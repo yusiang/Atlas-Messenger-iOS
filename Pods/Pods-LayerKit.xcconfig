@@ -1,0 +1,1 @@
+PODS_LAYERKIT_OTHER_LDFLAGS = -lsqlite3 -lz -framework CFNetwork -framework MobileCoreServices -framework Security -framework SystemConfiguration
