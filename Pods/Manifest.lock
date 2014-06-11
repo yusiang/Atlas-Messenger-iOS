@@ -1,10 +1,19 @@
 PODS:
+  - KIF (3.0.4):
+    - KIF/XCTest
+  - KIF/XCTest (3.0.4)
+  - KIFViewControllerActions (1.0.0):
+    - KIF (>= 2.0.0)
   - SVProgressHUD (HEAD based on 1.0)
 
 DEPENDENCIES:
+  - KIF (~> 3.0)
+  - KIFViewControllerActions (~> 1.0)
   - SVProgressHUD (HEAD)
 
 SPEC CHECKSUMS:
+  KIF: 443c517d14fc2a99d27d3df170bc274cdf288241
+  KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
 
 COCOAPODS: 0.33.1

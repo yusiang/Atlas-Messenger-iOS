@@ -39,9 +39,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setAccessibilityLabel:@"Conversation"];
     self.placeHolderUserID = @"2";
     [self addCollectionView];
     [self addComposeView];
+    [self registerForKeyboardNotifications];
 }
 
 - (void)didReceiveMemoryWarning
@@ -66,8 +68,21 @@
 
 - (void) addComposeView
 {
-    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 48, self.view.frame.size.width, 48)];
+    CGRect rect = [[UIScreen mainScreen] bounds];
+    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 48, rect.size.width, 48)];
     [self.view addSubview:self.composeView];
+}
+
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardWillShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
 }
 
 # pragma mark
@@ -99,6 +114,7 @@
         cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kReceivedMessageCellIdentifier forIndexPath:indexPath];
     }
     [cell setMessageObject:[self.conversation.messages objectAtIndex:indexPath.row]];
+    [cell setAccessibilityLabel:@"Message Cell"];
     return cell;
 }
 
@@ -131,5 +147,31 @@
 {
     return 0;
 }
+
+#pragma mark
+#pragma mark Keyboard Nofifications
+
+-(void)keyboardWasShown:(NSNotification*)notification
+{
+    NSDictionary* info = [notification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
+    } completion:^(BOOL finished) {
+        //
+    }];
+}
+
+- (void)keyboardWillBeHidden:(NSNotification*)notification
+{
+    NSDictionary* info = [notification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
+    } completion:^(BOOL finished) {
+        //
+    }];
+}
+
 
 @end

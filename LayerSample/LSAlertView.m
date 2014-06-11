@@ -26,6 +26,7 @@
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
+    alertView.accessibilityLabel = @"Alert";
     [alertView show];
 }
 
@@ -36,6 +37,7 @@
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
+    alertView.accessibilityLabel = @"Alert";
     [alertView show];
 }
 

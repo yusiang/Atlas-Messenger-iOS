@@ -19,7 +19,6 @@
 		0A0C244719477D8F00401B74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242619477D8F00401B74 /* Foundation.framework */; };
 		0A0C244819477D8F00401B74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242A19477D8F00401B74 /* UIKit.framework */; };
 		0A0C245019477D8F00401B74 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0A0C244E19477D8F00401B74 /* InfoPlist.strings */; };
-		0A0C245219477D8F00401B74 /* LayerSampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C245119477D8F00401B74 /* LayerSampleTests.m */; };
 		0A0C246119477E6600401B74 /* LSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C246019477E6600401B74 /* LSHomeViewController.m */; };
 		0A0C246519477F1600401B74 /* LSButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C246419477F1600401B74 /* LSButton.m */; };
 		0A0C246E1947857E00401B74 /* LSLoginTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C246D1947857E00401B74 /* LSLoginTableViewController.m */; };
@@ -50,7 +49,10 @@
 		0AADB5D81947C9330083732B /* LSAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AADB5D71947C9330083732B /* LSAlertView.m */; };
 		0ADEFE8E1947D0D90064DF09 /* LSLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ADEFE8D1947D0D90064DF09 /* LSLayerController.m */; };
 		0ADEFE911947DAF70064DF09 /* LSComposeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ADEFE901947DAF70064DF09 /* LSComposeView.m */; };
+		0AF909B31948CFE4007E69ED /* LSLoginTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF909B21948CFE4007E69ED /* LSLoginTests.m */; };
+		0AF909B61948D09B007E69ED /* KIFUITestActor+LSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF909B51948D09B007E69ED /* KIFUITestActor+LSAdditions.m */; };
 		140D75B35BCA4D3395A4DC4B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931E36A3415C497CA3681E7F /* libPods.a */; };
+		9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,7 +82,6 @@
 		0A0C244519477D8F00401B74 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0A0C244D19477D8F00401B74 /* LayerSampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LayerSampleTests-Info.plist"; sourceTree = "<group>"; };
 		0A0C244F19477D8F00401B74 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		0A0C245119477D8F00401B74 /* LayerSampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LayerSampleTests.m; sourceTree = "<group>"; };
 		0A0C245F19477E6600401B74 /* LSHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSHomeViewController.h; sourceTree = "<group>"; };
 		0A0C246019477E6600401B74 /* LSHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSHomeViewController.m; sourceTree = "<group>"; };
 		0A0C246319477F1600401B74 /* LSButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSButton.h; sourceTree = "<group>"; };
@@ -131,8 +132,14 @@
 		0ADEFE8D1947D0D90064DF09 /* LSLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLayerController.m; sourceTree = "<group>"; };
 		0ADEFE8F1947DAF70064DF09 /* LSComposeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSComposeView.h; sourceTree = "<group>"; };
 		0ADEFE901947DAF70064DF09 /* LSComposeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSComposeView.m; sourceTree = "<group>"; };
+		0AF909B11948CFE4007E69ED /* LSLoginTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLoginTests.h; sourceTree = "<group>"; };
+		0AF909B21948CFE4007E69ED /* LSLoginTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLoginTests.m; sourceTree = "<group>"; };
+		0AF909B41948D09B007E69ED /* KIFUITestActor+LSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KIFUITestActor+LSAdditions.h"; sourceTree = "<group>"; };
+		0AF909B51948D09B007E69ED /* KIFUITestActor+LSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KIFUITestActor+LSAdditions.m"; sourceTree = "<group>"; };
+		53480A235A364E9AAAB2DC78 /* Pods-LayerSampleTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSampleTests.xcconfig"; path = "Pods/Pods-LayerSampleTests.xcconfig"; sourceTree = "<group>"; };
 		931E36A3415C497CA3681E7F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A939C393B9254AF5B6B4FB43 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +170,7 @@
 				0A0C244619477D8F00401B74 /* XCTest.framework in Frameworks */,
 				0A0C244819477D8F00401B74 /* UIKit.framework in Frameworks */,
 				0A0C244719477D8F00401B74 /* Foundation.framework in Frameworks */,
+				9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +185,7 @@
 				0A0C242519477D8F00401B74 /* Frameworks */,
 				0A0C242419477D8F00401B74 /* Products */,
 				A939C393B9254AF5B6B4FB43 /* Pods.xcconfig */,
+				53480A235A364E9AAAB2DC78 /* Pods-LayerSampleTests.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -206,6 +215,7 @@
 				0A0C242A19477D8F00401B74 /* UIKit.framework */,
 				0A0C244519477D8F00401B74 /* XCTest.framework */,
 				931E36A3415C497CA3681E7F /* libPods.a */,
+				FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -244,7 +254,10 @@
 		0A0C244B19477D8F00401B74 /* LayerSampleTests */ = {
 			isa = PBXGroup;
 			children = (
-				0A0C245119477D8F00401B74 /* LayerSampleTests.m */,
+				0AF909B41948D09B007E69ED /* KIFUITestActor+LSAdditions.h */,
+				0AF909B51948D09B007E69ED /* KIFUITestActor+LSAdditions.m */,
+				0AF909B11948CFE4007E69ED /* LSLoginTests.h */,
+				0AF909B21948CFE4007E69ED /* LSLoginTests.m */,
 				0A0C244C19477D8F00401B74 /* Supporting Files */,
 			);
 			path = LayerSampleTests;
@@ -422,9 +435,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0A0C245819477D8F00401B74 /* Build configuration list for PBXNativeTarget "LayerSampleTests" */;
 			buildPhases = (
+				6D1B6C4F72A14767A34B248A /* Check Pods Manifest.lock */,
 				0A0C244019477D8F00401B74 /* Sources */,
 				0A0C244119477D8F00401B74 /* Frameworks */,
 				0A0C244219477D8F00401B74 /* Resources */,
+				72EE957AF4434922BA19B10E /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -493,6 +508,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		6D1B6C4F72A14767A34B248A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		72EE957AF4434922BA19B10E /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-LayerSampleTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A487A0EE4CB44DA78C108935 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -559,7 +604,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A0C245219477D8F00401B74 /* LayerSampleTests.m in Sources */,
+				0AF909B31948CFE4007E69ED /* LSLoginTests.m in Sources */,
+				0AF909B61948D09B007E69ED /* KIFUITestActor+LSAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -721,6 +767,7 @@
 		};
 		0A0C245919477D8F00401B74 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 53480A235A364E9AAAB2DC78 /* Pods-LayerSampleTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LayerSample.app/LayerSample";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -743,6 +790,7 @@
 		};
 		0A0C245A19477D8F00401B74 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 53480A235A364E9AAAB2DC78 /* Pods-LayerSampleTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LayerSample.app/LayerSample";
 				FRAMEWORK_SEARCH_PATHS = (

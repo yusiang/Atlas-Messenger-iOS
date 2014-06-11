@@ -76,6 +76,7 @@
     LYRSampleParticipant *participant = [LYRSampleParticipant participantWithNumber:[message.sentByUserID intValue]];
     self.senderName.text = participant.fullName;
     self.senderName.userInteractionEnabled = FALSE;
+    self.senderName.accessibilityLabel = @"Sender Label";
     
 }
 

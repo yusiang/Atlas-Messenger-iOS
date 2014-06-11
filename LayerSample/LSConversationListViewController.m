@@ -34,7 +34,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self setAccessibilityLabel:@"Conversation List"];
     self.conversations = [LYRSampleConversation sampleConversations];
     [self addCollectionView];
 }
@@ -81,6 +81,7 @@
 - (LSConversationCell *)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     [cell setConversation:[[self.conversations allObjects] objectAtIndex:indexPath.row]];
+    [cell setAccessibilityLabel:@"Conversation Cell"];
     return cell;
 }
 

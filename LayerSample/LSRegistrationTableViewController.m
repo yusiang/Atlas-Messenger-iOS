@@ -80,14 +80,17 @@
     switch (path.row) {
         case 0:
             [cell setText:@"Username"];
+            cell.textField.accessibilityLabel = @"Username";
             break;
         case 1:
             [cell setText:@"Password"];
             cell.textField.secureTextEntry = TRUE;
+            cell.textField.accessibilityLabel = @"Password";
             break;
         case 2:
             [cell setText:@"Confirm"];
             cell.textField.secureTextEntry = TRUE;
+            cell.textField.accessibilityLabel = @"Confirm";
             break;
         default:
             break;
@@ -102,6 +105,7 @@
     [button setFont:[UIFont fontWithName:kLayerFont size:20]];
     [button.layer setCornerRadius:4.0f];
     [button setBackgroundColor:kLayerColor];
+    [button setAccessibilityLabel:@"Register"];
     button.center = self.view.center;
     button.frame = CGRectMake(button.frame.origin.x, button.frame.origin.y - 40, button.frame.size.width, button.frame.size.height);
     [button addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -110,17 +114,14 @@
 
 - (void)registerTapped
 {
-//    LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-//    LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-//    LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
-//    
-//    NSString *username = usernameCell.textField.text;
-//    NSString *password = passwordCell.textField.text;
-//    NSString *confirmation = confirmationCell.textField.text;
-//    
-//    if (![password isEqualToString:confirmation]) {
-//       [LSAlertView matchingPasswordAlert];
-//    } else {
+    LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+    LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
+    
+    NSString *username = usernameCell.textField.text;
+    NSString *password = passwordCell.textField.text;
+    NSString *confirmation = confirmationCell.textField.text;
+//
 //        LSParseController *parseController = [[LSParseController alloc] init];
 //        [parseController initializeParseSDK];
 //        [parseController createParseUserWithEmail:username password:password completion:^(NSError *error) {
@@ -130,8 +131,13 @@
 //            }
 //        }];
 //    }
-    LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
-    [self.navigationController pushViewController:controller animated:TRUE];
+     if (![password isEqualToString:confirmation]) {
+         [LSAlertView matchingPasswordAlert];
+     } else {
+         LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
+         [self.navigationController pushViewController:controller animated:TRUE];
+     }
+
 }
 
 @end

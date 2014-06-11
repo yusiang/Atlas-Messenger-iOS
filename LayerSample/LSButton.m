@@ -32,6 +32,7 @@
     self.textLabel = [[UILabel alloc] init];
     self.textLabel.text = text;
     self.textLabel.textColor = [UIColor whiteColor];
+    self.accessibilityLabel = text;
     [self sizeAndCenterLabel];
     [self addSubview:self.textLabel];
 }

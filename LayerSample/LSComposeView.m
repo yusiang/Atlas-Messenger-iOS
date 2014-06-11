@@ -32,6 +32,7 @@
     self.textField.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.textField.layer.borderWidth = 1;
     self.textField.layer.cornerRadius = 4.0f;
+    [self.textField setAccessibilityLabel:@"Compose TextView"];
     
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 6, 36)];
     self.textField.leftView = paddingView;
@@ -47,6 +48,7 @@
     [button addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [button setText:@"Send"];
     [button setBackgroundColor:kLayerColor];
+    [button setAccessibilityLabel:@"Button"];
     [self addSubview:button];
 }
 
@@ -60,9 +62,6 @@
 #pragma mark TextViewDelegate Methods
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    [UIView animateWithDuration:0.35 animations:^{
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y - 216, self.frame.size.width, self.frame.size.height);
-    }];
     return TRUE;
 }
 
@@ -94,9 +93,7 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self.textField resignFirstResponder];
-    [UIView animateWithDuration:0.35 animations:^{
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y + 216, self.frame.size.width, self.frame.size.height);
-    }];
     return TRUE;
 }
+
 @end
