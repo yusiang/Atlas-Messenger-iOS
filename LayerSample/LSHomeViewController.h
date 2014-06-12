@@ -7,7 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LSLoginTableViewController.h"
+#import "LSRegistrationTableViewController.h"
 
-@interface LSHomeViewController : UIViewController
+@class LSHomeViewController;
 
+@protocol LSHomeViewControllerDelegate <NSObject>
+
+- (void) presentConversationViewController;
+
+@end
+
+@interface LSHomeViewController : UIViewController <LSLoginTableViewControllerDelegate, LSRegistrationTableViewControllerDelegate>
+
+@property (nonatomic, weak) id<LSHomeViewControllerDelegate>delegate;
 @end

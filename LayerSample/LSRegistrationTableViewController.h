@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@class LSRegistrationTableViewController;
+
+@protocol LSRegistrationTableViewControllerDelegate <NSObject>
+
+- (void)registrationSuccessful;
+
+@end
+
 @interface LSRegistrationTableViewController : UITableViewController
+
+@property (nonatomic, weak) id<LSRegistrationTableViewControllerDelegate>delegate;
 
 @end

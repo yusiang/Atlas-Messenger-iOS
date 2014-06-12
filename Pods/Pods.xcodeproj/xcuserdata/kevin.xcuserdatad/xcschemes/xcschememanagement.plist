@@ -4,6 +4,51 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-CocoaLumberjack.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-CocoaSPDY.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-FMDB.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-FMDBMigrationManager.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-LayerKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-LayerSampleTests-CocoaLumberjack.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-LayerSampleTests-CocoaSPDY.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-LayerSampleTests-FMDB.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-LayerSampleTests-FMDBMigrationManager.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-LayerSampleTests-KIF.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -14,7 +59,32 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-LayerSampleTests-LayerKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-LayerSampleTests-SVProgressHUD.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-LayerSampleTests-TransitionKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-LayerSampleTests-layer-client-messaging-schema.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-LayerSampleTests-layer-thrift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-LayerSampleTests-thrift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -29,7 +99,32 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-TransitionKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-layer-client-messaging-schema.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-layer-thrift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-thrift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>layer-client-messaging-schema.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -37,32 +132,127 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>3475492B8FB44AD2AF667916</key>
+		<key>022F262AC2834BA4B5F8E197</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D38120FE0A674E95B9A62370</key>
+		<key>0FBE8D5676E648FAA8AB1D0B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D4BFD374E95E40E09A92D429</key>
+		<key>132384F7A4924EBFB7B1136C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E71AD2E4C6C54EAA9A94EC00</key>
+		<key>2AF2573F6A4842D89BFA84E8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F704AF6120854841A3C67892</key>
+		<key>2BA623EA67314C3C9688C5B2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>FFF7F3D8B4DE4581BEAA793C</key>
+		<key>358FBDEFA79148A79C4C6699</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>38BF406B1B53493A815D98E7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3B36C765904D444E99A3567E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4649CFB4A1DF43BBB5CAC295</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4A36BAE2CD63492E80B63E31</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>639EB4B0BE374B719ED5698A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>65138EBE6F7C40519674569C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6F0A924F47AA40748C5E520A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>72E4E86FD832479286A71999</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>878C1CED36414FC4BBA5D9F0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9C64E007C35640B3B0525B8B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A1FBE4566F414962ACDCC27E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A774F3BA26564ACABE8A7DD0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B39D3F90DAB0471892077B80</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B5F47C94CA2743EAB852F8B5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B7273AF477374866B4A79EB9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D2F2A2834C4B4E36B5D70084</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E06632CBBE5742D1A20D74BD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E783C2EF00F84A80956B31CB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F994DA7705DC470AAF700DE8</key>
 		<dict>
 			<key>primary</key>
 			<true/>

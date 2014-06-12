@@ -54,7 +54,10 @@
 
 - (void)sendMessage
 {
-    NSString *string = self.textField.text;
+    if (self.textField.text) {
+        [self.delegate sendMessageWithText:self.textField.text];
+    }
+    [self.textField setText:@""];
     [self textFieldShouldReturn:self.textField];
 }
 
@@ -77,7 +80,7 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    
+
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

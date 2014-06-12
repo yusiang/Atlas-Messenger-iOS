@@ -1,0 +1,15 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+    #import <DDLog.h>
+    #include "LYRLog.h"
+
+    // Type definition of sequence type (we might change it to 64-bit at some point)
+    typedef uint32_t LYRSequence;
+    #define LYRSequenceNotDefined UINT32_MAX
+#endif

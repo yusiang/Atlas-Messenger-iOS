@@ -8,9 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class LSComposeView;
+
+@protocol LSComposeViewDelegate <NSObject>
+
+- (void)sendMessageWithText:(NSString *)text;
+
+@end
+
 @interface LSComposeView : UIView <UITextFieldDelegate>
 
 @property (nonatomic, strong) UITextField *textField;
-
+@property (nonatomic, weak) id<LSComposeViewDelegate>delegate;
 
 @end

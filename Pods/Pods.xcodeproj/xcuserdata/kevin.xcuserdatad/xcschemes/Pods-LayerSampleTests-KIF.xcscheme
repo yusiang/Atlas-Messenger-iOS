@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F704AF6120854841A3C67892"
+               BlueprintIdentifier = "F994DA7705DC470AAF700DE8"
                BuildableName = "libPods-LayerSampleTests-KIF.a"
                BlueprintName = "Pods-LayerSampleTests-KIF"
                ReferencedContainer = "container:Pods.xcodeproj">

@@ -7,9 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <LayerKit/LayerKit.h>
 
-@interface LSLayerController : NSObject
+@interface LSLayerController : NSObject <LYRClientDelegate, NSURLSessionDelegate>
 
-- (NSString *) requestLayerNonce;
+@property (nonatomic, strong) LYRClient *client;
+
+- (void)initializeLayerClientWithCompletion:(void (^)(NSError *error))completion;
+
+- (void)authenticateLayerClientWithCompletion:(void (^)(NSError * error))completion;
 
 @end

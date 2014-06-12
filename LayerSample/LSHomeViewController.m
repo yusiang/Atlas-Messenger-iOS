@@ -8,8 +8,7 @@
 
 #import "LSHomeViewController.h"
 #import "LSButton.h"
-#import "LSLoginTableViewController.h"
-#import "LSRegistrationTableViewController.h"
+
 @interface LSHomeViewController ()
 
 @end
@@ -67,6 +66,7 @@
 - (void)registerTapped
 {
     LSRegistrationTableViewController *registerVC = [[LSRegistrationTableViewController alloc] init];
+    registerVC.delegate = self;
     [self.navigationController pushViewController:registerVC animated:TRUE];
 }
 
@@ -83,6 +83,7 @@
 - (void)loginTapped
 {
     LSLoginTableViewController *loginVC = [[LSLoginTableViewController alloc] init];
+    loginVC.delegate = self;
     [self.navigationController pushViewController:loginVC animated:TRUE];
 }
 
@@ -97,4 +98,19 @@
     return button;
 }
 
+#pragma mark
+#pragma mark LSRegistrationViewControllerDelegate Methods
+
+-(void)registrationSuccessful
+{
+    [self.delegate presentConversationViewController];
+}
+
+#pragma mark
+#pragma mark LSLoginViewControllerDelegate Methods
+
+-(void)loginSuccess
+{
+    [self.delegate presentConversationViewController];
+}
 @end

@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "LYRSampleConversation.h"
+#import "LSLayerController.h"
+#import "LSComposeView.h"
 
-@interface LSConversationViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface LSConversationViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate>
 
-@property (nonatomic, strong) LYRSampleConversation *conversation;
+@property (nonatomic, strong) LYRSampleConversation *fakeConversation;
+@property (nonatomic, strong) LSLayerController *layerController;
+@property (nonatomic, strong) LYRConversation *conversation;
 
 @end

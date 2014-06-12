@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@class LSLoginTableViewController;
+
+@protocol LSLoginTableViewControllerDelegate <NSObject>
+
+- (void)loginSuccess;
+
+@end
+
 @interface LSLoginTableViewController : UITableViewController
+
+@property (nonatomic, weak) id<LSLoginTableViewControllerDelegate>delegate;
 
 @end

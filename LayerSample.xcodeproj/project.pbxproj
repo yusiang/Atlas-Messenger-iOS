@@ -36,6 +36,8 @@
 		0A0C249D1947B80E00401B74 /* LSConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C249C1947B80E00401B74 /* LSConversationViewController.m */; };
 		0A0C24A01947BB0500401B74 /* LSSentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C249F1947BB0500401B74 /* LSSentMessageCell.m */; };
 		0A0C24A31947BB1100401B74 /* LSRecievedMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C24A21947BB1100401B74 /* LSRecievedMessageCell.m */; };
+		0A3DF5DA194A1D6500D9060F /* LSConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */; };
+		0A3DF5DE194A4C4000D9060F /* LSNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3DF5DD194A4C4000D9060F /* LSNavigationController.m */; };
 		0AADB5C01947C7DB0083732B /* LSParseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AADB5BF1947C7DB0083732B /* LSParseController.m */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
@@ -115,6 +117,10 @@
 		0A0C249F1947BB0500401B74 /* LSSentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSentMessageCell.m; sourceTree = "<group>"; };
 		0A0C24A11947BB1100401B74 /* LSRecievedMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRecievedMessageCell.h; sourceTree = "<group>"; };
 		0A0C24A21947BB1100401B74 /* LSRecievedMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSRecievedMessageCell.m; sourceTree = "<group>"; };
+		0A3DF5D8194A1D6500D9060F /* LSConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConnectionManager.h; sourceTree = "<group>"; };
+		0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConnectionManager.m; sourceTree = "<group>"; };
+		0A3DF5DC194A4C4000D9060F /* LSNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNavigationController.h; sourceTree = "<group>"; };
+		0A3DF5DD194A4C4000D9060F /* LSNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNavigationController.m; sourceTree = "<group>"; };
 		0AADB5BE1947C7DB0083732B /* LSParseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSParseController.h; sourceTree = "<group>"; };
 		0AADB5BF1947C7DB0083732B /* LSParseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSParseController.m; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -223,9 +229,9 @@
 		0A0C242C19477D8F00401B74 /* LayerSample */ = {
 			isa = PBXGroup;
 			children = (
+				0A3DF5D7194A1D4B00D9060F /* Connection Manager */,
 				0AADB5D51947C9280083732B /* UI Alerts */,
 				0A0C24A41947C60C00401B74 /* SDK Controllers */,
-				0A0C246219477F0900401B74 /* UIViews */,
 				0A0C2489194796EB00401B74 /* CollectionViewCells */,
 				0A0C24761947943100401B74 /* Fake Data */,
 				0A0C2475194788D600401B74 /* TableViewCells */,
@@ -275,6 +281,7 @@
 		0A0C245B19477D9E00401B74 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				0A3DF5DB194A4C2300D9060F /* Navigation Controller */,
 				0A0C2483194795BF00401B74 /* Registration/Login */,
 				0A0C2484194795DC00401B74 /* Messaging */,
 			);
@@ -387,8 +394,27 @@
 				0AADB5BF1947C7DB0083732B /* LSParseController.m */,
 				0ADEFE8C1947D0D90064DF09 /* LSLayerController.h */,
 				0ADEFE8D1947D0D90064DF09 /* LSLayerController.m */,
+				0A0C246219477F0900401B74 /* UIViews */,
 			);
 			name = "SDK Controllers";
+			sourceTree = "<group>";
+		};
+		0A3DF5D7194A1D4B00D9060F /* Connection Manager */ = {
+			isa = PBXGroup;
+			children = (
+				0A3DF5D8194A1D6500D9060F /* LSConnectionManager.h */,
+				0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */,
+			);
+			name = "Connection Manager";
+			sourceTree = "<group>";
+		};
+		0A3DF5DB194A4C2300D9060F /* Navigation Controller */ = {
+			isa = PBXGroup;
+			children = (
+				0A3DF5DC194A4C4000D9060F /* LSNavigationController.h */,
+				0A3DF5DD194A4C4000D9060F /* LSNavigationController.m */,
+			);
+			name = "Navigation Controller";
 			sourceTree = "<group>";
 		};
 		0AADB5D51947C9280083732B /* UI Alerts */ = {
@@ -578,8 +604,10 @@
 				0A0C246119477E6600401B74 /* LSHomeViewController.m in Sources */,
 				0A0C246519477F1600401B74 /* LSButton.m in Sources */,
 				0A0C249D1947B80E00401B74 /* LSConversationViewController.m in Sources */,
+				0A3DF5DA194A1D6500D9060F /* LSConnectionManager.m in Sources */,
 				0A0C24821947944700401B74 /* LYRSampleMessagePart.m in Sources */,
 				0ADEFE911947DAF70064DF09 /* LSComposeView.m in Sources */,
+				0A3DF5DE194A4C4000D9060F /* LSNavigationController.m in Sources */,
 				0ADEFE8E1947D0D90064DF09 /* LSLayerController.m in Sources */,
 				0A0C243319477D8F00401B74 /* main.m in Sources */,
 				0A0C248F19479CA400401B74 /* LSConversationListViewController.m in Sources */,

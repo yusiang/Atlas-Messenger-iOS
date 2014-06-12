@@ -9,12 +9,13 @@
 #import "LSConversationListViewController.h"
 #import "LSConversationCell.h"
 #import "LYRSampleConversation.h"
-#import "LSConversationViewController.h"
+
+#import "LSAppDelegate.h"
 
 @interface LSConversationListViewController ()
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSSet *conversations;
+@property (nonatomic, strong) NSSet *fakeConversations;
 
 @end
 
@@ -26,7 +27,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.title = @"Conversation";
     }
     return self;
 }
@@ -34,8 +35,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self fetchLayerConversations];
     [self setAccessibilityLabel:@"Conversation List"];
-    self.conversations = [LYRSampleConversation sampleConversations];
+    self.fakeConversations = [LYRSampleConversation sampleConversations];
     [self addCollectionView];
 }
 
@@ -45,6 +47,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)fetchLayerConversations
+{
+    self.conversations = [self.layerController.client conversationsForIdentifiers:nil];
+}
 - (void)addCollectionView
 {
     if (!self.collectionView) {
@@ -62,7 +68,8 @@
 # pragma mark Collection View Data Source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.conversations.count;
+    //return self.conversations.count;
+    return self.fakeConversations.count;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -80,7 +87,8 @@
 
 - (LSConversationCell *)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    [cell setConversation:[[self.conversations allObjects] objectAtIndex:indexPath.row]];
+    //LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
+    [cell setConversation:[[self.fakeConversations allObjects] objectAtIndex:indexPath.row]];
     [cell setAccessibilityLabel:@"Conversation Cell"];
     return cell;
 }
@@ -90,8 +98,10 @@
 #pragma mark Collection View Delegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    //LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
     LSConversationViewController *viewController = [[LSConversationViewController alloc] init];
-    [viewController setConversation:[[self.conversations allObjects] objectAtIndex:indexPath.row]];
+    [viewController setLayerController:self.layerController];
+    [viewController setFakeConversation:[[self.fakeConversations allObjects] objectAtIndex:indexPath.row]];
     [self.navigationController pushViewController:viewController animated:TRUE];
 }
 

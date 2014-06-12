@@ -12,6 +12,7 @@
 #import "LSAlertView.h"
 #import "LSParseController.h"
 #import "LSConversationListViewController.h"
+#import "LSAppDelegate.h"
 
 @interface LSRegistrationTableViewController ()
 
@@ -30,7 +31,7 @@
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        // Custom initialization
+        self.title = @"Register";
     }
     return self;
 }
@@ -134,8 +135,9 @@
      if (![password isEqualToString:confirmation]) {
          [LSAlertView matchingPasswordAlert];
      } else {
-         LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
-         [self.navigationController pushViewController:controller animated:TRUE];
+         [self.delegate registrationSuccessful];
+//         LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
+//         [self.navigationController pushViewController:controller animated:TRUE];
      }
 
 }

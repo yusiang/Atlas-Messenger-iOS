@@ -9,13 +9,13 @@
 #import "LSConversationViewController.h"
 #import "LSSentMessageCell.h"
 #import "LSRecievedMessageCell.h"
-#import "LSComposeView.h"
 
 @interface LSConversationViewController ()
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) LSComposeView *composeView;
 @property (nonatomic, strong) NSString *placeHolderUserID;
+@property (nonatomic, strong) NSOrderedSet *messages;
 
 @end
 
@@ -27,18 +27,12 @@
 #define kSentMessageCellIdentifier         @"sentMessageCell"
 #define kReceivedMessageCellIdentifier      @"receivedMessageCell"
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"Chat";
+    [self fetchLayerConversations];
     [self setAccessibilityLabel:@"Conversation"];
     self.placeHolderUserID = @"2";
     [self addCollectionView];
@@ -50,6 +44,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) fetchLayerConversations
+{
+    self.messages = [self.layerController.client messagesForConversation:self.conversation];
 }
 
 - (void)addCollectionView
@@ -89,7 +88,8 @@
 # pragma mark Collection View Data Source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.conversation.messages.count;
+    //return self.messages.count;
+    return self.fakeConversation.messages.count;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -107,13 +107,14 @@
 
 - (LSMessageCell *)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    LYRSampleMessage *message = [self.conversation.messages objectAtIndex:indexPath.row];
+    //LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
+    LYRSampleMessage *message = [self.fakeConversation.messages objectAtIndex:indexPath.row];
     if ([message.sentByUserID isEqualToString:self.placeHolderUserID]) {
         cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kSentMessageCellIdentifier forIndexPath:indexPath];
     } else {
         cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kReceivedMessageCellIdentifier forIndexPath:indexPath];
     }
-    [cell setMessageObject:[self.conversation.messages objectAtIndex:indexPath.row]];
+    [cell setMessageObject:[self.fakeConversation.messages objectAtIndex:indexPath.row]];
     [cell setAccessibilityLabel:@"Message Cell"];
     return cell;
 }
@@ -173,5 +174,12 @@
     }];
 }
 
+#pragma mark
+#pragma mark LSComposeViewDelegate
+
+-(void)sendMessageWithText:(NSString *)text
+{
+    
+}
 
 @end

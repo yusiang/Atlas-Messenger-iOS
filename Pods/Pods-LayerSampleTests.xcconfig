@@ -1,6 +1,6 @@
 FRAMEWORK_SEARCH_PATHS = $(inherited) "$(SDKROOT)/Developer/Library/Frameworks"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/KIF" "${PODS_ROOT}/Headers/KIFViewControllerActions" "${PODS_ROOT}/Headers/SVProgressHUD"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers" -isystem "${PODS_ROOT}/Headers/KIF" -isystem "${PODS_ROOT}/Headers/KIFViewControllerActions" -isystem "${PODS_ROOT}/Headers/SVProgressHUD" -DKIF_XCTEST
-OTHER_LDFLAGS = -ObjC -framework CoreGraphics -framework QuartzCore -framework XCTest
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/CocoaLumberjack" "${PODS_ROOT}/Headers/CocoaSPDY" "${PODS_ROOT}/Headers/FMDB" "${PODS_ROOT}/Headers/FMDBMigrationManager" "${PODS_ROOT}/Headers/KIF" "${PODS_ROOT}/Headers/KIFViewControllerActions" "${PODS_ROOT}/Headers/LayerKit" "${PODS_ROOT}/Headers/SVProgressHUD" "${PODS_ROOT}/Headers/TransitionKit" "${PODS_ROOT}/Headers/layer-client-messaging-schema" "${PODS_ROOT}/Headers/layer-thrift" "${PODS_ROOT}/Headers/thrift"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers" -isystem "${PODS_ROOT}/Headers/CocoaLumberjack" -isystem "${PODS_ROOT}/Headers/CocoaSPDY" -isystem "${PODS_ROOT}/Headers/FMDB" -isystem "${PODS_ROOT}/Headers/FMDBMigrationManager" -isystem "${PODS_ROOT}/Headers/KIF" -isystem "${PODS_ROOT}/Headers/KIFViewControllerActions" -isystem "${PODS_ROOT}/Headers/LayerKit" -isystem "${PODS_ROOT}/Headers/SVProgressHUD" -isystem "${PODS_ROOT}/Headers/TransitionKit" -isystem "${PODS_ROOT}/Headers/layer-client-messaging-schema" -isystem "${PODS_ROOT}/Headers/layer-thrift" -isystem "${PODS_ROOT}/Headers/thrift" -DKIF_XCTEST
+OTHER_LDFLAGS = -ObjC -lsqlite3 -lz -framework CFNetwork -framework CoreGraphics -framework MobileCoreServices -framework QuartzCore -framework Security -framework SystemConfiguration -framework XCTest
 PODS_ROOT = ${SRCROOT}/Pods

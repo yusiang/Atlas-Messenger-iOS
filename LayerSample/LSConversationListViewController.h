@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LSConversationViewController.h"
 
 @interface LSConversationListViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+
+@property (nonatomic, strong) LSLayerController *layerController;
+@property (nonatomic, strong) NSOrderedSet *conversations;
 
 @end

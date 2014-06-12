@@ -12,6 +12,7 @@
 #import "LSButton.h"
 #import "LSAlertView.h"
 #import "LSParseController.h"
+#import "LSAppDelegate.h"
 
 @interface LSLoginTableViewController ()
 
@@ -27,7 +28,7 @@
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        // Custom initialization
+        self.title = @"Login";
     }
     return self;
 }
@@ -123,8 +124,9 @@
 //            }
 //        }];
 //    }
-    LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
-    [self.navigationController pushViewController:controller animated:TRUE];
+//    LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
+//    [self.navigationController pushViewController:controller animated:TRUE];
+    [self.delegate loginSuccess];
 
 }
 

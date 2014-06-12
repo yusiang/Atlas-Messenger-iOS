@@ -7,16 +7,24 @@
 //
 
 #import "LSAppDelegate.h"
-#import "LSHomeViewController.h"
 
 @implementation LSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [self initializeSDKs];
+    
     LSHomeViewController *controller = [[LSHomeViewController alloc] init];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    
+    LSNavigationController *navController = [[LSNavigationController alloc] initWithRootViewController:controller];
+    
+    controller.delegate = navController;
+    
+    navController.layerController = self.layerController;
+    
     [self.window setRootViewController:navController];
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 							
@@ -47,4 +55,35 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark
+#pragma mark SDK Initialization Classes
+- (void)initializeSDKs
+{
+    [self setLayerController:[[LSLayerController alloc] init]];
+    [self setParseController:[[LSParseController alloc] init]];
+}
+
+- (void)setLayerController:(LSLayerController *)layerController
+{
+    if (_layerController != layerController) {
+        _layerController = layerController;
+    }
+    [_layerController initializeLayerClientWithCompletion:^(NSError *error) {
+        if (!error) NSLog(@"Layer Client Started");
+    }];
+}
+
+- (void)setParseController:(LSParseController *)parseController
+{
+    if (_parseController != parseController) {
+        _parseController = parseController;
+    }
+}
+
+#pragma mark
+#pragma mark HomeViewControllerDelegate Methods
+-(void)presentConversationViewController
+{
+
+}
 @end
