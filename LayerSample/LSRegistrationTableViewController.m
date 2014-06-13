@@ -119,27 +119,34 @@
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
     LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
     
-    NSString *username = usernameCell.textField.text;
-    NSString *password = passwordCell.textField.text;
-    NSString *confirmation = confirmationCell.textField.text;
-//
-//        LSParseController *parseController = [[LSParseController alloc] init];
-//        [parseController initializeParseSDK];
-//        [parseController createParseUserWithEmail:username password:password completion:^(NSError *error) {
-//            if(!error) {
-//                LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
-//                [self.navigationController pushViewController:controller animated:TRUE];
-//            }
-//        }];
-//    }
-     if (![password isEqualToString:confirmation]) {
-         [LSAlertView matchingPasswordAlert];
-     } else {
-         [self.delegate registrationSuccessful];
-//         LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
-//         [self.navigationController pushViewController:controller animated:TRUE];
-     }
+    if ([self verifyEmail:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
+        LSParseController *parseController = [[LSParseController alloc] init];
+        [parseController initializeParseSDK];
+        [parseController createParseUserWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(NSError *error) {
+            if(!error) {
+                [self.delegate registrationSuccessful];
+            }
+        }];
+    }
+}
 
+- (BOOL)verifyEmail:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
+{
+    if ([email isEqualToString:@""]) {
+        [LSAlertView missingEmailAlert];
+        return FALSE;
+    }
+    
+    if ([password isEqualToString:@""]|| [confirmation isEqualToString:@""]) {
+        [LSAlertView matchingPasswordAlert];
+        return FALSE;
+    }
+        
+    if(![password isEqualToString:confirmation]) {
+        [LSAlertView matchingPasswordAlert];
+        return FALSE;
+    }
+    return TRUE;
 }
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "LSNavigationController.h"
-
+#import "LSContactsViewController.h"
 @interface LSNavigationController ()
 
 @end
@@ -42,10 +42,19 @@
 
 - (void) presentConversationViewController
 {
-    LSConversationListViewController *viewController = [[LSConversationListViewController alloc] init];
-    viewController.layerController = self.layerController;
+    LSContactsViewController *contactViewController = [[LSContactsViewController alloc] init];
+    contactViewController.layerController = self.layerController;
     
-    UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:viewController];
+    UINavigationController *contactController = [[UINavigationController alloc] initWithRootViewController:contactViewController];
+    
+    LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
+    conversationListViewController.layerController = self.layerController;
+    
+    UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
+    
+    UITabBarController *controller = [[UITabBarController alloc] init];
+    [controller setViewControllers:@[contactController, conversationController]];
+    
     [self presentViewController:controller animated:TRUE completion:^{
         //
     }];

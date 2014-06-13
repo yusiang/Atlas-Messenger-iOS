@@ -10,24 +10,25 @@
 
 @implementation LSParseController
 
-//- (id) init
-//{
-//    self = [super init];
-//    if (self) {
-//        
-//    }
-//    return self;
-//}
-//
-//- (void) initializeParseSDK
-//{
+- (id) init
+{
+    self = [super init];
+    if (self) {
+        
+    }
+    return self;
+}
+
+- (void) initializeParseSDK
+{
 //    [Parse setApplicationId:@"FvtTD9THmnMNlBxQKZ0R3RVx3zuVYgcG1uPFR7Mo"
 //                  clientKey:@"eT1sf2vFjeHRehFYJ2A2jlGCr5dq2tQWLpqJvh4Z"];
-//    
-//}
-//
-//- (void) createParseUserWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *))completion
-//{
+    
+}
+
+- (void) createParseUserWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *))completion
+{
+    completion(nil);
 //    PFUser *user = [PFUser user];
 //    user.email = email;
 //    user.username = email;
@@ -51,10 +52,16 @@
 //            completion(error);
 //        }
 //    }];
-//}
-//
-//- (void) logParseUserInWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *))completion
-//{
+}
+
+- (void) logParseUserInWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *))completion
+{
+    if([email isEqualToString:@"test@layer.com"] && [password isEqualToString:@"password"]) {
+        completion (nil);
+    } else {
+        NSError *error = [NSError errorWithDomain:@"Invalid Login Credentials" code:404 userInfo:nil];
+        completion (error);
+    }
 //    [PFUser logInWithUsernameInBackground:email password:password
 //                                    block:^(PFUser *user, NSError *error) {
 //                                        if (user) {
@@ -63,15 +70,15 @@
 //                                            completion(error);
 //                                        }
 //                                    }];
-//}
-//
-//- (void) logOutParseUser
-//{
+}
+
+- (void) logOutParseUser
+{
 //    [PFUser logOut];
-//}
-//
-//- (void) requestLayerIdentityTokenWithNonce:(NSString *)nonce
-//{
+}
+
+- (void) requestLayerIdentityTokenWithNonce:(NSString *)nonce
+{
 //    [PFCloud callFunctionInBackground:@"requestIdentityToken"
 //                       withParameters:@{@"nonce": nonce,
 //                                        @"uid" : @"8372kdjd83"}
@@ -80,7 +87,7 @@
 //                                        
 //                                    }
 //                                }];
-//}
+}
 
 @end
 

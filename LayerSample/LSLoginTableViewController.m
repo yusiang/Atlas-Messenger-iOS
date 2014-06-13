@@ -106,28 +106,23 @@
 
 - (void)loginTapped
 {
-//    LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-//    LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-//    
-//    NSString *username = usernameCell.textField.text;
-//    NSString *password = passwordCell.textField.text;
-//    
-//    if (!password) {
+    LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+    
+//    if (!passwordCell.textField.text) {
 //        [LSAlertView missingPasswordAlert];
 //    } else {
 //        LSParseController *parseController = [[LSParseController alloc] init];
 //        [parseController initializeParseSDK];
-//        [parseController logParseUserInWithEmail:username password:password completion:^(NSError *error) {
+//        [parseController logParseUserInWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(NSError *error) {
 //            if(!error) {
-//                LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
-//                [self.navigationController pushViewController:controller animated:TRUE];
+//                [self.delegate loginSuccess];
+//            }else {
+//                [LSAlertView invalidLoginCredentials];
 //            }
 //        }];
 //    }
-//    LSConversationListViewController *controller = [[LSConversationListViewController alloc] init];
-//    [self.navigationController pushViewController:controller animated:TRUE];
     [self.delegate loginSuccess];
-
 }
 
 @end

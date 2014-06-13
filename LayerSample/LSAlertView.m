@@ -19,6 +19,17 @@
     return self;
 }
 
++ (void)missingEmailAlert
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"No Email"
+                                                        message:@"Please enter an email address"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    alertView.accessibilityLabel = @"Alert";
+    [alertView show];
+}
+
 + (void)matchingPasswordAlert
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Password Error"
@@ -41,4 +52,14 @@
     [alertView show];
 }
 
++(void)invalidLoginCredentials
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid Credentials"
+                                                        message:@"Please check your login credentials and try again"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    alertView.accessibilityLabel = @"Alert";
+    [alertView show];
+}
 @end

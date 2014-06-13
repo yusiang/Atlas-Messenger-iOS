@@ -10,8 +10,12 @@
 
 @interface LSAlertView : NSObject
 
++ (void) missingEmailAlert;
+
 + (void) matchingPasswordAlert;
 
 + (void) missingPasswordAlert;
+
++ (void) invalidLoginCredentials;
 
 @end
