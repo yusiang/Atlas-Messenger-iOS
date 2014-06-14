@@ -8,6 +8,12 @@
 
 #import "LSContactTableViewCell.h"
 
+@interface LSContactTableViewCell ()
+
+@property (nonatomic) BOOL isSelected;
+
+@end
+
 @implementation LSContactTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -23,7 +29,21 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:FALSE animated:FALSE];
-    // Configure the view for the selected state
+    if (selected && !self.isSelected) {
+        [self updateWithSelectionIndicator:TRUE];
+        self.isSelected = TRUE;
+    } else if(!selected && !self.isSelected) {
+        self.isSelected = FALSE;
+        [self updateWithSelectionIndicator:FALSE];
+    } else if (selected && self.isSelected) {
+        self.isSelected = FALSE;
+        [self updateWithSelectionIndicator:FALSE];
+    }
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
 }
 
 - (void) updateWithSelectionIndicator:(BOOL)selected
@@ -41,4 +61,5 @@
         self.radioButton.alpha = 0.0;
     }
 }
+
 @end

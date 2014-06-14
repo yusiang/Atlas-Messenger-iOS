@@ -18,7 +18,7 @@
 
 enum LYRTErrorCode {
   ErrorCode_UNSPECIFIED_ERROR = 1,
-  ErrorCode_STREAM_SEQ_CONTENTION = 2
+  ErrorCode_TIMEOUT = 2
 };
 
 enum LYRTEventType {

@@ -7,34 +7,28 @@
 //
 
 #import "LSConversationViewController.h"
-#import "LSSentMessageCell.h"
-#import "LSRecievedMessageCell.h"
+#import "LSMessageCell.h"
 
 @interface LSConversationViewController ()
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) LSComposeView *composeView;
-@property (nonatomic, strong) NSString *placeHolderUserID;
 @property (nonatomic, strong) NSOrderedSet *messages;
 
 @end
 
 @implementation LSConversationViewController
 
-@synthesize collectionView = _collectionView;
-@synthesize placeHolderUserID = _placeHolderUserID;
-
-#define kSentMessageCellIdentifier         @"sentMessageCell"
-#define kReceivedMessageCellIdentifier      @"receivedMessageCell"
+#define kMessageCellIdentifier         @"messageCell"
 
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.title = @"Chat";
+    if (!self.conversation) [self createConversation];
     [self fetchLayerConversations];
     [self setAccessibilityLabel:@"Conversation"];
-    self.placeHolderUserID = @"2";
     [self addCollectionView];
     [self addComposeView];
     [self registerForKeyboardNotifications];
@@ -43,7 +37,12 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+}
+
+- (void) createConversation
+{
+    LYRConversation *conversation = [self.layerController.client conversationWithIdentifier:@"1" participants:@[@"100101"]];
+    self.conversation = conversation;
 }
 
 - (void) fetchLayerConversations
@@ -61,14 +60,14 @@
         self.collectionView.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:self.collectionView];
     }
-    [self.collectionView registerClass:[LSRecievedMessageCell class] forCellWithReuseIdentifier:kReceivedMessageCellIdentifier];
-    [self.collectionView registerClass:[LSSentMessageCell class] forCellWithReuseIdentifier:kSentMessageCellIdentifier];
+    [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:kMessageCellIdentifier];
 }
 
 - (void) addComposeView
 {
     CGRect rect = [[UIScreen mainScreen] bounds];
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 48, rect.size.width, 48)];
+    self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
 }
 
@@ -89,7 +88,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     //return self.messages.count;
-    return self.fakeConversation.messages.count;
+    return self.messages.count;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -107,18 +106,12 @@
 
 - (LSMessageCell *)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    //LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
-    LYRSampleMessage *message = [self.fakeConversation.messages objectAtIndex:indexPath.row];
-    if ([message.sentByUserID isEqualToString:self.placeHolderUserID]) {
-        cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kSentMessageCellIdentifier forIndexPath:indexPath];
-    } else {
-        cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kReceivedMessageCellIdentifier forIndexPath:indexPath];
-    }
-    [cell setMessageObject:[self.fakeConversation.messages objectAtIndex:indexPath.row]];
+    LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
+    cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kMessageCellIdentifier forIndexPath:indexPath];
+    [cell updateCellWithMessage:message andLayerController:self.layerController];
     [cell setAccessibilityLabel:@"Message Cell"];
     return cell;
 }
-
 
 #pragma mark
 #pragma mark Collection View Delegate
@@ -179,7 +172,7 @@
 
 -(void)sendMessageWithText:(NSString *)text
 {
-    
+    [self.layerController sendMessage:text inConversation:self.conversation];
 }
 
 @end

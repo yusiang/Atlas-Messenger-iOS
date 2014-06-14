@@ -6,24 +6,26 @@ Pod::Spec.new do |s|
   s.homepage = 'https://github.com/layerhq/LayerKit'
   s.authors  = { 'Blake Watters' => 'blake@layer.com', 'Klemen Verdnik' => 'klemen@layer.com' }
   s.source   = { :git => 'https://github.com/layerhq/LayerKit.git', :tag => "v#{s.version}" }  
-  s.requires_arc = true
-  s.ios.deployment_target = '7.0'
-  
-  s.source_files = 'Code/**/*.{h,m}'
-  s.public_header_files = 'Code/*.h'
-  s.private_header_files = 'Code/Private/**/*.h'
-  s.prefix_header_file = 'Code/Private/LayerKit-Prefix.pch'
-  
+  s.requires_arc = true    
   s.libraries = 'sqlite3', 'z'
-  s.ios.frameworks = 'CFNetwork', 'Security', 'MobileCoreServices', 'SystemConfiguration'
   
-  s.prefix_header_contents = <<-PCH
-#import <DDLog.h>
-#include "LYRLog.h"
-PCH
-
-  s.ios.deployment_target = '5.0'
-  s.osx.deployment_target = '10.7'
+  s.ios.frameworks = 'CFNetwork', 'Security', 'MobileCoreServices', 'SystemConfiguration'
+  s.ios.deployment_target = '7.0'  
+  
+  # Subspecs
+  s.default_subspec = 'Public'
+  s.subspec 'Public' do |ss|
+    ss.source_files = 'Code/**/*.{h,m}'
+    ss.public_header_files = 'Code/*.h'
+    ss.private_header_files = 'Code/Private/**/*.h'
+    ss.prefix_header_file = 'Code/Private/LayerKit-Prefix.pch'
+  end
+  
+  s.subspec 'Testing' do |ss|
+    ss.source_files = 'Code/Private/Testing'
+    ss.public_header_files = ['Code/Private/Testing/*.h', 'Code/Private/Support/**/*.h', 'Code/Private/Authentication/**/*.h']
+    ss.dependency 'LayerKit/Public'
+  end  
   
   # Dependencies
   s.dependency 'CocoaSPDY', '~> 1.0.1'

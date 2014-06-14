@@ -8,8 +8,12 @@
 
 #import "LSContactsViewController.h"
 #import "LSContactTableViewCell.h"
+#import "LSConversationViewController.h"
+#import "LYRSampleConversation.h"
 
 @interface LSContactsViewController ()
+
+@property (nonatomic, strong) NSMutableArray *participants;
 
 @end
 
@@ -27,8 +31,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self addCancelBarButton];
+    [self addDoneBarButton];
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:@"cell"];
-
 }
 
 - (void)didReceiveMemoryWarning
@@ -36,6 +41,17 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)addCancelBarButton
+{
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelTapped)];
+    [self.navigationItem setLeftBarButtonItem:cancel];
+}
+
+- (void)addDoneBarButton
+{
+    UIBarButtonItem *newConversation = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
+    [self.navigationItem setRightBarButtonItem:newConversation];
+}
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -64,7 +80,38 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSContactTableViewCell *cell = (LSContactTableViewCell *)[self tableView:tableView cellForRowAtIndexPath:indexPath];
-    [cell updateWithSelectionIndicator:YES];
+    [self updateParticpantListWithSelectionAtIndex:indexPath];
 }
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(LSContactTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell updateWithSelectionIndicator:FALSE];
+}
+
+- (void)updateParticpantListWithSelectionAtIndex:(NSIndexPath *)indexPath
+{
+    NSString *contact = [self.participants objectAtIndex:indexPath.row];
+    if([self.participants containsObject:contact]) {
+        [self.participants removeObject:contact];
+    } else {
+        [self.participants addObject:contact];
+    }
+}
+
+- (void)cancelTapped
+{
+    [self dismissViewControllerAnimated:TRUE completion:^{
+        //
+    }];
+}
+
+- (void) newConversationTapped
+{
+    LYRSampleConversation *conversation = [[[LYRSampleConversation sampleConversations] allObjects] objectAtIndex:0];
+    LSConversationViewController *controller = [[LSConversationViewController alloc] init];
+    controller.layerController = self.layerController;
+    [self.navigationController pushViewController:controller animated:TRUE];
+}
+
+
 @end

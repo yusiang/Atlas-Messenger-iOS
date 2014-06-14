@@ -13,8 +13,8 @@
 
 @interface LSConversationViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate>
 
-@property (nonatomic, strong) LYRSampleConversation *fakeConversation;
 @property (nonatomic, strong) LSLayerController *layerController;
 @property (nonatomic, strong) LYRConversation *conversation;
+@property (nonatomic, strong) NSArray *participantsForNewConversation;
 
 @end

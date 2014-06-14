@@ -22,7 +22,7 @@
 #import "LYRDDLogFormatter.h"
 
 // Default baseURL when the client is initialized via `init`
-static NSString *const LYRClientDefaultBaseURLString = @"http://10.66.0.35";
+static NSString *const LYRClientDefaultBaseURLString = @"https://localhost:7072";
 static NSUInteger const LYRClientDefaultPort = 5555;
 NSString *const LYRClientCryptographicKeyPairIdentifier = @"com.layer.LYRClient.keyPairIdentifier";
 

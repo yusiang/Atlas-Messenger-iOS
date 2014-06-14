@@ -18,4 +18,6 @@
 
 + (void) invalidLoginCredentials;
 
++ (void)existingUsernameAlert;
+
 @end

@@ -34,8 +34,9 @@
 		0A0C24971947ABD900401B74 /* kevin.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0C24961947ABD900401B74 /* kevin.png */; };
 		0A0C249A1947AD8100401B74 /* LSMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C24991947AD8100401B74 /* LSMessageCell.m */; };
 		0A0C249D1947B80E00401B74 /* LSConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C249C1947B80E00401B74 /* LSConversationViewController.m */; };
-		0A0C24A01947BB0500401B74 /* LSSentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C249F1947BB0500401B74 /* LSSentMessageCell.m */; };
-		0A0C24A31947BB1100401B74 /* LSRecievedMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C24A21947BB1100401B74 /* LSRecievedMessageCell.m */; };
+		0A0E0D17194B8CED00A8C91D /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A0E0D15194B8CED00A8C91D /* Model.xcdatamodeld */; };
+		0A0E0D1D194B8D7800A8C91D /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0E0D1C194B8D7800A8C91D /* User.m */; };
+		0A0E0D20194B8DBC00A8C91D /* User+LSSampleResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0E0D1F194B8DBC00A8C91D /* User+LSSampleResource.m */; };
 		0A3DF5DA194A1D6500D9060F /* LSConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */; };
 		0A3DF5DE194A4C4000D9060F /* LSNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3DF5DD194A4C4000D9060F /* LSNavigationController.m */; };
 		0A8EF546194A6B800058012E /* LSContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8EF545194A6B800058012E /* LSContactsViewController.m */; };
@@ -115,10 +116,11 @@
 		0A0C24991947AD8100401B74 /* LSMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMessageCell.m; sourceTree = "<group>"; };
 		0A0C249B1947B80E00401B74 /* LSConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationViewController.h; sourceTree = "<group>"; };
 		0A0C249C1947B80E00401B74 /* LSConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationViewController.m; sourceTree = "<group>"; };
-		0A0C249E1947BB0500401B74 /* LSSentMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSentMessageCell.h; sourceTree = "<group>"; };
-		0A0C249F1947BB0500401B74 /* LSSentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSentMessageCell.m; sourceTree = "<group>"; };
-		0A0C24A11947BB1100401B74 /* LSRecievedMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRecievedMessageCell.h; sourceTree = "<group>"; };
-		0A0C24A21947BB1100401B74 /* LSRecievedMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSRecievedMessageCell.m; sourceTree = "<group>"; };
+		0A0E0D16194B8CED00A8C91D /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		0A0E0D1B194B8D7800A8C91D /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		0A0E0D1C194B8D7800A8C91D /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		0A0E0D1E194B8DBC00A8C91D /* User+LSSampleResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "User+LSSampleResource.h"; sourceTree = "<group>"; };
+		0A0E0D1F194B8DBC00A8C91D /* User+LSSampleResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "User+LSSampleResource.m"; sourceTree = "<group>"; };
 		0A3DF5D8194A1D6500D9060F /* LSConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConnectionManager.h; sourceTree = "<group>"; };
 		0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConnectionManager.m; sourceTree = "<group>"; };
 		0A3DF5DC194A4C4000D9060F /* LSNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNavigationController.h; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 		0A0C242C19477D8F00401B74 /* LayerSample */ = {
 			isa = PBXGroup;
 			children = (
+				0A0E0D14194B8CCC00A8C91D /* Core Data */,
 				0A3DF5D7194A1D4B00D9060F /* Connection Manager */,
 				0AADB5D51947C9280083732B /* UI Alerts */,
 				0A0C24A41947C60C00401B74 /* SDK Controllers */,
@@ -362,10 +365,6 @@
 				0A0C248B1947970100401B74 /* LSConversationCell.m */,
 				0A0C24981947AD8100401B74 /* LSMessageCell.h */,
 				0A0C24991947AD8100401B74 /* LSMessageCell.m */,
-				0A0C249E1947BB0500401B74 /* LSSentMessageCell.h */,
-				0A0C249F1947BB0500401B74 /* LSSentMessageCell.m */,
-				0A0C24A11947BB1100401B74 /* LSRecievedMessageCell.h */,
-				0A0C24A21947BB1100401B74 /* LSRecievedMessageCell.m */,
 			);
 			name = CollectionViewCells;
 			sourceTree = "<group>";
@@ -406,6 +405,18 @@
 				0A0C246219477F0900401B74 /* UIViews */,
 			);
 			name = "SDK Controllers";
+			sourceTree = "<group>";
+		};
+		0A0E0D14194B8CCC00A8C91D /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				0A0E0D1E194B8DBC00A8C91D /* User+LSSampleResource.h */,
+				0A0E0D1F194B8DBC00A8C91D /* User+LSSampleResource.m */,
+				0A0E0D1B194B8D7800A8C91D /* User.h */,
+				0A0E0D1C194B8D7800A8C91D /* User.m */,
+				0A0E0D15194B8CED00A8C91D /* Model.xcdatamodeld */,
+			);
+			name = "Core Data";
 			sourceTree = "<group>";
 		};
 		0A3DF5D7194A1D4B00D9060F /* Connection Manager */ = {
@@ -621,6 +632,7 @@
 			files = (
 				0A0C246119477E6600401B74 /* LSHomeViewController.m in Sources */,
 				0A0C246519477F1600401B74 /* LSButton.m in Sources */,
+				0A0E0D1D194B8D7800A8C91D /* User.m in Sources */,
 				0A0C249D1947B80E00401B74 /* LSConversationViewController.m in Sources */,
 				0A3DF5DA194A1D6500D9060F /* LSConnectionManager.m in Sources */,
 				0A0C24821947944700401B74 /* LYRSampleMessagePart.m in Sources */,
@@ -630,11 +642,11 @@
 				0A0C243319477D8F00401B74 /* main.m in Sources */,
 				0A0C248F19479CA400401B74 /* LSConversationListViewController.m in Sources */,
 				0A0C2474194788CE00401B74 /* LSInputTableViewCell.m in Sources */,
-				0A0C24A01947BB0500401B74 /* LSSentMessageCell.m in Sources */,
 				0A0C243719477D8F00401B74 /* LSAppDelegate.m in Sources */,
 				0AADB5C01947C7DB0083732B /* LSParseController.m in Sources */,
 				0A0C24711947870700401B74 /* LSRegistrationTableViewController.m in Sources */,
 				0A0C24811947944700401B74 /* LYRSampleParticipant.m in Sources */,
+				0A0E0D20194B8DBC00A8C91D /* User+LSSampleResource.m in Sources */,
 				0A8EF549194A6C4D0058012E /* LSContactTableViewCell.m in Sources */,
 				0A0C24941947AB6500401B74 /* LSAvatarImageView.m in Sources */,
 				0A8EF546194A6B800058012E /* LSContactsViewController.m in Sources */,
@@ -644,7 +656,6 @@
 				0A0C248C1947970100401B74 /* LSConversationCell.m in Sources */,
 				0A0C249A1947AD8100401B74 /* LSMessageCell.m in Sources */,
 				0A0C247F1947944700401B74 /* LYRSampleConversation.m in Sources */,
-				0A0C24A31947BB1100401B74 /* LSRecievedMessageCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -654,6 +665,7 @@
 			files = (
 				0AF909B31948CFE4007E69ED /* LSLoginTests.m in Sources */,
 				0AF909B61948D09B007E69ED /* KIFUITestActor+LSAdditions.m in Sources */,
+				0A0E0D17194B8CED00A8C91D /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -886,6 +898,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		0A0E0D15194B8CED00A8C91D /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0A0E0D16194B8CED00A8C91D /* Model.xcdatamodel */,
+			);
+			currentVersion = 0A0E0D16194B8CED00A8C91D /* Model.xcdatamodel */;
+			name = Model.xcdatamodeld;
+			path = LayerSampleTests/Model.xcdatamodeld;
+			sourceTree = SOURCE_ROOT;
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 0A0C241B19477D8F00401B74 /* Project object */;
 }

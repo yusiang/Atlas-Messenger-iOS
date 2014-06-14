@@ -1,4 +1,4 @@
-pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
+pod 'LayerKit/Testing', git: 'git@github.com:layerhq/LayerKit.git', branch: "feature/extract-testing-subspec"
 pod 'layer-thrift', git: 'git@github.com:layerhq/lyr-thrift-common.git'
 pod 'SVProgressHUD', :head
 

@@ -38,22 +38,17 @@
     return self;
 }
 
-- (void) setConversation:(LYRSampleConversation *)conversation
+- (void) updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller
 {
-    if (_conversation != conversation) {
-        _conversation = conversation;
-    }
-    [self configureCell];
-}
-
-- (void)configureCell
-{
+    LYRMessage *message = [[controller.client messagesForConversation:conversation] firstObject];
+    LYRMessagePart *part = [message.parts firstObject];
     [self addAvatarImage];
-    [self addSenderName];
-    [self addLastMessageText];
-    [self addDateLabel];
+    [self addSenderNameWithID:message.sentByUserID];
+    [self addLastMessageText:[NSString stringWithUTF8String:[part.data bytes]]];
+    [self addDateLabel:message.sentAt];
     [self addSeperatorLine];
 }
+
 //NSLayoutConstraint
 - (void) addAvatarImage
 {
@@ -64,7 +59,7 @@
     [self addSubview:self.avatarImageView];
 }
 
-- (void)addSenderName
+- (void)addSenderNameWithID:(NSString *)userID
 {
     if(!self.senderName) {
         self.senderName = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 240, 20)];
@@ -72,15 +67,14 @@
     }
     [self.senderName setFont:[UIFont fontWithName:kLayerFont size:14]];
     [self.senderName setTextColor:[UIColor darkGrayColor]];
-    LYRSampleMessage *message = [self.conversation.messages firstObject];
-    LYRSampleParticipant *participant = [LYRSampleParticipant participantWithNumber:[message.sentByUserID intValue]];
-    self.senderName.text = participant.fullName;
+#warning ADD Name Here for Userr
+    self.senderName.text = @"Kevin Coleman";
     self.senderName.userInteractionEnabled = FALSE;
     self.senderName.accessibilityLabel = @"Sender Label";
     
 }
 
--(void)addLastMessageText
+-(void)addLastMessageText:(NSString *)text
 {
     if (!self.lastMessageText) {
         self.lastMessageText = [[UITextView alloc] initWithFrame:CGRectMake(70, 26, 240, 50)];
@@ -90,13 +84,11 @@
     [self.lastMessageText setTextColor:[UIColor grayColor]];
     self.lastMessageText.editable = FALSE;
     self.lastMessageText.scrollEnabled = FALSE;
-    LYRSampleMessage *message = [self.conversation.messages firstObject];
-    LYRSampleMessagePart *messagePart = [message.parts firstObject];
-    self.lastMessageText.text = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
+    self.lastMessageText.text = text;
     self.lastMessageText.userInteractionEnabled = FALSE;
 }
 
-- (void) addDateLabel
+- (void) addDateLabel:(NSDate *)date
 {
     if(!self.date) {
         self.date = [[UILabel alloc] initWithFrame:CGRectMake(270, 8, 40, 20)];
@@ -104,11 +96,10 @@
     }
     [self.date setFont:[UIFont fontWithName:kLayerFont size:12]];
     [self.date setTextColor:[UIColor darkGrayColor]];
-    LYRSampleMessage *message = [self.conversation.messages firstObject];
    
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat: @"HH:mm"];
-    self.date.text = [formatter stringFromDate:message.receivedAt];
+    self.date.text = [formatter stringFromDate:date];
 }
 
 - (void) addSeperatorLine

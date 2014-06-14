@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|  
   s.name         = 'layer-thrift'
-  s.version      = '0.52.0'
+  s.version      = '0.53.0'
   s.summary      =  'The Layer Thrift interfaces'
   s.homepage     =  'http://layer.com'
   s.author       =  { 'Blake Watters' => 'blake@layer.com' }

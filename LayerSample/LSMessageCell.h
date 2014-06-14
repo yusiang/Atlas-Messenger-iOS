@@ -9,25 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "LYRSampleMessage.h"
 #import "LSAvatarImageView.h"
+#import "LYRMessage.h"
+#import "LSLayerController.h"
 
 @interface LSMessageCell : UICollectionViewCell
 
-@property (nonatomic, strong) LYRSampleMessage *messageObject;
-@property (nonatomic, strong) LSAvatarImageView *avatarImageView;
-@property (nonatomic, strong) UIView *bubbleView;
-@property (nonatomic, strong) UITextView *messageText;
-@property (nonatomic, strong) UILabel *senderLabel;
-
-
-- (void)configureCell;
-
-- (void) addAvatarImage;
-
-- (void)addBubbleView;
-
-- (void)addMessageText;
-
-- (void)addSenderLabel;
-
+- (void) updateCellWithMessage:(LYRMessage *)message andLayerController:(LSLayerController *)controller;
 
 @end

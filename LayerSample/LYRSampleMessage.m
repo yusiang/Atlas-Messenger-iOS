@@ -12,13 +12,13 @@
 
 @implementation LYRSampleMessage
 
-+ (NSArray *) messagesForConversation:(LYRSampleConversation *)conversation
++ (NSMutableArray *) messagesForConversation:(LYRSampleConversation *)conversation
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
     for (int i = 0; i < 30; i++) {
         [messages addObject:[self messageWithConversation:conversation]];
     }
-    return [[NSArray alloc] initWithArray:messages];
+    return messages;
 }
 
 + (instancetype) messageWithConversation:(LYRSampleConversation *)conversation

@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LYRSampleConversation.h"
+#import "LYRConversation.h"
+#import "LSLayerController.h"
+#import "LYRMessage.h"
 
 @interface LSConversationCell : UICollectionViewCell
 
-@property (nonatomic, strong) LYRSampleConversation *conversation;
+-(void) updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller;
 
 @end

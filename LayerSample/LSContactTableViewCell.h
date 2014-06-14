@@ -14,4 +14,5 @@
 
 - (void) updateWithSelectionIndicator:(BOOL)selected;
 
+- (void) displaySelectionIndicator;
 @end

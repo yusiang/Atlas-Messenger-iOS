@@ -54,11 +54,17 @@
 #define COCOAPODS_VERSION_MINOR_FMDBMigrationManager 2
 #define COCOAPODS_VERSION_PATCH_FMDBMigrationManager 0
 
-// LayerKit
-#define COCOAPODS_POD_AVAILABLE_LayerKit
-#define COCOAPODS_VERSION_MAJOR_LayerKit 0
-#define COCOAPODS_VERSION_MINOR_LayerKit 50
-#define COCOAPODS_VERSION_PATCH_LayerKit 0
+// LayerKit/Public
+#define COCOAPODS_POD_AVAILABLE_LayerKit_Public
+#define COCOAPODS_VERSION_MAJOR_LayerKit_Public 0
+#define COCOAPODS_VERSION_MINOR_LayerKit_Public 50
+#define COCOAPODS_VERSION_PATCH_LayerKit_Public 0
+
+// LayerKit/Testing
+#define COCOAPODS_POD_AVAILABLE_LayerKit_Testing
+#define COCOAPODS_VERSION_MAJOR_LayerKit_Testing 0
+#define COCOAPODS_VERSION_MINOR_LayerKit_Testing 50
+#define COCOAPODS_VERSION_PATCH_LayerKit_Testing 0
 
 // SVProgressHUD
 #define COCOAPODS_POD_AVAILABLE_SVProgressHUD

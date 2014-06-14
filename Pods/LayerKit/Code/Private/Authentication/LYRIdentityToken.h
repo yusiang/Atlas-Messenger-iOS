@@ -68,10 +68,19 @@
 /// @name Accessing Components
 ///---------------------------
 
+/**
+ @abstract Returns the header component of the JWS.
+ */
 @property (nonatomic, readonly) NSDictionary *header;
+
+/**
+ @abstract Returns the payload component of the JWS.
+ */
 @property (nonatomic, readonly) NSDictionary *payload;
 
-// `nil` if not yet signed
+/**
+ @abstract Returns the signature of the identity token or `nil` if unsigned.
+ */
 @property (nonatomic, readonly) NSData *signature;
 
 ///-------------------------------------

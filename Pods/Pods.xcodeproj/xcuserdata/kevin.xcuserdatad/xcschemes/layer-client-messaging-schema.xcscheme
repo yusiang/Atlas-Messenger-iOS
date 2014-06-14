@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2AF2573F6A4842D89BFA84E8"
+               BlueprintIdentifier = "F06BB84179964BEC838D76D4"
                BuildableName = "layer-client-messaging-schema.bundle"
                BlueprintName = "layer-client-messaging-schema"
                ReferencedContainer = "container:Pods.xcodeproj">

@@ -3,8 +3,6 @@
 #endif
 
 #import "Pods-LayerSampleTests-environment.h"
-#import <DDLog.h>
-#include "LYRLog.h"
 //
 //  Prefix header
 //

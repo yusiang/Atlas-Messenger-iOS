@@ -9,6 +9,13 @@
 #import "LSLayerController.h"
 #import "LSParseController.h"
 #import "LSConnectionManager.h"
+#import "LYRTestingContext.h"
+#import "LYRTestProvider.h"
+#import "LYRTestUtilities.h"
+
+@interface LYRClient ()
+- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID;
+@end
 
 @implementation LSLayerController
 
@@ -26,11 +33,17 @@
 
 - (void)initializeLayerClientWithCompletion:(void (^)(NSError *))completion
 {
-    
-    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"57692e74-f27e-11e3-b94b-202b01000604"];
-    self.client = [LYRClient clientWithAppID:appID];
+    self.client = [[LYRClient alloc] initWithBaseURL:LYRTestSPDYBaseURL() appID:[LYRTestingContext sharedContext].appID];
     [self.client setDelegate:self];
     [self.client startWithCompletion:^(BOOL success, NSError *error) {
+        if(success) {
+            [self.client requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+                NSString *identityToken = [[LYRTestingContext sharedContext].provider JWSIdentityTokenForUserID:@"383727293" nonce:nonce];
+                [self.client authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                    if(!error) NSLog(@"Success");
+                }];
+            }];
+        }
         completion(error);
     }];
 }
@@ -79,9 +92,9 @@
 
 - (void)layerClient:(LYRClient *)client didReceiveAuthenticationChallengeWithNonce:(NSString *)nonce
 {
-    NSLog(@"Client Did Recieve Authentication Challenge");
-    [self reauthenticateLayerClientWithNonce:nonce completion:^(NSError *error) {
-        if(!error) NSLog(@"Client Reauthentication Succesful");
+    NSString *identityToken = [[LYRTestingContext sharedContext].provider JWSIdentityTokenForUserID:@"383727293" nonce:nonce];
+    [self.client authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+        if(!error) NSLog(@"Success");
     }];
 }
 
@@ -108,6 +121,15 @@
             completion(error);
         }];
     }];
+}
+
+-(void)sendMessage:(NSString *)messageText inConversation:(LYRConversation *)conversation
+{
+    LYRMessagePart *part = [LYRMessagePart messagePartWithText:messageText];
+    LYRMessage *message = [self.client messageWithConversation:conversation parts:@[part]];
+    
+    NSError *error;
+    [self.client sendMessage:message error:&error];
 }
 
 

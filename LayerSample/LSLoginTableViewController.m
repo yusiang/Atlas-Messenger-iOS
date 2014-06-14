@@ -122,7 +122,36 @@
 //            }
 //        }];
 //    }
-    [self.delegate loginSuccess];
+    if(![self verifyEmail:usernameCell.textField.text andPassword:passwordCell.textField.text]){
+        [LSAlertView invalidLoginCredentials];
+    } else {
+        [self.delegate loginSuccess];
+    }
+    
 }
 
+-(BOOL)verifyEmail:(NSString *)email andPassword:(NSString *)password
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *lasterUserID = [defaults objectForKey:@"lastUserID"];
+    for (int i = [lasterUserID doubleValue]; i > 0; i--) {
+        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", lasterUserID]];
+        if ([existingEmail isEqualToString:email]) {
+            NSString *existingPassword = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.password", lasterUserID]];
+            if ([existingPassword isEqualToString:password]) {
+                return TRUE;
+            }
+        }
+    }
+    return false;
+}
+
+
+
+
+
+
+
+
 @end
+

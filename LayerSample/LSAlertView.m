@@ -62,4 +62,15 @@
     alertView.accessibilityLabel = @"Alert";
     [alertView show];
 }
+
++(void)existingUsernameAlert
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Email Already Exists"
+                                                         message:@"Please choose another username and try again"
+                                                        delegate:nil
+                                               cancelButtonTitle:@"OK"
+                                               otherButtonTitles:nil];
+    alertView.accessibilityLabel = @"Alert";
+    [alertView show];
+}
 @end

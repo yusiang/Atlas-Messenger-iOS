@@ -17,4 +17,6 @@
 
 - (void)authenticateLayerClientWithCompletion:(void (^)(NSError * error))completion;
 
+-(void)sendMessage:(NSString *)messageText inConversation:(LYRConversation *)conversation;
+
 @end

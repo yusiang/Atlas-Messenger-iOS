@@ -59,7 +59,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 4;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -80,15 +80,19 @@
 {
     switch (path.row) {
         case 0:
+            [cell setText:@"Full Name"];
+            cell.textField.accessibilityLabel = @"Full Name";
+            break;
+        case 1:
             [cell setText:@"Username"];
             cell.textField.accessibilityLabel = @"Username";
             break;
-        case 1:
+        case 2:
             [cell setText:@"Password"];
             cell.textField.secureTextEntry = TRUE;
             cell.textField.accessibilityLabel = @"Password";
             break;
-        case 2:
+        case 3:
             [cell setText:@"Confirm"];
             cell.textField.secureTextEntry = TRUE;
             cell.textField.accessibilityLabel = @"Confirm";
@@ -100,7 +104,7 @@
 
 - (void)addLoginButton
 {
-    CGRect rect = CGRectMake(0, 0, 280, 60);
+    CGRect rect = CGRectMake(0, 0, 320, 60);
     LSButton *button = [[LSButton alloc] initWithFrame:rect];
     [button setText:@"Register"];
     [button setFont:[UIFont fontWithName:kLayerFont size:20]];
@@ -108,18 +112,19 @@
     [button setBackgroundColor:kLayerColor];
     [button setAccessibilityLabel:@"Register"];
     button.center = self.view.center;
-    button.frame = CGRectMake(button.frame.origin.x, button.frame.origin.y - 40, button.frame.size.width, button.frame.size.height);
+    button.frame = CGRectMake(button.frame.origin.x, button.frame.origin.y, button.frame.size.width, button.frame.size.height);
     [button addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
 }
 
 - (void)registerTapped
 {
-    LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-    LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
+    LSInputTableViewCell *fullNameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+    LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
+    LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]];
     
-    if ([self verifyEmail:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
+    if ([self verifyFullName:fullNameCell.textField.text email:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
         LSParseController *parseController = [[LSParseController alloc] init];
         [parseController initializeParseSDK];
         [parseController createParseUserWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(NSError *error) {
@@ -130,7 +135,7 @@
     }
 }
 
-- (BOOL)verifyEmail:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
+- (BOOL)verifyFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
 {
     if ([email isEqualToString:@""]) {
         [LSAlertView missingEmailAlert];
@@ -146,7 +151,53 @@
         [LSAlertView matchingPasswordAlert];
         return FALSE;
     }
+    if(![self storeFullName:fullName email:email password:password andConfirmation:confirmation]) {
+        [LSAlertView existingUsernameAlert];
+        return FALSE;
+    }
     return TRUE;
+}
+
+- (BOOL)storeFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *lastUserID = [defaults objectForKey:@"lastUserNumber"];
+    
+    if ([self checkForExistingEmail:email withUserID:lastUserID]) {
+        return FALSE;
+    }
+    
+    NSString *userID;
+   
+    if (lastUserID) {
+        double number = [lastUserID doubleValue];
+        userID = [NSString stringWithFormat:@"%f", (number + 1)];
+    } else {
+        userID = [NSString stringWithFormat:@"%d", 1];
+    }
+    
+    NSDictionary *userInfo = @{@"fullName" : fullName,
+                               @"email" : email,
+                               @"password" : password,
+                               @"confirmation" : confirmation,
+                               @"userID" : userID};
+    
+    [defaults setObject:userInfo forKey:userID];
+    [defaults setObject:userID forKey:@"lastUserID"];
+    [defaults synchronize];
+    return TRUE;
+}
+
+-(BOOL)checkForExistingEmail:(NSString *)email withUserID:(NSString *)userID
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    for (int i = 0; i < [userID doubleValue]; i++) {
+        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", userID]];
+        if ([existingEmail isEqualToString:email]) {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 @end

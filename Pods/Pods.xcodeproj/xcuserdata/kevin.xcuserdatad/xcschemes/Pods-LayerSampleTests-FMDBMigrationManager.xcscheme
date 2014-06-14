@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "72E4E86FD832479286A71999"
+               BlueprintIdentifier = "7F3CB9A8B4FF4B9CAF73D020"
                BuildableName = "libPods-LayerSampleTests-FMDBMigrationManager.a"
                BlueprintName = "Pods-LayerSampleTests-FMDBMigrationManager"
                ReferencedContainer = "container:Pods.xcodeproj">

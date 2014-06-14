@@ -13,7 +13,7 @@
 @property (nonatomic, strong) NSUUID *identifier;
 @property (nonatomic, strong) NSSet *participants;
 @property (nonatomic, strong) NSDate *createdAt;
-@property (nonatomic, strong) NSArray *messages;
+@property (nonatomic, strong) NSMutableArray *messages;
 
 + (NSSet *) sampleConversations;
 

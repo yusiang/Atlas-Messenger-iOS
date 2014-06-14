@@ -8,6 +8,7 @@
 
 #import "LSNavigationController.h"
 #import "LSContactsViewController.h"
+
 @interface LSNavigationController ()
 
 @end
@@ -52,10 +53,10 @@
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     
-    UITabBarController *controller = [[UITabBarController alloc] init];
-    [controller setViewControllers:@[contactController, conversationController]];
-    
-    [self presentViewController:controller animated:TRUE completion:^{
+//    UITabBarController *controller = [[UITabBarController alloc] init];
+//    [controller setViewControllers:@[contactController, conversationController]];
+//    
+    [self presentViewController:conversationController animated:TRUE completion:^{
         //
     }];
 }

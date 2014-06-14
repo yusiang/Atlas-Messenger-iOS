@@ -10,6 +10,11 @@
 
 @interface LSMessageCell ()
 
+@property (nonatomic, strong) UIView *bubbleView;
+@property (nonatomic, strong) UITextView *messageText;
+@property (nonatomic, strong) UILabel *senderLabel;
+@property (nonatomic, strong) LSAvatarImageView *avatarImageView;
+
 @end
 
 @implementation LSMessageCell
@@ -23,19 +28,13 @@
     return self;
 }
 
-- (void) setMessageObject:(LYRSampleMessage *)messageObject
+- (void) updateCellWithMessage:(LYRMessage *)message andLayerController:(LSLayerController *)controller
 {
-    if(_messageObject != messageObject) {
-        _messageObject = messageObject;
-    }
-}
-
-- (void)configureCell
-{
+    LYRMessagePart *part = [message.parts firstObject];
     [self addAvatarImage];
     [self addBubbleView];
-    [self addMessageText];
-    [self addSenderLabel];
+    [self addMessageText:[NSString stringWithUTF8String:[part.data bytes]]];
+    [self addSenderLabelForID:message.sentByUserID];
 }
 
 - (void) addAvatarImage
@@ -55,7 +54,7 @@
     [self addSubview:self.bubbleView];
 }
 
-- (void)addMessageText
+- (void)addMessageText:(NSString *)text
 {
     if (!self.messageText) {
         self.messageText = [[UITextView alloc] init];
@@ -63,7 +62,7 @@
     [self addSubview:self.messageText];
 }
 
-- (void)addSenderLabel
+- (void)addSenderLabelForID:(NSString *)senderID
 {
     if (!self.senderLabel) {
         self.senderLabel = [[UILabel alloc] init];
