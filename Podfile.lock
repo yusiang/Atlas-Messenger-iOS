@@ -45,14 +45,13 @@ DEPENDENCIES:
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
   - layer-thrift (from `git@github.com:layerhq/lyr-thrift-common.git`)
-  - LayerKit/Testing (from `git@github.com:layerhq/LayerKit.git`, branch `feature/extract-testing-subspec`)
+  - LayerKit/Testing (from `git@github.com:layerhq/LayerKit.git`)
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
   layer-thrift:
     :git: git@github.com:layerhq/lyr-thrift-common.git
   LayerKit:
-    :branch: feature/extract-testing-subspec
     :git: git@github.com:layerhq/LayerKit.git
 
 SPEC CHECKSUMS:

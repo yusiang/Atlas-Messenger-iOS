@@ -10,6 +10,7 @@
 #import "LSContactTableViewCell.h"
 #import "LSConversationViewController.h"
 #import "LYRSampleConversation.h"
+#import "LSUserManager.h"
 
 @interface LSContactsViewController ()
 
@@ -23,7 +24,7 @@
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        // Custom initialization
+        self.title = @"Contacts";
     }
     return self;
 }
@@ -31,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self loadContacts];
     [self addCancelBarButton];
     [self addDoneBarButton];
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:@"cell"];
@@ -41,15 +43,23 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void) loadContacts
+{
+    self.contacts = [LSUserManager fetchContacts];
+    self.participants = [[NSMutableArray alloc] init];
+}
+
 - (void)addCancelBarButton
 {
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelTapped)];
+    cancel.accessibilityLabel = @"cancel";
     [self.navigationItem setLeftBarButtonItem:cancel];
 }
 
 - (void)addDoneBarButton
 {
-    UIBarButtonItem *newConversation = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
+    UIBarButtonItem *newConversation = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
+    newConversation.accessibilityLabel = @"start";
     [self.navigationItem setRightBarButtonItem:newConversation];
 }
 #pragma mark - Table view data source
@@ -61,7 +71,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return self.contacts.count;
 }
 
 - (double)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -73,7 +83,11 @@
 {
     LSContactTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"];
     [cell updateWithSelectionIndicator:FALSE];
-    cell.textLabel.text = @"Name";
+    
+    NSDictionary *userInfo = [self.contacts objectAtIndex:indexPath.row];
+    cell.textLabel.text = [userInfo objectForKey:@"fullName"];
+    [cell setAccessibilityLabel:[NSString stringWithFormat:@"contactCell+%@", [userInfo objectForKey:@"userID"]]];
+    NSLog(@"Contact Cell String %@",[NSString stringWithFormat:@"contactCell+%@", [userInfo objectForKey:@"userID"]]);
     return cell;
 }
 
@@ -90,11 +104,12 @@
 
 - (void)updateParticpantListWithSelectionAtIndex:(NSIndexPath *)indexPath
 {
-    NSString *contact = [self.participants objectAtIndex:indexPath.row];
-    if([self.participants containsObject:contact]) {
-        [self.participants removeObject:contact];
+    NSDictionary *userInfo = [self.contacts objectAtIndex:indexPath.row];
+    
+    if([self.participants containsObject:userInfo]) {
+        [self.participants removeObject:userInfo];
     } else {
-        [self.participants addObject:contact];
+        [self.participants addObject:userInfo];
     }
 }
 
@@ -107,10 +122,14 @@
 
 - (void) newConversationTapped
 {
-    LYRSampleConversation *conversation = [[[LYRSampleConversation sampleConversations] allObjects] objectAtIndex:0];
     LSConversationViewController *controller = [[LSConversationViewController alloc] init];
+    controller.conversation = [self.layerController conversationForParticipants:self.participants];
     controller.layerController = self.layerController;
     [self.navigationController pushViewController:controller animated:TRUE];
+    NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
+    
+    [navigationArray removeObjectAtIndex: 1];  // You can pass your index here
+    self.navigationController.viewControllers = navigationArray;
 }
 
 

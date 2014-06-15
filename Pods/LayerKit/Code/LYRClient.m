@@ -61,6 +61,15 @@ NSString *LYRApplicationDataDirectory(void)
 #endif
 }
 
+static NSString *LYRPathForDatabaseWithAppID(NSUUID *appID)
+{
+    if ([UIApplication sharedApplication] == nil || [[[NSProcessInfo processInfo] environment] valueForKey:@"XCInjectBundle"]) {
+        return nil;
+    } else {
+        return [LYRApplicationDataDirectory() stringByAppendingFormat:@"/%@-LayerKit.sqlite", [appID UUIDString]];
+    }
+}
+
 @interface LYRClient () <LYRSynchronizationManagerDelegate>
 @end
 
@@ -95,7 +104,7 @@ NSString *LYRApplicationDataDirectory(void)
         LYRLogVerbose(@"Initalizing with baseURL: %@", baseURL);
         _appID = appID;
         _baseURL = baseURL;
-        _persistenceManager = [LYRSynchronizationDataSource dataSourceWithUpToDateDatabaseAtPath:nil];
+        _persistenceManager = [LYRSynchronizationDataSource dataSourceWithUpToDateDatabaseAtPath:LYRPathForDatabaseWithAppID(appID)];
         _synchronizationManager = [[LYRSynchronizationManager alloc] initWithBaseURL:self.baseURL sessionConfiguration:self.transportManager.sessionConfiguration datasource:_persistenceManager delegate:self];
         
         // Initialize authorization baseURL

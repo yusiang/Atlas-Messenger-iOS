@@ -20,19 +20,21 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self addTextField];
+        [self addCameraButton];
         [self addSendButton];
         self.textField.delegate = self;
+        self.accessibilityLabel = @"composeView";
     }
     return self;
 }
 
 - (void)addTextField
 {
-    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(6, 6, 250, 36)];
+    self.textField = [[UITextField alloc] initWithFrame:CGRectMake(50, 6, 200, 36)];
     self.textField.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.textField.layer.borderWidth = 1;
     self.textField.layer.cornerRadius = 4.0f;
-    [self.textField setAccessibilityLabel:@"Compose TextView"];
+    [self.textField setAccessibilityLabel:@"composeTextView"];
     
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 6, 36)];
     self.textField.leftView = paddingView;
@@ -41,15 +43,32 @@
     [self addSubview:self.textField];
 }
 
+- (void)addCameraButton
+{
+    LSButton *button = [[LSButton alloc] initWithFrame:CGRectMake(6, 6, 38, 36)];
+    [button setFont:[UIFont fontWithName:kLayerFont size:10]];
+    button.layer.cornerRadius = 4;
+    [button addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
+    [button setBackgroundColor:[UIColor redColor]];
+    [button setAccessibilityLabel:@"sendButton"];
+    [self addSubview:button];
+}
+
 - (void)addSendButton
 {
     LSButton *button = [[LSButton alloc] initWithFrame:CGRectMake(self.frame.size.width -58, 6, 52, 36)];
     [button setFont:[UIFont fontWithName:kLayerFont size:10]];
+    button.layer.cornerRadius = 4;
     [button addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [button setText:@"Send"];
     [button setBackgroundColor:kLayerColor];
-    [button setAccessibilityLabel:@"Button"];
+    [button setAccessibilityLabel:@"sendButton"];
     [self addSubview:button];
+}
+
+- (void)cameraTapped
+{
+    [self.delegate cameraTapped];
 }
 
 - (void)sendMessage

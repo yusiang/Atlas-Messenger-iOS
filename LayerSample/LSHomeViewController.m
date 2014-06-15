@@ -7,6 +7,7 @@
 //
 
 #import "LSHomeViewController.h"
+#import "LSNavigationController.h"
 #import "LSButton.h"
 
 @interface LSHomeViewController ()
@@ -23,6 +24,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [self.view setBackgroundColor:[UIColor whiteColor]];
+        
     }
     return self;
 }
@@ -113,4 +115,5 @@
 {
     [self.delegate presentConversationViewController];
 }
+
 @end

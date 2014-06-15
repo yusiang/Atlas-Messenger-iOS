@@ -34,6 +34,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setBackgroundColor:[UIColor whiteColor]];
+        self.accessibilityLabel = @"conversationCell";
     }
     return self;
 }

@@ -21,6 +21,15 @@
 
 #define kMessageCellIdentifier         @"messageCell"
 
+- (id) init
+{
+    self = [super init];
+    if(self) {
+        self.view.backgroundColor = [UIColor lightGrayColor];
+        self.title = @"Chat";
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -28,10 +37,21 @@
     self.title = @"Chat";
     if (!self.conversation) [self createConversation];
     [self fetchLayerConversations];
-    [self setAccessibilityLabel:@"Conversation"];
+    [self setAccessibilityLabel:@"chat"];
     [self addCollectionView];
     [self addComposeView];
     [self registerForKeyboardNotifications];
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+}
+- (void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.composeView.textField becomeFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning
@@ -175,4 +195,48 @@
     [self.layerController sendMessage:text inConversation:self.conversation];
 }
 
+- (void)cameraTapped
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:nil
+                                  delegate:self
+                                  cancelButtonTitle:@"Cancel"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:@"Choose Existing", @"Take Photo", nil];
+    [actionSheet showInView:self.view];
+}
+
+#pragma mark
+#pragma mark UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:
+            [self displayImagePickerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+            break;
+        case 1:
+            [self displayImagePickerWithSourceType:UIImagePickerControllerSourceTypeCamera];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)displayImagePickerWithSourceType:(UIImagePickerControllerSourceType)sourceType;
+{
+    {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        
+        // Since I'm not actually taking a picture, is a delegate function necessary?
+        picker.delegate = self;
+        
+        picker.sourceType = sourceType;
+        [self.navigationController presentViewController:picker animated:TRUE completion:^{
+            //
+        }];
+        
+        NSLog(@"Camera is available");
+    }
+}
 @end

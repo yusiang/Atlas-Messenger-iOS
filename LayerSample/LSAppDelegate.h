@@ -12,7 +12,7 @@
 #import "LSHomeViewController.h"
 #import "LSNavigationController.h"
 
-@interface LSAppDelegate : UIResponder <UIApplicationDelegate, LSHomeViewControllerDelegate>
+@interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) LSLayerController *layerController;

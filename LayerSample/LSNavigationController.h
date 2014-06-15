@@ -10,10 +10,11 @@
 #import "LSHomeViewController.h"
 #import "LSConversationListViewController.h"
 
-@interface LSNavigationController : UINavigationController <LSHomeViewControllerDelegate>
+@interface LSNavigationController : UINavigationController <LSHomeViewControllerDelegate, LSConversationListViewControllerDelegate>
 
 @property (nonatomic, strong) LSLayerController *layerController;
 
 - (void) setViewController:(id)viewController;
 
+- (void) logout;
 @end

@@ -18,8 +18,6 @@
     
     LSNavigationController *navController = [[LSNavigationController alloc] initWithRootViewController:controller];
     
-    controller.delegate = navController;
-    
     navController.layerController = self.layerController;
     
     [self.window setRootViewController:navController];
@@ -68,9 +66,6 @@
     if (_layerController != layerController) {
         _layerController = layerController;
     }
-    [_layerController initializeLayerClientWithCompletion:^(NSError *error) {
-        if (!error) NSLog(@"Layer Client Started");
-    }];
 }
 
 - (void)setParseController:(LSParseController *)parseController
@@ -80,10 +75,4 @@
     }
 }
 
-#pragma mark
-#pragma mark HomeViewControllerDelegate Methods
--(void)presentConversationViewController
-{
-
-}
 @end

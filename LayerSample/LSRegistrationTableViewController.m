@@ -13,6 +13,7 @@
 #import "LSParseController.h"
 #import "LSConversationListViewController.h"
 #import "LSAppDelegate.h"
+#import "LSUserManager.h"
 
 @interface LSRegistrationTableViewController ()
 
@@ -81,7 +82,7 @@
     switch (path.row) {
         case 0:
             [cell setText:@"Full Name"];
-            cell.textField.accessibilityLabel = @"Full Name";
+            cell.textField.accessibilityLabel = @"Fullname";
             break;
         case 1:
             [cell setText:@"Username"];
@@ -110,7 +111,7 @@
     [button setFont:[UIFont fontWithName:kLayerFont size:20]];
     [button.layer setCornerRadius:4.0f];
     [button setBackgroundColor:kLayerColor];
-    [button setAccessibilityLabel:@"Register"];
+    button.accessibilityLabel = @"RegisterButton";
     button.center = self.view.center;
     button.frame = CGRectMake(button.frame.origin.x, button.frame.origin.y, button.frame.size.width, button.frame.size.height);
     [button addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -124,80 +125,9 @@
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
     LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]];
     
-    if ([self verifyFullName:fullNameCell.textField.text email:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
-        LSParseController *parseController = [[LSParseController alloc] init];
-        [parseController initializeParseSDK];
-        [parseController createParseUserWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(NSError *error) {
-            if(!error) {
-                [self.delegate registrationSuccessful];
-            }
-        }];
+    if([LSUserManager registerWithFullName:fullNameCell.textField.text email:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
+        [self.delegate registrationSuccessful];
     }
-}
-
-- (BOOL)verifyFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
-{
-    if ([email isEqualToString:@""]) {
-        [LSAlertView missingEmailAlert];
-        return FALSE;
-    }
-    
-    if ([password isEqualToString:@""]|| [confirmation isEqualToString:@""]) {
-        [LSAlertView matchingPasswordAlert];
-        return FALSE;
-    }
-        
-    if(![password isEqualToString:confirmation]) {
-        [LSAlertView matchingPasswordAlert];
-        return FALSE;
-    }
-    if(![self storeFullName:fullName email:email password:password andConfirmation:confirmation]) {
-        [LSAlertView existingUsernameAlert];
-        return FALSE;
-    }
-    return TRUE;
-}
-
-- (BOOL)storeFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *lastUserID = [defaults objectForKey:@"lastUserNumber"];
-    
-    if ([self checkForExistingEmail:email withUserID:lastUserID]) {
-        return FALSE;
-    }
-    
-    NSString *userID;
-   
-    if (lastUserID) {
-        double number = [lastUserID doubleValue];
-        userID = [NSString stringWithFormat:@"%f", (number + 1)];
-    } else {
-        userID = [NSString stringWithFormat:@"%d", 1];
-    }
-    
-    NSDictionary *userInfo = @{@"fullName" : fullName,
-                               @"email" : email,
-                               @"password" : password,
-                               @"confirmation" : confirmation,
-                               @"userID" : userID};
-    
-    [defaults setObject:userInfo forKey:userID];
-    [defaults setObject:userID forKey:@"lastUserID"];
-    [defaults synchronize];
-    return TRUE;
-}
-
--(BOOL)checkForExistingEmail:(NSString *)email withUserID:(NSString *)userID
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    for (int i = 0; i < [userID doubleValue]; i++) {
-        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", userID]];
-        if ([existingEmail isEqualToString:email]) {
-            return TRUE;
-        }
-    }
-    return FALSE;
 }
 
 @end

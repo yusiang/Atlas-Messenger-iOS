@@ -8,6 +8,8 @@
 
 #import "LSNavigationController.h"
 #import "LSContactsViewController.h"
+#import "LSHomeViewController.h"
+#import "LSUserManager.h"
 
 @interface LSNavigationController ()
 
@@ -15,11 +17,11 @@
 
 @implementation LSNavigationController
 
-- (id)init
+- (id)initWithRootViewController:(LSHomeViewController *)rootViewController
 {
-    self = [super init];
+    self = [super initWithRootViewController:rootViewController];
     if (self) {
-        
+        rootViewController.delegate = self;
     }
     return self;
 }
@@ -43,21 +45,28 @@
 
 - (void) presentConversationViewController
 {
-    LSContactsViewController *contactViewController = [[LSContactsViewController alloc] init];
-    contactViewController.layerController = self.layerController;
-    
-    UINavigationController *contactController = [[UINavigationController alloc] initWithRootViewController:contactViewController];
-    
+    [self popToRootViewControllerAnimated:TRUE];
     LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
-    conversationListViewController.layerController = self.layerController;
-    
+    conversationListViewController.delegate = self;
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     
-//    UITabBarController *controller = [[UITabBarController alloc] init];
-//    [controller setViewControllers:@[contactController, conversationController]];
-//    
     [self presentViewController:conversationController animated:TRUE completion:^{
-        //
+        
+    }];
+    
+    [self.layerController initializeLayerClientWithUserIdentifier:[LSUserManager loggedInUserID] completion:^(NSError * error) {
+        if (!error) {
+            NSLog(@"Layer Client Started");
+            conversationListViewController.layerController = self.layerController;
+        }
+    }];
+}
+
+- (void) logout
+{
+    [self.layerController.client stop];
+    [self.presentedViewController dismissViewControllerAnimated:TRUE completion:^{
+        [self popToRootViewControllerAnimated:TRUE];
     }];
 }
 

@@ -13,10 +13,12 @@
 
 @property (nonatomic, strong) LYRClient *client;
 
-- (void)initializeLayerClientWithCompletion:(void (^)(NSError *error))completion;
+- (void)initializeLayerClientWithUserIdentifier:(NSString *)identifier completion:(void (^)(NSError *error))completion;
 
-- (void)authenticateLayerClientWithCompletion:(void (^)(NSError * error))completion;
+-(void)authenticateLayerClientWithCompletion:(void (^)(NSError * error))completion;
 
 -(void)sendMessage:(NSString *)messageText inConversation:(LYRConversation *)conversation;
+
+-(LYRConversation *)conversationForParticipants:(NSArray *)particiapnts;
 
 @end

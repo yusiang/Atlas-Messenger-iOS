@@ -11,7 +11,7 @@
 #import "LSLayerController.h"
 #import "LSComposeView.h"
 
-@interface LSConversationViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate>
+@interface LSConversationViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) LSLayerController *layerController;
 @property (nonatomic, strong) LYRConversation *conversation;

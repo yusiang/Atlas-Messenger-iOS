@@ -31,14 +31,14 @@
 #pragma mark
 #pragma mark LSLayerController Public Methods
 
-- (void)initializeLayerClientWithCompletion:(void (^)(NSError *))completion
+- (void)initializeLayerClientWithUserIdentifier:(NSString *)identifier completion:(void (^)(NSError *error))completion
 {
     self.client = [[LYRClient alloc] initWithBaseURL:LYRTestSPDYBaseURL() appID:[LYRTestingContext sharedContext].appID];
     [self.client setDelegate:self];
     [self.client startWithCompletion:^(BOOL success, NSError *error) {
         if(success) {
             [self.client requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-                NSString *identityToken = [[LYRTestingContext sharedContext].provider JWSIdentityTokenForUserID:@"383727293" nonce:nonce];
+                NSString *identityToken = [[LYRTestingContext sharedContext].provider JWSIdentityTokenForUserID:identifier nonce:nonce];
                 [self.client authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
                     if(!error) NSLog(@"Success");
                 }];
@@ -111,7 +111,7 @@
 #pragma mark
 #pragma mark Private Implementation Methods
 
-- (void)reauthenticateLayerClientWithNonce:(NSString *)nonce completion:(void(^)(NSError *error))completion
+-(void)reauthenticateLayerClientWithNonce:(NSString *)nonce completion:(void(^)(NSError *error))completion
 {
     [self requestIdentityTokenWithNonce:nonce completion:^(NSString *identityToken, NSError *error) {
         [self authenticateLayerClientWithIdenityToken:identityToken completion:^(NSError *error) {
@@ -130,7 +130,16 @@
     
     NSError *error;
     [self.client sendMessage:message error:&error];
+    NSLog(@"The error is %@", error);
 }
 
+-(LYRConversation *)conversationForParticipants:(NSArray *)particiapnts
+{
+    NSMutableArray *conversationParticipants = [[NSMutableArray alloc] init];
+    for (NSDictionary *userInfo in particiapnts) {
+        [conversationParticipants addObject:[userInfo objectForKey:@"userID"]];
+    }
+    return [self.client conversationWithIdentifier:nil participants:conversationParticipants];
+}
 
 @end

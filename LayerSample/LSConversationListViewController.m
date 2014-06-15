@@ -23,10 +23,11 @@
 
 #define kConversationCellIdentifier       @"conversationCell"
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id) init
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+    self = [super init];
+    if(self) {
+        self.view.backgroundColor = [UIColor lightGrayColor];
         self.title = @"Conversation";
     }
     return self;
@@ -35,10 +36,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self fetchLayerConversations];
     [self addRightBarButton];
-    [self setAccessibilityLabel:@"Conversation List"];
+    [self addLeftBarButton];
+    [self setAccessibilityLabel:@"conversationList"];
     [self addCollectionView];
+    
+}
+
+- (void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -47,15 +55,32 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void) setLayerController:(LSLayerController *)layerController
+{
+    if(!_layerController) {
+        _layerController = layerController;
+    }
+    [self fetchLayerConversations];
+    [self.collectionView reloadData];
+}
+
 - (void)fetchLayerConversations
 {
     NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
     self.conversations = conversations;
 }
 
+- (void)addLeftBarButton
+{
+    UIBarButtonItem *logout = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutTapped)];
+    logout.accessibilityLabel = @"logout";
+    [self.navigationItem setLeftBarButtonItem:logout];
+}
+
 - (void)addRightBarButton
 {
     UIBarButtonItem *newConversation = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
+    newConversation.accessibilityLabel = @"new";
     [self.navigationItem setRightBarButtonItem:newConversation];
 }
 
@@ -95,10 +120,18 @@
 {
     LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
     [cell updateCellWithConversation:conversation andLayerController:self.layerController];
-    [cell setAccessibilityLabel:@"Conversation Cell"];
+    [cell setAccessibilityLabel:[self accessibilityLabelForParticipants:[conversation.participants allObjects]]];
     return cell;
 }
 
+- (NSString *)accessibilityLabelForParticipants:(NSArray *)participants
+{
+    NSString *label = @"conversationCell";
+    for (NSString *userID in participants) {
+        [label stringByAppendingString:[NSString stringWithFormat:@"+%@", userID]];
+    }
+    return label;
+}
 
 #pragma mark
 #pragma mark Collection View Delegate
@@ -133,15 +166,17 @@
     return 0;
 }
 
+- (void) logoutTapped
+{
+    [self.delegate logout];
+}
+
 - (void) newConversationTapped
 {
     LSContactsViewController *contactsViewController = [[LSContactsViewController alloc] init];
     contactsViewController.layerController = self.layerController;
     
-    UINavigationController  *controller = [[UINavigationController alloc] initWithRootViewController:contactsViewController];
-    [self.navigationController presentViewController:controller animated:TRUE completion:^{
-        //
-    }];
+    [self.navigationController pushViewController:contactsViewController animated:TRUE];
 }
 
 @end

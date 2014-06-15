@@ -9,8 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "LSConversationViewController.h"
 
+@class LSConversationListViewController;
+
+@protocol LSConversationListViewControllerDelegate <NSObject>
+
+- (void)logout;
+
+@end
+
 @interface LSConversationListViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, strong) LSLayerController *layerController;
+@property (nonatomic, weak) id<LSConversationListViewControllerDelegate>delegate;
 
 @end

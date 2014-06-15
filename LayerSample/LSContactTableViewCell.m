@@ -25,7 +25,6 @@
     return self;
 }
 
-
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:FALSE animated:FALSE];
@@ -50,6 +49,7 @@
 {
     if (!self.radioButton) {
         self.radioButton = [[UIView alloc] initWithFrame:CGRectMake(280, 16, 28, 28)];
+        self.radioButton.accessibilityLabel = @"selectionIndicator";
         [self addSubview:self.radioButton];
     }
     self.radioButton.layer.cornerRadius = 14.0f;
@@ -58,7 +58,8 @@
     if (selected) {
         self.radioButton.alpha = 1.0;
     } else {
-        self.radioButton.alpha = 0.0;
+        [self.radioButton removeFromSuperview];
+        self.radioButton = nil;
     }
 }
 

@@ -13,6 +13,7 @@
 #import "LSAlertView.h"
 #import "LSParseController.h"
 #import "LSAppDelegate.h"
+#import "LSUserManager.h"
 
 @interface LSLoginTableViewController ()
 
@@ -97,7 +98,7 @@
     [button setFont:[UIFont fontWithName:kLayerFont size:20]];
     [button.layer setCornerRadius:4.0f];
     [button setBackgroundColor:kLayerColor];
-    [button setAccessibilityLabel:@"Login"];
+    [button setAccessibilityLabel:@"LoginButton"];
     button.center = self.view.center;
     button.frame = CGRectMake(button.frame.origin.x, button.frame.origin.y - 90, button.frame.size.width, button.frame.size.height);
     [button addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -108,43 +109,13 @@
 {
     LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-    
-//    if (!passwordCell.textField.text) {
-//        [LSAlertView missingPasswordAlert];
-//    } else {
-//        LSParseController *parseController = [[LSParseController alloc] init];
-//        [parseController initializeParseSDK];
-//        [parseController logParseUserInWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(NSError *error) {
-//            if(!error) {
-//                [self.delegate loginSuccess];
-//            }else {
-//                [LSAlertView invalidLoginCredentials];
-//            }
-//        }];
-//    }
-    if(![self verifyEmail:usernameCell.textField.text andPassword:passwordCell.textField.text]){
-        [LSAlertView invalidLoginCredentials];
-    } else {
+
+    if([LSUserManager loginWithEmail:usernameCell.textField.text andPassword:passwordCell.textField.text]) {
         [self.delegate loginSuccess];
     }
-    
 }
 
--(BOOL)verifyEmail:(NSString *)email andPassword:(NSString *)password
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *lasterUserID = [defaults objectForKey:@"lastUserID"];
-    for (int i = [lasterUserID doubleValue]; i > 0; i--) {
-        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", lasterUserID]];
-        if ([existingEmail isEqualToString:email]) {
-            NSString *existingPassword = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.password", lasterUserID]];
-            if ([existingPassword isEqualToString:password]) {
-                return TRUE;
-            }
-        }
-    }
-    return false;
-}
+
 
 
 

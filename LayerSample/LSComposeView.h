@@ -12,7 +12,8 @@
 
 @protocol LSComposeViewDelegate <NSObject>
 
-- (void)sendMessageWithText:(NSString *)text;
+-(void)sendMessageWithText:(NSString *)text;
+-(void)cameraTapped;
 
 @end
 
