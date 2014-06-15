@@ -13,6 +13,6 @@
 
 @interface LSConversationCell : UICollectionViewCell
 
--(void) updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller;
+- (void) updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller;
 
 @end

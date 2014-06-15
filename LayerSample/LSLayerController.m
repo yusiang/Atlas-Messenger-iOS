@@ -80,7 +80,7 @@
     }];
 }
 
--(void)authenticateLayerClientWithIdenityToken:(NSString *)string completion:(void (^)(NSError *error))completion
+- (void)authenticateLayerClientWithIdenityToken:(NSString *)string completion:(void (^)(NSError *error))completion
 {
     [self.client authenticateWithIdentityToken:string completion:^(NSString *authenticatedUserID, NSError *error) {
         completion(error);
@@ -111,7 +111,7 @@
 #pragma mark
 #pragma mark Private Implementation Methods
 
--(void)reauthenticateLayerClientWithNonce:(NSString *)nonce completion:(void(^)(NSError *error))completion
+- (void)reauthenticateLayerClientWithNonce:(NSString *)nonce completion:(void(^)(NSError *error))completion
 {
     [self requestIdentityTokenWithNonce:nonce completion:^(NSString *identityToken, NSError *error) {
         [self authenticateLayerClientWithIdenityToken:identityToken completion:^(NSError *error) {
@@ -123,7 +123,7 @@
     }];
 }
 
--(void)sendMessage:(NSString *)messageText inConversation:(LYRConversation *)conversation
+- (void)sendMessage:(NSString *)messageText inConversation:(LYRConversation *)conversation
 {
     LYRMessagePart *part = [LYRMessagePart messagePartWithText:messageText];
     LYRMessage *message = [self.client messageWithConversation:conversation parts:@[part]];

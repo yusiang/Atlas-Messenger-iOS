@@ -19,14 +19,14 @@
     return self;
 }
 
-- (void) initializeParseSDK
+- (void)initializeParseSDK
 {
 //    [Parse setApplicationId:@"FvtTD9THmnMNlBxQKZ0R3RVx3zuVYgcG1uPFR7Mo"
 //                  clientKey:@"eT1sf2vFjeHRehFYJ2A2jlGCr5dq2tQWLpqJvh4Z"];
     
 }
 
-- (void) createParseUserWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *))completion
+- (void)createParseUserWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *))completion
 {
     completion(nil);
 //    PFUser *user = [PFUser user];
@@ -54,7 +54,7 @@
 //    }];
 }
 
-- (void) logParseUserInWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *))completion
+- (void)logParseUserInWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *))completion
 {
     if([email isEqualToString:@"test@layer.com"] && [password isEqualToString:@"password"]) {
         completion (nil);
@@ -72,12 +72,12 @@
 //                                    }];
 }
 
-- (void) logOutParseUser
+- (void)logOutParseUser
 {
 //    [PFUser logOut];
 }
 
-- (void) requestLayerIdentityTokenWithNonce:(NSString *)nonce
+- (void)requestLayerIdentityTokenWithNonce:(NSString *)nonce
 {
 //    [PFCloud callFunctionInBackground:@"requestIdentityToken"
 //                       withParameters:@{@"nonce": nonce,

@@ -39,7 +39,7 @@
     return self;
 }
 
-- (void) updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller
+- (void)updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller
 {
     LYRMessage *message = [[controller.client messagesForConversation:conversation] firstObject];
     LYRMessagePart *part = [message.parts firstObject];
@@ -51,7 +51,7 @@
 }
 
 //NSLayoutConstraint
-- (void) addAvatarImage
+- (void)addAvatarImage
 {
     if (!self.avatarImageView) {
         self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(10, 10, 46, 46)];
@@ -75,7 +75,7 @@
     
 }
 
--(void)addLastMessageText:(NSString *)text
+- (void)addLastMessageText:(NSString *)text
 {
     if (!self.lastMessageText) {
         self.lastMessageText = [[UITextView alloc] initWithFrame:CGRectMake(70, 26, 240, 50)];
@@ -89,7 +89,7 @@
     self.lastMessageText.userInteractionEnabled = FALSE;
 }
 
-- (void) addDateLabel:(NSDate *)date
+- (void)addDateLabel:(NSDate *)date
 {
     if(!self.date) {
         self.date = [[UILabel alloc] initWithFrame:CGRectMake(270, 8, 40, 20)];
@@ -103,7 +103,7 @@
     self.date.text = [formatter stringFromDate:date];
 }
 
-- (void) addSeperatorLine
+- (void)addSeperatorLine
 {
     if(!self.seperatorLine){
         self.seperatorLine = [[UIView alloc] initWithFrame:CGRectMake(70, self.frame.size.height - 1, self.frame.size.width - 70, 1)];

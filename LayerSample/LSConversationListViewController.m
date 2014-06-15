@@ -43,7 +43,7 @@
     
 }
 
-- (void) viewDidAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 
@@ -55,7 +55,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) setLayerController:(LSLayerController *)layerController
+- (void)setLayerController:(LSLayerController *)layerController
 {
     if(!_layerController) {
         _layerController = layerController;
@@ -166,12 +166,12 @@
     return 0;
 }
 
-- (void) logoutTapped
+- (void)logoutTapped
 {
     [self.delegate logout];
 }
 
-- (void) newConversationTapped
+- (void)newConversationTapped
 {
     LSContactsViewController *contactsViewController = [[LSContactsViewController alloc] init];
     contactsViewController.layerController = self.layerController;

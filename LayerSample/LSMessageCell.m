@@ -28,7 +28,7 @@
     return self;
 }
 
-- (void) updateCellWithMessage:(LYRMessage *)message andLayerController:(LSLayerController *)controller
+- (void)updateCellWithMessage:(LYRMessage *)message andLayerController:(LSLayerController *)controller
 {
     LYRMessagePart *part = [message.parts firstObject];
     [self addAvatarImage];
@@ -37,7 +37,7 @@
     [self addSenderLabelForID:message.sentByUserID];
 }
 
-- (void) addAvatarImage
+- (void)addAvatarImage
 {
     if (!self.avatarImageView) {
         self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 46, 46)];

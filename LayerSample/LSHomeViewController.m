@@ -103,7 +103,7 @@
 #pragma mark
 #pragma mark LSRegistrationViewControllerDelegate Methods
 
--(void)registrationSuccessful
+- (void)registrationSuccessful
 {
     [self.delegate presentConversationViewController];
 }
@@ -111,7 +111,7 @@
 #pragma mark
 #pragma mark LSLoginViewControllerDelegate Methods
 
--(void)loginSuccess
+- (void)loginSuccess
 {
     [self.delegate presentConversationViewController];
 }

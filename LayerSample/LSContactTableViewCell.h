@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) UIView *radioButton;
 
-- (void) updateWithSelectionIndicator:(BOOL)selected;
+- (void)updateWithSelectionIndicator:(BOOL)selected;
 
-- (void) displaySelectionIndicator;
+- (void)displaySelectionIndicator;
 @end

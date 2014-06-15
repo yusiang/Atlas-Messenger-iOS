@@ -59,7 +59,7 @@
     self.frame = CGRectMake(self.frame.origin.x, centerY, self.frame.size.width, self.frame.size.height);
 }
 
-- (void) sizeAndCenterLabel
+- (void)sizeAndCenterLabel
 {
     [self.textLabel sizeToFit];
     self.textLabel.center = self.center;

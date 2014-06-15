@@ -42,7 +42,7 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void) loadContacts
+- (void)loadContacts
 {
     self.contacts = [LSUserManager fetchContacts];
     self.participants = [[NSMutableArray alloc] init];
@@ -105,7 +105,7 @@
     }
 }
 
-- (void) newConversationTapped
+- (void)newConversationTapped
 {
     LSConversationViewController *controller = [[LSConversationViewController alloc] init];
     controller.conversation = [self.layerController conversationForParticipants:self.participants];

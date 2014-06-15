@@ -43,7 +43,7 @@
     [self setViewControllers:@[viewController] animated:TRUE];
 }
 
-- (void) presentConversationViewController
+- (void)presentConversationViewController
 {
     LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
     conversationListViewController.delegate = self;
@@ -63,7 +63,7 @@
     }];
 }
 
-- (void) logout
+- (void)logout
 {
     [self.layerController.client stop];
     [self.presentedViewController dismissViewControllerAnimated:TRUE completion:nil];

@@ -12,6 +12,6 @@
 
 @property (nonatomic, strong) UITextField *textField;
 
-- (void) setText:(NSString *)text;
+- (void)setText:(NSString *)text;
 
 @end
