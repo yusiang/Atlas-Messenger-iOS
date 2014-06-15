@@ -43,16 +43,13 @@
     
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [super viewWillAppear:animated];
+    
+    // TODO: Temporarily do a complete reload pending notification mechanism
+    [self fetchLayerConversations];
+    [self.collectionView reloadData];
 }
 
 - (void)setLayerController:(LSLayerController *)layerController
@@ -66,6 +63,7 @@
 
 - (void)fetchLayerConversations
 {
+    NSAssert(self.layerController, @"Layer Controller should not be `nil`.");
     NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
     self.conversations = conversations;
 }
