@@ -1,1 +1,0 @@
-../../CocoaSPDY/SPDY/SPDYTLSTrustEvaluator.h
