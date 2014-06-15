@@ -536,7 +536,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
     [tester tapViewWithAccessibilityLabel:@"start"];
 }
 
-- (NSString *) contactCellLabelForUser:(int)userID
+- (NSString *)contactCellLabelForUser:(int)userID
 {
     return [NSString stringWithFormat:@"contactCell+%d", userID];
 }

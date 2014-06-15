@@ -13,6 +13,6 @@
 @property (nonatomic, strong) NSString *mimeType;
 @property (nonatomic, strong) NSData *data;
 
-+ (NSArray *) parts;
++ (NSArray *)parts;
 
 @end

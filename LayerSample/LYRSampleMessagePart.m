@@ -12,7 +12,7 @@
 
 @synthesize data = _data;
 
-+ (NSArray *) parts;
++ (NSArray *)parts
 {
     LYRSampleMessagePart *part1 = [[LYRSampleMessagePart alloc] init];
     part1.data = [@"This is a sample message! It is a super simple sample message because it is super long. I am doing this to test my UI cells!" dataUsingEncoding:NSUTF8StringEncoding];
@@ -22,4 +22,5 @@
 
     return @[part1, part2];
 }
+
 @end

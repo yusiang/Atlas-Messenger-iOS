@@ -12,7 +12,7 @@
 
 @implementation LYRSampleMessage
 
-+ (NSMutableArray *) messagesForConversation:(LYRSampleConversation *)conversation
++ (NSMutableArray *)messagesForConversation:(LYRSampleConversation *)conversation
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
     for (int i = 0; i < 30; i++) {
@@ -21,7 +21,7 @@
     return messages;
 }
 
-+ (instancetype) messageWithConversation:(LYRSampleConversation *)conversation
++ (instancetype)messageWithConversation:(LYRSampleConversation *)conversation
 {
     int count = (int)conversation.participants.count;
     int number = arc4random_uniform(count);
@@ -36,12 +36,12 @@
                             sentByUserID:participant.identifier];
 }
 
-+ (instancetype) messageWithConversation:(LYRSampleConversation *)conversation
-                              identifier:(NSUUID *)identifier
-                                   parts:(NSArray*)parts
-                                  sentAt:(NSDate *)sentAt
-                              receivedAt:(NSDate *)receivedAt
-                            sentByUserID:(NSString *)userID
++ (instancetype)messageWithConversation:(LYRSampleConversation *)conversation
+                             identifier:(NSUUID *)identifier
+                                  parts:(NSArray*)parts
+                                 sentAt:(NSDate *)sentAt
+                             receivedAt:(NSDate *)receivedAt
+                           sentByUserID:(NSString *)userID
 {
     LYRSampleMessage *message = [[LYRSampleMessage alloc] init];
     message.conversation = conversation;

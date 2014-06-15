@@ -42,7 +42,7 @@ NSString *const LSIdentityTokenURL = @"http://localhost:3000/identityToken";
     return request;
 }
                                     
--(NSData *) bodyWithDictionary:(NSDictionary *)dictionary
+-(NSData *)bodyWithDictionary:(NSDictionary *)dictionary
 {
     NSError *error;
     return [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&error];

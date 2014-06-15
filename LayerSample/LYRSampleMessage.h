@@ -19,6 +19,6 @@
 @property (nonatomic, strong) NSDate *receivedAt;
 @property (nonatomic, strong) NSString *sentByUserID;
 
-+ (NSArray *) messagesForConversation:(LYRSampleConversation *)conversation;
++ (NSArray *)messagesForConversation:(LYRSampleConversation *)conversation;
 
 @end
