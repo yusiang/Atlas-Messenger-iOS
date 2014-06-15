@@ -22,4 +22,6 @@
 @property (nonatomic, strong) UITextField *textField;
 @property (nonatomic, weak) id<LSComposeViewDelegate>delegate;
 
+- (void)updateWithImage:(UIImage *)image;
+
 @end

@@ -17,4 +17,5 @@
 @property (nonatomic, strong) LYRConversation *conversation;
 @property (nonatomic, strong) NSArray *participantsForNewConversation;
 
+
 @end

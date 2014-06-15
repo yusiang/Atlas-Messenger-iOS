@@ -19,12 +19,12 @@
 #define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
 #define kLayerFont      @"Avenir-Medium"
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)init
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super init];
     if (self) {
         [self.view setBackgroundColor:[UIColor whiteColor]];
-        
+         self.title = @"Home";
     }
     return self;
 }

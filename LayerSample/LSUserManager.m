@@ -97,9 +97,8 @@
     
     [defaults setObject:userInfo forKey:userID];
     [defaults setObject:userID forKey:@"lastUserID"];
-    [defaults synchronize];
-    
     [self setLoggedInUserInfo:userInfo];
+    [defaults synchronize];
     
     return TRUE;
 }
@@ -125,7 +124,7 @@
         if ([existingEmail isEqualToString:email]) {
             NSString *existingPassword = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.password", [NSString stringWithFormat:@"%d", i]]];
             if ([existingPassword isEqualToString:password]) {
-                [self setLoggedInUserInfo:[defaults valueForKey:[NSString stringWithFormat:@"%d", 1]]];
+                [self setLoggedInUserInfo:[defaults valueForKey:[NSString stringWithFormat:@"%d", i]]];
                 return TRUE;
             }
         }

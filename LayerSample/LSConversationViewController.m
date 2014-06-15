@@ -14,6 +14,7 @@
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) LSComposeView *composeView;
 @property (nonatomic, strong) NSOrderedSet *messages;
+@property (nonatomic, strong) UIImage *selectedImage;
 
 @end
 
@@ -225,7 +226,9 @@
 
 - (void)displayImagePickerWithSourceType:(UIImagePickerControllerSourceType)sourceType;
 {
-    {
+    BOOL camera = [UIImagePickerController isSourceTypeAvailable:sourceType];
+
+    if (camera) {
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         
         // Since I'm not actually taking a picture, is a delegate function necessary?
@@ -235,8 +238,26 @@
         [self.navigationController presentViewController:picker animated:TRUE completion:^{
             //
         }];
-        
         NSLog(@"Camera is available");
     }
 }
+
+#pragma mark
+#pragma mark Image Picker Controller Delegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    NSString *mediaType = [info objectForKey:@"UIImagePickerControllerMediaType"];
+    if ([mediaType isEqualToString:@"public.image"]) {
+        self.selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
+        [self.composeView updateWithImage:self.selectedImage];
+    }
+    [self.navigationController dismissViewControllerAnimated:TRUE completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self.navigationController dismissViewControllerAnimated:TRUE completion:nil];
+}
+
+
 @end

@@ -80,6 +80,15 @@
     [self textFieldShouldReturn:self.textField];
 }
 
+- (void)updateWithImage:(UIImage *)image
+{
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y - 50, self.frame.size.width, self.frame.size.height + 50);
+    self.textField.frame = CGRectMake(self.textField.frame.origin.x, self.textField.frame.origin.y - 50, self.textField.frame.size.width, self.textField.frame.size.height + 50);
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
+    imageView.image = image;
+    [self.textField setLeftView:imageView];
+}
+
 #pragma mark
 #pragma mark TextViewDelegate Methods
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField

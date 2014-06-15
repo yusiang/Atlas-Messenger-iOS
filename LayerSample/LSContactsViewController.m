@@ -33,7 +33,6 @@
 {
     [super viewDidLoad];
     [self loadContacts];
-    [self addCancelBarButton];
     [self addDoneBarButton];
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:@"cell"];
 }
@@ -47,13 +46,6 @@
 {
     self.contacts = [LSUserManager fetchContacts];
     self.participants = [[NSMutableArray alloc] init];
-}
-
-- (void)addCancelBarButton
-{
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelTapped)];
-    cancel.accessibilityLabel = @"cancel";
-    [self.navigationItem setLeftBarButtonItem:cancel];
 }
 
 - (void)addDoneBarButton
@@ -113,22 +105,16 @@
     }
 }
 
-- (void)cancelTapped
-{
-    [self dismissViewControllerAnimated:TRUE completion:^{
-        //
-    }];
-}
-
 - (void) newConversationTapped
 {
     LSConversationViewController *controller = [[LSConversationViewController alloc] init];
     controller.conversation = [self.layerController conversationForParticipants:self.participants];
     controller.layerController = self.layerController;
     [self.navigationController pushViewController:controller animated:TRUE];
-    NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
     
-    [navigationArray removeObjectAtIndex: 1];  // You can pass your index here
+    //Remove Controller From Navigation Stack
+    NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
+    [navigationArray removeObjectAtIndex: 1];
     self.navigationController.viewControllers = navigationArray;
 }
 

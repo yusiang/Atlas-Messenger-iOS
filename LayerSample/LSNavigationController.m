@@ -45,13 +45,14 @@
 
 - (void) presentConversationViewController
 {
-    [self popToRootViewControllerAnimated:TRUE];
     LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
     conversationListViewController.delegate = self;
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     
     [self presentViewController:conversationController animated:TRUE completion:^{
-        
+        NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.viewControllers];
+        [navigationArray removeObjectAtIndex: 1];
+        self.viewControllers = navigationArray;
     }];
     
     [self.layerController initializeLayerClientWithUserIdentifier:[LSUserManager loggedInUserID] completion:^(NSError * error) {
@@ -65,9 +66,7 @@
 - (void) logout
 {
     [self.layerController.client stop];
-    [self.presentedViewController dismissViewControllerAnimated:TRUE completion:^{
-        [self popToRootViewControllerAnimated:TRUE];
-    }];
+    [self.presentedViewController dismissViewControllerAnimated:TRUE completion:nil];
 }
 
 @end
