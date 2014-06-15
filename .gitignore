@@ -1,0 +1,7 @@
+Pods
+.DS_Store
+xcuserdata
+LayerSample.xcworkspace/xcshareddata/xcschemes/*Tests.xcscheme
+LayerSample.xcworkspace/xcshareddata/LayerSample.xccheckout
+xcodebuild.log
+
