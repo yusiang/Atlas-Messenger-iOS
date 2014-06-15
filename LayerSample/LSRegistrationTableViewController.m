@@ -77,7 +77,7 @@
     return cell;
 }
 
-- (void) configureCell:(LSInputTableViewCell *)cell forIndexPath:(NSIndexPath *)path
+- (void)configureCell:(LSInputTableViewCell *)cell forIndexPath:(NSIndexPath *)path
 {
     switch (path.row) {
         case 0:

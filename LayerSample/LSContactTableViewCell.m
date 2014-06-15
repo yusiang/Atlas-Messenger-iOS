@@ -45,7 +45,7 @@
     [super prepareForReuse];
 }
 
-- (void) updateWithSelectionIndicator:(BOOL)selected
+- (void)updateWithSelectionIndicator:(BOOL)selected
 {
     if (!self.radioButton) {
         self.radioButton = [[UIView alloc] initWithFrame:CGRectMake(280, 16, 28, 28)];

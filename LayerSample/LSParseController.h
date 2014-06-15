@@ -16,14 +16,14 @@
 
 - (id) init;
 
-- (void) initializeParseSDK;
+- (void)initializeParseSDK;
 
-- (void) createParseUserWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *error))completion;
+- (void)createParseUserWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *error))completion;
 
-- (void) logParseUserInWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *error))completion;
+- (void)logParseUserInWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(NSError *error))completion;
 
-- (void) logOutParseUser;
+- (void)logOutParseUser;
 
-- (void) requestLayerIdentityTokenWithNonce:(NSString *)nonce;
+- (void)requestLayerIdentityTokenWithNonce:(NSString *)nonce;
 
 @end

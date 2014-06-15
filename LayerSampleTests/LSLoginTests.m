@@ -67,14 +67,14 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //}
 //
 ////Successfully log in with good credentials.
-//-(void)testToVerifySuccesfulLogin
+//- (void)testToVerifySuccesfulLogin
 //{
 //    [self loginAsTestUser:0];
 //    [self logoutFromConversationListViewController];
 //}
 //
 ////Tap register, enter nothing, and verify that a prompt came up requesting valid info. Add a first name. Tap register and verify that a prompt requested more info. Continue adding data until success.
-//-(void)testToVerifyIncompleteInfoRegistrationFunctionality
+//- (void)testToVerifyIncompleteInfoRegistrationFunctionality
 //{
 //    [tester tapViewWithAccessibilityLabel:@"Register"];
 //    [tester enterText:LSTestUser1FullName intoViewWithAccessibilityLabel:@"Fullname"];
@@ -167,7 +167,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 }
 //
 ////Register two users. Log in and start a conversation. Tap the back button and verify that the Contacts view returns.
-//-(void)testToVerifyNavigationBetweenContactsandConversations
+//- (void)testToVerifyNavigationBetweenContactsandConversations
 //{
 //    [self registerTestUser:1];
 //    [self logout];
@@ -202,7 +202,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //}
 //
 ////Send three messages to a user. Log out. Log back in with the same account. Verify that the old messages are still there in proper order.
-//-(void)testToVerifySentMessagePersistence
+//- (void)testToVerifySentMessagePersistence
 //{
 //    [self registerTestUser:1];
 //    [self logout];
@@ -225,7 +225,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //}
 //
 ////Send three messages to a user. Log out. Log back in as the recipient user. Verify that the messages are there, marked as sent by the sender, in proper order.
-//-(void)testToVerifySuccesfullRecipetOfThreeMessages
+//- (void)testToVerifySuccesfullRecipetOfThreeMessages
 //{
 //    [self registerTestUser:1];
 //    [self logout];
@@ -249,7 +249,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //}
 
 //Create three users. Log in as one of them. Start individual conversations with each contact and with both together. Verify that all three conversations show up on the Conversations list with proper names displayed.
-//-(void)testToVerifyThreeNewConversationsAreDisplayedInconversationList
+//- (void)testToVerifyThreeNewConversationsAreDisplayedInconversationList
 //{
 //    [self registerTestUser:1];
 //    [self logout];
@@ -275,7 +275,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //}
 //
 ////Create three users. Log in as one of them. Start individual conversations with each contact and with both together. Open one of the individual conversations and send three messages. Tap back and verify that the latest message is displayed in the proper conversation's list item.
-//-(void)testToVerifyTheLatestMessageInANewConversationIsDisplayedInConversationList
+//- (void)testToVerifyTheLatestMessageInANewConversationIsDisplayedInConversationList
 //{
 //    [self registerTestUser:1];
 //    [self logout];
@@ -301,7 +301,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //}
 //
 ////Create three users. Log in as one of them. Start individual conversations with each contact and with both together. Open one of the individual conversations and send three messages. Open the group chat and send one message. Log out and back in as the recipient of the three messages. Verify that two conversations are listed – one with three messages and another group chat with one message, all with the proper participants.
-//-(void)testToVerifyMultipleMessagesSentToMultipleRecipeientsAreReciecvedAndDisplayedForTheRecipients
+//- (void)testToVerifyMultipleMessagesSentToMultipleRecipeientsAreReciecvedAndDisplayedForTheRecipients
 //{
 //    [self registerTestUser:1];
 //    [self logout];
@@ -325,7 +325,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    
 //}
 ////Create three users. Log in as one of them. Send a message to one contact. Log out and in as that contact. Reply to the original message. Log out and in as the first user, and verify that the reply shows up below the originally sent message.
-//-(void)testToVerifySendingRecievingAndReplyingToAMessage
+//- (void)testToVerifySendingRecievingAndReplyingToAMessage
 //{
 //    [self registerTestUser:1];
 //    [self logout];
@@ -347,19 +347,19 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //}
 //
 ////Push an image to a know location on the device. Create two users. Log in as one, create a conversation with the other. Tap the camera button. Verify that a photo prompt pops up with options for taking a picture or attaching an image from the filesystem. Select the filesystem option. Select the pushed photo. Verify that a photo is added to the conversation view.
-//-(void)testToVerifySelectingAnImageFromTheCameraRollAndSending
+//- (void)testToVerifySelectingAnImageFromTheCameraRollAndSending
 //{
 //    
 //}
 //
 ////Push an image to a know location on the device. Create two users. Log in as one and send a photo to the other. Log in as the recipient and verify that the photo was received.
-//-(void)testToVerifyASentPhotoIsRecievedByTheRecipient
+//- (void)testToVerifyASentPhotoIsRecievedByTheRecipient
 //{
 //    
 //}
 //
 ////Push three images to known locations. Create three users. Log in as one and create a group chat with the other two. Send two text messages and one of the photos. Log in as the second user. Send another photo and two additional text messages. Log in as the third user. Verify that the prior messages are all there in the proper order from the proper senders.
-//-(void)testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat
+//- (void)testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat
 //{
 //    
 //}
@@ -387,7 +387,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [tester waitForViewWithAccessibilityLabel:@"Conversation List"];
 //}
 //
-//- (void) testNonMatchingPasswordRegistrationError
+//- (void)testNonMatchingPasswordRegistrationError
 //{
 //    [system presentViewControllerWithClass:[LSRegistrationTableViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
 //
@@ -398,7 +398,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [tester tapViewWithAccessibilityLabel:@"Register"];
 //}
 //
-//- (void) testRegistrationFunctionality
+//- (void)testRegistrationFunctionality
 //{
 //    [system presentViewControllerWithClass:[LSRegistrationTableViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
 //
@@ -411,7 +411,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [tester waitForViewWithAccessibilityLabel:@"Sender Label"];
 //}
 //
-//- (void) testLoginFunctionality
+//- (void)testLoginFunctionality
 //{
 //    [system presentViewControllerWithClass:[LSLoginTableViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
 //
@@ -446,7 +446,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 #pragma mark
 #pragma mark Test User Registration and Login Methods
--(void)registerTestUser:(int)userID
+- (void)registerTestUser:(int)userID
 {
     switch (userID) {
         case 0:
@@ -517,7 +517,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
     [tester waitForViewWithAccessibilityLabel:@"conversationList"];
 }
 
--(void)logout
+- (void)logout
 {
     [tester tapViewWithAccessibilityLabel:@"logout"];
 }
@@ -525,7 +525,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 #pragma mark
 #pragma mark Start Conversation
 
--(void)startConversationWithUserId:(NSArray *)userIDs
+- (void)startConversationWithUserId:(NSArray *)userIDs
 {
     for (NSNumber *userID in userIDs) {
         NSString *string = [NSString stringWithFormat:@"%@", userID];
@@ -597,14 +597,14 @@ NSString *const LSTestUser3Confirmation = @"password3";
     [tester waitForViewWithAccessibilityLabel:@"Home"];
 }
 
--(void)logoutFromContactViewController
+- (void)logoutFromContactViewController
 {
     [tester tapViewWithAccessibilityLabel:@"conversationList"];
     [tester tapViewWithAccessibilityLabel:@"logout"];
     [tester waitForViewWithAccessibilityLabel:@"Home"];
 }
 
--(void)logoutFromConversationViewController
+- (void)logoutFromConversationViewController
 {
     [tester tapViewWithAccessibilityLabel:@"conversationList"];
     [tester tapViewWithAccessibilityLabel:@"logout"];

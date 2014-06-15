@@ -13,7 +13,7 @@
 @property (nonatomic, strong) NSString *fullName;
 @property (nonatomic, strong) NSString *identifier;
 
-+ (NSSet *) participants:(int)number;
-+ (instancetype) participantWithNumber:(int)number;
++ (NSSet *)participants:(int)number;
++ (instancetype)participantWithNumber:(int)number;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "LSHomeViewController.h"
 #import "LSNavigationCoordinator.h"
+#import "SVProgressHUD.h"
 #import "LSUserManager.h"
 #import "LSButton.h"
 
@@ -104,22 +105,38 @@
 #pragma mark
 #pragma mark LSRegistrationViewControllerDelegate Methods
 
--(void)registrationSuccessful
+- (void)registrationSuccessful
 {
-    [self presentConversationViewController];
+    [self initializeLayerClient];
 }
 
 #pragma mark
 #pragma mark LSLoginViewControllerDelegate Methods
 
--(void)loginSuccess
+- (void)loginSuccess
 {
-    [self presentConversationViewController];
+    [self initializeLayerClient];
 }
 
-- (void) presentConversationViewController
+- (void)initializeLayerClient
+{
+    [SVProgressHUD show];
+    [self.layerController initializeLayerClientWithUserIdentifier:[LSUserManager loggedInUserID] completion:^(NSError * error) {
+        if (!error) {
+            NSLog(@"Layer Client Started");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentConversationViewController];
+                [SVProgressHUD dismiss];
+            });
+        }
+    }];
+}
+
+- (void)presentConversationViewController
 {
     LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
+    conversationListViewController.layerController = self.layerController;
+    
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     
     [self presentViewController:conversationController animated:TRUE completion:^{
@@ -128,11 +145,6 @@
         self.navigationController.viewControllers = navigationArray;
     }];
 
-    [self.layerController initializeLayerClientWithUserIdentifier:[LSUserManager loggedInUserID] completion:^(NSError * error) {
-        if (!error) {
-            NSLog(@"Layer Client Started");
-            conversationListViewController.layerController = self.layerController;
-        }
-    }];
+
 }
 @end

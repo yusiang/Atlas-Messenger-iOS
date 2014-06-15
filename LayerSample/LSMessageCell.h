@@ -14,6 +14,6 @@
 
 @interface LSMessageCell : UICollectionViewCell
 
-- (void) updateCellWithMessage:(LYRMessage *)message andLayerController:(LSLayerController *)controller;
+- (void)updateCellWithMessage:(LYRMessage *)message andLayerController:(LSLayerController *)controller;
 
 @end

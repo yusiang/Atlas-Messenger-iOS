@@ -17,7 +17,7 @@
 @synthesize createdAt = _createdAt;
 @synthesize messages = _messages;
 
-+ (NSSet *) sampleConversations
++ (NSSet *)sampleConversations
 {
     NSMutableArray *conversations = [[NSMutableArray alloc] init];
     for (int i = 0; i < 10; i++) {
@@ -26,7 +26,7 @@
     return [[NSSet alloc] initWithArray:conversations];
 }
 
-+ (instancetype) createConversation
++ (instancetype)createConversation
 {
     return [self conversationWithIdentifier:[NSUUID UUID]
                                participants:[LYRSampleParticipant participants:arc4random_uniform(10) + 1]
@@ -35,11 +35,11 @@
                                   createdAt:[NSDate date]];
 }
 
-+ (instancetype) conversationWithIdentifier:(NSUUID *)identifier
-                               participants:(NSSet *)participants
-                                   metadata:(NSDictionary *)metaData
-                                   userInfo:(NSDictionary *)userInfo
-                                  createdAt:(NSDate *)createdAt
++ (instancetype)conversationWithIdentifier:(NSUUID *)identifier
+                              participants:(NSSet *)participants
+                                  metadata:(NSDictionary *)metaData
+                                  userInfo:(NSDictionary *)userInfo
+                                 createdAt:(NSDate *)createdAt
 {
     LYRSampleConversation *conversation = [[LYRSampleConversation alloc] init];
     conversation.identifier = identifier;

@@ -15,6 +15,6 @@
 @property (nonatomic, strong) NSDate *createdAt;
 @property (nonatomic, strong) NSMutableArray *messages;
 
-+ (NSSet *) sampleConversations;
++ (NSSet *)sampleConversations;
 
 @end

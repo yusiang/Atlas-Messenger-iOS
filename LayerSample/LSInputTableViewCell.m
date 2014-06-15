@@ -27,7 +27,7 @@
     // Initialization code
 }
 
-- (void) setText:(NSString *)text
+- (void)setText:(NSString *)text
 {
     if (!self.textField) {
         self.textField = [[UITextField alloc] init];

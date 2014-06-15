@@ -1,1 +1,0 @@
-../../LayerKit/Code/Private/Transport/LYRHTTP/LYRThriftHTTPResponseSerializer.h

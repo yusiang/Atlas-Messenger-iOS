@@ -11,6 +11,7 @@
 #import "LYRSampleMessage.h"
 #import "LYRSampleParticipant.h"
 #import "LYRSampleMessagePart.h"
+#import "LSUserManager.h"
 
 @interface LSConversationCell ()
 
@@ -28,6 +29,7 @@
 
 #define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
 #define kLayerFont      @"Avenir-Medium"
+#define kLayerFontHeavy @"Avenir-Heavy"
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -39,19 +41,19 @@
     return self;
 }
 
-- (void) updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller
+- (void)updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller
 {
     LYRMessage *message = [[controller.client messagesForConversation:conversation] firstObject];
     LYRMessagePart *part = [message.parts firstObject];
     [self addAvatarImage];
-    [self addSenderNameWithID:message.sentByUserID];
-    [self addLastMessageText:[NSString stringWithUTF8String:[part.data bytes]]];
+    [self addSenderLabelWithParticipants:[conversation.participants allObjects]];
+    [self addLastMessageTextWithPart:part];
     [self addDateLabel:message.sentAt];
     [self addSeperatorLine];
 }
 
 //NSLayoutConstraint
-- (void) addAvatarImage
+- (void)addAvatarImage
 {
     if (!self.avatarImageView) {
         self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(10, 10, 46, 46)];
@@ -60,36 +62,44 @@
     [self addSubview:self.avatarImageView];
 }
 
-- (void)addSenderNameWithID:(NSString *)userID
+- (void)addSenderLabelWithParticipants:(NSArray *)participants
 {
     if(!self.senderName) {
         self.senderName = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 240, 20)];
         [self addSubview:self.senderName];
     }
-    [self.senderName setFont:[UIFont fontWithName:kLayerFont size:14]];
+    [self.senderName setFont:[UIFont fontWithName:kLayerFontHeavy size:16]];
     [self.senderName setTextColor:[UIColor darkGrayColor]];
-#warning ADD Name Here for Userr
-    self.senderName.text = @"Kevin Coleman";
-    self.senderName.userInteractionEnabled = FALSE;
-    self.senderName.accessibilityLabel = @"Sender Label";
     
+    NSString *senderLabel = @"";
+    for (NSString *userID in participants) {
+        if ([userID isEqualToString:[LSUserManager loggedInUserID]]) break;
+        NSString *participant = (NSString *)[[LSUserManager userInfoForUserID:userID] objectForKey:@"fullName"];
+        senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", participant]];
+    }
+    self.senderName.text = senderLabel;
+    self.senderName.accessibilityLabel = senderLabel;
+    self.senderName.userInteractionEnabled = FALSE;
 }
 
--(void)addLastMessageText:(NSString *)text
+- (void)addLastMessageTextWithPart:(LYRMessagePart *)part
 {
     if (!self.lastMessageText) {
         self.lastMessageText = [[UITextView alloc] initWithFrame:CGRectMake(70, 26, 240, 50)];
         [self addSubview:self.lastMessageText];
     }
-    [self.lastMessageText setFont:[UIFont fontWithName:kLayerFont size:12]];
-    [self.lastMessageText setTextColor:[UIColor grayColor]];
+    
+    if(part)  {
+        self.lastMessageText.text = [NSString stringWithUTF8String:[part.data bytes]];
+        [self.lastMessageText setFont:[UIFont fontWithName:kLayerFont size:12]];
+        [self.lastMessageText setTextColor:[UIColor grayColor]];
+    }
     self.lastMessageText.editable = FALSE;
     self.lastMessageText.scrollEnabled = FALSE;
-    self.lastMessageText.text = text;
     self.lastMessageText.userInteractionEnabled = FALSE;
 }
 
-- (void) addDateLabel:(NSDate *)date
+- (void)addDateLabel:(NSDate *)date
 {
     if(!self.date) {
         self.date = [[UILabel alloc] initWithFrame:CGRectMake(270, 8, 40, 20)];
@@ -103,7 +113,7 @@
     self.date.text = [formatter stringFromDate:date];
 }
 
-- (void) addSeperatorLine
+- (void)addSeperatorLine
 {
     if(!self.seperatorLine){
         self.seperatorLine = [[UIView alloc] initWithFrame:CGRectMake(70, self.frame.size.height - 1, self.frame.size.width - 70, 1)];

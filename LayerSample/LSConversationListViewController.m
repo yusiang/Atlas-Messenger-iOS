@@ -43,19 +43,16 @@
     
 }
 
-- (void) viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-
+    [super viewWillAppear:animated];
+    
+    // TODO: Temporarily do a complete reload pending notification mechanism
+    [self fetchLayerConversations];
+    [self.collectionView reloadData];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void) setLayerController:(LSLayerController *)layerController
+- (void)setLayerController:(LSLayerController *)layerController
 {
     if(!_layerController) {
         _layerController = layerController;
@@ -66,6 +63,7 @@
 
 - (void)fetchLayerConversations
 {
+    NSAssert(self.layerController, @"Layer Controller should not be `nil`.");
     NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
     self.conversations = conversations;
 }
@@ -166,12 +164,12 @@
     return 0;
 }
 
-- (void) logoutTapped
+- (void)logoutTapped
 {
     [self.navigationController dismissViewControllerAnimated:TRUE completion:nil];
 }
 
-- (void) newConversationTapped
+- (void)newConversationTapped
 {
     LSContactsViewController *contactsViewController = [[LSContactsViewController alloc] init];
     contactsViewController.layerController = self.layerController;

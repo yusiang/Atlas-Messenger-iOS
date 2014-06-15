@@ -10,13 +10,15 @@
 
 @interface LSUserManager : NSObject
 
-+ (BOOL)registerWithFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation;
++(BOOL)registerWithFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation;
 
-+ (BOOL)loginWithEmail:(NSString *)email andPassword:(NSString *)password;
++(BOOL)loginWithEmail:(NSString *)email andPassword:(NSString *)password;
 
-+ (NSArray *)fetchContacts;
++(NSArray *)fetchContacts;
 
-+ (NSString *)loggedInUserID;
++(NSString *)loggedInUserID;
+
++(NSDictionary *)userInfoForUserID:(NSString *)userID;
 
 +(void)logout;
 

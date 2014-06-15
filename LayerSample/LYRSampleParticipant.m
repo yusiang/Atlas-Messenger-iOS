@@ -13,7 +13,7 @@
 @synthesize fullName = _fullName;
 @synthesize identifier = _identifier;
 
-+ (NSSet *) participants:(int)number
++ (NSSet *)participants:(int)number
 {
     NSMutableSet *participants = [[NSMutableSet alloc] init];
     for (int i = 0; i < number; i++) {
@@ -22,7 +22,7 @@
     return participants;
 }
 
-+ (instancetype) participantWithNumber:(int)number
++ (instancetype)participantWithNumber:(int)number
 {
     LYRSampleParticipant *participant = [[LYRSampleParticipant alloc] init];
     switch (number) {

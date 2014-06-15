@@ -86,9 +86,9 @@
 		0A0C244D19477D8F00401B74 /* LayerSampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LayerSampleTests-Info.plist"; sourceTree = "<group>"; };
 		0A0C244F19477D8F00401B74 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0A0C245F19477E6600401B74 /* LSHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSHomeViewController.h; sourceTree = "<group>"; };
-		0A0C246019477E6600401B74 /* LSHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSHomeViewController.m; sourceTree = "<group>"; };
+		0A0C246019477E6600401B74 /* LSHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSHomeViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0A0C246319477F1600401B74 /* LSButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSButton.h; sourceTree = "<group>"; };
-		0A0C246419477F1600401B74 /* LSButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSButton.m; sourceTree = "<group>"; };
+		0A0C246419477F1600401B74 /* LSButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0A0C246C1947857E00401B74 /* LSLoginTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLoginTableViewController.h; sourceTree = "<group>"; };
 		0A0C246D1947857E00401B74 /* LSLoginTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLoginTableViewController.m; sourceTree = "<group>"; };
 		0A0C246F1947870700401B74 /* LSRegistrationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRegistrationTableViewController.h; sourceTree = "<group>"; };
@@ -103,25 +103,25 @@
 		0A0C247C1947944700401B74 /* LYRSampleParticipant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRSampleParticipant.m; sourceTree = "<group>"; };
 		0A0C247D1947944700401B74 /* LYRSampleMessagePart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRSampleMessagePart.h; sourceTree = "<group>"; };
 		0A0C247E1947944700401B74 /* LYRSampleMessagePart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRSampleMessagePart.m; sourceTree = "<group>"; };
-		0A0C248A1947970100401B74 /* LSConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationCell.h; sourceTree = "<group>"; };
-		0A0C248B1947970100401B74 /* LSConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationCell.m; sourceTree = "<group>"; };
+		0A0C248A1947970100401B74 /* LSConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LSConversationCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		0A0C248B1947970100401B74 /* LSConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSConversationCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0A0C248D19479CA400401B74 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
-		0A0C248E19479CA400401B74 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
+		0A0C248E19479CA400401B74 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSConversationListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0A0C24921947AB6500401B74 /* LSAvatarImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAvatarImageView.h; sourceTree = "<group>"; };
 		0A0C24931947AB6500401B74 /* LSAvatarImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAvatarImageView.m; sourceTree = "<group>"; };
 		0A0C24961947ABD900401B74 /* kevin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kevin.png; sourceTree = "<group>"; };
 		0A0C24981947AD8100401B74 /* LSMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSMessageCell.h; sourceTree = "<group>"; };
 		0A0C24991947AD8100401B74 /* LSMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMessageCell.m; sourceTree = "<group>"; };
 		0A0C249B1947B80E00401B74 /* LSConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationViewController.h; sourceTree = "<group>"; };
-		0A0C249C1947B80E00401B74 /* LSConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationViewController.m; sourceTree = "<group>"; };
+		0A0C249C1947B80E00401B74 /* LSConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSConversationViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0A3DF5D8194A1D6500D9060F /* LSConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConnectionManager.h; sourceTree = "<group>"; };
 		0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConnectionManager.m; sourceTree = "<group>"; };
 		0A3DF5DC194A4C4000D9060F /* LSNavigationCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNavigationCoordinator.h; sourceTree = "<group>"; };
 		0A3DF5DD194A4C4000D9060F /* LSNavigationCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNavigationCoordinator.m; sourceTree = "<group>"; };
 		0A8EF544194A6B800058012E /* LSContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsViewController.h; sourceTree = "<group>"; };
-		0A8EF545194A6B800058012E /* LSContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactsViewController.m; sourceTree = "<group>"; };
-		0A8EF547194A6C4D0058012E /* LSContactTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactTableViewCell.h; sourceTree = "<group>"; };
-		0A8EF548194A6C4D0058012E /* LSContactTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactTableViewCell.m; sourceTree = "<group>"; };
+		0A8EF545194A6B800058012E /* LSContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSContactsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		0A8EF547194A6C4D0058012E /* LSContactTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LSContactTableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		0A8EF548194A6C4D0058012E /* LSContactTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSContactTableViewCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0A9E53F0194CD7280074CBC6 /* LSUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUserManager.h; sourceTree = "<group>"; };
 		0A9E53F1194CD7280074CBC6 /* LSUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUserManager.m; sourceTree = "<group>"; };
 		0AADB5BE1947C7DB0083732B /* LSParseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSParseController.h; sourceTree = "<group>"; };
@@ -137,9 +137,9 @@
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0AADB5D61947C9330083732B /* LSAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAlertView.h; sourceTree = "<group>"; };
 		0AADB5D71947C9330083732B /* LSAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAlertView.m; sourceTree = "<group>"; };
-		0ADEFE8C1947D0D90064DF09 /* LSLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLayerController.h; sourceTree = "<group>"; };
-		0ADEFE8D1947D0D90064DF09 /* LSLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLayerController.m; sourceTree = "<group>"; };
-		0ADEFE8F1947DAF70064DF09 /* LSComposeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSComposeView.h; sourceTree = "<group>"; };
+		0ADEFE8C1947D0D90064DF09 /* LSLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LSLayerController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		0ADEFE8D1947D0D90064DF09 /* LSLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSLayerController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		0ADEFE8F1947DAF70064DF09 /* LSComposeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LSComposeView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0ADEFE901947DAF70064DF09 /* LSComposeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSComposeView.m; sourceTree = "<group>"; };
 		0AF909B11948CFE4007E69ED /* LSLoginTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLoginTests.h; sourceTree = "<group>"; };
 		0AF909B21948CFE4007E69ED /* LSLoginTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLoginTests.m; sourceTree = "<group>"; };
@@ -232,7 +232,7 @@
 		0A0C242C19477D8F00401B74 /* LayerSample */ = {
 			isa = PBXGroup;
 			children = (
-				0A0E0D14194B8CCC00A8C91D /* Contact Manager */,
+				0A0E0D14194B8CCC00A8C91D /* User Manager */,
 				0A3DF5D7194A1D4B00D9060F /* Connection Manager */,
 				0AADB5D51947C9280083732B /* UI Alerts */,
 				0A0C24A41947C60C00401B74 /* SDK Controllers */,
@@ -402,13 +402,13 @@
 			name = "SDK Controllers";
 			sourceTree = "<group>";
 		};
-		0A0E0D14194B8CCC00A8C91D /* Contact Manager */ = {
+		0A0E0D14194B8CCC00A8C91D /* User Manager */ = {
 			isa = PBXGroup;
 			children = (
 				0A9E53F0194CD7280074CBC6 /* LSUserManager.h */,
 				0A9E53F1194CD7280074CBC6 /* LSUserManager.m */,
 			);
-			name = "Contact Manager";
+			name = "User Manager";
 			sourceTree = "<group>";
 		};
 		0A3DF5D7194A1D4B00D9060F /* Connection Manager */ = {

@@ -15,7 +15,7 @@
 
 @protocol LSHomeViewControllerDelegate <NSObject>
 
-- (void) presentConversationViewController;
+- (void)presentConversationViewController;
 
 @end
 

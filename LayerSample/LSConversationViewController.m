@@ -36,7 +36,6 @@
 {
     [super viewDidLoad];
     self.title = @"Chat";
-    if (!self.conversation) [self createConversation];
     [self fetchLayerConversations];
     [self setAccessibilityLabel:@"chat"];
     [self addCollectionView];
@@ -44,12 +43,13 @@
     [self registerForKeyboardNotifications];
 }
 
-- (void) viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    NSOrderedSet *set = [self.layerController.client conversationsForIdentifiers:nil];
 }
-- (void) viewDidAppear:(BOOL)animated
+
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self.composeView.textField becomeFirstResponder];
@@ -60,13 +60,7 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void) createConversation
-{
-    LYRConversation *conversation = [self.layerController.client conversationWithIdentifier:@"1" participants:@[@"100101"]];
-    self.conversation = conversation;
-}
-
-- (void) fetchLayerConversations
+- (void)fetchLayerConversations
 {
     self.messages = [self.layerController.client messagesForConversation:self.conversation];
 }
@@ -84,7 +78,7 @@
     [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:kMessageCellIdentifier];
 }
 
-- (void) addComposeView
+- (void)addComposeView
 {
     CGRect rect = [[UIScreen mainScreen] bounds];
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 48, rect.size.width, 48)];
@@ -166,7 +160,7 @@
 #pragma mark
 #pragma mark Keyboard Nofifications
 
--(void)keyboardWasShown:(NSNotification*)notification
+- (void)keyboardWasShown:(NSNotification*)notification
 {
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
@@ -191,7 +185,7 @@
 #pragma mark
 #pragma mark LSComposeViewDelegate
 
--(void)sendMessageWithText:(NSString *)text
+- (void)sendMessageWithText:(NSString *)text
 {
     [self.layerController sendMessage:text inConversation:self.conversation];
 }

@@ -48,6 +48,11 @@
     return [loggedInUserInfo objectForKey:@"userID"];
 }
 
++(NSDictionary *)userInfoForUserID:(NSString *)userID;
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:userID];
+}
+
 + (void)logout
 {
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"loggedInUser"];

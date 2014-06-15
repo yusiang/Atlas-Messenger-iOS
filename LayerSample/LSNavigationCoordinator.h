@@ -15,7 +15,7 @@
 @property (nonatomic, strong) UINavigationController *navigationController;
 @property (nonatomic, strong) LSLayerController *layerController;
 
-- (void) setViewController:(id)viewController;
+- (void)setViewController:(id)viewController;
 
-- (void) logout;
+- (void)logout;
 @end
