@@ -8,18 +8,18 @@
 
 #import "LSAppDelegate.h"
 
+
 @implementation LSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self initializeSDKs];
     
-    LSHomeViewController *controller = [[LSHomeViewController alloc] init];
+    LSHomeViewController *homeViewController = [[LSHomeViewController alloc] init];
+    homeViewController.layerController = self.layerController;
     
-    LSNavigationController *navController = [[LSNavigationController alloc] initWithRootViewController:controller];
-    
-    navController.layerController = self.layerController;
-    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
+
     [self.window setRootViewController:navController];
     [self.window makeKeyAndVisible];
     

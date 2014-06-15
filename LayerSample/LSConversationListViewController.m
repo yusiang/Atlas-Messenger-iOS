@@ -168,7 +168,7 @@
 
 - (void) logoutTapped
 {
-    [self.delegate logout];
+    [self.navigationController dismissViewControllerAnimated:TRUE completion:nil];
 }
 
 - (void) newConversationTapped

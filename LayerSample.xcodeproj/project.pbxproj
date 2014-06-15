@@ -35,7 +35,7 @@
 		0A0C249A1947AD8100401B74 /* LSMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C24991947AD8100401B74 /* LSMessageCell.m */; };
 		0A0C249D1947B80E00401B74 /* LSConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C249C1947B80E00401B74 /* LSConversationViewController.m */; };
 		0A3DF5DA194A1D6500D9060F /* LSConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */; };
-		0A3DF5DE194A4C4000D9060F /* LSNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3DF5DD194A4C4000D9060F /* LSNavigationController.m */; };
+		0A3DF5DE194A4C4000D9060F /* LSNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3DF5DD194A4C4000D9060F /* LSNavigationCoordinator.m */; };
 		0A8EF546194A6B800058012E /* LSContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8EF545194A6B800058012E /* LSContactsViewController.m */; };
 		0A8EF549194A6C4D0058012E /* LSContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8EF548194A6C4D0058012E /* LSContactTableViewCell.m */; };
 		0A9E53F2194CD7280074CBC6 /* LSUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9E53F1194CD7280074CBC6 /* LSUserManager.m */; };
@@ -116,8 +116,8 @@
 		0A0C249C1947B80E00401B74 /* LSConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationViewController.m; sourceTree = "<group>"; };
 		0A3DF5D8194A1D6500D9060F /* LSConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConnectionManager.h; sourceTree = "<group>"; };
 		0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConnectionManager.m; sourceTree = "<group>"; };
-		0A3DF5DC194A4C4000D9060F /* LSNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNavigationController.h; sourceTree = "<group>"; };
-		0A3DF5DD194A4C4000D9060F /* LSNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNavigationController.m; sourceTree = "<group>"; };
+		0A3DF5DC194A4C4000D9060F /* LSNavigationCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNavigationCoordinator.h; sourceTree = "<group>"; };
+		0A3DF5DD194A4C4000D9060F /* LSNavigationCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNavigationCoordinator.m; sourceTree = "<group>"; };
 		0A8EF544194A6B800058012E /* LSContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsViewController.h; sourceTree = "<group>"; };
 		0A8EF545194A6B800058012E /* LSContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactsViewController.m; sourceTree = "<group>"; };
 		0A8EF547194A6C4D0058012E /* LSContactTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactTableViewCell.h; sourceTree = "<group>"; };
@@ -423,8 +423,8 @@
 		0A3DF5DB194A4C2300D9060F /* Navigation Controller */ = {
 			isa = PBXGroup;
 			children = (
-				0A3DF5DC194A4C4000D9060F /* LSNavigationController.h */,
-				0A3DF5DD194A4C4000D9060F /* LSNavigationController.m */,
+				0A3DF5DC194A4C4000D9060F /* LSNavigationCoordinator.h */,
+				0A3DF5DD194A4C4000D9060F /* LSNavigationCoordinator.m */,
 			);
 			name = "Navigation Controller";
 			sourceTree = "<group>";
@@ -629,7 +629,7 @@
 				0A3DF5DA194A1D6500D9060F /* LSConnectionManager.m in Sources */,
 				0A0C24821947944700401B74 /* LYRSampleMessagePart.m in Sources */,
 				0ADEFE911947DAF70064DF09 /* LSComposeView.m in Sources */,
-				0A3DF5DE194A4C4000D9060F /* LSNavigationController.m in Sources */,
+				0A3DF5DE194A4C4000D9060F /* LSNavigationCoordinator.m in Sources */,
 				0ADEFE8E1947D0D90064DF09 /* LSLayerController.m in Sources */,
 				0A0C243319477D8F00401B74 /* main.m in Sources */,
 				0A0C248F19479CA400401B74 /* LSConversationListViewController.m in Sources */,

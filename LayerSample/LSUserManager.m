@@ -48,6 +48,12 @@
     return [loggedInUserInfo objectForKey:@"userID"];
 }
 
++ (void)logout
+{
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"loggedInUser"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 + (BOOL)verifyFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
 {
     if ([email isEqualToString:@""]) {

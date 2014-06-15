@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LSLoginTableViewController.h"
 #import "LSRegistrationTableViewController.h"
+#import "LSLayerController.h"
 
 @class LSHomeViewController;
 
@@ -20,5 +21,7 @@
 
 @interface LSHomeViewController : UIViewController <LSLoginTableViewControllerDelegate, LSRegistrationTableViewControllerDelegate>
 
+@property (nonatomic, strong) LSLayerController *layerController;
 @property (nonatomic, weak) id<LSHomeViewControllerDelegate>delegate;
+
 @end

@@ -13,7 +13,7 @@
 #import "LSConversationListViewController.h"
 #import "LSConversationViewController.h"
 #import "LSHomeViewController.h"
-#import "LSNavigationController.h"
+#import "LSNavigationCoordinator.h"
 #import "LSUserManager.h"
 
 NSString *const LSTestUser0FullName = @"Layer Tester0";
@@ -112,59 +112,59 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [self registerTestUser:1];
 //    [tester tapViewWithAccessibilityLabel:@"new"];
 //    [tester waitForViewWithAccessibilityLabel:[self contactCellLabelForUser:0]];
+//    [self logoutFromContactViewController];
 //}
-
-
-
-
-
-//Register two users. Log in. Tap the contact and verify that its checkbox checks. Tap it again and verify that the checkbox unchecks.
--(void)testToVerifyAddressBookSelectionIndicatorFunctionality
-{
-    [self registerTestUser:1];
-    [self logoutFromConversationListViewController];
-    [self registerTestUser:2];
-    [self logoutFromConversationListViewController];
-    
-    [self loginAsTestUser:1];
-    [tester tapViewWithAccessibilityLabel:@"new"];
-    [tester waitForViewWithAccessibilityLabel:[self contactCellLabelForUser:2]];
-    [tester tapViewWithAccessibilityLabel:[self contactCellLabelForUser:2]];
-    
-    [tester waitForViewWithAccessibilityLabel:@"selectionIndicator"];
-    [tester tapViewWithAccessibilityLabel:@"contactCell"];
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"selectionIndicator"];
-}
+//
+////Register two users. Log in. Tap the contact and verify that its checkbox checks. Tap it again and verify that the checkbox unchecks.
+//-(void)testToVerifyAddressBookSelectionIndicatorFunctionality
+//{
+//    [self registerTestUser:1];
+//    [self logoutFromConversationListViewController];
+//    [self registerTestUser:2];
+//    [self logoutFromConversationListViewController];
+//    
+//    [self loginAsTestUser:1];
+//    [tester tapViewWithAccessibilityLabel:@"new"];
+//    [tester waitForViewWithAccessibilityLabel:[self contactCellLabelForUser:2]];
+//    [tester tapViewWithAccessibilityLabel:[self contactCellLabelForUser:2]];
+//    
+//    [tester waitForViewWithAccessibilityLabel:@"selectionIndicator"];
+//    [tester tapViewWithAccessibilityLabel:[self contactCellLabelForUser:2]];
+//    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"selectionIndicator"];
+//    [self logoutFromContactViewController];
+//}
 //
 ////Register two users. Log in. Tap the contact to check its checkbox. Tap the "+" to start a conversation and verify that the proper Conversation view is shown.
 //-(void)testToVerifyStartingAConversationWithTwoContacts
 //{
 //    [self registerTestUser:1];
-//    [self logout];
+//    [self logoutFromConversationListViewController];
 //  
-//    [self registerTestUser:1];
-//    [self logout];
+//    [self registerTestUser:2];
+//    [self logoutFromConversationListViewController];
 //    
 //    [self loginAsTestUser:1];
-//    
 //    [tester tapViewWithAccessibilityLabel:@"new"];
-//    [tester waitForViewWithAccessibilityLabel:@"contactCell"];
-//    [tester tapViewWithAccessibilityLabel:@"contactCell"];
+//    [tester waitForViewWithAccessibilityLabel:[self contactCellLabelForUser:2]];
+//    [tester tapViewWithAccessibilityLabel:[self contactCellLabelForUser:2]];
+//    
 //    [tester tapViewWithAccessibilityLabel:@"start"];
 //    [tester waitForViewWithAccessibilityLabel:@"composeView"];
+//    [self logoutFromConversationViewController];
 //}
-//
-////Register two users. Log in and start a conversation. Log out and back in. Verify that the old conversation is still there.
-//-(void)testToVerifyConversationPersistenceFunctionality
-//{
-//    [self registerTestUser:1];
-//    [self logout];
-//    
-//    [self registerTestUser:2];
-//    [self logout];
-//    
-//    [self loginAsTestUser:1];
-//}
+
+
+//Register two users. Log in and start a conversation. Log out and back in. Verify that the old conversation is still there.
+-(void)testToVerifyConversationPersistenceFunctionality
+{
+    [self registerTestUser:1];
+    [self logout];
+    
+    [self registerTestUser:2];
+    [self logout];
+    
+    [self loginAsTestUser:1];
+}
 //
 ////Register two users. Log in and start a conversation. Tap the back button and verify that the Contacts view returns.
 //-(void)testToVerifyNavigationBetweenContactsandConversations
@@ -536,15 +536,31 @@ NSString *const LSTestUser3Confirmation = @"password3";
     [tester tapViewWithAccessibilityLabel:@"start"];
 }
 
-- (NSString *) contactCellLabelForUser:(int)userID
+- (NSString *) contactCellLabelForUser:(NSUInteger)userID
 {
-    return [NSString stringWithFormat:@"contactCell+%d", userID];
+    switch (userID) {
+        case 0:
+            return [NSString stringWithFormat:@"%@", LSTestUser0FullName];
+            break;
+        case 1:
+            return [NSString stringWithFormat:@"%@", LSTestUser1FullName];
+            break;
+        case 2:
+            return [NSString stringWithFormat:@"%@", LSTestUser2FullName];
+            break;
+        case 3:
+            return [NSString stringWithFormat:@"%@", LSTestUser3FullName];
+            break;
+        default:
+            break;
+    }
+    return nil;
 }
 
 #pragma mark
 #pragma mark Send Message
 
-- (void)sendMessageWithNumber:(int)number
+- (void)sendMessageWithNumber:(NSUInteger)number
 {
     [tester tapViewWithAccessibilityLabel:@"composeTextView"];
     [tester waitForViewWithAccessibilityLabel:@"space"]; //Space represents that the keyboard is show, hence the focus is on the text entry box
@@ -590,7 +606,6 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 -(void)logoutFromConversationViewController
 {
-    [tester tapViewWithAccessibilityLabel:@"Contacts"];
     [tester tapViewWithAccessibilityLabel:@"conversationList"];
     [tester tapViewWithAccessibilityLabel:@"logout"];
     [tester waitForViewWithAccessibilityLabel:@"Home"];

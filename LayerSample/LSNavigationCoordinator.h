@@ -10,8 +10,9 @@
 #import "LSHomeViewController.h"
 #import "LSConversationListViewController.h"
 
-@interface LSNavigationController : UINavigationController <LSHomeViewControllerDelegate, LSConversationListViewControllerDelegate>
+@interface LSNavigationCoordinator : NSObject <LSHomeViewControllerDelegate, LSConversationListViewControllerDelegate>
 
+@property (nonatomic, strong) UINavigationController *navigationController;
 @property (nonatomic, strong) LSLayerController *layerController;
 
 - (void) setViewController:(id)viewController;

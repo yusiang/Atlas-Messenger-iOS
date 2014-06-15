@@ -7,7 +7,8 @@
 //
 
 #import "LSHomeViewController.h"
-#import "LSNavigationController.h"
+#import "LSNavigationCoordinator.h"
+#import "LSUserManager.h"
 #import "LSButton.h"
 
 @interface LSHomeViewController ()
@@ -105,7 +106,7 @@
 
 -(void)registrationSuccessful
 {
-    [self.delegate presentConversationViewController];
+    [self presentConversationViewController];
 }
 
 #pragma mark
@@ -113,7 +114,25 @@
 
 -(void)loginSuccess
 {
-    [self.delegate presentConversationViewController];
+    [self presentConversationViewController];
 }
 
+- (void) presentConversationViewController
+{
+    LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
+    UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
+    
+    [self presentViewController:conversationController animated:TRUE completion:^{
+        NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
+        [navigationArray removeObjectAtIndex: 1];
+        self.navigationController.viewControllers = navigationArray;
+    }];
+
+    [self.layerController initializeLayerClientWithUserIdentifier:[LSUserManager loggedInUserID] completion:^(NSError * error) {
+        if (!error) {
+            NSLog(@"Layer Client Started");
+            conversationListViewController.layerController = self.layerController;
+        }
+    }];
+}
 @end

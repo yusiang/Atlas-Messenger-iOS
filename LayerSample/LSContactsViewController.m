@@ -78,8 +78,7 @@
     
     NSDictionary *userInfo = [self.contacts objectAtIndex:indexPath.row];
     cell.textLabel.text = [userInfo objectForKey:@"fullName"];
-    [cell setAccessibilityLabel:[NSString stringWithFormat:@"contactCell+%@", [userInfo objectForKey:@"userID"]]];
-    NSLog(@"Contact Cell String %@",[NSString stringWithFormat:@"contactCell+%@", [userInfo objectForKey:@"userID"]]);
+    [cell setAccessibilityLabel:[NSString stringWithFormat:@"%@", [userInfo objectForKey:@"fullName"]]];
     return cell;
 }
 
