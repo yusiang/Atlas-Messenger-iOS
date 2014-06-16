@@ -19,6 +19,8 @@
 
 - (void)sendMessage:(NSString *)messageText inConversation:(LYRConversation *)conversation;
 
+- (void)sendImage:(UIImage *)image inConversation:(LYRConversation *)conversation;
+
 -(LYRConversation *)conversationForParticipants:(NSArray *)particiapnts;
 
 @end

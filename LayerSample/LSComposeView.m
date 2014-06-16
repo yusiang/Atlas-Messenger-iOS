@@ -50,7 +50,7 @@
     button.layer.cornerRadius = 4;
     [button addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
     [button setBackgroundColor:[UIColor redColor]];
-    [button setAccessibilityLabel:@"sendButton"];
+    [button setAccessibilityLabel:@"cameraButton"];
     [self addSubview:button];
 }
 
@@ -75,8 +75,14 @@
 {
     if (self.textField.text) {
         [self.delegate sendMessageWithText:self.textField.text];
+        [self.textField setText:@""];
     }
-    [self.textField setText:@""];
+    if ([self.textField.leftView isKindOfClass:[UIImageView class]]) {
+        UIImageView *imageView = (UIImageView *)self.textField.leftView;
+        [self.delegate sendMessageWithImage:imageView.image];
+        self.textField.leftView = nil;
+    }
+    
     [self textFieldShouldReturn:self.textField];
 }
 
@@ -86,7 +92,18 @@
     self.textField.frame = CGRectMake(self.textField.frame.origin.x, self.textField.frame.origin.y - 50, self.textField.frame.size.width, self.textField.frame.size.height + 50);
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
     imageView.image = image;
+    imageView.accessibilityLabel = @"selectedImage";
     [self.textField setLeftView:imageView];
+}
+
+- (void)imageTextEntryFieldSize
+{
+    
+}
+
+- (void)defaultTextEntryFieldSize
+{
+    
 }
 
 #pragma mark

@@ -15,6 +15,7 @@
 @property (nonatomic, strong) UITextView *messageText;
 @property (nonatomic, strong) UILabel *senderLabel;
 @property (nonatomic, strong) LSAvatarImageView *avatarImageView;
+@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic) BOOL wasSentByLoggedInUser;
 
 @end
@@ -38,7 +39,8 @@
     [self addBubbleViewForMessage:message];
     [self addAvatarImageForMessage:message];
     [self addSenderLabelForIDForMessage:message];
-    [self addMessageTextForMessage:message];
+    
+    [self addMessageContentForMessagePart:[message.parts firstObject]];
     
     if ([message.sentByUserID isEqualToString:[LSUserManager loggedInUserID]]) {
         [self configureCellForLoggedInUser];
@@ -54,6 +56,8 @@
     
     self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
     
+    self.imageView.frame = CGRectMake(2, 2, self.bubbleView.frame.size.width - 4, self.bubbleView.frame.size.height - 4);
+    
     self.avatarImageView.frame = CGRectMake(self.frame.size.width - 52, self.frame.size.height - 52, 46, 46);
 }
 
@@ -63,6 +67,8 @@
     self.bubbleView.backgroundColor = [UIColor blueColor];
     
     self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
+    
+    self.imageView.frame =  CGRectMake(2, 2, self.bubbleView.frame.size.width - 4, self.bubbleView.frame.size.height - 4);
     
     self.avatarImageView.frame = CGRectMake(6, self.frame.size.height - 52, 46, 46);
 }
@@ -97,7 +103,16 @@
     [self addSubview:self.senderLabel];
 }
 
-- (void)addMessageTextForMessage:(LYRMessage *)message
+- (void) addMessageContentForMessagePart:(LYRMessagePart *)part
+{
+    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+        [self addTextForMessagePart:part];
+    } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+        [self addPhotoForMessagePart:part];
+    }
+}
+
+- (void)addTextForMessagePart:(LYRMessagePart *)part
 {
     if (!self.messageText) {
         self.messageText = [[UITextView alloc] init];
@@ -105,7 +120,6 @@
         self.messageText.font = [UIFont fontWithName:kLayerFont size:16];
         self.messageText.editable = FALSE;
     }
-    LYRMessagePart *part = [message.parts objectAtIndex:0];
     NSString *messageText = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
     self.messageText.text = messageText;
     self.messageText.backgroundColor = [UIColor clearColor];
@@ -115,6 +129,19 @@
     self.accessibilityLabel = label;
 }
 
+- (void)addPhotoForMessagePart:(LYRMessagePart *)part
+{
+    if (!self.imageView) {
+        self.imageView = [[UIImageView alloc] init];
+        self.imageView.layer.cornerRadius = 4;
+        [self.bubbleView addSubview:self.imageView];
+    }
+    
+    self.imageView.image = [[UIImage alloc] initWithData:part.data];
+    
+    NSString *label = [NSString stringWithFormat:@"Photo sent by %@", self.senderLabel.text];
+    self.accessibilityLabel = label;
+}
 
 
 @end

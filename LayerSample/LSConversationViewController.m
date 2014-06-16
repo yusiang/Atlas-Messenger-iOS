@@ -189,6 +189,13 @@
     [self.collectionView reloadData];
 }
 
+- (void)sendMessageWithImage:(UIImage *)image
+{
+    [self.layerController sendImage:image inConversation:self.conversation];
+    [self fetchMessages];
+    [self.collectionView reloadData];
+}
+
 - (void)cameraTapped
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc]

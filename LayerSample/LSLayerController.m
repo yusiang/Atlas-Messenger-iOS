@@ -133,6 +133,16 @@
     NSLog(@"The error is %@", error);
 }
 
+- (void)sendImage:(UIImage *)image inConversation:(LYRConversation *)conversation
+{
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:UIImagePNGRepresentation(image)];
+    LYRMessage *message = [self.client messageWithConversation:conversation parts:@[part]];
+
+    NSError *error;
+    [self.client sendMessage:message error:&error];
+    NSLog(@"The error is %@", error);
+}
+
 -(LYRConversation *)conversationForParticipants:(NSArray *)particiapnts
 {
     NSMutableArray *conversationParticipants = [[NSMutableArray alloc] init];

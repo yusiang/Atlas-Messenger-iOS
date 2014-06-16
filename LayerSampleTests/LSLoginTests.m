@@ -427,102 +427,89 @@ NSString *const LSTestUser3Confirmation = @"password3";
     //[tester waitForViewWithAccessibilityLabel:@"This is another test message"];
 }
 
+//Push an image to a know location on the device. Create two users. Log in as one, create a conversation with the other. Tap the camera button. Verify that a photo prompt pops up with options for taking a picture or attaching an image from the filesystem. Select the filesystem option. Select the pushed photo. Verify that a photo is added to the conversation view.
+- (void)testToVerifySelectingAnImageFromTheCameraRollAndSending
+{
+    [self registerTestUser:1];
+    [self logoutFromConversationListViewController];
+    
+    [self registerTestUser:2];
+    [self logoutFromConversationListViewController];
+    
+    [self loginAsTestUser:1];
+    
+    [self startConversationWithUserId:@[[NSNumber numberWithInt:2]]];
+    
+    [self selectPhotoFromCameraRoll];
+}
 
-////Push an image to a know location on the device. Create two users. Log in as one, create a conversation with the other. Tap the camera button. Verify that a photo prompt pops up with options for taking a picture or attaching an image from the filesystem. Select the filesystem option. Select the pushed photo. Verify that a photo is added to the conversation view.
-//- (void)testToVerifySelectingAnImageFromTheCameraRollAndSending
-//{
-//    
-//}
-//
-////Push an image to a know location on the device. Create two users. Log in as one and send a photo to the other. Log in as the recipient and verify that the photo was received.
-//- (void)testToVerifyASentPhotoIsRecievedByTheRecipient
-//{
-//    
-//}
-//
-////Push three images to known locations. Create three users. Log in as one and create a group chat with the other two. Send two text messages and one of the photos. Log in as the second user. Send another photo and two additional text messages. Log in as the third user. Verify that the prior messages are all there in the proper order from the proper senders.
-//- (void)testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat
-//{
-//    
-//}
+//Push an image to a know location on the device. Create two users. Log in as one and send a photo to the other. Log in as the recipient and verify that the photo was received.
+- (void)testToVerifyASentPhotoIsRecievedByTheRecipient
+{
+    [self registerTestUser:1];
+    [self logoutFromConversationListViewController];
+    
+    [self registerTestUser:2];
+    [self logoutFromConversationListViewController];
+    
+    [self loginAsTestUser:1];
+    
+    [self startConversationWithUserId:@[[NSNumber numberWithInt:2]]];
+    
+    [self selectPhotoFromCameraRoll];
+}
 
-
-//======== OLD TESTS =========//
-
-//- (void)testToVerifySendButtonFunctionality
-//{
-//    [system presentViewControllerWithClass:[LSConversationViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
-//
-//    }];
-//    [tester tapViewWithAccessibilityLabel:@"Compose TextView"];
-//    [tester waitForViewWithAccessibilityLabel:@"E"];
-//    [tester enterText:@"This is a test!" intoViewWithAccessibilityLabel:@"Compose TextView"];
-//    [tester tapViewWithAccessibilityLabel:@"Button"];
-//}
-//
-//- (void)testToVerifyTappingOnConversationCellFunctionality
-//{
-//    [system presentViewControllerWithClass:[LSConversationListViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
-//
-//    }];
-//    [tester tapViewWithAccessibilityLabel:@"Conversation Cell"];
-//    [tester waitForViewWithAccessibilityLabel:@"Conversation List"];
-//}
-//
-//- (void)testNonMatchingPasswordRegistrationError
-//{
-//    [system presentViewControllerWithClass:[LSRegistrationTableViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
-//
-//    }];
-//    [tester enterText:@"tester@layer.com" intoViewWithAccessibilityLabel:@"Username"];
-//    [tester enterText:@"password" intoViewWithAccessibilityLabel:@"Password"];
-//    [tester enterText:@"password1" intoViewWithAccessibilityLabel:@"Confirm"];
-//    [tester tapViewWithAccessibilityLabel:@"Register"];
-//}
-//
-//- (void)testRegistrationFunctionality
-//{
-//    [system presentViewControllerWithClass:[LSRegistrationTableViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
-//
-//    }];
-//    [tester enterText:@"tester@layer.com" intoViewWithAccessibilityLabel:@"Username"];
-//    [tester enterText:@"password" intoViewWithAccessibilityLabel:@"Password"];
-//    [tester enterText:@"password" intoViewWithAccessibilityLabel:@"Confirm"];
-//    [tester tapViewWithAccessibilityLabel:@"Register"];
-//
-//    [tester waitForViewWithAccessibilityLabel:@"Sender Label"];
-//}
-//
-//- (void)testLoginFunctionality
-//{
-//    [system presentViewControllerWithClass:[LSLoginTableViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
-//
-//    }];
-//    [tester enterText:@"tester@layer.com" intoViewWithAccessibilityLabel:@"Username"];
-//    [tester enterText:@"Password" intoViewWithAccessibilityLabel:@"Password"];
-//    [tester tapViewWithAccessibilityLabel:@"Login"];
-//    [tester waitForViewWithAccessibilityLabel:@"Sender Label"];
-//}
-//
-//- (void)testRegisterButton
-//{
-//    [system presentViewControllerWithClass:[LSHomeViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
-//
-//    }];
-//    [tester tapViewWithAccessibilityLabel:@"Register"];
-//    [tester waitForTappableViewWithAccessibilityLabel:@"Username"];
-//    [tester tapViewWithAccessibilityLabel:@"Back"];
-//}
-//
-//- (void)testLoginButton
-//{
-//    [system presentViewControllerWithClass:[LSHomeViewController class] withinNavigationControllerWithNavigationBarClass:nil toolbarClass:nil configurationBlock:^(id viewController) {
-//
-//    }];
-//    [tester tapViewWithAccessibilityLabel:@"Login"];
-//    [tester waitForTappableViewWithAccessibilityLabel:@"Username"];
-//    [tester tapViewWithAccessibilityLabel:@"Back"];
-//}
+//Push three images to known locations. Create three users. Log in as one and create a group chat with the other two. Send two text messages and one of the photos. Log in as the second user. Send another photo and two additional text messages. Log in as the third user. Verify that the prior messages are all there in the proper order from the proper senders.
+- (void)testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat
+{
+    [self registerTestUser:1];
+    [self logoutFromConversationListViewController];
+    
+    [self registerTestUser:2];
+    [self logoutFromConversationListViewController];
+    
+    [self registerTestUser:3];
+    [self logoutFromConversationListViewController];
+    
+    [self loginAsTestUser:1];
+    
+    [self startConversationWithUserId:@[[NSNumber numberWithInt:2], [NSNumber numberWithInt:3]]];
+    [tester tapViewWithAccessibilityLabel:@"conversationList"];
+    [tester waitForViewWithAccessibilityLabel:@"conversationList"];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[NSString stringWithFormat:@"%d", 2], [NSString stringWithFormat:@"%d", 3]]]];
+    
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[NSString stringWithFormat:@"%d", 2], [NSString stringWithFormat:@"%d", 3]]]];
+    
+    [self sendMessageWithText:@"Hello"];
+    [self sendMessageWithText:@"This is a test message"];
+    
+//    [self selectPhotoFromCameraRoll];
+//    [self sendPhoto];
+    
+    [tester waitForTimeInterval:5];
+    
+    [self logoutFromConversationViewController];
+    [self loginAsTestUser:2];
+    
+//    [self selectPhotoFromCameraRoll];
+//    [self sendPhoto];
+    
+    [self sendMessageWithText:@"Hello"];
+    [self sendMessageWithText:@"This is a test message"];
+    
+    [tester waitForTimeInterval:5];
+    
+    [self logoutFromConversationViewController];
+    [self loginAsTestUser:3];
+    
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:1]];
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:1]];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:1]];
+    
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:2]];
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:2]];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:2]];
+}
 
 //======== Factory Methods =========//
 
@@ -679,6 +666,43 @@ NSString *const LSTestUser3Confirmation = @"password3";
             break;
         case 3:
             return [NSString stringWithFormat:@"%@ sent by %@", text, LSTestUser2FullName];
+            break;
+        default:
+            break;
+    }
+    return nil;
+}
+
+- (void)selectPhotoFromCameraRoll
+{
+    [tester tapViewWithAccessibilityLabel:@"cameraButton"];
+    [tester tapViewWithAccessibilityLabel:@"Choose Existing"];
+    [tester tapViewWithAccessibilityLabel:@"Saved Photos"];
+    [tester tapViewWithAccessibilityLabel:@"Photo, Landscape, 8:14 AM"];
+    [tester waitForViewWithAccessibilityLabel:@"composeView"];
+    [tester waitForViewWithAccessibilityLabel:@"selectedImage"];
+}
+
+-(void)sendPhoto
+{
+    [tester tapViewWithAccessibilityLabel:@"sendButton"];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[[LSUserManager loggedInUserID] intValue]]];
+}
+
+- (NSString *)imageCelLabelForUserID:(NSInteger)userId
+{
+    switch (userId) {
+        case 0:
+            return [NSString stringWithFormat:@"Photo sent by %@", LSTestUser0FullName];
+            break;
+        case 1:
+            return [NSString stringWithFormat:@"Photo sent by %@", LSTestUser1FullName];
+            break;
+        case 2:
+            return [NSString stringWithFormat:@"Photo sent by %@", LSTestUser2FullName];
+            break;
+        case 3:
+            return [NSString stringWithFormat:@"Photo sent by %@", LSTestUser3FullName];
             break;
         default:
             break;
