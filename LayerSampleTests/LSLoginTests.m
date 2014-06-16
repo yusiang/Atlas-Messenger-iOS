@@ -426,8 +426,8 @@ NSString *const LSTestUser3Confirmation = @"password3";
     [self logoutFromConversationListViewController];
     //[tester waitForViewWithAccessibilityLabel:@"This is another test message"];
 }
-//
-//
+
+
 ////Push an image to a know location on the device. Create two users. Log in as one, create a conversation with the other. Tap the camera button. Verify that a photo prompt pops up with options for taking a picture or attaching an image from the filesystem. Select the filesystem option. Select the pushed photo. Verify that a photo is added to the conversation view.
 //- (void)testToVerifySelectingAnImageFromTheCameraRollAndSending
 //{
