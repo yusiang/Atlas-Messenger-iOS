@@ -31,20 +31,25 @@
 #pragma mark
 #pragma mark LSLayerController Public Methods
 
-- (void)initializeLayerClientWithUserIdentifier:(NSString *)identifier completion:(void (^)(NSError *error))completion
+- (void)initializeLayerClientWithCompletion:(void (^)(NSError *))completion
 {
     self.client = [[LYRClient alloc] initWithBaseURL:LYRTestSPDYBaseURL() appID:[LYRTestingContext sharedContext].appID];
     [self.client setDelegate:self];
+}
+
+-(void)authenticateUser:(NSString *)userID completion:(void (^)(NSError *))completion
+{
     [self.client startWithCompletion:^(BOOL success, NSError *error) {
-        if(success) {
-            [self.client requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-                NSString *identityToken = [[LYRTestingContext sharedContext].provider JWSIdentityTokenForUserID:identifier nonce:nonce];
-                [self.client authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-                    if(!error) NSLog(@"Success");
-                    completion(error);
-                }];
+        NSAssert(!error, @"Can't continue without a connected layer client");
+        NSAssert(userID, @"Cannont continue without a userID");
+        [self.client requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+            NSAssert(nonce, @"Cannont continue with a nil nonce");
+            NSString *identityToken = [[LYRTestingContext sharedContext].provider JWSIdentityTokenForUserID:userID nonce:nonce];
+            [self.client authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                NSAssert(!error, @"Failure authentication client for userID %@", userID);
+                completion(error);
             }];
-        }
+        }];
     }];
 }
 

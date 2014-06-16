@@ -7,9 +7,14 @@
 //
 
 #import "LSAppDelegate.h"
-
+#import "LSUserManager.h"
 
 @implementation LSAppDelegate
+
+NSString *const LSTestUser0FullName = @"Layer Tester0";
+NSString *const LSTestUser0Email = @"tester0@layer.com";
+NSString *const LSTestUser0Password = @"password0";
+NSString *const LSTestUser0Confirmation = @"password0";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -39,6 +44,9 @@
     if (_layerController != layerController) {
         _layerController = layerController;
     }
+    [_layerController initializeLayerClientWithCompletion:^(NSError *error) {
+        NSLog(@"Layer Client Initialized");
+    }];
 }
 
 - (void)setParseController:(LSParseController *)parseController

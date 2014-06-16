@@ -107,7 +107,7 @@
 
 - (void)registrationSuccessful
 {
-    [self initializeLayerClient];
+    [self authenticateLayerClient];
 }
 
 #pragma mark
@@ -115,18 +115,18 @@
 
 - (void)loginSuccess
 {
-    [self initializeLayerClient];
+    [self authenticateLayerClient];
 }
 
-- (void)initializeLayerClient
+- (void)authenticateLayerClient
 {
     [SVProgressHUD show];
-    [self.layerController initializeLayerClientWithUserIdentifier:[LSUserManager loggedInUserID] completion:^(NSError * error) {
+    [self.layerController authenticateUser:[LSUserManager loggedInUserID] completion:^(NSError *error) {
         if (!error) {
             NSLog(@"Layer Client Started");
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self presentConversationViewController];
-                [SVProgressHUD dismiss];
+                
             });
         }
     }];
@@ -134,6 +134,7 @@
 
 - (void)presentConversationViewController
 {
+    [SVProgressHUD dismiss];
     LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
     conversationListViewController.layerController = self.layerController;
     
@@ -144,7 +145,5 @@
         [navigationArray removeObjectAtIndex: 1];
         self.navigationController.viewControllers = navigationArray;
     }];
-
-
 }
 @end

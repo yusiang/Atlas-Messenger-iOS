@@ -13,9 +13,9 @@
 
 @property (nonatomic, strong) LYRClient *client;
 
-- (void)initializeLayerClientWithUserIdentifier:(NSString *)identifier completion:(void (^)(NSError *error))completion;
+- (void)initializeLayerClientWithCompletion:(void (^)(NSError *error))completion;
 
-- (void)authenticateLayerClientWithCompletion:(void (^)(NSError * error))completion;
+- (void)authenticateUser:(NSString *)userID completion:(void (^)(NSError *error))completion;
 
 - (void)sendMessage:(NSString *)messageText inConversation:(LYRConversation *)conversation;
 

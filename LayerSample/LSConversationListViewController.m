@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSOrderedSet *conversations;
+@property (nonatomic) BOOL onScreen;
 
 @end
 
@@ -40,18 +41,22 @@
     [self addLeftBarButton];
     [self setAccessibilityLabel:@"conversationList"];
     [self addCollectionView];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    self.onScreen = TRUE;
     // TODO: Temporarily do a complete reload pending notification mechanism
     [self fetchLayerConversations];
     [self.collectionView reloadData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.onScreen = FALSE;
+}
 - (void)setLayerController:(LSLayerController *)layerController
 {
     if(!_layerController) {
@@ -66,7 +71,8 @@
     NSAssert(self.layerController, @"Layer Controller should not be `nil`.");
     NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
     self.conversations = conversations;
-    if (!self.conversations.count > 0){
+    
+    if (!self.conversations.count > 0 && self.onScreen){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self fetchLayerConversations];
             [self.collectionView reloadData];
@@ -162,8 +168,10 @@
 
 - (void)logoutTapped
 {
-    [self.navigationController dismissViewControllerAnimated:TRUE completion:nil];
-    [self.layerController.client stop];
+    [self.navigationController dismissViewControllerAnimated:TRUE completion:^{
+        [self.layerController.client stop];
+    }];
+    
 }
 
 - (void)newConversationTapped
