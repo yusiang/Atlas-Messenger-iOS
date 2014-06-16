@@ -7,6 +7,7 @@
 //
 
 #import "LSMessageCell.h"
+#import "LSUserManager.h"
 
 @interface LSMessageCell ()
 
@@ -14,10 +15,14 @@
 @property (nonatomic, strong) UITextView *messageText;
 @property (nonatomic, strong) UILabel *senderLabel;
 @property (nonatomic, strong) LSAvatarImageView *avatarImageView;
+@property (nonatomic) BOOL wasSentByLoggedInUser;
 
 @end
 
 @implementation LSMessageCell
+
+#define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
+#define kLayerFont      @"Avenir-Medium"
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -30,44 +35,86 @@
 
 - (void)updateCellWithMessage:(LYRMessage *)message andLayerController:(LSLayerController *)controller
 {
-    LYRMessagePart *part = [message.parts firstObject];
-    [self addAvatarImage];
-    [self addBubbleView];
-    [self addMessageText:[NSString stringWithUTF8String:[part.data bytes]]];
-    [self addSenderLabelForID:message.sentByUserID];
+    [self addBubbleViewForMessage:message];
+    [self addAvatarImageForMessage:message];
+    [self addSenderLabelForIDForMessage:message];
+    [self addMessageTextForMessage:message];
+    
+    if ([message.sentByUserID isEqualToString:[LSUserManager loggedInUserID]]) {
+        [self configureCellForLoggedInUser];
+    }else {
+        [self configureCellForNonLoggedInUser];
+    }
 }
 
-- (void)addAvatarImage
+- (void)configureCellForLoggedInUser
+{
+    self.bubbleView.frame = CGRectMake(58, 6, self.frame.size.width - 116, self.frame.size.height - 12);
+    self.bubbleView.backgroundColor = kLayerColor;
+    
+    self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
+    
+    self.avatarImageView.frame = CGRectMake(self.frame.size.width - 52, self.frame.size.height - 52, 46, 46);
+}
+
+- (void)configureCellForNonLoggedInUser
+{
+    self.bubbleView.frame = CGRectMake(42, 6, self.frame.size.width - 116, self.frame.size.height - 12);
+    self.bubbleView.backgroundColor = [UIColor blueColor];
+    
+    self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
+    
+    self.avatarImageView.frame = CGRectMake(6, self.frame.size.height - 52, 46, 46);
+}
+
+
+- (void)addBubbleViewForMessage:(LYRMessage *)message
+{
+    if (!self.bubbleView) {
+        self.bubbleView= [[UIView alloc] init];
+        self.bubbleView.layer.cornerRadius = 4.0f;
+    }
+    [self addSubview:self.bubbleView];
+}
+
+- (void)addAvatarImageForMessage:(LYRMessage *)message
 {
     if (!self.avatarImageView) {
         self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 46, 46)];
+        [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     }
     [self addSubview:self.avatarImageView];
 }
 
-- (void)addBubbleView
-{
-    if (!self.bubbleView) {
-        self.bubbleView= [[UIView alloc] init];
-    }
-    self.bubbleView.layer.cornerRadius = 4.0f;
-    [self addSubview:self.bubbleView];
-}
-
-- (void)addMessageText:(NSString *)text
-{
-    if (!self.messageText) {
-        self.messageText = [[UITextView alloc] init];
-    }
-    [self addSubview:self.messageText];
-}
-
-- (void)addSenderLabelForID:(NSString *)senderID
+- (void)addSenderLabelForIDForMessage:(LYRMessage *)message
 {
     if (!self.senderLabel) {
         self.senderLabel = [[UILabel alloc] init];
     }
+    NSDictionary *userInfo = [LSUserManager userInfoForUserID:[message sentByUserID]];
+    NSString *senderName = [userInfo objectForKey:@"fullName"];
+    self.senderLabel.text = senderName;
     [self addSubview:self.senderLabel];
 }
+
+- (void)addMessageTextForMessage:(LYRMessage *)message
+{
+    if (!self.messageText) {
+        self.messageText = [[UITextView alloc] init];
+        self.messageText.textColor = [UIColor whiteColor];
+        self.messageText.font = [UIFont fontWithName:kLayerFont size:16];
+        self.messageText.editable = FALSE;
+    }
+    LYRMessagePart *part = [message.parts objectAtIndex:0];
+    NSString *messageText = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
+    self.messageText.text = messageText;
+    self.messageText.backgroundColor = [UIColor clearColor];
+    [self.bubbleView addSubview:self.messageText];
+
+    NSString *label = [NSString stringWithFormat:@"%@ sent by %@", messageText, self.senderLabel.text];
+    self.accessibilityLabel = label;
+}
+
+
 
 @end

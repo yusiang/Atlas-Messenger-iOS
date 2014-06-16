@@ -43,7 +43,7 @@
 
 - (void)updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller
 {
-    LYRMessage *message = [[controller.client messagesForConversation:conversation] firstObject];
+    LYRMessage *message = [[controller.client messagesForConversation:conversation] lastObject];
     LYRMessagePart *part = [message.parts firstObject];
     [self addAvatarImage];
     [self addSenderLabelWithParticipants:[conversation.participants allObjects]];
@@ -73,13 +73,15 @@
     
     NSString *senderLabel = @"";
     for (NSString *userID in participants) {
-        if ([userID isEqualToString:[LSUserManager loggedInUserID]]) break;
-        NSString *participant = (NSString *)[[LSUserManager userInfoForUserID:userID] objectForKey:@"fullName"];
-        senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", participant]];
+        if (![userID isEqualToString:[LSUserManager loggedInUserID]]) {
+            NSString *participant = (NSString *)[[LSUserManager userInfoForUserID:userID] objectForKey:@"fullName"];
+            senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", participant]];
+        }
     }
     self.senderName.text = senderLabel;
     self.senderName.accessibilityLabel = senderLabel;
     self.senderName.userInteractionEnabled = FALSE;
+    self.accessibilityLabel = senderLabel;
 }
 
 - (void)addLastMessageTextWithPart:(LYRMessagePart *)part
@@ -90,7 +92,7 @@
     }
     
     if(part)  {
-        self.lastMessageText.text = [NSString stringWithUTF8String:[part.data bytes]];
+        self.lastMessageText.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         [self.lastMessageText setFont:[UIFont fontWithName:kLayerFont size:12]];
         [self.lastMessageText setTextColor:[UIColor grayColor]];
     }

@@ -66,6 +66,12 @@
     NSAssert(self.layerController, @"Layer Controller should not be `nil`.");
     NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
     self.conversations = conversations;
+    if (!self.conversations.count > 0){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self fetchLayerConversations];
+            [self.collectionView reloadData];
+        });
+    }
 }
 
 - (void)addLeftBarButton
@@ -118,17 +124,7 @@
 {
     LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
     [cell updateCellWithConversation:conversation andLayerController:self.layerController];
-    [cell setAccessibilityLabel:[self accessibilityLabelForParticipants:[conversation.participants allObjects]]];
     return cell;
-}
-
-- (NSString *)accessibilityLabelForParticipants:(NSArray *)participants
-{
-    NSString *label = @"conversationCell";
-    for (NSString *userID in participants) {
-        [label stringByAppendingString:[NSString stringWithFormat:@"+%@", userID]];
-    }
-    return label;
 }
 
 #pragma mark
@@ -167,6 +163,7 @@
 - (void)logoutTapped
 {
     [self.navigationController dismissViewControllerAnimated:TRUE completion:nil];
+    [self.layerController.client stop];
 }
 
 - (void)newConversationTapped

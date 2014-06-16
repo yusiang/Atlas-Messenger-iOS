@@ -36,7 +36,6 @@
 {
     [super viewDidLoad];
     self.title = @"Chat";
-    [self fetchLayerConversations];
     [self setAccessibilityLabel:@"chat"];
     [self addCollectionView];
     [self addComposeView];
@@ -46,7 +45,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSOrderedSet *set = [self.layerController.client conversationsForIdentifiers:nil];
+    [self fetchMessages];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -60,7 +59,7 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void)fetchLayerConversations
+- (void)fetchMessages
 {
     self.messages = [self.layerController.client messagesForConversation:self.conversation];
 }
@@ -73,6 +72,8 @@
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
         self.collectionView.backgroundColor = [UIColor whiteColor];
+        self.collectionView.alwaysBounceVertical = TRUE;
+        self.collectionView.bounces = TRUE;
         [self.view addSubview:self.collectionView];
     }
     [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:kMessageCellIdentifier];
@@ -102,7 +103,6 @@
 # pragma mark Collection View Data Source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    //return self.messages.count;
     return self.messages.count;
 }
 
@@ -114,17 +114,14 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSMessageCell *cell = [[LSMessageCell alloc] init];
+    LSMessageCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kMessageCellIdentifier forIndexPath:indexPath];
     cell = [self configureCell:cell forIndexPath:indexPath];
     return cell;
 }
 
 - (LSMessageCell *)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
-    cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kMessageCellIdentifier forIndexPath:indexPath];
-    [cell updateCellWithMessage:message andLayerController:self.layerController];
-    [cell setAccessibilityLabel:@"Message Cell"];
+    [cell updateCellWithMessage:[self.messages objectAtIndex:indexPath.row] andLayerController:self.layerController];
     return cell;
 }
 
@@ -188,6 +185,8 @@
 - (void)sendMessageWithText:(NSString *)text
 {
     [self.layerController sendMessage:text inConversation:self.conversation];
+    [self fetchMessages];
+    [self.collectionView reloadData];
 }
 
 - (void)cameraTapped
