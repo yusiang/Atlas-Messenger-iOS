@@ -10,5 +10,5 @@ XCTasks::TestTask.new do |t|
   t.runner = :xcpretty
   t.output_log = 'xcodebuild.log'
   t.settings["LAYER_TEST_HOST"] = (ENV['LAYER_TEST_HOST'] || 'localhost')
-  t.subtasks = { unit: 'Unit Tests' }
+  t.subtasks = { app: 'LayerSampleTests' }
 end
