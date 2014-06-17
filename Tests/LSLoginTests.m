@@ -41,11 +41,23 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)beforeEach
 {
+    /**
+     If you are going to use user defaults as a data store, you'd be better off by putting a `reset` method on the `LSUserManager` interface that only deletes specific
+     keys used for user management. Otherwise this approach could blow out keys stored by another part of the system and it requires refactoring your tests if you change
+     data store implementations in the future.
+     */
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [defaults removePersistentDomainForName:appDomain];
     [defaults synchronize];
     
+    /**
+     SBW: you never want to use `andWhatever` in an Objective-C method signature unless the method actually take two actions. For example, if you had an object
+     that acted as indexed collection, you might have methods like `addObject:` and `reindex`. You may then want to add a new method that adds the objects from
+     another collection and reindexes: `addObjectsFromArrayAndReindex:foo`. But if you wanted to parameterize it, you'd go with `addObjectsFromArray:array reindex:NO`.
+     This is a very uncommon signature idiom. Try searching the Cocoa headers for the word `And` in method signatures. It rarely appears and typically only in very old
+     API's such as `NSBundle`.
+     */
     [LSUserManager registerWithFullName:LSTestUser0FullName email:LSTestUser0Email password:LSTestUser0Password andConfirmation:LSTestUser0Confirmation];
 }
 

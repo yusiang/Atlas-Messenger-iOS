@@ -26,6 +26,7 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
+        // SBW: viewDidLoad
         self.title = @"Login";
         self.accessibilityLabel = @"Login Screen";
     }

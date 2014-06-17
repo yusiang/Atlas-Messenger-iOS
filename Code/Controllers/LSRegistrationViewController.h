@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+// SBW: Dead code?
 @interface LSRegistrationViewController : UIViewController
 
 @end

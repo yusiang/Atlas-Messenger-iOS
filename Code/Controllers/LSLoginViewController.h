@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+// SBW: Is this just dead code??
 @interface LSLoginViewController : UIViewController
 
 @end

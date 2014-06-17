@@ -26,6 +26,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
+        // SBW: Move to `viewDidLoad`
         self.title = @"Contacts";
         self.accessibilityLabel = @"Contact List";
 
@@ -36,6 +37,8 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // SBW: I'd add an `NSAssert` that `self.contacts` is not `nil`
+    // SBW: I'd add an `NSAssert` that `self.layerController` is not `nil`
     [self fetchContacts];
     [self initializeBarButton];
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
@@ -44,11 +47,12 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 - (void)fetchContacts
 {
     self.contacts = [LSUserManager fetchContacts];
-    self.participants = [[NSMutableArray alloc] init];
+    self.participants = [[NSMutableArray alloc] init]; // SBW: [NSMutableArray new] == [[NSMutableArray alloc] init]
 }
 
 - (void)initializeBarButton
 {
+    // SBW: name things consistently with type: newConversationButton
     UIBarButtonItem *newConversation = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
     newConversation.accessibilityLabel = @"start";
     [self.navigationItem setRightBarButtonItem:newConversation];
@@ -80,6 +84,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)configureCell:(LSContactTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
+    // SBW: You don't want to use an `NSDictionary` in place of a domain model
     NSDictionary *userInfo = [self.contacts objectAtIndex:indexPath.row];
     cell.textLabel.text = [userInfo objectForKey:@"fullName"];
     cell.accessibilityLabel = [NSString stringWithFormat:@"%@", [userInfo objectForKey:@"fullName"]];
@@ -114,9 +119,10 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     LSConversationViewController *controller = [[LSConversationViewController alloc] init];
     controller.conversation = [self.layerController conversationForParticipants:self.participants];
     controller.layerController = self.layerController;
-    [self.navigationController pushViewController:controller animated:TRUE];
+    [self.navigationController pushViewController:controller animated:TRUE]; // SBW: It's more idiomatic to use `YES` instead of `TRUE`
     
     //Remove Controller From Navigation Stack
+    // SBW: You probably want to use `popToViewController:XXXX animated:NO` instead of directly manipulating the stack like this
     NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
     [navigationArray removeObjectAtIndex: 1];
     self.navigationController.viewControllers = navigationArray;

@@ -20,12 +20,15 @@
 
 @implementation LSConversationViewController
 
+// SBW: should be declared static
 NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
+// SBW: Extra spacing
 - (id) init
 {
     self = [super init];
     if(self) {
+        // SBW: Move to `viewDidLoad`
         self.title = @"Conversation";
         self.accessibilityLabel = @"Conversation";
     }
@@ -35,6 +38,8 @@ NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // SBW: I'd add an `NSAssert` that `self.conversation` is not `nil`
+    // SBW: I'd add an `NSAssert` that `self.layerController` is not `nil`
     [self initializeCollectionView];
     [self initializeComposeView];
     [self registerForKeyboardNotifications];

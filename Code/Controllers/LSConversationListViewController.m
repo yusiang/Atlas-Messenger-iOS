@@ -29,6 +29,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 {
     self = [super init];
     if(self) {
+        // SBW: These are better being set in `viewDidLoad`
         self.title = @"Conversations";
         self.accessibilityLabel = @"Conversation List";
     }
@@ -46,7 +47,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 {
     [super viewWillAppear:animated];
     [self.collectionView reloadData];
-    self.onScreen = TRUE;
+    self.onScreen = TRUE; // SBW: You can typically just check `self.navigationController.topViewController == self` as a decent proxy for this
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -55,6 +56,9 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     self.onScreen = FALSE;
 }
 
+/**
+ SBW: I'd recommend using a standard accessor and then doing your fetch in `viewDidLoad`.
+ */
 - (void)setLayerController:(LSLayerController *)layerController
 {
     if(!_layerController) {
@@ -69,6 +73,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
     self.conversations = conversations;
     
+    // SBW: You don't want a method called `fetchLayerConversations` that also does UI changes. I'd probably use KVO on `self.conversations` to drive the reload
     //Doing this for now in place of notifications to changes in the DB
     if (!self.conversations.count > 0 && self.onScreen){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -78,6 +83,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     }
 }
 
+// SBW: I'd probably inline this into `viewDidLoad`
 - (void)initializeBarButtons
 {
     UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutTapped)];
@@ -89,8 +95,10 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     [self.navigationItem setRightBarButtonItem:newConversationButton];
 }
 
+// SBW: I'd probably inline tis into `viewDidLoad`
 - (void)initializeCollectionView
 {
+    // SBW: Why have you set this up to be tolerant of multiple invocations?
     if (!self.collectionView) {
         self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame
                                                  collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
@@ -124,6 +132,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
+    // SBW: Again with the `andLayerController:` anti-pattern
     [cell updateCellWithConversation:[self.conversations objectAtIndex:indexPath.row] andLayerController:self.layerController];
 }
 
@@ -142,11 +151,17 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    /**
+     SBW: You can use a static CGSize constant
+     
+     static CGSize const LSConversationListItemCellSize = { 320, 80 };
+     */
     return CGSizeMake(320, 80);
 }
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
+    // SBW: You can use `UIEdgeInsetsZero`
     return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 

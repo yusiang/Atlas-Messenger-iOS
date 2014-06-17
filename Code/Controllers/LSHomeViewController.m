@@ -27,6 +27,7 @@
 {
     self = [super init];
     if (self) {
+        // SBW: All this view initialization belongs in `viewDidLoad`
         self.view.backgroundColor = [UIColor whiteColor];
         self.title = @"Home";
         self.accessibilityLabel = @"Home Screen";
@@ -80,6 +81,10 @@
 
 - (void)configureLayoutConstraints
 {
+    /**
+     SBW: Are you actually trying to use auto-layout or not? This method signature mentions constraints, but you are
+     fucking with the frames directly
+     */
     self.titleLabel.center = CGPointMake(self.view.center.x, self.view.center.y - 100);
     
     self.registerButton.frame = CGRectMake(0, 0, 280, 60);
@@ -130,6 +135,7 @@
     [self.layerController authenticateUser:[LSUserManager loggedInUserID] completion:^(NSError *error) {
         if (!error) {
             NSLog(@"Layer Client Started");
+            // SBW: We should be providing callback guarantees on the main queue (this is probably missing LayerKit behavior)
             dispatch_async(dispatch_get_main_queue(), ^{
                 [SVProgressHUD dismiss];
                 [self presentConversationViewController];
@@ -146,6 +152,7 @@
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     
     [self presentViewController:conversationController animated:TRUE completion:^{
+        // SBW: You don't want to make assumptions about the view controller's position in the stack. Use query methods and `popToViewController:`
         NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
         [navigationArray removeObjectAtIndex: 1];
         self.navigationController.viewControllers = navigationArray;

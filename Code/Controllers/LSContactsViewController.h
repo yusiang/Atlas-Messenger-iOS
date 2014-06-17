@@ -12,6 +12,6 @@
 @interface LSContactsViewController : UITableViewController
 
 @property (nonatomic, strong) LSLayerController *layerController;
-@property (nonatomic, strong) NSArray *contacts;
+@property (nonatomic, strong) NSArray *contacts; // SBW: Is this ever set externally? It appears to be loaded internally
 
 @end

@@ -115,6 +115,8 @@ NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
     LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]];
     
+    // SBW: I'd create an `LSUser` model and set all this shit as properties on the model
+    // Then your method becomes `[LSUserManager registerUser:user completion:(void (^)(BOOL success, NSError *error))`
     if([LSUserManager registerWithFullName:fullNameCell.textField.text email:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
         [self.delegate registrationSuccess];
     }

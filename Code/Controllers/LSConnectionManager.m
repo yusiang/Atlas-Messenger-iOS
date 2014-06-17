@@ -8,6 +8,7 @@
 
 #import "LSConnectionManager.h"
 
+// SBW: You want to move this configuration out into configuration set by an initializer
 NSString *const LSIdentityTokenURL = @"http://localhost:3000/identityToken";
 
 @implementation LSConnectionManager
@@ -23,6 +24,7 @@ NSString *const LSIdentityTokenURL = @"http://localhost:3000/identityToken";
                             }] resume];
 }
 
+// SBW: I'd probably just initialize one of these on object instantiation into a strong reference
 - (NSURLSession *)defaultURLSession
 {
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -36,12 +38,14 @@ NSString *const LSIdentityTokenURL = @"http://localhost:3000/identityToken";
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:60.0];
     
+    // SBW: You can use the `additionalHeaders` field on `NSURLSessionConfiguration` to push this configuration into the session and avoid repeating
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setHTTPMethod:@"POST"];
     return request;
 }
-                                    
+
+// SBW: This is functionally equivalent to just calling: `[NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil]`
 -(NSData *)bodyWithDictionary:(NSDictionary *)dictionary
 {
     NSError *error;
