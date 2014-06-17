@@ -120,13 +120,13 @@
 
 - (void)authenticateLayerClient
 {
+    
     [SVProgressHUD show];
     [self.layerController authenticateUser:[LSUserManager loggedInUserID] completion:^(NSError *error) {
         if (!error) {
             NSLog(@"Layer Client Started");
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self presentConversationViewController];
-                
             });
         }
     }];

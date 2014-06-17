@@ -39,6 +39,7 @@
 		0A8EF546194A6B800058012E /* LSContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8EF545194A6B800058012E /* LSContactsViewController.m */; };
 		0A8EF549194A6C4D0058012E /* LSContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8EF548194A6C4D0058012E /* LSContactTableViewCell.m */; };
 		0A9E53F2194CD7280074CBC6 /* LSUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9E53F1194CD7280074CBC6 /* LSUserManager.m */; };
+		0AA92FB4194FADC2001052AC /* LSMediaAttachement.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA92FB3194FADC2001052AC /* LSMediaAttachement.m */; };
 		0AADB5C01947C7DB0083732B /* LSParseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AADB5BF1947C7DB0083732B /* LSParseController.m */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
@@ -124,6 +125,8 @@
 		0A8EF548194A6C4D0058012E /* LSContactTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSContactTableViewCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0A9E53F0194CD7280074CBC6 /* LSUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUserManager.h; sourceTree = "<group>"; };
 		0A9E53F1194CD7280074CBC6 /* LSUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUserManager.m; sourceTree = "<group>"; };
+		0AA92FB2194FADC2001052AC /* LSMediaAttachement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSMediaAttachement.h; sourceTree = "<group>"; };
+		0AA92FB3194FADC2001052AC /* LSMediaAttachement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMediaAttachement.m; sourceTree = "<group>"; };
 		0AADB5BE1947C7DB0083732B /* LSParseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSParseController.h; sourceTree = "<group>"; };
 		0AADB5BF1947C7DB0083732B /* LSParseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSParseController.m; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -452,6 +455,8 @@
 			children = (
 				0ADEFE8F1947DAF70064DF09 /* LSComposeView.h */,
 				0ADEFE901947DAF70064DF09 /* LSComposeView.m */,
+				0AA92FB2194FADC2001052AC /* LSMediaAttachement.h */,
+				0AA92FB3194FADC2001052AC /* LSMediaAttachement.m */,
 			);
 			name = ComposeView;
 			sourceTree = "<group>";
@@ -636,6 +641,7 @@
 				0A0C2474194788CE00401B74 /* LSInputTableViewCell.m in Sources */,
 				0A0C243719477D8F00401B74 /* LSAppDelegate.m in Sources */,
 				0AADB5C01947C7DB0083732B /* LSParseController.m in Sources */,
+				0AA92FB4194FADC2001052AC /* LSMediaAttachement.m in Sources */,
 				0A0C24711947870700401B74 /* LSRegistrationTableViewController.m in Sources */,
 				0A0C24811947944700401B74 /* LYRSampleParticipant.m in Sources */,
 				0A8EF549194A6C4D0058012E /* LSContactTableViewCell.m in Sources */,

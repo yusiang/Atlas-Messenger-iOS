@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LSButton.h"
 
 @class LSComposeView;
 
@@ -18,9 +19,12 @@
 
 @end
 
-@interface LSComposeView : UIView <UITextFieldDelegate>
+@interface LSComposeView : UIView <UITextViewDelegate>
 
-@property (nonatomic, strong) UITextField *textField;
+@property (nonatomic, strong) UIView *backingTextView;
+@property (nonatomic, strong) UITextView *textField;
+@property (nonatomic, strong) LSButton *cameraButton;
+@property (nonatomic, strong) LSButton *sendButton;
 @property (nonatomic, weak) id<LSComposeViewDelegate>delegate;
 
 - (void)updateWithImage:(UIImage *)image;

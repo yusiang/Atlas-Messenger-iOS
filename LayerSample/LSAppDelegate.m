@@ -8,7 +8,7 @@
 
 #import "LSAppDelegate.h"
 #import "LSUserManager.h"
-
+#import "LSConversationViewController.h"
 @implementation LSAppDelegate
 
 NSString *const LSTestUser0FullName = @"Layer Tester0";
@@ -18,10 +18,11 @@ NSString *const LSTestUser0Confirmation = @"password0";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self initializeSDKs];
+//    [self initializeSDKs];
     
+    LSConversationViewController *controller = [[LSConversationViewController alloc] init];
     LSHomeViewController *homeViewController = [[LSHomeViewController alloc] init];
-    homeViewController.layerController = self.layerController;
+//    homeViewController.layerController = self.layerController;
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
 
