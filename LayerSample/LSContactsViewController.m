@@ -20,11 +20,15 @@
 
 @implementation LSContactsViewController
 
+NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.title = @"Contacts";
+        self.accessibilityLabel = @"Contact List";
+
     }
     return self;
 }
@@ -32,28 +36,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self loadContacts];
-    [self addDoneBarButton];
-    [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:@"cell"];
+    [self fetchContacts];
+    [self initializeBarButton];
+    [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
-
-- (void)loadContacts
+- (void)fetchContacts
 {
     self.contacts = [LSUserManager fetchContacts];
     self.participants = [[NSMutableArray alloc] init];
 }
 
-- (void)addDoneBarButton
+- (void)initializeBarButton
 {
     UIBarButtonItem *newConversation = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
     newConversation.accessibilityLabel = @"start";
     [self.navigationItem setRightBarButtonItem:newConversation];
 }
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -73,25 +73,30 @@
 
 - (LSContactTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSContactTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"];
-    [cell updateWithSelectionIndicator:FALSE];
-    
-    NSDictionary *userInfo = [self.contacts objectAtIndex:indexPath.row];
-    cell.textLabel.text = [userInfo objectForKey:@"fullName"];
-    [cell setAccessibilityLabel:[NSString stringWithFormat:@"%@", [userInfo objectForKey:@"fullName"]]];
+    LSContactTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSContactCellIdentifier];
+    [self configureCell:cell forIndexPath:indexPath];
     return cell;
 }
 
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(LSContactTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    [self updateParticpantListWithSelectionAtIndex:indexPath];
+    NSDictionary *userInfo = [self.contacts objectAtIndex:indexPath.row];
+    cell.textLabel.text = [userInfo objectForKey:@"fullName"];
+    cell.accessibilityLabel = [NSString stringWithFormat:@"%@", [userInfo objectForKey:@"fullName"]];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(LSContactTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [cell updateWithSelectionIndicator:FALSE];
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self updateParticpantListWithSelectionAtIndex:indexPath];
+}
+
+#pragma mark
+#pragma mark Participant List Management Methods
 
 - (void)updateParticpantListWithSelectionAtIndex:(NSIndexPath *)indexPath
 {

@@ -10,26 +10,24 @@
 #import "LSInputTableViewCell.h"
 #import "LSConversationListViewController.h"
 #import "LSButton.h"
-#import "LSAlertView.h"
-#import "LSParseController.h"
-#import "LSAppDelegate.h"
 #import "LSUserManager.h"
 
 @interface LSLoginTableViewController ()
+
+@property (nonatomic, strong) LSButton *loginButton;
 
 @end
 
 @implementation LSLoginTableViewController
 
-#define kCellIdentifier     @"cell"
-#define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
-#define kLayerFont      @"Avenir-Medium"
+NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.title = @"Login";
+        self.accessibilityLabel = @"Login Screen";
     }
     return self;
 }
@@ -37,17 +35,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:kCellIdentifier];
-    [self addLoginButton];
+    [self initializeLoginButton];
+    [self configureLayoutConstraints];
+    [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSLoginlIdentifier];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)initializeLoginButton
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.LoginButton = [[LSButton alloc] initWithText:@"Login"];
+    [self.loginButton addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.loginButton];
 }
 
-#pragma mark - Table view data source
+- (void)configureLayoutConstraints
+{
+    self.loginButton.frame = CGRectMake(0, 0, 280, 60);
+    self.loginButton.center = CGPointMake(self.view.center.x, 220);
+}
+
+#pragma mark 
+#pragma mark TableView Data Source Methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -66,10 +73,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSInputTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
-    
+    LSInputTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSLoginlIdentifier forIndexPath:indexPath];
     [self configureCell:cell forIndexPath:indexPath];
-    
     return cell;
 }
 
@@ -78,31 +83,16 @@
     switch (path.row) {
         case 0:
             [cell setText:@"Username"];
-            [cell.textField setAccessibilityLabel:@"Username"];
+            cell.textField.accessibilityLabel = @"Username";
             break;
         case 1:
             [cell setText:@"Password"];
-            [cell.textField setAccessibilityLabel:@"Password"];
+            cell.textField.accessibilityLabel = @"Password";
             cell.textField.secureTextEntry = TRUE;
             break;
         default:
             break;
     }
-}
-
-- (void)addLoginButton
-{
-    CGRect rect = CGRectMake(0, 0, 280, 60);
-    LSButton *button = [[LSButton alloc] initWithFrame:rect];
-    [button setText:@"Login"];
-    [button setFont:[UIFont fontWithName:kLayerFont size:20]];
-    [button.layer setCornerRadius:4.0f];
-    [button setBackgroundColor:kLayerColor];
-    [button setAccessibilityLabel:@"LoginButton"];
-    button.center = self.view.center;
-    button.frame = CGRectMake(button.frame.origin.x, button.frame.origin.y - 90, button.frame.size.width, button.frame.size.height);
-    [button addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
 }
 
 - (void)loginTapped
@@ -114,15 +104,6 @@
         [self.delegate loginSuccess];
     }
 }
-
-
-
-
-
-
-
-
-
 
 @end
 

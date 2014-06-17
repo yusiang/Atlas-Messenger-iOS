@@ -10,7 +10,6 @@
 #import "LSLayerController.h"
 #import "LSParseController.h"
 #import "LSHomeViewController.h"
-#import "LSNavigationCoordinator.h"
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 

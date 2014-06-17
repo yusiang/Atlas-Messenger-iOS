@@ -11,6 +11,9 @@
 
 @implementation LSUserManager
 
+#pragma mark
+#pragma mark Public Class Methods
+
 + (BOOL)registerWithFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
 {
     if ([self verifyFullName:fullName email:email password:password andConfirmation:confirmation]) {
@@ -59,6 +62,11 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+
+#pragma mark
+#pragma mark Private Class Methods
+
+//Verifys credentials for a new user. This method handles displaying errors to the user if there are registration issues
 + (BOOL)verifyFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
 {
     if ([email isEqualToString:@""]) {
@@ -82,6 +90,7 @@
     return TRUE;
 }
 
+//Stores credentials for a new user
 + (BOOL)storeFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -114,6 +123,7 @@
     return TRUE;
 }
 
+//Checks to see if an email exists
 + (BOOL)checkForExistingEmail:(NSString *)email withUserID:(NSString *)userID
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -126,6 +136,7 @@
     return FALSE;
 }
 
+//Verifies that an email and password match
 +(BOOL)verifyEmail:(NSString *)email andPassword:(NSString *)password
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -143,6 +154,7 @@
     return false;
 }
 
+//Sets the logged in user info
 + (void)setLoggedInUserInfo:(NSDictionary *)userInfo
 {
     [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:@"loggedInUser"];

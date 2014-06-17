@@ -17,22 +17,21 @@
 
 @interface LSRegistrationTableViewController ()
 
+@property (nonatomic, strong) LSButton *registerButton;
 @property (nonatomic, strong) LSAlertView *alertView;
 
 @end
 
 @implementation LSRegistrationTableViewController
 
-#define kCellIdentifier     @"cell"
-#define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
-#define kLayerFont      @"Avenir-Medium"
-
+NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.title = @"Register";
+        self.accessibilityLabel = @"Register Screen";
     }
     return self;
 }
@@ -40,15 +39,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self initializeRegisterButton];
+    [self configureLayoutConstraints];
+    [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSRegistrationCellIdentifier];
     self.alertView = [[LSAlertView alloc] init];
-    [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:kCellIdentifier];
-    [self addLoginButton];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)initializeRegisterButton
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.registerButton = [[LSButton alloc] initWithText:@"Register"];
+    [self.registerButton addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.registerButton];
+}
+
+- (void)configureLayoutConstraints
+{
+    self.registerButton.frame = CGRectMake(0, 0, 280, 60);
+    self.registerButton.center = CGPointMake(self.view.center.x, 300);
 }
 
 #pragma mark - Table view data source
@@ -70,10 +77,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSInputTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
-    
+    LSInputTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSRegistrationCellIdentifier forIndexPath:indexPath];
     [self configureCell:cell forIndexPath:indexPath];
-    
     return cell;
 }
 
@@ -103,21 +108,6 @@
     }
 }
 
-- (void)addLoginButton
-{
-    CGRect rect = CGRectMake(0, 0, 320, 60);
-    LSButton *button = [[LSButton alloc] initWithFrame:rect];
-    [button setText:@"Register"];
-    [button setFont:[UIFont fontWithName:kLayerFont size:20]];
-    [button.layer setCornerRadius:4.0f];
-    [button setBackgroundColor:kLayerColor];
-    button.accessibilityLabel = @"RegisterButton";
-    button.center = self.view.center;
-    button.frame = CGRectMake(button.frame.origin.x, button.frame.origin.y, button.frame.size.width, button.frame.size.height);
-    [button addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
-}
-
 - (void)registerTapped
 {
     LSInputTableViewCell *fullNameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
@@ -126,7 +116,7 @@
     LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]];
     
     if([LSUserManager registerWithFullName:fullNameCell.textField.text email:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
-        [self.delegate registrationSuccessful];
+        [self.delegate registrationSuccess];
     }
 }
 

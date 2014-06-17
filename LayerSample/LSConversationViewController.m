@@ -20,14 +20,14 @@
 
 @implementation LSConversationViewController
 
-#define kMessageCellIdentifier         @"messageCell"
+NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (id) init
 {
     self = [super init];
     if(self) {
-        self.view.backgroundColor = [UIColor lightGrayColor];
-        self.title = @"Chat";
+        self.title = @"Conversation";
+        self.accessibilityLabel = @"Conversation";
     }
     return self;
 }
@@ -35,28 +35,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"Chat";
-    [self setAccessibilityLabel:@"chat"];
-    [self addCollectionView];
-    [self addComposeView];
+    [self initializeCollectionView];
+    [self initializeComposeView];
     [self registerForKeyboardNotifications];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self fetchMessages];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
+    [self.collectionView reloadData];
     [self.composeView.textField becomeFirstResponder];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)setConversation:(LYRConversation *)conversation
 {
-    [super didReceiveMemoryWarning];
+    _conversation = conversation;
+    [self fetchMessages];
 }
 
 - (void)fetchMessages
@@ -64,7 +58,7 @@
     self.messages = [self.layerController.client messagesForConversation:self.conversation];
 }
 
-- (void)addCollectionView
+- (void)initializeCollectionView
 {
     if (!self.collectionView) {
         self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame
@@ -76,10 +70,10 @@
         self.collectionView.bounces = TRUE;
         [self.view addSubview:self.collectionView];
     }
-    [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:kMessageCellIdentifier];
+    [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:LSCMessageCellIdentifier];
 }
 
-- (void)addComposeView
+- (void)initializeComposeView
 {
     CGRect rect = [[UIScreen mainScreen] bounds];
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 48, rect.size.width, 48)];
@@ -96,7 +90,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification object:nil];
-    
 }
 
 # pragma mark
@@ -111,25 +104,24 @@
     return 1;
 }
 
-// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSMessageCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kMessageCellIdentifier forIndexPath:indexPath];
-    cell = [self configureCell:cell forIndexPath:indexPath];
+    LSMessageCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LSCMessageCellIdentifier forIndexPath:indexPath];
+    [self configureCell:cell forIndexPath:indexPath];
     return cell;
 }
 
-- (LSMessageCell *)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     [cell updateCellWithMessage:[self.messages objectAtIndex:indexPath.row] andLayerController:self.layerController];
-    return cell;
 }
 
 #pragma mark
 #pragma mark Collection View Delegate
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    //
 }
 
 #pragma mark – UICollectionViewDelegateFlowLayout
@@ -231,7 +223,6 @@
     if (camera) {
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         
-        // Since I'm not actually taking a picture, is a delegate function necessary?
         picker.delegate = self;
         
         picker.sourceType = sourceType;
@@ -244,6 +235,7 @@
 
 #pragma mark
 #pragma mark Image Picker Controller Delegate
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     NSString *mediaType = [info objectForKey:@"UIImagePickerControllerMediaType"];

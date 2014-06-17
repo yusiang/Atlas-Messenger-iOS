@@ -7,6 +7,7 @@
 //
 
 #import "LSButton.h"
+#import "LSUIConstants.h"
 
 @interface LSButton ()
 
@@ -18,6 +19,7 @@
 
 @synthesize textLabel = _textLabel;
 
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -25,6 +27,26 @@
         // Initialization code
     }
     return self;
+}
+
+- (id)initWithText:(NSString *)text
+{
+    self = [super init];
+    if (self) {
+        [self setText:text];
+        [self setAccessibilityLabel:[NSString stringWithFormat:@"%@ Button", text]];
+        [self setFont:[UIFont fontWithName:[LSUIConstants layerMediumFont] size:20]];
+        [self setBackgroundColor:[LSUIConstants layerBlueColor]];
+        [self.layer setCornerRadius:4.0f];
+    }
+    return self;
+}
+
+
+- (void) setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    [self sizeAndCenterLabel];
 }
 
 - (void)setText:(NSString *)text

@@ -1,19 +1,72 @@
 PODS:
+  - CocoaLumberjack (1.8.1):
+    - CocoaLumberjack/Extensions
+  - CocoaLumberjack/Core (1.8.1)
+  - CocoaLumberjack/Extensions (1.8.1):
+    - CocoaLumberjack/Core
+  - CocoaSPDY (1.0.1)
+  - FMDB (2.3):
+    - FMDB/standard
+  - FMDB/common (2.3)
+  - FMDB/standard (2.3):
+    - FMDB/common
+  - FMDBMigrationManager (1.2.0):
+    - FMDB (~> 2.2)
   - KIF (3.0.4):
     - KIF/XCTest
   - KIF/XCTest (3.0.4)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
+  - layer-client-messaging-schema (201406110649840.3)
+  - layer-thrift (0.52.0):
+    - thrift (~> 0.9.1)
+  - LayerKit/Public (0.50.0):
+    - CocoaLumberjack (~> 1.8.1)
+    - CocoaSPDY (~> 1.0.1)
+    - FMDB (~> 2.2)
+    - FMDBMigrationManager (~> 1.2.0)
+    - layer-client-messaging-schema (~> 201406110649840.3)
+    - layer-thrift (~> 0.52.0)
+    - TransitionKit (~> 2.1.0)
+  - LayerKit/Testing (0.50.0):
+    - CocoaLumberjack (~> 1.8.1)
+    - CocoaSPDY (~> 1.0.1)
+    - FMDB (~> 2.2)
+    - FMDBMigrationManager (~> 1.2.0)
+    - layer-client-messaging-schema (~> 201406110649840.3)
+    - layer-thrift (~> 0.52.0)
+    - LayerKit/Public
+    - TransitionKit (~> 2.1.0)
   - SVProgressHUD (HEAD based on 1.0)
+  - thrift (0.9.1)
+  - TransitionKit (2.1.0)
 
 DEPENDENCIES:
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
+  - layer-thrift (from `git@github.com:layerhq/lyr-thrift-common.git`)
+  - LayerKit/Testing (from `git@github.com:layerhq/LayerKit.git`, branch `blake-MSG-187-start-and-stop-sync`)
   - SVProgressHUD (HEAD)
 
+EXTERNAL SOURCES:
+  layer-thrift:
+    :git: git@github.com:layerhq/lyr-thrift-common.git
+  LayerKit:
+    :branch: blake-MSG-187-start-and-stop-sync
+    :git: git@github.com:layerhq/LayerKit.git
+
 SPEC CHECKSUMS:
+  CocoaLumberjack: 9d198d6e19909b3b113a38c5f06f7bb8eedd0427
+  CocoaSPDY: f27e2a70e08531d6be30e1dbc5c1ffbc03f8016b
+  FMDB: 31ec26773c7f7b7890a6038235a1f2bbd933a7cb
+  FMDBMigrationManager: 09b4f463839cad531272d3b6b60ab2e081aaf26d
   KIF: 443c517d14fc2a99d27d3df170bc274cdf288241
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
+  layer-client-messaging-schema: 8521ada9d27b65fc5fdaff42a0fac44ee459483b
+  layer-thrift: fe344ea49f9b86ffe5412b77865bfdc59a03ea5a
+  LayerKit: e8f369be7f16b541e1d26ad8738c3be8c29b3e0f
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
+  thrift: b69f9820045ffa76eabe35674cdcc8daa5b1f75c
+  TransitionKit: 6a6f3ddda38ae758778aa889dcb930e4f8d64edc
 
 COCOAPODS: 0.33.1

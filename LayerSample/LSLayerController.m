@@ -14,7 +14,9 @@
 #import "LYRTestUtilities.h"
 
 @interface LYRClient ()
+
 - (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID;
+
 @end
 
 @implementation LSLayerController

@@ -12,9 +12,7 @@
 
 @protocol LSRegistrationTableViewControllerDelegate <NSObject>
 
-- (void)registrationSuccessful;
-
-- (void)setLoggedInUserInfo:(NSDictionary *)userInfo;
+- (void)registrationSuccess;
 
 @end
 

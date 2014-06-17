@@ -12,7 +12,7 @@
 
 @interface LSParseController : NSObject
 
-@property (nonatomic, strong) LSLayerController *layerController;
+//@property (nonatomic, strong) LSLayerController *layerController;
 
 - (id) init;
 

@@ -13,7 +13,6 @@
 @protocol LSLoginTableViewControllerDelegate <NSObject>
 
 - (void)loginSuccess;
-- (void)setLoggedInUserInfo:(NSDictionary *)userInfo;
 
 @end
 

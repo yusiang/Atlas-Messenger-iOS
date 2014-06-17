@@ -10,7 +10,8 @@
 #import "LSConversationCell.h"
 #import "LYRSampleConversation.h"
 #import "LSContactsViewController.h"
-#import "LSAppDelegate.h"
+#import "LSUIConstants.h"
+
 
 @interface LSConversationListViewController ()
 
@@ -22,14 +23,14 @@
 
 @implementation LSConversationListViewController
 
-#define kConversationCellIdentifier       @"conversationCell"
+NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (id) init
 {
     self = [super init];
     if(self) {
-        self.view.backgroundColor = [UIColor lightGrayColor];
-        self.title = @"Conversation";
+        self.title = @"Conversations";
+        self.accessibilityLabel = @"Conversation List";
     }
     return self;
 }
@@ -37,19 +38,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self addRightBarButton];
-    [self addLeftBarButton];
-    [self setAccessibilityLabel:@"conversationList"];
-    [self addCollectionView];
+    [self initializeBarButtons];
+    [self initializeCollectionView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.onScreen = TRUE;
-    // TODO: Temporarily do a complete reload pending notification mechanism
-    [self fetchLayerConversations];
     [self.collectionView reloadData];
+    self.onScreen = TRUE;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -57,13 +54,13 @@
     [super viewWillDisappear:animated];
     self.onScreen = FALSE;
 }
+
 - (void)setLayerController:(LSLayerController *)layerController
 {
     if(!_layerController) {
         _layerController = layerController;
     }
     [self fetchLayerConversations];
-    [self.collectionView reloadData];
 }
 
 - (void)fetchLayerConversations
@@ -72,6 +69,7 @@
     NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
     self.conversations = conversations;
     
+    //Doing this for now in place of notifications to changes in the DB
     if (!self.conversations.count > 0 && self.onScreen){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self fetchLayerConversations];
@@ -80,21 +78,18 @@
     }
 }
 
-- (void)addLeftBarButton
+- (void)initializeBarButtons
 {
-    UIBarButtonItem *logout = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutTapped)];
-    logout.accessibilityLabel = @"logout";
-    [self.navigationItem setLeftBarButtonItem:logout];
+    UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutTapped)];
+    logoutButton.accessibilityLabel = @"logout";
+    [self.navigationItem setLeftBarButtonItem:logoutButton];
+    
+    UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
+    newConversationButton.accessibilityLabel = @"new";
+    [self.navigationItem setRightBarButtonItem:newConversationButton];
 }
 
-- (void)addRightBarButton
-{
-    UIBarButtonItem *newConversation = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
-    newConversation.accessibilityLabel = @"new";
-    [self.navigationItem setRightBarButtonItem:newConversation];
-}
-
-- (void)addCollectionView
+- (void)initializeCollectionView
 {
     if (!self.collectionView) {
         self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame
@@ -104,11 +99,12 @@
         self.collectionView.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:self.collectionView];
     }
-    [self.collectionView registerClass:[LSConversationCell class] forCellWithReuseIdentifier:kConversationCellIdentifier];
+    [self.collectionView registerClass:[LSConversationCell class] forCellWithReuseIdentifier:LSConversationCellIdentifier];
 }
 
 # pragma mark
 # pragma mark Collection View Data Source
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.conversations.count;
@@ -121,25 +117,23 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSConversationCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:kConversationCellIdentifier forIndexPath:indexPath];
+    LSConversationCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LSConversationCellIdentifier forIndexPath:indexPath];
     [self configureCell:cell forIndexPath:indexPath];
     return cell;
 }
 
-- (LSConversationCell *)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
-    [cell updateCellWithConversation:conversation andLayerController:self.layerController];
-    return cell;
+    [cell updateCellWithConversation:[self.conversations objectAtIndex:indexPath.row] andLayerController:self.layerController];
 }
 
 #pragma mark
 #pragma mark Collection View Delegate
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
     LSConversationViewController *viewController = [[LSConversationViewController alloc] init];
-    [viewController setConversation:conversation];
+    [viewController setConversation:[self.conversations objectAtIndex:indexPath.row]];
     [viewController setLayerController:self.layerController];
     [self.navigationController pushViewController:viewController animated:TRUE];
 }
@@ -166,12 +160,14 @@
     return 0;
 }
 
+#pragma mark
+#pragma mark Bar Button Functionality Methods
+
 - (void)logoutTapped
 {
     [self.navigationController dismissViewControllerAnimated:TRUE completion:^{
         [self.layerController.client stop];
     }];
-    
 }
 
 - (void)newConversationTapped

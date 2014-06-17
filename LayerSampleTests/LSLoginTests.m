@@ -13,7 +13,6 @@
 #import "LSConversationListViewController.h"
 #import "LSConversationViewController.h"
 #import "LSHomeViewController.h"
-#import "LSNavigationCoordinator.h"
 #import "LSUserManager.h"
 
 NSString *const LSTestUser0FullName = @"Layer Tester0";
@@ -55,55 +54,55 @@ NSString *const LSTestUser3Confirmation = @"password3";
     //[tester returnToLoggedOutHomeScreen];
 }
 
-////Log in with incorrect credentials and verify that an error prompt pops up.
+////1. Log in with incorrect credentials and verify that an error prompt pops up.
 //- (void)testToVerifyIncorrectLoginCredentialsAlert
 //{
-//    [tester tapViewWithAccessibilityLabel:@"Login"];
-//    [tester enterText:@"fakeEmail@gmail.com" intoViewWithAccessibilityLabel:@"Username"];
+//    [tester tapViewWithAccessibilityLabel:@"Login Button"];
+//    [tester enterText:@"fakeEmail@layer.com" intoViewWithAccessibilityLabel:@"Username"];
 //    [tester enterText:@"fakePassword" intoViewWithAccessibilityLabel:@"Password"];
-//    [tester tapViewWithAccessibilityLabel:@"LoginButton"];
+//    [tester tapViewWithAccessibilityLabel:@"Login Button"];
 //    [tester waitForViewWithAccessibilityLabel:@"Invalid Credentials"];
 //    [tester tapViewWithAccessibilityLabel:@"OK"];
 //    [tester tapViewWithAccessibilityLabel:@"Home"];
 //}
 //
-////Tap register, enter valid info, and verify success.
+////2. Tap register, enter valid info, and verify success.
 //- (void)testToVerifyRegistrationFunctionality
 //{
 //    [self registerTestUser:1];
 //    [self logoutFromConversationListViewController];
 //}
 //
-////Successfully log in with good credentials.
+////3. Successfully log in with good credentials.
 //- (void)testToVerifySuccesfulLogin
 //{
 //    [self loginAsTestUser:0];
 //    [self logoutFromConversationListViewController];
 //}
 //
-////Tap register, enter nothing, and verify that a prompt came up requesting valid info. Add a first name. Tap register and verify that a prompt requested more info. Continue adding data until success.
+////4. Tap register, enter nothing, and verify that a prompt came up requesting valid info. Add a first name. Tap register and verify that a prompt requested more info. Continue adding data until success.
 //- (void)testToVerifyIncompleteInfoRegistrationFunctionality
 //{
-//    [tester tapViewWithAccessibilityLabel:@"Register"];
+//    [tester tapViewWithAccessibilityLabel:@"Register Button"];
 //    [tester enterText:LSTestUser1FullName intoViewWithAccessibilityLabel:@"Fullname"];
-//    [tester tapViewWithAccessibilityLabel:@"RegisterButton"];
+//    [tester tapViewWithAccessibilityLabel:@"Register Button"];
 //    [tester waitForViewWithAccessibilityLabel:@"No Email"];
 //    [tester tapViewWithAccessibilityLabel:@"OK"];
 //    [tester enterText:LSTestUser1Email intoViewWithAccessibilityLabel:@"Username"];
-//    [tester tapViewWithAccessibilityLabel:@"RegisterButton"];
+//    [tester tapViewWithAccessibilityLabel:@"Register Button"];
 //    [tester waitForViewWithAccessibilityLabel:@"Password Error"];
 //    [tester tapViewWithAccessibilityLabel:@"OK"];
 //    [tester enterText:LSTestUser1Password intoViewWithAccessibilityLabel:@"Password"];
-//    [tester tapViewWithAccessibilityLabel:@"RegisterButton"];
+//    [tester tapViewWithAccessibilityLabel:@"Register Button"];
 //    [tester waitForViewWithAccessibilityLabel:@"Password Error"];
 //    [tester tapViewWithAccessibilityLabel:@"OK"];
 //    [tester enterText:LSTestUser1Confirmation intoViewWithAccessibilityLabel:@"Confirm"];
-//    [tester tapViewWithAccessibilityLabel:@"RegisterButton"];
-//    [tester waitForViewWithAccessibilityLabel:@"conversationList"];
+//    [tester tapViewWithAccessibilityLabel:@"Register Button"];
+//    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
 //    [self logoutFromConversationListViewController];
-//}
+////}
 //
-////Log in. Verify the address book is empty. Log out and register as a new user. Verify that the first user is in the address book.
+////5. Log in. Verify the address book is empty. Log out and register as a new user. Verify that the first user is in the address book.
 //- (void)testToVerifyAddressBookFunctionalityForFirstTwoUsers
 //{
 //    [self loginAsTestUser:0];
@@ -116,7 +115,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [self logoutFromContactViewController];
 //}
 //
-////Register two users. Log in. Tap the contact and verify that its checkbox checks. Tap it again and verify that the checkbox unchecks.
+////6. Register two users. Log in. Tap the contact and verify that its checkbox checks. Tap it again and verify that the checkbox unchecks.
 //-(void)testToVerifyAddressBookSelectionIndicatorFunctionality
 //{
 //    [self registerTestUser:1];
@@ -135,7 +134,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [self logoutFromContactViewController];
 //}
 //
-////Register two users. Log in. Tap the contact to check its checkbox. Tap the "+" to start a conversation and verify that the proper Conversation view is shown.
+////7. Register two users. Log in. Tap the contact to check its checkbox. Tap the "+" to start a conversation and verify that the proper Conversation view is shown.
 //-(void)testToVerifyStartingAConversationWithTwoContacts
 //{
 //    [self registerTestUser:1];
@@ -151,7 +150,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [self logoutFromConversationViewController];
 //}
 //
-////Register two users. Log in and start a conversation. Tap the back button and verify that the ConversationList Returns
+////8. Register two users. Log in and start a conversation. Tap the back button and verify that the ConversationList Returns
 //- (void)testToVerifyNavigationBetweenContactsandConversations
 //{
 //    [self registerTestUser:1];
@@ -163,12 +162,13 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [self loginAsTestUser:1];
 //    [self startConversationWithUserId:@[[NSNumber numberWithInt:2]]];
 //    
-//    [tester tapViewWithAccessibilityLabel:@"conversationList"];
-//    [tester waitForViewWithAccessibilityLabel:@"conversationList"];
+//    [tester tapViewWithAccessibilityLabel:@"Back"];
+//    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
+//    
 //    [self logoutFromConversationListViewController];
 //}
 //
-////Register two users. Log in as one and start a conversation. Verify that the focus is automatically set on the message entry box. Type "hello!" and verify that "hello!" appears in the entry box. Tap "send" and verify that a message with "hello!" is added to the conversation history. Send "Do you hear me?" and verify that the new message is added below the first.
+////9. Register two users. Log in as one and start a conversation. Verify that the focus is automatically set on the message entry box. Type "hello!" and verify that "hello!" appears in the entry box. Tap "send" and verify that a message with "hello!" is added to the conversation history. Send "Do you hear me?" and verify that the new message is added below the first.
 //-(void)testToVerifyUIAnimimationsForSendingAMessage
 //{
 //    [self registerTestUser:1];
@@ -186,26 +186,26 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [self logoutFromConversationViewController];
 //}
 //
-////Register two users. Log in and start a conversation. Log out and back in. Verify that the old conversation is still there.
-//-(void)testToVerifyConversationPersistenceFunctionality
-//{
-//    [self registerTestUser:1];
-//    [self logoutFromConversationListViewController];
-//
-//    [self registerTestUser:2];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:1];
-//    [self startConversationWithUserId:@[[NSNumber numberWithInt:2]]];
-//    [tester tapViewWithAccessibilityLabel:@"conversationList"];
-//
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:1];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[NSString stringWithFormat:@"%d", 2]]]];
-//    [self logoutFromConversationListViewController];
-//}
+//10. Register two users. Log in and start a conversation. Log out and back in. Verify that the old conversation is still there.
+-(void)testToVerifyConversationPersistenceFunctionality
+{
+    [self registerTestUser:1];
+    [self logoutFromConversationListViewController];
+
+    [self registerTestUser:2];
+    [self logoutFromConversationListViewController];
+    
+    [self loginAsTestUser:1];
+    [self startConversationWithUserId:@[[NSNumber numberWithInt:2]]];
+    [tester tapViewWithAccessibilityLabel:@"conversationList"];
+
+    [self logoutFromConversationListViewController];
+    
+    [self loginAsTestUser:1];
+    
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[NSString stringWithFormat:@"%d", 2]]]];
+    [self logoutFromConversationListViewController];
+}
 //
 ////Send three messages to a user. Log out. Log back in with the same account. Verify that the old messages are still there in proper order.
 //- (void)testToVerifySentMessagePersistence
@@ -469,57 +469,57 @@ NSString *const LSTestUser3Confirmation = @"password3";
 //    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:1]];
 //}
 //
-//Push three images to known locations. Create three users. Log in as one and create a group chat with the other two. Send two text messages and one of the photos. Log in as the second user. Send another photo and two additional text messages. Log in as the third user. Verify that the prior messages are all there in the proper order from the proper senders.
-- (void)testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat
-{
-    [self registerTestUser:1];
-    [self logoutFromConversationListViewController];
-    
-    [self registerTestUser:2];
-    [self logoutFromConversationListViewController];
-    
-    [self registerTestUser:3];
-    [self logoutFromConversationListViewController];
-    
-    [self loginAsTestUser:1];
-    
-    [self startConversationWithUserId:@[[NSNumber numberWithInt:2], [NSNumber numberWithInt:3]]];
-    [tester tapViewWithAccessibilityLabel:@"conversationList"];
-    [tester waitForViewWithAccessibilityLabel:@"conversationList"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[NSString stringWithFormat:@"%d", 2], [NSString stringWithFormat:@"%d", 3]]]];
-    
-    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[NSString stringWithFormat:@"%d", 2], [NSString stringWithFormat:@"%d", 3]]]];
-    
-    [self sendMessageWithText:@"Hello"];
-    [self sendMessageWithText:@"This is a test message"];
-    
-    [self selectPhotoFromCameraRoll];
-    [self sendPhoto];
-    
-    [tester waitForTimeInterval:5];
-    
-    [self logoutFromConversationViewController];
-    [self loginAsTestUser:2];
-    
-    [self selectPhotoFromCameraRoll];
-    [self sendPhoto];
-    
-    [self sendMessageWithText:@"Hello"];
-    [self sendMessageWithText:@"This is a test message"];
-    
-    [tester waitForTimeInterval:5];
-    
-    [self logoutFromConversationViewController];
-    [self loginAsTestUser:3];
-    
-    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:1]];
-    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:1]];
-    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:1]];
-    
-    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:2]];
-    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:2]];
-    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:2]];
-}
+////Push three images to known locations. Create three users. Log in as one and create a group chat with the other two. Send two text messages and one of the photos. Log in as the second user. Send another photo and two additional text messages. Log in as the third user. Verify that the prior messages are all there in the proper order from the proper senders.
+//- (void)testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat
+//{
+//    [self registerTestUser:1];
+//    [self logoutFromConversationListViewController];
+//    
+//    [self registerTestUser:2];
+//    [self logoutFromConversationListViewController];
+//    
+//    [self registerTestUser:3];
+//    [self logoutFromConversationListViewController];
+//    
+//    [self loginAsTestUser:1];
+//    
+//    [self startConversationWithUserId:@[[NSNumber numberWithInt:2], [NSNumber numberWithInt:3]]];
+//    [tester tapViewWithAccessibilityLabel:@"conversationList"];
+//    [tester waitForViewWithAccessibilityLabel:@"conversationList"];
+//    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[NSString stringWithFormat:@"%d", 2], [NSString stringWithFormat:@"%d", 3]]]];
+//    
+//    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[NSString stringWithFormat:@"%d", 2], [NSString stringWithFormat:@"%d", 3]]]];
+//    
+//    [self sendMessageWithText:@"Hello"];
+//    [self sendMessageWithText:@"This is a test message"];
+//    
+//    [self selectPhotoFromCameraRoll];
+//    [self sendPhoto];
+//    
+//    [tester waitForTimeInterval:5];
+//    
+//    [self logoutFromConversationViewController];
+//    [self loginAsTestUser:2];
+//    
+//    [self selectPhotoFromCameraRoll];
+//    [self sendPhoto];
+//    
+//    [self sendMessageWithText:@"Hello"];
+//    [self sendMessageWithText:@"This is a test message"];
+//    
+//    [tester waitForTimeInterval:5];
+//    
+//    [self logoutFromConversationViewController];
+//    [self loginAsTestUser:3];
+//    
+//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:1]];
+//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:1]];
+//    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:1]];
+//    
+//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:2]];
+//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:2]];
+//    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:2]];
+//}
 
 //======== Factory Methods =========//
 
@@ -527,43 +527,43 @@ NSString *const LSTestUser3Confirmation = @"password3";
 #pragma mark Test User Registration and Login Methods
 - (void)registerTestUser:(NSUInteger)userID
 {
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"conversationList"];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Conversations"];
     switch (userID) {
         case 0:
-            [tester tapViewWithAccessibilityLabel:@"Register"];
+            [tester tapViewWithAccessibilityLabel:@"Register Button"];
             [tester enterText:LSTestUser0FullName intoViewWithAccessibilityLabel:@"Fullname"];
             [tester enterText:LSTestUser0Email intoViewWithAccessibilityLabel:@"Username"];
             [tester enterText:LSTestUser0Password intoViewWithAccessibilityLabel:@"Password"];
             [tester enterText:LSTestUser0Confirmation intoViewWithAccessibilityLabel:@"Confirm"];
-            [tester tapViewWithAccessibilityLabel:@"RegisterButton"];
-            [tester waitForViewWithAccessibilityLabel:@"conversationList"];
+            [tester tapViewWithAccessibilityLabel:@"Register Button"];
+            [tester waitForViewWithAccessibilityLabel:@"Conversations"];
             break;
         case 1:
-            [tester tapViewWithAccessibilityLabel:@"Register"];
+            [tester tapViewWithAccessibilityLabel:@"Register Button"];
             [tester enterText:LSTestUser1FullName intoViewWithAccessibilityLabel:@"Fullname"];
             [tester enterText:LSTestUser1Email intoViewWithAccessibilityLabel:@"Username"];
             [tester enterText:LSTestUser1Password intoViewWithAccessibilityLabel:@"Password"];
             [tester enterText:LSTestUser1Confirmation intoViewWithAccessibilityLabel:@"Confirm"];
-            [tester tapViewWithAccessibilityLabel:@"RegisterButton"];
-            [tester waitForViewWithAccessibilityLabel:@"conversationList"];
+            [tester tapViewWithAccessibilityLabel:@"Register Button"];
+            [tester waitForViewWithAccessibilityLabel:@"Conversations"];
             break;
         case 2:
-            [tester tapViewWithAccessibilityLabel:@"Register"];
+            [tester tapViewWithAccessibilityLabel:@"Register Button"];
             [tester enterText:LSTestUser2FullName intoViewWithAccessibilityLabel:@"Fullname"];
             [tester enterText:LSTestUser2Email intoViewWithAccessibilityLabel:@"Username"];
             [tester enterText:LSTestUser2Password intoViewWithAccessibilityLabel:@"Password"];
             [tester enterText:LSTestUser2Confirmation intoViewWithAccessibilityLabel:@"Confirm"];
-            [tester tapViewWithAccessibilityLabel:@"RegisterButton"];
-            [tester waitForViewWithAccessibilityLabel:@"conversationList"];
+            [tester tapViewWithAccessibilityLabel:@"Register Button"];
+            [tester waitForViewWithAccessibilityLabel:@"Conversations"];
             break;
         case 3:
-            [tester tapViewWithAccessibilityLabel:@"Register"];
+            [tester tapViewWithAccessibilityLabel:@"Register Button"];
             [tester enterText:LSTestUser3FullName intoViewWithAccessibilityLabel:@"Fullname"];
             [tester enterText:LSTestUser3Email intoViewWithAccessibilityLabel:@"Username"];
             [tester enterText:LSTestUser3Password intoViewWithAccessibilityLabel:@"Password"];
             [tester enterText:LSTestUser3Confirmation intoViewWithAccessibilityLabel:@"Confirm"];
-            [tester tapViewWithAccessibilityLabel:@"RegisterButton"];
-            [tester waitForViewWithAccessibilityLabel:@"conversationList"];
+            [tester tapViewWithAccessibilityLabel:@"Register Button"];
+            [tester waitForViewWithAccessibilityLabel:@"Conversations"];
             break;
         default:
             break;
@@ -572,7 +572,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)loginAsTestUser:(NSInteger)userID
 {
-    [tester tapViewWithAccessibilityLabel:@"Login"];
+    [tester tapViewWithAccessibilityLabel:@"Login Button"];
     switch (userID) {
         case 0:
             [tester enterText:LSTestUser0Email intoViewWithAccessibilityLabel:@"Username"];
@@ -593,8 +593,8 @@ NSString *const LSTestUser3Confirmation = @"password3";
         default:
             break;
     }
-    [tester tapViewWithAccessibilityLabel:@"LoginButton"];
-    [tester waitForViewWithAccessibilityLabel:@"conversationList"];
+    [tester tapViewWithAccessibilityLabel:@"Login Button"];
+    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
 }
 
 - (void)logout
@@ -655,10 +655,10 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)sendMessageWithText:(NSString *)text
 {
-    [tester tapViewWithAccessibilityLabel:@"composeTextView"];
+    [tester tapViewWithAccessibilityLabel:@"Compose TextView"];
     [tester waitForViewWithAccessibilityLabel:@"space"]; //Space represents that the keyboard is show, hence the focus is on the text entry box
-    [tester clearTextFromAndThenEnterText:text intoViewWithAccessibilityLabel:@"composeTextView"];
-    [tester tapViewWithAccessibilityLabel:@"sendButton"];
+    [tester clearTextFromAndThenEnterText:text intoViewWithAccessibilityLabel:@"Compose TextView"];
+    [tester tapViewWithAccessibilityLabel:@"Send Button"];
     
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:[[LSUserManager loggedInUserID] intValue]]];
 }
@@ -686,7 +686,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)selectPhotoFromCameraRoll
 {
-    [tester tapViewWithAccessibilityLabel:@"cameraButton"];
+    [tester tapViewWithAccessibilityLabel:@"Cam Button"];
     [tester tapViewWithAccessibilityLabel:@"Choose Existing"];
     [tester tapViewWithAccessibilityLabel:@"Saved Photos"];
     [tester tapViewWithAccessibilityLabel:@"Photo, Landscape, 8:14 AM"];
@@ -696,7 +696,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 -(void)sendPhoto
 {
-    [tester tapViewWithAccessibilityLabel:@"sendButton"];
+    [tester tapViewWithAccessibilityLabel:@"Send Button"];
     [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[[LSUserManager loggedInUserID] intValue]]];
 }
 
@@ -732,14 +732,14 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)logoutFromContactViewController
 {
-    [tester tapViewWithAccessibilityLabel:@"conversationList"];
+    [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester tapViewWithAccessibilityLabel:@"logout"];
     [tester waitForViewWithAccessibilityLabel:@"Home"];
 }
 
 - (void)logoutFromConversationViewController
 {
-    [tester tapViewWithAccessibilityLabel:@"conversationList"];
+    [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester tapViewWithAccessibilityLabel:@"logout"];
     [tester waitForViewWithAccessibilityLabel:@"Home"];
 }

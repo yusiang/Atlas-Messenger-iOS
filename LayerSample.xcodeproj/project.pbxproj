@@ -35,9 +35,9 @@
 		0A0C249A1947AD8100401B74 /* LSMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C24991947AD8100401B74 /* LSMessageCell.m */; };
 		0A0C249D1947B80E00401B74 /* LSConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0C249C1947B80E00401B74 /* LSConversationViewController.m */; };
 		0A3DF5DA194A1D6500D9060F /* LSConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */; };
-		0A3DF5DE194A4C4000D9060F /* LSNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3DF5DD194A4C4000D9060F /* LSNavigationCoordinator.m */; };
 		0A8EF546194A6B800058012E /* LSContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8EF545194A6B800058012E /* LSContactsViewController.m */; };
 		0A8EF549194A6C4D0058012E /* LSContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8EF548194A6C4D0058012E /* LSContactTableViewCell.m */; };
+		0A9D42E91950AC08004656E0 /* LSUIConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D42E81950AC08004656E0 /* LSUIConstants.m */; };
 		0A9E53F2194CD7280074CBC6 /* LSUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9E53F1194CD7280074CBC6 /* LSUserManager.m */; };
 		0AA92FB4194FADC2001052AC /* LSMediaAttachement.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA92FB3194FADC2001052AC /* LSMediaAttachement.m */; };
 		0AADB5C01947C7DB0083732B /* LSParseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AADB5BF1947C7DB0083732B /* LSParseController.m */; };
@@ -117,12 +117,12 @@
 		0A0C249C1947B80E00401B74 /* LSConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSConversationViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0A3DF5D8194A1D6500D9060F /* LSConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConnectionManager.h; sourceTree = "<group>"; };
 		0A3DF5D9194A1D6500D9060F /* LSConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConnectionManager.m; sourceTree = "<group>"; };
-		0A3DF5DC194A4C4000D9060F /* LSNavigationCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNavigationCoordinator.h; sourceTree = "<group>"; };
-		0A3DF5DD194A4C4000D9060F /* LSNavigationCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNavigationCoordinator.m; sourceTree = "<group>"; };
 		0A8EF544194A6B800058012E /* LSContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsViewController.h; sourceTree = "<group>"; };
 		0A8EF545194A6B800058012E /* LSContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSContactsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0A8EF547194A6C4D0058012E /* LSContactTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LSContactTableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		0A8EF548194A6C4D0058012E /* LSContactTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LSContactTableViewCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		0A9D42E71950AC08004656E0 /* LSUIConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUIConstants.h; sourceTree = "<group>"; };
+		0A9D42E81950AC08004656E0 /* LSUIConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUIConstants.m; sourceTree = "<group>"; };
 		0A9E53F0194CD7280074CBC6 /* LSUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUserManager.h; sourceTree = "<group>"; };
 		0A9E53F1194CD7280074CBC6 /* LSUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUserManager.m; sourceTree = "<group>"; };
 		0AA92FB2194FADC2001052AC /* LSMediaAttachement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSMediaAttachement.h; sourceTree = "<group>"; };
@@ -235,6 +235,7 @@
 		0A0C242C19477D8F00401B74 /* LayerSample */ = {
 			isa = PBXGroup;
 			children = (
+				0A9D42E61950ABF2004656E0 /* Constants */,
 				0A0E0D14194B8CCC00A8C91D /* User Manager */,
 				0A3DF5D7194A1D4B00D9060F /* Connection Manager */,
 				0AADB5D51947C9280083732B /* UI Alerts */,
@@ -289,7 +290,6 @@
 			isa = PBXGroup;
 			children = (
 				0A8EF543194A6AF20058012E /* Contacts */,
-				0A3DF5DB194A4C2300D9060F /* Navigation Controller */,
 				0A0C2483194795BF00401B74 /* Registration/Login */,
 				0A0C2484194795DC00401B74 /* Messaging */,
 			);
@@ -423,15 +423,6 @@
 			name = "Connection Manager";
 			sourceTree = "<group>";
 		};
-		0A3DF5DB194A4C2300D9060F /* Navigation Controller */ = {
-			isa = PBXGroup;
-			children = (
-				0A3DF5DC194A4C4000D9060F /* LSNavigationCoordinator.h */,
-				0A3DF5DD194A4C4000D9060F /* LSNavigationCoordinator.m */,
-			);
-			name = "Navigation Controller";
-			sourceTree = "<group>";
-		};
 		0A8EF543194A6AF20058012E /* Contacts */ = {
 			isa = PBXGroup;
 			children = (
@@ -439,6 +430,15 @@
 				0A8EF545194A6B800058012E /* LSContactsViewController.m */,
 			);
 			name = Contacts;
+			sourceTree = "<group>";
+		};
+		0A9D42E61950ABF2004656E0 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				0A9D42E71950AC08004656E0 /* LSUIConstants.h */,
+				0A9D42E81950AC08004656E0 /* LSUIConstants.m */,
+			);
+			name = Constants;
 			sourceTree = "<group>";
 		};
 		0AADB5D51947C9280083732B /* UI Alerts */ = {
@@ -631,10 +631,10 @@
 				0A0C246519477F1600401B74 /* LSButton.m in Sources */,
 				0A0C249D1947B80E00401B74 /* LSConversationViewController.m in Sources */,
 				0A9E53F2194CD7280074CBC6 /* LSUserManager.m in Sources */,
+				0A9D42E91950AC08004656E0 /* LSUIConstants.m in Sources */,
 				0A3DF5DA194A1D6500D9060F /* LSConnectionManager.m in Sources */,
 				0A0C24821947944700401B74 /* LYRSampleMessagePart.m in Sources */,
 				0ADEFE911947DAF70064DF09 /* LSComposeView.m in Sources */,
-				0A3DF5DE194A4C4000D9060F /* LSNavigationCoordinator.m in Sources */,
 				0ADEFE8E1947D0D90064DF09 /* LSLayerController.m in Sources */,
 				0A0C243319477D8F00401B74 /* main.m in Sources */,
 				0A0C248F19479CA400401B74 /* LSConversationListViewController.m in Sources */,

@@ -7,7 +7,7 @@
 //
 
 #import "LSInputTableViewCell.h"
-
+#import "LSUIConstants.h"
 @implementation LSInputTableViewCell
 
 #define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
@@ -33,7 +33,7 @@
         self.textField = [[UITextField alloc] init];
     }
     self.textField.placeholder = text;
-    self.textField.font = [UIFont fontWithName:kLayerFont size:18];
+    self.textField.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:18];
     self.textField.textColor = [UIColor darkGrayColor];
     [self.textField sizeToFit];
     self.textField.frame = CGRectMake(20, 14, self.frame.size.width - 20, self.textField.frame.size.height);

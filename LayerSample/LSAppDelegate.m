@@ -18,15 +18,8 @@ NSString *const LSTestUser0Confirmation = @"password0";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    [self initializeSDKs];
-    
-    LSConversationViewController *controller = [[LSConversationViewController alloc] init];
-    LSHomeViewController *homeViewController = [[LSHomeViewController alloc] init];
-//    homeViewController.layerController = self.layerController;
-    
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
-
-    [self.window setRootViewController:navController];
+    [self initializeSDKs];
+    [self.window setRootViewController:[self rootViewController]];
     [self.window makeKeyAndVisible];
     
     return YES;
@@ -57,4 +50,11 @@ NSString *const LSTestUser0Confirmation = @"password0";
     }
 }
 
+- (UINavigationController *)rootViewController
+{
+    LSHomeViewController *homeViewController = [[LSHomeViewController alloc] init];
+    homeViewController.layerController = self.layerController;
+    
+    return [[UINavigationController alloc] initWithRootViewController:homeViewController];
+}
 @end

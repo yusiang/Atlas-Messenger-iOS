@@ -18,4 +18,6 @@
 @property (nonatomic) double height;
 @property (nonatomic) double centerY;
 
+- (id)initWithText:(NSString *)text;
+
 @end
