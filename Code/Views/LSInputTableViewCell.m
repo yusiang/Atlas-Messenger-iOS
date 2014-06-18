@@ -40,6 +40,7 @@
     [self addSubview:self.textField];
 }
 
+// SBW: What's up with this?
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:FALSE animated:FALSE];

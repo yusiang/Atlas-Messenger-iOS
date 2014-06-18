@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+// SBW: Why do you need a string on an image view?
 @interface LSAvatarImageView : UIImageView
 
 @property (nonatomic, strong) NSString *senderName;

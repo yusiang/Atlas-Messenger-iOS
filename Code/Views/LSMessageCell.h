@@ -14,6 +14,7 @@
 
 @interface LSMessageCell : UICollectionViewCell
 
+// SBW: This should not know about the layer controller...
 - (void)updateCellWithMessage:(LYRMessage *)message andLayerController:(LSLayerController *)controller;
 
 @end

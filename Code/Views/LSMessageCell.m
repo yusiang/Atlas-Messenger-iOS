@@ -22,6 +22,7 @@
 
 @implementation LSMessageCell
 
+// SBW: Be gone, #define's!
 #define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
 #define kLayerFont      @"Avenir-Medium"
 
@@ -42,6 +43,7 @@
     
     [self addMessageContentForMessagePart:[message.parts firstObject]];
     
+    // TODO: The controller should be telling the cell what to do here... it shouldn't know about the auth model
     if ([message.sentByUserID isEqualToString:[LSUserManager loggedInUserID]]) {
         [self configureCellForLoggedInUser];
     }else {

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+// SBW: What's up with the shadow API's? I'd probably use a category on UIButton if this stuff is really useful
 @interface LSButton : UIButton
 
 @property (nonatomic, strong) NSString *text;

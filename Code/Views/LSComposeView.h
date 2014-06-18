@@ -11,8 +11,10 @@
 
 @class LSComposeView;
 
+// SBW: This really feels more like controller behavior...
 @protocol LSComposeViewDelegate <NSObject>
 
+// SBW: Needs the compose view as the first argument
 - (void)sendMessageWithText:(NSString *)text;
 - (void)sendMessageWithImage:(UIImage *)image;
 - (void)cameraTapped;
@@ -21,7 +23,7 @@
 
 @interface LSComposeView : UIView <UITextViewDelegate>
 
-@property (nonatomic, strong) UIView *backingTextView;
+@property (nonatomic, strong) UIView *backingTextView; // SBW: What's this for?
 @property (nonatomic, strong) UITextView *textField;
 @property (nonatomic, strong) LSButton *cameraButton;
 @property (nonatomic, strong) LSButton *sendButton;
