@@ -10,19 +10,23 @@
 #import "LSMediaAttachement.h"
 #import "LSUIConstants.h"
 
-@implementation LSComposeView
+@interface LSComposeView ()
 
-#define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
-#define kLayerFont      @"Avenir-Medium"
+@property (nonatomic, strong) NSMutableArray *images;
+
+@end
+
+@implementation LSComposeView
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-        [self initizlizeSubviews];
-        
         self.accessibilityLabel = @"composeView";
+        [self initizlizeSubviews];
+        self.images = [[NSMutableArray alloc] init];
+        
     }
     return self;
 }
@@ -81,13 +85,17 @@
         [self.delegate sendMessageWithText:self.textField.text];
         [self.textField setText:@""];
     }
-    if ([self.textField.attributedText isKindOfClass:[UIImageView class]]) {
-        
+    
+    if (self.images.count > 0) {
+        for (UIImage *image in self.images) {
+            [self.delegate sendMessageWithImage:image];
+        }
     }
 }
 
 - (void)updateWithImage:(UIImage *)image
 {
+    [self.images addObject:image];
     [self adjustFrameForImage];
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"a"];

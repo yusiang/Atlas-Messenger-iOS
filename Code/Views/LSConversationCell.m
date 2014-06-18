@@ -36,7 +36,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setBackgroundColor:[UIColor whiteColor]];
-        self.accessibilityLabel = @"conversationCell";
     }
     return self;
 }
@@ -71,15 +70,21 @@
     [self.senderName setFont:[UIFont fontWithName:kLayerFontHeavy size:16]];
     [self.senderName setTextColor:[UIColor darkGrayColor]];
     
-    NSString *senderLabel = @"";
+    NSMutableArray *fullNames = [[NSMutableArray alloc] init];
     for (NSString *userID in participants) {
         if (![userID isEqualToString:[LSUserManager loggedInUserID]]) {
-            NSString *participant = (NSString *)[[LSUserManager userInfoForUserID:userID] objectForKey:@"fullName"];
-            senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", participant]];
+            NSString *fullName = [[LSUserManager userInfoForUserID:userID] objectForKey:@"fullName"];
+            if (fullName)[fullNames addObject:fullName];
         }
     }
+    
+    NSArray *sortedFullNames = [fullNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    NSString *senderLabel = @"";
+    
+    for (NSString *fullName in sortedFullNames) {
+        senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", fullName]];
+    }
     self.senderName.text = senderLabel;
-    self.senderName.accessibilityLabel = senderLabel;
     self.senderName.userInteractionEnabled = FALSE;
     self.accessibilityLabel = senderLabel;
 }

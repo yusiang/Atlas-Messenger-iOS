@@ -43,14 +43,16 @@ NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self fetchMessages];
     [self.collectionView reloadData];
     [self.composeView.textField becomeFirstResponder];
 }
 
 - (void)setConversation:(LYRConversation *)conversation
 {
-    _conversation = conversation;
-    [self fetchMessages];
+    if(!_conversation) {
+        _conversation = conversation;
+    }
 }
 
 - (void)fetchMessages

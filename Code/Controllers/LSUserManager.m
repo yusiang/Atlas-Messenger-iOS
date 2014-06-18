@@ -35,9 +35,9 @@
 {
     NSMutableArray *contacts = [[NSMutableArray alloc] init];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *lastUserID = [defaults objectForKey:@"lastUserID"];
-    for (int i = [lastUserID doubleValue]; i > -1; i--) {
-        NSDictionary *userInfo = [defaults objectForKey:[NSString stringWithFormat:@"%d", i]];
+    NSMutableArray *UUIDs = [defaults objectForKey:@"UUIDs"];
+    for (NSString *userID in UUIDs) {
+        NSDictionary *userInfo = [defaults objectForKey:userID];
         if(![self checkIfUserInfoIsLoggedInuser:userInfo]) {
             [contacts addObject:userInfo];
         }
@@ -93,21 +93,19 @@
 //Stores credentials for a new user
 + (BOOL)storeFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
 {
+    if ([self checkForExistingEmail:email]) return FALSE;
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *lastUserID = [defaults objectForKey:@"lastUserID"];
     
-    if ([self checkForExistingEmail:email withUserID:lastUserID]) {
-        return FALSE;
-    }
-    
-    NSString *userID;
-    
-    if (lastUserID) {
-        int number = [lastUserID intValue];
-        userID = [NSString stringWithFormat:@"%d", (number + 1)];
+    NSMutableArray *UUIDs;
+    if (![defaults objectForKey:@"UUIDs"]) {
+        UUIDs = [[NSMutableArray alloc] init];
     } else {
-        userID = [NSString stringWithFormat:@"%d", 0];
+        UUIDs = [[NSMutableArray alloc] initWithArray:[defaults objectForKey:@"UUIDs"]];
     }
+
+    NSString *userID = [[NSUUID UUID] UUIDString];
+    [UUIDs addObject:userID];
     
     NSDictionary *userInfo = @{@"fullName" : fullName,
                                @"email" : email,
@@ -116,18 +114,19 @@
                                @"userID" : userID};
     
     [defaults setObject:userInfo forKey:userID];
-    [defaults setObject:userID forKey:@"lastUserID"];
+    [defaults setObject:UUIDs forKey:@"UUIDs"];
     [self setLoggedInUserInfo:userInfo];
     [defaults synchronize];
-    
+     NSString *loggedAfter = [[NSUserDefaults standardUserDefaults] objectForKey:@"loggedInUser"] ;
     return TRUE;
 }
 
 //Checks to see if an email exists
-+ (BOOL)checkForExistingEmail:(NSString *)email withUserID:(NSString *)userID
++ (BOOL)checkForExistingEmail:(NSString *)email
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    for (int i = [userID doubleValue] ; i > -1; i--) {
+    NSMutableArray *UUIDs = [defaults objectForKey:@"UUIDs"];
+    for (NSString *userID in UUIDs) {
         NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", userID]];
         if ([existingEmail isEqualToString:email]) {
             return TRUE;
@@ -140,13 +139,13 @@
 +(BOOL)verifyEmail:(NSString *)email andPassword:(NSString *)password
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *lasterUserID = [defaults objectForKey:@"lastUserID"];
-    for (int i = [lasterUserID doubleValue]; i > -1; i--) {
-        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", [NSString stringWithFormat:@"%d", i]]];
+    NSMutableArray *UUIDs = [defaults objectForKey:@"UUIDs"];
+    for (NSString *userID in UUIDs) {
+        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", userID]];
         if ([existingEmail isEqualToString:email]) {
-            NSString *existingPassword = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.password", [NSString stringWithFormat:@"%d", i]]];
+            NSString *existingPassword = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.password", userID]];
             if ([existingPassword isEqualToString:password]) {
-                [self setLoggedInUserInfo:[defaults valueForKey:[NSString stringWithFormat:@"%d", i]]];
+                [self setLoggedInUserInfo:[defaults valueForKey:userID]];
                 return TRUE;
             }
         }
@@ -157,6 +156,7 @@
 //Sets the logged in user info
 + (void)setLoggedInUserInfo:(NSDictionary *)userInfo
 {
+    NSString *logged = [[NSUserDefaults standardUserDefaults] objectForKey:@"loggedInUser"];
     [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:@"loggedInUser"];
 }
 

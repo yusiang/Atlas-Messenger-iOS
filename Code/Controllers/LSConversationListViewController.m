@@ -45,6 +45,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self fetchLayerConversations];
     [self.collectionView reloadData];
     self.onScreen = TRUE;
 }
@@ -60,7 +61,6 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     if(!_layerController) {
         _layerController = layerController;
     }
-    [self fetchLayerConversations];
 }
 
 - (void)fetchLayerConversations
@@ -124,6 +124,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"The conversation is %@", [self.conversations objectAtIndex:indexPath.row]);
     [cell updateCellWithConversation:[self.conversations objectAtIndex:indexPath.row] andLayerController:self.layerController];
 }
 
