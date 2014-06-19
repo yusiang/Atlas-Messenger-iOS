@@ -41,6 +41,7 @@
 
 -(void)authenticateUser:(NSString *)userID completion:(void (^)(NSError *))completion
 {
+    NSLog(@"The LYRClient is %@", self.client);
     [self.client startWithCompletion:^(BOOL success, NSError *error) {
         NSAssert(!error, @"Can't continue without a connected layer client");
         NSAssert(userID, @"Cannont continue without a userID");
@@ -49,6 +50,8 @@
             NSString *identityToken = [[LYRTestingContext sharedContext].provider JWSIdentityTokenForUserID:userID nonce:nonce];
             [self.client authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
                 NSAssert(!error, @"Failure authentication client for userID %@", userID);
+                NSOrderedSet *conversations = [self.client conversationsForIdentifiers:nil];
+                NSLog(@"The conversations are %@", conversations);
                 completion(error);
             }];
         }];
@@ -94,15 +97,20 @@
     }];
 }
 
+- (void)logout
+{
+    [self.client deauthenticate];
+}
+
 #pragma mark
 #pragma mark LYRClientDelegate Methods
 
 - (void)layerClient:(LYRClient *)client didReceiveAuthenticationChallengeWithNonce:(NSString *)nonce
 {
-    NSString *identityToken = [[LYRTestingContext sharedContext].provider JWSIdentityTokenForUserID:@"383727293" nonce:nonce];
-    [self.client authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-        if(!error) NSLog(@"Success");
-    }];
+//    NSString *identityToken = [[LYRTestingContext sharedContext].provider JWSIdentityTokenForUserID:@"383727293" nonce:nonce];
+//    [self.client authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+//        if(!error) NSLog(@"Success");
+//    }];
 }
 
 - (void)layerClient:(LYRClient *)client didAuthenticateAsUserID:(NSString *)userID
@@ -159,4 +167,25 @@
     return [self.client conversationWithIdentifier:nil participants:conversationParticipants];
 }
 
+//============Transition Guide Stuff=================//
+- (void)sendMessage
+{
+    // 1. Initialize a conversation object
+    LYRConversation *conversation =[self.client conversationWithIdentifier:nil participants:@[@"USER_IDENTIFIER"]];
+
+    // 2. Initialize the message content via LYRMessageParts
+    LYRMessagePart *messagePart = [LYRMessagePart messagePartWithText:@"Hey there, how are you?"];
+
+    // 3. Initialize a message object with the content
+    LYRMessage *message = [self.client messageWithConversation:conversation parts:@[messagePart]];
+
+    // 4. Send the message within the context of the conversation
+    NSError *error;
+    [self.client sendMessage:message error:&error];
+    
+    NSOrderedSet *messages = [self.client messagesForConversation:conversation];
+    
+    NSOrderedSet *conversations = [self.client conversationsForIdentifiers:nil];
+
+}
 @end

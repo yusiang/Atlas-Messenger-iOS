@@ -89,6 +89,7 @@
     if (self.images.count > 0) {
         for (UIImage *image in self.images) {
             [self.delegate sendMessageWithImage:image];
+            [self adjustFramePostImageSend];
         }
     }
 }
@@ -115,6 +116,11 @@
     self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y - 50, self.frame.size.width, self.frame.size.height + 50);
     [self initizlizeSubviews];
     self.textField.frame = CGRectMake(self.textField.frame.origin.x, self.textField.frame.origin.y - 50, self.textField.frame.size.width, self.textField.frame.size.height + 50);
+}
+
+-(void)adjustFramePostImageSend
+{
+    [self initizlizeSubviews];
 }
 
 #pragma mark

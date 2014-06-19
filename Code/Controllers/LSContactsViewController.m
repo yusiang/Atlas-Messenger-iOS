@@ -112,7 +112,9 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 - (void)newConversationTapped
 {
     LSConversationViewController *controller = [[LSConversationViewController alloc] init];
-    controller.conversation = [self.layerController conversationForParticipants:self.participants];
+    
+    LYRConversation *conversation = [self.layerController conversationForParticipants:self.participants];
+    controller.conversation = conversation;
     controller.layerController = self.layerController;
     [self.navigationController pushViewController:controller animated:TRUE];
     

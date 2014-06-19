@@ -21,6 +21,8 @@
 
 - (void)sendImage:(UIImage *)image inConversation:(LYRConversation *)conversation;
 
--(LYRConversation *)conversationForParticipants:(NSArray *)particiapnts;
+- (LYRConversation *)conversationForParticipants:(NSArray *)particiapnts;
+
+- (void)logout;
 
 @end

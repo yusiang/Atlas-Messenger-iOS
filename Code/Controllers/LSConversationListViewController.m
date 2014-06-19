@@ -45,9 +45,10 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.onScreen = TRUE;
     [self fetchLayerConversations];
     [self.collectionView reloadData];
-    self.onScreen = TRUE;
+   
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -66,6 +67,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)fetchLayerConversations
 {
     NSAssert(self.layerController, @"Layer Controller should not be `nil`.");
+    if (self.conversations) self.conversations = nil;
     NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
     self.conversations = conversations;
     
@@ -107,6 +109,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
+    NSLog(@"%lu Conversations For Authenticated User", (unsigned long)self.conversations.count);
     return self.conversations.count;
 }
 
@@ -167,7 +170,8 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)logoutTapped
 {
     [self.navigationController dismissViewControllerAnimated:TRUE completion:^{
-        [self.layerController.client stop];
+        [self.layerController logout];
+        self.layerController = nil;
     }];
 }
 

@@ -117,7 +117,7 @@
     [defaults setObject:UUIDs forKey:@"UUIDs"];
     [self setLoggedInUserInfo:userInfo];
     [defaults synchronize];
-     NSString *loggedAfter = [[NSUserDefaults standardUserDefaults] objectForKey:@"loggedInUser"] ;
+    NSLog(@"New user Info is %@", userInfo);
     return TRUE;
 }
 
