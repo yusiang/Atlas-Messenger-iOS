@@ -70,7 +70,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "LAYER_TEST_HOST"
-            value = "10.66.0.35"
+            value = "172.17.8.101"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

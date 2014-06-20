@@ -12,6 +12,7 @@
 
 @interface LSComposeView ()
 
+@property (nonatomic) CGRect defaultRect;
 @property (nonatomic, strong) NSMutableArray *images;
 
 @end
@@ -22,7 +23,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
+        self.defaultRect = frame;
+        self.backgroundColor = [UIColor lightGrayColor];
         self.accessibilityLabel = @"composeView";
         [self initizlizeSubviews];
         self.images = [[NSMutableArray alloc] init];
@@ -36,21 +38,21 @@
     [self initializeTextField];
     [self initializeCameraButton];
     [self initializeSendButton];
+    [self configureDefaultViewConstraints];
 }
 
 - (void)initializeTextField
 {
-    if (!self.textField) {
-        self.textField = [[UITextView alloc] init];
-        self.textField.delegate = self;
+    if (!self.textVIew) {
+        self.textVIew = [[UITextView alloc] init];
+        self.textVIew.delegate = self;
     }
-    self.textField.frame = CGRectMake(50, self.frame.size.height - 42, 200, 36);
-    self.textField.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.textField.layer.borderWidth = 1;
-    self.textField.layer.cornerRadius = 4.0f;
-    self.textField.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:14];
-    self.textField.accessibilityLabel = @"Compose TextView";
-    [self addSubview:self.textField];
+    self.textVIew.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.textVIew.layer.borderWidth = 1;
+    self.textVIew.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:16];
+    self.textVIew.layer.cornerRadius = 4.0f;
+    self.textVIew.accessibilityLabel = @"Compose TextView";
+    [self addSubview:self.textVIew];
 }
 
 - (void)initializeCameraButton
@@ -59,7 +61,6 @@
         self.cameraButton = [[LSButton alloc] initWithText:@"Cam"];
         [self.cameraButton setBackgroundColor:[UIColor redColor]];
     }
-    self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
     [self.cameraButton addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.cameraButton];
 }
@@ -69,9 +70,28 @@
     if (!self.sendButton) {
         self.sendButton = [[LSButton alloc] initWithText:@"Send"];
     }
-    self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
+    
     [self.sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.sendButton];
+}
+
+- (void)configureDefaultViewConstraints
+{
+    self.frame = self.defaultRect;
+    self.textVIew.frame = CGRectMake(50, self.frame.size.height - 42, 200, 36);
+    self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
+    self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
+}
+
+
+- (void)configurePhotoViewConstraints
+{
+    if (self.frame.size.height < self.defaultRect.size.height + 50) {
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y - 50, self.frame.size.width, self.frame.size.height + 50);
+        self.textVIew.frame = CGRectMake(self.textVIew.frame.origin.x, self.frame.size.height - 92, self.textVIew.frame.size.width, self.textVIew.frame.size.height + 50);
+        self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
+        self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
+    }
 }
 
 - (void)cameraTapped
@@ -81,25 +101,36 @@
 
 - (void)sendMessage
 {
-    if (self.textField.text) {
-        [self.delegate sendMessageWithText:self.textField.text];
-        [self.textField setText:@""];
+    [self.textVIew resignFirstResponder];
+    
+    if (self.textVIew.attributedText) {
+        NSAttributedString *string = self.textVIew.attributedText;
+
+    }
+    
+    if (![self.textVIew.text isEqualToString:@""]) {
+        [self.delegate sendMessageWithText:self.textVIew.text];
+        [self.textVIew setText:@""];
     }
     
     if (self.images.count > 0) {
         for (UIImage *image in self.images) {
             [self.delegate sendMessageWithImage:image];
-            [self adjustFramePostImageSend];
         }
     }
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        [self configureDefaultViewConstraints];
+    }];
 }
 
 - (void)updateWithImage:(UIImage *)image
 {
     [self.images addObject:image];
-    [self adjustFrameForImage];
     
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"a"];
+    [self configurePhotoViewConstraints];
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textVIew.attributedText];
     
     LSMediaAttachement *textAttachment = [[LSMediaAttachement alloc] init];
     
@@ -107,58 +138,57 @@
     
     NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
     
-    [attributedString replaceCharactersInRange:NSMakeRange(0, 1) withAttributedString:attrStringWithImage];
-    self.textField.attributedText = attributedString;
-}
-
--(void)adjustFrameForImage
-{
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y - 50, self.frame.size.width, self.frame.size.height + 50);
-    [self initizlizeSubviews];
-    self.textField.frame = CGRectMake(self.textField.frame.origin.x, self.textField.frame.origin.y - 50, self.textField.frame.size.width, self.textField.frame.size.height + 50);
-}
-
--(void)adjustFramePostImageSend
-{
-    [self initizlizeSubviews];
+    [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
+    
+    self.textVIew.attributedText = attrStringWithImage;
 }
 
 #pragma mark
 #pragma mark TextViewDelegate Methods
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    return TRUE;
+    return YES;
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
-
+    return YES;
 }
 
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+- (void)textViewDidBeginEditing:(UITextView *)textView
 {
-    return TRUE;
+   
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
+- (void)textViewDidEndEditing:(UITextView *)textView
 {
-
+    
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    return TRUE;
+    return YES;
+    
+}
+- (void)textViewDidChange:(UITextView *)textView
+{
+    
 }
 
-- (BOOL)textFieldShouldClear:(UITextField *)textField
+- (void)textViewDidChangeSelection:(UITextView *)textView
 {
-    return TRUE;
+    
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
-    [self.textField resignFirstResponder];
-    return TRUE;
+    return YES;
 }
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange
+{
+    return YES;
+}
+
 
 @end

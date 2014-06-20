@@ -418,112 +418,114 @@ NSString *const LSTestUser3Confirmation = @"password3";
     [self logoutFromConversationListViewController];
     
 }
-//
-////17. Push an image to a know location on the device. Create two users. Log in as one, create a conversation with the other. Tap the camera button. Verify that a photo prompt pops up with options for taking a picture or attaching an image from the filesystem. Select the filesystem option. Select the pushed photo. Verify that a photo is added to the conversation view.
-//- (void)testToVerifySelectingAnImageFromTheCameraRollAndSending
-//{
-//    [self registerTestUser:1];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self registerTestUser:2];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:1];
-//    
-//    [self startConversationWithUsers:@[LSTestUser2FullName]];
-//    
-//    [self selectPhotoFromCameraRoll];
-//
-//    [self logoutFromContactViewController];
-//}
-//
-////Push an image to a know location on the device. Create two users. Log in as one and send a photo to the other. Log in as the recipient and verify that the photo was received.
-//- (void)testToVerifyASentPhotoIsRecievedByTheRecipient
-//{
-//    [self registerTestUser:1];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self registerTestUser:2];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:1];
-//    
-//    [self startConversationWithUsers:@[LSTestUser2FullName]];
-//    
-//    [self selectPhotoFromCameraRoll];
-//    [self sendPhoto];
-//    
-//    [self logoutFromConversationViewController];
-//    
-//    [self loginAsTestUser:2];
-//    
-//    [tester waitForTimeInterval:10];
-//    
-//    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName]]];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:LSTestUser1FullName]];
-//}
-//
-////Push three images to known locations. Create three users. Log in as one and create a group chat with the other two. Send two text messages and one of the photos. Log in as the second user. Send another photo and two additional text messages. Log in as the third user. Verify that the prior messages are all there in the proper order from the proper senders.
-//- (void)testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat
-//{
-//    [self registerTestUser:1];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self registerTestUser:2];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self registerTestUser:3];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:1];
-//    
-//    [self startConversationWithUsers:@[LSTestUser2FullName, LSTestUser3FullName]];
-//    
-//    [tester tapViewWithAccessibilityLabel:@"Back"];
-//    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser2FullName, LSTestUser3FullName]]];
-//    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser2FullName, LSTestUser3FullName]]];
-//    
-//    [self sendMessageWithText:@"Hello"];
-//    [self sendMessageWithText:@"This is a test message"];
-//    
-////    [self selectPhotoFromCameraRoll];
-////    [self sendPhoto];
-//    
-//    [self logoutFromConversationViewController];
-//    
-//    [self loginAsTestUser:2];
-//    
-//    [tester waitForTimeInterval:10];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName, LSTestUser3FullName]]];
-//    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName, LSTestUser3FullName]]];
-//    
-////    [self selectPhotoFromCameraRoll];
-////    [self sendPhoto];
-//
-//    [self sendMessageWithText:@"Hello"];
-//    [self sendMessageWithText:@"This is another test message"];
-//    
-//    [self logoutFromConversationViewController];
-//    
-//    [self loginAsTestUser:3];
-//    
-//    [tester waitForTimeInterval:10];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName, LSTestUser2FullName]]];
-//    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName, LSTestUser2FullName]]];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:LSTestUser1FullName]];
-//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:LSTestUser1FullName]];
-//    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:LSTestUser1FullName]];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:LSTestUser2FullName]];
-//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is another test message" andUser:LSTestUser2FullName]];
-//    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:LSTestUser2FullName]];
-//}
+
+//17. Push an image to a know location on the device. Create two users. Log in as one, create a conversation with the other. Tap the camera button. Verify that a photo prompt pops up with options for taking a picture or attaching an image from the filesystem. Select the filesystem option. Select the pushed photo. Verify that a photo is added to the conversation view.
+- (void)testToVerifySelectingAnImageFromTheCameraRollAndSending
+{
+    [self registerTestUser:1];
+    [self logoutFromConversationListViewController];
+    
+    [self registerTestUser:2];
+    [self logoutFromConversationListViewController];
+    
+    [self loginAsTestUser:1];
+    
+    [self startConversationWithUsers:@[LSTestUser2FullName]];
+    
+    [self selectPhotoFromCameraRoll];
+
+    [self logoutFromContactViewController];
+}
+
+//18. Push an image to a know location on the device. Create two users. Log in as one and send a photo to the other. Log in as the recipient and verify that the photo was received.
+- (void)testToVerifyASentPhotoIsRecievedByTheRecipient
+{
+    [self registerTestUser:1];
+    [self logoutFromConversationListViewController];
+    
+    [self registerTestUser:2];
+    [self logoutFromConversationListViewController];
+    
+    [self loginAsTestUser:1];
+    
+    [self startConversationWithUsers:@[LSTestUser2FullName]];
+    
+    [self selectPhotoFromCameraRoll];
+    [self sendPhoto];
+    
+    [self logoutFromConversationViewController];
+    
+    [self loginAsTestUser:2];
+    
+    [tester waitForTimeInterval:10];
+    
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName]]];
+    
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:LSTestUser1FullName]];
+    [self logoutFromConversationViewController];
+}
+
+//19. Push three images to known locations. Create three users. Log in as one and create a group chat with the other two. Send two text messages and one of the photos. Log in as the second user. Send another photo and two additional text messages. Log in as the third user. Verify that the prior messages are all there in the proper order from the proper senders.
+- (void)testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat
+{
+    [self registerTestUser:1];
+    [self logoutFromConversationListViewController];
+    
+    [self registerTestUser:2];
+    [self logoutFromConversationListViewController];
+    
+    [self registerTestUser:3];
+    [self logoutFromConversationListViewController];
+    
+    [self loginAsTestUser:1];
+    
+    [self startConversationWithUsers:@[LSTestUser2FullName, LSTestUser3FullName]];
+    
+    [tester tapViewWithAccessibilityLabel:@"Back"];
+    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
+    
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser2FullName, LSTestUser3FullName]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser2FullName, LSTestUser3FullName]]];
+    
+    [self sendMessageWithText:@"Hello"];
+    [self sendMessageWithText:@"This is a test message"];
+    
+    [self selectPhotoFromCameraRoll];
+    [self sendPhoto];
+    
+    [self logoutFromConversationViewController];
+    
+    [self loginAsTestUser:2];
+    
+    [tester waitForTimeInterval:10];
+    
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName, LSTestUser3FullName]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName, LSTestUser3FullName]]];
+    
+    [self selectPhotoFromCameraRoll];
+    [self sendPhoto];
+
+    [self sendMessageWithText:@"Hello"];
+    [self sendMessageWithText:@"This is another test message"];
+    
+    [self logoutFromConversationViewController];
+    
+    [self loginAsTestUser:3];
+    
+    [tester waitForTimeInterval:10];
+    
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName, LSTestUser2FullName]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser1FullName, LSTestUser2FullName]]];
+    
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:LSTestUser2FullName]];
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is another test message" andUser:LSTestUser2FullName]];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:LSTestUser2FullName]];
+    
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:LSTestUser1FullName]];
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:LSTestUser1FullName]];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:LSTestUser1FullName]];
+    [self logoutFromConversationViewController];
+}
 
 //======== Factory Methods =========//
 

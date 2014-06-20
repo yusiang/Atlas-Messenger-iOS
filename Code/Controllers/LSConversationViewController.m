@@ -45,7 +45,7 @@ NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [super viewWillAppear:animated];
     [self fetchMessages];
     [self.collectionView reloadData];
-    [self.composeView.textField becomeFirstResponder];
+    [self.composeView.textVIew becomeFirstResponder];
 }
 
 - (void)setConversation:(LYRConversation *)conversation
@@ -70,6 +70,7 @@ NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
         self.collectionView.backgroundColor = [UIColor whiteColor];
         self.collectionView.alwaysBounceVertical = TRUE;
         self.collectionView.bounces = TRUE;
+        self.collectionView.accessibilityLabel = @"collectionView";
         [self.view addSubview:self.collectionView];
     }
     [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:LSCMessageCellIdentifier];
