@@ -31,10 +31,7 @@
 		259A57531950EB76000E27B0 /* LSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571E1950EB76000E27B0 /* LSHomeViewController.m */; };
 		259A57541950EB76000E27B0 /* LSLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57201950EB76000E27B0 /* LSLayerController.m */; };
 		259A57551950EB76000E27B0 /* LSLoginTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57221950EB76000E27B0 /* LSLoginTableViewController.m */; };
-		259A57561950EB76000E27B0 /* LSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57241950EB76000E27B0 /* LSLoginViewController.m */; };
-		259A57581950EB76000E27B0 /* LSParseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57271950EB76000E27B0 /* LSParseController.m */; };
 		259A57591950EB76000E27B0 /* LSRegistrationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57291950EB76000E27B0 /* LSRegistrationTableViewController.m */; };
-		259A575A1950EB76000E27B0 /* LSRegistrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A572B1950EB76000E27B0 /* LSRegistrationViewController.m */; };
 		259A575B1950EB76000E27B0 /* LSUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A572D1950EB76000E27B0 /* LSUserManager.m */; };
 		259A575C1950EB76000E27B0 /* LSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57301950EB76000E27B0 /* LSAppDelegate.m */; };
 		259A575D1950EB76000E27B0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57311950EB76000E27B0 /* main.m */; };
@@ -102,14 +99,8 @@
 		259A57201950EB76000E27B0 /* LSLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLayerController.m; sourceTree = "<group>"; };
 		259A57211950EB76000E27B0 /* LSLoginTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLoginTableViewController.h; sourceTree = "<group>"; };
 		259A57221950EB76000E27B0 /* LSLoginTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLoginTableViewController.m; sourceTree = "<group>"; };
-		259A57231950EB76000E27B0 /* LSLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLoginViewController.h; sourceTree = "<group>"; };
-		259A57241950EB76000E27B0 /* LSLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLoginViewController.m; sourceTree = "<group>"; };
-		259A57261950EB76000E27B0 /* LSParseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSParseController.h; sourceTree = "<group>"; };
-		259A57271950EB76000E27B0 /* LSParseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSParseController.m; sourceTree = "<group>"; };
 		259A57281950EB76000E27B0 /* LSRegistrationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRegistrationTableViewController.h; sourceTree = "<group>"; };
 		259A57291950EB76000E27B0 /* LSRegistrationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSRegistrationTableViewController.m; sourceTree = "<group>"; };
-		259A572A1950EB76000E27B0 /* LSRegistrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRegistrationViewController.h; sourceTree = "<group>"; };
-		259A572B1950EB76000E27B0 /* LSRegistrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSRegistrationViewController.m; sourceTree = "<group>"; };
 		259A572C1950EB76000E27B0 /* LSUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUserManager.h; sourceTree = "<group>"; };
 		259A572D1950EB76000E27B0 /* LSUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUserManager.m; sourceTree = "<group>"; };
 		259A572E1950EB76000E27B0 /* LayerSample-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LayerSample-Prefix.pch"; sourceTree = "<group>"; };
@@ -270,14 +261,8 @@
 				259A57201950EB76000E27B0 /* LSLayerController.m */,
 				259A57211950EB76000E27B0 /* LSLoginTableViewController.h */,
 				259A57221950EB76000E27B0 /* LSLoginTableViewController.m */,
-				259A57231950EB76000E27B0 /* LSLoginViewController.h */,
-				259A57241950EB76000E27B0 /* LSLoginViewController.m */,
-				259A57261950EB76000E27B0 /* LSParseController.h */,
-				259A57271950EB76000E27B0 /* LSParseController.m */,
 				259A57281950EB76000E27B0 /* LSRegistrationTableViewController.h */,
 				259A57291950EB76000E27B0 /* LSRegistrationTableViewController.m */,
-				259A572A1950EB76000E27B0 /* LSRegistrationViewController.h */,
-				259A572B1950EB76000E27B0 /* LSRegistrationViewController.m */,
 				259A572C1950EB76000E27B0 /* LSUserManager.h */,
 				259A572D1950EB76000E27B0 /* LSUserManager.m */,
 			);
@@ -529,12 +514,9 @@
 				259A575D1950EB76000E27B0 /* main.m in Sources */,
 				259A575E1950EB76000E27B0 /* LYRSampleConversation.m in Sources */,
 				259A57661950EB76000E27B0 /* LSConversationCell.m in Sources */,
-				259A57561950EB76000E27B0 /* LSLoginViewController.m in Sources */,
-				259A575A1950EB76000E27B0 /* LSRegistrationViewController.m in Sources */,
 				259A575C1950EB76000E27B0 /* LSAppDelegate.m in Sources */,
 				259A57621950EB76000E27B0 /* LSAvatarImageView.m in Sources */,
 				259A57551950EB76000E27B0 /* LSLoginTableViewController.m in Sources */,
-				259A57581950EB76000E27B0 /* LSParseController.m in Sources */,
 				259A575B1950EB76000E27B0 /* LSUserManager.m in Sources */,
 				259A57611950EB76000E27B0 /* LYRSampleParticipant.m in Sources */,
 				259A574E1950EB76000E27B0 /* LSAlertView.m in Sources */,

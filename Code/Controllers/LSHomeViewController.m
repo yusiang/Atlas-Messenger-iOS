@@ -27,10 +27,7 @@
 {
     self = [super init];
     if (self) {
-        // SBW: All this view initialization belongs in `viewDidLoad`
-        self.view.backgroundColor = [UIColor whiteColor];
-        self.title = @"Home";
-        self.accessibilityLabel = @"Home Screen";
+
     }
     return self;
 }
@@ -38,6 +35,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.title = @"Home";
+    self.accessibilityLabel = @"Home Screen";
+    
     [self initializeTitleText];
     [self initializeRegistrationButton];
     [self initializeLoginButton];
@@ -113,7 +115,7 @@
 #pragma mark
 #pragma mark LSRegistrationViewControllerDelegate Methods
 
-- (void)registrationSuccess
+- (void)registrationViewControllerDidFinish
 {
     [self authenticateLayerClient];
 }
@@ -121,7 +123,7 @@
 #pragma mark
 #pragma mark LSLoginViewControllerDelegate Methods
 
-- (void)loginSuccess
+- (void)loginViewControllerDidFinish    
 {
     [self authenticateLayerClient];
 }
@@ -135,6 +137,7 @@
     [self.layerController authenticateUser:[LSUserManager loggedInUserID] completion:^(NSError *error) {
         if (!error) {
             NSLog(@"Layer Client Started");
+            
             // SBW: We should be providing callback guarantees on the main queue (this is probably missing LayerKit behavior)
             dispatch_async(dispatch_get_main_queue(), ^{
                 [SVProgressHUD dismiss];

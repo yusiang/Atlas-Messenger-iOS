@@ -17,9 +17,7 @@
 
 @end
 
-// SBW: You can declare protocols on the class extension inside the implementation file. The collection view protocols is
-// an implementation detail and doesn't need to be exposed publicly.
-@interface LSConversationListViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface LSConversationListViewController : UIViewController
 
 @property (nonatomic, strong) LSLayerController *layerController;
 @property (nonatomic, weak) id<LSConversationListViewControllerDelegate> delegate;

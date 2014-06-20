@@ -10,7 +10,6 @@
 #import "LSInputTableViewCell.h"
 #import "LSButton.h"
 #import "LSAlertView.h"
-#import "LSParseController.h"
 #import "LSConversationListViewController.h"
 #import "LSAppDelegate.h"
 #import "LSUserManager.h"
@@ -24,14 +23,13 @@
 
 @implementation LSRegistrationTableViewController
 
-NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
+static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        self.title = @"Register";
-        self.accessibilityLabel = @"Register Screen";
+        
     }
     return self;
 }
@@ -39,6 +37,10 @@ NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = @"Register";
+    self.accessibilityLabel = @"Register Screen";
+    
     [self initializeRegisterButton];
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSRegistrationCellIdentifier];
@@ -118,7 +120,9 @@ NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
     // SBW: I'd create an `LSUser` model and set all this shit as properties on the model
     // Then your method becomes `[LSUserManager registerUser:user completion:(void (^)(BOOL success, NSError *error))`
     if([LSUserManager registerWithFullName:fullNameCell.textField.text email:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
-        [self.delegate registrationSuccess];
+        [self.delegate registrationViewControllerDidFinish];
+    } else {
+        [self.delegate registrationViewControllerDidFailWithError:nil];
     }
 }
 

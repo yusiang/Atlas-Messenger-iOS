@@ -11,9 +11,7 @@
 #import "LSLayerController.h"
 #import "LSComposeView.h"
 
-// SBW: Why does this conform to `UINavigationControllerDelegate`?
-// SBW: Again most of these protocols could be moved to the implementation
-@interface LSConversationViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface LSConversationViewController : UIViewController
 
 @property (nonatomic, strong) LSLayerController *layerController;
 @property (nonatomic, strong) LYRConversation *conversation;

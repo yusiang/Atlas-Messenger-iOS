@@ -14,6 +14,7 @@
 
 @interface LSContactsViewController ()
 
+@property (nonatomic, strong) NSArray *contacts; // SBW: Is this ever set externally? It appears to be loaded internally
 @property (nonatomic, strong) NSMutableArray *participants;
 
 @end
@@ -26,9 +27,6 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        // SBW: Move to `viewDidLoad`
-        self.title = @"Contacts";
-        self.accessibilityLabel = @"Contact List";
 
     }
     return self;
@@ -37,25 +35,37 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // SBW: I'd add an `NSAssert` that `self.contacts` is not `nil`
-    // SBW: I'd add an `NSAssert` that `self.layerController` is not `nil`
+    
+    // SBW: Move to `viewDidLoad`
+    self.title = @"Contacts";
+    self.accessibilityLabel = @"Contact List";
+    
     [self fetchContacts];
     [self initializeBarButton];
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
+    
+    // SBW: I'd add an `NSAssert` that `self.contacts` is not `nil`
+    // SBW: I'd add an `NSAssert` that `self.layerController` is not `nil`
+    NSAssert(self.contacts, @"`self.contacts` cannont be nil");
+    NSAssert(self.layerController, @"`self.layerController` cannot be nil");
+    
 }
 
 - (void)fetchContacts
 {
     self.contacts = [LSUserManager fetchContacts];
-    self.participants = [[NSMutableArray alloc] init]; // SBW: [NSMutableArray new] == [[NSMutableArray alloc] init]
+    self.participants = [NSMutableArray new]; // SBW: [NSMutableArray new] == [[NSMutableArray alloc] init]
 }
 
 - (void)initializeBarButton
 {
     // SBW: name things consistently with type: newConversationButton
-    UIBarButtonItem *newConversation = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
-    newConversation.accessibilityLabel = @"start";
-    [self.navigationItem setRightBarButtonItem:newConversation];
+    UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithTitle:@"Start"
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(newConversationTapped)];
+    newConversationButton.accessibilityLabel = @"start";
+    [self.navigationItem setRightBarButtonItem:newConversationButton];
 }
 
 #pragma mark - Table view data source
@@ -92,7 +102,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(LSContactTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [cell updateWithSelectionIndicator:FALSE];
+    [cell updateWithSelectionIndicator:NO];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -119,7 +129,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     LSConversationViewController *controller = [[LSConversationViewController alloc] init];
     controller.conversation = [self.layerController conversationForParticipants:self.participants];
     controller.layerController = self.layerController;
-    [self.navigationController pushViewController:controller animated:TRUE]; // SBW: It's more idiomatic to use `YES` instead of `TRUE`
+    [self.navigationController pushViewController:controller animated:YES]; // SBW: It's more idiomatic to use `YES` instead of `TRUE`
     
     //Remove Controller From Navigation Stack
     // SBW: You probably want to use `popToViewController:XXXX animated:NO` instead of directly manipulating the stack like this

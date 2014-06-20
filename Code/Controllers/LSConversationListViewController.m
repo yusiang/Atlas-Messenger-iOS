@@ -12,12 +12,13 @@
 #import "LSContactsViewController.h"
 #import "LSUIConstants.h"
 
+// SBW: You can declare protocols on the class extension inside the implementation file. The collection view protocols is
+// an implementation detail and doesn't need to be exposed publicly.
 
-@interface LSConversationListViewController ()
+@interface LSConversationListViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSOrderedSet *conversations;
-@property (nonatomic) BOOL onScreen;
 
 @end
 
@@ -29,9 +30,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 {
     self = [super init];
     if(self) {
-        // SBW: These are better being set in `viewDidLoad`
-        self.title = @"Conversations";
-        self.accessibilityLabel = @"Conversation List";
+
     }
     return self;
 }
@@ -39,21 +38,29 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // SBW: These are better being set in `viewDidLoad`
+    self.title = @"Conversations";
+    self.accessibilityLabel = @"Conversation List";
+    
     [self initializeBarButtons];
     [self initializeCollectionView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationsUpdated:) name:@"conversationsUpdated" object:nil];
+    
+    NSAssert(self.layerController, @"`self.layerController` cannot be nil");
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.collectionView reloadData];
-    self.onScreen = TRUE; // SBW: You can typically just check `self.navigationController.topViewController == self` as a decent proxy for this
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    self.onScreen = FALSE;
 }
 
 /**
@@ -75,12 +82,18 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     
     // SBW: You don't want a method called `fetchLayerConversations` that also does UI changes. I'd probably use KVO on `self.conversations` to drive the reload
     //Doing this for now in place of notifications to changes in the DB
-    if (!self.conversations.count > 0 && self.onScreen){
+    if (!self.conversations.count > 0 && self.navigationController.topViewController == self){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self fetchLayerConversations];
             [self.collectionView reloadData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"conversationsUpdated" object:nil userInfo:nil];
         });
     }
+}
+
+- (void)conversationsUpdated:(NSNotification *)notification
+{
+    
 }
 
 // SBW: I'd probably inline this into `viewDidLoad`

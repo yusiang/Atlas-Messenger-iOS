@@ -26,9 +26,7 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        // SBW: viewDidLoad
-        self.title = @"Login";
-        self.accessibilityLabel = @"Login Screen";
+
     }
     return self;
 }
@@ -36,6 +34,10 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = @"Login";
+    self.accessibilityLabel = @"Login Screen";
+    
     [self initializeLoginButton];
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSLoginlIdentifier];
