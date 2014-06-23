@@ -51,26 +51,26 @@
 
 - (void)configureCellForLoggedInUser
 {
-    self.bubbleView.frame = CGRectMake(58, 6, self.frame.size.width - 116, self.frame.size.height - 12);
+    self.bubbleView.frame = CGRectMake(74, 6, self.frame.size.width - 116, self.frame.size.height - 12);
     self.bubbleView.backgroundColor = kLayerColor;
     
     self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
     
     self.imageView.frame = CGRectMake(2, 2, self.bubbleView.frame.size.width - 4, self.bubbleView.frame.size.height - 4);
     
-    self.avatarImageView.frame = CGRectMake(self.frame.size.width - 52, self.frame.size.height - 52, 46, 46);
+    self.avatarImageView.frame = CGRectMake(self.frame.size.width - 52, self.frame.size.height - 52, 30, 30);
 }
 
 - (void)configureCellForNonLoggedInUser
 {
     self.bubbleView.frame = CGRectMake(42, 6, self.frame.size.width - 116, self.frame.size.height - 12);
-    self.bubbleView.backgroundColor = [UIColor blueColor];
+    self.bubbleView.backgroundColor = [UIColor colorWithRed:219.0/255.0 green:219.0/255.0 blue:219.0/255.0 alpha:1.0];
     
     self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
     
     self.imageView.frame =  CGRectMake(2, 2, self.bubbleView.frame.size.width - 4, self.bubbleView.frame.size.height - 4);
     
-    self.avatarImageView.frame = CGRectMake(6, self.frame.size.height - 52, 46, 46);
+    self.avatarImageView.frame = CGRectMake(6, self.frame.size.height - 52, 30, 30);
 }
 
 
