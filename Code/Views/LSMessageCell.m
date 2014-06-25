@@ -44,7 +44,8 @@
     [self addMessageContentForMessagePart:[message.parts firstObject]];
     
     // TODO: The controller should be telling the cell what to do here... it shouldn't know about the auth model
-    if ([message.sentByUserID isEqualToString:[LSUserManager loggedInUserID]]) {
+    LSUserManager *manager = [LSUserManager new];
+    if ([message.sentByUserID isEqualToString:[manager loggedInUser].identifier]) {
         [self configureCellForLoggedInUser];
     }else {
         [self configureCellForNonLoggedInUser];
@@ -99,8 +100,8 @@
     if (!self.senderLabel) {
         self.senderLabel = [[UILabel alloc] init];
     }
-    NSDictionary *userInfo = [LSUserManager userInfoForUserID:[message sentByUserID]];
-    NSString *senderName = [userInfo objectForKey:@"fullName"];
+    LSUserManager *manager = [LSUserManager new];
+    NSString *senderName = [manager userWithIdentifier:[message sentByUserID]].identifier;
     self.senderLabel.text = senderName;
     [self addSubview:self.senderLabel];
 }

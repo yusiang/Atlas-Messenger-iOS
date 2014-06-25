@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LYRSampleMessage.h"
 #import "LSAvatarImageView.h"
 #import "LYRMessage.h"
 #import "LSLayerController.h"

@@ -8,9 +8,9 @@
 
 #import "LSConversationListViewController.h"
 #import "LSConversationCell.h"
-#import "LYRSampleConversation.h"
 #import "LSContactsViewController.h"
 #import "LSUIConstants.h"
+#import "LSUserManager.h"
 
 // SBW: You can declare protocols on the class extension inside the implementation file. The collection view protocols is
 // an implementation detail and doesn't need to be exposed publicly.
@@ -194,6 +194,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)logoutTapped
 {
     [self.navigationController dismissViewControllerAnimated:TRUE completion:^{
+        [[LSUserManager new] logout];
         [self.layerController.client stop];
     }];
 }

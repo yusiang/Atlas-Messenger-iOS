@@ -30,7 +30,6 @@ NSString *const LSTestUser0Confirmation = @"password0";
 - (void)initializeSDKs
 {
     [self setLayerController:[[LSLayerController alloc] init]];
-    [self setParseController:[[LSParseController alloc] init]];
 }
 
 - (void)setLayerController:(LSLayerController *)layerController
@@ -43,13 +42,6 @@ NSString *const LSTestUser0Confirmation = @"password0";
     }];
 }
 
-- (void)setParseController:(LSParseController *)parseController
-{
-    if (_parseController != parseController) {
-        _parseController = parseController;
-    }
-}
-
 - (UINavigationController *)rootViewController
 {
     LSHomeViewController *homeViewController = [[LSHomeViewController alloc] init];
@@ -57,4 +49,5 @@ NSString *const LSTestUser0Confirmation = @"password0";
     
     return [[UINavigationController alloc] initWithRootViewController:homeViewController];
 }
+
 @end

@@ -9,7 +9,6 @@
 #import "LSContactsViewController.h"
 #import "LSContactTableViewCell.h"
 #import "LSConversationViewController.h"
-#import "LYRSampleConversation.h"
 #import "LSUserManager.h"
 
 @interface LSContactsViewController ()
@@ -53,7 +52,8 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)fetchContacts
 {
-    self.contacts = [LSUserManager fetchContacts];
+    LSUserManager *manager = [[LSUserManager alloc] init];
+    self.contacts = [manager contactsForUser:[manager loggedInUser]];
     self.participants = [NSMutableArray new]; // SBW: [NSMutableArray new] == [[NSMutableArray alloc] init]
 }
 
@@ -95,9 +95,9 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 - (void)configureCell:(LSContactTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     // SBW: You don't want to use an `NSDictionary` in place of a domain model
-    NSDictionary *userInfo = [self.contacts objectAtIndex:indexPath.row];
-    cell.textLabel.text = [userInfo objectForKey:@"fullName"];
-    cell.accessibilityLabel = [NSString stringWithFormat:@"%@", [userInfo objectForKey:@"fullName"]];
+    LSUser *user = [self.contacts objectAtIndex:indexPath.row];
+    cell.textLabel.text = user.fullName;
+    cell.accessibilityLabel = [NSString stringWithFormat:@"%@", user.fullName];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(LSContactTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -115,12 +115,12 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)updateParticpantListWithSelectionAtIndex:(NSIndexPath *)indexPath
 {
-    NSDictionary *userInfo = [self.contacts objectAtIndex:indexPath.row];
+    LSUser *user = [self.contacts objectAtIndex:indexPath.row];
     
-    if([self.participants containsObject:userInfo]) {
-        [self.participants removeObject:userInfo];
+    if([self.participants containsObject:user]) {
+        [self.participants removeObject:user];
     } else {
-        [self.participants addObject:userInfo];
+        [self.participants addObject:user];
     }
 }
 

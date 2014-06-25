@@ -14,160 +14,162 @@
 #pragma mark
 #pragma mark Public Class Methods
 
-+ (BOOL)registerWithFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
+static NSString *const LSUserDirectoryPath = @"users";
+
+#pragma mark
+#pragma mark Public Authentication Methods
+
+- (void)registerUser:(LSUser *)user completion:(void (^)(BOOL success, NSError *error))completion
 {
-    if ([self verifyFullName:fullName email:email password:password andConfirmation:confirmation]) {
-        return TRUE;
+    NSError *error;
+    BOOL success = NO;
+    
+    if (!user.fullName) {
+        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter your Full Name in order to register"}];
     }
-    return FALSE;
-}
-
-+ (BOOL)loginWithEmail:(NSString *)email andPassword:(NSString *)password
-{
-    if(![self verifyEmail:email andPassword:password]){
-        [LSAlertView invalidLoginCredentials];
-        return FALSE;
+    
+    if (!user.email) {
+        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter an email in order to register"}];
     }
-    return TRUE;
-}
-
-+ (NSArray *)fetchContacts
-{
-    NSMutableArray *contacts = [[NSMutableArray alloc] init];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *lastUserID = [defaults objectForKey:@"lastUserID"];
-    for (int i = [lastUserID doubleValue]; i > -1; i--) {
-        NSDictionary *userInfo = [defaults objectForKey:[NSString stringWithFormat:@"%d", i]];
-        if(![self checkIfUserInfoIsLoggedInuser:userInfo]) {
-            [contacts addObject:userInfo];
-        }
+    
+    if (!user.password || !user.confirmation || ![user.password isEqualToString:user.confirmation]) {
+        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter matching passwords in order to register"}];
     }
-    return contacts;
+
+    if ([self userExists:user]) {
+        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Email address taken. Please enter another email."}];
+    } else {
+        NSMutableArray *applicationUsers = [[NSMutableArray alloc] initWithArray:[self allApplicationsUsers]];
+        
+        NSData *userData = [NSKeyedArchiver archivedDataWithRootObject:user];
+        [applicationUsers addObject:userData];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:applicationUsers] forKey:@"users"];
+        
+        [self setLoggedInUser:user];
+        
+        success = YES;
+    }
+    completion(success, error);
 }
 
-+(NSString *)loggedInUserID
+- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(LSUser *user, NSError *error))completion
 {
-    NSDictionary *loggedInUserInfo = [[NSUserDefaults standardUserDefaults] objectForKey:@"loggedInUser"];
-    return [loggedInUserInfo objectForKey:@"userID"];
+    NSError *error;
+    
+    if (!email) {
+         error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your Email address in order to Login"}];
+    }
+    
+    if (!password) {
+        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your password in order to login"}];
+    }
+    
+    LSUser *user = [self userWithEmail:email];
+    if (!user) {
+        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Email does not exist, please register or login with a different email."}];
+    }
+    
+    if (![user.password isEqualToString:password]) {
+        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Incorrect password, please try again."}];
+    }
+    
+    [self setLoggedInUser:user];
+    
+    completion (user, error);
 }
 
-+(NSDictionary *)userInfoForUserID:(NSString *)userID;
+- (void)logout
 {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:userID];
-}
-
-+ (void)logout
-{
-    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"loggedInUser"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"loggedInUser"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 
 #pragma mark
-#pragma mark Private Class Methods
+#pragma mark Public User Methods
 
-//Verifys credentials for a new user. This method handles displaying errors to the user if there are registration issues
-+ (BOOL)verifyFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
+- (LSUser *)loggedInUser
 {
-    if ([email isEqualToString:@""]) {
-        [LSAlertView missingEmailAlert];
-        return FALSE;
-    }
-    
-    if ([password isEqualToString:@""]|| [confirmation isEqualToString:@""]) {
-        [LSAlertView matchingPasswordAlert];
-        return FALSE;
-    }
-    
-    if(![password isEqualToString:confirmation]) {
-        [LSAlertView matchingPasswordAlert];
-        return FALSE;
-    }
-    if(![self storeFullName:fullName email:email password:password andConfirmation:confirmation]) {
-        [LSAlertView existingUsernameAlert];
-        return FALSE;
-    }
-    return TRUE;
+    NSData *userData = [[NSUserDefaults standardUserDefaults] objectForKey:@"loggedInUser"];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:userData];
 }
 
-//Stores credentials for a new user
-+ (BOOL)storeFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation
+- (NSArray *)contactsForUser:(LSUser *)user
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *lastUserID = [defaults objectForKey:@"lastUserID"];
-    
-    if ([self checkForExistingEmail:email withUserID:lastUserID]) {
-        return FALSE;
+    NSMutableArray *userObjects = [[NSMutableArray alloc] init];
+    NSArray *users = [self allApplicationsUsers];
+    for (NSData *userData in users) {
+        LSUser *existingUser = [NSKeyedUnarchiver unarchiveObjectWithData:userData];
+        NSLog(@"Existing User ID %@", existingUser.identifier);
+        NSLog(@"User ID %@", user.identifier);
+        if ([existingUser.identifier isEqualToString:user.identifier]) break;
+        [userObjects addObject:existingUser];
     }
     
-    NSString *userID;
-    
-    if (lastUserID) {
-        int number = [lastUserID intValue];
-        userID = [NSString stringWithFormat:@"%d", (number + 1)];
-    } else {
-        userID = [NSString stringWithFormat:@"%d", 0];
-    }
-    
-    NSDictionary *userInfo = @{@"fullName" : fullName,
-                               @"email" : email,
-                               @"password" : password,
-                               @"confirmation" : confirmation,
-                               @"userID" : userID};
-    
-    [defaults setObject:userInfo forKey:userID];
-    [defaults setObject:userID forKey:@"lastUserID"];
-    [self setLoggedInUserInfo:userInfo];
-    [defaults synchronize];
-    
-    return TRUE;
+    return [[NSArray alloc] initWithArray:userObjects];
 }
 
-//Checks to see if an email exists
-+ (BOOL)checkForExistingEmail:(NSString *)email withUserID:(NSString *)userID
+- (LSUser *)userWithIdentifier:(NSString *)identifier
+{
+    NSArray *existingUsers = [self allApplicationsUsers];
+    for (NSData *data in existingUsers) {
+        LSUser *user = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if ([user.identifier isEqualToString:identifier]) {
+            return user;
+        }
+    }
+    return nil;
+}
+
+
+#pragma mark 
+#pragma mark Private Implementation Methods
+
+- (NSArray *)allApplicationsUsers
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    for (int i = [userID doubleValue] ; i > -1; i--) {
-        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", userID]];
-        if ([existingEmail isEqualToString:email]) {
+    
+    if (![defaults objectForKey:@"users"]) {
+        return [[NSArray alloc] init];
+    }
+    
+    NSData *savedArray = [defaults objectForKey:@"users"];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:savedArray];
+}
+
+- (BOOL)userExists:(LSUser *)user
+{
+    NSArray *existingUsers = [self allApplicationsUsers];
+    for (NSData *data in existingUsers) {
+        LSUser *existingUser = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if ([existingUser.email isEqualToString:user.email]) {
             return TRUE;
         }
     }
     return FALSE;
 }
 
-//Verifies that an email and password match
-+(BOOL)verifyEmail:(NSString *)email andPassword:(NSString *)password
+
+- (LSUser *)userWithEmail:(NSString *)email
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *lasterUserID = [defaults objectForKey:@"lastUserID"];
-    for (int i = [lasterUserID doubleValue]; i > -1; i--) {
-        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", [NSString stringWithFormat:@"%d", i]]];
-        if ([existingEmail isEqualToString:email]) {
-            NSString *existingPassword = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.password", [NSString stringWithFormat:@"%d", i]]];
-            if ([existingPassword isEqualToString:password]) {
-                [self setLoggedInUserInfo:[defaults valueForKey:[NSString stringWithFormat:@"%d", i]]];
-                return TRUE;
-            }
+    NSArray *existingUsers = [self allApplicationsUsers];
+    for (NSData *data in existingUsers) {
+        LSUser *user = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if ([user.email isEqualToString:email]) {
+            return user;
         }
     }
-    return false;
+    return nil;
 }
 
-//Sets the logged in user info
-+ (void)setLoggedInUserInfo:(NSDictionary *)userInfo
+- (void)setLoggedInUser:(LSUser *)user
 {
-    [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:@"loggedInUser"];
-}
-
-+ (BOOL)checkIfUserInfoIsLoggedInuser:(NSDictionary *)userInfo
-{
-    NSDictionary *loggedInUserInfo = [[NSUserDefaults standardUserDefaults] objectForKey:@"loggedInUser"];
-    NSString *loggedInUserId = [loggedInUserInfo objectForKey:@"userID"];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"loggedInUser"]) [defaults removeObjectForKey:@"loggedInUser"];
     
-    if ([loggedInUserId isEqualToString:[userInfo objectForKey:@"userID"]]) {
-        return TRUE;
-    }
-    return FALSE;
+    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:user] forKey:@"loggedInUser"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
+
 @end

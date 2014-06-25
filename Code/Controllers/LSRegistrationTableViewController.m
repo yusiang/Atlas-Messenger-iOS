@@ -13,6 +13,7 @@
 #import "LSConversationListViewController.h"
 #import "LSAppDelegate.h"
 #import "LSUserManager.h"
+#import "LSUser.h"
 
 @interface LSRegistrationTableViewController ()
 
@@ -117,13 +118,21 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
     LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]];
     
-    // SBW: I'd create an `LSUser` model and set all this shit as properties on the model
-    // Then your method becomes `[LSUserManager registerUser:user completion:(void (^)(BOOL success, NSError *error))`
-    if([LSUserManager registerWithFullName:fullNameCell.textField.text email:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
-        [self.delegate registrationViewControllerDidFinish];
-    } else {
-        [self.delegate registrationViewControllerDidFailWithError:nil];
-    }
+    LSUser *user = [[LSUser alloc] init];
+    [user setFullName:fullNameCell.textField.text];
+    [user setEmail:usernameCell.textField.text];
+    [user setPassword:passwordCell.textField.text];
+    [user setConfirmation:confirmationCell.textField.text];
+    [user setIdentifier:[[NSUUID UUID] UUIDString]];
+    
+    LSUserManager *userManager = [[LSUserManager alloc] init];
+    [userManager registerUser:user completion:^(BOOL success, NSError *error) {
+        if (!error) {
+            [self.delegate registrationViewControllerDidFinish];
+        } else {
+            [self.delegate registrationViewControllerDidFailWithError:error];
+        }
+    }];
 }
 
 @end

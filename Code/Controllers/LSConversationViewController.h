@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LYRSampleConversation.h"
 #import "LSLayerController.h"
 #import "LSComposeView.h"
 

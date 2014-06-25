@@ -58,7 +58,17 @@ NSString *const LSTestUser3Confirmation = @"password3";
      This is a very uncommon signature idiom. Try searching the Cocoa headers for the word `And` in method signatures. It rarely appears and typically only in very old
      API's such as `NSBundle`.
      */
-    [LSUserManager registerWithFullName:LSTestUser0FullName email:LSTestUser0Email password:LSTestUser0Password andConfirmation:LSTestUser0Confirmation];
+    
+    LSUser *user = [[LSUser alloc] init];
+    [user setFullName:LSTestUser0FullName];
+    [user setEmail:LSTestUser0Email];
+    [user setPassword:LSTestUser0Password];
+    [user setConfirmation:LSTestUser0Confirmation];
+    [user setIdentifier:[[NSUUID UUID] UUIDString]];
+    
+    [[LSUserManager new] registerUser:user completion:^(BOOL success, NSError *error) {
+        //
+    }];
 }
 
 - (void)afterEach
@@ -632,9 +642,11 @@ NSString *const LSTestUser3Confirmation = @"password3";
 - (NSString *)conversationCellLabelForParticipants:(NSArray *)participants
 {
     NSString *senderLabel = @"";
+
+    LSUserManager *manager = [LSUserManager new];
     for (NSString *userID in participants) {
-        if (![userID isEqualToString:[LSUserManager loggedInUserID]]) {
-            NSString *participant = (NSString *)[[LSUserManager userInfoForUserID:userID] objectForKey:@"fullName"];
+        if (![userID isEqualToString:[manager loggedInUser].identifier]) {
+            NSString *participant = [manager userWithIdentifier:userID].fullName;
             senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", participant]];
         }
     }
@@ -672,7 +684,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
     [tester clearTextFromAndThenEnterText:text intoViewWithAccessibilityLabel:@"Compose TextView"];
     [tester tapViewWithAccessibilityLabel:@"Send Button"];
     
-    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:[[LSUserManager loggedInUserID] intValue]]];
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:[[[LSUserManager new] loggedInUser].identifier intValue]]];
 }
 
 - (NSString *)messageCellLabelForText:(NSString *)text andUser:(NSInteger)userID
@@ -709,7 +721,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
 -(void)sendPhoto
 {
     [tester tapViewWithAccessibilityLabel:@"Send Button"];
-    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[[LSUserManager loggedInUserID] intValue]]];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[[[LSUserManager new] loggedInUser].identifier intValue]]];
 }
 
 - (NSString *)imageCelLabelForUserID:(NSInteger)userId

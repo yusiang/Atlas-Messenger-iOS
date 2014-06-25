@@ -120,6 +120,17 @@
     [self authenticateLayerClient];
 }
 
+- (void)registrationViewControllerDidFailWithError:(NSError *)error
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:error.domain
+                                                        message:[error.userInfo objectForKey:@"description"]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    alertView.accessibilityLabel = @"Alert";
+    [alertView show];
+}
+
 #pragma mark
 #pragma mark LSLoginViewControllerDelegate Methods
 
@@ -128,13 +139,25 @@
     [self authenticateLayerClient];
 }
 
+- (void)loginViewControllerDidFailWithError:(NSError *)error
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:error.domain
+                                                        message:[error.userInfo objectForKey:@"description"]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    alertView.accessibilityLabel = @"Alert";
+    [alertView show];
+}
+
 #pragma mark
 #pragma mark Layer Authentication Methods
 
 - (void)authenticateLayerClient
 {
     [SVProgressHUD show];
-    [self.layerController authenticateUser:[LSUserManager loggedInUserID] completion:^(NSError *error) {
+    LSUserManager *manager = [[LSUserManager alloc] init];
+    [self.layerController authenticateUser:[manager loggedInUser].identifier completion:^(NSError *error) {
         if (!error) {
             NSLog(@"Layer Client Started");
             

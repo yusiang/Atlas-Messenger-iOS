@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "LSUser.h"
 /**
  SBW: You are missing a domain model for the User.
  This method also encapsulates global user state which is not good.
@@ -26,21 +26,19 @@
 
 @interface LSUserManager : NSObject
 
-//Registers a new users and saves their information to NSUserDefaults
-+(BOOL)registerWithFullName:(NSString *)fullName email:(NSString *)email password:(NSString *)password andConfirmation:(NSString *)confirmation;
+//==========Blakes Public API Proposal==========//
 
-//Checks if a user exists in NSUserDefaults nad logs them in yes
-+(BOOL)loginWithEmail:(NSString *)email andPassword:(NSString *)password;
+- (void)registerUser:(LSUser *)user completion:(void (^)(BOOL success, NSError *error))completion;
 
-//Returns an array of all contacts in NSUserDefaults
-+(NSArray *)fetchContacts;
+- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(LSUser *user, NSError *error))completion;
 
-//Returns the userID for the currently logged in user
-+(NSString *)loggedInUserID;
+- (void)logout;
 
-//Returns a dictionary of userInfo for a userID
-+(NSDictionary *)userInfoForUserID:(NSString *)userID;
 
-+(void)logout;
+- (LSUser *)loggedInUser;
+
+- (NSArray *)contactsForUser:(LSUser *)user;
+
+- (LSUser *)userWithIdentifier:(NSString *)identifier;
 
 @end

@@ -8,9 +8,7 @@
 
 #import "LSConversationCell.h"
 #import "LSAvatarImageView.h"
-#import "LYRSampleMessage.h"
-#import "LYRSampleParticipant.h"
-#import "LYRSampleMessagePart.h"
+#import "LSUser.h"
 #import "LSUserManager.h"
 
 @interface LSConversationCell ()
@@ -71,10 +69,11 @@
     [self.senderName setFont:[UIFont fontWithName:kLayerFontHeavy size:16]];
     [self.senderName setTextColor:[UIColor darkGrayColor]];
     
+    LSUserManager *manager = [[LSUserManager alloc] init];
     NSString *senderLabel = @"";
     for (NSString *userID in participants) {
-        if (![userID isEqualToString:[LSUserManager loggedInUserID]]) {
-            NSString *participant = (NSString *)[[LSUserManager userInfoForUserID:userID] objectForKey:@"fullName"];
+        if (![userID isEqualToString:[manager loggedInUser].identifier]) {
+            NSString *participant = [manager userWithIdentifier:userID].fullName;
             senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", participant]];
         }
     }

@@ -7,11 +7,11 @@
 //
 
 #import "LSLayerController.h"
-#import "LSParseController.h"
 #import "LSConnectionManager.h"
 #import "LYRTestingContext.h"
 #import "LYRTestProvider.h"
 #import "LYRTestUtilities.h"
+#import "LSUser.h"
 
 @interface LYRClient ()
 
@@ -35,6 +35,7 @@
 
 - (void)initializeLayerClientWithCompletion:(void (^)(NSError *))completion
 {
+    NSUUID *uuid = [NSUUID UUID];
     self.client = [[LYRClient alloc] initWithBaseURL:LYRTestSPDYBaseURL() appID:[LYRTestingContext sharedContext].appID];
     [self.client setDelegate:self];
 }
@@ -153,8 +154,8 @@
 -(LYRConversation *)conversationForParticipants:(NSArray *)particiapnts
 {
     NSMutableArray *conversationParticipants = [[NSMutableArray alloc] init];
-    for (NSDictionary *userInfo in particiapnts) {
-        [conversationParticipants addObject:[userInfo objectForKey:@"userID"]];
+    for (LSUser *user in particiapnts) {
+        [conversationParticipants addObject:user.identifier];
     }
     return [self.client conversationWithIdentifier:nil participants:conversationParticipants];
 }
