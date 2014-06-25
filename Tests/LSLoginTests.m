@@ -42,13 +42,38 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)beforeEach
 {
+<<<<<<< HEAD
     LYRSetLogLevel(LYR_LOG_COLOR_VERBOSE);
+=======
+    /**
+     If you are going to use user defaults as a data store, you'd be better off by putting a `reset` method on the `LSUserManager` interface that only deletes specific
+     keys used for user management. Otherwise this approach could blow out keys stored by another part of the system and it requires refactoring your tests if you change
+     data store implementations in the future.
+     */
+>>>>>>> blake-MSG-187-code-review-feedback
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [defaults removePersistentDomainForName:appDomain];
     [defaults synchronize];
     
-    [LSUserManager registerWithFullName:LSTestUser0FullName email:LSTestUser0Email password:LSTestUser0Password andConfirmation:LSTestUser0Confirmation];
+    /**
+     SBW: you never want to use `andWhatever` in an Objective-C method signature unless the method actually take two actions. For example, if you had an object
+     that acted as indexed collection, you might have methods like `addObject:` and `reindex`. You may then want to add a new method that adds the objects from
+     another collection and reindexes: `addObjectsFromArrayAndReindex:foo`. But if you wanted to parameterize it, you'd go with `addObjectsFromArray:array reindex:NO`.
+     This is a very uncommon signature idiom. Try searching the Cocoa headers for the word `And` in method signatures. It rarely appears and typically only in very old
+     API's such as `NSBundle`.
+     */
+    
+    LSUser *user = [[LSUser alloc] init];
+    [user setFullName:LSTestUser0FullName];
+    [user setEmail:LSTestUser0Email];
+    [user setPassword:LSTestUser0Password];
+    [user setConfirmation:LSTestUser0Confirmation];
+    [user setIdentifier:[[NSUUID UUID] UUIDString]];
+    
+    [[LSUserManager new] registerUser:user completion:^(BOOL success, NSError *error) {
+        //
+    }];
 }
 
 - (void)afterEach
@@ -629,8 +654,18 @@ NSString *const LSTestUser3Confirmation = @"password3";
     NSArray *sortedFullNames = [participantNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 
     NSString *senderLabel = @"";
+<<<<<<< HEAD
     for (NSString *fullName in sortedFullNames) {
         senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", fullName]];
+=======
+
+    LSUserManager *manager = [LSUserManager new];
+    for (NSString *userID in participants) {
+        if (![userID isEqualToString:[manager loggedInUser].identifier]) {
+            NSString *participant = [manager userWithIdentifier:userID].fullName;
+            senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", participant]];
+        }
+>>>>>>> blake-MSG-187-code-review-feedback
     }
     return senderLabel;
 }
@@ -645,7 +680,11 @@ NSString *const LSTestUser3Confirmation = @"password3";
     [tester clearTextFromAndThenEnterText:text intoViewWithAccessibilityLabel:@"Compose TextView"];
     [tester tapViewWithAccessibilityLabel:@"Send Button"];
     
+<<<<<<< HEAD
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:[[LSUserManager userInfoForUserID:[LSUserManager loggedInUserID]] objectForKey:@"fullName"]]];
+=======
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:[[[LSUserManager new] loggedInUser].identifier intValue]]];
+>>>>>>> blake-MSG-187-code-review-feedback
 }
 
 - (NSString *)messageCellLabelForText:(NSString *)text andUser:(NSString *)fullName
@@ -665,8 +704,12 @@ NSString *const LSTestUser3Confirmation = @"password3";
 -(void)sendPhoto
 {
     [tester tapViewWithAccessibilityLabel:@"Send Button"];
+<<<<<<< HEAD
     [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[[LSUserManager userInfoForUserID:[LSUserManager loggedInUserID]] objectForKey:@"fullName"]]];
     [tester waitForTimeInterval:10];
+=======
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[[[LSUserManager new] loggedInUser].identifier intValue]]];
+>>>>>>> blake-MSG-187-code-review-feedback
 }
 
 - (NSString *)imageCelLabelForUserID:(NSString *)fullName

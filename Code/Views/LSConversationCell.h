@@ -13,6 +13,7 @@
 
 @interface LSConversationCell : UICollectionViewCell
 
+// SBW: There should not be any reason for a cell to know about the layer controller...
 - (void) updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller;
 
 @end

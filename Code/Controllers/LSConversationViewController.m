@@ -9,7 +9,7 @@
 #import "LSConversationViewController.h"
 #import "LSMessageCell.h"
 
-@interface LSConversationViewController ()
+@interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) LSComposeView *composeView;
@@ -20,14 +20,14 @@
 
 @implementation LSConversationViewController
 
-NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
+// SBW: should be declared static KC:???
+static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
-- (id) init
+- (id)init
 {
     self = [super init];
     if(self) {
-        self.title = @"Conversation";
-        self.accessibilityLabel = @"Conversation";
+        
     }
     return self;
 }
@@ -35,9 +35,17 @@ NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"Conversation";
+    self.accessibilityLabel = @"Conversation";
+
     [self initializeCollectionView];
     [self initializeComposeView];
     [self registerForKeyboardNotifications];
+    
+    // SBW: I'd add an `NSAssert` that `self.conversation` is not `nil`
+    // SBW: I'd add an `NSAssert` that `self.layerController` is not `nil`
+    NSAssert(self.conversation, @"`self.conversation` cannont be nil");
+    NSAssert(self.layerController, @"`self.layerController` cannot be nil");
 }
 
 - (void)viewWillAppear:(BOOL)animated

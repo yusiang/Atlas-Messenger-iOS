@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LYRSampleParticipant : NSObject
+@interface LSUser : NSObject <NSCoding>
 
 @property (nonatomic, strong) NSString *fullName;
+@property (nonatomic, strong) NSString *email;
+@property (nonatomic, strong) NSString *password;
+@property (nonatomic, strong) NSString *confirmation;
 @property (nonatomic, strong) NSString *identifier;
-
-+ (NSSet *)participants:(int)number;
-+ (instancetype)participantWithNumber:(int)number;
 
 @end

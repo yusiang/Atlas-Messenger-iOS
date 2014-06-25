@@ -17,7 +17,7 @@
 
 @end
 
-@interface LSConversationListViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface LSConversationListViewController : UIViewController
 
 @property (nonatomic, strong) LSLayerController *layerController;
 @property (nonatomic, weak) id<LSConversationListViewControllerDelegate> delegate;

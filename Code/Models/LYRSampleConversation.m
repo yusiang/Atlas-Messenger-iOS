@@ -8,7 +8,7 @@
 
 #import "LYRSampleConversation.h"
 #import "LYRSampleMessage.h"
-#import "LYRSampleParticipant.h"
+#import "LSUser.h"
 
 @implementation LYRSampleConversation
 
@@ -29,7 +29,7 @@
 + (instancetype)createConversation
 {
     return [self conversationWithIdentifier:[NSUUID UUID]
-                               participants:[LYRSampleParticipant participants:arc4random_uniform(10) + 1]
+                               participants:[LSUser participants:arc4random_uniform(10) + 1]
                                    metadata:nil
                                    userInfo:nil
                                   createdAt:[NSDate date]];

@@ -35,11 +35,13 @@
     self.textField.placeholder = text;
     self.textField.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:18];
     self.textField.textColor = [UIColor darkGrayColor];
+    self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.textField sizeToFit];
     self.textField.frame = CGRectMake(20, 14, self.frame.size.width - 20, self.textField.frame.size.height);
     [self addSubview:self.textField];
 }
 
+// SBW: What's up with this?
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:FALSE animated:FALSE];

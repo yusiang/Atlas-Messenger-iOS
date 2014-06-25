@@ -41,6 +41,7 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
             filePath = "Code/Controllers/LSLayerController.m"
             timestampString = "424833951.467456"
             startingColumnNumber = "9223372036854775807"
@@ -133,6 +134,8 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+=======
+>>>>>>> blake-MSG-187-code-review-feedback
             filePath = "Pods/LayerKit/Code/Private/Synchronization/LYRSynchronizationDataSource.m"
             timestampString = "424881388.889509"
             startingColumnNumber = "9223372036854775807"
@@ -150,12 +153,20 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Code/Controllers/LSConversationListViewController.m"
+<<<<<<< HEAD
             timestampString = "424915263.380452"
+=======
+            timestampString = "425412290.56692"
+>>>>>>> blake-MSG-187-code-review-feedback
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "94"
             endingLineNumber = "94"
+<<<<<<< HEAD
             landmarkName = "-initializeCollectionView"
+=======
+            landmarkName = "-conversationsUpdated:"
+>>>>>>> blake-MSG-187-code-review-feedback
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

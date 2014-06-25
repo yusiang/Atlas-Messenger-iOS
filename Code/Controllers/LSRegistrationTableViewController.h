@@ -12,7 +12,12 @@
 
 @protocol LSRegistrationTableViewControllerDelegate <NSObject>
 
-- (void)registrationSuccess;
+// SBW: Any time you define a delegate the first argument should be a pointer to the object for which the receiver is acting as the delegate.
+// i.e. registrationViewControllerDidFinish
+// You also need a `didFailWithError:`
+- (void)registrationViewControllerDidFinish;
+
+- (void)registrationViewControllerDidFailWithError:(NSError *)error;
 
 @end
 

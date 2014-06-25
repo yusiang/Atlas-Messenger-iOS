@@ -26,8 +26,7 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        self.title = @"Login";
-        self.accessibilityLabel = @"Login Screen";
+
     }
     return self;
 }
@@ -35,6 +34,10 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = @"Login";
+    self.accessibilityLabel = @"Login Screen";
+    
     [self initializeLoginButton];
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSLoginlIdentifier];
@@ -100,9 +103,15 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
 
-    if([LSUserManager loginWithEmail:usernameCell.textField.text andPassword:passwordCell.textField.text]) {
-        [self.delegate loginSuccess];
-    }
+    LSUserManager *manager = [[LSUserManager alloc] init];
+    [manager loginWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(LSUser *user, NSError *error) {
+        if (!error) {
+            [self.delegate loginViewControllerDidFinish];
+        } else {
+            [self.delegate loginViewControllerDidFailWithError:error];
+        }
+       
+    }];
 }
 
 @end

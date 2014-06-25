@@ -27,9 +27,7 @@
 {
     self = [super init];
     if (self) {
-        self.view.backgroundColor = [UIColor whiteColor];
-        self.title = @"Home";
-        self.accessibilityLabel = @"Home Screen";
+
     }
     return self;
 }
@@ -37,6 +35,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.title = @"Home";
+    self.accessibilityLabel = @"Home Screen";
+    
     [self initializeTitleText];
     [self initializeRegistrationButton];
     [self initializeLoginButton];
@@ -80,6 +83,10 @@
 
 - (void)configureLayoutConstraints
 {
+    /**
+     SBW: Are you actually trying to use auto-layout or not? This method signature mentions constraints, but you are
+     fucking with the frames directly
+     */
     self.titleLabel.center = CGPointMake(self.view.center.x, self.view.center.y - 100);
     
     self.registerButton.frame = CGRectMake(0, 0, 280, 60);
@@ -108,17 +115,39 @@
 #pragma mark
 #pragma mark LSRegistrationViewControllerDelegate Methods
 
-- (void)registrationSuccess
+- (void)registrationViewControllerDidFinish
 {
     [self authenticateLayerClient];
+}
+
+- (void)registrationViewControllerDidFailWithError:(NSError *)error
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:error.domain
+                                                        message:[error.userInfo objectForKey:@"description"]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    alertView.accessibilityLabel = @"Alert";
+    [alertView show];
 }
 
 #pragma mark
 #pragma mark LSLoginViewControllerDelegate Methods
 
-- (void)loginSuccess
+- (void)loginViewControllerDidFinish    
 {
     [self authenticateLayerClient];
+}
+
+- (void)loginViewControllerDidFailWithError:(NSError *)error
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:error.domain
+                                                        message:[error.userInfo objectForKey:@"description"]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    alertView.accessibilityLabel = @"Alert";
+    [alertView show];
 }
 
 #pragma mark
@@ -127,9 +156,12 @@
 - (void)authenticateLayerClient
 {
     [SVProgressHUD show];
-    [self.layerController authenticateUser:[LSUserManager loggedInUserID] completion:^(NSError *error) {
+    LSUserManager *manager = [[LSUserManager alloc] init];
+    [self.layerController authenticateUser:[manager loggedInUser].identifier completion:^(NSError *error) {
         if (!error) {
             NSLog(@"Layer Client Started");
+            
+            // SBW: We should be providing callback guarantees on the main queue (this is probably missing LayerKit behavior)
             dispatch_async(dispatch_get_main_queue(), ^{
                 [SVProgressHUD dismiss];
                 [self presentConversationViewController];
@@ -146,6 +178,7 @@
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     
     [self presentViewController:conversationController animated:TRUE completion:^{
+        // SBW: You don't want to make assumptions about the view controller's position in the stack. Use query methods and `popToViewController:`
         NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
         [navigationArray removeObjectAtIndex: 1];
         self.navigationController.viewControllers = navigationArray;

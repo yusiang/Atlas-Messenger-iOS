@@ -12,7 +12,9 @@
 
 @protocol LSLoginTableViewControllerDelegate <NSObject>
 
-- (void)loginSuccess;
+- (void)loginViewControllerDidFinish;
+
+- (void)loginViewControllerDidFailWithError:(NSError *)error;
 
 @end
 

@@ -31,17 +31,11 @@
 		259A57531950EB76000E27B0 /* LSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571E1950EB76000E27B0 /* LSHomeViewController.m */; };
 		259A57541950EB76000E27B0 /* LSLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57201950EB76000E27B0 /* LSLayerController.m */; };
 		259A57551950EB76000E27B0 /* LSLoginTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57221950EB76000E27B0 /* LSLoginTableViewController.m */; };
-		259A57561950EB76000E27B0 /* LSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57241950EB76000E27B0 /* LSLoginViewController.m */; };
-		259A57581950EB76000E27B0 /* LSParseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57271950EB76000E27B0 /* LSParseController.m */; };
 		259A57591950EB76000E27B0 /* LSRegistrationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57291950EB76000E27B0 /* LSRegistrationTableViewController.m */; };
-		259A575A1950EB76000E27B0 /* LSRegistrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A572B1950EB76000E27B0 /* LSRegistrationViewController.m */; };
 		259A575B1950EB76000E27B0 /* LSUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A572D1950EB76000E27B0 /* LSUserManager.m */; };
 		259A575C1950EB76000E27B0 /* LSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57301950EB76000E27B0 /* LSAppDelegate.m */; };
 		259A575D1950EB76000E27B0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57311950EB76000E27B0 /* main.m */; };
-		259A575E1950EB76000E27B0 /* LYRSampleConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57341950EB76000E27B0 /* LYRSampleConversation.m */; };
-		259A575F1950EB76000E27B0 /* LYRSampleMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57361950EB76000E27B0 /* LYRSampleMessage.m */; };
-		259A57601950EB76000E27B0 /* LYRSampleMessagePart.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57381950EB76000E27B0 /* LYRSampleMessagePart.m */; };
-		259A57611950EB76000E27B0 /* LYRSampleParticipant.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A573A1950EB76000E27B0 /* LYRSampleParticipant.m */; };
+		259A57611950EB76000E27B0 /* LSUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A573A1950EB76000E27B0 /* LSUser.m */; };
 		259A57621950EB76000E27B0 /* LSAvatarImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A573D1950EB76000E27B0 /* LSAvatarImageView.m */; };
 		259A57631950EB76000E27B0 /* LSButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A573F1950EB76000E27B0 /* LSButton.m */; };
 		259A57641950EB76000E27B0 /* LSComposeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57411950EB76000E27B0 /* LSComposeView.m */; };
@@ -102,28 +96,16 @@
 		259A57201950EB76000E27B0 /* LSLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLayerController.m; sourceTree = "<group>"; };
 		259A57211950EB76000E27B0 /* LSLoginTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLoginTableViewController.h; sourceTree = "<group>"; };
 		259A57221950EB76000E27B0 /* LSLoginTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLoginTableViewController.m; sourceTree = "<group>"; };
-		259A57231950EB76000E27B0 /* LSLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLoginViewController.h; sourceTree = "<group>"; };
-		259A57241950EB76000E27B0 /* LSLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLoginViewController.m; sourceTree = "<group>"; };
-		259A57261950EB76000E27B0 /* LSParseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSParseController.h; sourceTree = "<group>"; };
-		259A57271950EB76000E27B0 /* LSParseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSParseController.m; sourceTree = "<group>"; };
 		259A57281950EB76000E27B0 /* LSRegistrationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRegistrationTableViewController.h; sourceTree = "<group>"; };
 		259A57291950EB76000E27B0 /* LSRegistrationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSRegistrationTableViewController.m; sourceTree = "<group>"; };
-		259A572A1950EB76000E27B0 /* LSRegistrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRegistrationViewController.h; sourceTree = "<group>"; };
-		259A572B1950EB76000E27B0 /* LSRegistrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSRegistrationViewController.m; sourceTree = "<group>"; };
 		259A572C1950EB76000E27B0 /* LSUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUserManager.h; sourceTree = "<group>"; };
 		259A572D1950EB76000E27B0 /* LSUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUserManager.m; sourceTree = "<group>"; };
 		259A572E1950EB76000E27B0 /* LayerSample-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LayerSample-Prefix.pch"; sourceTree = "<group>"; };
 		259A572F1950EB76000E27B0 /* LSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAppDelegate.h; sourceTree = "<group>"; };
 		259A57301950EB76000E27B0 /* LSAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAppDelegate.m; sourceTree = "<group>"; };
 		259A57311950EB76000E27B0 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		259A57331950EB76000E27B0 /* LYRSampleConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRSampleConversation.h; sourceTree = "<group>"; };
-		259A57341950EB76000E27B0 /* LYRSampleConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRSampleConversation.m; sourceTree = "<group>"; };
-		259A57351950EB76000E27B0 /* LYRSampleMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRSampleMessage.h; sourceTree = "<group>"; };
-		259A57361950EB76000E27B0 /* LYRSampleMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRSampleMessage.m; sourceTree = "<group>"; };
-		259A57371950EB76000E27B0 /* LYRSampleMessagePart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRSampleMessagePart.h; sourceTree = "<group>"; };
-		259A57381950EB76000E27B0 /* LYRSampleMessagePart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRSampleMessagePart.m; sourceTree = "<group>"; };
-		259A57391950EB76000E27B0 /* LYRSampleParticipant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRSampleParticipant.h; sourceTree = "<group>"; };
-		259A573A1950EB76000E27B0 /* LYRSampleParticipant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRSampleParticipant.m; sourceTree = "<group>"; };
+		259A57391950EB76000E27B0 /* LSUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUser.h; sourceTree = "<group>"; };
+		259A573A1950EB76000E27B0 /* LSUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUser.m; sourceTree = "<group>"; };
 		259A573C1950EB76000E27B0 /* LSAvatarImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAvatarImageView.h; sourceTree = "<group>"; };
 		259A573D1950EB76000E27B0 /* LSAvatarImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAvatarImageView.m; sourceTree = "<group>"; };
 		259A573E1950EB76000E27B0 /* LSButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSButton.h; sourceTree = "<group>"; };
@@ -270,14 +252,8 @@
 				259A57201950EB76000E27B0 /* LSLayerController.m */,
 				259A57211950EB76000E27B0 /* LSLoginTableViewController.h */,
 				259A57221950EB76000E27B0 /* LSLoginTableViewController.m */,
-				259A57231950EB76000E27B0 /* LSLoginViewController.h */,
-				259A57241950EB76000E27B0 /* LSLoginViewController.m */,
-				259A57261950EB76000E27B0 /* LSParseController.h */,
-				259A57271950EB76000E27B0 /* LSParseController.m */,
 				259A57281950EB76000E27B0 /* LSRegistrationTableViewController.h */,
 				259A57291950EB76000E27B0 /* LSRegistrationTableViewController.m */,
-				259A572A1950EB76000E27B0 /* LSRegistrationViewController.h */,
-				259A572B1950EB76000E27B0 /* LSRegistrationViewController.m */,
 				259A572C1950EB76000E27B0 /* LSUserManager.h */,
 				259A572D1950EB76000E27B0 /* LSUserManager.m */,
 			);
@@ -287,14 +263,8 @@
 		259A57321950EB76000E27B0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				259A57331950EB76000E27B0 /* LYRSampleConversation.h */,
-				259A57341950EB76000E27B0 /* LYRSampleConversation.m */,
-				259A57351950EB76000E27B0 /* LYRSampleMessage.h */,
-				259A57361950EB76000E27B0 /* LYRSampleMessage.m */,
-				259A57371950EB76000E27B0 /* LYRSampleMessagePart.h */,
-				259A57381950EB76000E27B0 /* LYRSampleMessagePart.m */,
-				259A57391950EB76000E27B0 /* LYRSampleParticipant.h */,
-				259A573A1950EB76000E27B0 /* LYRSampleParticipant.m */,
+				259A57391950EB76000E27B0 /* LSUser.h */,
+				259A573A1950EB76000E27B0 /* LSUser.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -400,6 +370,13 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Layer, Inc.";
 				TargetAttributes = {
+					0A0C242219477D8F00401B74 = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 					0A0C244319477D8F00401B74 = {
 						TestTargetID = 0A0C242219477D8F00401B74;
 					};
@@ -515,28 +492,22 @@
 			files = (
 				259A57681950EB76000E27B0 /* LSMediaAttachement.m in Sources */,
 				259A57531950EB76000E27B0 /* LSHomeViewController.m in Sources */,
-				259A57601950EB76000E27B0 /* LYRSampleMessagePart.m in Sources */,
 				259A57521950EB76000E27B0 /* LSConversationViewController.m in Sources */,
 				259A57501950EB76000E27B0 /* LSContactsViewController.m in Sources */,
 				259A574F1950EB76000E27B0 /* LSConnectionManager.m in Sources */,
 				259A57541950EB76000E27B0 /* LSLayerController.m in Sources */,
 				259A57631950EB76000E27B0 /* LSButton.m in Sources */,
 				259A57671950EB76000E27B0 /* LSInputTableViewCell.m in Sources */,
-				259A575F1950EB76000E27B0 /* LYRSampleMessage.m in Sources */,
 				259A57511950EB76000E27B0 /* LSConversationListViewController.m in Sources */,
 				259A57651950EB76000E27B0 /* LSContactTableViewCell.m in Sources */,
 				259A57641950EB76000E27B0 /* LSComposeView.m in Sources */,
 				259A575D1950EB76000E27B0 /* main.m in Sources */,
-				259A575E1950EB76000E27B0 /* LYRSampleConversation.m in Sources */,
 				259A57661950EB76000E27B0 /* LSConversationCell.m in Sources */,
-				259A57561950EB76000E27B0 /* LSLoginViewController.m in Sources */,
-				259A575A1950EB76000E27B0 /* LSRegistrationViewController.m in Sources */,
 				259A575C1950EB76000E27B0 /* LSAppDelegate.m in Sources */,
 				259A57621950EB76000E27B0 /* LSAvatarImageView.m in Sources */,
 				259A57551950EB76000E27B0 /* LSLoginTableViewController.m in Sources */,
-				259A57581950EB76000E27B0 /* LSParseController.m in Sources */,
 				259A575B1950EB76000E27B0 /* LSUserManager.m in Sources */,
-				259A57611950EB76000E27B0 /* LYRSampleParticipant.m in Sources */,
+				259A57611950EB76000E27B0 /* LSUser.m in Sources */,
 				259A574E1950EB76000E27B0 /* LSAlertView.m in Sources */,
 				259A576A1950EB76000E27B0 /* LSUIConstants.m in Sources */,
 				259A57691950EB76000E27B0 /* LSMessageCell.m in Sources */,

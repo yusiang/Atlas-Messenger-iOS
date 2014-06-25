@@ -8,16 +8,17 @@
 
 #import "LSConversationListViewController.h"
 #import "LSConversationCell.h"
-#import "LYRSampleConversation.h"
 #import "LSContactsViewController.h"
 #import "LSUIConstants.h"
+#import "LSUserManager.h"
 
+// SBW: You can declare protocols on the class extension inside the implementation file. The collection view protocols is
+// an implementation detail and doesn't need to be exposed publicly.
 
-@interface LSConversationListViewController ()
+@interface LSConversationListViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSOrderedSet *conversations;
-@property (nonatomic) BOOL onScreen;
 
 @end
 
@@ -29,8 +30,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 {
     self = [super init];
     if(self) {
-        self.title = @"Conversations";
-        self.accessibilityLabel = @"Conversation List";
+
     }
     return self;
 }
@@ -38,25 +38,41 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // SBW: These are better being set in `viewDidLoad`
+    self.title = @"Conversations";
+    self.accessibilityLabel = @"Conversation List";
+    
     [self initializeBarButtons];
     [self initializeCollectionView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationsUpdated:) name:@"conversationsUpdated" object:nil];
+    
+    NSAssert(self.layerController, @"`self.layerController` cannot be nil");
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+<<<<<<< HEAD
     self.onScreen = TRUE;
     [self fetchLayerConversations];
     [self.collectionView reloadData];
    
+=======
+    [self.collectionView reloadData];
+>>>>>>> blake-MSG-187-code-review-feedback
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    self.onScreen = FALSE;
 }
 
+/**
+ SBW: I'd recommend using a standard accessor and then doing your fetch in `viewDidLoad`.
+ */
 - (void)setLayerController:(LSLayerController *)layerController
 {
     if(!_layerController) {
@@ -71,15 +87,23 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
     self.conversations = conversations;
     
+    // SBW: You don't want a method called `fetchLayerConversations` that also does UI changes. I'd probably use KVO on `self.conversations` to drive the reload
     //Doing this for now in place of notifications to changes in the DB
-    if (!self.conversations.count > 0 && self.onScreen){
+    if (!self.conversations.count > 0 && self.navigationController.topViewController == self){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self fetchLayerConversations];
             [self.collectionView reloadData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"conversationsUpdated" object:nil userInfo:nil];
         });
     }
 }
 
+- (void)conversationsUpdated:(NSNotification *)notification
+{
+    
+}
+
+// SBW: I'd probably inline this into `viewDidLoad`
 - (void)initializeBarButtons
 {
     UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutTapped)];
@@ -91,8 +115,10 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     [self.navigationItem setRightBarButtonItem:newConversationButton];
 }
 
+// SBW: I'd probably inline tis into `viewDidLoad`
 - (void)initializeCollectionView
 {
+    // SBW: Why have you set this up to be tolerant of multiple invocations?
     if (!self.collectionView) {
         self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame
                                                  collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
@@ -127,7 +153,11 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
+<<<<<<< HEAD
     NSLog(@"The conversation is %@", [self.conversations objectAtIndex:indexPath.row]);
+=======
+    // SBW: Again with the `andLayerController:` anti-pattern
+>>>>>>> blake-MSG-187-code-review-feedback
     [cell updateCellWithConversation:[self.conversations objectAtIndex:indexPath.row] andLayerController:self.layerController];
 }
 
@@ -146,11 +176,17 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    /**
+     SBW: You can use a static CGSize constant
+     
+     static CGSize const LSConversationListItemCellSize = { 320, 80 };
+     */
     return CGSizeMake(320, 80);
 }
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
+    // SBW: You can use `UIEdgeInsetsZero`
     return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
@@ -170,8 +206,13 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)logoutTapped
 {
     [self.navigationController dismissViewControllerAnimated:TRUE completion:^{
+<<<<<<< HEAD
         [self.layerController logout];
         self.layerController = nil;
+=======
+        [[LSUserManager new] logout];
+        [self.layerController.client stop];
+>>>>>>> blake-MSG-187-code-review-feedback
     }];
 }
 

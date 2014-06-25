@@ -10,10 +10,10 @@
 #import "LSInputTableViewCell.h"
 #import "LSButton.h"
 #import "LSAlertView.h"
-#import "LSParseController.h"
 #import "LSConversationListViewController.h"
 #import "LSAppDelegate.h"
 #import "LSUserManager.h"
+#import "LSUser.h"
 
 @interface LSRegistrationTableViewController ()
 
@@ -24,14 +24,13 @@
 
 @implementation LSRegistrationTableViewController
 
-NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
+static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        self.title = @"Register";
-        self.accessibilityLabel = @"Register Screen";
+        
     }
     return self;
 }
@@ -39,6 +38,10 @@ NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = @"Register";
+    self.accessibilityLabel = @"Register Screen";
+    
     [self initializeRegisterButton];
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSRegistrationCellIdentifier];
@@ -115,9 +118,21 @@ NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
     LSInputTableViewCell *confirmationCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]];
     
-    if([LSUserManager registerWithFullName:fullNameCell.textField.text email:usernameCell.textField.text password:passwordCell.textField.text andConfirmation:confirmationCell.textField.text]) {
-        [self.delegate registrationSuccess];
-    }
+    LSUser *user = [[LSUser alloc] init];
+    [user setFullName:fullNameCell.textField.text];
+    [user setEmail:usernameCell.textField.text];
+    [user setPassword:passwordCell.textField.text];
+    [user setConfirmation:confirmationCell.textField.text];
+    [user setIdentifier:[[NSUUID UUID] UUIDString]];
+    
+    LSUserManager *userManager = [[LSUserManager alloc] init];
+    [userManager registerUser:user completion:^(BOOL success, NSError *error) {
+        if (!error) {
+            [self.delegate registrationViewControllerDidFinish];
+        } else {
+            [self.delegate registrationViewControllerDidFailWithError:error];
+        }
+    }];
 }
 
 @end

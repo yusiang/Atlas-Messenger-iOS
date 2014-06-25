@@ -7,15 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LYRSampleConversation.h"
 #import "LSLayerController.h"
 #import "LSComposeView.h"
 
-@interface LSConversationViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface LSConversationViewController : UIViewController
 
 @property (nonatomic, strong) LSLayerController *layerController;
 @property (nonatomic, strong) LYRConversation *conversation;
-@property (nonatomic, strong) NSArray *participantsForNewConversation;
+@property (nonatomic, strong) NSArray *participantsForNewConversation; // SBW: This appears to be unused
 
 
 @end

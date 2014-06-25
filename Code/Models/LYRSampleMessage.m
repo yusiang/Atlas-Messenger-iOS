@@ -7,7 +7,7 @@
 //
 
 #import "LYRSampleMessage.h"
-#import "LYRSampleParticipant.h"
+#import "LSUser.h"
 #import "LYRSampleMessagePart.h"
 
 @implementation LYRSampleMessage
@@ -26,7 +26,7 @@
     int count = (int)conversation.participants.count;
     int number = arc4random_uniform(count);
     NSUInteger participantNumber = (NSUInteger)number;
-    LYRSampleParticipant *participant = [[conversation.participants allObjects] objectAtIndex:participantNumber];
+    LSUser *participant = [[conversation.participants allObjects] objectAtIndex:participantNumber];
     
     return [self messageWithConversation:conversation
                               identifier:[NSUUID UUID]
@@ -62,7 +62,7 @@
 
 - (NSString *)sender
 {
-    LYRSampleParticipant *participant = [LYRSampleParticipant participantWithNumber:[self.sentByUserID intValue]];
+    LSUser *participant = [LSUser participantWithNumber:[self.sentByUserID intValue]];
     return participant.fullName;
 }
 

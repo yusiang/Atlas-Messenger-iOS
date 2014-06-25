@@ -22,6 +22,7 @@
 
 @implementation LSMessageCell
 
+// SBW: Be gone, #define's!
 #define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
 #define kLayerFont      @"Avenir-Medium"
 
@@ -42,7 +43,9 @@
     
     [self addMessageContentForMessagePart:[message.parts firstObject]];
     
-    if ([message.sentByUserID isEqualToString:[LSUserManager loggedInUserID]]) {
+    // TODO: The controller should be telling the cell what to do here... it shouldn't know about the auth model
+    LSUserManager *manager = [LSUserManager new];
+    if ([message.sentByUserID isEqualToString:[manager loggedInUser].identifier]) {
         [self configureCellForLoggedInUser];
     }else {
         [self configureCellForNonLoggedInUser];
@@ -97,8 +100,8 @@
     if (!self.senderLabel) {
         self.senderLabel = [[UILabel alloc] init];
     }
-    NSDictionary *userInfo = [LSUserManager userInfoForUserID:[message sentByUserID]];
-    NSString *senderName = [userInfo objectForKey:@"fullName"];
+    LSUserManager *manager = [LSUserManager new];
+    NSString *senderName = [manager userWithIdentifier:[message sentByUserID]].identifier;
     self.senderLabel.text = senderName;
     [self addSubview:self.senderLabel];
 }
