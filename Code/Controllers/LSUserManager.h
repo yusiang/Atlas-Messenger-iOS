@@ -41,4 +41,7 @@
 
 - (NSArray *)contactsForUser:(LSUser *)user;
 
+
+- (void)reset;
+
 @end

@@ -42,15 +42,12 @@ NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)beforeEach
 {
-<<<<<<< HEAD
-    LYRSetLogLevel(LYR_LOG_COLOR_VERBOSE);
-=======
     /**
      If you are going to use user defaults as a data store, you'd be better off by putting a `reset` method on the `LSUserManager` interface that only deletes specific
      keys used for user management. Otherwise this approach could blow out keys stored by another part of the system and it requires refactoring your tests if you change
      data store implementations in the future.
      */
->>>>>>> blake-MSG-187-code-review-feedback
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [defaults removePersistentDomainForName:appDomain];

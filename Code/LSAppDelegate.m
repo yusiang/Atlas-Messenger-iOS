@@ -18,6 +18,8 @@ NSString *const LSTestUser0Confirmation = @"password0";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[LSUserManager new] reset];
+    
     [self initializeSDKs];
     [self.window setRootViewController:[self rootViewController]];
     [self.window makeKeyAndVisible];

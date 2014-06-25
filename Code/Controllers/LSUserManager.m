@@ -172,4 +172,12 @@ static NSString *const LSUserDirectoryPath = @"users";
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)reset
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    [defaults removePersistentDomainForName:appDomain];
+    [defaults synchronize];
+}
+
 @end

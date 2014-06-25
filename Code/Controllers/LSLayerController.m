@@ -35,7 +35,6 @@
 
 - (void)initializeLayerClientWithCompletion:(void (^)(NSError *))completion
 {
-    NSUUID *uuid = [NSUUID UUID];
     self.client = [[LYRClient alloc] initWithBaseURL:LYRTestSPDYBaseURL() appID:[LYRTestingContext sharedContext].appID];
     [self.client setDelegate:self];
 }
