@@ -21,16 +21,6 @@ static NSString *const LSUserDirectoryPath = @"users";
 
 - (void)registerUser:(LSUser *)user completion:(void (^)(BOOL success, NSError *error))completion
 {
-<<<<<<< HEAD
-    NSMutableArray *contacts = [[NSMutableArray alloc] init];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableArray *UUIDs = [defaults objectForKey:@"UUIDs"];
-    for (NSString *userID in UUIDs) {
-        NSDictionary *userInfo = [defaults objectForKey:userID];
-        if(![self checkIfUserInfoIsLoggedInuser:userInfo]) {
-            [contacts addObject:userInfo];
-        }
-=======
     NSError *error;
     BOOL success = NO;
     
@@ -44,9 +34,8 @@ static NSString *const LSUserDirectoryPath = @"users";
     
     if (!user.password || !user.confirmation || ![user.password isEqualToString:user.confirmation]) {
         error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter matching passwords in order to register"}];
->>>>>>> blake-MSG-187-code-review-feedback
     }
-
+    
     if ([self userExists:user]) {
         error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Email address taken. Please enter another email."}];
     } else {
@@ -69,7 +58,7 @@ static NSString *const LSUserDirectoryPath = @"users";
     NSError *error;
     
     if (!email) {
-         error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your Email address in order to Login"}];
+        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your Email address in order to Login"}];
     }
     
     if (!password) {
@@ -134,49 +123,11 @@ static NSString *const LSUserDirectoryPath = @"users";
 }
 
 
-#pragma mark 
+#pragma mark
 #pragma mark Private Implementation Methods
 
 - (NSArray *)allApplicationsUsers
 {
-<<<<<<< HEAD
-    if ([self checkForExistingEmail:email]) return FALSE;
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    NSMutableArray *UUIDs;
-    if (![defaults objectForKey:@"UUIDs"]) {
-        UUIDs = [[NSMutableArray alloc] init];
-    } else {
-        UUIDs = [[NSMutableArray alloc] initWithArray:[defaults objectForKey:@"UUIDs"]];
-    }
-
-    NSString *userID = [[NSUUID UUID] UUIDString];
-    [UUIDs addObject:userID];
-    
-    NSDictionary *userInfo = @{@"fullName" : fullName,
-                               @"email" : email,
-                               @"password" : password,
-                               @"confirmation" : confirmation,
-                               @"userID" : userID};
-    
-    [defaults setObject:userInfo forKey:userID];
-    [defaults setObject:UUIDs forKey:@"UUIDs"];
-    [self setLoggedInUserInfo:userInfo];
-    [defaults synchronize];
-    NSLog(@"New user Info is %@", userInfo);
-    return TRUE;
-}
-
-//Checks to see if an email exists
-+ (BOOL)checkForExistingEmail:(NSString *)email
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableArray *UUIDs = [defaults objectForKey:@"UUIDs"];
-    for (NSString *userID in UUIDs) {
-        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", userID]];
-        if ([existingEmail isEqualToString:email]) {
-=======
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     if (![defaults objectForKey:@"users"]) {
@@ -193,7 +144,6 @@ static NSString *const LSUserDirectoryPath = @"users";
     for (NSData *data in existingUsers) {
         LSUser *existingUser = [NSKeyedUnarchiver unarchiveObjectWithData:data];
         if ([existingUser.email isEqualToString:user.email]) {
->>>>>>> blake-MSG-187-code-review-feedback
             return TRUE;
         }
     }
@@ -203,28 +153,6 @@ static NSString *const LSUserDirectoryPath = @"users";
 
 - (LSUser *)userWithEmail:(NSString *)email
 {
-<<<<<<< HEAD
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableArray *UUIDs = [defaults objectForKey:@"UUIDs"];
-    for (NSString *userID in UUIDs) {
-        NSString *existingEmail = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.email", userID]];
-        if ([existingEmail isEqualToString:email]) {
-            NSString *existingPassword = [defaults valueForKeyPath:[NSString stringWithFormat:@"%@.password", userID]];
-            if ([existingPassword isEqualToString:password]) {
-                [self setLoggedInUserInfo:[defaults valueForKey:userID]];
-                return TRUE;
-            }
-        }
-    }
-    return false;
-}
-
-//Sets the logged in user info
-+ (void)setLoggedInUserInfo:(NSDictionary *)userInfo
-{
-    NSString *logged = [[NSUserDefaults standardUserDefaults] objectForKey:@"loggedInUser"];
-    [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:@"loggedInUser"];
-=======
     NSArray *existingUsers = [self allApplicationsUsers];
     for (NSData *data in existingUsers) {
         LSUser *user = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -233,7 +161,6 @@ static NSString *const LSUserDirectoryPath = @"users";
         }
     }
     return nil;
->>>>>>> blake-MSG-187-code-review-feedback
 }
 
 - (void)setLoggedInUser:(LSUser *)user

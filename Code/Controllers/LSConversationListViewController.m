@@ -55,14 +55,8 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-<<<<<<< HEAD
-    self.onScreen = TRUE;
     [self fetchLayerConversations];
     [self.collectionView reloadData];
-   
-=======
-    [self.collectionView reloadData];
->>>>>>> blake-MSG-187-code-review-feedback
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -153,11 +147,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-<<<<<<< HEAD
     NSLog(@"The conversation is %@", [self.conversations objectAtIndex:indexPath.row]);
-=======
-    // SBW: Again with the `andLayerController:` anti-pattern
->>>>>>> blake-MSG-187-code-review-feedback
     [cell updateCellWithConversation:[self.conversations objectAtIndex:indexPath.row] andLayerController:self.layerController];
 }
 
@@ -206,13 +196,8 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)logoutTapped
 {
     [self.navigationController dismissViewControllerAnimated:TRUE completion:^{
-<<<<<<< HEAD
         [self.layerController logout];
-        self.layerController = nil;
-=======
         [[LSUserManager new] logout];
-        [self.layerController.client stop];
->>>>>>> blake-MSG-187-code-review-feedback
     }];
 }
 

@@ -68,20 +68,12 @@
     [self.senderName setFont:[UIFont fontWithName:kLayerFontHeavy size:16]];
     [self.senderName setTextColor:[UIColor darkGrayColor]];
     
-<<<<<<< HEAD
     NSMutableArray *fullNames = [[NSMutableArray alloc] init];
-    for (NSString *userID in participants) {
-        if (![userID isEqualToString:[LSUserManager loggedInUserID]]) {
-            NSString *fullName = [[LSUserManager userInfoForUserID:userID] objectForKey:@"fullName"];
-            if (fullName)[fullNames addObject:fullName];
-=======
     LSUserManager *manager = [[LSUserManager alloc] init];
-    NSString *senderLabel = @"";
     for (NSString *userID in participants) {
         if (![userID isEqualToString:[manager loggedInUser].identifier]) {
-            NSString *participant = [manager userWithIdentifier:userID].fullName;
-            senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", participant]];
->>>>>>> blake-MSG-187-code-review-feedback
+            NSString *participantName = [manager userWithIdentifier:userID].fullName;
+            [fullNames addObject:participantName];
         }
     }
     

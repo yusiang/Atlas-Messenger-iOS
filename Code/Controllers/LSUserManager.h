@@ -37,8 +37,8 @@
 
 - (LSUser *)loggedInUser;
 
-- (NSArray *)contactsForUser:(LSUser *)user;
-
 - (LSUser *)userWithIdentifier:(NSString *)identifier;
+
+- (NSArray *)contactsForUser:(LSUser *)user;
 
 @end

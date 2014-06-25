@@ -4,7 +4,7 @@ PODS:
   - CocoaLumberjack/Core (1.8.1)
   - CocoaLumberjack/Extensions (1.8.1):
     - CocoaLumberjack/Core
-  - CocoaSPDY-Layer (20140617100951189)
+  - CocoaSPDY-Layer (20140624141130730)
   - FMDB (2.3):
     - FMDB/standard
   - FMDB/common (2.3)
@@ -12,9 +12,9 @@ PODS:
     - FMDB/common
   - FMDBMigrationManager (1.2.0):
     - FMDB (~> 2.2)
-  - KIF (3.0.4):
+  - KIF (3.0.5):
     - KIF/XCTest
-  - KIF/XCTest (3.0.4)
+  - KIF/XCTest (3.0.5)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
   - layer-client-messaging-schema (20140619155122816)
@@ -22,7 +22,7 @@ PODS:
     - thrift (~> 0.9.1)
   - LayerKit/Public (0.50.0):
     - CocoaLumberjack (~> 1.8.1)
-    - CocoaSPDY-Layer (~> 20140617100951189)
+    - CocoaSPDY-Layer (~> 20140624141130730)
     - FMDB (~> 2.2)
     - FMDBMigrationManager (~> 1.2.0)
     - layer-client-messaging-schema (~> 20140619155122816)
@@ -30,7 +30,7 @@ PODS:
     - TransitionKit (~> 2.1.0)
   - LayerKit/Testing (0.50.0):
     - CocoaLumberjack (~> 1.8.1)
-    - CocoaSPDY-Layer (~> 20140617100951189)
+    - CocoaSPDY-Layer (~> 20140624141130730)
     - FMDB (~> 2.2)
     - FMDBMigrationManager (~> 1.2.0)
     - layer-client-messaging-schema (~> 20140619155122816)
@@ -56,14 +56,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 9d198d6e19909b3b113a38c5f06f7bb8eedd0427
-  CocoaSPDY-Layer: 2902688dad2d194bb8911c2d5a5f84c9d3c46cb1
+  CocoaSPDY-Layer: cb63f60ee60478cd2e063593f2358b6529c590e5
   FMDB: 31ec26773c7f7b7890a6038235a1f2bbd933a7cb
   FMDBMigrationManager: 09b4f463839cad531272d3b6b60ab2e081aaf26d
-  KIF: 443c517d14fc2a99d27d3df170bc274cdf288241
+  KIF: ad5ddd4e8cb213e6b3e2e166fba9308e3b542e6e
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
   layer-client-messaging-schema: 3f63b6e1b8e205ee51af520b120ffbbc4f3699cc
   layer-thrift: d3a9850a8f7db40c3bb7ca60428b1c32b725a642
-  LayerKit: fea007a26aea6c590288e0fe892275784bc31ea0
+  LayerKit: a47e40751d5709f7f50dc1c7a54467b1f1b907a1
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
   thrift: b69f9820045ffa76eabe35674cdcc8daa5b1f75c
   TransitionKit: 6a6f3ddda38ae758778aa889dcb930e4f8d64edc
