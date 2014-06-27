@@ -7,14 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LSAuthenticationManager.h"
 
 @class LSRegistrationTableViewController;
 
 @protocol LSRegistrationTableViewControllerDelegate <NSObject>
 
-// SBW: Any time you define a delegate the first argument should be a pointer to the object for which the receiver is acting as the delegate.
-// i.e. registrationViewControllerDidFinish
-// You also need a `didFailWithError:`
 - (void)registrationViewControllerDidFinish;
 
 - (void)registrationViewControllerDidFailWithError:(NSError *)error;
@@ -23,6 +21,7 @@
 
 @interface LSRegistrationTableViewController : UITableViewController
 
+@property (nonatomic, strong) LSAuthenticationManager *authenticationManager;
 @property (nonatomic, weak) id<LSRegistrationTableViewControllerDelegate>delegate;
 
 @end

@@ -41,9 +41,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [self initializeCollectionView];
     [self initializeComposeView];
     [self registerForKeyboardNotifications];
-    
-    // SBW: I'd add an `NSAssert` that `self.conversation` is not `nil`
-    // SBW: I'd add an `NSAssert` that `self.layerController` is not `nil`
+
     NSAssert(self.conversation, @"`self.conversation` cannont be nil");
     NSAssert(self.layerController, @"`self.layerController` cannot be nil");
 }
@@ -54,6 +52,9 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [self fetchMessages];
     [self.collectionView reloadData];
     [self.composeView.textVIew becomeFirstResponder];
+    
+    CGPoint bottomOffset = CGPointMake(0, self.collectionView.contentSize.height - self.collectionView.bounds.size.height);
+    [self.collectionView setContentOffset:bottomOffset animated:YES];
 }
 
 - (void)setConversation:(LYRConversation *)conversation
@@ -139,6 +140,18 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
+    LYRMessagePart *part = [message.parts objectAtIndex:0];
+    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+        //
+    } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+        //
+    }
+    
+    //192 Is the width of the text view
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 192, 0)];
+    textView.text = @"djsjsjdjdjdjdfhdsk";
+    [textView sizeToFit];
     return CGSizeMake(320, 80);
 }
 

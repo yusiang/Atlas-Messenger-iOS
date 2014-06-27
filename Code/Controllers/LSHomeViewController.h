@@ -10,9 +10,11 @@
 #import "LSLoginTableViewController.h"
 #import "LSRegistrationTableViewController.h"
 #import "LSLayerController.h"
+#import "LSAuthenticationManager.h"
 
 @interface LSHomeViewController : UIViewController <LSLoginTableViewControllerDelegate, LSRegistrationTableViewControllerDelegate>
 
 @property (nonatomic, strong) LSLayerController *layerController;
+@property (nonatomic, strong) LSAuthenticationManager *authenticationManager;
 
 @end

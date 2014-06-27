@@ -197,7 +197,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 {
     [self.navigationController dismissViewControllerAnimated:TRUE completion:^{
         [self.layerController logout];
-        [[LSUserManager new] logout];
+//        [[LSUserManager new] logout];
     }];
 }
 

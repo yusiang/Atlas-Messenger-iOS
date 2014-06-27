@@ -7,49 +7,186 @@
 //
 
 #import "LSAuthenticationManager.h"
+#import "LSUserManager.h"
+#import "LSUser.h"
 
-// SBW: You want to move this configuration out into configuration set by an initializer
-NSString *const LSIdentityTokenURL = @"http://localhost:3000/identityToken";
+@interface LSAuthenticationManager () <NSURLSessionDelegate>
+
+@property (nonatomic, strong) NSURL *baseURL;
+@property (nonatomic, strong) NSURLSession *urlSession;
+@property (nonatomic, strong) LSUserManager *userManager;
+
+@end
 
 @implementation LSAuthenticationManager
 
-- (void)requestLayerIdentityTokenWithNonce:(NSString *)nonce completion:(void (^)(NSString *, NSError *))completion
+
+- (id)initWithBaseURL:(NSString *)baseURL
 {
-    NSMutableURLRequest *request = [self requestWithURLString:LSIdentityTokenURL];
-    [request setHTTPBody:[self bodyWithDictionary:@{@"nonce": nonce}]];
-    
-    [[[self defaultURLSession] dataTaskWithRequest:request
-                                 completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                        
-                            }] resume];
+    self = [super init];
+    if (self) {
+        self.baseURL = [NSURL URLWithString:baseURL];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        configuration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json", @"Content-Type": @"application/json" };
+        self.urlSession = [NSURLSession sessionWithConfiguration:configuration];
+        
+        self.userManager = [[LSUserManager alloc] init];
+        
+    }
+    return self;
 }
 
-// SBW: I'd probably just initialize one of these on object instantiation into a strong reference
-- (NSURLSession *)defaultURLSession
-{
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    return [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-}
-
-- (NSMutableURLRequest *)requestWithURLString:(NSString *)urlString
-{
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
-                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                       timeoutInterval:60.0];
-    
-    // SBW: You can use the `additionalHeaders` field on `NSURLSessionConfiguration` to push this configuration into the session and avoid repeating
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setHTTPMethod:@"POST"];
-    return request;
-}
-
-// SBW: This is functionally equivalent to just calling: `[NSJSONSerialization dataWithJSONObject:dictionary options:0 error:nil]`
--(NSData *)bodyWithDictionary:(NSDictionary *)dictionary
+- (void)signUpUser:(LSUser *)user completion:(void (^)(BOOL success, NSError *error))completion
 {
     NSError *error;
-    return [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&error];
+    
+    if (!user.email) {
+        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter an email in order to register"}];
+    }
+    
+    if (!user.firstName) {
+        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter an email in order to register"}];
+    }
+    
+    if (!user.lastName) {
+        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter an email in order to register"}];
+    }
+    
+    if (!user.password || !user.confirmation || ![user.password isEqualToString:user.confirmation]) {
+        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter matching passwords in order to register"}];
+    }
+    
+    if (!error) {
+        NSURL *URL = [NSURL URLWithString:@"users.json" relativeToURL:self.baseURL];
+        
+        NSDictionary *parameters = @{ @"user": @{ @"first_name": user.firstName, @"last_name": user.lastName, @"email": user.email, @"password": user.password, @"password_confirmation": user.confirmation}};
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+        request.HTTPMethod = @"POST";
+        request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+        
+        [[self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            NSLog(@"Got response: %@, data: %@, error: %@", response, data, error);
+            if (response && data) {
+                NSDictionary *info = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+                NSLog(@"Get the info: %@", info);
+                
+                [self loginWithEmail:info[@"email"] password:user.password completion:^(BOOL success, NSError *error) {
+                    if (!error) {
+                        completion(YES, error);
+                    } else {
+                        completion(NO, error);
+                    }
+                }];
+                
+            } else {
+                NSLog(@"Failed with error: %@", error);
+                completion (NO, error);
+            }
+        }] resume];
+    } else {
+        completion(NO, error);
+    }
+}
+
+- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success, NSError *error))completion
+{
+    NSError *error;
+    
+    if (!email) {
+        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your Email address in order to Login"}];
+    }
+    
+    if (!password) {
+        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your password in order to login"}];
+    }
+    
+    if (!error) {
+        [self.layerController.client requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+            if (nonce) {
+                
+                NSURL *URL = [NSURL URLWithString:@"users/sign_in.json" relativeToURL:self.baseURL];
+                
+                NSDictionary *parameters = @{ @"user": @{ @"email": email, @"password":  password}, @"nonce": nonce };
+                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+                request.HTTPMethod = @"POST";
+                request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+                
+                [[self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                    NSLog(@"Got response: %@, data: %@, error: %@", response, data, error);
+                    if (response && data) {
+                        NSDictionary *info = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+                        NSLog(@"Get the info: %@", info);
+                        if(info[@"layer_identity_token"]) {
+                            
+                            [self.userManager persistAuthenticatedEmail:email withInfo:info];
+                            
+//                            [self fetchAllContactsWithCompletion:^(BOOL success, NSError *error) {
+//                               
+//                            }];
+                            
+                            [self.layerController.client authenticateWithIdentityToken:info[@"layer_identity_token"] completion:^(NSString *authenticatedUserID, NSError *error) {
+                                NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
+                                completion(YES, error);
+                            }];
+                            
+                        } else {
+                            NSLog(@"Failed with error: %@", info[@"error"]);
+                            completion (NO, error);
+                        }
+                    } else {
+                        NSLog(@"Failed with error: %@", error);
+                        completion (NO, error);
+                    }
+                }] resume];
+            }
+            completion(NO, error);
+        }];
+    }
+}
+
+- (void)resumeSessionWithCompletion:(void(^)(BOOL success, NSError *error))completion
+{
+    
+}
+
+- (void)logoutWithCompletion:(void(^)(BOOL success, NSError *error))completion
+{
+    
+}
+
+- (void)fetchAllContactsWithCompletion:(void(^)(BOOL success, NSError *error))completion
+{
+    NSURL *URL = [NSURL URLWithString:@"users.json" relativeToURL:self.baseURL];
+    
+    self.urlSession = [self authenticatedURLSessionConfiguration];
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"GET";
+    
+    [[self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSLog(@"Got response: %@, data: %@, error: %@", response, data, error);
+        if (response && data) {
+           
+            NSDictionary *info = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+             NSLog(@"Get the info: %@", info);
+            LSUserManager *manager = [[LSUserManager alloc] init];
+            [manager persistApplicationContacts:info];
+            completion(YES, error);
+        } else {
+            NSLog(@"Failed with error: %@", error);
+            completion (NO, error);
+        }
+    }] resume];
+}
+
+- (NSURLSession *)authenticatedURLSessionConfiguration
+{
+    NSString *email = [[NSUserDefaults standardUserDefaults] objectForKey:@"authenticatedEmail"];
+    NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"authToken"];
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    configuration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json", @"Content-Type": @"application/json", @"HTTP_X_AUTH_EMAIL" : email, @"HTTP_X_AUTH_TOKEN": authToken};
+    return [NSURLSession sessionWithConfiguration:configuration];
 }
 
 #pragma mark

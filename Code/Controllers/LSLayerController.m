@@ -78,10 +78,10 @@
 
 - (void)requestIdentityTokenWithNonce:(NSString *)nonce completion:(void (^)(NSString *idenityToken, NSError *error))completion
 {
-    LSAuthenticationManager *connectionManager = [[LSAuthenticationManager alloc] init];
-    [connectionManager requestLayerIdentityTokenWithNonce:nonce completion:^(NSString *identityToken, NSError *error) {
-        completion(identityToken, error);
-    }];
+//    LSAuthenticationManager *connectionManager = [[LSAuthenticationManager alloc] init];
+//    [connectionManager requestLayerIdentityTokenWithNonce:nonce completion:^(NSString *identityToken, NSError *error) {
+//        completion(identityToken, error);
+//    }];
 }
 
 - (void)authenticateLayerClientWithIdenityToken:(NSString *)string completion:(void (^)(NSError *error))completion

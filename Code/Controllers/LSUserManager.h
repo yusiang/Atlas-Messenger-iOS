@@ -28,12 +28,9 @@
 
 //==========Blakes Public API Proposal==========//
 
-- (void)registerUser:(LSUser *)user completion:(void (^)(BOOL success, NSError *error))completion;
+- (void)persistAuthenticatedEmail:(NSString *)email withInfo:(NSDictionary *)userInfo;
 
-- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(LSUser *user, NSError *error))completion;
-
-- (void)logout;
-
+- (void)persistApplicationContacts:(NSDictionary *)contacts;
 
 - (LSUser *)loggedInUser;
 

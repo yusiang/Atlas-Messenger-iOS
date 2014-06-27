@@ -19,64 +19,34 @@ static NSString *const LSUserDirectoryPath = @"users";
 #pragma mark
 #pragma mark Public Authentication Methods
 
-- (void)registerUser:(LSUser *)user completion:(void (^)(BOOL success, NSError *error))completion
+
+- (void)persistAuthenticatedEmail:(NSString *)email withInfo:(NSDictionary *)userInfo
 {
-    NSError *error;
-    BOOL success = NO;
+    LSUser *user = [[LSUser alloc] init];
+    user.email = email;
+    user.authToken = [userInfo objectForKey:@"authentication_token"];
+    user.identifier = [userInfo objectForKey:@"id"];
+    [self setLoggedInUser:user];
+}
+
+- (void)persistApplicationContacts:(NSDictionary *)contacts
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"users"];
     
-    if (!user.fullName) {
-        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter your Full Name in order to register"}];
-    }
+    NSMutableArray *applicationUsers = [[NSMutableArray alloc] init];
     
-    if (!user.email) {
-        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter an email in order to register"}];
-    }
-    
-    if (!user.password || !user.confirmation || ![user.password isEqualToString:user.confirmation]) {
-        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Please enter matching passwords in order to register"}];
-    }
-    
-    if ([self userExists:user]) {
-        error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{@"description" : @"Email address taken. Please enter another email."}];
-    } else {
-        NSMutableArray *applicationUsers = [[NSMutableArray alloc] initWithArray:[self allApplicationsUsers]];
+    for (NSDictionary *contact in contacts) {
+        LSUser *user = [[LSUser alloc] init];
+        user.fullName = [contact objectForKey:@"name"];
+        user.email = [contact objectForKey:@"email"];
         
         NSData *userData = [NSKeyedArchiver archivedDataWithRootObject:user];
         [applicationUsers addObject:userData];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:applicationUsers] forKey:@"users"];
-        
-        [self setLoggedInUser:user];
-        
-        success = YES;
     }
-    completion(success, error);
-}
 
-- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void (^)(LSUser *user, NSError *error))completion
-{
-    NSError *error;
-    
-    if (!email) {
-        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your Email address in order to Login"}];
-    }
-    
-    if (!password) {
-        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your password in order to login"}];
-    }
-    
-    LSUser *user = [self userWithEmail:email];
-    if (!user) {
-        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Email does not exist, please register or login with a different email."}];
-    }
-    
-    if (![user.password isEqualToString:password]) {
-        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Incorrect password, please try again."}];
-    }
-    
-    [self setLoggedInUser:user];
-    
-    completion (user, error);
+    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:applicationUsers] forKey:@"users"];
+    [defaults synchronize];
 }
 
 - (void)logout

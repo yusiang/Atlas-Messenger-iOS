@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LSAuthenticationManager.h"
 
 @class LSLoginTableViewController, LYRClient;
 
@@ -21,5 +22,6 @@
 @interface LSLoginTableViewController : UITableViewController
 
 @property (nonatomic, weak) id<LSLoginTableViewControllerDelegate>delegate;
-@property (nonatomic) LYRClient *layerClient;
+@property (nonatomic, strong) LSAuthenticationManager *authenticationManager;
+
 @end

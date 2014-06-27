@@ -102,6 +102,7 @@
 {
     LSRegistrationTableViewController *registerVC = [[LSRegistrationTableViewController alloc] init];
     registerVC.delegate = self;
+    registerVC.authenticationManager = self.authenticationManager;
     [self.navigationController pushViewController:registerVC animated:TRUE];
 }
 
@@ -109,7 +110,7 @@
 {
     LSLoginTableViewController *loginVC = [[LSLoginTableViewController alloc] init];
     loginVC.delegate = self;
-    loginVC.layerClient = self.layerController.client;
+    loginVC.authenticationManager = self.authenticationManager;
     [self.navigationController pushViewController:loginVC animated:TRUE];
 }
 
@@ -118,7 +119,8 @@
 
 - (void)registrationViewControllerDidFinish
 {
-    [self authenticateLayerClient];
+    [SVProgressHUD dismiss];
+    [self presentConversationViewController];
 }
 
 - (void)registrationViewControllerDidFailWithError:(NSError *)error
@@ -137,7 +139,8 @@
 
 - (void)loginViewControllerDidFinish    
 {
-    [self authenticateLayerClient];
+    [SVProgressHUD dismiss];
+    [self presentConversationViewController];
 }
 
 - (void)loginViewControllerDidFailWithError:(NSError *)error
@@ -153,23 +156,6 @@
 
 #pragma mark
 #pragma mark Layer Authentication Methods
-
-- (void)authenticateLayerClient
-{
-    [SVProgressHUD show];
-    LSUserManager *manager = [[LSUserManager alloc] init];
-    [self.layerController authenticateUser:[manager loggedInUser].identifier completion:^(NSError *error) {
-        if (!error) {
-            NSLog(@"Layer Client Started");
-            
-            // SBW: We should be providing callback guarantees on the main queue (this is probably missing LayerKit behavior)
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [SVProgressHUD dismiss];
-                [self presentConversationViewController];
-            });
-        }
-    }];
-}
 
 - (void)presentConversationViewController
 {

@@ -11,6 +11,7 @@
 #import "LSConversationListViewController.h"
 #import "LSButton.h"
 #import "LSUserManager.h"
+#import "SVProgressHUD.h"
 
 @interface LSLoginTableViewController ()
 
@@ -103,41 +104,16 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
     
-    [self.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-        if (nonce) {
-            NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-            configuration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json", @"Content-Type": @"application/json" };
-            NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
-            NSURL *URL = [NSURL URLWithString:@"http://10.66.0.35:8080/users/sign_in.json"];
-            NSDictionary *parameters = @{ @"user": @{ @"email": usernameCell.textField.text, @"password":  passwordCell.textField.text }, @"nonce": nonce };
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
-            request.HTTPMethod = @"POST";
-            request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
-            [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                NSLog(@"Got response: %@, data: %@, error: %@", response, data, error);
-                if (response && data) {
-                    NSDictionary *info = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                    NSLog(@"Get the info: %@", info);
-                    [self.layerClient authenticateWithIdentityToken:info[@"layer_identity_token"] completion:^(NSString *authenticatedUserID, NSError *error) {
-                        NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
-                    }];
-                } else {
-                    NSLog(@"Failed with error: %@", error);
-                }
-            }] resume];
-        } else {
-            NSLog(@"Failed obtaining nonce: %@", error);
-        }
+    [SVProgressHUD show];
+    [self.authenticationManager loginWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!error && success) {
+                [self.delegate loginViewControllerDidFinish];
+            } else {
+                [self.delegate loginViewControllerDidFailWithError:error];
+            }
+        });
     }];
-//    LSUserManager *manager = [[LSUserManager alloc] init];
-//    [manager loginWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(LSUser *user, NSError *error) {
-//        if (!error) {
-//            [self.delegate loginViewControllerDidFinish];
-//        } else {
-//            [self.delegate loginViewControllerDidFailWithError:error];
-//        }
-//       
-//    }];
 }
 
 @end
