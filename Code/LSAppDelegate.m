@@ -26,7 +26,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSURL *baseURL = [NSURL URLWithString:@"https://10.66.0.35:7072"];
-    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-0000-000000000000"];
+    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
     LYRClient *client = [[LYRClient alloc] initWithBaseURL:baseURL appID:appID];
     [client startWithCompletion:^(BOOL success, NSError *error) {
         NSLog(@"Started with success: %d, %@", success, error);
