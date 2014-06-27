@@ -24,7 +24,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.defaultRect = frame;
-        self.backgroundColor = [UIColor lightGrayColor];
+        self.backgroundColor = [UIColor whiteColor];
         self.accessibilityLabel = @"composeView";
         [self initizlizeSubviews];
         self.images = [[NSMutableArray alloc] init];
