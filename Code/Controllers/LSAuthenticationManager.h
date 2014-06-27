@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LSConnectionManager : NSObject <NSURLSessionDelegate>
+@interface LSAuthenticationManager : NSObject <NSURLSessionDelegate>
 
 - (void)requestLayerIdentityTokenWithNonce:(NSString *)nonce completion:(void(^)(NSString *identityToken, NSError *error))completion;
 

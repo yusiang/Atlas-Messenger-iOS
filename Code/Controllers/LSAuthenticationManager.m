@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSConnectionManager.h"
+#import "LSAuthenticationManager.h"
 
 // SBW: You want to move this configuration out into configuration set by an initializer
 NSString *const LSIdentityTokenURL = @"http://localhost:3000/identityToken";
 
-@implementation LSConnectionManager
+@implementation LSAuthenticationManager
 
 - (void)requestLayerIdentityTokenWithNonce:(NSString *)nonce completion:(void (^)(NSString *, NSError *))completion
 {

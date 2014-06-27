@@ -7,7 +7,7 @@
 //
 
 #import "LSLayerController.h"
-#import "LSConnectionManager.h"
+#import "LSAuthenticationManager.h"
 #import "LYRTestingContext.h"
 #import "LYRTestProvider.h"
 #import "LYRTestUtilities.h"
@@ -78,7 +78,7 @@
 
 - (void)requestIdentityTokenWithNonce:(NSString *)nonce completion:(void (^)(NSString *idenityToken, NSError *error))completion
 {
-    LSConnectionManager *connectionManager = [[LSConnectionManager alloc] init];
+    LSAuthenticationManager *connectionManager = [[LSAuthenticationManager alloc] init];
     [connectionManager requestLayerIdentityTokenWithNonce:nonce completion:^(NSString *identityToken, NSError *error) {
         completion(identityToken, error);
     }];
