@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class LSLoginTableViewController;
+@class LSLoginTableViewController, LYRClient;
 
 @protocol LSLoginTableViewControllerDelegate <NSObject>
 
@@ -21,5 +21,5 @@
 @interface LSLoginTableViewController : UITableViewController
 
 @property (nonatomic, weak) id<LSLoginTableViewControllerDelegate>delegate;
-
+@property (nonatomic) LYRClient *layerClient;
 @end

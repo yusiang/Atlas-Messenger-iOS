@@ -11,11 +11,8 @@
 
 @interface LSLayerController : NSObject <LYRClientDelegate, NSURLSessionDelegate>
 
-// SBW: This should probably have a designated initializer of `initWithLayerClient:`
-
-@property (nonatomic, strong) LYRClient *client;
-
-- (void)initializeLayerClientWithCompletion:(void (^)(NSError *error))completion;
+- (id)initWithClient:(LYRClient *)client;
+@property (nonatomic, readonly) LYRClient *client;
 
 - (void)authenticateUser:(NSString *)userID completion:(void (^)(NSError *error))completion;
 

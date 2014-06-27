@@ -12,9 +12,9 @@ PODS:
     - FMDB/common
   - FMDBMigrationManager (1.2.0):
     - FMDB (~> 2.2)
-  - KIF (3.0.5):
+  - KIF (3.0.6):
     - KIF/XCTest
-  - KIF/XCTest (3.0.5)
+  - KIF/XCTest (3.0.6)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
   - layer-client-messaging-schema (20140619155122816)
@@ -59,7 +59,7 @@ SPEC CHECKSUMS:
   CocoaSPDY-Layer: cb63f60ee60478cd2e063593f2358b6529c590e5
   FMDB: 31ec26773c7f7b7890a6038235a1f2bbd933a7cb
   FMDBMigrationManager: 09b4f463839cad531272d3b6b60ab2e081aaf26d
-  KIF: ad5ddd4e8cb213e6b3e2e166fba9308e3b542e6e
+  KIF: 7fcc68436ffda73749885a68b998fdac7bf6f9f4
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
   layer-client-messaging-schema: 3f63b6e1b8e205ee51af520b120ffbbc4f3699cc
   layer-thrift: d3a9850a8f7db40c3bb7ca60428b1c32b725a642

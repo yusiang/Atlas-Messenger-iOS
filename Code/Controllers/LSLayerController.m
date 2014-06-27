@@ -13,32 +13,25 @@
 #import "LYRTestUtilities.h"
 #import "LSUser.h"
 
-@interface LYRClient ()
-
-- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID;
-
-@end
-
 @implementation LSLayerController
 
-- (id)init
+- (id)initWithClient:(LYRClient *)client
 {
     self = [super init];
     if (self) {
-
+        _client = client;
+        client.delegate = self;
     }
     return self;
 }
 
+- (id)init
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer. Call `initWithClient:` instead." userInfo:nil];
+}
+
 #pragma mark
 #pragma mark LSLayerController Public Methods
-
-- (void)initializeLayerClientWithCompletion:(void (^)(NSError *))completion
-{
-    NSUUID *uuid = [NSUUID UUID];
-    self.client = [[LYRClient alloc] initWithBaseURL:LYRTestSPDYBaseURL() appID:[LYRTestingContext sharedContext].appID];
-    [self.client setDelegate:self];
-}
 
 -(void)authenticateUser:(NSString *)userID completion:(void (^)(NSError *))completion
 {

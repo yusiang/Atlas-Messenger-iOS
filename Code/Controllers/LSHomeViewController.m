@@ -109,6 +109,7 @@
 {
     LSLoginTableViewController *loginVC = [[LSLoginTableViewController alloc] init];
     loginVC.delegate = self;
+    loginVC.layerClient = self.layerController.client;
     [self.navigationController pushViewController:loginVC animated:TRUE];
 }
 

@@ -6,48 +6,40 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
+#import <LayerKit/LayerKit.h>
 #import "LSAppDelegate.h"
 #import "LSUserManager.h"
 #import "LSConversationViewController.h"
+
+@interface LYRClient ()
+- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID;
+@end
+
+@interface LSAppDelegate ()
+@property (nonatomic) LSLayerController *layerController;
+@end
+
 @implementation LSAppDelegate
 
-NSString *const LSTestUser0FullName = @"Layer Tester0";
-NSString *const LSTestUser0Email = @"tester0@layer.com";
-NSString *const LSTestUser0Password = @"password0";
-NSString *const LSTestUser0Confirmation = @"password0";
+@synthesize window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self initializeSDKs];
-    [self.window setRootViewController:[self rootViewController]];
-    [self.window makeKeyAndVisible];
-    
-    return YES;
-}
-
-#pragma mark
-#pragma mark SDK Initialization Classes
-- (void)initializeSDKs
-{
-    [self setLayerController:[[LSLayerController alloc] init]];
-}
-
-- (void)setLayerController:(LSLayerController *)layerController
-{
-    if (_layerController != layerController) {
-        _layerController = layerController;
-    }
-    [_layerController initializeLayerClientWithCompletion:^(NSError *error) {
-        NSLog(@"Layer Client Initialized");
+    NSURL *baseURL = [NSURL URLWithString:@"https://10.66.0.35:7072"];
+    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-0000-000000000000"];
+    LYRClient *client = [[LYRClient alloc] initWithBaseURL:baseURL appID:appID];
+    [client startWithCompletion:^(BOOL success, NSError *error) {
+        NSLog(@"Started with success: %d, %@", success, error);
     }];
-}
-
-- (UINavigationController *)rootViewController
-{
+    self.layerController = [[LSLayerController alloc] initWithClient:client];
+    
     LSHomeViewController *homeViewController = [[LSHomeViewController alloc] init];
     homeViewController.layerController = self.layerController;
     
-    return [[UINavigationController alloc] initWithRootViewController:homeViewController];
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
+    [self.window makeKeyAndVisible];
+    
+    return YES;
 }
 
 @end

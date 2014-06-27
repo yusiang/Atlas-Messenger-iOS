@@ -11,8 +11,4 @@
 #import "LSHomeViewController.h"
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, strong) LSLayerController *layerController;
-
 @end
