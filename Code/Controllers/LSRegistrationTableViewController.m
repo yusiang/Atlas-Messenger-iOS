@@ -14,7 +14,7 @@
 #import "LSUserManager.h"
 #import "LSUser.h"
 
-@interface LSRegistrationTableViewController () <UITextFieldDelegate>
+@interface LSRegistrationTableViewController () <UITextFieldDelegate, UITableViewDelegate>
 
 @property (nonatomic, strong) LSButton *registerButton;
 @property (nonatomic, weak) UITextField *firstNameField;
@@ -48,6 +48,7 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     [self initializeRegisterButton];
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSRegistrationCellIdentifier];
+    self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -108,6 +109,7 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
             [cell setText:@"Last Name"];
             cell.textField.accessibilityLabel = @"Last Name";
             self.lastNameField = cell.textField;
+            break;
         case 2:
             [cell setText:@"Email Address"];
             cell.textField.accessibilityLabel = @"Email";

@@ -43,6 +43,7 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     [self initializeLoginButton];
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSLoginlIdentifier];
+    self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 }
 
 - (void)viewDidAppear:(BOOL)animated
