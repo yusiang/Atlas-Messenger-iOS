@@ -7,7 +7,6 @@
 //
 
 #import "LSUserManager.h"
-#import "LSAlertView.h"
 
 @implementation LSUserManager
 

@@ -9,7 +9,6 @@
 #import "LSRegistrationTableViewController.h"
 #import "LSInputTableViewCell.h"
 #import "LSButton.h"
-#import "LSAlertView.h"
 #import "LSConversationListViewController.h"
 #import "LSAppDelegate.h"
 #import "LSUserManager.h"
@@ -18,7 +17,11 @@
 @interface LSRegistrationTableViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) LSButton *registerButton;
-@property (nonatomic, strong) LSAlertView *alertView;
+@property (nonatomic, weak) UITextField *firstNameField;
+@property (nonatomic, weak) UITextField *lastNameField;
+@property (nonatomic, weak) UITextField *emailField;
+@property (nonatomic, weak) UITextField *passwordField;
+@property (nonatomic, weak) UITextField *passwordConfirmationField;
 
 @end
 
@@ -45,7 +48,12 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     [self initializeRegisterButton];
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSRegistrationCellIdentifier];
-    self.alertView = [[LSAlertView alloc] init];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.firstNameField becomeFirstResponder];
 }
 
 - (void)initializeRegisterButton
@@ -87,32 +95,40 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
 
 - (void)configureCell:(LSInputTableViewCell *)cell forIndexPath:(NSIndexPath *)path
 {
+    cell.textField.delegate = self;
+    cell.textField.returnKeyType = UIReturnKeyNext;
+    cell.textField.enablesReturnKeyAutomatically = YES;
     switch (path.row) {
         case 0:
             [cell setText:@"First Name"];
             cell.textField.accessibilityLabel = @"First Name";
+            self.firstNameField = cell.textField;
             break;
         case 1:
             [cell setText:@"Last Name"];
             cell.textField.accessibilityLabel = @"Last Name";
+            self.lastNameField = cell.textField;
         case 2:
             [cell setText:@"Email Address"];
             cell.textField.accessibilityLabel = @"Email";
+            self.emailField = cell.textField;
             break;
         case 3:
             [cell setText:@"Password"];
             cell.textField.secureTextEntry = TRUE;
             cell.textField.accessibilityLabel = @"Password";
+            self.passwordField = cell.textField;
             break;
         case 4:
             [cell setText:@"Confirm"];
             cell.textField.secureTextEntry = TRUE;
             cell.textField.accessibilityLabel = @"Confirm";
+            self.passwordConfirmationField = cell.textField;
+            cell.textField.returnKeyType = UIReturnKeySend;
             break;
         default:
             break;
     }
-    cell.textField.delegate = self;
 }
 
 - (void)registerTapped
@@ -145,7 +161,23 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [textField resignFirstResponder];
+    if (textField == self.firstNameField) {
+        [self.lastNameField becomeFirstResponder];
+    } else if (textField == self.lastNameField) {
+        [self.emailField becomeFirstResponder];
+    } else if (textField == self.emailField) {
+        [self.passwordField becomeFirstResponder];
+    } else if (textField == self.passwordField) {
+        [self.passwordConfirmationField becomeFirstResponder];
+    } else if (textField == self.passwordConfirmationField) {
+        [self registerTapped];
+    }
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    self.registerButton.enabled = (self.firstNameField.text.length && self.lastNameField.text.length && self.emailField.text.length && self.passwordField.text.length && self.passwordConfirmationField.text.length);
     return YES;
 }
 

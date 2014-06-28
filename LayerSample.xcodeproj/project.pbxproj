@@ -23,7 +23,6 @@
 		0AADB5D21947C8850083732B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D11947C8850083732B /* StoreKit.framework */; };
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		140D75B35BCA4D3395A4DC4B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931E36A3415C497CA3681E7F /* libPods.a */; };
-		259A574E1950EB76000E27B0 /* LSAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57141950EB76000E27B0 /* LSAlertView.m */; };
 		259A574F1950EB76000E27B0 /* LSAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57161950EB76000E27B0 /* LSAuthenticationManager.m */; };
 		259A57501950EB76000E27B0 /* LSContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57181950EB76000E27B0 /* LSContactsViewController.m */; };
 		259A57511950EB76000E27B0 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571A1950EB76000E27B0 /* LSConversationListViewController.m */; };
@@ -80,8 +79,6 @@
 		0AADB5CF1947C8800083732B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0AADB5D11947C8850083732B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		259A57131950EB76000E27B0 /* LSAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAlertView.h; sourceTree = "<group>"; };
-		259A57141950EB76000E27B0 /* LSAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAlertView.m; sourceTree = "<group>"; };
 		259A57151950EB76000E27B0 /* LSAuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationManager.h; sourceTree = "<group>"; };
 		259A57161950EB76000E27B0 /* LSAuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAuthenticationManager.m; sourceTree = "<group>"; };
 		259A57171950EB76000E27B0 /* LSContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsViewController.h; sourceTree = "<group>"; };
@@ -236,8 +233,6 @@
 		259A57121950EB76000E27B0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				259A57131950EB76000E27B0 /* LSAlertView.h */,
-				259A57141950EB76000E27B0 /* LSAlertView.m */,
 				259A57151950EB76000E27B0 /* LSAuthenticationManager.h */,
 				259A57161950EB76000E27B0 /* LSAuthenticationManager.m */,
 				259A57171950EB76000E27B0 /* LSContactsViewController.h */,
@@ -508,7 +503,6 @@
 				259A57551950EB76000E27B0 /* LSLoginTableViewController.m in Sources */,
 				259A575B1950EB76000E27B0 /* LSUserManager.m in Sources */,
 				259A57611950EB76000E27B0 /* LSUser.m in Sources */,
-				259A574E1950EB76000E27B0 /* LSAlertView.m in Sources */,
 				259A576A1950EB76000E27B0 /* LSUIConstants.m in Sources */,
 				259A57691950EB76000E27B0 /* LSMessageCell.m in Sources */,
 				259A57591950EB76000E27B0 /* LSRegistrationTableViewController.m in Sources */,

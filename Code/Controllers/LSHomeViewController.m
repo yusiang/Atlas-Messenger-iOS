@@ -23,15 +23,6 @@
 
 @implementation LSHomeViewController
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -153,7 +144,7 @@
 - (void)presentConversationViewController
 {
     LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
-    conversationListViewController.layerController = self.layerController;    
+    conversationListViewController.layerController = self.layerController;
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     [self presentViewController:conversationController animated:TRUE completion:nil];
 }

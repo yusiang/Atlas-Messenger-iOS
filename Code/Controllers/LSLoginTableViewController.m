@@ -43,11 +43,12 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     [self initializeLoginButton];
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSLoginlIdentifier];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        LSInputTableViewCell *cell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-        [cell.textField becomeFirstResponder];
-    });
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.emailField becomeFirstResponder];
 }
 
 - (void)initializeLoginButton
