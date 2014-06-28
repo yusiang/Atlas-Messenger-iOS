@@ -10,7 +10,6 @@
 #import <LayerKit/LayerKit.h>
 #import "LSLoginTableViewController.h"
 #import "LSRegistrationTableViewController.h"
-#import "LSLayerController.h"
 #import "LSAuthenticationManager.h"
 
 @interface LSHomeViewController : UIViewController

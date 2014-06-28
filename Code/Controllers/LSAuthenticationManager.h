@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
-#import "LSLayerController.h"
 #import "LSUser.h"
 
 @interface LSAuthenticationManager : NSObject

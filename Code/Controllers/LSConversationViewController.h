@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
-#import "LSLayerController.h"
-#import "LSComposeView.h"
 
 @interface LSConversationViewController : UIViewController
 

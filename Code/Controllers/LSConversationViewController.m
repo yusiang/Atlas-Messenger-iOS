@@ -8,6 +8,7 @@
 
 #import "LSConversationViewController.h"
 #import "LSMessageCell.h"
+#import "LSComposeView.h"
 
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
