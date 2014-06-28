@@ -93,63 +93,73 @@
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success, NSError *error))completion
 {
-    NSError *error;
+    NSParameterAssert(completion);
     
     if (!email) {
-        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your Email address in order to Login"}];
+        NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your Email address in order to Login"}];
+        completion(NO, error);
+        return;
     }
     
     if (!password) {
-        error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your password in order to login"}];
+        NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{@"description" : @"Please enter your password in order to login"}];
+        completion(NO, error);
+        return;
     }
     
-    if (!error) {
-        [self.layerController.client requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-            if (nonce) {
-                
-                NSURL *URL = [NSURL URLWithString:@"users/sign_in.json" relativeToURL:self.baseURL];
-                
-                NSDictionary *parameters = @{ @"user": @{ @"email": email, @"password":  password}, @"nonce": nonce };
-                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
-                request.HTTPMethod = @"POST";
-                request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
-                
-                [[self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                    NSLog(@"Got response: %@, data: %@, error: %@", response, data, error);
-                    if (response && data) {
-                        NSDictionary *info = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                        NSLog(@"Get the info: %@", info);
-                        if(info[@"layer_identity_token"]) {
-                            
-                            self.email = email;
-                            self.authToken = info[@"authentication_token"];
-                            
-                            [self.userManager persistAuthenticatedEmail:email withInfo:info];
-                            
-                            [self.layerController.client authenticateWithIdentityToken:info[@"layer_identity_token"] completion:^(NSString *authenticatedUserID, NSError *error) {
-                                [self fetchAllContactsWithCompletion:^(BOOL success, NSError *error) {
-                                    
-                                }];
-                                NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
-                                [self.userManager setLoggedInUserIdentifier:authenticatedUserID];
-                                completion(YES, error);
-                            }];
-                            
-                        } else {
-                            NSLog(@"Failed with error: %@", info[@"error"]);
-                            if (info[@"error"]) error = [NSError errorWithDomain:@"LayerSample" code:401 userInfo:@{ NSLocalizedDescriptionKey: info[@"error"] }];
-                            completion (NO, error);
-                        }
-                    } else {
-                        NSLog(@"Failed with error: %@", error);
-                        completion (NO, error);
-                    }
-                }] resume];
-            } else {
+    [self.layerController.client requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+        if (!nonce) {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 completion(NO, error);
+            });
+            return;
+        }
+        
+        NSURL *URL = [NSURL URLWithString:@"users/sign_in.json" relativeToURL:self.baseURL];
+        NSDictionary *parameters = @{ @"user": @{ @"email": email, @"password":  password}, @"nonce": nonce };
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+        request.HTTPMethod = @"POST";
+        request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+        
+        [[self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            NSLog(@"Got response: %@, data: %@, error: %@", response, data, error);
+            if (response && data) {
+                NSDictionary *info = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+                NSLog(@"Get the info: %@", info);
+                if(info[@"layer_identity_token"]) {
+                    
+                    self.email = email;
+                    self.authToken = info[@"authentication_token"];
+                    
+                    [self.userManager persistAuthenticatedEmail:email withInfo:info];
+                    
+                    [self.layerController.client authenticateWithIdentityToken:info[@"layer_identity_token"] completion:^(NSString *authenticatedUserID, NSError *error) {
+                        [self fetchAllContactsWithCompletion:^(BOOL success, NSError *error) {
+                            
+                        }];
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
+                            [self.userManager setLoggedInUserIdentifier:authenticatedUserID];
+                            completion(YES, error);
+                        });
+                    }];
+                    
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSLog(@"Failed with error: %@", info[@"error"]);
+                        NSError *error = [NSError errorWithDomain:@"LayerSample" code:401 userInfo:@{ NSLocalizedDescriptionKey: (info[@"error"] ?: @"An unknown error has occurred.") }];
+                        completion (NO, error);
+                    });
+                }
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"Failed with error: %@", error);
+                    completion (NO, error);
+                });
             }
-        }];
-    }
+        }] resume];
+    }];
 }
 
 - (void)resumeSessionWithCompletion:(void(^)(BOOL success, NSError *error))completion
