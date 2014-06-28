@@ -139,19 +139,12 @@
 
 - (void)loginViewControllerDidFinish    
 {
-    [SVProgressHUD dismiss];
+    [self.navigationController popViewControllerAnimated:YES];
     [self presentConversationViewController];
 }
 
 - (void)loginViewControllerDidFailWithError:(NSError *)error
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:error.domain
-                                                        message:[error.userInfo objectForKey:@"description"]
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-    alertView.accessibilityLabel = @"Alert";
-    [alertView show];
 }
 
 #pragma mark
@@ -160,16 +153,9 @@
 - (void)presentConversationViewController
 {
     LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
-    conversationListViewController.layerController = self.layerController;
-    
+    conversationListViewController.layerController = self.layerController;    
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
-    
-    [self presentViewController:conversationController animated:TRUE completion:^{
-        // SBW: You don't want to make assumptions about the view controller's position in the stack. Use query methods and `popToViewController:`
-        NSMutableArray *navigationArray = [[NSMutableArray alloc] initWithArray: self.navigationController.viewControllers];
-        [navigationArray removeObjectAtIndex: 1];
-        self.navigationController.viewControllers = navigationArray;
-    }];
+    [self presentViewController:conversationController animated:TRUE completion:nil];
 }
 
 
