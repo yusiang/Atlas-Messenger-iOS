@@ -102,7 +102,7 @@
     }
     LSUserManager *manager = [LSUserManager new];
     NSString *senderName = [manager userWithIdentifier:[message sentByUserID]].identifier;
-    self.senderLabel.text = senderName;
+    //self.senderLabel.text = senderName;
     [self addSubview:self.senderLabel];
 }
 

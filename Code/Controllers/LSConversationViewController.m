@@ -54,8 +54,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [self.collectionView reloadData];
     [self.composeView.textVIew becomeFirstResponder];
     
-    CGPoint bottomOffset = CGPointMake(0, self.collectionView.contentSize.height - self.collectionView.bounds.size.height);
-    [self.collectionView setContentOffset:bottomOffset animated:YES];
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop  animated:YES];
 }
 
 - (void)setConversation:(LYRConversation *)conversation
@@ -68,15 +67,14 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 - (void)fetchMessages
 {
     self.messages = [self.layerController.client messagesForConversation:self.conversation];
-}
-
-- (void)refresh
-{
-    NSOrderedSet *set = [self.layerController.client messagesForConversation:self.conversation];
-    if (set.count > self.messages.count) {
-        self.messages = set;
-        [self.collectionView reloadData];
-    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSOrderedSet *set = [self.layerController.client messagesForConversation:self.conversation];
+        if (set.count > self.messages.count) {
+            self.messages = set;
+            [self.collectionView reloadData];
+        }
+        [self fetchMessages];
+    });
 }
 
 - (void)initializeCollectionView
@@ -188,6 +186,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [self.collectionView setContentOffset:CGPointMake(0, 440)];
         self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     } completion:^(BOOL finished) {
         //
@@ -199,6 +198,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [self.collectionView setContentOffset:CGPointMake(0, 100)];
         self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     } completion:^(BOOL finished) {
         //
