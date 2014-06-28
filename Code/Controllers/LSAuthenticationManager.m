@@ -15,6 +15,8 @@
 @property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, strong) NSURLSession *urlSession;
 @property (nonatomic, strong) LSUserManager *userManager;
+@property (nonatomic, readwrite) NSString *authToken;
+@property (nonatomic, readwrite) NSString *email;
 
 @end
 
@@ -119,14 +121,17 @@
                         NSLog(@"Get the info: %@", info);
                         if(info[@"layer_identity_token"]) {
                             
+                            self.email = email;
+                            self.authToken = info[@"authentication_token"];
+                            
                             [self.userManager persistAuthenticatedEmail:email withInfo:info];
                             
-//                            [self fetchAllContactsWithCompletion:^(BOOL success, NSError *error) {
-//                               
-//                            }];
-                            
                             [self.layerController.client authenticateWithIdentityToken:info[@"layer_identity_token"] completion:^(NSString *authenticatedUserID, NSError *error) {
+                                [self fetchAllContactsWithCompletion:^(BOOL success, NSError *error) {
+                                    
+                                }];
                                 NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
+                                [self.userManager setLoggedInUserIdentifier:authenticatedUserID];
                                 completion(YES, error);
                             }];
                             
@@ -170,9 +175,11 @@
            
             NSDictionary *info = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
              NSLog(@"Get the info: %@", info);
+            
             LSUserManager *manager = [[LSUserManager alloc] init];
             [manager persistApplicationContacts:info];
             completion(YES, error);
+            
         } else {
             NSLog(@"Failed with error: %@", error);
             completion (NO, error);
@@ -182,10 +189,8 @@
 
 - (NSURLSession *)authenticatedURLSessionConfiguration
 {
-    NSString *email = [[NSUserDefaults standardUserDefaults] objectForKey:@"authenticatedEmail"];
-    NSString *authToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"authToken"];
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-    configuration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json", @"Content-Type": @"application/json", @"HTTP_X_AUTH_EMAIL" : email, @"HTTP_X_AUTH_TOKEN": authToken};
+    configuration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json", @"Content-Type": @"application/json", @"HTTP_X_AUTH_EMAIL" : self.email, @"HTTP_X_AUTH_TOKEN": self.authToken};
     return [NSURLSession sessionWithConfiguration:configuration];
 }
 

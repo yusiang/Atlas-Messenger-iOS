@@ -15,6 +15,7 @@
 @property (nonatomic, strong) LSComposeView *composeView;
 @property (nonatomic, strong) NSOrderedSet *messages;
 @property (nonatomic, strong) UIImage *selectedImage;
+@property (nonatomic, strong) NSTimer *timer;
 
 @end
 
@@ -37,7 +38,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [super viewDidLoad];
     self.title = @"Conversation";
     self.accessibilityLabel = @"Conversation";
-
+    self.timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(refresh) userInfo:nil repeats:YES];
     [self initializeCollectionView];
     [self initializeComposeView];
     [self registerForKeyboardNotifications];
@@ -67,6 +68,15 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 - (void)fetchMessages
 {
     self.messages = [self.layerController.client messagesForConversation:self.conversation];
+}
+
+- (void)refresh
+{
+    NSOrderedSet *set = [self.layerController.client messagesForConversation:self.conversation];
+    if (set.count > self.messages.count) {
+        self.messages = set;
+        [self.collectionView reloadData];
+    }
 }
 
 - (void)initializeCollectionView

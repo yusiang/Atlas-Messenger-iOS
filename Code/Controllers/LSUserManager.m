@@ -40,6 +40,7 @@ static NSString *const LSUserDirectoryPath = @"users";
         LSUser *user = [[LSUser alloc] init];
         user.fullName = [contact objectForKey:@"name"];
         user.email = [contact objectForKey:@"email"];
+        user.identifier = [contact objectForKey:@"id"];
         
         NSData *userData = [NSKeyedArchiver archivedDataWithRootObject:user];
         [applicationUsers addObject:userData];
@@ -47,6 +48,13 @@ static NSString *const LSUserDirectoryPath = @"users";
 
     [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:applicationUsers] forKey:@"users"];
     [defaults synchronize];
+}
+
+- (void)setLoggedInUserIdentifier:(NSString *)identifier
+{
+    LSUser *user = [self loggedInUser];
+    user.identifier = (NSString *)identifier;
+    [self setLoggedInUser:user];
 }
 
 - (void)logout
@@ -62,7 +70,8 @@ static NSString *const LSUserDirectoryPath = @"users";
 - (LSUser *)loggedInUser
 {
     NSData *userData = [[NSUserDefaults standardUserDefaults] objectForKey:@"loggedInUser"];
-    return [NSKeyedUnarchiver unarchiveObjectWithData:userData];
+    LSUser *user = [NSKeyedUnarchiver unarchiveObjectWithData:userData];
+    return user;
 }
 
 - (NSArray *)contactsForUser:(LSUser *)user
@@ -73,8 +82,9 @@ static NSString *const LSUserDirectoryPath = @"users";
         LSUser *existingUser = [NSKeyedUnarchiver unarchiveObjectWithData:userData];
         NSLog(@"Existing User ID %@", existingUser.identifier);
         NSLog(@"User ID %@", user.identifier);
-        if ([existingUser.identifier isEqualToString:user.identifier]) break;
-        [userObjects addObject:existingUser];
+        if (![existingUser.email isEqualToString:user.email]) {
+             [userObjects addObject:existingUser];
+        }
     }
     
     return [[NSArray alloc] initWithArray:userObjects];
@@ -85,7 +95,8 @@ static NSString *const LSUserDirectoryPath = @"users";
     NSArray *existingUsers = [self allApplicationsUsers];
     for (NSData *data in existingUsers) {
         LSUser *user = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        if ([user.identifier isEqualToString:identifier]) {
+        NSString *userID = [NSString stringWithFormat:@"%@", user.identifier];
+        if ([userID isEqualToString:identifier]) {
             return user;
         }
     }

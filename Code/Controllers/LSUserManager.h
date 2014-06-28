@@ -32,6 +32,8 @@
 
 - (void)persistApplicationContacts:(NSDictionary *)contacts;
 
+- (void)setLoggedInUserIdentifier:(NSString *)identifier;
+
 - (LSUser *)loggedInUser;
 
 - (LSUser *)userWithIdentifier:(NSString *)identifier;

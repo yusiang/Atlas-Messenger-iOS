@@ -71,6 +71,7 @@
     NSMutableArray *fullNames = [[NSMutableArray alloc] init];
     LSUserManager *manager = [[LSUserManager alloc] init];
     for (NSString *userID in participants) {
+        LSUser *user = [manager loggedInUser];
         if (![userID isEqualToString:[manager loggedInUser].identifier]) {
             NSString *participantName = [manager userWithIdentifier:userID].fullName;
             [fullNames addObject:participantName];

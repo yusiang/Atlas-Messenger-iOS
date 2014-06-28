@@ -57,76 +57,62 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Code/Controllers/LSConversationListViewController.m"
-            timestampString = "425417843.376307"
+            filePath = "Code/Controllers/LSUserManager.m"
+            timestampString = "425604486.660009"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
-            landmarkName = "-fetchLayerConversations"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
+            landmarkName = "-contactsForUser:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Code/Controllers/LSAuthenticationManager.m"
-            timestampString = "425602851.214563"
+            filePath = "Code/Controllers/LSUserManager.m"
+            timestampString = "425604486.660009"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
-            landmarkName = "-loginWithEmail:password:completion:"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "-contactsForUser:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Code/Controllers/LSAuthenticationManager.m"
-            timestampString = "425602860.630939"
+            filePath = "Code/Controllers/LSUserManager.m"
+            timestampString = "425604486.660009"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "-loginWithEmail:password:completion:"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "-contactsForUser:"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__62-[LSAuthenticationManager loginWithEmail:password:completion:]_block_invoke_2"
-                  moduleName = "LayerSample"
-                  urlString = "file:///Users/kevin/Desktop/iOS/Projects/layer-sample-ios/Code/Controllers/LSAuthenticationManager.m"
-                  timestampString = "425602916.049242"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "128"
-                  endingLineNumber = "128"
-                  offsetFromSymbolStart = "411">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__62-[LSAuthenticationManager loginWithEmail:password:completion:]_block_invoke_3"
-                  moduleName = "LayerSample"
-                  urlString = "file:///Users/kevin/Desktop/iOS/Projects/layer-sample-ios/Code/Controllers/LSAuthenticationManager.m"
-                  timestampString = "425602916.049468"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "128"
-                  endingLineNumber = "128"
-                  offsetFromSymbolStart = "74">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Code/Controllers/LSUserManager.m"
+            timestampString = "425604486.660009"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "-contactsForUser:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
