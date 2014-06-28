@@ -9,19 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "LSAuthenticationManager.h"
 
-@class LSRegistrationTableViewController;
-
-@protocol LSRegistrationTableViewControllerDelegate <NSObject>
-
-- (void)registrationViewControllerDidFinish;
-
-- (void)registrationViewControllerDidFailWithError:(NSError *)error;
-
-@end
-
 @interface LSRegistrationTableViewController : UITableViewController
 
 @property (nonatomic, strong) LSAuthenticationManager *authenticationManager;
-@property (nonatomic, weak) id<LSRegistrationTableViewControllerDelegate>delegate;
+
+/**
+ @abstract Sets a block to be executed upon completion of the registration.
+ @param completion A block to be executed when the registration controller has finished its work.
+ */
+- (void)setCompletionBlock:(void (^)(LSUser *user))completion;
 
 @end

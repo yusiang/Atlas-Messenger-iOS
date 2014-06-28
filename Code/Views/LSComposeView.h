@@ -24,7 +24,7 @@
 @interface LSComposeView : UIView <UITextViewDelegate>
 
 @property (nonatomic, strong) UIView *backingTextView;
-@property (nonatomic, strong) UITextView *textVIew;
+@property (nonatomic, strong) UITextView *textView;
 @property (nonatomic, strong) LSButton *cameraButton;
 @property (nonatomic, strong) LSButton *sendButton;
 @property (nonatomic, weak) id<LSComposeViewDelegate>delegate;

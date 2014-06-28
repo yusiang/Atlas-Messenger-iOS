@@ -39,5 +39,29 @@ static NSString *const LSUserIdentifier = @"identifier";
     [encoder encodeObject:self.identifier forKey:LSUserIdentifier];
 }
 
-@end
+- (BOOL)validate:(NSError *__autoreleasing *)error
+{
+    if (!self.email) {
+        if (error) *error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+        return NO;
+    }
+    
+    if (!self.firstName) {
+        if (error) *error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+        return NO;
+    }
+    
+    if (!self.lastName) {
+        if (error) *error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+        return NO;
+    }
+    
+    if (!self.password || !self.confirmation || ![self.password isEqualToString:self.confirmation]) {
+        if (error) *error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{ NSLocalizedDescriptionKey: @"Please enter matching passwords in order to register" }];
+        return NO;
+    }
+    
+    return YES;
+}
 
+@end

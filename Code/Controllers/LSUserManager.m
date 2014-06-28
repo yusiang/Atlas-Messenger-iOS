@@ -8,6 +8,9 @@
 
 #import "LSUserManager.h"
 
+NSString *const LSUserDidAuthenticateNotification = @"LSUserDidAuthenticateNotification";
+NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateNotification";
+
 @implementation LSUserManager
 
 #pragma mark
@@ -150,6 +153,8 @@ static NSString *const LSUserDirectoryPath = @"users";
     
     [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:user] forKey:@"loggedInUser"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidAuthenticateNotification object:user];
 }
 
 @end

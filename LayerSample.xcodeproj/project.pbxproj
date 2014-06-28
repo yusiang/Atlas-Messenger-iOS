@@ -23,12 +23,12 @@
 		0AADB5D21947C8850083732B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D11947C8850083732B /* StoreKit.framework */; };
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		140D75B35BCA4D3395A4DC4B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931E36A3415C497CA3681E7F /* libPods.a */; };
+		25203F85195F5FC800E41FA1 /* LSHTTPResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */; };
 		259A574F1950EB76000E27B0 /* LSAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57161950EB76000E27B0 /* LSAuthenticationManager.m */; };
-		259A57501950EB76000E27B0 /* LSContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57181950EB76000E27B0 /* LSContactsViewController.m */; };
+		259A57501950EB76000E27B0 /* LSContactsSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */; };
 		259A57511950EB76000E27B0 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571A1950EB76000E27B0 /* LSConversationListViewController.m */; };
 		259A57521950EB76000E27B0 /* LSConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571C1950EB76000E27B0 /* LSConversationViewController.m */; };
 		259A57531950EB76000E27B0 /* LSHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571E1950EB76000E27B0 /* LSHomeViewController.m */; };
-		259A57541950EB76000E27B0 /* LSLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57201950EB76000E27B0 /* LSLayerController.m */; };
 		259A57551950EB76000E27B0 /* LSLoginTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57221950EB76000E27B0 /* LSLoginTableViewController.m */; };
 		259A57591950EB76000E27B0 /* LSRegistrationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57291950EB76000E27B0 /* LSRegistrationTableViewController.m */; };
 		259A575B1950EB76000E27B0 /* LSUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A572D1950EB76000E27B0 /* LSUserManager.m */; };
@@ -79,18 +79,18 @@
 		0AADB5CF1947C8800083732B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0AADB5D11947C8850083732B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSHTTPResponseSerializer.h; sourceTree = "<group>"; };
+		25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSHTTPResponseSerializer.m; sourceTree = "<group>"; };
 		259A57151950EB76000E27B0 /* LSAuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationManager.h; sourceTree = "<group>"; };
 		259A57161950EB76000E27B0 /* LSAuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAuthenticationManager.m; sourceTree = "<group>"; };
-		259A57171950EB76000E27B0 /* LSContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsViewController.h; sourceTree = "<group>"; };
-		259A57181950EB76000E27B0 /* LSContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactsViewController.m; sourceTree = "<group>"; };
+		259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsSelectionViewController.h; sourceTree = "<group>"; };
+		259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactsSelectionViewController.m; sourceTree = "<group>"; };
 		259A57191950EB76000E27B0 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
 		259A571A1950EB76000E27B0 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
 		259A571B1950EB76000E27B0 /* LSConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationViewController.h; sourceTree = "<group>"; };
 		259A571C1950EB76000E27B0 /* LSConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationViewController.m; sourceTree = "<group>"; };
 		259A571D1950EB76000E27B0 /* LSHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSHomeViewController.h; sourceTree = "<group>"; };
 		259A571E1950EB76000E27B0 /* LSHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSHomeViewController.m; sourceTree = "<group>"; };
-		259A571F1950EB76000E27B0 /* LSLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLayerController.h; sourceTree = "<group>"; };
-		259A57201950EB76000E27B0 /* LSLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLayerController.m; sourceTree = "<group>"; };
 		259A57211950EB76000E27B0 /* LSLoginTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLoginTableViewController.h; sourceTree = "<group>"; };
 		259A57221950EB76000E27B0 /* LSLoginTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLoginTableViewController.m; sourceTree = "<group>"; };
 		259A57281950EB76000E27B0 /* LSRegistrationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRegistrationTableViewController.h; sourceTree = "<group>"; };
@@ -226,6 +226,8 @@
 				259A57311950EB76000E27B0 /* main.m */,
 				259A57321950EB76000E27B0 /* Models */,
 				259A573B1950EB76000E27B0 /* Views */,
+				25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */,
+				25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -235,16 +237,14 @@
 			children = (
 				259A57151950EB76000E27B0 /* LSAuthenticationManager.h */,
 				259A57161950EB76000E27B0 /* LSAuthenticationManager.m */,
-				259A57171950EB76000E27B0 /* LSContactsViewController.h */,
-				259A57181950EB76000E27B0 /* LSContactsViewController.m */,
+				259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */,
+				259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */,
 				259A57191950EB76000E27B0 /* LSConversationListViewController.h */,
 				259A571A1950EB76000E27B0 /* LSConversationListViewController.m */,
 				259A571B1950EB76000E27B0 /* LSConversationViewController.h */,
 				259A571C1950EB76000E27B0 /* LSConversationViewController.m */,
 				259A571D1950EB76000E27B0 /* LSHomeViewController.h */,
 				259A571E1950EB76000E27B0 /* LSHomeViewController.m */,
-				259A571F1950EB76000E27B0 /* LSLayerController.h */,
-				259A57201950EB76000E27B0 /* LSLayerController.m */,
 				259A57211950EB76000E27B0 /* LSLoginTableViewController.h */,
 				259A57221950EB76000E27B0 /* LSLoginTableViewController.m */,
 				259A57281950EB76000E27B0 /* LSRegistrationTableViewController.h */,
@@ -366,6 +366,7 @@
 				ORGANIZATIONNAME = "Layer, Inc.";
 				TargetAttributes = {
 					0A0C242219477D8F00401B74 = {
+						DevelopmentTeam = U46UP347QQ;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -488,15 +489,15 @@
 				259A57681950EB76000E27B0 /* LSMediaAttachement.m in Sources */,
 				259A57531950EB76000E27B0 /* LSHomeViewController.m in Sources */,
 				259A57521950EB76000E27B0 /* LSConversationViewController.m in Sources */,
-				259A57501950EB76000E27B0 /* LSContactsViewController.m in Sources */,
+				259A57501950EB76000E27B0 /* LSContactsSelectionViewController.m in Sources */,
 				259A574F1950EB76000E27B0 /* LSAuthenticationManager.m in Sources */,
-				259A57541950EB76000E27B0 /* LSLayerController.m in Sources */,
 				259A57631950EB76000E27B0 /* LSButton.m in Sources */,
 				259A57671950EB76000E27B0 /* LSInputTableViewCell.m in Sources */,
 				259A57511950EB76000E27B0 /* LSConversationListViewController.m in Sources */,
 				259A57651950EB76000E27B0 /* LSContactTableViewCell.m in Sources */,
 				259A57641950EB76000E27B0 /* LSComposeView.m in Sources */,
 				259A575D1950EB76000E27B0 /* main.m in Sources */,
+				25203F85195F5FC800E41FA1 /* LSHTTPResponseSerializer.m in Sources */,
 				259A57661950EB76000E27B0 /* LSConversationCell.m in Sources */,
 				259A575C1950EB76000E27B0 /* LSAppDelegate.m in Sources */,
 				259A57621950EB76000E27B0 /* LSAvatarImageView.m in Sources */,
@@ -624,6 +625,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -638,6 +641,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -648,7 +652,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Phone.ly, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -663,6 +668,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

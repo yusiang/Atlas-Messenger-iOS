@@ -9,19 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "LSAuthenticationManager.h"
 
-@class LSLoginTableViewController, LYRClient;
-
-@protocol LSLoginTableViewControllerDelegate <NSObject>
-
-- (void)loginViewControllerDidFinish;
-
-- (void)loginViewControllerDidFailWithError:(NSError *)error;
-
-@end
+@class LSUser, LYRClient;
 
 @interface LSLoginTableViewController : UITableViewController
 
-@property (nonatomic, weak) id<LSLoginTableViewControllerDelegate>delegate;
 @property (nonatomic, strong) LSAuthenticationManager *authenticationManager;
+
+- (void)setCompletionBlock:(void (^)(LSUser *user))completion;
 
 @end

@@ -43,16 +43,16 @@
 
 - (void)initializeTextField
 {
-    if (!self.textVIew) {
-        self.textVIew = [[UITextView alloc] init];
-        self.textVIew.delegate = self;
+    if (!self.textView) {
+        self.textView = [[UITextView alloc] init];
+        self.textView.delegate = self;
     }
-    self.textVIew.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.textVIew.layer.borderWidth = 1;
-    self.textVIew.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:16];
-    self.textVIew.layer.cornerRadius = 4.0f;
-    self.textVIew.accessibilityLabel = @"Compose TextView";
-    [self addSubview:self.textVIew];
+    self.textView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.textView.layer.borderWidth = 1;
+    self.textView.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:16];
+    self.textView.layer.cornerRadius = 4.0f;
+    self.textView.accessibilityLabel = @"Compose TextView";
+    [self addSubview:self.textView];
 }
 
 - (void)initializeCameraButton
@@ -79,7 +79,7 @@
 - (void)configureDefaultViewConstraints
 {
     self.frame = self.defaultRect;
-    self.textVIew.frame = CGRectMake(50, self.frame.size.height - 42, 200, 36);
+    self.textView.frame = CGRectMake(50, self.frame.size.height - 42, 200, 36);
     self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
     self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
 }
@@ -89,7 +89,7 @@
 {
     if (self.frame.size.height < self.defaultRect.size.height + 50) {
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y - 50, self.frame.size.width, self.frame.size.height + 50);
-        self.textVIew.frame = CGRectMake(self.textVIew.frame.origin.x, self.frame.size.height - 92, self.textVIew.frame.size.width, self.textVIew.frame.size.height + 50);
+        self.textView.frame = CGRectMake(self.textView.frame.origin.x, self.frame.size.height - 92, self.textView.frame.size.width, self.textView.frame.size.height + 50);
         self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
         self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
     }
@@ -102,16 +102,11 @@
 
 - (void)sendMessage
 {
-    [self.textVIew resignFirstResponder];
+    [self.textView resignFirstResponder];
     
-    if (self.textVIew.attributedText) {
-        NSAttributedString *string = self.textVIew.attributedText;
-
-    }
-    
-    if (![self.textVIew.text isEqualToString:@""]) {
-        [self.delegate sendMessageWithText:self.textVIew.text];
-        [self.textVIew setText:@""];
+    if (![self.textView.text isEqualToString:@""]) {
+        [self.delegate sendMessageWithText:self.textView.text];
+        [self.textView setText:@""];
     }
     
     if (self.images.count > 0) {
@@ -131,7 +126,7 @@
     
     [self configurePhotoViewConstraints];
     
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textVIew.attributedText];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textView.attributedText];
     
     LSMediaAttachement *textAttachment = [[LSMediaAttachement alloc] init];
     
@@ -141,7 +136,7 @@
     
     [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
     
-    self.textVIew.attributedText = attrStringWithImage;
+    self.textView.attributedText = attrStringWithImage;
 }
 
 #pragma mark

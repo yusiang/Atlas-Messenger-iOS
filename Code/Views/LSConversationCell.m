@@ -13,11 +13,11 @@
 
 @interface LSConversationCell ()
 
-@property (nonatomic, strong) LSAvatarImageView *avatarImageView;
-@property (nonatomic, strong) UILabel *senderName;
-@property (nonatomic, strong) UITextView *lastMessageText;
-@property (nonatomic, strong) UILabel *date;
-@property (nonatomic, strong) UIView *seperatorLine;
+@property (nonatomic) LSAvatarImageView *avatarImageView;
+@property (nonatomic) UILabel *senderName;
+@property (nonatomic) UITextView *lastMessageText;
+@property (nonatomic) UILabel *date;
+@property (nonatomic) UIView *seperatorLine;
 
 @end
 
@@ -25,6 +25,7 @@
 
 @synthesize avatarImageView = _avatarImageView;
 
+// SBW: Eliminate these
 #define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
 #define kLayerFont      @"Avenir-Medium"
 #define kLayerFontHeavy @"Avenir-Heavy"
@@ -38,9 +39,9 @@
     return self;
 }
 
-- (void)updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller
+- (void)updateWithConversation:(LYRConversation *)conversation messages:(NSOrderedSet *)messages
 {
-    LYRMessage *message = [[controller.client messagesForConversation:conversation] lastObject];
+    LYRMessage *message = [messages lastObject];
     LYRMessagePart *part = [message.parts firstObject];
     [self addAvatarImage];
     [self addSenderLabelWithParticipants:[conversation.participants allObjects]];
@@ -49,7 +50,6 @@
     [self addSeperatorLine];
 }
 
-//NSLayoutConstraint
 - (void)addAvatarImage
 {
     if (!self.avatarImageView) {
@@ -68,12 +68,12 @@
     [self.senderName setFont:[UIFont fontWithName:kLayerFontHeavy size:16]];
     [self.senderName setTextColor:[UIColor darkGrayColor]];
     
+    // SBW: The view should not be querying the model directly.
     NSMutableArray *fullNames = [[NSMutableArray alloc] init];
     LSUserManager *manager = [[LSUserManager alloc] init];
     for (NSString *userID in participants) {
-        LSUser *user = [manager loggedInUser];
         if (![userID isEqualToString:[manager loggedInUser].identifier]) {
-            NSString *participantName = [manager userWithIdentifier:userID].fullName;
+            NSString *participantName = [manager userWithIdentifier:userID].fullName ?: @"Unknown User";
             [fullNames addObject:participantName];
         }
     }
@@ -128,5 +128,5 @@
     }
     self.seperatorLine.backgroundColor = [UIColor lightGrayColor];
 }
-@end
 
+@end

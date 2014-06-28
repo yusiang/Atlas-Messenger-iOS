@@ -8,14 +8,14 @@
 
 #import "LSConversationListViewController.h"
 #import "LSConversationCell.h"
-#import "LSContactsViewController.h"
+#import "LSContactsSelectionViewController.h"
 #import "LSUIConstants.h"
 #import "LSUserManager.h"
 
 // SBW: You can declare protocols on the class extension inside the implementation file. The collection view protocols is
 // an implementation detail and doesn't need to be exposed publicly.
 
-@interface LSConversationListViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface LSConversationListViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSContactsSelectionViewControllerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSOrderedSet *conversations;
@@ -26,30 +26,34 @@
 
 NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
-- (id) init
-{
-    self = [super init];
-    if(self) {
-
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
+    NSAssert(self.layerClient, @"`self.layerClient` cannot be nil");
     [super viewDidLoad];
     
-    // SBW: These are better being set in `viewDidLoad`
     self.title = @"Conversations";
     self.accessibilityLabel = @"Conversation List";
     
-    [self initializeBarButtons];
-    [self initializeCollectionView];
+    // Setup Navigation Item
+    UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutTapped)];
+    logoutButton.accessibilityLabel = @"logout";
+    [self.navigationItem setLeftBarButtonItem:logoutButton];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationsUpdated:) name:@"conversationsUpdated" object:nil];
+    UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
+    newConversationButton.accessibilityLabel = @"new";
+    [self.navigationItem setRightBarButtonItem:newConversationButton];
     
-    NSAssert(self.layerController, @"`self.layerController` cannot be nil");
+    // Setup Collection View
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame
+                                             collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    self.collectionView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.collectionView];
+    [self.collectionView registerClass:[LSConversationCell class] forCellWithReuseIdentifier:LSConversationCellIdentifier];
 
+    // TODO: Nothing is removing this....
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationsUpdated:) name:@"conversationsUpdated" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -59,26 +63,11 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     [self.collectionView reloadData];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-/**
- SBW: I'd recommend using a standard accessor and then doing your fetch in `viewDidLoad`.
- */
-- (void)setLayerController:(LSLayerController *)layerController
-{
-    if(!_layerController) {
-        _layerController = layerController;
-    }
-}
-
 - (void)fetchLayerConversations
 {
-    NSAssert(self.layerController, @"Layer Controller should not be `nil`.");
+    NSAssert(self.layerClient, @"Layer Controller should not be `nil`.");
     if (self.conversations) self.conversations = nil;
-    NSOrderedSet *conversations = [self.layerController.client conversationsForIdentifiers:nil];
+    NSOrderedSet *conversations = [self.layerClient conversationsForIdentifiers:nil];
     self.conversations = conversations;
     
     // SBW: You don't want a method called `fetchLayerConversations` that also does UI changes. I'd probably use KVO on `self.conversations` to drive the reload
@@ -95,33 +84,6 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)conversationsUpdated:(NSNotification *)notification
 {
     
-}
-
-// SBW: I'd probably inline this into `viewDidLoad`
-- (void)initializeBarButtons
-{
-    UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutTapped)];
-    logoutButton.accessibilityLabel = @"logout";
-    [self.navigationItem setLeftBarButtonItem:logoutButton];
-    
-    UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
-    newConversationButton.accessibilityLabel = @"new";
-    [self.navigationItem setRightBarButtonItem:newConversationButton];
-}
-
-// SBW: I'd probably inline tis into `viewDidLoad`
-- (void)initializeCollectionView
-{
-    // SBW: Why have you set this up to be tolerant of multiple invocations?
-    if (!self.collectionView) {
-        self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame
-                                                 collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
-        self.collectionView.delegate = self;
-        self.collectionView.dataSource = self;
-        self.collectionView.backgroundColor = [UIColor whiteColor];
-        [self.view addSubview:self.collectionView];
-    }
-    [self.collectionView registerClass:[LSConversationCell class] forCellWithReuseIdentifier:LSConversationCellIdentifier];
 }
 
 # pragma mark
@@ -148,7 +110,9 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"The conversation is %@", [self.conversations objectAtIndex:indexPath.row]);
-    [cell updateCellWithConversation:[self.conversations objectAtIndex:indexPath.row] andLayerController:self.layerController];
+    LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
+    NSOrderedSet *messages = [self.layerClient messagesForConversation:conversation];
+    [cell updateWithConversation:conversation messages:messages];
 }
 
 #pragma mark
@@ -156,10 +120,10 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSConversationViewController *viewController = [[LSConversationViewController alloc] init];
-    [viewController setConversation:[self.conversations objectAtIndex:indexPath.row]];
-    [viewController setLayerController:self.layerController];
-    [self.navigationController pushViewController:viewController animated:TRUE];
+    LSConversationViewController *viewController = [LSConversationViewController new];
+    viewController.conversation = [self.conversations objectAtIndex:indexPath.row];
+    viewController.layerClient = self.layerClient;
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 #pragma mark – UICollectionViewDelegateFlowLayout
@@ -176,8 +140,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    // SBW: You can use `UIEdgeInsetsZero`
-    return UIEdgeInsetsMake(0, 0, 0, 0);
+    return UIEdgeInsetsZero;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -195,18 +158,37 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)logoutTapped
 {
-    [self.navigationController dismissViewControllerAnimated:TRUE completion:^{
-        [self.layerController logout];
+    [self.navigationController dismissViewControllerAnimated:YES completion:^{
+//        [self.layerController logout];
 //        [[LSUserManager new] logout];
     }];
 }
 
 - (void)newConversationTapped
 {
-    LSContactsViewController *contactsViewController = [[LSContactsViewController alloc] init];
-    contactsViewController.layerController = self.layerController;
-    
-    [self.navigationController pushViewController:contactsViewController animated:TRUE];
+    LSContactsSelectionViewController *contactsViewController = [LSContactsSelectionViewController new];
+    contactsViewController.delegate = self;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:contactsViewController];
+    [self presentViewController:navigationController animated:YES completion:nil];
+}
+
+#pragma mark - LSContactsSelectionViewControllerDelegate methods
+
+- (void)contactsSelectionViewController:(LSContactsSelectionViewController *)contactsSelectionViewController didSelectContacts:(NSSet *)contacts
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        LSConversationViewController *controller = [LSConversationViewController new];
+        
+        LYRConversation *conversation = [self.layerClient conversationWithIdentifier:nil participants:[[contacts valueForKey:@"identifier"] allObjects]];
+        controller.conversation = conversation;
+        controller.layerClient = self.layerClient;
+        [self.navigationController pushViewController:controller animated:YES];
+    }];
+}
+
+- (void)contactsSelectionViewControllerDidCancel:(LSContactsSelectionViewController *)contactsSelectionViewController
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

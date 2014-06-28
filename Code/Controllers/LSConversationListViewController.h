@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LayerKit/LayerKit.h>
 #import "LSConversationViewController.h"
 
 @class LSConversationListViewController;
@@ -19,7 +20,7 @@
 
 @interface LSConversationListViewController : UIViewController
 
-@property (nonatomic, strong) LSLayerController *layerController;
+@property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, weak) id<LSConversationListViewControllerDelegate> delegate;
 
 @end

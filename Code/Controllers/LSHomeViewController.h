@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LayerKit/LayerKit.h>
 #import "LSLoginTableViewController.h"
 #import "LSRegistrationTableViewController.h"
 #import "LSLayerController.h"
 #import "LSAuthenticationManager.h"
 
-@interface LSHomeViewController : UIViewController <LSLoginTableViewControllerDelegate, LSRegistrationTableViewControllerDelegate>
+@interface LSHomeViewController : UIViewController
 
-@property (nonatomic, strong) LSLayerController *layerController;
-@property (nonatomic, strong) LSAuthenticationManager *authenticationManager;
+@property (nonatomic) LYRClient *layerClient;
+@property (nonatomic) LSAuthenticationManager *authenticationManager;
 
 @end

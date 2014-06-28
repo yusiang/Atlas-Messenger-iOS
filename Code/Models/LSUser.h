@@ -19,4 +19,6 @@
 @property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *authToken;
 
+- (BOOL)validate:(NSError **)error;
+
 @end

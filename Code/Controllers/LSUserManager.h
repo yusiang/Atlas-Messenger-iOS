@@ -24,6 +24,9 @@
  If you implement `NSCoding` on the `LSUser` class then you can serialize it directly instead of mapping fields to user defaults...
  */
 
+extern NSString *const LSUserDidAuthenticateNotification;
+extern NSString *const LSUserDidDeauthenticateNotification;
+
 @interface LSUserManager : NSObject
 
 //==========Blakes Public API Proposal==========//

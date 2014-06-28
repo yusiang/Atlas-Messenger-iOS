@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSLayerController.h"
 #import "LSHomeViewController.h"
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>

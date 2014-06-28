@@ -6,23 +6,24 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
+#import <SVProgressHUD/SVProgressHUD.h>
 #import "LSLoginTableViewController.h"
 #import "LSInputTableViewCell.h"
 #import "LSConversationListViewController.h"
 #import "LSButton.h"
 #import "LSUserManager.h"
-#import "SVProgressHUD.h"
 
 @interface LSLoginTableViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) LSButton *loginButton;
 @property (nonatomic, weak) UITextField *emailField;
 @property (nonatomic, weak) UITextField *passwordField;
+@property (nonatomic, copy) void (^completionBlock)(LSUser *);
 @end
 
 @implementation LSLoginTableViewController
 
-NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
+static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -101,6 +102,7 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
             cell.textField.enablesReturnKeyAutomatically = YES;
             cell.textField.returnKeyType = UIReturnKeyNext;
             cell.textField.delegate = self;
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.emailField = cell.textField;
             break;
         case 1:
@@ -122,17 +124,14 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
     
     [SVProgressHUD show];
-    [self.authenticationManager loginWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(BOOL success, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [SVProgressHUD dismiss];
-            if (!error && success) {
-                [self.delegate loginViewControllerDidFinish];
-            } else {
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alertView show];
-                [self.delegate loginViewControllerDidFailWithError:error];
-            }
-        });
+    [self.authenticationManager loginWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(LSUser *user, NSError *error) {
+        [SVProgressHUD dismiss];
+        if (user) {
+            if (self.completionBlock) self.completionBlock(user);
+        } else {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        }
     }];
 }
 

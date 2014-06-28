@@ -20,7 +20,7 @@
 
 @interface LSAppDelegate ()
 
-@property (nonatomic) LSLayerController *layerController;
+@property (nonatomic) LYRClient *layerClient;
 
 @end
 
@@ -32,40 +32,26 @@
 {
     NSURL *baseURL = [NSURL URLWithString:@"https://10.66.0.35:7072"];
     NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
-    LYRClient *client = [[LYRClient alloc] initWithBaseURL:baseURL appID:appID];
+    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:baseURL appID:appID];
+    self.layerClient = layerClient;
     
-//    NSURL *baseURL = [NSURL URLWithString:@"https://10.66.0.35:7072"];
-//<<<<<<< HEAD
-//    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-0000-000000000000"];
-//    
-//=======
-//    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
-//>>>>>>> 1a72deec0a13ca3933bdde3cbea2451333347377
-//    LYRClient *client = [[LYRClient alloc] initWithBaseURL:baseURL appID:appID];
-    
-    [client startWithCompletion:^(BOOL success, NSError *error) {
+    [layerClient startWithCompletion:^(BOOL success, NSError *error) {
         NSLog(@"Started with success: %d, %@", success, error);
     }];
     
-    self.layerController = [[LSLayerController alloc] initWithClient:client];
-    
-    LSAuthenticationManager *authenticationManager = [[LSAuthenticationManager alloc] initWithBaseURL:@"http://10.66.0.35:8080/"];
-    authenticationManager.layerController= self.layerController;
-    
+    LSAuthenticationManager *authenticationManager = [[LSAuthenticationManager alloc] initWithBaseURL:@"http://10.66.0.35:8080/" layerClient:layerClient];
     if (authenticationManager.authToken) {
-        [authenticationManager resumeSessionWithCompletion:^(BOOL success, NSError *error) {
-            //
+        [authenticationManager resumeSessionWithCompletion:^(LSUser *user, NSError *error) {
+            
         }];
     } else {
-        LSHomeViewController *homeViewController = [[LSHomeViewController alloc] init];
-        homeViewController.layerController = self.layerController;
+        LSHomeViewController *homeViewController = [LSHomeViewController new];
+        homeViewController.layerClient = self.layerClient;
         homeViewController.authenticationManager = authenticationManager;
         
         self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
         [self.window makeKeyAndVisible];
     }
-    
-
     
     return YES;
 }

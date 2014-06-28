@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
+#import <SVProgressHUD/SVProgressHUD.h>
 #import "LSRegistrationTableViewController.h"
 #import "LSInputTableViewCell.h"
 #import "LSButton.h"
@@ -23,6 +24,8 @@
 @property (nonatomic, weak) UITextField *passwordField;
 @property (nonatomic, weak) UITextField *passwordConfirmationField;
 
+@property (nonatomic, copy) void (^completionBlock)(LSUser *);
+
 @end
 
 @implementation LSRegistrationTableViewController
@@ -31,11 +34,7 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
-    self = [super initWithStyle:UITableViewStyleGrouped];
-    if (self) {
-        
-    }
-    return self;
+    return [super initWithStyle:UITableViewStyleGrouped];
 }
 
 - (void)viewDidLoad
@@ -45,8 +44,13 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     self.title = @"Register";
     self.accessibilityLabel = @"Register Screen";
     
-    [self initializeRegisterButton];
-    [self configureLayoutConstraints];
+    // Add Register Button
+    self.registerButton = [[LSButton alloc] initWithText:@"Register"];
+    [self.registerButton addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.registerButton];
+    self.registerButton.frame = CGRectMake(0, 0, 280, 60);
+    self.registerButton.center = CGPointMake(self.view.center.x, 360);
+    
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSRegistrationCellIdentifier];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 }
@@ -55,19 +59,6 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
 {
     [super viewDidAppear:animated];
     [self.firstNameField becomeFirstResponder];
-}
-
-- (void)initializeRegisterButton
-{
-    self.registerButton = [[LSButton alloc] initWithText:@"Register"];
-    [self.registerButton addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.registerButton];
-}
-
-- (void)configureLayoutConstraints
-{
-    self.registerButton.frame = CGRectMake(0, 0, 280, 60);
-    self.registerButton.center = CGPointMake(self.view.center.x, 360);
 }
 
 #pragma mark - Table view data source
@@ -149,11 +140,14 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     [user setConfirmation:confirmationCell.textField.text];
     [user setIdentifier:[[NSUUID UUID] UUIDString]];
     
-    [self.authenticationManager signUpUser:user completion:^(BOOL success, NSError *error) {
-        if (!error && success) {
-            [self.delegate registrationViewControllerDidFinish];
+    [SVProgressHUD show];
+    [self.authenticationManager signUpUser:user completion:^(LSUser *user, NSError *error) {
+        [SVProgressHUD dismiss];
+        if (user) {
+            if (self.completionBlock) self.completionBlock(user);
         } else {
-            [self.delegate registrationViewControllerDidFailWithError:error];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Registration Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
         }
     }];
 }

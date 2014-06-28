@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LYRConversation.h"
-#import "LSLayerController.h"
-#import "LYRMessage.h"
+#import <LayerKit/LayerKit.h>
+#import "LSUser.h"
 
 @interface LSConversationCell : UICollectionViewCell
 
-// SBW: There should not be any reason for a cell to know about the layer controller...
-- (void) updateCellWithConversation:(LYRConversation *)conversation andLayerController:(LSLayerController *)controller;
+- (void)updateWithConversation:(LYRConversation *)conversation messages:(NSOrderedSet *)messages;
 
 @end
