@@ -61,7 +61,7 @@
     
     self.imageView.frame = CGRectMake(2, 2, self.bubbleView.frame.size.width - 4, self.bubbleView.frame.size.height - 4);
     
-    self.avatarImageView.frame = CGRectMake(self.frame.size.width - 52, self.frame.size.height - 52, 30, 30);
+    self.avatarImageView.frame = CGRectMake(self.frame.size.width - 38, self.frame.size.height - 52, 32, 32);
 }
 
 - (void)configureCellForNonLoggedInUser
@@ -73,7 +73,7 @@
     
     self.imageView.frame =  CGRectMake(2, 2, self.bubbleView.frame.size.width - 4, self.bubbleView.frame.size.height - 4);
     
-    self.avatarImageView.frame = CGRectMake(6, self.frame.size.height - 52, 30, 30);
+    self.avatarImageView.frame = CGRectMake(6, self.frame.size.height - 52, 32, 32);
 }
 
 
@@ -89,7 +89,7 @@
 - (void)addAvatarImageForMessage:(LYRMessage *)message
 {
     if (!self.avatarImageView) {
-        self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 46, 46)];
+        self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 32, 32)];
         [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     }
     [self addSubview:self.avatarImageView];

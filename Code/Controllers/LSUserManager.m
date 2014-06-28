@@ -39,7 +39,7 @@ static NSString *const LSUserDirectoryPath = @"users";
         LSUser *user = [[LSUser alloc] init];
         user.fullName = [contact objectForKey:@"name"];
         user.email = [contact objectForKey:@"email"];
-        user.identifier = [contact objectForKey:@"id"];
+        user.identifier = [NSString stringWithFormat:@"%@",[contact objectForKey:@"id"]];
         
         NSData *userData = [NSKeyedArchiver archivedDataWithRootObject:user];
         [applicationUsers addObject:userData];

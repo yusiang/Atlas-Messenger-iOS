@@ -38,7 +38,6 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [super viewDidLoad];
     self.title = @"Conversation";
     self.accessibilityLabel = @"Conversation";
-    self.timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(refresh) userInfo:nil repeats:YES];
     [self initializeCollectionView];
     [self initializeComposeView];
     [self registerForKeyboardNotifications];
@@ -52,11 +51,18 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [super viewWillAppear:animated];
     [self fetchMessages];
     [self.collectionView reloadData];
-    [self.composeView.textVIew becomeFirstResponder];
-    
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop  animated:YES];
+    //[self.composeView.textVIew becomeFirstResponder];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.collectionView setContentSize:CGSizeMake(0, 60)];
+    if (self.messages.count > 1) {
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+    }
+    
+}
 - (void)setConversation:(LYRConversation *)conversation
 {
     if(!_conversation) {
@@ -72,6 +78,9 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
         if (set.count > self.messages.count) {
             self.messages = set;
             [self.collectionView reloadData];
+            if (self.messages.count > 1) {
+                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+            }
         }
         [self fetchMessages];
     });
@@ -79,8 +88,9 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (void)initializeCollectionView
 {
+    
     if (!self.collectionView) {
-        self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame
+        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 48)
                                                  collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
@@ -165,7 +175,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    return UIEdgeInsetsMake(0, 0, 0, 0);
+    return UIEdgeInsetsMake(0, 0, 48, 0);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -186,7 +196,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self.collectionView setContentOffset:CGPointMake(0, 440)];
+        [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y + kbSize.height)];
         self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     } completion:^(BOOL finished) {
         //
@@ -198,7 +208,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self.collectionView setContentOffset:CGPointMake(0, 100)];
+        [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y - kbSize.height)];
         self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     } completion:^(BOOL finished) {
         //
@@ -213,6 +223,8 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [self.layerController sendMessage:text inConversation:self.conversation];
     [self fetchMessages];
     [self.collectionView reloadData];
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+    
 }
 
 - (void)sendMessageWithImage:(UIImage *)image
@@ -220,6 +232,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [self.layerController sendImage:image inConversation:self.conversation];
     [self fetchMessages];
     [self.collectionView reloadData];
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
 }
 
 - (void)cameraTapped

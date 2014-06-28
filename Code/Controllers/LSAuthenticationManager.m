@@ -145,8 +145,9 @@
                         completion (NO, error);
                     }
                 }] resume];
+            } else {
+                completion(NO, error);
             }
-            completion(NO, error);
         }];
     }
 }
