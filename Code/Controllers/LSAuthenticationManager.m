@@ -137,6 +137,7 @@
                             
                         } else {
                             NSLog(@"Failed with error: %@", info[@"error"]);
+                            if (info[@"error"]) error = [NSError errorWithDomain:@"LayerSample" code:401 userInfo:@{ NSLocalizedDescriptionKey: info[@"error"] }];
                             completion (NO, error);
                         }
                     } else {
