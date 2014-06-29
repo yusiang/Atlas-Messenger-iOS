@@ -39,7 +39,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     
     NSError *error = nil;
     NSSet *contacts = [self.persistenceManager persistedUsersWithError:&error];
-    self.contacts = [contacts sortedArrayUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES] ]];
+    self.contacts = [contacts sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES] ]];
     NSAssert(self.contacts, @"Failed to load contacts!!");
     
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
@@ -55,6 +55,8 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
                                                                         action:@selector(doneButtonTapped:)];
     doneButtonItem.accessibilityLabel = @"done";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
+    
+    self.tableView.accessibilityLabel = @"Contact List";
 }
 
 #pragma mark - Actions

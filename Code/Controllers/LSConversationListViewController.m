@@ -38,7 +38,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     [self.navigationItem setLeftBarButtonItem:logoutButton];
     
     UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newConversationTapped)];
-    newConversationButton.accessibilityLabel = @"new";
+    newConversationButton.accessibilityLabel = @"New";
     [self.navigationItem setRightBarButtonItem:newConversationButton];
     
     // Setup Collection View

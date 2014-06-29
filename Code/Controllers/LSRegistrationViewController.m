@@ -114,7 +114,7 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
         case 4:
             [cell setText:@"Confirm"];
             cell.textField.secureTextEntry = TRUE;
-            cell.textField.accessibilityLabel = @"Confirm";
+            cell.textField.accessibilityLabel = @"Confirmation";
             self.passwordConfirmationField = cell.textField;
             cell.textField.returnKeyType = UIReturnKeySend;
             break;

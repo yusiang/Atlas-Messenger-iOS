@@ -371,7 +371,7 @@
 				ORGANIZATIONNAME = "Layer, Inc.";
 				TargetAttributes = {
 					0A0C242219477D8F00401B74 = {
-						DevelopmentTeam = U46UP347QQ;
+						DevelopmentTeam = Z77XRZV7CC;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;

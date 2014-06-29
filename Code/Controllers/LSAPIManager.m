@@ -183,6 +183,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 - (void)deauthenticateWithCompletion:(void(^)(BOOL success, NSError *error))completion
 {
+    //TODO: KC - Deauthenticate should STOP the sync manager but NOT cut off the SDK connection. Currently it is not stopping the sync manager.
     self.authenticatedSession = nil;
     if (completion) completion(YES, nil);
 }
