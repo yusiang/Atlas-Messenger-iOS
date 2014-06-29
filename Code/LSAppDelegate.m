@@ -59,7 +59,6 @@ static void LSAlertWithError(NSError *error)
     LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
     authenticationViewController.layerClient = self.layerClient;
     authenticationViewController.APIManager = self.APIManager;
-    authenticationViewController.persistenceManager = self.persistenceManager;
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
     self.window.rootViewController = self.navigationController;
     

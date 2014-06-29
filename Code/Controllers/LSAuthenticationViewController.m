@@ -25,7 +25,6 @@
 
 - (void)viewDidLoad
 {
-    NSAssert(self.persistenceManager, @"persistenceManager cannot be nil");
     NSAssert(self.APIManager, @"APIManager cannot be nil");
     NSAssert(self.layerClient, @"layerClient cannot be nil");
     [super viewDidLoad];

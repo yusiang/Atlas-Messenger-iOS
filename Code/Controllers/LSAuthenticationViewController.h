@@ -17,6 +17,5 @@
 
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LSAPIManager *APIManager;
-@property (nonatomic) LSPersistenceManager *persistenceManager;
 
 @end
