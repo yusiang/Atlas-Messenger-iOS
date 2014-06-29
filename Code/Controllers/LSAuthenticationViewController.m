@@ -70,7 +70,7 @@
     LSRegistrationViewController *registrationViewController = [[LSRegistrationViewController alloc] init];
     [registrationViewController setCompletionBlock:^(LSUser *user) {
         if (user) {
-            [self.navigationController popViewControllerAnimated:YES];
+            [self.navigationController popViewControllerAnimated:NO];
         }
     }];
     registrationViewController.APIManager = self.APIManager;
@@ -82,7 +82,7 @@
     LSLoginViewController *loginViewController = [[LSLoginViewController alloc] init];
     [loginViewController setCompletionBlock:^(LSUser *user) {
         if (user) {
-            [self.navigationController popViewControllerAnimated:YES];
+            [self.navigationController popViewControllerAnimated:NO];
         }
     }];
     loginViewController.APIManager = self.APIManager;
