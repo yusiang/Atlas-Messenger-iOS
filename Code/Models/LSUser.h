@@ -12,7 +12,7 @@
 
 + (instancetype)userFromDictionaryRepresentation:(NSDictionary *)representation;
 
-@property (nonatomic, strong) NSNumber *userID;
+@property (nonatomic, strong) NSString *userID;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, readonly) NSString *fullName;

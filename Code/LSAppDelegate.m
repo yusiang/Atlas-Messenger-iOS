@@ -20,6 +20,28 @@ static void LSAlertWithError(NSError *error)
     [alertView show];
 }
 
+static BOOL LSIsRunningTests(void)
+{
+    return NSClassFromString(@"XCTestCase") != Nil;
+}
+
+static NSString *LSApplicationDataDirectory(void)
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    return ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+}
+
+static NSURL *LSLayerBaseURL(void)
+{
+    if (LSIsRunningTests()) {
+        NSString *environmentHost = [NSProcessInfo processInfo].environment[@"LAYER_TEST_HOST"];
+        if (environmentHost) {
+            return [NSURL URLWithString:[NSString stringWithFormat:@"https://%@:7072", environmentHost]];
+        }
+    }
+    return [NSURL URLWithString:@"https://10.66.0.35:7072"];
+}
+
 @interface LYRClient ()
 
 - (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID;
@@ -41,9 +63,8 @@ static void LSAlertWithError(NSError *error)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSURL *baseURL = [NSURL URLWithString:@"https://10.66.0.35:7072"];
     NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
-    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:baseURL appID:appID];
+    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:appID];
     self.layerClient = layerClient;
     
     [layerClient startWithCompletion:^(BOOL success, NSError *error) {
@@ -53,7 +74,7 @@ static void LSAlertWithError(NSError *error)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     
-    self.persistenceManager = [LSPersistenceManager persistenceManagerWithInMemoryStore];
+    self.persistenceManager = LSIsRunningTests() ? [LSPersistenceManager persistenceManagerWithInMemoryStore] : [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
     self.APIManager = [LSAPIManager managerWithBaseURL:[NSURL URLWithString:@"http://10.66.0.35:8080/"] layerClient:layerClient];
     
     LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
