@@ -8,7 +8,6 @@
 
 #import "LSContactsSelectionViewController.h"
 #import "LSContactTableViewCell.h"
-#import "LSUserManager.h"
 
 @interface LSContactsSelectionViewController ()
 
@@ -38,7 +37,10 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     self.accessibilityLabel = @"Contact List";
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
     
-    [self fetchContacts];
+    NSError *error = nil;
+    NSSet *contacts = [self.persistenceManager persistedUsersWithError:&error];
+    self.contacts = [contacts sortedArrayUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES] ]];
+    NSAssert(self.contacts, @"Failed to load contacts!!");
     
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                          style:UIBarButtonItemStylePlain
@@ -67,12 +69,6 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     [self.delegate contactsSelectionViewController:self didSelectContacts:self.selectedContacts];
 }
 
-- (void)fetchContacts
-{
-    LSUserManager *manager = [[LSUserManager alloc] init];
-    self.contacts = [manager contactsForUser:[manager loggedInUser]];
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -99,7 +95,6 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)configureCell:(LSContactTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    // SBW: You don't want to use an `NSDictionary` in place of a domain model
     LSUser *user = [self.contacts objectAtIndex:indexPath.row];
     cell.textLabel.text = user.fullName;
     cell.accessibilityLabel = [NSString stringWithFormat:@"%@", user.fullName];

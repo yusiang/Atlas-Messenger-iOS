@@ -7,13 +7,12 @@
 //
 
 #import <SVProgressHUD/SVProgressHUD.h>
-#import "LSLoginTableViewController.h"
+#import "LSLoginViewController.h"
 #import "LSInputTableViewCell.h"
 #import "LSConversationListViewController.h"
 #import "LSButton.h"
-#import "LSUserManager.h"
 
-@interface LSLoginTableViewController () <UITextFieldDelegate>
+@interface LSLoginViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) LSButton *loginButton;
 @property (nonatomic, weak) UITextField *emailField;
@@ -21,7 +20,7 @@
 @property (nonatomic, copy) void (^completionBlock)(LSUser *);
 @end
 
-@implementation LSLoginTableViewController
+@implementation LSLoginViewController
 
 static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 
@@ -124,7 +123,7 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
     
     [SVProgressHUD show];
-    [self.authenticationManager loginWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(LSUser *user, NSError *error) {
+    [self.APIManager authenticateWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(LSUser *user, NSError *error) {
         [SVProgressHUD dismiss];
         if (user) {
             if (self.completionBlock) self.completionBlock(user);

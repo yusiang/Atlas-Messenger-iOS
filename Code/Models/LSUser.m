@@ -10,33 +10,47 @@
 
 @implementation LSUser
 
-static NSString *const LSUserFullName = @"fullName";
-static NSString *const LSUserEmail = @"email";
-static NSString *const LSUserPassword = @"password";
-static NSString *const LSUserIdentifier = @"identifier";
++ (instancetype)userFromDictionaryRepresentation:(NSDictionary *)representation
+{
+    LSUser *user = [LSUser new];
+    user.userID = representation[@"id"];
+    user.firstName = representation[@"first_name"];
+    user.lastName = representation[@"last_name"];
+    user.email = representation[@"email"];
+    
+    return user;
+}
 
 #pragma mark - NSCoding
 
-- (id)initWithCoder:(NSCoder *)decoder {
-   
+- (id)initWithCoder:(NSCoder *)decoder
+{
     self = [super init];
     if (!self) {
         return nil;
     }
     
-    self.fullName = [decoder decodeObjectForKey:LSUserFullName];
-    self.email = [decoder decodeObjectForKey:LSUserEmail];
-    self.password = [decoder decodeObjectForKey:LSUserPassword];
-    self.identifier = [decoder decodeObjectForKey:LSUserIdentifier];
+    self.userID = [decoder decodeObjectForKey:NSStringFromSelector(@selector(userID))];
+    self.firstName = [decoder decodeObjectForKey:NSStringFromSelector(@selector(firstName))];
+    self.firstName = [decoder decodeObjectForKey:NSStringFromSelector(@selector(lastName))];
+    self.email = [decoder decodeObjectForKey:NSStringFromSelector(@selector(email))];
+    self.password = [decoder decodeObjectForKey:NSStringFromSelector(@selector(password))];
     
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)encoder {
-    [encoder encodeObject:self.fullName forKey:LSUserFullName];
-    [encoder encodeObject:self.email forKey:LSUserEmail];
-    [encoder encodeObject:self.password forKey:LSUserPassword];
-    [encoder encodeObject:self.identifier forKey:LSUserIdentifier];
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    [encoder encodeObject:self.userID forKey:NSStringFromSelector(@selector(userID))];
+    [encoder encodeObject:self.firstName forKey:NSStringFromSelector(@selector(firstName))];
+    [encoder encodeObject:self.lastName forKey:NSStringFromSelector(@selector(lastName))];
+    [encoder encodeObject:self.email forKey:NSStringFromSelector(@selector(email))];
+    [encoder encodeObject:self.password forKey:NSStringFromSelector(@selector(password))];
+}
+
+- (NSString *)fullName
+{
+    return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
 }
 
 - (BOOL)validate:(NSError *__autoreleasing *)error
@@ -56,7 +70,7 @@ static NSString *const LSUserIdentifier = @"identifier";
         return NO;
     }
     
-    if (!self.password || !self.confirmation || ![self.password isEqualToString:self.confirmation]) {
+    if (!self.password || !self.passwordConfirmation || ![self.password isEqualToString:self.passwordConfirmation]) {
         if (error) *error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{ NSLocalizedDescriptionKey: @"Please enter matching passwords in order to register" }];
         return NO;
     }

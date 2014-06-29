@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
+#import "LSPersistenceManager.h"
 
 @class LSContactsSelectionViewController;
 
@@ -24,6 +25,7 @@
  */
 @interface LSContactsSelectionViewController : UITableViewController
 
+@property (nonatomic, strong) LSPersistenceManager *persistenceManager;
 @property (nonatomic, weak) id<LSContactsSelectionViewControllerDelegate> delegate;
 
 @end

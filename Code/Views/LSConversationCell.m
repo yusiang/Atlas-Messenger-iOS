@@ -9,7 +9,6 @@
 #import "LSConversationCell.h"
 #import "LSAvatarImageView.h"
 #import "LSUser.h"
-#import "LSUserManager.h"
 
 @interface LSConversationCell ()
 
@@ -69,24 +68,24 @@
     [self.senderName setTextColor:[UIColor darkGrayColor]];
     
     // SBW: The view should not be querying the model directly.
-    NSMutableArray *fullNames = [[NSMutableArray alloc] init];
-    LSUserManager *manager = [[LSUserManager alloc] init];
-    for (NSString *userID in participants) {
-        if (![userID isEqualToString:[manager loggedInUser].identifier]) {
-            NSString *participantName = [manager userWithIdentifier:userID].fullName ?: @"Unknown User";
-            [fullNames addObject:participantName];
-        }
-    }
-    
-    NSArray *sortedFullNames = [fullNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    NSString *senderLabel = @"";
-    
-    for (NSString *fullName in sortedFullNames) {
-        senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", fullName]];
-    }
-    self.senderName.text = senderLabel;
-    self.senderName.userInteractionEnabled = FALSE;
-    self.accessibilityLabel = senderLabel;
+//    NSMutableArray *fullNames = [[NSMutableArray alloc] init];
+//    LSUserManager *manager = [[LSUserManager alloc] init];
+//    for (NSString *userID in participants) {
+//        if (![userID isEqualToString:[manager loggedInUser].identifier]) {
+//            NSString *participantName = [manager userWithIdentifier:userID].fullName ?: @"Unknown User";
+//            [fullNames addObject:participantName];
+//        }
+//    }
+//    
+//    NSArray *sortedFullNames = [fullNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+//    NSString *senderLabel = @"";
+//    
+//    for (NSString *fullName in sortedFullNames) {
+//        senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", fullName]];
+//    }
+//    self.senderName.text = senderLabel;
+//    self.senderName.userInteractionEnabled = FALSE;
+//    self.accessibilityLabel = senderLabel;
 }
 
 - (void)addLastMessageTextWithPart:(LYRMessagePart *)part

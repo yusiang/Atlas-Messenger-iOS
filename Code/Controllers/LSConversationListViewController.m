@@ -10,10 +10,6 @@
 #import "LSConversationCell.h"
 #import "LSContactsSelectionViewController.h"
 #import "LSUIConstants.h"
-#import "LSUserManager.h"
-
-// SBW: You can declare protocols on the class extension inside the implementation file. The collection view protocols is
-// an implementation detail and doesn't need to be exposed publicly.
 
 @interface LSConversationListViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSContactsSelectionViewControllerDelegate>
 
@@ -29,6 +25,8 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)viewDidLoad
 {
     NSAssert(self.layerClient, @"`self.layerClient` cannot be nil");
+    NSAssert(self.persistenceManager, @"persistenceManager cannot be nil");
+    NSAssert(self.APIManager, @"APIManager cannot be nil");
     [super viewDidLoad];
     
     self.title = @"Conversations";
@@ -158,15 +156,15 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)logoutTapped
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:^{
-//        [self.layerController logout];
-//        [[LSUserManager new] logout];
+    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+        NSLog(@"Deauthenticated...");
     }];
 }
 
 - (void)newConversationTapped
 {
     LSContactsSelectionViewController *contactsViewController = [LSContactsSelectionViewController new];
+    contactsViewController.persistenceManager = self.persistenceManager;
     contactsViewController.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:contactsViewController];
     [self presentViewController:navigationController animated:YES completion:nil];
@@ -179,7 +177,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     [self dismissViewControllerAnimated:YES completion:^{
         LSConversationViewController *controller = [LSConversationViewController new];
         
-        LYRConversation *conversation = [self.layerClient conversationWithIdentifier:nil participants:[[contacts valueForKey:@"identifier"] allObjects]];
+        LYRConversation *conversation = [self.layerClient conversationWithIdentifier:nil participants:[[contacts valueForKey:@"userID"] allObjects]];
         controller.conversation = conversation;
         controller.layerClient = self.layerClient;
         [self.navigationController pushViewController:controller animated:YES];

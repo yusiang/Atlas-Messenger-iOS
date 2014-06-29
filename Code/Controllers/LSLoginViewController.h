@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSAuthenticationManager.h"
+#import "LSAPIManager.h"
 
 @class LSUser, LYRClient;
 
-@interface LSLoginTableViewController : UITableViewController
+@interface LSLoginViewController : UITableViewController
 
-@property (nonatomic, strong) LSAuthenticationManager *authenticationManager;
+@property (nonatomic, strong) LSAPIManager *APIManager;
 
 - (void)setCompletionBlock:(void (^)(LSUser *user))completion;
 

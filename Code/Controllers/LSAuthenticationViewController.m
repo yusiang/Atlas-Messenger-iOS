@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSHomeViewController.h"
+#import "LSAuthenticationViewController.h"
 #import "LSConversationListViewController.h"
-#import "SVProgressHUD.h"
-#import "LSUserManager.h"
 #import "LSButton.h"
 #import "LSUIConstants.h"
+#import "LSLoginViewController.h"
+#import "LSRegistrationViewController.h"
 
-@interface LSHomeViewController ()
+@interface LSAuthenticationViewController ()
 
 @property (nonatomic) UILabel *titleLabel;
 @property (nonatomic) LSButton *registerButton;
@@ -21,10 +21,13 @@
 
 @end
 
-@implementation LSHomeViewController
+@implementation LSAuthenticationViewController
 
 - (void)viewDidLoad
 {
+    NSAssert(self.persistenceManager, @"persistenceManager cannot be nil");
+    NSAssert(self.APIManager, @"APIManager cannot be nil");
+    NSAssert(self.layerClient, @"layerClient cannot be nil");
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
@@ -63,44 +66,28 @@
     self.loginButton.center = CGPointMake(self.view.center.x, 460);
 }
 
-#pragma mark
-#pragma mark Button Actions
-
 - (void)registerTapped
 {
-    LSRegistrationTableViewController *registerVC = [[LSRegistrationTableViewController alloc] init];
-    [registerVC setCompletionBlock:^(LSUser *user) {
+    LSRegistrationViewController *registrationViewController = [[LSRegistrationViewController alloc] init];
+    [registrationViewController setCompletionBlock:^(LSUser *user) {
         if (user) {
             [self.navigationController popViewControllerAnimated:YES];
-            [self presentConversationViewController];
         }
     }];
-    registerVC.authenticationManager = self.authenticationManager;
-    [self.navigationController pushViewController:registerVC animated:YES];
+    registrationViewController.APIManager = self.APIManager;
+    [self.navigationController pushViewController:registrationViewController animated:YES];
 }
 
 - (void)loginTapped
 {
-    LSLoginTableViewController *loginVC = [[LSLoginTableViewController alloc] init];
-    [loginVC setCompletionBlock:^(LSUser *user) {
+    LSLoginViewController *loginViewController = [[LSLoginViewController alloc] init];
+    [loginViewController setCompletionBlock:^(LSUser *user) {
         if (user) {
             [self.navigationController popViewControllerAnimated:YES];
-            [self presentConversationViewController];
         }
     }];
-    loginVC.authenticationManager = self.authenticationManager;
-    [self.navigationController pushViewController:loginVC animated:YES];
-}
-
-#pragma mark
-#pragma mark Layer Authentication Methods
-
-- (void)presentConversationViewController
-{
-    LSConversationListViewController *conversationListViewController = [[LSConversationListViewController alloc] init];
-    conversationListViewController.layerClient = self.layerClient;
-    UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
-    [self presentViewController:conversationController animated:YES completion:nil];
+    loginViewController.APIManager = self.APIManager;
+    [self.navigationController pushViewController:loginViewController animated:YES];
 }
 
 @end

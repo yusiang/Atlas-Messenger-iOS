@@ -1,5 +1,5 @@
 //
-//  LSRegistrationTableViewController.h
+//  LSRegistrationViewController.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 6/10/14.
@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSAuthenticationManager.h"
+#import "LSAPIManager.h"
 
-@interface LSRegistrationTableViewController : UITableViewController
+@interface LSRegistrationViewController : UITableViewController
 
-@property (nonatomic, strong) LSAuthenticationManager *authenticationManager;
+@property (nonatomic, strong) LSAPIManager *APIManager;
 
 /**
  @abstract Sets a block to be executed upon completion of the registration.

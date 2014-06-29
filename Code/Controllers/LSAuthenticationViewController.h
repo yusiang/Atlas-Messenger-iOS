@@ -1,5 +1,5 @@
 //
-//  LSConversationListVC.h
+//  LSHomeViewController.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 6/10/14.
@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
-#import "LSConversationViewController.h"
 #import "LSAPIManager.h"
 
-@interface LSConversationListViewController : UIViewController
+/**
+ @abtract The `LSAuthenticationViewController` presents a user interface that allows the user to login or register for an account.
+ */
+@interface LSAuthenticationViewController : UIViewController
 
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LSAPIManager *APIManager;

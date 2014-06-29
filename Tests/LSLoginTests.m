@@ -8,11 +8,11 @@
 
 #import "LSLoginTests.h"
 #import "KIFUITestActor+LSAdditions.h"
-#import "LSRegistrationTableViewController.h"
-#import "LSLoginTableViewController.h"
+#import "LSRegistrationViewController.h"
+#import "LSLoginViewController.h"
 #import "LSConversationListViewController.h"
 #import "LSConversationViewController.h"
-#import "LSHomeViewController.h"
+#import "LSAuthenticationViewController.h"
 #import "LSUserManager.h"
 #import "LYRLog.h"
 
@@ -68,7 +68,7 @@ NSString *const LSTestUser3Confirmation = @"password3";
     [user setFullName:LSTestUser0FullName];
     [user setEmail:LSTestUser0Email];
     [user setPassword:LSTestUser0Password];
-    [user setConfirmation:LSTestUser0Confirmation];
+    [user setPasswordConfirmation:LSTestUser0Confirmation];
     [user setIdentifier:[[NSUUID UUID] UUIDString]];
     
     [[LSUserManager new] registerUser:user completion:^(BOOL success, NSError *error) {

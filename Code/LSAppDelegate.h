@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSHomeViewController.h"
+#import "LSAuthenticationViewController.h"
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 @end

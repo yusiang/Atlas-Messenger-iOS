@@ -1,5 +1,5 @@
 //
-//  LSRegistrationTableViewController.m
+//  LSRegistrationViewController.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 6/10/14.
@@ -7,15 +7,14 @@
 //
 
 #import <SVProgressHUD/SVProgressHUD.h>
-#import "LSRegistrationTableViewController.h"
+#import "LSRegistrationViewController.h"
 #import "LSInputTableViewCell.h"
 #import "LSButton.h"
 #import "LSConversationListViewController.h"
 #import "LSAppDelegate.h"
-#import "LSUserManager.h"
 #import "LSUser.h"
 
-@interface LSRegistrationTableViewController () <UITextFieldDelegate, UITableViewDelegate>
+@interface LSRegistrationViewController () <UITextFieldDelegate, UITableViewDelegate>
 
 @property (nonatomic, strong) LSButton *registerButton;
 @property (nonatomic, weak) UITextField *firstNameField;
@@ -28,7 +27,7 @@
 
 @end
 
-@implementation LSRegistrationTableViewController
+@implementation LSRegistrationViewController
 
 static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifier";
 
@@ -137,11 +136,10 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     [user setLastName:lastNameCell.textField.text];
     [user setEmail:emailCell.textField.text];
     [user setPassword:passwordCell.textField.text];
-    [user setConfirmation:confirmationCell.textField.text];
-    [user setIdentifier:[[NSUUID UUID] UUIDString]];
+    [user setPasswordConfirmation:confirmationCell.textField.text];
     
     [SVProgressHUD show];
-    [self.authenticationManager signUpUser:user completion:^(LSUser *user, NSError *error) {
+    [self.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
         [SVProgressHUD dismiss];
         if (user) {
             if (self.completionBlock) self.completionBlock(user);
