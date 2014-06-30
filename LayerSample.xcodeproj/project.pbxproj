@@ -24,6 +24,7 @@
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		140D75B35BCA4D3395A4DC4B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931E36A3415C497CA3681E7F /* libPods.a */; };
 		25203F85195F5FC800E41FA1 /* LSHTTPResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */; };
+		252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */; };
 		25918B97195F95F700D0FB1B /* LSPersistenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25918B96195F95F700D0FB1B /* LSPersistenceManager.m */; };
 		25918B9A195F960500D0FB1B /* LSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 25918B99195F960500D0FB1B /* LSSession.m */; };
 		259A574F1950EB76000E27B0 /* LSAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57161950EB76000E27B0 /* LSAPIManager.m */; };
@@ -82,6 +83,7 @@
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSHTTPResponseSerializer.h; sourceTree = "<group>"; };
 		25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSHTTPResponseSerializer.m; sourceTree = "<group>"; };
+		2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSPersistenceManagerTest.m; sourceTree = "<group>"; };
 		25918B95195F95F700D0FB1B /* LSPersistenceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSPersistenceManager.h; sourceTree = "<group>"; };
 		25918B96195F95F700D0FB1B /* LSPersistenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSPersistenceManager.m; sourceTree = "<group>"; };
 		25918B98195F960500D0FB1B /* LSSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSession.h; sourceTree = "<group>"; };
@@ -314,6 +316,7 @@
 				259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */,
 				259A577C1950EB92000E27B0 /* LSLoginTests.h */,
 				259A577D1950EB92000E27B0 /* LSLoginTests.m */,
+				2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -520,6 +523,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */,
 				259A57801950EB92000E27B0 /* LSLoginTests.m in Sources */,
 				259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */,
 			);

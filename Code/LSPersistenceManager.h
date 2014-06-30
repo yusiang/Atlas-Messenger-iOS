@@ -21,6 +21,6 @@
 - (BOOL)persistSession:(LSSession *)session error:(NSError **)error;
 - (LSSession *)persistedSessionWithError:(NSError **)error;
 
-- (void)deleteAllObjects;
+- (BOOL)deleteAllObjects:(NSError **)error;
 
 @end

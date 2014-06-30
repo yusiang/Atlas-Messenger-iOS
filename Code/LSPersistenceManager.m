@@ -56,7 +56,7 @@
     LSMustBeImplementedBySubclass();
 }
 
-- (void)deleteAllObjects
+- (BOOL)deleteAllObjects:(NSError **)error
 {
     LSMustBeImplementedBySubclass();
 }
@@ -107,10 +107,11 @@
     return self.session;
 }
 
-- (void)deleteAllObjects
+- (BOOL)deleteAllObjects:(NSError **)error
 {
     [self.users removeAllObjects];
     self.session = nil;
+    return YES;
 }
 
 @end
@@ -122,19 +123,64 @@
     self = [super init];
     if (self) {
         _path = path;
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        BOOL isDirectory;
+        if ([fileManager fileExistsAtPath:path isDirectory:&isDirectory]) {
+            if (!isDirectory) {
+                [NSException raise:NSInternalInconsistencyException format:@"Failed to initialize persistent store at '%@': specified path is a regular file.", path];
+            }
+        } else {
+            NSError *error = nil;
+            BOOL success = [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error];
+            if (!success) {
+                [NSException raise:NSInternalInconsistencyException format:@"Failed creating persistent store at '%@': %@", path, error];
+            }
+        }
     }
     return self;
 }
 
-- (BOOL)ensureStoreExists:(NSError **)error
+- (BOOL)persistUsers:(NSSet *)users error:(NSError **)error
 {
-    // TODO: Make sure we have a directory at the store path and can write to it.
+    NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
+    return [NSKeyedArchiver archiveRootObject:users toFile:path];
+}
+
+- (NSSet *)persistedUsersWithError:(NSError **)error
+{
+    NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+}
+
+- (BOOL)deleteAllObjects:(NSError **)error
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *subpaths = [fileManager contentsOfDirectoryAtPath:self.path error:error];
+    if (!subpaths) {
+        return NO;
+    }
+    
+    for (NSString *subpath in subpaths) {
+        if ([[subpath pathExtension] isEqualToString:@"plist"]) {
+            if (![fileManager removeItemAtPath:[self.path stringByAppendingPathComponent:subpath] error:error]) {
+                return NO;
+            }
+        }
+    }
     return YES;
 }
 
-- (void)deleteAllObjects
+- (BOOL)persistSession:(LSSession *)session error:(NSError **)error
 {
-    // TODO: Remove all files within our store directory
+    NSString *path = [self.path stringByAppendingPathComponent:@"Session.plist"];
+    return [NSKeyedArchiver archiveRootObject:session toFile:path];
+}
+
+- (LSSession *)persistedSessionWithError:(NSError **)error
+{
+    NSString *path = [self.path stringByAppendingPathComponent:@"Session.plist"];
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
 }
 
 @end

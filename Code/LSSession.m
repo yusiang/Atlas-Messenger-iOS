@@ -46,4 +46,17 @@
     [encoder encodeObject:self.user forKey:@"user"];
 }
 
+- (NSUInteger)hash
+{
+    return [self.authenticationToken hash] ^ [self.user.userID hash];
+}
+
+- (BOOL)isEqual:(id)object
+{
+    if (!object) return NO;
+    if (![object isKindOfClass:[LSSession class]]) return NO;
+    LSSession *otherSession = object;
+    return [self.authenticationToken isEqualToString:otherSession.authenticationToken] && [self.user isEqual:otherSession.user];
+}
+
 @end
