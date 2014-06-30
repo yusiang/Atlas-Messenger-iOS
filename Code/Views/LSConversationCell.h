@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
 #import "LSUser.h"
+#import "LSConversationCellPresenter.h"
 
 @interface LSConversationCell : UICollectionViewCell
 
-- (void)updateWithConversation:(LYRConversation *)conversation messages:(NSOrderedSet *)messages;
+- (void)updateWithPresenter:(LSConversationCellPresenter *)presenter;
 
 @end

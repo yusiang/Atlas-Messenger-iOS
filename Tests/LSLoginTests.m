@@ -17,6 +17,7 @@
 #import "LYRLog.h"
 #import "LYRCountdownLatch.h"
 #import "LSPersistenceManager.h"
+#import "LSConversationCellPresenter.h"
 
 static NSString *const LSTestUser0FirstName = @"Layer";
 static NSString *const LSTestUser0LastName = @"Tester0";
@@ -50,6 +51,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 
 @interface LSLoginTests ()
 
+@property (nonatomic) LSPersistenceManager *persistenceManager;
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LSAPIManager *APIManager;
 
@@ -71,48 +73,11 @@ static NSString *const LSTestUser3Confirmation = @"password3";
  This is a very uncommon signature idiom. Try searching the Cocoa headers for the word `And` in method signatures. It rarely appears and typically only in very old
  API's such as `NSBundle`.
  */
-- (LSUser *)testUserWithNumber:(NSUInteger)number
-{
-    LSUser *user = [[LSUser alloc] init];
-    switch (number) {
-        case 0:
-            [user setFirstName:LSTestUser0FirstName];
-            [user setLastName:LSTestUser0LastName];
-            [user setEmail:LSTestUser0Email];
-            [user setPassword:LSTestUser0Password];
-            [user setPasswordConfirmation:LSTestUser0Confirmation];
-            break;
-        case 1:
-            [user setFirstName:LSTestUser1FirstName];
-            [user setLastName:LSTestUser1LastName];
-            [user setEmail:LSTestUser1Email];
-            [user setPassword:LSTestUser1Password];
-            [user setPasswordConfirmation:LSTestUser1Confirmation];
-            break;
-        case 2:
-            [user setFirstName:LSTestUser2FirstName];
-            [user setLastName:LSTestUser2LastName];
-            [user setEmail:LSTestUser2Email];
-            [user setPassword:LSTestUser2Password];;
-            [user setPasswordConfirmation:LSTestUser2Confirmation];
-            break;
-        case 3:
-            [user setFirstName:LSTestUser3FirstName];
-            [user setLastName:LSTestUser3LastName];
-            [user setEmail:LSTestUser3Email];
-            [user setPassword:LSTestUser3Password];
-            [user setPasswordConfirmation:LSTestUser3Confirmation];
-            break;
-        default:
-            break;
-    }
-    return user;
-}
 
 - (void)beforeEach
 {
-    LSPersistenceManager *manager = [LSPersistenceManager persistenceManagerWithInMemoryStore];
-    [manager deleteAllObjects];
+    self.persistenceManager = [LSPersistenceManager persistenceManagerWithInMemoryStore];
+    [self.persistenceManager deleteAllObjects];
     
     NSURL *baseURL = [NSURL URLWithString:@"https://10.66.0.35:7072"];
     NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
@@ -199,117 +164,116 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 //5. Log in. Verify the address book is empty. Log out and register as a new user. Verify that the first user is in the address book.
 - (void)testToVerifyAddressBookFunctionalityForFirstTwoUsers
 {
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:3 timeoutInterval:5.0];
-    
     [self systemLoginUser:[self testUserWithNumber:0]];
     [tester tapViewWithAccessibilityLabel:@"New"];
     //TODO change to wait for view with out this label
     [tester waitForViewWithAccessibilityLabel:@"Contact List"];
     
-    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:2];
+    [self deauthenticate];
     
     [self systemLoginUser:[self testUserWithNumber:1]];
     [tester tapViewWithAccessibilityLabel:@"new"];
     [tester waitForViewWithAccessibilityLabel:[self testUserWithNumber:0].fullName];
 
-    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
+    [self deauthenticate];
 }
 
-////6. Register two users. Log in. Tap the contact and verify that its checkbox checks. Tap it again and verify that the checkbox unchecks.
-//-(void)testToVerifyAddressBookSelectionIndicatorFunctionality
-//{
-//    [self registerTestUser:[self testUserWithNumber:1]];
-//    [self logoutFromConversationListViewController];
-//    [self registerTestUser:[self testUserWithNumber:2]];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:[self testUserWithNumber:1]];
-//    [tester tapViewWithAccessibilityLabel:@"new"];
-//    [tester waitForViewWithAccessibilityLabel:[self testUserWithNumber:2].fullName];
-//    [tester tapViewWithAccessibilityLabel:[self testUserWithNumber:2].fullName];
-//    
-//    [tester waitForViewWithAccessibilityLabel:@"selectionIndicator"];
-//    [tester tapViewWithAccessibilityLabel:[self testUserWithNumber:2].fullName];
-//    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"selectionIndicator"];
-//    [self logoutFromContactViewController];
-//}
+//6. Register two users. Log in. Tap the contact and verify that its checkbox checks. Tap it again and verify that the checkbox unchecks.
+-(void)testToVerifyAddressBookSelectionIndicatorFunctionality
+{
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:2]];
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+    
+    [tester tapViewWithAccessibilityLabel:@"new"];
+    [tester waitForViewWithAccessibilityLabel:[self testUserWithNumber:2].fullName];
+    [tester tapViewWithAccessibilityLabel:[self testUserWithNumber:2].fullName];
+    
+    [tester waitForViewWithAccessibilityLabel:@"selectionIndicator"];
+    [tester tapViewWithAccessibilityLabel:[self testUserWithNumber:2].fullName];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"selectionIndicator"];
+    
+    [self deauthenticate];
+}
+
+//7. Register two users. Log in. Tap the contact to check its checkbox. Tap the "+" to start a conversation and verify that the proper Conversation view is shown.
+-(void)testToVerifyStartingAConversationWithTwoContacts
+{
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:2]];
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+
+    [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
+    
+    [self deauthenticate];
+}
+
+//8. Register two users. Log in and start a conversation. Tap the back button and verify that the ConversationList Returns
+- (void)testToVerifyNavigationBetweenContactsandConversations
+{
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:2]];
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+    
+    [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
+    
+    [tester tapViewWithAccessibilityLabel:@"Back"];
+    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
+    
+    [self deauthenticate];
+}
+
+//9. Register two users. Log in as one and start a conversation. Verify that the focus is automatically set on the message entry box. Type "hello!" and verify that "hello!" appears in the entry box. Tap "send" and verify that a message with "hello!" is added to the conversation history. Send "Do you hear me?" and verify that the new message is added below the first.
+-(void)testToVerifyUIAnimimationsForSendingAMessage
+{
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:2]];
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+
+    [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
+    
+    [self sendMessageWithText:@"Hello"];
+    [self sendMessageWithText:@"This is a test message"];
+    
+    [self deauthenticate];
+}
 //
-////7. Register two users. Log in. Tap the contact to check its checkbox. Tap the "+" to start a conversation and verify that the proper Conversation view is shown.
-//-(void)testToVerifyStartingAConversationWithTwoContacts
-//{
-//    [self registerTestUser:[self testUserWithNumber:1]];
-//    [self logoutFromConversationListViewController];
-//  
-//    [self registerTestUser:[self testUserWithNumber:1]];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:1];
-//
-//    [self startConversationWithUsers:@[LSTestUser2FullName]];
-//
-//    [self logoutFromConversationViewController];
-//}
-//
-////8. Register two users. Log in and start a conversation. Tap the back button and verify that the ConversationList Returns
-//- (void)testToVerifyNavigationBetweenContactsandConversations
-//{
-//    [self registerTestUser:1];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self registerTestUser:2];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:1];
-//    [self startConversationWithUsers:@[LSTestUser2FullName]];
-//    
-//    [tester tapViewWithAccessibilityLabel:@"Back"];
-//    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-//    
-//    [self logoutFromConversationListViewController];
-//}
-//
-////9. Register two users. Log in as one and start a conversation. Verify that the focus is automatically set on the message entry box. Type "hello!" and verify that "hello!" appears in the entry box. Tap "send" and verify that a message with "hello!" is added to the conversation history. Send "Do you hear me?" and verify that the new message is added below the first.
-//-(void)testToVerifyUIAnimimationsForSendingAMessage
-//{
-//    [self registerTestUser:1];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self registerTestUser:2];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:1];
-//    [self startConversationWithUsers:@[LSTestUser2FullName]];
-//    
-//    [self sendMessageWithText:@"Hello"];
-//    [self sendMessageWithText:@"This is a test message"];
-//    
-//    [self logoutFromConversationViewController];
-//}
-////
-////10. Register two users. Log in and start a conversation. Log out and back in. Verify that the old conversation is still there.
-//-(void)testToVerifyConversationPersistenceFunctionality
-//{
-//    [self registerTestUser:1];
-//    [self logoutFromConversationListViewController];
-//
-//    [self registerTestUser:2];
-//    [self logoutFromConversationListViewController];
-//    
-//    [self loginAsTestUser:1];
-//    [self startConversationWithUsers:@[LSTestUser2FullName]];
-//    [self logoutFromConversationViewController];
-//    
-//    [self loginAsTestUser:1];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[LSTestUser2FullName]]];
-//    [self logoutFromConversationListViewController];
-//}
+//10. Register two users. Log in and start a conversation. Log out and back in. Verify that the old conversation is still there.
+-(void)testToVerifyConversationPersistenceFunctionality
+{
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:2]];
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+    
+    [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
+    
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+    
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2]]]];
+    [self deauthenticate];
+}
 //
 ////11. Send three messages to a user. Log out. Log back in with the same account. Verify that the old messages are still there in proper order.
 //- (void)testToVerifySentMessagePersistence
@@ -676,115 +640,124 @@ static NSString *const LSTestUser3Confirmation = @"password3";
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
 }
 
-//- (void)logout
-//{
-//    [tester tapViewWithAccessibilityLabel:@"logout"];
-//}
-//
-//#pragma mark
-//#pragma mark Start Conversation
-//
-//- (void)startConversationWithUsers:(NSArray *)users
-//{
-//    [tester tapViewWithAccessibilityLabel:@"new"];
-//    [tester waitForViewWithAccessibilityLabel:@"Contacts"];
-//    for (NSString *fullName in users) {
-//        [tester waitForViewWithAccessibilityLabel:fullName];
-//        [tester tapViewWithAccessibilityLabel:fullName];
-//    }
-//    [tester tapViewWithAccessibilityLabel:@"start"];
-//    [tester waitForViewWithAccessibilityLabel:@"composeView"];
-//    [tester waitForTimeInterval:5];
-//}
-//
-//- (NSString *)conversationCellLabelForParticipants:(NSArray *)participantNames
-//{
-//    NSArray *sortedFullNames = [participantNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-//
-//    NSString *senderLabel = @"";
-//<<<<<<< HEAD
-//    for (NSString *fullName in sortedFullNames) {
-//        senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", fullName]];
-//=======
-//
-//    LSUserManager *manager = [LSUserManager new];
-//    for (NSString *userID in participants) {
-//        if (![userID isEqualToString:[manager loggedInUser].identifier]) {
-//            NSString *participant = [manager userWithIdentifier:userID].fullName;
-//            senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", participant]];
-//        }
-//>>>>>>> blake-MSG-187-code-review-feedback
-//    }
-//    return senderLabel;
-//}
-//
-//#pragma mark
-//#pragma mark Send Message
-//
-//- (void)sendMessageWithText:(NSString *)text
-//{
-//    [tester tapViewWithAccessibilityLabel:@"Compose TextView"];
-//    [tester waitForViewWithAccessibilityLabel:@"space"]; //Space represents that the keyboard is show, hence the focus is on the text entry box
-//    [tester clearTextFromAndThenEnterText:text intoViewWithAccessibilityLabel:@"Compose TextView"];
-//    [tester tapViewWithAccessibilityLabel:@"Send Button"];
-//    
-//<<<<<<< HEAD
-//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:[[LSUserManager userInfoForUserID:[LSUserManager loggedInUserID]] objectForKey:@"fullName"]]];
-//=======
-//    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:[[[LSUserManager new] loggedInUser].identifier intValue]]];
-//>>>>>>> blake-MSG-187-code-review-feedback
-//}
-//
-//- (NSString *)messageCellLabelForText:(NSString *)text andUser:(NSString *)fullName
-//{
-//    return [NSString stringWithFormat:@"%@ sent by %@", text, fullName];
-//}
-//
-//- (void)selectPhotoFromCameraRoll
-//{
-//    [tester tapViewWithAccessibilityLabel:@"Cam Button"];
-//    [tester tapViewWithAccessibilityLabel:@"Choose Existing"];
-//    [tester tapViewWithAccessibilityLabel:@"Saved Photos"];
-//    [tester tapViewWithAccessibilityLabel:@"Photo, Portrait, 3:29 PM"];
-//    [tester waitForViewWithAccessibilityLabel:@"composeView"];
-//}
-//
-//-(void)sendPhoto
-//{
+- (void)logout
+{
+    [tester tapViewWithAccessibilityLabel:@"logout"];
+}
+
+#pragma mark
+#pragma mark Start Conversation
+
+- (void)startConversationWithUsers:(NSArray *)users
+{
+    [tester tapViewWithAccessibilityLabel:@"New"];
+    [tester waitForViewWithAccessibilityLabel:@"Contact List"];
+    for (LSUser *user in users) {
+        [tester waitForViewWithAccessibilityLabel:user.fullName];
+        [tester tapViewWithAccessibilityLabel:user.fullName];
+    }
+    [tester tapViewWithAccessibilityLabel:@"Done"];
+    [tester waitForViewWithAccessibilityLabel:@"Conversation"];
+    [tester waitForTimeInterval:5];
+}
+
+- (NSString *)conversationCellLabelForParticipants:(NSArray *)participants
+{
+    LSConversationCellPresenter *presenter = [LSConversationCellPresenter new];
+    presenter.persistenceManager = self.persistenceManager;
+    presenter.participants = participantNames;
+    return [presenter conversationLabel];
+}
+
+#pragma mark
+#pragma mark Send Message
+
+- (void)sendMessageWithText:(NSString *)text
+{
+    [tester tapViewWithAccessibilityLabel:@"Compose TextView"];
+    [tester waitForViewWithAccessibilityLabel:@"space"]; //Space represents that the keyboard is show, hence the focus is on the text entry box
+    [tester clearTextFromAndThenEnterText:text intoViewWithAccessibilityLabel:@"Compose TextView"];
+    [tester tapViewWithAccessibilityLabel:@"Send Button"];
+    
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:[[[LSUserManager new] loggedInUser].identifier intValue]]];
+
+}
+
+- (NSString *)messageCellLabelForText:(NSString *)text andUser:(NSString *)fullName
+{
+    return [NSString stringWithFormat:@"%@ sent by %@", text, fullName];
+}
+
+- (void)selectPhotoFromCameraRoll
+{
+    [tester tapViewWithAccessibilityLabel:@"Cam Button"];
+    [tester tapViewWithAccessibilityLabel:@"Choose Existing"];
+    [tester tapViewWithAccessibilityLabel:@"Saved Photos"];
+    [tester tapViewWithAccessibilityLabel:@"Photo, Portrait, 3:29 PM"];
+    [tester waitForViewWithAccessibilityLabel:@"composeView"];
+}
+
+-(void)sendPhoto
+{
 //    [tester tapViewWithAccessibilityLabel:@"Send Button"];
 //    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[[[LSUserManager new] loggedInUser].identifier intValue]]];
 //    [tester waitForTimeInterval:10];
-//    
-//}
-//
-//- (NSString *)imageCelLabelForUserID:(NSString *)fullName
-//{
-//    return [NSString stringWithFormat:@"Photo sent by %@", fullName];
-//}
-//
-//#pragma mark
-//#pragma mark Logout Methods
-//
-//- (void)logoutFromConversationListViewController
-//{
-//    [tester tapViewWithAccessibilityLabel:@"logout"];
-//    [tester waitForViewWithAccessibilityLabel:@"Home"];
-//}
-//
-//- (void)logoutFromContactViewController
-//{
-//    [tester waitForTimeInterval:5];
-//    [tester tapViewWithAccessibilityLabel:@"Back"];
-//    [tester tapViewWithAccessibilityLabel:@"logout"];
-//    [tester waitForViewWithAccessibilityLabel:@"Home"];
-//}
-//
-//- (void)logoutFromConversationViewController
-//{
-//    [tester waitForTimeInterval:5];
-//    [tester tapViewWithAccessibilityLabel:@"Back"];
-//    [tester tapViewWithAccessibilityLabel:@"logout"];
-//    [tester waitForViewWithAccessibilityLabel:@"Home"];
-//}
+    
+}
+
+- (NSString *)imageCelLabelForUserID:(NSString *)fullName
+{
+    return [NSString stringWithFormat:@"Photo sent by %@", fullName];
+}
+
+#pragma mark
+#pragma mark Logout Methods
+
+- (void)deauthenticate
+{
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
+    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:0];
+}
+
+- (LSUser *)testUserWithNumber:(NSUInteger)number
+{
+    LSUser *user = [[LSUser alloc] init];
+    switch (number) {
+        case 0:
+            [user setFirstName:LSTestUser0FirstName];
+            [user setLastName:LSTestUser0LastName];
+            [user setEmail:LSTestUser0Email];
+            [user setPassword:LSTestUser0Password];
+            [user setPasswordConfirmation:LSTestUser0Confirmation];
+            break;
+        case 1:
+            [user setFirstName:LSTestUser1FirstName];
+            [user setLastName:LSTestUser1LastName];
+            [user setEmail:LSTestUser1Email];
+            [user setPassword:LSTestUser1Password];
+            [user setPasswordConfirmation:LSTestUser1Confirmation];
+            break;
+        case 2:
+            [user setFirstName:LSTestUser2FirstName];
+            [user setLastName:LSTestUser2LastName];
+            [user setEmail:LSTestUser2Email];
+            [user setPassword:LSTestUser2Password];;
+            [user setPasswordConfirmation:LSTestUser2Confirmation];
+            break;
+        case 3:
+            [user setFirstName:LSTestUser3FirstName];
+            [user setLastName:LSTestUser3LastName];
+            [user setEmail:LSTestUser3Email];
+            [user setPassword:LSTestUser3Password];
+            [user setPasswordConfirmation:LSTestUser3Confirmation];
+            break;
+        default:
+            break;
+    }
+    return user;
+}
 
 @end

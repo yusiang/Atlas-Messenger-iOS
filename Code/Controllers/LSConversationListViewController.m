@@ -9,6 +9,7 @@
 #import "LSConversationListViewController.h"
 #import "LSConversationCell.h"
 #import "LSContactsSelectionViewController.h"
+#import "LSConversationCellPresenter.h"
 #import "LSUIConstants.h"
 
 @interface LSConversationListViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSContactsSelectionViewControllerDelegate>
@@ -107,10 +108,11 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"The conversation is %@", [self.conversations objectAtIndex:indexPath.row]);
-    LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
-    NSOrderedSet *messages = [self.layerClient messagesForConversation:conversation];
-    [cell updateWithConversation:conversation messages:messages];
+    LSConversationCellPresenter *presenter = [LSConversationCellPresenter new];
+    presenter.conversation = [self.conversations objectAtIndex:indexPath.row];
+    presenter.mesages = [self.layerClient messagesForConversation:[self.conversations objectAtIndex:indexPath.row]];
+    presenter.persistenceManager = self.persistenceManager;
+    [cell updateWithPresenter:presenter];
 }
 
 #pragma mark

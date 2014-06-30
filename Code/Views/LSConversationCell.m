@@ -17,6 +17,7 @@
 @property (nonatomic) UITextView *lastMessageText;
 @property (nonatomic) UILabel *date;
 @property (nonatomic) UIView *seperatorLine;
+@property (nonatomic) LSConversationCellPresenter *presenter;
 
 @end
 
@@ -38,14 +39,13 @@
     return self;
 }
 
-- (void)updateWithConversation:(LYRConversation *)conversation messages:(NSOrderedSet *)messages
+- (void)updateWithPresenter:(LSConversationCellPresenter *)presenter
 {
-    LYRMessage *message = [messages lastObject];
-    LYRMessagePart *part = [message.parts firstObject];
+    self.presenter = presenter;
     [self addAvatarImage];
-    [self addSenderLabelWithParticipants:[conversation.participants allObjects]];
-    [self addLastMessageTextWithPart:part];
-    [self addDateLabel:message.sentAt];
+    [self addConversationLabel];
+    [self addLastMessageText];
+    [self addDateLabel];
     [self addSeperatorLine];
 }
 
@@ -58,7 +58,7 @@
     [self addSubview:self.avatarImageView];
 }
 
-- (void)addSenderLabelWithParticipants:(NSArray *)participants
+- (void)addConversationLabel
 {
     if(!self.senderName) {
         self.senderName = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 240, 20)];
@@ -66,30 +66,16 @@
     }
     [self.senderName setFont:[UIFont fontWithName:kLayerFontHeavy size:16]];
     [self.senderName setTextColor:[UIColor darkGrayColor]];
-    
-    // SBW: The view should not be querying the model directly.
-//    NSMutableArray *fullNames = [[NSMutableArray alloc] init];
-//    LSUserManager *manager = [[LSUserManager alloc] init];
-//    for (NSString *userID in participants) {
-//        if (![userID isEqualToString:[manager loggedInUser].identifier]) {
-//            NSString *participantName = [manager userWithIdentifier:userID].fullName ?: @"Unknown User";
-//            [fullNames addObject:participantName];
-//        }
-//    }
-//    
-//    NSArray *sortedFullNames = [fullNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-//    NSString *senderLabel = @"";
-//    
-//    for (NSString *fullName in sortedFullNames) {
-//        senderLabel = [senderLabel stringByAppendingString:[NSString stringWithFormat:@"%@, ", fullName]];
-//    }
-//    self.senderName.text = senderLabel;
-//    self.senderName.userInteractionEnabled = FALSE;
-//    self.accessibilityLabel = senderLabel;
+    self.senderName.text = [self.presenter conversationLabel];
+    self.accessibilityLabel = [self.presenter conversationLabel];
+    self.senderName.userInteractionEnabled = FALSE;
 }
 
-- (void)addLastMessageTextWithPart:(LYRMessagePart *)part
+- (void)addLastMessageText
 {
+    LYRMessage *message = [self.presenter.mesages lastObject];
+    LYRMessagePart *part = [message.parts firstObject];
+    
     if (!self.lastMessageText) {
         self.lastMessageText = [[UITextView alloc] initWithFrame:CGRectMake(70, 26, 240, 50)];
         [self addSubview:self.lastMessageText];
@@ -105,8 +91,11 @@
     self.lastMessageText.userInteractionEnabled = FALSE;
 }
 
-- (void)addDateLabel:(NSDate *)date
+- (void)addDateLabel
 {
+    LYRMessage *message = [self.presenter.mesages lastObject];
+    NSDate *date = [message sentAt];
+    
     if(!self.date) {
         self.date = [[UILabel alloc] initWithFrame:CGRectMake(270, 8, 40, 20)];
         [self addSubview:self.date];

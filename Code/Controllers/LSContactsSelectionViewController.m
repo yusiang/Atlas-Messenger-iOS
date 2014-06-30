@@ -46,17 +46,15 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
                                                                          style:UIBarButtonItemStylePlain
                                                                         target:self
                                                                         action:@selector(cancelButtonTapped:)];
-    cancelButtonItem.accessibilityLabel = @"cancel";
+    cancelButtonItem.accessibilityLabel = @"Cancel";
     self.navigationItem.leftBarButtonItem = cancelButtonItem;
     
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                          style:UIBarButtonItemStyleDone
                                                                         target:self
                                                                         action:@selector(doneButtonTapped:)];
-    doneButtonItem.accessibilityLabel = @"done";
+    doneButtonItem.accessibilityLabel = @"Done";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
-    
-    self.tableView.accessibilityLabel = @"Contact List";
 }
 
 #pragma mark - Actions
