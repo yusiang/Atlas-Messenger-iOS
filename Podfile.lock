@@ -5,6 +5,7 @@ PODS:
   - CocoaLumberjack/Extensions (1.8.1):
     - CocoaLumberjack/Core
   - CocoaSPDY-Layer (20140624141130730)
+  - Expecta (0.3.0)
   - FMDB (2.3):
     - FMDB/standard
   - FMDB/common (2.3)
@@ -42,6 +43,7 @@ PODS:
   - TransitionKit (2.1.0)
 
 DEPENDENCIES:
+  - Expecta (~> 0.3.0)
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
   - layer-thrift (from `git@github.com:layerhq/lyr-thrift-common.git`)
@@ -57,6 +59,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CocoaLumberjack: 9d198d6e19909b3b113a38c5f06f7bb8eedd0427
   CocoaSPDY-Layer: cb63f60ee60478cd2e063593f2358b6529c590e5
+  Expecta: ce8a51b9fad15a2cd573b291cb2909aaed865350
   FMDB: 31ec26773c7f7b7890a6038235a1f2bbd933a7cb
   FMDBMigrationManager: 09b4f463839cad531272d3b6b60ab2e081aaf26d
   KIF: 7fcc68436ffda73749885a68b998fdac7bf6f9f4
