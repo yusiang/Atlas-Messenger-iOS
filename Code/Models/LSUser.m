@@ -78,4 +78,22 @@
     return YES;
 }
 
+- (NSUInteger)hash
+{
+    return [self.userID hash];
+}
+
+- (BOOL)isEqual:(id)object
+{
+    if (!object) return NO;
+    if (![object isKindOfClass:[LSUser class]]) return NO;
+    return [self.userID isEqualToString:[(LSUser *)object userID]];
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@: %p userID=%@, firstName=%@, lastName=%@, email=%@, password=%@>",
+            [self class], self, self.userID, self.firstName, self.lastName, self.email, self.password];
+}
+
 @end
