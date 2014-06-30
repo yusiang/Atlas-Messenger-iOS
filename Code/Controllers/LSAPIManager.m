@@ -231,4 +231,38 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     }] resume];
 }
 
+- (void)deleteAllContactsWithCompletion:(void(^)(BOOL completion, NSError *error))completion
+{
+    NSURL *URL = [NSURL URLWithString:@"users/all" relativeToURL:self.baseURL];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"DELETE";
+    [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (!response && error) {
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(nil, error);
+                });
+            }
+            return;
+        }
+        
+        NSError *serializationError = nil;
+        BOOL success = [LSHTTPResponseSerializer responseObject:&response withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
+        if (!success) {
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(nil, serializationError);
+                });
+            }
+            return;
+        }
+        
+        NSLog(@"Users succesfully deleted");
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(success, nil);
+            });
+        }
+    }] resume];
+}
 @end

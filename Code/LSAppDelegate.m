@@ -81,7 +81,7 @@ static NSURL *LSLayerBaseURL(void)
     
     self.persistenceManager = LSIsRunningTests() ? [LSPersistenceManager persistenceManagerWithInMemoryStore] : [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
     self.APIManager = [LSAPIManager managerWithBaseURL:[NSURL URLWithString:@"http://10.66.0.35:8080/"] layerClient:layerClient];
-    
+
     LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
     authenticationViewController.layerClient = self.layerClient;
     authenticationViewController.APIManager = self.APIManager;

@@ -14,6 +14,7 @@
 		0A0C244719477D8F00401B74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242619477D8F00401B74 /* Foundation.framework */; };
 		0A0C244819477D8F00401B74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242A19477D8F00401B74 /* UIKit.framework */; };
 		0A2324F51960DB8C00C1C98D /* LSConversationCellPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A2324F41960DB8C00C1C98D /* LSConversationCellPresenter.m */; };
+		0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
 		0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C71947C86B0083732B /* CoreLocation.framework */; };
@@ -52,7 +53,7 @@
 		259A57751950EB83000E27B0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A57701950EB83000E27B0 /* Images.xcassets */; };
 		259A57761950EB83000E27B0 /* kevin.png in Resources */ = {isa = PBXBuildFile; fileRef = 259A57711950EB83000E27B0 /* kevin.png */; };
 		259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */; };
-		259A57801950EB92000E27B0 /* LSLoginTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577D1950EB92000E27B0 /* LSLoginTests.m */; };
+		259A57801950EB92000E27B0 /* LSUITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577D1950EB92000E27B0 /* LSUITest.m */; };
 		9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +76,7 @@
 		0A0C244519477D8F00401B74 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0A2324F31960DB8C00C1C98D /* LSConversationCellPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationCellPresenter.h; sourceTree = "<group>"; };
 		0A2324F41960DB8C00C1C98D /* LSConversationCellPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationCellPresenter.m; sourceTree = "<group>"; };
+		0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAPIManagerTest.m; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0AADB5C51947C8600083732B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		0AADB5C71947C86B0083732B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -137,8 +139,8 @@
 		259A57791950EB92000E27B0 /* KIFUITestActor+LSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KIFUITestActor+LSAdditions.h"; sourceTree = "<group>"; };
 		259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KIFUITestActor+LSAdditions.m"; sourceTree = "<group>"; };
 		259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LayerSampleTests-Info.plist"; sourceTree = "<group>"; };
-		259A577C1950EB92000E27B0 /* LSLoginTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLoginTests.h; sourceTree = "<group>"; };
-		259A577D1950EB92000E27B0 /* LSLoginTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLoginTests.m; sourceTree = "<group>"; };
+		259A577C1950EB92000E27B0 /* LSUITest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUITest.h; sourceTree = "<group>"; };
+		259A577D1950EB92000E27B0 /* LSUITest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUITest.m; sourceTree = "<group>"; };
 		53480A235A364E9AAAB2DC78 /* Pods-LayerSampleTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSampleTests.xcconfig"; path = "Pods/Pods-LayerSampleTests.xcconfig"; sourceTree = "<group>"; };
 		931E36A3415C497CA3681E7F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A939C393B9254AF5B6B4FB43 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -319,8 +321,9 @@
 				259A57791950EB92000E27B0 /* KIFUITestActor+LSAdditions.h */,
 				259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */,
 				259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */,
-				259A577C1950EB92000E27B0 /* LSLoginTests.h */,
-				259A577D1950EB92000E27B0 /* LSLoginTests.m */,
+				259A577C1950EB92000E27B0 /* LSUITest.h */,
+				259A577D1950EB92000E27B0 /* LSUITest.m */,
+				0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */,
 				2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */,
 			);
 			path = Tests;
@@ -385,9 +388,6 @@
 								enabled = 1;
 							};
 						};
-					};
-					0A0C244319477D8F00401B74 = {
-						TestTargetID = 0A0C242219477D8F00401B74;
 					};
 				};
 			};
@@ -530,7 +530,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */,
-				259A57801950EB92000E27B0 /* LSLoginTests.m in Sources */,
+				0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */,
+				259A57801950EB92000E27B0 /* LSUITest.m in Sources */,
 				259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -688,7 +689,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 53480A235A364E9AAAB2DC78 /* Pods-LayerSampleTests.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LayerSample.app/LayerSample";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -702,7 +702,6 @@
 				);
 				INFOPLIST_FILE = "Tests/LayerSampleTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -711,7 +710,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 53480A235A364E9AAAB2DC78 /* Pods-LayerSampleTests.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LayerSample.app/LayerSample";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -721,7 +719,6 @@
 				GCC_PREFIX_HEADER = "Code/LayerSample-Prefix.pch";
 				INFOPLIST_FILE = "Tests/LayerSampleTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;

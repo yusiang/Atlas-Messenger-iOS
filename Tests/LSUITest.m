@@ -6,7 +6,9 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSLoginTests.h"
+#import "KIFTestCase.h"
+#import <KIF/KIF.h>
+#import "KIFSystemTestActor+ViewControllerActions.h"
 #import "KIFUITestActor+LSAdditions.h"
 #import "LSRegistrationViewController.h"
 #import "LSLoginViewController.h"
@@ -49,7 +51,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 
 @end
 
-@interface LSLoginTests ()
+@interface LSUITest : KIFTestCase
 
 @property (nonatomic) LSPersistenceManager *persistenceManager;
 @property (nonatomic) LYRClient *layerClient;
@@ -57,7 +59,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 
 @end
 
-@implementation LSLoginTests
+@implementation LSUITest
 
 /**
  If you are going to use user defaults as a data store, you'd be better off by putting a `reset` method on the `LSUserManager` interface that only deletes specific
@@ -92,29 +94,28 @@ static NSString *const LSTestUser3Confirmation = @"password3";
     [tester waitForTimeInterval:2];
     
     self.APIManager = [LSAPIManager managerWithBaseURL:[NSURL URLWithString:@"http://10.66.0.35:8080/"] layerClient:self.layerClient];
-    
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
-    [self.APIManager registerUser:[self testUserWithNumber:0] completion:^(LSUser *user, NSError *error) {
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
 }
 
 - (void)afterEach
 {
-    [self deauthenticate];
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
+    [self.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
+        [self deauthenticate];
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:0];
 }
 
 //1. Log in with incorrect credentials and verify that an error prompt pops up.
 - (void)testToVerifyIncorrectLoginCredentialsAlert
 {
     [tester tapViewWithAccessibilityLabel:@"Login Button"];
-    [tester enterText:@"fakeEmail@layer.com" intoViewWithAccessibilityLabel:@"Username"];
+    [tester enterText:@"fakeEmail@layer.com" intoViewWithAccessibilityLabel:@"Email"];
     [tester enterText:@"fakePassword" intoViewWithAccessibilityLabel:@"Password"];
     [tester tapViewWithAccessibilityLabel:@"Login Button"];
-    [tester waitForViewWithAccessibilityLabel:@"Invalid Credentials"];
+    [tester waitForViewWithAccessibilityLabel:@"Login Failed"];
     [tester tapViewWithAccessibilityLabel:@"OK"];
-    [tester tapViewWithAccessibilityLabel:@"Home"];
+    [tester tapViewWithAccessibilityLabel:@"Home Screen"];
 }
 
 //2. Tap register, enter valid info, and verify success.
@@ -126,6 +127,8 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 //3. Successfully log in with good credentials.
 - (void)testToVerifySuccesfulLogin
 {
+    [self systemRegisterUser:[self testUserWithNumber:0]];
+    [self deauthenticate];
     [self loginAsTestUser:[self testUserWithNumber:0]];
 }
 
@@ -579,7 +582,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 - (void)registerTestUser:(LSUser *)testUser
 {
     [tester tapViewWithAccessibilityLabel:@"Register Button"];
-    [tester enterText:testUser.firstName intoViewWithAccessibilityLabel:@"Fisrt Name"];
+    [tester enterText:testUser.firstName intoViewWithAccessibilityLabel:@"First Name"];
     [tester enterText:testUser.lastName intoViewWithAccessibilityLabel:@"Last Name"];
     [tester enterText:testUser.email intoViewWithAccessibilityLabel:@"Email"];
     [tester enterText:testUser.password intoViewWithAccessibilityLabel:@"Password"];
