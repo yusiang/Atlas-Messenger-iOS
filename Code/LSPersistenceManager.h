@@ -12,6 +12,8 @@
 
 @interface LSPersistenceManager : NSObject
 
+@property (nonatomic, readonly) NSSet *persistedUsers;
+
 + (instancetype)persistenceManagerWithInMemoryStore;
 + (instancetype)persistenceManagerWithStoreAtPath:(NSString *)path;
 

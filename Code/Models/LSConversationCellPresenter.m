@@ -24,10 +24,7 @@
 - (NSString *)conversationLabel
 {
     if (!self.participantNames) {
-        self.participantNames = [NSMutableArray new];
-        for (NSString *userID in [self.conversation.participants allObjects]) {
-            [self.participantNames addObject:[self.persistenceManager userWithIdentifier:userID].fullName];
-        }
+        self.participantNames = [self fullNamesForParticiapnts:self.conversation.participants];
     }
     
     NSArray *sortedFullNames = [self.participantNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
@@ -45,6 +42,18 @@
     return nil;
 }
 
-
+- (NSMutableArray *)fullNamesForParticiapnts:(NSSet *)participants
+{
+    NSMutableArray *fullNames = [NSMutableArray new];
+    NSArray *persistedUsers = [self.persistenceManager.persistedUsers allObjects];
+    for (NSString *userID in participants) {
+        for (LSUser *persistedUser in persistedUsers) {
+            if ([userID isEqualToString:persistedUser.userID]) {
+                [fullNames addObject:persistedUser.fullName];
+            }
+        }
+    }
+    return fullNames;
+}
 
 @end

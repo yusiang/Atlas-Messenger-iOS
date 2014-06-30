@@ -34,7 +34,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     [super viewDidLoad];
     
     self.title = @"Select Contacts";
-    self.accessibilityLabel = @"Contact List";
+    self.accessibilityLabel = @"Contacts";
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
     
     NSError *error = nil;
@@ -55,6 +55,8 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
                                                                         action:@selector(doneButtonTapped:)];
     doneButtonItem.accessibilityLabel = @"Done";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
+    
+    self.tableView.accessibilityLabel = @"Contact List";
 }
 
 #pragma mark - Actions

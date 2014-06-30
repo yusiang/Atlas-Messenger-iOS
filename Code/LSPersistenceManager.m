@@ -10,6 +10,12 @@
 
 #define LSMustBeImplementedBySubclass() @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Must be implemented by concrete subclass." userInfo:nil]
 
+@interface LSPersistenceManager ()
+
+@property (nonatomic, readwrite, strong) NSSet *persistedUsers;
+
+@end
+
 @interface LSInMemoryPersistenceManager : LSPersistenceManager
 
 @property (nonatomic) NSMutableSet *users;
@@ -144,6 +150,7 @@
 - (BOOL)persistUsers:(NSSet *)users error:(NSError **)error
 {
     NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
+    self.persistedUsers = users;
     return [NSKeyedArchiver archiveRootObject:users toFile:path];
 }
 
