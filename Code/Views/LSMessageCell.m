@@ -7,6 +7,7 @@
 //
 
 #import "LSMessageCell.h"
+#import "LSUIConstants.h"
 
 @interface LSMessageCell ()
 
@@ -15,15 +16,11 @@
 @property (nonatomic, strong) UILabel *senderLabel;
 @property (nonatomic, strong) LSAvatarImageView *avatarImageView;
 @property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic) BOOL wasSentByLoggedInUser;
+@property (nonatomic, strong) LSMessageCellPresenter *presenter;
 
 @end
 
 @implementation LSMessageCell
-
-// SBW: Be gone, #define's!
-#define kLayerColor     [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0]
-#define kLayerFont      @"Avenir-Medium"
 
 // SBW: All of the lazy loading in here needs to removed. Just set the view up.
 
@@ -38,11 +35,11 @@
 
 - (void)updateWithPresenter:(LSMessageCellPresenter *)presenter
 {
-    [self addBubbleViewForMessage:presenter.message];
-    [self addAvatarImageForMessage:presenter.message];
-    [self addSenderLabelForIDForMessage:presenter.message];
-    
-    [self addMessageContentForMessagePart:[presenter.message.parts firstObject]];
+    self.presenter = presenter;
+    [self addBubbleView];
+    [self addAvatarImage];
+    [self addSenderLabel];
+    [self addMessageContent];
     
     if ([presenter messageWasSentByAuthenticatedUser]) {
         [self configureCellForLoggedInUser];
@@ -54,7 +51,7 @@
 - (void)configureCellForLoggedInUser
 {
     self.bubbleView.frame = CGRectMake(74, 6, self.frame.size.width - 116, self.frame.size.height - 12);
-    self.bubbleView.backgroundColor = kLayerColor;
+    self.bubbleView.backgroundColor = [LSUIConstants layerBlueColor];
     
     self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
     
@@ -75,7 +72,7 @@
     self.avatarImageView.frame = CGRectMake(6, self.frame.size.height - 52, 32, 32);
 }
 
-- (void)addBubbleViewForMessage:(LYRMessage *)message
+- (void)addBubbleView
 {
     if (!self.bubbleView) {
         self.bubbleView= [[UIView alloc] init];
@@ -84,7 +81,7 @@
     [self addSubview:self.bubbleView];
 }
 
-- (void)addAvatarImageForMessage:(LYRMessage *)message
+- (void)addAvatarImage
 {
     if (!self.avatarImageView) {
         self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 32, 32)];
@@ -93,7 +90,7 @@
     [self addSubview:self.avatarImageView];
 }
 
-- (void)addSenderLabelForIDForMessage:(LYRMessage *)message
+- (void)addSenderLabel
 {
     if (!self.senderLabel) {
         self.senderLabel = [[UILabel alloc] init];
@@ -102,8 +99,9 @@
     [self addSubview:self.senderLabel];
 }
 
-- (void) addMessageContentForMessagePart:(LYRMessagePart *)part
+- (void) addMessageContent
 {
+    LYRMessagePart *part = [self.presenter.message.parts objectAtIndex:0];
     if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
         [self addTextForMessagePart:part];
     } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
@@ -116,7 +114,7 @@
     if (!self.messageText) {
         self.messageText = [[UITextView alloc] init];
         self.messageText.textColor = [UIColor whiteColor];
-        self.messageText.font = [UIFont fontWithName:kLayerFont size:16];
+        self.messageText.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:16];
         self.messageText.editable = FALSE;
     }
     NSString *messageText = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];

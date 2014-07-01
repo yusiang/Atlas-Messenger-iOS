@@ -68,21 +68,17 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     if (self.conversations) self.conversations = nil;
     NSOrderedSet *conversations = [self.layerClient conversationsForIdentifiers:nil];
     self.conversations = conversations;
-    
-    // SBW: You don't want a method called `fetchLayerConversations` that also does UI changes. I'd probably use KVO on `self.conversations` to drive the reload
-    //Doing this for now in place of notifications to changes in the DB
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self fetchLayerConversations];
-        [self.collectionView reloadData];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"conversationsUpdated" object:nil userInfo:nil];
+        [self fetchLayerConversations];
     });
 
 }
 
 - (void)conversationsUpdated:(NSNotification *)notification
 {
-    
+    [self.collectionView reloadData];
 }
 
 # pragma mark
@@ -108,10 +104,8 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    LSConversationCellPresenter *presenter = [LSConversationCellPresenter new];
-    presenter.conversation = [self.conversations objectAtIndex:indexPath.row];
-    presenter.mesages = [self.layerClient messagesForConversation:[self.conversations objectAtIndex:indexPath.row]];
-    presenter.persistenceManager = self.persistenceManager;
+    LSConversationCellPresenter *presenter = [LSConversationCellPresenter presenterWithConversation:[self.conversations objectAtIndex:indexPath.row]
+                                                                                 persistanceManager:self.persistenceManager];
     [cell updateWithPresenter:presenter];
 }
 

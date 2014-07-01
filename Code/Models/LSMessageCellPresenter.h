@@ -10,13 +10,25 @@
 #import "LSPersistenceManager.h"
 #import "LYRMessage.h"
 
+/**
+ @abstract The `LSMessageCellPresenter` class models a message object and is used to present message information to the user interface
+ */
+
+
 @interface LSMessageCellPresenter : NSObject
 
-@property (nonatomic, strong) LSPersistenceManager *persistenceManager;
 @property (nonatomic, strong) LYRMessage *message;
+
+///-------------------------------
+/// @name Initializing a Presenter
+///-------------------------------
+
++ (instancetype)presenterWithMessage:(LYRMessage *)message persistanceManager:(LSPersistenceManager *)persistenceManager;
 
 - (BOOL)messageWasSentByAuthenticatedUser;
 
-- (NSString *)senderLabel;
+- (NSString *)labelForMessageSender;
+
+- (UIImage *)imageForMessageSender;
 
 @end

@@ -13,21 +13,24 @@
 #import "LSUser.h"
 
 /**
- @abstract The `LSConversationCellPResent` class models a conversation object and is used to present conversation information to the user.
+ @abstract The `LSConversationCellPresenter` class models a conversation object and is used to present conversation information to the user interface
  */
 
 @interface LSConversationCellPresenter : NSObject
 
-@property (nonatomic, strong) LYRConversation *conversation;
-@property (nonatomic, strong) LSPersistenceManager *persistenceManager;
-@property (nonatomic, strong) NSOrderedSet *mesages;
-@property (nonatomic, strong) NSArray *participants;
-@property (nonatomic, strong) NSMutableArray *participantNames;
+///-------------------------------
+/// @name Initializing a Presenter
+///-------------------------------
+
++ (instancetype)presenterWithConversation:(LYRConversation *)conversation persistanceManager:(LSPersistenceManager *)persistenceManager;
 
 - (NSString *)conversationLabel;
 
-- (UIImage *)imageForAuthenticatedUser;
+- (UIImage *)conversationImage;
 
-- (NSString *)conversationLabelForNames:(NSArray *)names;
+//KC: Method made public for testing purposes
+- (NSString *)conversationLabelForParticipantNames:(NSArray *)participantNames;
+
+@property (nonatomic, strong) LYRConversation *conversation;
 
 @end

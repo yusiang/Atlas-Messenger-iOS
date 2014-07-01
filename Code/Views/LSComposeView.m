@@ -12,8 +12,12 @@
 
 @interface LSComposeView ()
 
-@property (nonatomic) CGRect defaultRect;
+@property (nonatomic, strong) UIView *backingTextView;
+@property (nonatomic, strong) UITextView *textView;
+@property (nonatomic, strong) LSButton *cameraButton;
+@property (nonatomic, strong) LSButton *sendButton;
 @property (nonatomic, strong) NSMutableArray *images;
+@property (nonatomic) CGRect defaultRect;
 
 @end
 
@@ -105,13 +109,13 @@
     [self.textView resignFirstResponder];
     
     if (![self.textView.text isEqualToString:@""]) {
-        [self.delegate sendMessageWithText:self.textView.text];
+        [self.delegate composeView:self sendMessageWithText:self.textView.text];
         [self.textView setText:@""];
     }
     
     if (self.images.count > 0) {
         for (UIImage *image in self.images) {
-            [self.delegate sendMessageWithImage:image];
+            [self.delegate composeView:self sendMessageWithImage:image];
         }
     }
     

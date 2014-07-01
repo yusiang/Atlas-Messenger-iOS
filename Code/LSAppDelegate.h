@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "LSAuthenticationViewController.h"
-#import "LSAppController.h"
+#import "LSApplicationController.h"
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic) LSAppController *controller;
+@property (nonatomic) LSApplicationController *controller;
 
 @end

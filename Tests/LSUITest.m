@@ -21,7 +21,7 @@
 #import "LSPersistenceManager.h"
 #import "LSConversationCellPresenter.h"
 #import "LSContactsSelectionViewController.h"
-#import "LSAppController.h"
+#import "LSApplicationController.h"
 #import "LSAuthenticationViewController.h"
 #import "LSAppDelegate.h"
 
@@ -57,7 +57,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 
 @interface LSUITest : KIFTestCase
 
-@property (nonatomic) LSAppController *controller;
+@property (nonatomic) LSApplicationController *controller;
 @property (nonatomic) LSPersistenceManager *persistenceManager;
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LSAPIManager *APIManager;

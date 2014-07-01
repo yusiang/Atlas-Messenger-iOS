@@ -28,12 +28,6 @@ static BOOL LSIsRunningTests(void)
     return NSClassFromString(@"XCTestCase") != Nil;
 }
 
-static NSString *LSApplicationDataDirectory(void)
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    return ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-}
-
 static NSURL *LSLayerBaseURL(void)
 {
     if (LSIsRunningTests()) {
@@ -69,30 +63,27 @@ static NSURL *LSLayerBaseURL(void)
     LYRTestCleanKeychain();
     LYRSetLogLevelFromEnvironment();
     
-    self.controller = [[LSAppController alloc] init];
+    self.controller = [LSApplicationController managerWithBaseURL:LSLayerBaseURL()];
     
-    self.layerClient = self.controller.layerClient;
-    self.persistenceManager = self.controller.persistenceManager;
-    self.APIManager = self.controller.APIManager;
-    
-    [self.layerClient startWithCompletion:^(BOOL success, NSError *error) {
+    [self.controller.layerClient startWithCompletion:^(BOOL success, NSError *error) {
         NSLog(@"Started with success: %d, %@", success, error);
     }];
-    
-    LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
-    authenticationViewController.layerClient = self.layerClient;
-    authenticationViewController.APIManager = self.APIManager;
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
-    self.window.rootViewController = self.navigationController;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     
-    LSSession *session = [self.persistenceManager persistedSessionWithError:nil];
+    LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
+    authenticationViewController.layerClient = self.controller.layerClient;
+    authenticationViewController.APIManager = self.controller.APIManager;
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
+    self.window.rootViewController = self.navigationController;
+    
+    LSSession *session = [self.controller.persistenceManager persistedSessionWithError:nil];
     
     if (session) {
         [self.APIManager resumeSession:session completion:^(LSUser *user, NSError *error) {
             if (user) {
+                NSLog(@"Session resumed with user %@", user);
                 [self presentConversationsListViewController];
             } else {
                 NSLog(@"An error occurred while resuming session");
@@ -108,8 +99,8 @@ static NSURL *LSLayerBaseURL(void)
 - (void)userDidAuthenticateNotification:(NSNotification *)notification
 {
     NSError *error = nil;
-    LSSession *session = self.APIManager.authenticatedSession;
-    BOOL success = [self.persistenceManager persistSession:session error:&error];
+    LSSession *session = self.controller.APIManager.authenticatedSession;
+    BOOL success = [self.controller.persistenceManager persistSession:session error:&error];
     if (success) {
         NSLog(@"Persisted authenticated user session: %@", session);
     } else {
@@ -124,7 +115,7 @@ static NSURL *LSLayerBaseURL(void)
 - (void)userDidDeauthenticateNotification:(NSNotification *)notification
 {
     NSError *error = nil;
-    BOOL success = [self.persistenceManager persistSession:nil error:&error];
+    BOOL success = [self.controller.persistenceManager persistSession:nil error:&error];
     if (success) {
         NSLog(@"Cleared persisted user session");
     } else {
@@ -132,17 +123,17 @@ static NSURL *LSLayerBaseURL(void)
         LSAlertWithError(error);
     }
     
-    [self.layerClient deauthenticate];
+    [self.controller.layerClient deauthenticate];
     [self.navigationController dismissViewControllerAnimated:YES completion:NO];
 }
 
 - (void)loadContacts
 {
     NSLog(@"Loading contacts...");
-    [self.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
+    [self.controller.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
         if (contacts) {
             NSError *persistenceError = nil;
-            BOOL success = [self.persistenceManager persistUsers:contacts error:&persistenceError];
+            BOOL success = [self.controller.persistenceManager persistUsers:contacts error:&persistenceError];
             if (success) {
                 NSLog(@"Persisted contacts successfully: %@", contacts);
             } else {
@@ -159,9 +150,9 @@ static NSURL *LSLayerBaseURL(void)
 - (void)presentConversationsListViewController
 {
     LSConversationListViewController *conversationListViewController = [LSConversationListViewController new];
-    conversationListViewController.layerClient = self.layerClient;
-    conversationListViewController.APIManager = self.APIManager;
-    conversationListViewController.persistenceManager = self.persistenceManager;
+    conversationListViewController.layerClient = self.controller.layerClient;
+    conversationListViewController.APIManager = self.controller.APIManager;
+    conversationListViewController.persistenceManager = self.controller.persistenceManager;
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     [self.navigationController presentViewController:conversationController animated:YES completion:nil];
 }

@@ -17,40 +17,40 @@
 
 @interface LSConversationCellPresenter ()
 
+@property (nonatomic, strong) LYRConversation *conversation;
+@property (nonatomic, strong) LSPersistenceManager *persistenceManager;
+
 @end
 
 @implementation LSConversationCellPresenter
 
++ (instancetype)presenterWithConversation:(LYRConversation *)conversation persistanceManager:(LSPersistenceManager *)persistenceManager
+{
+    return [[self alloc] initWithConversation:conversation persistenceManager:persistenceManager];
+}
+            
+- (id)initWithConversation:(LYRConversation *)conversation persistenceManager:(LSPersistenceManager *)persistenceManager
+{
+    self = [super init];
+    if (self) {
+        _conversation = conversation;
+        _persistenceManager = persistenceManager;
+    }
+    return self;
+}
+
 - (NSString *)conversationLabel
 {
-
-    self.participantNames = [self fullNamesForParticiapnts:self.conversation.participants];
-
-    NSArray *sortedFullNames = [self.participantNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    
-    NSString *conversationLabel = [self conversationLabelForNames:sortedFullNames];
-
-    return conversationLabel;
+    NSArray *sortedParticipantNames = [self sortedFullNamesForParticiapnts:self.conversation.participants];
+    return [self conversationLabelForParticipantNames:sortedParticipantNames];
 }
 
-- (NSString *)conversationLabelForNames:(NSArray *)names
-{
-    NSString *conversationLabel;
-    if (names.count > 0) {
-        conversationLabel = [names objectAtIndex:0];
-        for (int i = 1; i < names.count; i++) {
-            conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, [names objectAtIndex:i]];
-        }
-    }
-    return conversationLabel;
-}
-
-- (UIImage *)imageForAuthenticatedUser
+- (UIImage *)conversationImage
 {
     return nil;
 }
 
-- (NSMutableArray *)fullNamesForParticiapnts:(NSSet *)participants
+- (NSArray *)sortedFullNamesForParticiapnts:(NSSet *)participants
 {
     NSError *error;
     LSSession *session = [self.persistenceManager persistedSessionWithError:&error];
@@ -65,8 +65,18 @@
             }
         }
     }
-
-    return fullNames;
+    return [fullNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 }
 
+- (NSString *)conversationLabelForParticipantNames:(NSArray *)participantNames
+{
+    NSString *conversationLabel;
+    if (participantNames.count > 0) {
+        conversationLabel = [participantNames objectAtIndex:0];
+        for (int i = 1; i < participantNames.count; i++) {
+            conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, [participantNames objectAtIndex:i]];
+        }
+    }
+    return conversationLabel;
+}
 @end
