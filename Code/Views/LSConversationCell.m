@@ -73,7 +73,7 @@
 
 - (void)addLastMessageText
 {
-    LYRMessage *message = [self.presenter.mesages lastObject];
+    LYRMessage *message = self.presenter.message;
     LYRMessagePart *part = [message.parts firstObject];
     
     if (!self.lastMessageText) {
@@ -93,7 +93,7 @@
 
 - (void)addDateLabel
 {
-    LYRMessage *message = [self.presenter.mesages lastObject];
+    LYRMessage *message = self.presenter.message;
     NSDate *date = [message sentAt];
     
     if(!self.date) {

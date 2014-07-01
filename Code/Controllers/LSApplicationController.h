@@ -20,7 +20,7 @@
 /// @name Initializing a Controller
 ///--------------------------------
 
-+ (instancetype)managerWithBaseURL:(NSURL *)baseURL;
++ (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient;
 
 /**
  @abstract The following properties service mission critical operations for the Layer Sample App and are managed by the Controller

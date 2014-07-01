@@ -104,7 +104,10 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    LSConversationCellPresenter *presenter = [LSConversationCellPresenter presenterWithConversation:[self.conversations objectAtIndex:indexPath.row]
+    LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
+    LYRMessage *lastMessage = [[self.layerClient messagesForConversation:conversation] lastObject];
+    LSConversationCellPresenter *presenter = [LSConversationCellPresenter presenterWithConversation:conversation
+                                                                                            message:lastMessage
                                                                                  persistanceManager:self.persistenceManager];
     [cell updateWithPresenter:presenter];
 }
@@ -173,13 +176,14 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)contactsSelectionViewController:(LSContactsSelectionViewController *)contactsSelectionViewController didSelectContacts:(NSSet *)contacts
 {
     [self dismissViewControllerAnimated:YES completion:^{
-        LSConversationViewController *controller = [LSConversationViewController new];
-        
-        LYRConversation *conversation = [self.layerClient conversationWithIdentifier:nil participants:[[contacts valueForKey:@"userID"] allObjects]];
-        controller.conversation = conversation;
-        controller.layerClient = self.layerClient;
-        controller.persistanceManager = self.persistenceManager;
-        [self.navigationController pushViewController:controller animated:YES];
+        if (contacts.count > 0) {
+            LSConversationViewController *controller = [LSConversationViewController new];
+            LYRConversation *conversation = [self.layerClient conversationWithIdentifier:nil participants:[[contacts valueForKey:@"userID"] allObjects]];
+            controller.conversation = conversation;
+            controller.layerClient = self.layerClient;
+            controller.persistanceManager = self.persistenceManager;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
     }];
 }
 

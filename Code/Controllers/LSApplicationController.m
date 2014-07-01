@@ -8,23 +8,7 @@
 
 #import "LSApplicationController.h"
 #import "LSConversationListViewController.h"
-
-static NSString *LSApplicationDataDirectory(void)
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    return ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-}
-
-static BOOL LSIsRunningTests(void)
-{
-    return NSClassFromString(@"XCTestCase") != Nil;
-}
-
-@interface LYRClient ()
-
-- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID;
-
-@end
+#import "LSUtilities.h"
 
 @interface LSApplicationController ()
 
@@ -34,23 +18,22 @@ static BOOL LSIsRunningTests(void)
 
 @implementation LSApplicationController
 
-+ (instancetype)managerWithBaseURL:(NSURL *)baseURL
++ (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient
 {
     NSParameterAssert(baseURL);
-    return [[self alloc] initWithBaseURL:baseURL];
+    NSParameterAssert(layerClient);
+    return [[self alloc] initWithBaseURL:baseURL layerClient:layerClient];
 }
 
-- (id)initWithBaseURL:(NSURL *)baseURL
+- (id)initWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient
 {
     self = [super init];
     if (self) {
        
-        NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
-        LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:baseURL appID:appID];
-       
         _layerClient = layerClient;
         _persistenceManager = LSIsRunningTests() ? [LSPersistenceManager persistenceManagerWithInMemoryStore] : [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
         _APIManager = [LSAPIManager managerWithBaseURL:[NSURL URLWithString:@"http://10.66.0.35:8080/"] layerClient:layerClient];
+        
     }
     return self;
 }

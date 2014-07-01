@@ -83,7 +83,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)beforeEach
 {
-    self.controller =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] controller];
+    self.controller =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     
     self.layerClient = self.controller.layerClient;
     self.persistenceManager = self.controller.persistenceManager;
@@ -653,7 +653,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 - (NSString *)conversationCellLabelForParticipants:(NSArray *)participantNames
 {
     LSConversationCellPresenter *presenter = [LSConversationCellPresenter new];
-    NSString *string = [presenter conversationLabelForNames:participantNames];
+    NSString *string = [presenter conversationLabelForParticipantNames:participantNames];
     return string;
 }
 

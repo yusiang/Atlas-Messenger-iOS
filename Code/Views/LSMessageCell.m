@@ -29,6 +29,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
+        self.autoresizesSubviews = TRUE;
     }
     return self;
 }
@@ -57,7 +58,7 @@
     
     self.imageView.frame = CGRectMake(2, 2, self.bubbleView.frame.size.width - 4, self.bubbleView.frame.size.height - 4);
     
-    self.avatarImageView.frame = CGRectMake(self.frame.size.width - 38, self.frame.size.height - 52, 32, 32);
+    self.avatarImageView.frame = CGRectMake(self.frame.size.width - 38, self.frame.size.height -42, 32, 32);
 }
 
 - (void)configureCellForNonLoggedInUser
@@ -69,7 +70,7 @@
     
     self.imageView.frame =  CGRectMake(2, 2, self.bubbleView.frame.size.width - 4, self.bubbleView.frame.size.height - 4);
     
-    self.avatarImageView.frame = CGRectMake(6, self.frame.size.height - 52, 32, 32);
+    self.avatarImageView.frame = CGRectMake(6, self.frame.size.height - 42, 32, 32);
 }
 
 - (void)addBubbleView
@@ -111,11 +112,17 @@
 
 - (void)addTextForMessagePart:(LYRMessagePart *)part
 {
+    if (self.imageView) {
+        [self.imageView removeFromSuperview];
+        self.imageView = nil;
+    }
+    
     if (!self.messageText) {
         self.messageText = [[UITextView alloc] init];
         self.messageText.textColor = [UIColor whiteColor];
         self.messageText.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:16];
-        self.messageText.editable = FALSE;
+        self.messageText.editable = NO;
+        self.messageText.userInteractionEnabled = NO;
     }
     NSString *messageText = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
     self.messageText.text = messageText;
@@ -128,6 +135,11 @@
 
 - (void)addPhotoForMessagePart:(LYRMessagePart *)part
 {
+    if (self.messageText) {
+        [self.messageText removeFromSuperview];
+        self.messageText = nil;
+    }
+    
     if (!self.imageView) {
         self.imageView = [[UIImageView alloc] init];
         self.imageView.layer.cornerRadius = 4;

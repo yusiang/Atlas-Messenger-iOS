@@ -76,7 +76,6 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self.collectionView setContentSize:CGSizeMake(0, 60)];
     if (self.messages.count > 1) {
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }
@@ -84,23 +83,30 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (void)fetchMessages
 {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSOrderedSet *newMessages = [self.layerClient messagesForConversation:self.conversation];
+        NSLog(@"New Message Count %lu", (unsigned long)newMessages.count);
+        if (newMessages.count > self.messages.count) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"messagesUpdated" object:nil userInfo:nil];
+        }
+        [self fetchMessages];
+    });
+    
     NSAssert(self.conversation, @"Conversation should not be `nil`.");
     if (self.messages) self.messages = nil;
     NSOrderedSet *messages = [self.layerClient messagesForConversation:self.conversation];
+    NSLog(@"Message Count %lu", (unsigned long)messages.count);
     self.messages = messages;
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messagesUpdated" object:nil userInfo:nil];
+}
+
+- (void)messagesUpdated:(NSNotification *)notification
+{
+    [self.collectionView reloadData];
+    if (self.messages.count > 0) {
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
                                     atScrollPosition:UICollectionViewScrollPositionBottom
                                             animated:YES];
-        [self fetchMessages];
-    });
-}
-
-- (void)conversationsUpdated:(NSNotification *)notification
-{
-    [self.collectionView reloadData];
+    }
 }
 
 # pragma mark
@@ -150,14 +156,21 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
         
         //192 Is the width of the text view
-        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 192, 0)];
-        textView.text = @"djsjsjdjdjdjdfhdsk";
+        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 180, 0)];
+        textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         [textView sizeToFit];
-        return CGSizeMake(192, textView.frame.size.height);
+        return CGSizeMake(320, textView.frame.size.height + 24);
     } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
-        //TODO size an image
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
+        if (imageView.frame.size.height > imageView.frame.size.width) {
+            return CGSizeMake(320, 300);
+        } else {
+            CGFloat ratio = (184 / imageView.frame.size.width);
+            CGFloat height = imageView.frame.size.height * ratio;
+            return CGSizeMake(320, height + 8);
+        }
     }
-    return CGSizeMake(192, 10);
+    return CGSizeMake(320, 10);
 }
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
@@ -215,6 +228,8 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     BOOL success = [self.layerClient sendMessage:message error:&error];
     if (success) {
         [self fetchMessages];
+        [self.collectionView reloadData];
+        NSLog(@"Messages Succesfully Sent");
     } else {
         NSLog(@"The error is %@", error);
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
@@ -229,13 +244,14 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 - (void)composeView:(LSComposeView *)composeView sendMessageWithImage:(UIImage *)image
 {
     //[self.delegate conversationViewController:self didSendImage:image]
-    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:UIImagePNGRepresentation(image)];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:[self compressedImageWithData:UIImagePNGRepresentation(image)]];
     LYRMessage *message = [self.layerClient messageWithConversation:self.conversation parts:@[ part ]];
     
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];
     if (success) {
         [self fetchMessages];
+        [self.collectionView reloadData];
     } else {
         NSLog(@"The error is %@", error);
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
@@ -245,6 +261,23 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
                                                   otherButtonTitles:nil];
         [alertView show];
     }
+}
+
+- (NSData *)compressedImageWithData:(NSData *)imageData
+{
+    
+    CGFloat compression = 0.9f;
+    CGFloat maxCompression = 0.1f;
+    int maxFileSize = 64*1024;
+    
+    UIImage *image = [UIImage imageWithData:imageData];
+    
+    while ([imageData length] > maxFileSize && compression > maxCompression) {
+        compression -= 0.1;
+        imageData = UIImageJPEGRepresentation(image, compression);
+    }
+    
+    return imageData;
 }
 
 - (void)cameraTapped

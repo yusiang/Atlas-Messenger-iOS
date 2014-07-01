@@ -12,6 +12,6 @@
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic) LSApplicationController *controller;
+@property (nonatomic) LSApplicationController *applicationController;
 
 @end

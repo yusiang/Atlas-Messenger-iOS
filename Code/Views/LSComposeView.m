@@ -62,9 +62,9 @@
 - (void)initializeCameraButton
 {
     if (!self.cameraButton){
-        self.cameraButton = [[LSButton alloc] initWithText:@"Cam"];
-        [self.cameraButton setBackgroundColor:[UIColor lightGrayColor]];
+        self.cameraButton = [[LSButton alloc] initWithText:@""];
     }
+    [self.cameraButton setBackgroundColor:[UIColor lightGrayColor]];
     [self.cameraButton addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.cameraButton];
 }
@@ -73,7 +73,6 @@
 {
     if (!self.sendButton) {
         self.sendButton = [[LSButton alloc] initWithText:@"Send"];
-        [self.cameraButton setBackgroundColor:[LSUIConstants layerBlueColor]];
     }
     
     [self.sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
@@ -85,9 +84,19 @@
     self.frame = self.defaultRect;
     self.textView.frame = CGRectMake(50, self.frame.size.height - 42, 200, 36);
     self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
+    [self addCameraIconToButton:self.cameraButton];
     self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
 }
 
+- (void)addCameraIconToButton:(LSButton *)button
+{
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, button.frame.size.width - 20, button.frame.size.height - 20)];
+    imageView.image = [UIImage imageNamed:@"camera"];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.backgroundColor = [UIColor clearColor];
+    imageView.center = button.center;
+    [self addSubview:imageView];
+}
 
 - (void)configurePhotoViewConstraints
 {
@@ -108,15 +117,13 @@
 {
     [self.textView resignFirstResponder];
     
-    if (![self.textView.text isEqualToString:@""]) {
-        [self.delegate composeView:self sendMessageWithText:self.textView.text];
-        [self.textView setText:@""];
-    }
-    
     if (self.images.count > 0) {
         for (UIImage *image in self.images) {
             [self.delegate composeView:self sendMessageWithImage:image];
         }
+    } else {
+        [self.delegate composeView:self sendMessageWithText:self.textView.text];
+        [self.textView setText:@""];
     }
     
     [UIView animateWithDuration:0.2 animations:^{

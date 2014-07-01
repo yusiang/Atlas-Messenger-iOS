@@ -17,23 +17,23 @@
 
 @interface LSConversationCellPresenter ()
 
-@property (nonatomic, strong) LYRConversation *conversation;
 @property (nonatomic, strong) LSPersistenceManager *persistenceManager;
 
 @end
 
 @implementation LSConversationCellPresenter
 
-+ (instancetype)presenterWithConversation:(LYRConversation *)conversation persistanceManager:(LSPersistenceManager *)persistenceManager
++ (instancetype)presenterWithConversation:(LYRConversation *)conversation message:(LYRMessage *)message persistanceManager:(LSPersistenceManager *)persistenceManager
 {
-    return [[self alloc] initWithConversation:conversation persistenceManager:persistenceManager];
+    return [[self alloc] initWithConversation:conversation message:message persistenceManager:persistenceManager];
 }
             
-- (id)initWithConversation:(LYRConversation *)conversation persistenceManager:(LSPersistenceManager *)persistenceManager
+- (id)initWithConversation:(LYRConversation *)conversation message:(LYRMessage *)message persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     self = [super init];
     if (self) {
         _conversation = conversation;
+        _message = message;
         _persistenceManager = persistenceManager;
     }
     return self;

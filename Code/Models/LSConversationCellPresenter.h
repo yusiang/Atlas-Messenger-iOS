@@ -22,7 +22,7 @@
 /// @name Initializing a Presenter
 ///-------------------------------
 
-+ (instancetype)presenterWithConversation:(LYRConversation *)conversation persistanceManager:(LSPersistenceManager *)persistenceManager;
++ (instancetype)presenterWithConversation:(LYRConversation *)conversation message:(LYRMessage *)message persistanceManager:(LSPersistenceManager *)persistenceManager;
 
 - (NSString *)conversationLabel;
 
@@ -32,5 +32,6 @@
 - (NSString *)conversationLabelForParticipantNames:(NSArray *)participantNames;
 
 @property (nonatomic, strong) LYRConversation *conversation;
+@property (nonatomic, strong) LYRMessage *message;
 
 @end
