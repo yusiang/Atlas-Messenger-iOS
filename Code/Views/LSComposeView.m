@@ -74,7 +74,8 @@
     if (!self.sendButton) {
         self.sendButton = [[LSButton alloc] initWithText:@"Send"];
     }
-    
+    [self.sendButton setFont:[UIFont fontWithName:[LSUIConstants layerMediumFont] size:16]];
+    [self.sendButton setTextColor:[UIColor whiteColor]];
     [self.sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.sendButton];
 }

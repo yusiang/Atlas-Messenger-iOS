@@ -84,7 +84,7 @@
 - (void)sizeAndCenterLabel
 {
     [self.textLabel sizeToFit];
-    self.textLabel.center = self.center;
+    self.textLabel.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
 }
 
 @end

@@ -14,6 +14,7 @@
 #import "LSAPIManager.h"
 #import "LYRTestUtilities.h"
 #import "LSUtilities.h"
+#import "LSUIConstants.h"
 
 static void LSAlertWithError(NSError *error)
 {
@@ -46,8 +47,8 @@ static void LSAlertWithError(NSError *error)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    LYRTestCleanKeychain();
-    LYRSetLogLevelFromEnvironment();
+//    LYRTestCleanKeychain();
+//    LYRSetLogLevelFromEnvironment();
     
     LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:LSLayerAppID()];
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient];
@@ -63,6 +64,7 @@ static void LSAlertWithError(NSError *error)
     authenticationViewController.layerClient = self.applicationController.layerClient;
     authenticationViewController.APIManager = self.applicationController.APIManager;
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
+    self.navigationController.navigationBar.barTintColor = [LSUIConstants veryLightGrayColor];
     self.window.rootViewController = self.navigationController;
     
     LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];

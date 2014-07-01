@@ -33,6 +33,8 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 {
     [super viewDidLoad];
     
+    self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    
     self.title = @"Select Contacts";
     self.accessibilityLabel = @"Contacts";
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
@@ -141,6 +143,18 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
         [self.selectedContacts removeObject:user];
     } else {
         [self.selectedContacts addObject:user];
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return YES;
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
     }
 }
 
