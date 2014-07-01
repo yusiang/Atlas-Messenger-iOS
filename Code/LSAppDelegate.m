@@ -7,6 +7,8 @@
 //
 
 #import <LayerKit/LayerKit.h>
+#import <LayerKit/LYRLog.h>
+#import <LayerKit/LYRTestUtilities.h>
 #import "LSAppDelegate.h"
 #import "LSConversationListViewController.h"
 #import "LSAPIManager.h"
@@ -63,6 +65,9 @@ static NSURL *LSLayerBaseURL(void)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    LYRTestCleanKeychain();
+    LYRSetLogLevelFromEnvironment();
+    
     NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
     LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:appID];
     self.layerClient = layerClient;
