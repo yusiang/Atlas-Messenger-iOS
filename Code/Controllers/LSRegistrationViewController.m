@@ -93,16 +93,19 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
         case 0:
             [cell setText:@"First Name"];
             cell.textField.accessibilityLabel = @"First Name";
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.firstNameField = cell.textField;
             break;
         case 1:
             [cell setText:@"Last Name"];
             cell.textField.accessibilityLabel = @"Last Name";
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.lastNameField = cell.textField;
             break;
         case 2:
             [cell setText:@"Email Address"];
             cell.textField.accessibilityLabel = @"Email";
+            cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
             self.emailField = cell.textField;
             break;
         case 3:
