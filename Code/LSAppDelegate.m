@@ -66,22 +66,14 @@ static NSURL *LSLayerBaseURL(void)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-<<<<<<< HEAD
     LYRTestCleanKeychain();
     LYRSetLogLevelFromEnvironment();
-    
-    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
-    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:appID];
-    self.layerClient = layerClient;
-=======
-//    LYRTestCleanKeychain();
-
+        
     self.controller = [[LSAppController alloc] init];
     
     self.layerClient = self.controller.layerClient;
     self.persistenceManager = self.controller.persistenceManager;
     self.APIManager = self.controller.APIManager;
->>>>>>> Test suite updates
     
     [self.layerClient startWithCompletion:^(BOOL success, NSError *error) {
         NSLog(@"Started with success: %d, %@", success, error);
