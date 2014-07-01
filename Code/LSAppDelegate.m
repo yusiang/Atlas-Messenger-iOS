@@ -68,7 +68,7 @@ static NSURL *LSLayerBaseURL(void)
 {
     LYRTestCleanKeychain();
     LYRSetLogLevelFromEnvironment();
-        
+    
     self.controller = [[LSAppController alloc] init];
     
     self.layerClient = self.controller.layerClient;
