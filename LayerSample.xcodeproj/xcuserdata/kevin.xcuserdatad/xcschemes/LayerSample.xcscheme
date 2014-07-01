@@ -39,6 +39,9 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "LSAPIManagerTest">
+               </Test>
+               <Test
                   Identifier = "LSAPIManagerTest/testExample">
                </Test>
                <Test
@@ -72,9 +75,6 @@
                   Identifier = "LSPersistenceManagerTest/testRaisesOnAttempToInit">
                </Test>
                <Test
-                  Identifier = "LSUITest">
-               </Test>
-               <Test
                   Identifier = "LSUITest/testToVerifyASentPhotoIsRecievedByTheRecipient">
                </Test>
                <Test
@@ -88,9 +88,6 @@
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifyIncompleteInfoRegistrationFunctionality">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyIncorrectLoginCredentialsAlert">
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifyMultipleMessagesSentToMultipleRecipeientsAreReciecvedAndDisplayedForTheRecipients">

@@ -36,21 +36,19 @@
     return self;
 }
 
-- (void)updateWithMessage:(LYRMessage *)message
+- (void)updateWithPresenter:(LSMessageCellPresenter *)presenter
 {
-    [self addBubbleViewForMessage:message];
-    [self addAvatarImageForMessage:message];
-    [self addSenderLabelForIDForMessage:message];
+    [self addBubbleViewForMessage:presenter.message];
+    [self addAvatarImageForMessage:presenter.message];
+    [self addSenderLabelForIDForMessage:presenter.message];
     
-    [self addMessageContentForMessagePart:[message.parts firstObject]];
+    [self addMessageContentForMessagePart:[presenter.message.parts firstObject]];
     
-    // TODO: The controller should be telling the cell what to do here... it shouldn't know about the auth model
-//    LSUserManager *manager = [LSUserManager new];
-//    if ([message.sentByUserID isEqualToString:[manager loggedInUser].identifier]) {
-//        [self configureCellForLoggedInUser];
-//    }else {
-//        [self configureCellForNonLoggedInUser];
-//    }
+    if ([presenter messageWasSentByAuthenticatedUser]) {
+        [self configureCellForLoggedInUser];
+    } else {
+        [self configureCellForNonLoggedInUser];
+    }
 }
 
 - (void)configureCellForLoggedInUser
@@ -100,9 +98,7 @@
     if (!self.senderLabel) {
         self.senderLabel = [[UILabel alloc] init];
     }
-//    LSUserManager *manager = [LSUserManager new];
-//    NSString *senderName = [manager userWithIdentifier:[message sentByUserID]].identifier;
-//    //self.senderLabel.text = senderName;
+    
     [self addSubview:self.senderLabel];
 }
 
@@ -128,8 +124,8 @@
     self.messageText.backgroundColor = [UIColor clearColor];
     [self.bubbleView addSubview:self.messageText];
 
-    NSString *label = [NSString stringWithFormat:@"%@ sent by %@", messageText, self.senderLabel.text];
-    self.accessibilityLabel = label;
+    NSString *label = messageText;
+    self.messageText.accessibilityLabel = label;
 }
 
 - (void)addPhotoForMessagePart:(LYRMessagePart *)part

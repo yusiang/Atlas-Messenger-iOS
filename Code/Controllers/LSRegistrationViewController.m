@@ -50,6 +50,11 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     self.registerButton.frame = CGRectMake(0, 0, 280, 60);
     self.registerButton.center = CGPointMake(self.view.center.x, 360);
     
+    //Done button added for testing purposes
+    UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneTapped)];
+    newConversationButton.accessibilityLabel = @"Done";
+    [self.navigationItem setRightBarButtonItem:newConversationButton];
+    
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSRegistrationCellIdentifier];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 }
@@ -124,6 +129,11 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
         default:
             break;
     }
+}
+
+- (void)doneTapped
+{
+    [self registerTapped];
 }
 
 - (void)registerTapped

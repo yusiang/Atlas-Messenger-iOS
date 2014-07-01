@@ -8,6 +8,7 @@
 
 #import "LSConversationViewController.h"
 #import "LSMessageCell.h"
+#import "LSMessageCellPresenter.h"
 #import "LSComposeView.h"
 
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
@@ -83,13 +84,14 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSOrderedSet *set = [self.layerClient messagesForConversation:self.conversation];
         if (set.count > self.messages.count) {
-            self.messages = set;
-            [self.collectionView reloadData];
-            if (self.messages.count > 1) {
-                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
-            }
-        }
-        [self fetchMessages];
+             self.messages = set;
+             if (self.messages.count > 1) {
+                 [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+             }
+         }
+        [self.collectionView reloadData];
+         [self fetchMessages];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"conversationsUpdated" object:nil userInfo:nil];
     });
 }
 
@@ -114,7 +116,10 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (void)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    [cell updateWithMessage:[self.messages objectAtIndex:indexPath.row]];
+    LSMessageCellPresenter *presenter = [[LSMessageCellPresenter alloc] init];
+    presenter.persistenceManager = self.persistanceManager;
+    presenter.message = [self.messages objectAtIndex:indexPath.row];
+    [cell updateWithPresenter:presenter];
 }
 
 #pragma mark

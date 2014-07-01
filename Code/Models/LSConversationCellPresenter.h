@@ -28,6 +28,6 @@
 
 - (UIImage *)imageForAuthenticatedUser;
 
-
+- (NSString *)conversationLabelForNames:(NSArray *)names;
 
 @end

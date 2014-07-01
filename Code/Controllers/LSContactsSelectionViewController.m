@@ -38,9 +38,17 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
     
     NSError *error = nil;
-    NSSet *contacts = [self.persistenceManager persistedUsersWithError:&error];
+    NSSet *contacts = [self filterContacts:[self.persistenceManager persistedUsersWithError:&error]];
     self.contacts = [contacts sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES] ]];
-    NSAssert(self.contacts, @"Failed to load contacts!!");
+    
+    if (!self.contacts.count > 0) {
+        UILabel *label = [[UILabel alloc] init];
+        label.text = @"No Contacts";
+        label.accessibilityLabel = @"No Contacts";
+        [label sizeToFit];
+        label.center = self.view.center;
+        [self.view addSubview:label];
+    }
     
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                          style:UIBarButtonItemStylePlain
@@ -57,6 +65,17 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
     
     self.tableView.accessibilityLabel = @"Contact List";
+}
+
+- (NSSet *)filterContacts:(NSSet *)contacts
+{
+    NSMutableSet *contactsToEvaluate = [NSMutableSet setWithSet:contacts];
+    
+    LSSession *session = self.APIManager.authenticatedSession;
+    LSUser *authenticatedUser = session.user;
+    
+    [contactsToEvaluate removeObject:authenticatedUser];
+    return contactsToEvaluate;
 }
 
 #pragma mark - Actions

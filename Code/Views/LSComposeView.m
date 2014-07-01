@@ -24,7 +24,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.defaultRect = frame;
-        self.backgroundColor = [UIColor lightGrayColor];
+        self.backgroundColor = [LSUIConstants veryLightGrayColor];
         self.accessibilityLabel = @"composeView";
         [self initizlizeSubviews];
         self.images = [[NSMutableArray alloc] init];
@@ -58,7 +58,7 @@
 - (void)initializeCameraButton
 {
     if (!self.cameraButton){
-        self.cameraButton = [[LSButton alloc] initWithText:nil];
+        self.cameraButton = [[LSButton alloc] initWithText:@"Cam"];
         [self.cameraButton setBackgroundColor:[UIColor lightGrayColor]];
     }
     [self.cameraButton addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -68,7 +68,7 @@
 - (void)initializeSendButton
 {
     if (!self.sendButton) {
-        self.sendButton = [[LSButton alloc] initWithText:@"Cam"];
+        self.sendButton = [[LSButton alloc] initWithText:@"Send"];
         [self.cameraButton setBackgroundColor:[LSUIConstants layerBlueColor]];
     }
     

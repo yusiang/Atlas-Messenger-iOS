@@ -14,6 +14,8 @@
 
 + (UIColor *)layerGrayColor;
 
++ (UIColor *)veryLightGrayColor;
+
 // SBW: The font names should be NSString constants and these methods can return `UIFont` instances
 + (NSString *)layerMediumFont;
 

@@ -157,7 +157,8 @@
 - (NSSet *)persistedUsersWithError:(NSError **)error
 {
     NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
-    return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    NSSet *users = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    return users;
 }
 
 - (BOOL)deleteAllObjects:(NSError **)error

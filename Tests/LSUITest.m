@@ -20,6 +20,10 @@
 #import "LYRCountdownLatch.h"
 #import "LSPersistenceManager.h"
 #import "LSConversationCellPresenter.h"
+#import "LSContactsSelectionViewController.h"
+#import "LSAppController.h"
+#import "LSAuthenticationViewController.h"
+#import "LSAppDelegate.h"
 
 static NSString *const LSTestUser0FirstName = @"Layer";
 static NSString *const LSTestUser0LastName = @"Tester0";
@@ -53,6 +57,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 
 @interface LSUITest : KIFTestCase
 
+@property (nonatomic) LSAppController *controller;
 @property (nonatomic) LSPersistenceManager *persistenceManager;
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LSAPIManager *APIManager;
@@ -78,32 +83,25 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)beforeEach
 {
-    self.persistenceManager = [LSPersistenceManager persistenceManagerWithInMemoryStore];
+    self.controller =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] controller];
+    
+    self.layerClient = self.controller.layerClient;
+    self.persistenceManager = self.controller.persistenceManager;
+    self.APIManager = self.controller.APIManager;
+    
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
+    [self.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
+        [latch decrementCount];
+    }];
+    [tester waitForTimeInterval:0];
     
     NSError *error;
     [self.persistenceManager deleteAllObjects:&error];
-    
-    NSURL *baseURL = [NSURL URLWithString:@"https://10.66.0.35:7072"];
-    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
-    self.layerClient = [[LYRClient alloc] initWithBaseURL:baseURL appID:appID];
-    
-    [self.layerClient startWithCompletion:^(BOOL success, NSError *error) {
-        NSLog(@"Started with success: %d, %@", success, error);
-    }];
-    
-    [tester waitForTimeInterval:2];
-    
-    self.APIManager = [LSAPIManager managerWithBaseURL:[NSURL URLWithString:@"http://10.66.0.35:8080/"] layerClient:self.layerClient];
 }
 
 - (void)afterEach
 {
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
-    [self.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
-        [self deauthenticate];
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
+    [self deauthenticate];
 }
 
 //1. Log in with incorrect credentials and verify that an error prompt pops up.
@@ -139,27 +137,27 @@ static NSString *const LSTestUser3Confirmation = @"password3";
     [tester tapViewWithAccessibilityLabel:@"Register Button"];
     
     [tester enterText:testUser.firstName intoViewWithAccessibilityLabel:@"First Name"];
-    [tester tapViewWithAccessibilityLabel:@"Register Button"];
-    [tester waitForViewWithAccessibilityLabel:@"No Email"];
+    [tester tapViewWithAccessibilityLabel:@"Done"];
+    [tester waitForViewWithAccessibilityLabel:@"Registration Error"];
     [tester tapViewWithAccessibilityLabel:@"OK"];
     
     [tester enterText:testUser.lastName intoViewWithAccessibilityLabel:@"Last Name"];
-    [tester tapViewWithAccessibilityLabel:@"Register Button"];
-    [tester waitForViewWithAccessibilityLabel:@"No Email"];
+    [tester tapViewWithAccessibilityLabel:@"Done"];
+    [tester waitForViewWithAccessibilityLabel:@"Registration Error"];
     [tester tapViewWithAccessibilityLabel:@"OK"];
     
     [tester enterText:testUser.email intoViewWithAccessibilityLabel:@"Email"];
-    [tester tapViewWithAccessibilityLabel:@"Register Button"];
-    [tester waitForViewWithAccessibilityLabel:@"Password Error"];
+    [tester tapViewWithAccessibilityLabel:@"Done"];
+    [tester waitForViewWithAccessibilityLabel:@"Registration Error"];
     [tester tapViewWithAccessibilityLabel:@"OK"];
     
     [tester enterText:testUser.password intoViewWithAccessibilityLabel:@"Password"];
-    [tester tapViewWithAccessibilityLabel:@"Register Button"];
-    [tester waitForViewWithAccessibilityLabel:@"Password Error"];
+    [tester tapViewWithAccessibilityLabel:@"Done"];
+    [tester waitForViewWithAccessibilityLabel:@"Registration Error"];
     [tester tapViewWithAccessibilityLabel:@"OK"];
     
     [tester enterText:testUser.passwordConfirmation intoViewWithAccessibilityLabel:@"Confirmation"];
-    [tester tapViewWithAccessibilityLabel:@"Register Button"];
+    [tester tapViewWithAccessibilityLabel:@"Done"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
     
 }
@@ -167,15 +165,14 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 //5. Log in. Verify the address book is empty. Log out and register as a new user. Verify that the first user is in the address book.
 - (void)testToVerifyAddressBookFunctionalityForFirstTwoUsers
 {
-    [self systemLoginUser:[self testUserWithNumber:0]];
+    [self systemRegisterUser:[self testUserWithNumber:0]];
     [tester tapViewWithAccessibilityLabel:@"New"];
-
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Contact List"];
+    [tester waitForViewWithAccessibilityLabel:@"No Contacts"];
     
     [self deauthenticate];
     
-    [self systemLoginUser:[self testUserWithNumber:1]];
-    [tester tapViewWithAccessibilityLabel:@"new"];
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    [tester tapViewWithAccessibilityLabel:@"New"];
     [tester waitForViewWithAccessibilityLabel:[self testUserWithNumber:0].fullName];
 }
 
@@ -228,8 +225,6 @@ static NSString *const LSTestUser3Confirmation = @"password3";
     
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    
-    [self deauthenticate];
 }
 
 //9. Register two users. Log in as one and start a conversation. Verify that the focus is automatically set on the message entry box. Type "hello!" and verify that "hello!" appears in the entry box. Tap "send" and verify that a message with "hello!" is added to the conversation history. Send "Do you hear me?" and verify that the new message is added below the first.
@@ -247,8 +242,6 @@ static NSString *const LSTestUser3Confirmation = @"password3";
     
     [self sendMessageWithText:@"Hello"];
     [self sendMessageWithText:@"This is a test message"];
-    
-    [self deauthenticate];
 }
 //
 //10. Register two users. Log in and start a conversation. Log out and back in. Verify that the old conversation is still there.
@@ -418,7 +411,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
     
     [self systemLoginUser:[self testUserWithNumber:1]];
     
-    [self startConversationWithUsers:@[[self testUserWithNumber:2].fullName]];
+    [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
     [self sendMessageWithText:@"Hello"];
     
     [self deauthenticate];
@@ -577,6 +570,22 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 
 //======== Factory Methods =========//
 
+- (void)presentAuthenticationViewController
+{
+    [system presentViewControllerWithClass:[LSAuthenticationViewController class] withinNavigationControllerWithNavigationBarClass:[UINavigationBar class] toolbarClass:nil configurationBlock:^(id viewController) {
+        [(LSAuthenticationViewController *)viewController setLayerClient:self.layerClient];
+        [(LSAuthenticationViewController *)viewController setAPIManager:self.APIManager];
+    }];
+}
+- (void)presentConversationsListViewController
+{
+    [system presentViewControllerWithClass:[LSConversationListViewController class] withinNavigationControllerWithNavigationBarClass:[UINavigationBar class] toolbarClass:nil configurationBlock:^(id viewController) {
+        [(LSConversationListViewController *)viewController setLayerClient:self.layerClient];
+        [(LSConversationListViewController *)viewController setAPIManager:self.APIManager];
+        [(LSConversationListViewController *)viewController setPersistenceManager:self.persistenceManager];
+    }];
+}
+
 #pragma mark
 #pragma mark Test User Registration and Login Methods
 - (void)registerTestUser:(LSUser *)testUser
@@ -604,6 +613,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 {
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
     [self.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
+        
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
@@ -613,7 +623,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 - (void)systemLoginUser:(LSUser *)user
 {
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
-    [self.APIManager authenticateWithEmail:[self testUserWithNumber:0].email password:[self testUserWithNumber:0].password completion:^(LSUser *user, NSError *error) {
+    [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
@@ -631,22 +641,20 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 - (void)startConversationWithUsers:(NSArray *)users
 {
     [tester tapViewWithAccessibilityLabel:@"New"];
-    [tester waitForViewWithAccessibilityLabel:@"Contact List"];
+    [tester waitForViewWithAccessibilityLabel:@"Contacts"];
     for (LSUser *user in users) {
         [tester waitForViewWithAccessibilityLabel:user.fullName];
         [tester tapViewWithAccessibilityLabel:user.fullName];
     }
     [tester tapViewWithAccessibilityLabel:@"Done"];
     [tester waitForViewWithAccessibilityLabel:@"Conversation"];
-    [tester waitForTimeInterval:5];
 }
 
 - (NSString *)conversationCellLabelForParticipants:(NSArray *)participantNames
 {
     LSConversationCellPresenter *presenter = [LSConversationCellPresenter new];
-    presenter.persistenceManager = self.persistenceManager;
-    presenter.participants = participantNames;
-    return [presenter conversationLabel];
+    NSString *string = [presenter conversationLabelForNames:participantNames];
+    return string;
 }
 
 #pragma mark
@@ -662,12 +670,13 @@ static NSString *const LSTestUser3Confirmation = @"password3";
     NSError *error;
     LSSession *session = [self.persistenceManager persistedSessionWithError:&error];
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:session.user.fullName]];
-
+    
+    [tester waitForTimeInterval:5];
 }
 
 - (NSString *)messageCellLabelForText:(NSString *)text andUser:(NSString *)fullName
 {
-    return [NSString stringWithFormat:@"%@ sent by %@", text, fullName];
+    return text;
 }
 
 - (void)selectPhotoFromCameraRoll
@@ -697,7 +706,7 @@ static NSString *const LSTestUser3Confirmation = @"password3";
 
 - (void)deauthenticate
 {
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:2 timeoutInterval:5.0];
     [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
         [latch decrementCount];
     }];

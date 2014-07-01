@@ -32,7 +32,7 @@
     
     self.userID = [decoder decodeObjectForKey:NSStringFromSelector(@selector(userID))];
     self.firstName = [decoder decodeObjectForKey:NSStringFromSelector(@selector(firstName))];
-    self.firstName = [decoder decodeObjectForKey:NSStringFromSelector(@selector(lastName))];
+    self.lastName = [decoder decodeObjectForKey:NSStringFromSelector(@selector(lastName))];
     self.email = [decoder decodeObjectForKey:NSStringFromSelector(@selector(email))];
     self.password = [decoder decodeObjectForKey:NSStringFromSelector(@selector(password))];
     

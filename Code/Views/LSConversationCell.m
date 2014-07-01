@@ -67,7 +67,7 @@
     [self.senderName setFont:[UIFont fontWithName:kLayerFontHeavy size:16]];
     [self.senderName setTextColor:[UIColor darkGrayColor]];
     self.senderName.text = [self.presenter conversationLabel];
-    self.accessibilityLabel = [self.presenter conversationLabel];
+    self.accessibilityLabel = self.senderName.text;
     self.senderName.userInteractionEnabled = FALSE;
 }
 

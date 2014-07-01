@@ -12,6 +12,7 @@
 #import "LSAppDelegate.h"
 #import "LSConversationListViewController.h"
 #import "LSAPIManager.h"
+#import "LYRTestUtilities.h"
 
 static void LSAlertWithError(NSError *error)
 {
@@ -65,30 +66,38 @@ static NSURL *LSLayerBaseURL(void)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+<<<<<<< HEAD
     LYRTestCleanKeychain();
     LYRSetLogLevelFromEnvironment();
     
     NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
     LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:appID];
     self.layerClient = layerClient;
+=======
+//    LYRTestCleanKeychain();
+
+    self.controller = [[LSAppController alloc] init];
     
-    [layerClient startWithCompletion:^(BOOL success, NSError *error) {
+    self.layerClient = self.controller.layerClient;
+    self.persistenceManager = self.controller.persistenceManager;
+    self.APIManager = self.controller.APIManager;
+>>>>>>> Test suite updates
+    
+    [self.layerClient startWithCompletion:^(BOOL success, NSError *error) {
         NSLog(@"Started with success: %d, %@", success, error);
     }];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
-    
-    self.persistenceManager = LSIsRunningTests() ? [LSPersistenceManager persistenceManagerWithInMemoryStore] : [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
-    self.APIManager = [LSAPIManager managerWithBaseURL:[NSURL URLWithString:@"http://10.66.0.35:8080/"] layerClient:layerClient];
-
     LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
     authenticationViewController.layerClient = self.layerClient;
     authenticationViewController.APIManager = self.APIManager;
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
     self.window.rootViewController = self.navigationController;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
+    
     LSSession *session = [self.persistenceManager persistedSessionWithError:nil];
+    
     if (session) {
         [self.APIManager resumeSession:session completion:^(LSUser *user, NSError *error) {
             if (user) {
@@ -115,7 +124,7 @@ static NSURL *LSLayerBaseURL(void)
         NSLog(@"Failed persisting authenticated user: %@. Error: %@", session, error);
         LSAlertWithError(error);
     }
-    
+
     [self loadContacts];
     [self presentConversationsListViewController];
 }
@@ -164,5 +173,42 @@ static NSURL *LSLayerBaseURL(void)
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     [self.navigationController presentViewController:conversationController animated:YES completion:nil];
 }
+
+
+//- (void)oldAppDidFinishLaunchingWithOptions
+//{
+//    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
+//    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:appID];
+//    self.layerClient = layerClient;
+//    
+//    [layerClient startWithCompletion:^(BOOL success, NSError *error) {
+//        NSLog(@"Started with success: %d, %@", success, error);
+//    }];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
+//    
+//    self.persistenceManager = LSIsRunningTests() ? [LSPersistenceManager persistenceManagerWithInMemoryStore] : [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
+//    self.APIManager = [LSAPIManager managerWithBaseURL:[NSURL URLWithString:@"http://10.66.0.35:8080/"] layerClient:layerClient];
+//    
+//    LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
+//    authenticationViewController.layerClient = self.layerClient;
+//    authenticationViewController.APIManager = self.APIManager;
+//    self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
+//    self.window.rootViewController = self.navigationController;
+//    
+//    LSSession *session = [self.persistenceManager persistedSessionWithError:nil];
+//    if (session) {
+//        [self.APIManager resumeSession:session completion:^(LSUser *user, NSError *error) {
+//            if (user) {
+//                [self presentConversationsListViewController];
+//            } else {
+//                NSLog(@"An error occurred while resuming session");
+//            }
+//        }];
+//    }
+//    
+//    [self.window makeKeyAndVisible];
+//    
 
 @end

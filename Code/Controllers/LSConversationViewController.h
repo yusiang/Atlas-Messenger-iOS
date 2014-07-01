@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
+#import "LSPersistenceManager.h"
 
 @interface LSConversationViewController : UIViewController
 
 @property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, strong) LYRConversation *conversation;
+@property (nonatomic, strong) LSPersistenceManager *persistanceManager;
 @property (nonatomic, strong) NSArray *participantsForNewConversation; // SBW: This appears to be unused
 
 

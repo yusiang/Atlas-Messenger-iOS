@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
 #import "LSAvatarImageView.h"
+#import "LSMessageCellPresenter.h"
 
 @interface LSMessageCell : UICollectionViewCell
 
-- (void)updateWithMessage:(LYRMessage *)message;
+- (void)updateWithPresenter:(LSMessageCellPresenter *)presenter;
 
 @end

@@ -71,13 +71,13 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     
     // SBW: You don't want a method called `fetchLayerConversations` that also does UI changes. I'd probably use KVO on `self.conversations` to drive the reload
     //Doing this for now in place of notifications to changes in the DB
-    if (!self.conversations.count > 0 && self.navigationController.topViewController == self){
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self fetchLayerConversations];
-            [self.collectionView reloadData];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"conversationsUpdated" object:nil userInfo:nil];
-        });
-    }
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self fetchLayerConversations];
+        [self.collectionView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"conversationsUpdated" object:nil userInfo:nil];
+    });
+
 }
 
 - (void)conversationsUpdated:(NSNotification *)notification
@@ -123,6 +123,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
     LSConversationViewController *viewController = [LSConversationViewController new];
     viewController.conversation = [self.conversations objectAtIndex:indexPath.row];
     viewController.layerClient = self.layerClient;
+    viewController.persistanceManager = self.persistenceManager;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -166,6 +167,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 - (void)newConversationTapped
 {
     LSContactsSelectionViewController *contactsViewController = [LSContactsSelectionViewController new];
+    contactsViewController.APIManager = self.APIManager;
     contactsViewController.persistenceManager = self.persistenceManager;
     contactsViewController.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:contactsViewController];
@@ -182,6 +184,7 @@ NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
         LYRConversation *conversation = [self.layerClient conversationWithIdentifier:nil participants:[[contacts valueForKey:@"userID"] allObjects]];
         controller.conversation = conversation;
         controller.layerClient = self.layerClient;
+        controller.persistanceManager = self.persistenceManager;
         [self.navigationController pushViewController:controller animated:YES];
     }];
 }
