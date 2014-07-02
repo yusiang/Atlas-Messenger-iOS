@@ -1,8 +1,8 @@
 //
-//  LSConversationListViewController.h
+//  LSConversationListVC.h
 //  LayerSample
 //
-//  Created by Kevin Coleman on 7/2/14.
+//  Created by Kevin Coleman on 6/10/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
@@ -11,7 +11,7 @@
 #import "LSConversationViewController.h"
 #import "LSAPIManager.h"
 
-@interface LSConversationListViewController : UITableViewController
+@interface LSConversationListOLDViewController : UIViewController
 
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LSAPIManager *APIManager;

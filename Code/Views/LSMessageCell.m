@@ -120,7 +120,7 @@
     if (!self.messageText) {
         self.messageText = [[UITextView alloc] init];
         self.messageText.textColor = [UIColor whiteColor];
-        self.messageText.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:16];
+        self.messageText.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:14];
         self.messageText.editable = NO;
         self.messageText.userInteractionEnabled = NO;
     }

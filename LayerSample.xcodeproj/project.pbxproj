@@ -27,6 +27,7 @@
 		0AADB5D01947C8800083732B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5CF1947C8800083732B /* Security.framework */; };
 		0AADB5D21947C8850083732B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D11947C8850083732B /* StoreKit.framework */; };
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
+		0AB1157C196460ED00B59DF8 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */; };
 		0AD767721963104200582755 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD767711963104200582755 /* LSUtilities.m */; };
 		0AD767741963157600582755 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD767731963157600582755 /* camera@2x.png */; };
 		140D75B35BCA4D3395A4DC4B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931E36A3415C497CA3681E7F /* libPods.a */; };
@@ -36,7 +37,7 @@
 		25918B9A195F960500D0FB1B /* LSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 25918B99195F960500D0FB1B /* LSSession.m */; };
 		259A574F1950EB76000E27B0 /* LSAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57161950EB76000E27B0 /* LSAPIManager.m */; };
 		259A57501950EB76000E27B0 /* LSContactsSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */; };
-		259A57511950EB76000E27B0 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571A1950EB76000E27B0 /* LSConversationListViewController.m */; };
+		259A57511950EB76000E27B0 /* LSConversationListOLDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571A1950EB76000E27B0 /* LSConversationListOLDViewController.m */; };
 		259A57521950EB76000E27B0 /* LSConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571C1950EB76000E27B0 /* LSConversationViewController.m */; };
 		259A57531950EB76000E27B0 /* LSAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571E1950EB76000E27B0 /* LSAuthenticationViewController.m */; };
 		259A57551950EB76000E27B0 /* LSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57221950EB76000E27B0 /* LSLoginViewController.m */; };
@@ -97,6 +98,8 @@
 		0AADB5CF1947C8800083732B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0AADB5D11947C8850083732B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0AB1157A196460ED00B59DF8 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
+		0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
 		0AD767701963104200582755 /* LSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUtilities.h; sourceTree = "<group>"; };
 		0AD767711963104200582755 /* LSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUtilities.m; sourceTree = "<group>"; };
 		0AD767731963157600582755 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
@@ -111,8 +114,8 @@
 		259A57161950EB76000E27B0 /* LSAPIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAPIManager.m; sourceTree = "<group>"; };
 		259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsSelectionViewController.h; sourceTree = "<group>"; };
 		259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactsSelectionViewController.m; sourceTree = "<group>"; };
-		259A57191950EB76000E27B0 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
-		259A571A1950EB76000E27B0 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
+		259A57191950EB76000E27B0 /* LSConversationListOLDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListOLDViewController.h; sourceTree = "<group>"; };
+		259A571A1950EB76000E27B0 /* LSConversationListOLDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListOLDViewController.m; sourceTree = "<group>"; };
 		259A571B1950EB76000E27B0 /* LSConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationViewController.h; sourceTree = "<group>"; };
 		259A571C1950EB76000E27B0 /* LSConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationViewController.m; sourceTree = "<group>"; };
 		259A571D1950EB76000E27B0 /* LSAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationViewController.h; sourceTree = "<group>"; };
@@ -239,6 +242,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0AB1157D196464BC00B59DF8 /* OLD - Delete */ = {
+			isa = PBXGroup;
+			children = (
+				259A57191950EB76000E27B0 /* LSConversationListOLDViewController.h */,
+				259A571A1950EB76000E27B0 /* LSConversationListOLDViewController.m */,
+			);
+			name = "OLD - Delete";
+			sourceTree = "<group>";
+		};
 		259A57111950EB76000E27B0 /* Code */ = {
 			isa = PBXGroup;
 			children = (
@@ -262,12 +274,13 @@
 		259A57121950EB76000E27B0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				0AB1157D196464BC00B59DF8 /* OLD - Delete */,
 				259A57151950EB76000E27B0 /* LSAPIManager.h */,
 				259A57161950EB76000E27B0 /* LSAPIManager.m */,
 				259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */,
 				259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */,
-				259A57191950EB76000E27B0 /* LSConversationListViewController.h */,
-				259A571A1950EB76000E27B0 /* LSConversationListViewController.m */,
+				0AB1157A196460ED00B59DF8 /* LSConversationListViewController.h */,
+				0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */,
 				259A571B1950EB76000E27B0 /* LSConversationViewController.h */,
 				259A571C1950EB76000E27B0 /* LSConversationViewController.m */,
 				259A571D1950EB76000E27B0 /* LSAuthenticationViewController.h */,
@@ -528,12 +541,13 @@
 				259A57531950EB76000E27B0 /* LSAuthenticationViewController.m in Sources */,
 				259A57521950EB76000E27B0 /* LSConversationViewController.m in Sources */,
 				0A52D6011962219D0030A34A /* LSMessageCellPresenter.m in Sources */,
+				0AB1157C196460ED00B59DF8 /* LSConversationListViewController.m in Sources */,
 				259A57501950EB76000E27B0 /* LSContactsSelectionViewController.m in Sources */,
 				259A574F1950EB76000E27B0 /* LSAPIManager.m in Sources */,
 				259A57631950EB76000E27B0 /* LSButton.m in Sources */,
 				259A57671950EB76000E27B0 /* LSInputTableViewCell.m in Sources */,
 				0A2324F51960DB8C00C1C98D /* LSConversationCellPresenter.m in Sources */,
-				259A57511950EB76000E27B0 /* LSConversationListViewController.m in Sources */,
+				259A57511950EB76000E27B0 /* LSConversationListOLDViewController.m in Sources */,
 				25918B97195F95F700D0FB1B /* LSPersistenceManager.m in Sources */,
 				259A57651950EB76000E27B0 /* LSContactTableViewCell.m in Sources */,
 				0A52D5FE1961FD0D0030A34A /* LSApplicationController.m in Sources */,

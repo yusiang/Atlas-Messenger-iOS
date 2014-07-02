@@ -8,6 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
+
+UIColor *LSBlueColor();
+
+UIColor *LSGrayColor();
+
+UIColor *LSLighGrayColor();
+
+NSString *LSMediumFont();
+
+NSString *LSBoldFont();
+
+NSString *LSHeavyFont();
+
 @interface LSUIConstants : NSObject
 
 + (UIColor *)layerBlueColor;

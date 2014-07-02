@@ -1,31 +1,30 @@
 //
-//  LSConversationListViewController.m
+//  LSConversationListVC.m
 //  LayerSample
 //
-//  Created by Kevin Coleman on 7/2/14.
+//  Created by Kevin Coleman on 6/10/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSConversationListViewController.h"
-#import "LSContactsSelectionViewController.h"
+#import "LSConversationListOLDViewController.h"
 #import "LSConversationCell.h"
+#import "LSContactsSelectionViewController.h"
+#import "LSConversationCellPresenter.h"
+#import "LSUIConstants.h"
 
-@interface LSConversationListViewController () <LSContactsSelectionViewControllerDelegate>
+@interface LSConversationListOLDViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSContactsSelectionViewControllerDelegate>
 
+@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSOrderedSet *conversations;
 
 @end
 
-@implementation LSConversationListViewController
+@implementation LSConversationListOLDViewController
 
-NSString *const LSConversationCellID = @"conversationCellIdentifier";
+NSString *const LSConversationCellIdentifier = @"conversationCellIdentifier";
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
-    self.tableView.allowsMultipleSelectionDuringEditing = NO;
-    
     NSAssert(self.layerClient, @"`self.layerClient` cannot be nil");
     NSAssert(self.persistenceManager, @"persistenceManager cannot be nil");
     NSAssert(self.APIManager, @"APIManager cannot be nil");
@@ -44,10 +43,14 @@ NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [self.navigationItem setRightBarButtonItem:newConversationButton];
     
     // Setup Collection View
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    self.tableView.backgroundColor = [UIColor whiteColor];
-    [self.tableView registerClass:[LSConversationCell class] forCellReuseIdentifier:LSConversationCellID];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame
+                                             collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    self.collectionView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.collectionView];
+    [self.collectionView registerClass:[LSConversationCell class] forCellWithReuseIdentifier:LSConversationCellIdentifier];
+
     // TODO: Nothing is removing this....
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationsUpdated:) name:@"conversationsUpdated" object:nil];
 }
@@ -56,7 +59,7 @@ NSString *const LSConversationCellID = @"conversationCellIdentifier";
 {
     [super viewWillAppear:animated];
     [self fetchLayerConversations];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)fetchLayerConversations
@@ -77,24 +80,25 @@ NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void)conversationsUpdated:(NSNotification *)notification
 {
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
-#pragma mark - Table view data source
+# pragma mark
+# pragma mark Collection View Data Source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.conversations.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    LSConversationCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSConversationCellID];
+    return 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    LSConversationCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LSConversationCellIdentifier forIndexPath:indexPath];
     [self configureCell:cell forIndexPath:indexPath];
     return cell;
 }
@@ -109,7 +113,10 @@ NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [cell updateWithPresenter:presenter];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark
+#pragma mark Collection View Delegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     LSConversationViewController *viewController = [LSConversationViewController new];
     viewController.conversation = [self.conversations objectAtIndex:indexPath.row];
@@ -118,9 +125,31 @@ NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark – UICollectionViewDelegateFlowLayout
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 80;
+    /**
+     SBW: You can use a static CGSize constant
+     
+     static CGSize const LSConversationListItemCellSize = { 320, 80 };
+     */
+    return CGSizeMake(320, 80);
+}
+
+- (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsZero;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 0;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 0;
 }
 
 #pragma mark
@@ -164,14 +193,4 @@ NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
-    }
-}
 @end

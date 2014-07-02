@@ -137,7 +137,7 @@ static void LSAlertWithError(NSError *error)
 }
 
 - (void)presentConversationsListViewController
-{
+{    
     LSConversationListViewController *conversationListViewController = [LSConversationListViewController new];
     conversationListViewController.layerClient = self.applicationController.layerClient;
     conversationListViewController.APIManager = self.applicationController.APIManager;

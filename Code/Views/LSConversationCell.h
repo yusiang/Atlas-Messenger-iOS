@@ -11,7 +11,7 @@
 #import "LSUser.h"
 #import "LSConversationCellPresenter.h"
 
-@interface LSConversationCell : UICollectionViewCell
+@interface LSConversationCell : UITableViewCell
 
 - (void)updateWithPresenter:(LSConversationCellPresenter *)presenter;
 

@@ -8,6 +8,38 @@
 
 #import "LSUIConstants.h"
 
+
+UIColor *LSBlueColor()
+{
+    return [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0];
+}
+
+UIColor *LSGrayColor()
+{
+    return [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0];
+}
+
+UIColor *LSLighGrayColor()
+{
+    return [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0];
+}
+
+NSString *LSMediumFont()
+{
+    return @"Avenir-Medium";
+}
+
+NSString *LSBoldFont()
+{
+    return @"Avenir-Medium";
+}
+
+NSString *LSHeavyFont()
+{
+    return @"Avenir-Medium";
+}
+
+
 @implementation LSUIConstants
 
 + (UIColor *)layerBlueColor

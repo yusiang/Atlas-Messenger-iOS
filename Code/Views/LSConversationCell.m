@@ -46,14 +46,14 @@
     [self addConversationLabel];
     [self addLastMessageText];
     [self addDateLabel];
-    [self addSeperatorLine];
 }
 
 - (void)addAvatarImage
 {
     if (!self.avatarImageView) {
-        self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(10, 10, 46, 46)];
+        self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 46, 46)];
     }
+    self.avatarImageView.center = CGPointMake(36, self.frame.size.height / 2);
     [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     [self addSubview:self.avatarImageView];
 }
@@ -106,15 +106,6 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat: @"HH:mm"];
     self.date.text = [formatter stringFromDate:date];
-}
-
-- (void)addSeperatorLine
-{
-    if(!self.seperatorLine){
-        self.seperatorLine = [[UIView alloc] initWithFrame:CGRectMake(70, self.frame.size.height - 1, self.frame.size.width - 70, 1)];
-        [self addSubview:self.seperatorLine];
-    }
-    self.seperatorLine.backgroundColor = [UIColor lightGrayColor];
 }
 
 @end

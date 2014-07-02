@@ -26,7 +26,7 @@ NSURL *LSLayerBaseURL(void)
 
 NSURL *LSRailsBaseURL(void)
 {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"https://%@:8080", LSApplicationHost()]];
+    return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@:8080", LSApplicationHost()]];
 }
 
 NSUUID *LSLayerAppID(void)

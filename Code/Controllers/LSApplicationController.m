@@ -32,7 +32,7 @@
        
         _layerClient = layerClient;
         _persistenceManager = LSIsRunningTests() ? [LSPersistenceManager persistenceManagerWithInMemoryStore] : [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
-        _APIManager = [LSAPIManager managerWithBaseURL:[NSURL URLWithString:@"http://10.66.0.35:8080/"] layerClient:layerClient];
+        _APIManager = [LSAPIManager managerWithBaseURL:baseURL layerClient:layerClient];
         
     }
     return self;

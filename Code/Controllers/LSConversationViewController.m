@@ -10,6 +10,7 @@
 #import "LSMessageCell.h"
 #import "LSMessageCellPresenter.h"
 #import "LSComposeView.h"
+#import "LSUIConstants.h"
 
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -153,24 +154,32 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 {
     LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
     LYRMessagePart *part = [message.parts objectAtIndex:0];
+    
+    CGSize itemSize;
+    
     if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
         
-        //192 Is the width of the text view
+        //180 Is the width we want for the textView
         UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 180, 0)];
         textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
+        textView.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:14];
         [textView sizeToFit];
-        return CGSizeMake(320, textView.frame.size.height + 24);
+        itemSize = CGSizeMake(320, textView.frame.size.height);
+        
     } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
         if (imageView.frame.size.height > imageView.frame.size.width) {
-            return CGSizeMake(320, 300);
+            itemSize = CGSizeMake(320, 300);
         } else {
             CGFloat ratio = (184 / imageView.frame.size.width);
             CGFloat height = imageView.frame.size.height * ratio;
-            return CGSizeMake(320, height + 8);
+            itemSize = CGSizeMake(320, height + 8);
         }
     }
-    return CGSizeMake(320, 10);
+    if (40 > itemSize.height) {
+        return CGSizeMake(itemSize.width, 50);
+    }
+    return itemSize;
 }
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
