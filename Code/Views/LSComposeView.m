@@ -65,6 +65,7 @@
         self.cameraButton = [[LSButton alloc] initWithText:@""];
     }
     [self.cameraButton setBackgroundColor:[UIColor lightGrayColor]];
+    self.cameraButton.accessibilityLabel = @"Cam Button";
     [self.cameraButton addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.cameraButton];
 }

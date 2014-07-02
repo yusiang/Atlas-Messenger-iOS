@@ -78,28 +78,10 @@
                   Identifier = "LSUITest/testToVerifyASentPhotoIsRecievedByTheRecipient">
                </Test>
                <Test
-                  Identifier = "LSUITest/testToVerifyMultipleMessagesSentToMultipleRecipeientsAreReciecvedAndDisplayedForTheRecipients">
-               </Test>
-               <Test
                   Identifier = "LSUITest/testToVerifySelectingAnImageFromTheCameraRollAndSending">
                </Test>
                <Test
-                  Identifier = "LSUITest/testToVerifySendingRecievingAndReplyingToAMessage">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifySentMessagePersistence">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifySuccesfullRecipetOfThreeMessages">
-               </Test>
-               <Test
                   Identifier = "LSUITest/testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyTheLatestMessageInANewConversationIsDisplayedInConversationList">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyThreeNewConversationsAreDisplayedInconversationList">
                </Test>
             </SkippedTests>
          </TestableReference>
@@ -136,11 +118,6 @@
          <EnvironmentVariable
             key = "LAYER_TEST_HOST"
             value = "172.17.8.101"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "LAYER_TEST_HOST"
-            value = "10.66.0.35"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

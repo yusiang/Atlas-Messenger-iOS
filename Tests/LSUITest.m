@@ -686,16 +686,15 @@ static NSString *const LSTestUser3Confirmation = @"password3";
     [tester tapViewWithAccessibilityLabel:@"Cam Button"];
     [tester tapViewWithAccessibilityLabel:@"Choose Existing"];
     [tester tapViewWithAccessibilityLabel:@"Saved Photos"];
-    [tester tapViewWithAccessibilityLabel:@"Photo, Portrait, 3:29 PM"];
+    [tester tapViewWithAccessibilityLabel:@"Photo, Landscape, 10:35 AM"];
     [tester waitForViewWithAccessibilityLabel:@"composeView"];
 }
 
 -(void)sendPhoto
 {
-//    [tester tapViewWithAccessibilityLabel:@"Send Button"];
-//    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[[[LSUserManager new] loggedInUser].identifier intValue]]];
-//    [tester waitForTimeInterval:10];
-    
+    [tester tapViewWithAccessibilityLabel:@"Send Button"];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[self testUserWithNumber:1].fullName]];
+    [tester waitForTimeInterval:10];
 }
 
 - (NSString *)imageCelLabelForUserID:(NSString *)fullName

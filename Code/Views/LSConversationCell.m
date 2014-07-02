@@ -53,7 +53,7 @@
     if (!self.avatarImageView) {
         self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 46, 46)];
     }
-    self.avatarImageView.center = CGPointMake(36, self.frame.size.height / 2);
+    self.avatarImageView.center = CGPointMake(36, 30);
     [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     [self addSubview:self.avatarImageView];
 }

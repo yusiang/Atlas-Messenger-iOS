@@ -19,6 +19,11 @@ NSString *LSApplicationHost()
     return @"10.66.0.12";
 }
 
+NSString *LSRailsHost()
+{
+    return @"10.66.0.12";
+}
+
 NSURL *LSLayerBaseURL(void)
 {
     return [NSURL URLWithString:[NSString stringWithFormat:@"https://%@:7072", LSApplicationHost()]];
@@ -26,7 +31,7 @@ NSURL *LSLayerBaseURL(void)
 
 NSURL *LSRailsBaseURL(void)
 {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@:8080", LSApplicationHost()]];
+    return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@:8080", LSRailsHost()]];
 }
 
 NSUUID *LSLayerAppID(void)
