@@ -257,6 +257,8 @@ static NSString *const LSTestUser3Confirmation = @"password3";
     
     [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
     
+    [tester waitForTimeInterval:5];
+    
     [self deauthenticate];
     
     [self systemLoginUser:[self testUserWithNumber:1]];

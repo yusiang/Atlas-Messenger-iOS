@@ -87,9 +87,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             NSOrderedSet *newMessages = [self.layerClient messagesForConversation:self.conversation];
             NSLog(@"New Message Count %lu", (unsigned long)newMessages.count);
-            if (newMessages.count > self.messages.count) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"messagesUpdated" object:nil userInfo:nil];
-            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"messagesUpdated" object:nil userInfo:nil];
             [self fetchMessages];
         });
     }

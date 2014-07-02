@@ -78,25 +78,7 @@
                   Identifier = "LSUITest/testToVerifyASentPhotoIsRecievedByTheRecipient">
                </Test>
                <Test
-                  Identifier = "LSUITest/testToVerifyAddressBookFunctionalityForFirstTwoUsers">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyAddressBookSelectionIndicatorFunctionality">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyConversationPersistenceFunctionality">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyIncompleteInfoRegistrationFunctionality">
-               </Test>
-               <Test
                   Identifier = "LSUITest/testToVerifyMultipleMessagesSentToMultipleRecipeientsAreReciecvedAndDisplayedForTheRecipients">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyNavigationBetweenContactsandConversations">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyRegistrationFunctionality">
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifySelectingAnImageFromTheCameraRollAndSending">
@@ -106,12 +88,6 @@
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifySentMessagePersistence">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyStartingAConversationWithTwoContacts">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifySuccesfulLogin">
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifySuccesfullRecipetOfThreeMessages">
@@ -124,9 +100,6 @@
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifyThreeNewConversationsAreDisplayedInconversationList">
-               </Test>
-               <Test
-                  Identifier = "LSUITest/testToVerifyUIAnimimationsForSendingAMessage">
                </Test>
             </SkippedTests>
          </TestableReference>

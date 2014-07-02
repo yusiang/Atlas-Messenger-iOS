@@ -181,7 +181,8 @@
 - (LSSession *)persistedSessionWithError:(NSError **)error
 {
     NSString *path = [self.path stringByAppendingPathComponent:@"Session.plist"];
-    return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    LSSession *session = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    return session;
 }
 
 @end

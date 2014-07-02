@@ -47,8 +47,8 @@ static void LSAlertWithError(NSError *error)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    LYRTestCleanKeychain();
-//    LYRSetLogLevelFromEnvironment();
+    LYRTestCleanKeychain();
+    LYRSetLogLevelFromEnvironment();
     
     LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:LSLayerAppID()];
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient];
