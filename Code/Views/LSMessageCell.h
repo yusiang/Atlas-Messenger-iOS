@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LayerKit/LayerKit.h>
 #import "LSAvatarImageView.h"
-#import "LYRMessage.h"
-#import "LSLayerController.h"
+#import "LSMessageCellPresenter.h"
 
 @interface LSMessageCell : UICollectionViewCell
 
-// SBW: This should not know about the layer controller...
-- (void)updateCellWithMessage:(LYRMessage *)message andLayerController:(LSLayerController *)controller;
+- (void)updateWithPresenter:(LSMessageCellPresenter *)presenter;
 
 @end

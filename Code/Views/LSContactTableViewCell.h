@@ -15,5 +15,4 @@
 // SBW: You can probably use the standard cell selection here...
 - (void)updateWithSelectionIndicator:(BOOL)selected;
 
-- (void)displaySelectionIndicator;
 @end

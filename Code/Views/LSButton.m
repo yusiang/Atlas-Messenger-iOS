@@ -35,8 +35,8 @@
     if (self) {
         [self setText:text];
         [self setAccessibilityLabel:[NSString stringWithFormat:@"%@ Button", text]];
-        [self setFont:[UIFont fontWithName:[LSUIConstants layerMediumFont] size:20]];
-        [self setBackgroundColor:[LSUIConstants layerBlueColor]];
+        [self setFont:LSMediumFont(20)];
+        [self setBackgroundColor:LSBlueColor()];
         [self.layer setCornerRadius:4.0f];
     }
     return self;
@@ -84,7 +84,7 @@
 - (void)sizeAndCenterLabel
 {
     [self.textLabel sizeToFit];
-    self.textLabel.center = self.center;
+    self.textLabel.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
 }
 
 @end

@@ -10,10 +10,16 @@
 
 @interface LSUser : NSObject <NSCoding>
 
-@property (nonatomic, strong) NSString *fullName;
++ (instancetype)userFromDictionaryRepresentation:(NSDictionary *)representation;
+
+@property (nonatomic, strong) NSString *userID;
+@property (nonatomic, strong) NSString *firstName;
+@property (nonatomic, strong) NSString *lastName;
+@property (nonatomic, readonly) NSString *fullName;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *password;
-@property (nonatomic, strong) NSString *confirmation;
-@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong) NSString *passwordConfirmation;
+
+- (BOOL)validate:(NSError **)error;
 
 @end

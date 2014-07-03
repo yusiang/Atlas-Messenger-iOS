@@ -1,0 +1,29 @@
+//
+//  LSUtilities.h
+//  LayerSample
+//
+//  Created by Kevin Coleman on 7/1/14.
+//  Copyright (c) 2014 Layer, Inc. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import <LayerKit/LayerKit.h>
+
+/**
+ @abstract The `LSUtilities` class provides convenince functions for app configuration
+ */
+
+BOOL LSIsRunningTests();
+
+NSString *LSApplicationHost();
+
+NSURL *LSLayerBaseURL();
+
+NSURL *LSRailsBaseURL();;
+
+NSUUID *LSLayerAppID();
+
+NSString *LSApplicationDataDirectory();
+
+
+

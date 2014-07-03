@@ -17,7 +17,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-
+        _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 5, 300, 45)];
     }
     return self;
 }
@@ -29,11 +29,8 @@
 
 - (void)setText:(NSString *)text
 {
-    if (!self.textField) {
-        self.textField = [[UITextField alloc] init];
-    }
     self.textField.placeholder = text;
-    self.textField.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:18];
+    self.textField.font = LSMediumFont(18);
     self.textField.textColor = [UIColor darkGrayColor];
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.textField sizeToFit];

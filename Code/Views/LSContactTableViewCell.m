@@ -29,7 +29,7 @@
 {
     [super setSelected:FALSE animated:FALSE];
     if (selected && !self.isSelected) {
-        [self updateWithSelectionIndicator:TRUE];
+        [self updateWithSelectionIndicator:YES];
         self.isSelected = TRUE;
     } else if(!selected && !self.isSelected) {
         self.isSelected = FALSE;

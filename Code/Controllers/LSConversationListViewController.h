@@ -1,25 +1,20 @@
 //
-//  LSConversationListVC.h
+//  LSConversationListViewController.h
 //  LayerSample
 //
-//  Created by Kevin Coleman on 6/10/14.
+//  Created by Kevin Coleman on 7/2/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import <LayerKit/LayerKit.h>
 #import "LSConversationViewController.h"
+#import "LSAPIManager.h"
 
-@class LSConversationListViewController;
+@interface LSConversationListViewController : UITableViewController
 
-@protocol LSConversationListViewControllerDelegate <NSObject>
-
-- (void)logout;
-
-@end
-
-@interface LSConversationListViewController : UIViewController
-
-@property (nonatomic, strong) LSLayerController *layerController;
-@property (nonatomic, weak) id<LSConversationListViewControllerDelegate> delegate;
+@property (nonatomic) LYRClient *layerClient;
+@property (nonatomic) LSAPIManager *APIManager;
+@property (nonatomic) LSPersistenceManager *persistenceManager;
 
 @end

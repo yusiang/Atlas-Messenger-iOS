@@ -8,17 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LSUIConstants : NSObject
 
-+ (UIColor *)layerBlueColor;
+UIColor *LSBlueColor();
 
-+ (UIColor *)layerGrayColor;
+UIColor *LSGrayColor();
 
-// SBW: The font names should be NSString constants and these methods can return `UIFont` instances
-+ (NSString *)layerMediumFont;
+UIColor *LSLighGrayColor();
 
-+ (NSString *)layerBoldFont;
+UIFont *LSMediumFont(CGFloat size);
 
-+ (NSString *)layerHeavyFont;
+UIFont *LSBoldFont(CGFloat size);
 
-@end
+UIFont *LSHeavyFont(CGFloat size);

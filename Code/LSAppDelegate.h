@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSLayerController.h"
-#import "LSHomeViewController.h"
+#import "LSAuthenticationViewController.h"
+#import "LSApplicationController.h"
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, strong) LSLayerController *layerController;
+@property (nonatomic) LSApplicationController *applicationController;
 
 @end

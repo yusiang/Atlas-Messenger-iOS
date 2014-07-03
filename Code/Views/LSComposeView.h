@@ -14,19 +14,15 @@
 // SBW: This really feels more like controller behavior...
 @protocol LSComposeViewDelegate <NSObject>
 
-// SBW: Needs the compose view as the first argument
-- (void)sendMessageWithText:(NSString *)text;
-- (void)sendMessageWithImage:(UIImage *)image;
+- (void)composeView:(LSComposeView *)composeView sendMessageWithText:(NSString *)text;
+- (void)composeView:(LSComposeView *)composeView sendMessageWithImage:(UIImage *)image;
+
 - (void)cameraTapped;
 
 @end
 
 @interface LSComposeView : UIView <UITextViewDelegate>
 
-@property (nonatomic, strong) UIView *backingTextView;
-@property (nonatomic, strong) UITextView *textVIew;
-@property (nonatomic, strong) LSButton *cameraButton;
-@property (nonatomic, strong) LSButton *sendButton;
 @property (nonatomic, weak) id<LSComposeViewDelegate>delegate;
 
 - (void)updateWithImage:(UIImage *)image;

@@ -6,21 +6,23 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSLoginTableViewController.h"
+#import <SVProgressHUD/SVProgressHUD.h>
+#import "LSLoginViewController.h"
 #import "LSInputTableViewCell.h"
 #import "LSConversationListViewController.h"
 #import "LSButton.h"
-#import "LSUserManager.h"
 
-@interface LSLoginTableViewController ()
+@interface LSLoginViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) LSButton *loginButton;
-
+@property (nonatomic, weak) UITextField *emailField;
+@property (nonatomic, weak) UITextField *passwordField;
+@property (nonatomic, copy) void (^completionBlock)(LSUser *);
 @end
 
-@implementation LSLoginTableViewController
+@implementation LSLoginViewController
 
-NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
+static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -41,12 +43,20 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     [self initializeLoginButton];
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSLoginlIdentifier];
+    self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.emailField becomeFirstResponder];
 }
 
 - (void)initializeLoginButton
 {
     self.LoginButton = [[LSButton alloc] initWithText:@"Login"];
     [self.loginButton addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
+    self.loginButton.enabled = NO;
     [self.view addSubview:self.loginButton];
 }
 
@@ -85,13 +95,22 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 {
     switch (path.row) {
         case 0:
-            [cell setText:@"Username"];
-            cell.textField.accessibilityLabel = @"Username";
+            [cell setText:@"Email"];
+            cell.textField.accessibilityLabel = @"Email";
+            cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
+            cell.textField.enablesReturnKeyAutomatically = YES;
+            cell.textField.returnKeyType = UIReturnKeyNext;
+            cell.textField.delegate = self;
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            self.emailField = cell.textField;
             break;
         case 1:
             [cell setText:@"Password"];
             cell.textField.accessibilityLabel = @"Password";
-            cell.textField.secureTextEntry = TRUE;
+            cell.textField.secureTextEntry = YES;
+            cell.textField.returnKeyType = UIReturnKeySend;
+            cell.textField.delegate = self;
+            self.passwordField = cell.textField;
             break;
         default:
             break;
@@ -102,16 +121,33 @@ NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 {
     LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-
-    LSUserManager *manager = [[LSUserManager alloc] init];
-    [manager loginWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(LSUser *user, NSError *error) {
-        if (!error) {
-            [self.delegate loginViewControllerDidFinish];
+    
+    [SVProgressHUD show];
+    [self.APIManager authenticateWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(LSUser *user, NSError *error) {
+        [SVProgressHUD dismiss];
+        if (user) {
+            if (self.completionBlock) self.completionBlock(user);
         } else {
-            [self.delegate loginViewControllerDidFailWithError:error];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
         }
-       
     }];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (textField == self.emailField) {
+        [self.passwordField becomeFirstResponder];
+    } else if (textField == self.passwordField) {
+        [self loginTapped];
+    }
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    self.loginButton.enabled = (self.emailField.text.length && self.passwordField.text.length);
+    return YES;
 }
 
 @end

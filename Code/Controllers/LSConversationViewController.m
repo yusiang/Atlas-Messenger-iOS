@@ -8,6 +8,24 @@
 
 #import "LSConversationViewController.h"
 #import "LSMessageCell.h"
+#import "LSMessageCellPresenter.h"
+#import "LSComposeView.h"
+#import "LSUIConstants.h"
+
+NSData *LSJPEGDataWithData(NSData *data)
+{
+    CGFloat compression = 0.9f;
+    CGFloat maxCompression = 0.1f;
+    int maxFileSize = 64*1024;
+    
+    UIImage *image = [UIImage imageWithData:data];
+    
+    while ([data length] > maxFileSize && compression > maxCompression) {
+        compression -= 0.1;
+        data = UIImageJPEGRepresentation(image, compression);
+    }
+    return data;
+}
 
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -20,80 +38,36 @@
 
 @implementation LSConversationViewController
 
-// SBW: should be declared static KC:???
 static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
-
-- (id)init
-{
-    self = [super init];
-    if(self) {
-        
-    }
-    return self;
-}
-
+static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSAssert(self.conversation, @"`self.conversation` cannont be nil");
+    NSAssert(self.layerClient, @"`self.layerController` cannot be nil");
+    
     self.title = @"Conversation";
     self.accessibilityLabel = @"Conversation";
-
-    [self initializeCollectionView];
-    [self initializeComposeView];
-    [self registerForKeyboardNotifications];
     
-    // SBW: I'd add an `NSAssert` that `self.conversation` is not `nil`
-    // SBW: I'd add an `NSAssert` that `self.layerController` is not `nil`
-    NSAssert(self.conversation, @"`self.conversation` cannont be nil");
-    NSAssert(self.layerController, @"`self.layerController` cannot be nil");
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self fetchMessages];
-    [self.collectionView reloadData];
-    [self.composeView.textVIew becomeFirstResponder];
-}
-
-- (void)setConversation:(LYRConversation *)conversation
-{
-    if(!_conversation) {
-        _conversation = conversation;
-    }
-}
-
-- (void)fetchMessages
-{
-    self.messages = [self.layerController.client messagesForConversation:self.conversation];
-}
-
-- (void)initializeCollectionView
-{
-    if (!self.collectionView) {
-        self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame
-                                                 collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
-        self.collectionView.delegate = self;
-        self.collectionView.dataSource = self;
-        self.collectionView.backgroundColor = [UIColor whiteColor];
-        self.collectionView.alwaysBounceVertical = TRUE;
-        self.collectionView.bounces = TRUE;
-        self.collectionView.accessibilityLabel = @"collectionView";
-        [self.view addSubview:self.collectionView];
-    }
+    // Setup Collection View
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 48)
+                                             collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView.alwaysBounceVertical = TRUE;
+    self.collectionView.bounces = TRUE;
+    self.collectionView.accessibilityLabel = @"collectionView";
+    [self.view addSubview:self.collectionView];
     [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:LSCMessageCellIdentifier];
-}
-
-- (void)initializeComposeView
-{
+    
+    // Setup Compose View
     CGRect rect = [[UIScreen mainScreen] bounds];
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 48, rect.size.width, 48)];
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
-}
-
-- (void)registerForKeyboardNotifications
-{
+    
+    // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
                                                  name:UIKeyboardWillShowNotification object:nil];
@@ -101,6 +75,51 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messagesUpdated:) name:LSMessagesUpdatedNotification object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self fetchMessages];
+    [self.collectionView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (self.messages.count > 1) {
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+    }
+}
+
+- (void)fetchMessages
+{
+    if (self.navigationController.topViewController == self) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSOrderedSet *newMessages = [self.layerClient messagesForConversation:self.conversation];
+            NSLog(@"New Message Count %lu", (unsigned long)newMessages.count);
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"messagesUpdated" object:nil userInfo:nil];
+            [self fetchMessages];
+        });
+    }
+    
+    NSAssert(self.conversation, @"Conversation should not be `nil`.");
+    if (self.messages) self.messages = nil;
+    NSOrderedSet *messages = [self.layerClient messagesForConversation:self.conversation];
+    NSLog(@"Message Count %lu", (unsigned long)messages.count);
+    self.messages = messages;
+}
+
+- (void)messagesUpdated:(NSNotification *)notification
+{
+    [self.collectionView reloadData];
+    if (self.messages.count > 0) {
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
+                                    atScrollPosition:UICollectionViewScrollPositionBottom
+                                            animated:YES];
+    }
 }
 
 # pragma mark
@@ -124,7 +143,8 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (void)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    [cell updateCellWithMessage:[self.messages objectAtIndex:indexPath.row] andLayerController:self.layerController];
+    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.row] persistanceManager:self.persistanceManager];
+    [cell updateWithPresenter:presenter];
 }
 
 #pragma mark
@@ -132,27 +152,54 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    //
+    //Nothing to do for now
 }
 
 #pragma mark – UICollectionViewDelegateFlowLayout
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(320, 80);
+    LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
+    LYRMessagePart *part = [message.parts objectAtIndex:0];
+    
+    CGSize itemSize;
+    
+    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+        
+        //180 Is the width we want for the textView
+        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 180, 0)];
+        textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
+        textView.font = LSMediumFont(14);
+        [textView sizeToFit];
+        itemSize = CGSizeMake(320, textView.frame.size.height);
+        
+    } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
+        if (imageView.frame.size.height > imageView.frame.size.width) {
+            itemSize = CGSizeMake(320, 300);
+        } else {
+            CGFloat ratio = (184 / imageView.frame.size.width);
+            CGFloat height = imageView.frame.size.height * ratio;
+            itemSize = CGSizeMake(320, height + 8);
+        }
+    }
+    if (40 > itemSize.height) {
+        return CGSizeMake(itemSize.width, 50);
+    }
+    return itemSize;
 }
 
-- (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+- (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    return UIEdgeInsetsMake(0, 0, 0, 0);
+    return UIEdgeInsetsMake(0, 0, 48, 0);
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
     return 0;
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
     return 0;
 }
@@ -165,6 +212,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y + kbSize.height)];
         self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     } completion:^(BOOL finished) {
         //
@@ -176,6 +224,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y - kbSize.height)];
         self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     } completion:^(BOOL finished) {
         //
@@ -185,18 +234,47 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 #pragma mark
 #pragma mark LSComposeViewDelegate
 
-- (void)sendMessageWithText:(NSString *)text
+- (void)composeView:(LSComposeView *)composeView sendMessageWithText:(NSString *)text
 {
-    [self.layerController sendMessage:text inConversation:self.conversation];
-    [self fetchMessages];
-    [self.collectionView reloadData];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
+    LYRMessage *message = [self.layerClient messageWithConversation:self.conversation parts:@[ part ]];
+
+    NSError *error;
+    BOOL success = [self.layerClient sendMessage:message error:&error];
+    if (success) {
+        [self fetchMessages];
+        [self.collectionView reloadData];
+        NSLog(@"Messages Succesfully Sent");
+    } else {
+        NSLog(@"The error is %@", error);
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
 }
 
-- (void)sendMessageWithImage:(UIImage *)image
+- (void)composeView:(LSComposeView *)composeView sendMessageWithImage:(UIImage *)image
 {
-    [self.layerController sendImage:image inConversation:self.conversation];
-    [self fetchMessages];
-    [self.collectionView reloadData];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:LSJPEGDataWithData(UIImagePNGRepresentation(image))];
+    LYRMessage *message = [self.layerClient messageWithConversation:self.conversation parts:@[ part ]];
+    
+    NSError *error;
+    BOOL success = [self.layerClient sendMessage:message error:&error];
+    if (success) {
+        [self fetchMessages];
+        [self.collectionView reloadData];
+    } else {
+        NSLog(@"The error is %@", error);
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
 }
 
 - (void)cameraTapped
@@ -237,7 +315,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
         picker.delegate = self;
         
         picker.sourceType = sourceType;
-        [self.navigationController presentViewController:picker animated:TRUE completion:^{
+        [self.navigationController presentViewController:picker animated:YES completion:^{
             //
         }];
         NSLog(@"Camera is available");
@@ -254,12 +332,12 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
         self.selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
         [self.composeView updateWithImage:self.selectedImage];
     }
-    [self.navigationController dismissViewControllerAnimated:TRUE completion:nil];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [self.navigationController dismissViewControllerAnimated:TRUE completion:nil];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 

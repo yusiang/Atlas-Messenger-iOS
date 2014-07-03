@@ -12,8 +12,12 @@
 
 @interface LSComposeView ()
 
-@property (nonatomic) CGRect defaultRect;
+@property (nonatomic, strong) UIView *backingTextView;
+@property (nonatomic, strong) UITextView *textView;
+@property (nonatomic, strong) LSButton *cameraButton;
+@property (nonatomic, strong) LSButton *sendButton;
 @property (nonatomic, strong) NSMutableArray *images;
+@property (nonatomic) CGRect defaultRect;
 
 @end
 
@@ -24,7 +28,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.defaultRect = frame;
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = LSLighGrayColor();
         self.accessibilityLabel = @"composeView";
         [self initizlizeSubviews];
         self.images = [[NSMutableArray alloc] init];
@@ -43,24 +47,25 @@
 
 - (void)initializeTextField
 {
-    if (!self.textVIew) {
-        self.textVIew = [[UITextView alloc] init];
-        self.textVIew.delegate = self;
+    if (!self.textView) {
+        self.textView = [[UITextView alloc] init];
+        self.textView.delegate = self;
     }
-    self.textVIew.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.textVIew.layer.borderWidth = 1;
-    self.textVIew.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:16];
-    self.textVIew.layer.cornerRadius = 4.0f;
-    self.textVIew.accessibilityLabel = @"Compose TextView";
-    [self addSubview:self.textVIew];
+    self.textView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.textView.layer.borderWidth = 1;
+    self.textView.font = LSMediumFont(16);
+    self.textView.layer.cornerRadius = 4.0f;
+    self.textView.accessibilityLabel = @"Compose TextView";
+    [self addSubview:self.textView];
 }
 
 - (void)initializeCameraButton
 {
     if (!self.cameraButton){
-        self.cameraButton = [[LSButton alloc] initWithText:@"Cam"];
-        [self.cameraButton setBackgroundColor:[UIColor redColor]];
+        self.cameraButton = [[LSButton alloc] initWithText:@""];
     }
+    [self.cameraButton setBackgroundColor:[UIColor lightGrayColor]];
+    self.cameraButton.accessibilityLabel = @"Cam Button";
     [self.cameraButton addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.cameraButton];
 }
@@ -70,7 +75,8 @@
     if (!self.sendButton) {
         self.sendButton = [[LSButton alloc] initWithText:@"Send"];
     }
-    
+    [self.sendButton setFont:LSMediumFont(16)];
+    [self.sendButton setTextColor:[UIColor whiteColor]];
     [self.sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.sendButton];
 }
@@ -78,17 +84,27 @@
 - (void)configureDefaultViewConstraints
 {
     self.frame = self.defaultRect;
-    self.textVIew.frame = CGRectMake(50, self.frame.size.height - 42, 200, 36);
+    self.textView.frame = CGRectMake(50, self.frame.size.height - 42, 200, 36);
     self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
+    [self addCameraIconToButton:self.cameraButton];
     self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
 }
 
+- (void)addCameraIconToButton:(LSButton *)button
+{
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, button.frame.size.width - 20, button.frame.size.height - 20)];
+    imageView.image = [UIImage imageNamed:@"camera"];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.backgroundColor = [UIColor clearColor];
+    imageView.center = button.center;
+    [self addSubview:imageView];
+}
 
 - (void)configurePhotoViewConstraints
 {
     if (self.frame.size.height < self.defaultRect.size.height + 50) {
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y - 50, self.frame.size.width, self.frame.size.height + 50);
-        self.textVIew.frame = CGRectMake(self.textVIew.frame.origin.x, self.frame.size.height - 92, self.textVIew.frame.size.width, self.textVIew.frame.size.height + 50);
+        self.textView.frame = CGRectMake(self.textView.frame.origin.x, self.frame.size.height - 92, self.textView.frame.size.width, self.textView.frame.size.height + 50);
         self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
         self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
     }
@@ -101,22 +117,15 @@
 
 - (void)sendMessage
 {
-    [self.textVIew resignFirstResponder];
-    
-    if (self.textVIew.attributedText) {
-        NSAttributedString *string = self.textVIew.attributedText;
-
-    }
-    
-    if (![self.textVIew.text isEqualToString:@""]) {
-        [self.delegate sendMessageWithText:self.textVIew.text];
-        [self.textVIew setText:@""];
-    }
+    [self.textView resignFirstResponder];
     
     if (self.images.count > 0) {
         for (UIImage *image in self.images) {
-            [self.delegate sendMessageWithImage:image];
+            [self.delegate composeView:self sendMessageWithImage:image];
         }
+    } else {
+        [self.delegate composeView:self sendMessageWithText:self.textView.text];
+        [self.textView setText:@""];
     }
     
     [UIView animateWithDuration:0.2 animations:^{
@@ -130,7 +139,7 @@
     
     [self configurePhotoViewConstraints];
     
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textVIew.attributedText];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textView.attributedText];
     
     LSMediaAttachement *textAttachment = [[LSMediaAttachement alloc] init];
     
@@ -140,7 +149,7 @@
     
     [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
     
-    self.textVIew.attributedText = attrStringWithImage;
+    self.textView.attributedText = attrStringWithImage;
 }
 
 #pragma mark
@@ -167,6 +176,9 @@
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
+    if ([text isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+    }
     return YES;
     
 }
