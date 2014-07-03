@@ -22,8 +22,6 @@
 
 @implementation LSMessageCell
 
-// SBW: All of the lazy loading in here needs to removed. Just set the view up.
-
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -52,7 +50,7 @@
 - (void)configureCellForLoggedInUser
 {
     self.bubbleView.frame = CGRectMake(74, 6, self.frame.size.width - 116, self.frame.size.height - 12);
-    self.bubbleView.backgroundColor = [LSUIConstants layerBlueColor];
+    self.bubbleView.backgroundColor = LSBlueColor();
     
     self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
     
@@ -120,7 +118,7 @@
     if (!self.messageText) {
         self.messageText = [[UITextView alloc] init];
         self.messageText.textColor = [UIColor whiteColor];
-        self.messageText.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:14];
+        self.messageText.font = LSMediumFont(14);
         self.messageText.editable = NO;
         self.messageText.userInteractionEnabled = NO;
     }

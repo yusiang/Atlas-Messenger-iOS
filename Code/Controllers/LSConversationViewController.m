@@ -12,20 +12,34 @@
 #import "LSComposeView.h"
 #import "LSUIConstants.h"
 
+NSData *LSJPEGDataWithData(NSData *data)
+{
+    CGFloat compression = 0.9f;
+    CGFloat maxCompression = 0.1f;
+    int maxFileSize = 64*1024;
+    
+    UIImage *image = [UIImage imageWithData:data];
+    
+    while ([data length] > maxFileSize && compression > maxCompression) {
+        compression -= 0.1;
+        data = UIImageJPEGRepresentation(image, compression);
+    }
+    return data;
+}
+
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) LSComposeView *composeView;
 @property (nonatomic, strong) NSOrderedSet *messages;
 @property (nonatomic, strong) UIImage *selectedImage;
-@property (nonatomic, strong) NSTimer *timer;
 
 @end
 
 @implementation LSConversationViewController
 
 static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
-
+static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -62,9 +76,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messagesUpdated:) name:@"messagesUpdated" object:nil];
-    
-    //[self.dataSource cellClass:class withIdentifier:identifier];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messagesUpdated:) name:LSMessagesUpdatedNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -114,19 +126,16 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 # pragma mark Collection View Data Source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    //[self.dataSource numberOfItemsInSection:section];
     return self.messages.count;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    //[self.dataSource numberOfSectionsInCollectionView:section];
     return 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    //[self.dataSource cellForItemAtIndexPath:indexPath];
     LSMessageCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LSCMessageCellIdentifier forIndexPath:indexPath];
     [self configureCell:cell forIndexPath:indexPath];
     return cell;
@@ -134,7 +143,6 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (void)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    //[self.dataSource messageForCellAtIndex:indexPath];
     LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.row] persistanceManager:self.persistanceManager];
     [cell updateWithPresenter:presenter];
 }
@@ -144,7 +152,6 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    //[self.delegate didSelectItemAtIndexPath];
     //Nothing to do for now
 }
 
@@ -162,7 +169,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
         //180 Is the width we want for the textView
         UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 180, 0)];
         textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
-        textView.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:14];
+        textView.font = LSMediumFont(14);
         [textView sizeToFit];
         itemSize = CGSizeMake(320, textView.frame.size.height);
         
@@ -229,7 +236,6 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (void)composeView:(LSComposeView *)composeView sendMessageWithText:(NSString *)text
 {
-    //[self.delegate conversationViewController:self didSendMessageWithText:text]
     LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
     LYRMessage *message = [self.layerClient messageWithConversation:self.conversation parts:@[ part ]];
 
@@ -252,8 +258,7 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 
 - (void)composeView:(LSComposeView *)composeView sendMessageWithImage:(UIImage *)image
 {
-    //[self.delegate conversationViewController:self didSendImage:image]
-    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:[self compressedImageWithData:UIImagePNGRepresentation(image)]];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:LSJPEGDataWithData(UIImagePNGRepresentation(image))];
     LYRMessage *message = [self.layerClient messageWithConversation:self.conversation parts:@[ part ]];
     
     NSError *error;
@@ -270,23 +275,6 @@ static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
                                                   otherButtonTitles:nil];
         [alertView show];
     }
-}
-
-- (NSData *)compressedImageWithData:(NSData *)imageData
-{
-    
-    CGFloat compression = 0.9f;
-    CGFloat maxCompression = 0.1f;
-    int maxFileSize = 64*1024;
-    
-    UIImage *image = [UIImage imageWithData:imageData];
-    
-    while ([imageData length] > maxFileSize && compression > maxCompression) {
-        compression -= 0.1;
-        imageData = UIImageJPEGRepresentation(image, compression);
-    }
-    
-    return imageData;
 }
 
 - (void)cameraTapped

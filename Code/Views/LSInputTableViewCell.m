@@ -30,7 +30,7 @@
 - (void)setText:(NSString *)text
 {
     self.textField.placeholder = text;
-    self.textField.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:18];
+    self.textField.font = LSMediumFont(18);
     self.textField.textColor = [UIColor darkGrayColor];
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.textField sizeToFit];

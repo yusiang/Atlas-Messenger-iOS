@@ -37,7 +37,6 @@
 		25918B9A195F960500D0FB1B /* LSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 25918B99195F960500D0FB1B /* LSSession.m */; };
 		259A574F1950EB76000E27B0 /* LSAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57161950EB76000E27B0 /* LSAPIManager.m */; };
 		259A57501950EB76000E27B0 /* LSContactsSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */; };
-		259A57511950EB76000E27B0 /* LSConversationListOLDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571A1950EB76000E27B0 /* LSConversationListOLDViewController.m */; };
 		259A57521950EB76000E27B0 /* LSConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571C1950EB76000E27B0 /* LSConversationViewController.m */; };
 		259A57531950EB76000E27B0 /* LSAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571E1950EB76000E27B0 /* LSAuthenticationViewController.m */; };
 		259A57551950EB76000E27B0 /* LSLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57221950EB76000E27B0 /* LSLoginViewController.m */; };
@@ -114,8 +113,6 @@
 		259A57161950EB76000E27B0 /* LSAPIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAPIManager.m; sourceTree = "<group>"; };
 		259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsSelectionViewController.h; sourceTree = "<group>"; };
 		259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactsSelectionViewController.m; sourceTree = "<group>"; };
-		259A57191950EB76000E27B0 /* LSConversationListOLDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListOLDViewController.h; sourceTree = "<group>"; };
-		259A571A1950EB76000E27B0 /* LSConversationListOLDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListOLDViewController.m; sourceTree = "<group>"; };
 		259A571B1950EB76000E27B0 /* LSConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationViewController.h; sourceTree = "<group>"; };
 		259A571C1950EB76000E27B0 /* LSConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationViewController.m; sourceTree = "<group>"; };
 		259A571D1950EB76000E27B0 /* LSAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationViewController.h; sourceTree = "<group>"; };
@@ -242,15 +239,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0AB1157D196464BC00B59DF8 /* OLD - Delete */ = {
-			isa = PBXGroup;
-			children = (
-				259A57191950EB76000E27B0 /* LSConversationListOLDViewController.h */,
-				259A571A1950EB76000E27B0 /* LSConversationListOLDViewController.m */,
-			);
-			name = "OLD - Delete";
-			sourceTree = "<group>";
-		};
 		259A57111950EB76000E27B0 /* Code */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,7 +262,6 @@
 		259A57121950EB76000E27B0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0AB1157D196464BC00B59DF8 /* OLD - Delete */,
 				259A57151950EB76000E27B0 /* LSAPIManager.h */,
 				259A57161950EB76000E27B0 /* LSAPIManager.m */,
 				259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */,
@@ -547,7 +534,6 @@
 				259A57631950EB76000E27B0 /* LSButton.m in Sources */,
 				259A57671950EB76000E27B0 /* LSInputTableViewCell.m in Sources */,
 				0A2324F51960DB8C00C1C98D /* LSConversationCellPresenter.m in Sources */,
-				259A57511950EB76000E27B0 /* LSConversationListOLDViewController.m in Sources */,
 				25918B97195F95F700D0FB1B /* LSPersistenceManager.m in Sources */,
 				259A57651950EB76000E27B0 /* LSContactTableViewCell.m in Sources */,
 				0A52D5FE1961FD0D0030A34A /* LSApplicationController.m in Sources */,
@@ -701,7 +687,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "96C25332-C546-4A20-A83B-1EE03BE5A8E7";
+				PROVISIONING_PROFILE = "C0AED2FE-7137-4D39-A2F6-863162522EEA";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -728,7 +714,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "96C25332-C546-4A20-A83B-1EE03BE5A8E7";
+				PROVISIONING_PROFILE = "C0AED2FE-7137-4D39-A2F6-863162522EEA";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

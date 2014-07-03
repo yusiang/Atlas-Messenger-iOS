@@ -51,7 +51,9 @@ static void LSAlertWithError(NSError *error)
     LYRSetLogLevelFromEnvironment();
     
     LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:LSLayerAppID()];
-    self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient];
+    LSPersistenceManager *persistenceManager = LSIsRunningTests() ? [LSPersistenceManager persistenceManagerWithInMemoryStore] : [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
+    
+    self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
     [self.applicationController.layerClient startWithCompletion:^(BOOL success, NSError *error) {
         NSLog(@"Started with success: %d, %@", success, error);
@@ -64,7 +66,7 @@ static void LSAlertWithError(NSError *error)
     authenticationViewController.layerClient = self.applicationController.layerClient;
     authenticationViewController.APIManager = self.applicationController.APIManager;
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
-    self.navigationController.navigationBar.barTintColor = [LSUIConstants veryLightGrayColor];
+    self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
     self.window.rootViewController = self.navigationController;
     
     LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];

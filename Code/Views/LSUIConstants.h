@@ -15,25 +15,8 @@ UIColor *LSGrayColor();
 
 UIColor *LSLighGrayColor();
 
-NSString *LSMediumFont();
+UIFont *LSMediumFont(CGFloat size);
 
-NSString *LSBoldFont();
+UIFont *LSBoldFont(CGFloat size);
 
-NSString *LSHeavyFont();
-
-@interface LSUIConstants : NSObject
-
-+ (UIColor *)layerBlueColor;
-
-+ (UIColor *)layerGrayColor;
-
-+ (UIColor *)veryLightGrayColor;
-
-// SBW: The font names should be NSString constants and these methods can return `UIFont` instances
-+ (NSString *)layerMediumFont;
-
-+ (NSString *)layerBoldFont;
-
-+ (NSString *)layerHeavyFont;
-
-@end
+UIFont *LSHeavyFont(CGFloat size);

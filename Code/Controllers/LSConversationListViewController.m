@@ -18,7 +18,7 @@
 
 @implementation LSConversationListViewController
 
-NSString *const LSConversationCellID = @"conversationCellIdentifier";
+static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void)viewDidLoad
 {

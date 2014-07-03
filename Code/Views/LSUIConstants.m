@@ -6,8 +6,9 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSUIConstants.h"
-
+static NSString *const LSFontMedium = @"Avenir-Medium";
+static NSString *const LSFontBold = @"Avenir-Heavy";
+static NSString *const LSFontHeavy = @"Avenir-Black";
 
 UIColor *LSBlueColor()
 {
@@ -24,52 +25,17 @@ UIColor *LSLighGrayColor()
     return [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0];
 }
 
-NSString *LSMediumFont()
+UIFont *LSMediumFont(CGFloat size)
 {
-    return @"Avenir-Medium";
+    return [UIFont fontWithName:LSFontMedium size:size];
 }
 
-NSString *LSBoldFont()
+UIFont *LSBoldFont(CGFloat size)
 {
-    return @"Avenir-Medium";
+    return [UIFont fontWithName:LSFontBold size:size];
 }
 
-NSString *LSHeavyFont()
+UIFont *LSHeavyFont(CGFloat size)
 {
-    return @"Avenir-Medium";
+    return [UIFont fontWithName:LSFontHeavy size:size];;
 }
-
-
-@implementation LSUIConstants
-
-+ (UIColor *)layerBlueColor
-{
-    return [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0];
-}
-
-+ (UIColor *)veryLightGrayColor
-{
-    return [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0];
-}
-
-+ (UIColor *)layerGrayColor
-{
-    return [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0];
-}
-
-+ (NSString *)layerMediumFont
-{
-    return @"Avenir-Medium";
-}
-
-+ (NSString *)layerBoldFont
-{
-    return @"Avenir-Medium";
-}
-
-+ (NSString *)layerHeavyFont
-{
-    return @"Avenir-Medium";
-}
-
-@end

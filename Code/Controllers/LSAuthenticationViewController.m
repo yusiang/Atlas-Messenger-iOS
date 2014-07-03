@@ -36,22 +36,22 @@
     self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = FALSE;
     self.titleLabel.text = @"Layer Chat";
-    self.titleLabel.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:42];
-    self.titleLabel.textColor = [LSUIConstants layerBlueColor];
+    self.titleLabel.font = LSMediumFont(42);
+    self.titleLabel.textColor = LSBlueColor();
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.titleLabel sizeToFit];
     [self.view addSubview:self.titleLabel];
     
     self.registerButton = [[LSButton alloc] initWithText:@"Register"];
     self.registerButton.translatesAutoresizingMaskIntoConstraints = FALSE;
-    self.registerButton.backgroundColor = [LSUIConstants layerBlueColor];
+    self.registerButton.backgroundColor = LSBlueColor();
     [self.registerButton addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.registerButton];
     
     self.loginButton =[[LSButton alloc] initWithText:@"Login"];
     self.loginButton.translatesAutoresizingMaskIntoConstraints = FALSE;
-    self.loginButton.borderColor = [LSUIConstants layerBlueColor];
-    self.loginButton.textColor = [LSUIConstants layerBlueColor];
+    self.loginButton.borderColor = LSBlueColor();
+    self.loginButton.textColor = LSBlueColor();
     self.loginButton.backgroundColor = [UIColor whiteColor];
     [self.loginButton addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.loginButton];

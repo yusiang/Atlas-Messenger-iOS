@@ -28,7 +28,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.defaultRect = frame;
-        self.backgroundColor = [LSUIConstants veryLightGrayColor];
+        self.backgroundColor = LSLighGrayColor();
         self.accessibilityLabel = @"composeView";
         [self initizlizeSubviews];
         self.images = [[NSMutableArray alloc] init];
@@ -53,7 +53,7 @@
     }
     self.textView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.textView.layer.borderWidth = 1;
-    self.textView.font = [UIFont fontWithName:[LSUIConstants layerMediumFont] size:16];
+    self.textView.font = LSMediumFont(16);
     self.textView.layer.cornerRadius = 4.0f;
     self.textView.accessibilityLabel = @"Compose TextView";
     [self addSubview:self.textView];
@@ -75,7 +75,7 @@
     if (!self.sendButton) {
         self.sendButton = [[LSButton alloc] initWithText:@"Send"];
     }
-    [self.sendButton setFont:[UIFont fontWithName:[LSUIConstants layerMediumFont] size:16]];
+    [self.sendButton setFont:LSMediumFont(16)];
     [self.sendButton setTextColor:[UIColor whiteColor]];
     [self.sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.sendButton];

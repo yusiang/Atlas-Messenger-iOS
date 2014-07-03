@@ -18,27 +18,22 @@
 
 @implementation LSApplicationController
 
-+ (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient
++ (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     NSParameterAssert(baseURL);
     NSParameterAssert(layerClient);
-    return [[self alloc] initWithBaseURL:baseURL layerClient:layerClient];
+    return [[self alloc] initWithBaseURL:baseURL layerClient:layerClient persistenceManager:persistenceManager];
 }
 
-- (id)initWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient
+- (id)initWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     self = [super init];
     if (self) {
-       
         _layerClient = layerClient;
-        _persistenceManager = LSIsRunningTests() ? [LSPersistenceManager persistenceManagerWithInMemoryStore] : [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
+        _persistenceManager = persistenceManager;
         _APIManager = [LSAPIManager managerWithBaseURL:baseURL layerClient:layerClient];
-        
     }
     return self;
 }
-
-
-
 
 @end
