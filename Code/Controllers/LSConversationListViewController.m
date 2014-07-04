@@ -129,6 +129,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 - (void)logoutTapped
 {
     [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+        self.tableView = nil;
         NSLog(@"Deauthenticated...");
     }];
 }

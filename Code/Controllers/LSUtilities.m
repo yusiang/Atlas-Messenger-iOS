@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
+#import "LSPersistenceManager.h"
+
 BOOL LSIsRunningTests(void)
 {
     return NSClassFromString(@"XCTestCase") != Nil;
@@ -43,4 +45,20 @@ NSString *LSApplicationDataDirectory(void)
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     return ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+}
+
+NSString *LSLayerPersistencePath(void)
+{
+    if (LSIsRunningTests()) {
+        return nil;
+    }
+    return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID()]];
+}
+
+LSPersistenceManager *LSPersitenceManager(void)
+{
+    if (LSIsRunningTests()){
+        return [LSPersistenceManager persistenceManagerWithInMemoryStore];
+    }
+    return [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
 }

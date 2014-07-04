@@ -64,7 +64,7 @@
     if (!self.cameraButton){
         self.cameraButton = [[LSButton alloc] initWithText:@""];
     }
-    [self.cameraButton setBackgroundColor:[UIColor lightGrayColor]];
+    [self.cameraButton setBackgroundColor:LSBlueColor()];
     self.cameraButton.accessibilityLabel = @"Cam Button";
     [self.cameraButton addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.cameraButton];
@@ -75,8 +75,9 @@
     if (!self.sendButton) {
         self.sendButton = [[LSButton alloc] initWithText:@"Send"];
     }
-    [self.sendButton setFont:LSMediumFont(16)];
-    [self.sendButton setTextColor:[UIColor whiteColor]];
+    [self.sendButton setBackgroundColor:[UIColor clearColor]];
+    [self.sendButton setFont:LSMediumFont(20)];
+    [self.sendButton setTextColor:[UIColor grayColor]];
     [self.sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.sendButton];
 }
@@ -84,15 +85,15 @@
 - (void)configureDefaultViewConstraints
 {
     self.frame = self.defaultRect;
-    self.textView.frame = CGRectMake(50, self.frame.size.height - 42, 200, 36);
-    self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
+    self.textView.frame = CGRectMake(50, self.frame.size.height - 42, 206, 36);
+    self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 41, 38, 34);
     [self addCameraIconToButton:self.cameraButton];
     self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
 }
 
 - (void)addCameraIconToButton:(LSButton *)button
 {
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, button.frame.size.width - 20, button.frame.size.height - 20)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, button.frame.size.width - 16, button.frame.size.height - 16)];
     imageView.image = [UIImage imageNamed:@"camera"];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.backgroundColor = [UIColor clearColor];
@@ -123,6 +124,10 @@
         for (UIImage *image in self.images) {
             [self.delegate composeView:self sendMessageWithImage:image];
         }
+    }
+    
+    if (![self.textView.text length] > 0) {
+        return;
     } else {
         [self.delegate composeView:self sendMessageWithText:self.textView.text];
         [self.textView setText:@""];
@@ -161,6 +166,7 @@
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
+    self.sendButton.textColor = [UIColor grayColor];
     return YES;
 }
 
@@ -178,7 +184,10 @@
 {
     if ([text isEqualToString:@"\n"]) {
         [textView resignFirstResponder];
+    } else {
+       self.sendButton.textColor = LSBlueColor();
     }
+    
     return YES;
     
 }

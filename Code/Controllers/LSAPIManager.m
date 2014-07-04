@@ -134,6 +134,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             } else {
                 NSString *authToken = loginInfo[@"authentication_token"];
                 LSUser *user = [LSUser userFromDictionaryRepresentation:loginInfo[@"user"]];
+                user.password = password;
                 LSSession *session = [LSSession sessionWithAuthenticationToken:authToken user:user];
                 self.authenticatedSession = session;
                 
@@ -178,7 +179,13 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 - (void)resumeSession:(LSSession *)session completion:(void(^)(LSUser *user, NSError *error))completion
 {
-    // TODO: Verify that the token actually works and emit a login notification
+    if (session) {
+        [self authenticateWithEmail:session.user.email password:session.user.password completion:^(LSUser *user, NSError *error) {
+            completion(user, error);
+        }];
+    }
+    NSError *error = [NSError errorWithDomain:@"Authentication Error" code:500 userInfo:@{@"error" : @"No authenticated session"}];
+    completion (nil, error);
 }
 
 - (void)deauthenticateWithCompletion:(void(^)(BOOL success, NSError *error))completion

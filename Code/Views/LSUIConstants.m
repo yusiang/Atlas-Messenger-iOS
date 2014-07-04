@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-static NSString *const LSFontMedium = @"Avenir-Medium";
-static NSString *const LSFontBold = @"Avenir-Heavy";
-static NSString *const LSFontHeavy = @"Avenir-Black";
+static NSString *const LSFontMedium = @"HelveticaNeue";
+static NSString *const LSFontBold = @"HelveticaNeue-Bold";
+static NSString *const LSFontLight = @"HelveticaNeue-Light";
 
 UIColor *LSBlueColor()
 {
@@ -17,12 +17,12 @@ UIColor *LSBlueColor()
 
 UIColor *LSGrayColor()
 {
-    return [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed:219.0/255.0 green:219.0/255.0 blue:219.0/255.0 alpha:1.0];
 }
 
 UIColor *LSLighGrayColor()
 {
-    return [UIColor colorWithRed:36.0f/255.0f green:166.0f/255.0f blue:225.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0];
 }
 
 UIFont *LSMediumFont(CGFloat size)
@@ -35,7 +35,7 @@ UIFont *LSBoldFont(CGFloat size)
     return [UIFont fontWithName:LSFontBold size:size];
 }
 
-UIFont *LSHeavyFont(CGFloat size)
+UIFont *LSHeavyLight(CGFloat size)
 {
-    return [UIFont fontWithName:LSFontHeavy size:size];;
+    return [UIFont fontWithName:LSFontLight size:size];;
 }

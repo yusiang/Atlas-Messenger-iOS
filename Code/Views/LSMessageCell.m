@@ -12,6 +12,7 @@
 @interface LSMessageCell ()
 
 @property (nonatomic, strong) UIView *bubbleView;
+@property (nonatomic, strong) UIView *arrow;
 @property (nonatomic, strong) UITextView *messageText;
 @property (nonatomic, strong) UILabel *senderLabel;
 @property (nonatomic, strong) LSAvatarImageView *avatarImageView;
@@ -36,6 +37,7 @@
 {
     self.presenter = presenter;
     [self addBubbleView];
+    [self addArrow];
     [self addAvatarImage];
     [self addSenderLabel];
     [self addMessageContent];
@@ -49,8 +51,11 @@
 
 - (void)configureCellForLoggedInUser
 {
-    self.bubbleView.frame = CGRectMake(74, 6, self.frame.size.width - 120, self.frame.size.height - 12);
+    self.bubbleView.frame = CGRectMake(50, 6, self.frame.size.width - 100, self.frame.size.height - 12);
     self.bubbleView.backgroundColor = LSBlueColor();
+
+    self.arrow.center = CGPointMake(self.bubbleView.frame.size.width - 6, self.bubbleView.frame.size.height / 2);
+    self.arrow.backgroundColor = LSBlueColor();
     
     self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
     
@@ -61,8 +66,11 @@
 
 - (void)configureCellForNonLoggedInUser
 {
-    self.bubbleView.frame = CGRectMake(42, 6, self.frame.size.width - 120, self.frame.size.height - 12);
-    self.bubbleView.backgroundColor = [UIColor colorWithRed:219.0/255.0 green:219.0/255.0 blue:219.0/255.0 alpha:1.0];
+    self.bubbleView.frame = CGRectMake(50, 6, self.frame.size.width - 100, self.frame.size.height - 12);
+    self.bubbleView.backgroundColor = LSGrayColor();
+
+    self.arrow.center = CGPointMake(6, self.bubbleView.frame.size.height / 2);
+    self.arrow.backgroundColor = LSGrayColor();
     
     self.messageText.frame = CGRectMake(4, 2, self.bubbleView.frame.size.width - 12, self.bubbleView.frame.size.height - 12);
     
@@ -78,6 +86,18 @@
         self.bubbleView.layer.cornerRadius = 4.0f;
     }
     [self addSubview:self.bubbleView];
+}
+
+#define DegreesToRadians(angle) ((angle) / 180.0 * M_PI)
+- (void)addArrow
+{
+    if (!self.arrow) {
+        self.arrow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        self.arrow.layer.cornerRadius = 2;
+        self.arrow.backgroundColor = LSBlueColor();
+        self.arrow.transform = CGAffineTransformMakeRotation(DegreesToRadians(45));
+    }
+    [self.bubbleView addSubview:self.arrow];
 }
 
 - (void)addAvatarImage

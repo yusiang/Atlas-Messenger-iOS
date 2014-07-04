@@ -22,7 +22,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
-    self = [super initWithStyle:UITableViewStyleGrouped];
+    self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
         _selectedContacts = [NSMutableSet set];
     }
@@ -41,7 +41,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     
     NSError *error = nil;
     NSSet *contacts = [self filterContacts:[self.persistenceManager persistedUsersWithError:&error]];
-    self.contacts = [contacts sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES] ]];
+    self.contacts = [contacts sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
     
     if (!self.contacts.count > 0) {
         UILabel *label = [[UILabel alloc] init];
@@ -106,7 +106,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60;
+    return 48;
 }
 
 - (LSContactTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

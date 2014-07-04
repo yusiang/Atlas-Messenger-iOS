@@ -7,6 +7,7 @@
 //
 
 #import "LSContactTableViewCell.h"
+#import "LSUIConstants.h"
 
 @interface LSContactTableViewCell ()
 
@@ -20,7 +21,9 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-
+        [self addSelectionIndicator];
+        self.textLabel.font = LSMediumFont(18);
+        [self setSeparatorInset:UIEdgeInsetsMake(0, 20, 0, 0)];
     }
     return self;
 }
@@ -40,27 +43,19 @@
     }
 }
 
-- (void)prepareForReuse
+- (void) addSelectionIndicator
 {
-    [super prepareForReuse];
+    if (!self.radioButton) {
+        self.radioButton = [LSSelectionIndicator initWithDiameter:28];
+        self.radioButton.frame = CGRectMake(270, 10, 28, 28);
+        self.radioButton.accessibilityLabel = @"selectionIndicator";
+        [self addSubview:self.radioButton];
+    }
 }
 
 - (void)updateWithSelectionIndicator:(BOOL)selected
 {
-    if (!self.radioButton) {
-        self.radioButton = [[UIView alloc] initWithFrame:CGRectMake(280, 16, 28, 28)];
-        self.radioButton.accessibilityLabel = @"selectionIndicator";
-        [self addSubview:self.radioButton];
-    }
-    self.radioButton.layer.cornerRadius = 14.0f;
-    self.radioButton.backgroundColor = [UIColor redColor];
-    
-    if (selected) {
-        self.radioButton.alpha = 1.0;
-    } else {
-        [self.radioButton removeFromSuperview];
-        self.radioButton = nil;
-    }
+    [self.radioButton setSelected:selected];
 }
 
 @end

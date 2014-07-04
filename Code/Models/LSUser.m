@@ -17,6 +17,7 @@
     user.firstName = representation[@"first_name"];
     user.lastName = representation[@"last_name"];
     user.email = representation[@"email"];
+    user.password = representation[@"password"];
     
     return user;
 }

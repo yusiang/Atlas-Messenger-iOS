@@ -39,8 +39,8 @@
 {
     self.presenter = presenter;
     [self addAvatarImage];
-    [self addConversationLabel];
     [self addLastMessageText];
+    [self addConversationLabel];
     [self addDateLabel];
 }
 
@@ -57,10 +57,10 @@
 - (void)addConversationLabel
 {
     if(!self.senderName) {
-        self.senderName = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 240, 20)];
+        self.senderName = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 200, 24)];
         [self addSubview:self.senderName];
     }
-    [self.senderName setFont:LSHeavyFont(16)];
+    [self.senderName setFont:LSBoldFont(16)];
     [self.senderName setTextColor:[UIColor darkGrayColor]];
     self.senderName.text = [self.presenter conversationLabel];
     self.accessibilityLabel = self.senderName.text;

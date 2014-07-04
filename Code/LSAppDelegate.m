@@ -28,7 +28,7 @@ static void LSAlertWithError(NSError *error)
 
 @interface LYRClient ()
 
-- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID;
+- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID databasePath:(NSString *)path;
 
 @end
 
@@ -50,8 +50,8 @@ static void LSAlertWithError(NSError *error)
     LYRTestCleanKeychain();
     LYRSetLogLevelFromEnvironment();
     
-    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:LSLayerAppID()];
-    LSPersistenceManager *persistenceManager = LSIsRunningTests() ? [LSPersistenceManager persistenceManagerWithInMemoryStore] : [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
+    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
+    LSPersistenceManager *persistenceManager = LSPersitenceManager();
     
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
@@ -67,12 +67,13 @@ static void LSAlertWithError(NSError *error)
     authenticationViewController.APIManager = self.applicationController.APIManager;
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
     self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
+    self.navigationController.navigationBar.tintColor = LSBlueColor();
     self.window.rootViewController = self.navigationController;
     
     LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
     
     if (session) {
-        [self.APIManager resumeSession:session completion:^(LSUser *user, NSError *error) {
+        [self.applicationController.APIManager resumeSession:session completion:^(LSUser *user, NSError *error) {
             if (user) {
                 NSLog(@"Session resumed with user %@", user);
                 [self presentConversationsListViewController];
@@ -83,7 +84,7 @@ static void LSAlertWithError(NSError *error)
     }
     
     [self.window makeKeyAndVisible];
-    
+
     return YES;
 }
 
@@ -145,6 +146,8 @@ static void LSAlertWithError(NSError *error)
     conversationListViewController.APIManager = self.applicationController.APIManager;
     conversationListViewController.persistenceManager = self.applicationController.persistenceManager;
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
+    conversationController.navigationBar.barTintColor = LSLighGrayColor();
+    conversationController.navigationBar.tintColor = LSBlueColor();
     [self.navigationController presentViewController:conversationController animated:YES completion:nil];
 }
 

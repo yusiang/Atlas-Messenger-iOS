@@ -25,5 +25,7 @@ NSUUID *LSLayerAppID();
 
 NSString *LSApplicationDataDirectory();
 
+NSString *LSLayerPersistencePath();
 
+LSPersistenceManager *LSPersitenceManager();
 
