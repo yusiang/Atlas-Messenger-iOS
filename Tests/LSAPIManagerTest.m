@@ -11,16 +11,14 @@
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
 #import "LSTestUser.h"
-
-static NSURL *LSLayerBaseURL(void)
-{
-    NSString *environmentHost = [NSProcessInfo processInfo].environment[@"LAYER_TEST_HOST"];
-    return [NSURL URLWithString:[NSString stringWithFormat:@"https://%@:7072", environmentHost]];
-}
+#import "LSUtilities.h"
+#import "LSPersistenceManager.h"
+#import "LSTestUser.h"
+#import "LYRCountdownLatch.h"
 
 @interface LYRClient ()
 
-- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID;
+- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID databasePath:(NSString *)path;
 
 @end
 
@@ -33,12 +31,15 @@ static NSURL *LSLayerBaseURL(void)
 - (void)setUp
 {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
+    [[self APIManager] deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
+        [latch decrementCount];
+    }];
+    [latch decrementCount];
 }
 
 - (void)tearDown
 {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
 
@@ -49,49 +50,111 @@ static NSURL *LSLayerBaseURL(void)
 
 - (void)testInitializingAPIManager
 {
-    expect([self testManager]).notTo.beNil();
+    expect([self APIManager]).notTo.beNil();
 }
 
 - (void)testPublicPropertiesOnInitializations
 {
-    LSAPIManager *manager = [self testManager];
+    LSAPIManager *manager = [self APIManager];
     expect(manager.authenticatedURLSessionConfiguration).to.beNil();
     expect(manager.authenticatedSession).to.beNil();
 }
 
-- (void)testRegistrationsWithInvalidCredentials
+- (void)testRegistrationsWithNilEmail
 {
+    LSAPIManager *manager = [self APIManager];
+    LSUser *user = [[[LSTestUser alloc] init] testUserWithNumber:1];
+    user.email = nil;
     
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
+    [manager registerUser:user completion:^(LSUser *user, NSError *error) {
+        expect(user).to.beNil;
+        expect(error).toNot.beNil;
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:0];
 }
 
 - (void)testRegistrationWithExistingEmail
 {
+    LSAPIManager *manager = [self APIManager];
+    LSUser *user1 = [[[LSTestUser alloc] init] testUserWithNumber:1];
+    
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:2 timeoutInterval:10];
+    [manager registerUser:user1 completion:^(LSUser *user, NSError *error) {
+        expect(user).toNot.beNil;
+        expect(error).to.beNil;
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:1];
+    
+    LSUser *user2 = [[[LSTestUser alloc] init] testUserWithNumber:2];
+    user2.email = user1.email;
+    
+    [manager registerUser:user2 completion:^(LSUser *user, NSError *error) {
+        expect(user).to.beNil;
+        expect(error).toNot.beNil;
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:0];
     
 }
 
 - (void)testRegistrationWithValidCredentials
 {
-    
+    LSAPIManager *manager = [self APIManager];
+    LSUser *user1 = [[[LSTestUser alloc] init] testUserWithNumber:1];
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
+    [manager registerUser:user1 completion:^(LSUser *user, NSError *error) {
+        expect(user).toNot.beNil;
+        expect(error).to.beNil;
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:0];
 }
 
 - (void)testLoginWithInvalidCredentials
 {
+    LSAPIManager *manager = [self APIManager];
+    LSUser *user1 = [[[LSTestUser alloc] init] testUserWithNumber:1];
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:2 timeoutInterval:10];
+    [manager registerUser:user1 completion:^(LSUser *user, NSError *error) {
+        expect(user).toNot.beNil;
+        expect(error).to.beNil;
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:0];
     
+    [manager authenticateWithEmail:user1.email password:@"fakePassword" completion:^(LSUser *user, NSError *error) {
+        expect(user).to.beNil;
+        expect(error).toNot.beNil;
+        [latch decrementCount];
+    }];
 }
 
 - (void)testLoginWithValidCredentials
 {
+    LSAPIManager *manager = [self APIManager];
+    LSUser *user1 = [[[LSTestUser alloc] init] testUserWithNumber:1];
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:2 timeoutInterval:10];
+    [manager registerUser:user1 completion:^(LSUser *user, NSError *error) {
+        expect(user).toNot.beNil;
+        expect(error).to.beNil;
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:0];
     
+    [manager authenticateWithEmail:user1.email password:user1.password completion:^(LSUser *user, NSError *error) {
+        expect(user).toNot.beNil;
+        expect(error).to.beNil;
+        [latch decrementCount];
+    }];
 }
 
-- (LSAPIManager *)testManager
+- (LSAPIManager *)APIManager
 {
-    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
-    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:appID];
-    
-    NSURL *url = [NSURL URLWithString:@"http://10.66.0.35:8080/"];
-    return [LSAPIManager managerWithBaseURL:url layerClient:layerClient];
-    
+    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
+    return [LSAPIManager managerWithBaseURL:LSRailsBaseURL() layerClient:layerClient];
 }
 
 - (void)testExample
