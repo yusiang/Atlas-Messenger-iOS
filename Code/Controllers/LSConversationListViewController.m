@@ -172,7 +172,13 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
+        NSError *error;
+        BOOL success = [self.layerClient deleteConversation:[self.conversations objectAtIndex:indexPath.row] error:&error];
+        if (success) {
+            NSLog(@"Conversation Deleted!");
+        } else {
+            NSLog(@"Conversation Not Deleted with Error %@", error);
+        }
     }
 }
 @end

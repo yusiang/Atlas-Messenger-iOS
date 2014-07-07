@@ -10,11 +10,10 @@
 
 @implementation LSAvatarImageView
 
-- (id)initWithFrame:(CGRect)frame
+- (id)init
 {
-    self = [super initWithFrame:frame];
+    self = [super init];
     if (self) {
-        self.layer.cornerRadius = frame.size.width / 2;
         self.clipsToBounds = TRUE;
     }
     return self;

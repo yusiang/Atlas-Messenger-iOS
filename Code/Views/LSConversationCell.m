@@ -14,94 +14,225 @@
 @interface LSConversationCell ()
 
 @property (nonatomic) LSAvatarImageView *avatarImageView;
-@property (nonatomic) UILabel *senderName;
-@property (nonatomic) UITextView *lastMessageText;
-@property (nonatomic) UILabel *date;
-@property (nonatomic) UIView *seperatorLine;
-@property (nonatomic) LSConversationCellPresenter *presenter;
+@property (nonatomic) UILabel *senderLabel;
+@property (nonatomic) UILabel *dateLabel;
+@property (nonatomic) UITextView *lastMessageTextView;
 
 @end
 
 @implementation LSConversationCell
 
-@synthesize avatarImageView = _avatarImageView;
+static CGFloat const LSAvatarImageViewSizeRatio  = 0.60f;
+static CGFloat const LSCellTopMargin = 12.0f;
+static CGFloat const LSCellHorizontalMargin = 12.0f;
+static CGFloat const LSCellBottomMargin = 6.0f;
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setBackgroundColor:[UIColor whiteColor]];
+        
+        self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:self.frame];
+        self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.contentView addSubview:self.avatarImageView];
+       
+        self.senderLabel = [[UILabel alloc] init];
+        self.senderLabel.font = LSBoldFont(16);
+        self.senderLabel.textColor = [UIColor darkGrayColor];
+        self.senderLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.contentView addSubview:self.senderLabel];
+        
+        self.lastMessageTextView = [[UITextView alloc] init];
+        self.lastMessageTextView.contentInset = UIEdgeInsetsMake(-4,-4,0,0);
+        self.lastMessageTextView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.lastMessageTextView.userInteractionEnabled = NO;
+        self.lastMessageTextView.font = LSMediumFont(12);
+        self.lastMessageTextView.textColor = [UIColor grayColor];
+        [self.contentView addSubview:self.lastMessageTextView];
+
+        self.dateLabel = [[UILabel alloc] init];
+        self.dateLabel.font = LSMediumFont(12);
+        self.dateLabel.textColor = [UIColor darkGrayColor];
+        self.dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.contentView addSubview:self.dateLabel];
+        
+        [self setupConstraints];
     }
     return self;
 }
 
 - (void)updateWithPresenter:(LSConversationCellPresenter *)presenter
 {
-    self.presenter = presenter;
-    [self addAvatarImage];
-    [self addLastMessageText];
-    [self addConversationLabel];
-    [self addDateLabel];
-}
-
-- (void)addAvatarImage
-{
-    if (!self.avatarImageView) {
-        self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 46, 46)];
-    }
-    self.avatarImageView.center = CGPointMake(36, 30);
-    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
-    [self addSubview:self.avatarImageView];
-}
-
-- (void)addConversationLabel
-{
-    if(!self.senderName) {
-        self.senderName = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 200, 24)];
-        [self addSubview:self.senderName];
-    }
-    [self.senderName setFont:LSBoldFont(16)];
-    [self.senderName setTextColor:[UIColor darkGrayColor]];
-    self.senderName.text = [self.presenter conversationLabel];
-    self.accessibilityLabel = self.senderName.text;
-    self.senderName.userInteractionEnabled = FALSE;
-}
-
-- (void)addLastMessageText
-{
-    LYRMessage *message = self.presenter.message;
+    //Set Sender Image
+    [self.avatarImageView setImage:[presenter conversationImage]];
+    
+    //Set Sender Label
+    self.senderLabel.text = presenter.conversationLabel;
+    
+    //Set Last Message Text
+    LYRMessage *message = presenter.message;
     LYRMessagePart *part = [message.parts firstObject];
     
-    if (!self.lastMessageText) {
-        self.lastMessageText = [[UITextView alloc] initWithFrame:CGRectMake(70, 26, 240, 50)];
-        [self addSubview:self.lastMessageText];
+    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+        self.lastMessageTextView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
+        [self.lastMessageTextView setFont:LSMediumFont(12)];
+    } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+        self.lastMessageTextView.text = @"Attachemnt: Image";
     }
     
-    if(part)  {
-        self.lastMessageText.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
-        [self.lastMessageText setFont:LSMediumFont(12)];
-        [self.lastMessageText setTextColor:[UIColor grayColor]];
-    }
-    self.lastMessageText.editable = FALSE;
-    self.lastMessageText.scrollEnabled = FALSE;
-    self.lastMessageText.userInteractionEnabled = FALSE;
-}
-
-- (void)addDateLabel
-{
-    LYRMessage *message = self.presenter.message;
-    NSDate *date = [message sentAt];
-    
-    if(!self.date) {
-        self.date = [[UILabel alloc] initWithFrame:CGRectMake(270, 8, 40, 20)];
-        [self addSubview:self.date];
-    }
-    [self.date setFont:LSMediumFont(12)];
-    [self.date setTextColor:[UIColor darkGrayColor]];
-   
+    //Set Date Text
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat: @"HH:mm"];
-    self.date.text = [formatter stringFromDate:date];
+    self.dateLabel.text = [formatter stringFromDate:presenter.message.sentAt];
+}
+
+#pragma mark
+#pragma mark Layout Code
+- (void)setupConstraints
+{
+    //**********Avatar Constraints**********//
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.contentView
+                                                          attribute:NSLayoutAttributeHeight
+                                                         multiplier:LSAvatarImageViewSizeRatio
+                                                           constant:0]];
+    
+    // Height constraint, half of parent view height
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.contentView
+                                                          attribute:NSLayoutAttributeHeight
+                                                         multiplier:LSAvatarImageViewSizeRatio
+                                                           constant:0]];
+    
+    // Center horizontally
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
+                                                          attribute:NSLayoutAttributeLeft
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.contentView
+                                                          attribute:NSLayoutAttributeLeft
+                                                         multiplier:1.0
+                                                           constant:LSCellHorizontalMargin]];
+    
+    // Center vertically
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.contentView
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+    
+    //**********Sender Label Test Constraints**********//
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.avatarImageView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:LSCellHorizontalMargin]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
+                                                                 attribute:NSLayoutAttributeRight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:-60]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
+                                                                 attribute:NSLayoutAttributeTop
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeTop
+                                                                multiplier:1.0
+                                                                  constant:LSCellTopMargin]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                multiplier:0.25
+                                                                  constant:0]];
+    
+    //**********Message Text Constraints**********//
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.avatarImageView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:LSCellHorizontalMargin]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:-LSCellHorizontalMargin]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
+                                                                 attribute:NSLayoutAttributeTop
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.senderLabel
+                                                                 attribute:NSLayoutAttributeBottom
+                                                                multiplier:1.0
+                                                                  constant:0]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
+                                                                 attribute:NSLayoutAttributeBottom
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeBottom
+                                                                multiplier:1.0
+                                                                  constant:-LSCellBottomMargin]];
+    
+     //**********Date Label Constraints**********//
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.senderLabel
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:6]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
+                                                                 attribute:NSLayoutAttributeRight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:-LSCellHorizontalMargin]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.senderLabel
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                multiplier:1.0
+                                                                  constant:0]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
+                                                                 attribute:NSLayoutAttributeTop
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeTop
+                                                                multiplier:1.0
+                                                                  constant:LSCellTopMargin]];
+}
+
+- (void)updateConstraints
+{
+    [super updateConstraints];
+    self.avatarImageView.layer.cornerRadius = (LSAvatarImageViewSizeRatio * self.frame.size.height) / 2;
+    self.avatarImageView.clipsToBounds = YES;
 }
 
 @end

@@ -15,6 +15,7 @@
 #import "LYRTestUtilities.h"
 #import "LSUtilities.h"
 #import "LSUIConstants.h"
+#import "LYRConfiguration.h"
 
 static void LSAlertWithError(NSError *error)
 {
@@ -29,6 +30,7 @@ static void LSAlertWithError(NSError *error)
 @interface LYRClient ()
 
 - (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID databasePath:(NSString *)path;
+- (id)initWithConfiguration:(LYRConfiguration *)configuration appID:(NSUUID *)appID databasePath:(NSString *)path;
 
 @end
 
@@ -50,7 +52,14 @@ static void LSAlertWithError(NSError *error)
     LYRTestCleanKeychain();
     LYRSetLogLevelFromEnvironment();
     
-    LYRClient *layerClient = [[LYRClient alloc] initWithBaseURL:LSLayerBaseURL() appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
+    NSDictionary *configDictionary = @{ LYRConfigurationCertificationURLKey: @"http://10.66.0.35:5555/certificates",
+                                        LYRConfigurationAuthenticationURLKey: @"https://10.66.0.35:7072/",
+                                        LYRConfigurationMessagingURLKey: @"https://10.66.0.35:7072/" };
+    
+    LYRConfiguration *configuration = [LYRConfiguration configurationWithDictionary:configDictionary];
+    
+    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
+    //LYRClient *layerClient = [[LYRClient alloc] initWithConfiguration:configuration appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];

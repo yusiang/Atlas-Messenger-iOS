@@ -18,6 +18,8 @@
 @interface LSMessageCellPresenter : NSObject
 
 @property (nonatomic, strong) LYRMessage *message;
+@property (nonatomic) BOOL shouldShowSenderImage;
+@property (nonatomic) BOOL shouldShowSenderLabel;
 
 ///-------------------------------
 /// @name Initializing a Presenter
@@ -30,5 +32,7 @@
 - (NSString *)labelForMessageSender;
 
 - (UIImage *)imageForMessageSender;
+
+- (BOOL)shouldShowAvatar;
 
 @end

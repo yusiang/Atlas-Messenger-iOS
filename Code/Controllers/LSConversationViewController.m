@@ -27,6 +27,38 @@ NSData *LSJPEGDataWithData(NSData *data)
     return data;
 }
 
+CGSize ItemSizeForPart(LYRMessagePart *part, CGFloat width)
+{
+    CGSize itemSize;
+    
+    //If Message Part is plain text...
+    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, width * 0.50, 0)];
+        textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
+        textView.font = LSMediumFont(14);
+        [textView sizeToFit];
+        itemSize = CGSizeMake(320, textView.frame.size.height);
+    }
+   
+    //If Message Part is an image...
+    if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
+        if (imageView.frame.size.height > imageView.frame.size.width) {
+            itemSize = CGSizeMake(320, 300);
+        } else {
+            CGFloat ratio = (184 / imageView.frame.size.width);
+            CGFloat height = imageView.frame.size.height * ratio;
+            itemSize = CGSizeMake(320, height + 8);
+        }
+    }
+    
+    if (40 > itemSize.height) {
+        itemSize = CGSizeMake(itemSize.width, 50);
+    }
+    
+    return itemSize;
+}
+
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -104,7 +136,7 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
             [self fetchMessages];
         });
     }
-    
+
     NSAssert(self.conversation, @"Conversation should not be `nil`.");
     if (self.messages) self.messages = nil;
     NSOrderedSet *messages = [self.layerClient messagesForConversation:self.conversation];
@@ -143,7 +175,46 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 
 - (void)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.row] persistanceManager:self.persistanceManager];
+    LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
+    LYRMessage *nextMessage = nil;
+    LYRMessage *previousMessage = nil;
+    
+    if (indexPath.row > 0 && indexPath.row < self.messages.count - 1) {
+        nextMessage = [self.messages objectAtIndex:(indexPath.row - 1)];
+    }
+    
+    if (self.messages.count > 0 && indexPath.row < self.messages.count - 1) {
+        previousMessage = [self.messages objectAtIndex:(indexPath.row + 1)];
+    }
+    
+    
+    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.row]
+                                                                  persistanceManager:self.persistanceManager];
+    
+    if (!previousMessage) {
+        presenter.shouldShowSenderImage = YES;
+    } else {
+        presenter.shouldShowSenderImage = NO;
+    }
+    
+    if (![previousMessage.sentByUserID isEqualToString:message.sentByUserID]) {
+        presenter.shouldShowSenderImage = YES;
+    } else {
+        presenter.shouldShowSenderImage = NO;
+    }
+    
+    if (!nextMessage) {
+        presenter.shouldShowSenderLabel = YES;
+    } else {
+        presenter.shouldShowSenderLabel = NO;
+    }
+    
+    if (![nextMessage.sentByUserID isEqualToString:message.sentByUserID]) {
+        presenter.shouldShowSenderLabel = YES;
+    } else {
+        presenter.shouldShowSenderLabel = NO;
+    }
+    
     [cell updateWithPresenter:presenter];
 }
 
@@ -161,32 +232,7 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 {
     LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
     LYRMessagePart *part = [message.parts objectAtIndex:0];
-    
-    CGSize itemSize;
-    
-    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
-        
-        //180 Is the width we want for the textView
-        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 180, 0)];
-        textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
-        textView.font = LSMediumFont(14);
-        [textView sizeToFit];
-        itemSize = CGSizeMake(320, textView.frame.size.height);
-        
-    } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
-        if (imageView.frame.size.height > imageView.frame.size.width) {
-            itemSize = CGSizeMake(320, 300);
-        } else {
-            CGFloat ratio = (184 / imageView.frame.size.width);
-            CGFloat height = imageView.frame.size.height * ratio;
-            itemSize = CGSizeMake(320, height + 8);
-        }
-    }
-    if (40 > itemSize.height) {
-        return CGSizeMake(itemSize.width, 50);
-    }
-    return itemSize;
+    return ItemSizeForPart(part, self.view.frame.size.width);
 }
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
