@@ -43,17 +43,10 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     self.title = @"Register";
     self.accessibilityLabel = @"Register Screen";
     
-    // Add Register Button
-    self.registerButton = [[LSButton alloc] initWithText:@"Register"];
-    [self.registerButton addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.registerButton];
-    self.registerButton.frame = CGRectMake(0, 0, 280, 60);
-    self.registerButton.center = CGPointMake(self.view.center.x, 360);
-    
     //Done button added for testing purposes
-    UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneTapped)];
-    newConversationButton.accessibilityLabel = @"Done";
-    [self.navigationItem setRightBarButtonItem:newConversationButton];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneTapped)];
+    doneButton.accessibilityLabel = @"Done";
+    [self.navigationItem setRightBarButtonItem:doneButton];
     
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSRegistrationCellIdentifier];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
@@ -80,6 +73,11 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 52;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 20;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

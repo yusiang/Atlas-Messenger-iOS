@@ -11,80 +11,66 @@
 
 @interface LSButton ()
 
-@property (nonatomic, strong) UILabel *textLabel;
-
 @end
 
 @implementation LSButton
 
-@synthesize textLabel = _textLabel;
-
-
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
 
 - (id)initWithText:(NSString *)text
 {
     self = [super init];
     if (self) {
-        [self setText:text];
-        [self setAccessibilityLabel:[NSString stringWithFormat:@"%@ Button", text]];
-        [self setFont:LSMediumFont(20)];
-        [self setBackgroundColor:LSBlueColor()];
-        [self.layer setCornerRadius:4.0f];
+        
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        self.textLabel = [[UILabel alloc] init];
+        self.textLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.textLabel.text = text;
+        self.textLabel.textAlignment = NSTextAlignmentCenter;
+        self.accessibilityLabel = [NSString stringWithFormat:@"%@ Button", text];
+        self.textLabel.font = LSMediumFont(20);
+        self.textLabel.userInteractionEnabled = FALSE;
+        self.backgroundColor = LSBlueColor();
+        [self addSubview:self.textLabel];
+        [self setupLayoutConstraints];
     }
     return self;
 }
 
-
-- (void) setFrame:(CGRect)frame
+- (void)setupLayoutConstraints
 {
-    [super setFrame:frame];
-    [self sizeAndCenterLabel];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeWidth
+                                                    multiplier:1.0
+                                                      constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeHeight
+                                                    multiplier:1.0
+                                                      constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel
+                                                     attribute:NSLayoutAttributeCenterX
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterX
+                                                    multiplier:1.0
+                                                      constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel
+                                                     attribute:NSLayoutAttributeCenterY
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterY
+                                                    multiplier:1.0
+                                                       constant:0]];
 }
 
-- (void)setText:(NSString *)text
-{
-    self.textLabel = [[UILabel alloc] init];
-    self.textLabel.text = text;
-    self.textLabel.textColor = [UIColor whiteColor];
-    self.accessibilityLabel = text;
-    [self sizeAndCenterLabel];
-    [self addSubview:self.textLabel];
-}
-
-- (void)setFont:(UIFont *)font
-{
-    self.textLabel.font = font;
-    [self sizeAndCenterLabel];
-}
-
-- (void)setTextColor:(UIColor *)textColor
-{
-    self.textLabel.textColor = textColor;
-}
-
-- (void)setBorderColor:(UIColor *)borderColor
-{
-    self.layer.borderColor = borderColor.CGColor;
-    self.layer.borderWidth = 2;
-}
-
-- (void)setCenterY:(double)centerY
-{
-    self.frame = CGRectMake(self.frame.origin.x, centerY, self.frame.size.width, self.frame.size.height);
-}
-
-- (void)sizeAndCenterLabel
-{
-    [self.textLabel sizeToFit];
-    self.textLabel.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
-}
 
 @end

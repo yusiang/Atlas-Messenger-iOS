@@ -75,6 +75,7 @@ static void LSAlertWithError(NSError *error)
     authenticationViewController.layerClient = self.applicationController.layerClient;
     authenticationViewController.APIManager = self.applicationController.APIManager;
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
+    self.navigationController.navigationBarHidden = TRUE;
     self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
     self.navigationController.navigationBar.tintColor = LSBlueColor();
     self.window.rootViewController = self.navigationController;

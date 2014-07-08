@@ -72,6 +72,9 @@ CGSize ItemSizeForPart(LYRMessagePart *part, CGFloat width)
 
 static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
 static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
+static CGFloat const LSComposeViewHeight = 40;
+static CGFloat const LSComposeViewIncrease = 24;
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -82,7 +85,7 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
     self.accessibilityLabel = @"Conversation";
     
     // Setup Collection View
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 48)
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40)
                                              collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -95,7 +98,7 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
     
     // Setup Compose View
     CGRect rect = [[UIScreen mainScreen] bounds];
-    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 48, rect.size.width, 48)];
+    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 40, rect.size.width, LSComposeViewHeight)];
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
     
@@ -321,6 +324,8 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
                                                   otherButtonTitles:nil];
         [alertView show];
     }
+    CGRect rect = [[UIScreen mainScreen] bounds];
+    self.composeView.frame = CGRectMake(0, rect.size.height - 40, rect.size.width, 40);
 }
 
 - (void)cameraTapped
@@ -332,6 +337,39 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
                                   destructiveButtonTitle:nil
                                   otherButtonTitles:@"Choose Existing", @"Take Photo", nil];
     [actionSheet showInView:self.view];
+}
+
+- (void)composeView:(LSComposeView *)composeView shouldChangeHeightForLines:(double)lines
+{
+    CGRect mainRect = [[UIScreen mainScreen] bounds];
+    CGRect rect = composeView.frame;
+
+    if (lines > 2 && lines < 3) {
+        rect.size.height = LSComposeViewHeight;
+        if (rect.size.height < composeView.frame.size.height) {
+            rect.origin.y -= LSComposeViewIncrease;
+        }
+    }
+    
+    if (lines > 3 && lines < 4) {
+        rect.size.height = LSComposeViewHeight + LSComposeViewIncrease;
+        if (rect.size.height > composeView.frame.size.height) {
+            rect.origin.y -= LSComposeViewIncrease;
+        } else if (rect.size.height < composeView.frame.size.height) {
+            rect.origin.y += LSComposeViewIncrease;
+        }
+    }
+    
+    if (lines == 4) {
+        rect.size.height = LSComposeViewHeight + LSComposeViewIncrease * 2;
+        if (rect.size.height > composeView.frame.size.height) {
+            rect.origin.y -= LSComposeViewIncrease;
+        } else if (rect.size.height < composeView.frame.size.height) {
+            rect.origin.y += LSComposeViewIncrease;
+        }
+    }
+    
+    composeView.frame = rect;
 }
 
 #pragma mark
@@ -375,6 +413,10 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 {
     NSString *mediaType = [info objectForKey:@"UIImagePickerControllerMediaType"];
     if ([mediaType isEqualToString:@"public.image"]) {
+        CGRect frame = self.composeView.frame;
+        frame.size.height = 100;
+        frame.origin.y = self.view.frame.size.height - 100;
+        self.composeView.frame = frame;
         self.selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
         [self.composeView updateWithImage:self.selectedImage];
     }

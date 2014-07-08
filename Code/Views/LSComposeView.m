@@ -12,9 +12,8 @@
 
 @interface LSComposeView ()
 
-@property (nonatomic, strong) UIView *backingTextView;
-@property (nonatomic, strong) UITextView *textView;
 @property (nonatomic, strong) LSButton *cameraButton;
+@property (nonatomic, strong) UITextView *textInputView;
 @property (nonatomic, strong) LSButton *sendButton;
 @property (nonatomic, strong) NSMutableArray *images;
 @property (nonatomic) CGRect defaultRect;
@@ -23,92 +22,168 @@
 
 @implementation LSComposeView
 
+static CGFloat const LSComposeiewHorizontalMargin = 6;
+static CGFloat const LSComposeiewVerticalMargin = 6;
+
+static CGFloat const LSCameraButtonWidth = 40;
+static CGFloat const LSSendButtonWidth = 50;
+static CGFloat const LSButtonHeight = 28;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.defaultRect = frame;
+
+        //Initialize the Camera Button
+        self.cameraButton = [[LSButton alloc] init];
+        self.cameraButton.translatesAutoresizingMaskIntoConstraints = NO;
+        self.cameraButton.BackgroundColor = LSBlueColor();
+        self.cameraButton.accessibilityLabel = @"Cam Button";
+        self.cameraButton.contentEdgeInsets = UIEdgeInsetsMake(4, 4, 4, 4);
+        self.cameraButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        self.cameraButton.layer.cornerRadius = 2;
+        [self.cameraButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
+        [self.cameraButton addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.cameraButton];
+        
+        //Initialize the Text Input View
+        self.textInputView = [[UITextView alloc] init];
+        self.textInputView.contentInset = UIEdgeInsetsMake(-2, 0, 0, 0);
+        self.textInputView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.textInputView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        self.textInputView.layer.borderWidth = 1;
+        self.textInputView.font = LSMediumFont(16);
+        self.textInputView.layer.cornerRadius = 4.0f;
+        self.textInputView.delegate = self;
+        self.textInputView.accessibilityLabel = @"Compose TextView";
+        [self addSubview:self.textInputView];
+        
+        //Initialize the Send Button
+        self.sendButton = [[LSButton alloc] initWithText:@"Send"];
+        self.sendButton.translatesAutoresizingMaskIntoConstraints = NO;
+        self.sendButton.backgroundColor = [UIColor clearColor];
+        self.sendButton.textLabel.font = LSMediumFont(18);
+        self.sendButton.textLabel.textColor = [UIColor grayColor];
+        [self.sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.sendButton];
+        
+        [self setupLayoutConstraints];
+        
+        //Setup
         self.backgroundColor = LSLighGrayColor();
         self.accessibilityLabel = @"composeView";
-        [self initizlizeSubviews];
         self.images = [[NSMutableArray alloc] init];
         
     }
     return self;
 }
 
-- (void)initizlizeSubviews
+- (void)setupLayoutConstraints
 {
-    [self initializeTextField];
-    [self initializeCameraButton];
-    [self initializeSendButton];
-    [self configureDefaultViewConstraints];
-}
-
-- (void)initializeTextField
-{
-    if (!self.textView) {
-        self.textView = [[UITextView alloc] init];
-        self.textView.delegate = self;
-    }
-    self.textView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.textView.layer.borderWidth = 1;
-    self.textView.font = LSMediumFont(16);
-    self.textView.layer.cornerRadius = 4.0f;
-    self.textView.accessibilityLabel = @"Compose TextView";
-    [self addSubview:self.textView];
-}
-
-- (void)initializeCameraButton
-{
-    if (!self.cameraButton){
-        self.cameraButton = [[LSButton alloc] initWithText:@""];
-    }
-    [self.cameraButton setBackgroundColor:LSBlueColor()];
-    self.cameraButton.accessibilityLabel = @"Cam Button";
-    [self.cameraButton addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.cameraButton];
-}
-
-- (void)initializeSendButton
-{
-    if (!self.sendButton) {
-        self.sendButton = [[LSButton alloc] initWithText:@"Send"];
-    }
-    [self.sendButton setBackgroundColor:[UIColor clearColor]];
-    [self.sendButton setFont:LSMediumFont(20)];
-    [self.sendButton setTextColor:[UIColor grayColor]];
-    [self.sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.sendButton];
-}
-
-- (void)configureDefaultViewConstraints
-{
-    self.frame = self.defaultRect;
-    self.textView.frame = CGRectMake(50, self.frame.size.height - 42, 206, 36);
-    self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 41, 38, 34);
-    [self addCameraIconToButton:self.cameraButton];
-    self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
-}
-
-- (void)addCameraIconToButton:(LSButton *)button
-{
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, button.frame.size.width - 16, button.frame.size.height - 16)];
-    imageView.image = [UIImage imageNamed:@"camera"];
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    imageView.backgroundColor = [UIColor clearColor];
-    imageView.center = button.center;
-    [self addSubview:imageView];
-}
-
-- (void)configurePhotoViewConstraints
-{
-    if (self.frame.size.height < self.defaultRect.size.height + 50) {
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y - 50, self.frame.size.width, self.frame.size.height + 50);
-        self.textView.frame = CGRectMake(self.textView.frame.origin.x, self.frame.size.height - 92, self.textView.frame.size.width, self.textView.frame.size.height + 50);
-        self.cameraButton.frame = CGRectMake(6, self.frame.size.height - 42, 38, 36);
-        self.sendButton.frame = CGRectMake(self.frame.size.width -58, self.frame.size.height - 42, 52, 36);
-    }
+    //**********Camera Button Constraints**********//
+    // Width
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cameraButton
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:LSCameraButtonWidth]];
+    
+    // Left Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cameraButton
+                                                     attribute:NSLayoutAttributeLeft
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeLeft
+                                                    multiplier:1.0
+                                                      constant:LSComposeiewVerticalMargin]];
+    // Height
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cameraButton
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:LSButtonHeight]];
+    // Bottom Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cameraButton
+                                                     attribute:NSLayoutAttributeBottom
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1.0
+                                                      constant:-LSComposeiewHorizontalMargin]];
+    
+    //**********Send Button Constraints**********//
+    // Width
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.sendButton
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:LSSendButtonWidth]];
+    
+    // Right Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.sendButton
+                                                     attribute:NSLayoutAttributeRight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeRight
+                                                    multiplier:1.0
+                                                      constant:-LSComposeiewVerticalMargin]];
+    // Height
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.sendButton
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:LSButtonHeight]];
+    // Bottom Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.sendButton
+                                                     attribute:NSLayoutAttributeBottom
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1.0
+                                                      constant:-LSComposeiewHorizontalMargin]];
+    
+    //**********Text Input View Constraints**********//
+    // Left Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
+                                                     attribute:NSLayoutAttributeLeft
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self.cameraButton
+                                                     attribute:NSLayoutAttributeRight
+                                                    multiplier:1.0
+                                                      constant:LSComposeiewVerticalMargin]];
+    
+    // Right Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
+                                                     attribute:NSLayoutAttributeRight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self.sendButton
+                                                     attribute:NSLayoutAttributeLeft
+                                                    multiplier:1.0
+                                                      constant:-LSComposeiewVerticalMargin]];
+    // Top Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
+                                                     attribute:NSLayoutAttributeTop
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeTop
+                                                    multiplier:1.0
+                                                      constant:LSComposeiewHorizontalMargin]];
+    // Bottom Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
+                                                     attribute:NSLayoutAttributeBottom
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1.0
+                                                      constant:-LSComposeiewHorizontalMargin]];
 }
 
 - (void)cameraTapped
@@ -118,43 +193,37 @@
 
 - (void)sendMessage
 {
-    [self.textView resignFirstResponder];
+    [self.textInputView resignFirstResponder];
     
+    //Send Image
     if (self.images.count > 0) {
         for (UIImage *image in self.images) {
             [self.delegate composeView:self sendMessageWithImage:image];
         }
     }
     
-    if (![self.textView.text length] > 0) {
+    //If not text, don't send
+    if ([self.textInputView.text isEqualToString:@" "]) {
         return;
     } else {
-        [self.delegate composeView:self sendMessageWithText:self.textView.text];
-        [self.textView setText:@""];
+        [self.delegate composeView:self sendMessageWithText:self.textInputView.text];
     }
     
-    [UIView animateWithDuration:0.2 animations:^{
-        [self configureDefaultViewConstraints];
-    }];
+    //Reset text input view label
+    [self.textInputView setText:@""];
 }
 
 - (void)updateWithImage:(UIImage *)image
 {
     [self.images addObject:image];
     
-    [self configurePhotoViewConstraints];
-    
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textView.attributedText];
-    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
     LSMediaAttachement *textAttachment = [[LSMediaAttachement alloc] init];
-    
     textAttachment.image = image;
     
     NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
-    
     [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
-    
-    self.textView.attributedText = attrStringWithImage;
+    self.textInputView.attributedText = attrStringWithImage;
 }
 
 #pragma mark
@@ -166,18 +235,15 @@
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
-    self.sendButton.textColor = [UIColor grayColor];
+    self.sendButton.textLabel.textColor = [UIColor grayColor];
     return YES;
 }
 
-- (void)textViewDidBeginEditing:(UITextView *)textView
+- (void)textViewDidChange:(UITextView *)textView
 {
-   
-}
-
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
-    
+    CGFloat height = self.textInputView.contentSize.height;
+    double lines = height / textView.font.lineHeight;
+    [self.delegate composeView:self shouldChangeHeightForLines:(double)lines];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
@@ -185,20 +251,9 @@
     if ([text isEqualToString:@"\n"]) {
         [textView resignFirstResponder];
     } else {
-       self.sendButton.textColor = LSBlueColor();
+       self.sendButton.textLabel.textColor = LSBlueColor();
     }
-    
     return YES;
-    
-}
-- (void)textViewDidChange:(UITextView *)textView
-{
-    
-}
-
-- (void)textViewDidChangeSelection:(UITextView *)textView
-{
-    
 }
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange

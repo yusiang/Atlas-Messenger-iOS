@@ -29,15 +29,18 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         
+        //Initialize the backing bubble view
         self.bubbleView = [[LSBubbleView alloc] init];
         self.bubbleView.backgroundColor = [UIColor redColor];
         self.bubbleView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.bubbleView];
         
+        //Initialize the Sender Label
         self.senderLabel = [[UILabel alloc] init];
         self.senderLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.senderLabel];
         
+        //Initialize the sender Avatar Image View
         self.avatarImageView = [[LSAvatarImageView alloc] init];
         self.avatarImageView.layer.cornerRadius = (LSAvatarImageViewSize / 2);
         self.avatarImageView.clipsToBounds = YES;
@@ -52,6 +55,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
     [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     
     //**********Avatar Image Constraints**********//
+    //Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
@@ -60,6 +64,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewSize]];
     
+    //Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeHeight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -68,6 +73,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewSize]];
 
+    //Right Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeRight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -76,6 +82,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:1.0
                                                                   constant:-LSAvatarImageViewInset]];
     
+    //Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual
@@ -86,6 +93,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
     
     
     //**********Bubble Image Constraints**********//
+    //Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
@@ -94,6 +102,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:0.75
                                                                   constant:0.0]];
     
+    //Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeTop
                                                                  relatedBy:NSLayoutRelationEqual
@@ -102,6 +111,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:0.8
                                                                   constant:LSAvatarImageViewInset]];
 
+    //Right Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeRight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -110,6 +120,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:1.0
                                                                   constant:-10]];
     
+    //Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual
@@ -123,6 +134,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
 {
    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     //**********Avatar Image Constraints**********//
+    //Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
@@ -131,7 +143,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewSize]];
     
-    // Height constraint, half of parent view height
+    //Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeHeight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -140,7 +152,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewSize]];
     
-    // Center horizontally
+    //Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeLeft
                                                                  relatedBy:NSLayoutRelationEqual
@@ -149,7 +161,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewInset]];
     
-    // Center vertically
+    //Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual
@@ -160,6 +172,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
     
     
     //**********Bubble Image Constraints**********//
+    //Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
@@ -168,7 +181,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:0.75
                                                                   constant:0.0]];
     
-    // Height constraint, half of parent view height
+    //Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeTop
                                                                  relatedBy:NSLayoutRelationEqual
@@ -177,7 +190,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:0.8
                                                                   constant:LSAvatarImageViewInset]];
     
-    // Center horizontally
+    //Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeLeft
                                                                  relatedBy:NSLayoutRelationEqual
@@ -186,7 +199,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                 multiplier:1.0
                                                                   constant:10]];
     
-    // Center vertically
+    //Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual
@@ -205,28 +218,22 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
     [self.bubbleView updateViewWithPresenter:presenter];
    
     if ([presenter messageWasSentByAuthenticatedUser]) {
-        
         [self setupSenderCellConstraints];
-        
         if (presenter.shouldShowSenderImage) {
             self.avatarImageView.alpha = 1.0;
-            //[self.bubbleView displayArrowForSender];
+            [self.bubbleView displayArrowForSender];
         } else {
             self.avatarImageView.alpha = 0.0;
         }
-        
     } else {
         [self setupRecipientCellConstraints];
-        
         if (presenter.shouldShowSenderImage) {
             self.avatarImageView.alpha = 1.0;
-            //[self.bubbleView displayArrowForRecipient];
+            [self.bubbleView displayArrowForRecipient];
         } else {
             self.avatarImageView.alpha = 0.0;
         }
     }
-    
-
 }
 
 

@@ -44,6 +44,11 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     [self configureLayoutConstraints];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSLoginlIdentifier];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    
+    //Done button added for testing purposes
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneTapped)];
+    doneButton.accessibilityLabel = @"Done";
+    [self.navigationItem setRightBarButtonItem:doneButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -54,7 +59,7 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 
 - (void)initializeLoginButton
 {
-    self.LoginButton = [[LSButton alloc] initWithText:@"Login"];
+    //self.LoginButton = [[LSButton alloc] initWithText:@"Login"];
     [self.loginButton addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
     self.loginButton.enabled = NO;
     [self.view addSubview:self.loginButton];
@@ -115,6 +120,11 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
         default:
             break;
     }
+}
+
+- (void)doneTapped
+{
+    [self loginTapped];
 }
 
 - (void)loginTapped

@@ -22,11 +22,6 @@
     return self;
 }
 
-- (void)awakeFromNib
-{
-    // Initialization code
-}
-
 - (void)setText:(NSString *)text
 {
     self.textField.placeholder = text;
@@ -35,7 +30,7 @@
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [self.textField sizeToFit];
     self.textField.frame = CGRectMake(20, 14, self.frame.size.width - 20, self.textField.frame.size.height);
-    [self addSubview:self.textField];
+    [self.contentView addSubview:self.textField];
 }
 
 // SBW: What's up with this?

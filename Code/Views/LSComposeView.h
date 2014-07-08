@@ -16,8 +16,8 @@
 
 - (void)composeView:(LSComposeView *)composeView sendMessageWithText:(NSString *)text;
 - (void)composeView:(LSComposeView *)composeView sendMessageWithImage:(UIImage *)image;
-
 - (void)cameraTapped;
+- (void)composeView:(LSComposeView *)composeView shouldChangeHeightForLines:(double)lines;
 
 @end
 
