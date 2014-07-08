@@ -29,14 +29,7 @@
 		0AADB5D21947C8850083732B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D11947C8850083732B /* StoreKit.framework */; };
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		0AB1157C196460ED00B59DF8 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */; };
-		0ABEFFA1196B747B006FFFF3 /* wood.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFA0196B747B006FFFF3 /* wood.png */; };
-		0ABEFFA6196B748C006FFFF3 /* city.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFA2196B748C006FFFF3 /* city.png */; };
-		0ABEFFA8196B748C006FFFF3 /* woods.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFA4196B748C006FFFF3 /* woods.png */; };
-		0ABEFFA9196B748C006FFFF3 /* yosemite.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFA5196B748C006FFFF3 /* yosemite.png */; };
-		0ABEFFAD196B7654006FFFF3 /* water.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAC196B7654006FFFF3 /* water.png */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
-		0ABEFFB1196B77CF006FFFF3 /* beach.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFB0196B77CF006FFFF3 /* beach.png */; };
-		0ABEFFB3196B780C006FFFF3 /* winter.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFB2196B780C006FFFF3 /* winter.png */; };
 		0AC3D70B196B29CD0089E49D /* LSBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC3D70A196B29CD0089E49D /* LSBubbleView.m */; };
 		0AD767721963104200582755 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD767711963104200582755 /* LSUtilities.m */; };
 		0AD767741963157600582755 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD767731963157600582755 /* camera@2x.png */; };
@@ -111,14 +104,7 @@
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0AB1157A196460ED00B59DF8 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
 		0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
-		0ABEFFA0196B747B006FFFF3 /* wood.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wood.png; sourceTree = "<group>"; };
-		0ABEFFA2196B748C006FFFF3 /* city.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = city.png; sourceTree = "<group>"; };
-		0ABEFFA4196B748C006FFFF3 /* woods.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = woods.png; sourceTree = "<group>"; };
-		0ABEFFA5196B748C006FFFF3 /* yosemite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yosemite.png; sourceTree = "<group>"; };
-		0ABEFFAC196B7654006FFFF3 /* water.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = water.png; sourceTree = "<group>"; };
 		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
-		0ABEFFB0196B77CF006FFFF3 /* beach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = beach.png; sourceTree = "<group>"; };
-		0ABEFFB2196B780C006FFFF3 /* winter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = winter.png; sourceTree = "<group>"; };
 		0AC3D709196B29CD0089E49D /* LSBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSBubbleView.h; sourceTree = "<group>"; };
 		0AC3D70A196B29CD0089E49D /* LSBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSBubbleView.m; sourceTree = "<group>"; };
 		0AD767701963104200582755 /* LSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUtilities.h; sourceTree = "<group>"; };
@@ -352,18 +338,11 @@
 			isa = PBXGroup;
 			children = (
 				0ABEFFAE196B7686006FFFF3 /* logo@2x.png */,
-				0ABEFFA2196B748C006FFFF3 /* city.png */,
-				0ABEFFA4196B748C006FFFF3 /* woods.png */,
-				0ABEFFA5196B748C006FFFF3 /* yosemite.png */,
 				0AD767731963157600582755 /* camera@2x.png */,
-				0ABEFFA0196B747B006FFFF3 /* wood.png */,
 				259A576C1950EB83000E27B0 /* Main.storyboard */,
 				259A576E1950EB83000E27B0 /* InfoPlist.strings */,
 				259A57701950EB83000E27B0 /* Images.xcassets */,
-				0ABEFFAC196B7654006FFFF3 /* water.png */,
 				259A57711950EB83000E27B0 /* kevin.png */,
-				0ABEFFB2196B780C006FFFF3 /* winter.png */,
-				0ABEFFB0196B77CF006FFFF3 /* beach.png */,
 				259A57721950EB83000E27B0 /* LayerSample-Info.plist */,
 			);
 			path = Resources;
@@ -474,16 +453,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				259A57751950EB83000E27B0 /* Images.xcassets in Resources */,
-				0ABEFFAD196B7654006FFFF3 /* water.png in Resources */,
 				259A57761950EB83000E27B0 /* kevin.png in Resources */,
-				0ABEFFB3196B780C006FFFF3 /* winter.png in Resources */,
-				0ABEFFB1196B77CF006FFFF3 /* beach.png in Resources */,
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
-				0ABEFFA8196B748C006FFFF3 /* woods.png in Resources */,
-				0ABEFFA9196B748C006FFFF3 /* yosemite.png in Resources */,
-				0ABEFFA6196B748C006FFFF3 /* city.png in Resources */,
 				259A57731950EB83000E27B0 /* Main.storyboard in Resources */,
-				0ABEFFA1196B747B006FFFF3 /* wood.png in Resources */,
 				0AD767741963157600582755 /* camera@2x.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
 			);

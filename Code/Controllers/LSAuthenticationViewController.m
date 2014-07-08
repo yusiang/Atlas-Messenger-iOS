@@ -48,7 +48,7 @@
     self.loginButton =[[LSButton alloc] initWithText:@"Login"];
     self.loginButton.layer.borderColor = LSBlueColor().CGColor;
     self.loginButton.textLabel.textColor = LSBlueColor();
-    self.loginButton.backgroundColor = [UIColor whiteColor];
+    self.loginButton.backgroundColor = LSGrayColor();
     self.loginButton.alpha = 0.8;
     [self.loginButton addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.loginButton];
@@ -59,12 +59,6 @@
 - (void)loadView
 {
     [super loadView];
-    CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:applicationFrame];
-    imageView.userInteractionEnabled = TRUE;
-    imageView.image = [UIImage imageNamed:@"winter"];
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    self.view = imageView;
 }
 
 - (void)setupLayoutConstraints

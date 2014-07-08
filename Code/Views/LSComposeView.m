@@ -48,7 +48,7 @@ static CGFloat const LSButtonHeight = 28;
         
         //Initialize the Text Input View
         self.textInputView = [[UITextView alloc] init];
-        self.textInputView.contentInset = UIEdgeInsetsMake(-2, 0, 0, 0);
+        self.textInputView.contentInset = UIEdgeInsetsMake(-4, 0, 0, 0);
         self.textInputView.translatesAutoresizingMaskIntoConstraints = NO;
         self.textInputView.layer.borderColor = [UIColor lightGrayColor].CGColor;
         self.textInputView.layer.borderWidth = 1;

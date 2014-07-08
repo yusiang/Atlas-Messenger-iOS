@@ -58,8 +58,8 @@ static void LSAlertWithError(NSError *error)
     
     LYRConfiguration *configuration = [LYRConfiguration configurationWithDictionary:configDictionary];
     
-    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
-    //LYRClient *layerClient = [[LYRClient alloc] initWithConfiguration:configuration appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
+    //LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
+    LYRClient *layerClient = [[LYRClient alloc] initWithConfiguration:configuration appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];

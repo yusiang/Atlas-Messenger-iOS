@@ -109,7 +109,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeTop
                                                                 multiplier:0.8
-                                                                  constant:LSAvatarImageViewInset]];
+                                                                  constant:12]];
 
     //Right Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
@@ -127,7 +127,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
-                                                                  constant:-LSAvatarImageViewInset]];
+                                                                  constant:0]];
 }
 
 - (void)setupRecipientCellConstraints

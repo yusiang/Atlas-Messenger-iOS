@@ -182,36 +182,27 @@ static CGFloat const LSComposeViewIncrease = 24;
     LYRMessage *nextMessage = nil;
     LYRMessage *previousMessage = nil;
     
+    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.row]
+                                                                  persistanceManager:self.persistanceManager];
+    
+    //If there is a next message....
     if (indexPath.row > 0 && indexPath.row < self.messages.count - 1) {
         nextMessage = [self.messages objectAtIndex:(indexPath.row - 1)];
     }
     
+    //If there is a previous message
     if (self.messages.count > 0 && indexPath.row < self.messages.count - 1) {
         previousMessage = [self.messages objectAtIndex:(indexPath.row + 1)];
     }
     
-    
-    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.row]
-                                                                  persistanceManager:self.persistanceManager];
-    
-    if (!previousMessage) {
-        presenter.shouldShowSenderImage = YES;
-    } else {
-        presenter.shouldShowSenderImage = NO;
-    }
-    
+    //If cell should show sender Image
     if (![previousMessage.sentByUserID isEqualToString:message.sentByUserID]) {
         presenter.shouldShowSenderImage = YES;
     } else {
         presenter.shouldShowSenderImage = NO;
     }
     
-    if (!nextMessage) {
-        presenter.shouldShowSenderLabel = YES;
-    } else {
-        presenter.shouldShowSenderLabel = NO;
-    }
-    
+    //If cell should show sender ID
     if (![nextMessage.sentByUserID isEqualToString:message.sentByUserID]) {
         presenter.shouldShowSenderLabel = YES;
     } else {
@@ -341,7 +332,6 @@ static CGFloat const LSComposeViewIncrease = 24;
 
 - (void)composeView:(LSComposeView *)composeView shouldChangeHeightForLines:(double)lines
 {
-    CGRect mainRect = [[UIScreen mainScreen] bounds];
     CGRect rect = composeView.frame;
 
     if (lines > 2 && lines < 3) {
