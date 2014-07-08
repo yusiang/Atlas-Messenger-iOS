@@ -205,13 +205,14 @@ static CGFloat const LSButtonHeight = 28;
     
     //If not text, don't send
     if (!(self.textInputView.text.length > 1)) {
-        return;
+        //
     } else {
         [self.delegate composeView:self sendMessageWithText:self.textInputView.text];
     }
     
     //Reset text input view label
     [self.textInputView setText:@""];
+    [self.textInputView setAttributedText:nil];
 }
 
 - (void)updateWithImage:(UIImage *)image
