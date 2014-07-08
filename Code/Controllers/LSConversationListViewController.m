@@ -170,13 +170,16 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     return YES;
 }
 
-
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         NSError *error;
         BOOL success = [self.layerClient deleteConversation:[self.conversations objectAtIndex:indexPath.row] error:&error];
         if (success) {
             NSLog(@"Conversation Deleted!");
+            [self.tableView beginUpdates];
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self fetchLayerConversations];
+            [self.tableView endUpdates];
         } else {
             NSLog(@"Conversation Not Deleted with Error %@", error);
         }

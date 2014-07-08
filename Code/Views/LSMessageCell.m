@@ -22,11 +22,18 @@
 
 static CGFloat const LSAvatarImageViewSize = 30.0f;
 static CGFloat const LSAvatarImageViewInset = 6.0f;
+static CGFloat const LSAvatarImageViewBottomMargin = -2.0f;
+
+static CGFloat const LSBubbleViewWidthMultiplier = 0.75f;
+static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
+
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        self.translatesAutoresizingMaskIntoConstraints = NO;
         self.backgroundColor = [UIColor whiteColor];
         
         //Initialize the backing bubble view
@@ -50,8 +57,44 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
     return self;
 }
 
-- (void)setupSenderCellConstraints
+- (void)updateWithPresenter:(LSMessageCellPresenter *)presenter
 {
+    [self.contentView removeConstraints:self.contentView.constraints];
+    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
+    [self.bubbleView updateViewWithPresenter:presenter];
+    
+    if ([presenter messageWasSentByAuthenticatedUser]) {
+        [self updateCellForSenderWithPresenter:presenter];
+    } else {
+        [self updateCellForRecipientWithPresenter:presenter];
+    }
+}
+
+- (void)updateCellForSenderWithPresenter:(LSMessageCellPresenter *)presenter
+{
+    [self setupSenderCellConstraintsWithPresenter:presenter];
+    if (presenter.shouldShowSenderImage) {
+        self.avatarImageView.alpha = 1.0;
+        [self.bubbleView displayArrowForSender];
+    } else {
+        self.avatarImageView.alpha = 0.0;
+    }
+}
+
+- (void)updateCellForRecipientWithPresenter:(LSMessageCellPresenter *)presenter
+{
+    [self setupRecipientCellConstraintsWithPresenter:presenter];
+    if (presenter.shouldShowSenderImage) {
+        self.avatarImageView.alpha = 1.0;
+        [self.bubbleView displayArrowForRecipient];
+    } else {
+        self.avatarImageView.alpha = 0.0;
+    }
+}
+
+- (void)setupSenderCellConstraintsWithPresenter:(LSMessageCellPresenter *)presenter
+{
+    //Place Holder
     [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     
     //**********Avatar Image Constraints**********//
@@ -89,18 +132,19 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
-                                                                  constant:-LSAvatarImageViewInset]];
+                                                                  constant:LSAvatarImageViewBottomMargin]];
     
     
     //**********Bubble Image Constraints**********//
+    LYRMessagePart *messagePart = [presenter.message.parts objectAtIndex:[presenter indexForPart]];
     //Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeWidth
-                                                                multiplier:0.75
-                                                                  constant:0.0]];
+                                                                    toItem:nil
+                                                                 attribute:NSLayoutAttributeNotAnAttribute
+                                                                multiplier:0
+                                                                  constant:[self bubbleWidthForMessagePart:messagePart]]];
     
     //Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
@@ -108,8 +152,8 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeTop
-                                                                multiplier:0.8
-                                                                  constant:12]];
+                                                                multiplier:1.0
+                                                                  constant:0]];
 
     //Right Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
@@ -118,7 +162,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                     toItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeLeft
                                                                 multiplier:1.0
-                                                                  constant:-10]];
+                                                                  constant:-LSBubbleViewVerticalMargin]];
     
     //Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
@@ -130,9 +174,10 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                   constant:0]];
 }
 
-- (void)setupRecipientCellConstraints
+- (void)setupRecipientCellConstraintsWithPresenter:(LSMessageCellPresenter *)presenter
 {
    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
+    
     //**********Avatar Image Constraints**********//
     //Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
@@ -168,18 +213,19 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
-                                                                  constant:-LSAvatarImageViewInset]];
+                                                                  constant:LSAvatarImageViewBottomMargin]];
     
     
     //**********Bubble Image Constraints**********//
+    LYRMessagePart *messagePart = [presenter.message.parts objectAtIndex:[presenter indexForPart]];
     //Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeWidth
-                                                                multiplier:0.75
-                                                                  constant:0.0]];
+                                                                    toItem:nil
+                                                                 attribute:NSLayoutAttributeNotAnAttribute
+                                                                multiplier:1.0
+                                                                  constant:[self bubbleWidthForMessagePart:messagePart]]];
     
     //Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
@@ -188,7 +234,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeTop
                                                                 multiplier:0.8
-                                                                  constant:LSAvatarImageViewInset]];
+                                                                  constant:0]];
     
     //Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
@@ -197,7 +243,7 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                     toItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
-                                                                  constant:10]];
+                                                                  constant:LSBubbleViewVerticalMargin]];
     
     //Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
@@ -206,35 +252,21 @@ static CGFloat const LSAvatarImageViewInset = 6.0f;
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
-                                                                  constant:-LSAvatarImageViewInset]];
+                                                                  constant:0]];
 }
 
-- (void)updateWithPresenter:(LSMessageCellPresenter *)presenter
+- (CGFloat)bubbleWidthForMessagePart:(LYRMessagePart *)messagePart
 {
-    [self.contentView removeConstraints:self.contentView.constraints];
-
-    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
-    
-    [self.bubbleView updateViewWithPresenter:presenter];
-   
-    if ([presenter messageWasSentByAuthenticatedUser]) {
-        [self setupSenderCellConstraints];
-        if (presenter.shouldShowSenderImage) {
-            self.avatarImageView.alpha = 1.0;
-            [self.bubbleView displayArrowForSender];
-        } else {
-            self.avatarImageView.alpha = 0.0;
-        }
-    } else {
-        [self setupRecipientCellConstraints];
-        if (presenter.shouldShowSenderImage) {
-            self.avatarImageView.alpha = 1.0;
-            [self.bubbleView displayArrowForRecipient];
-        } else {
-            self.avatarImageView.alpha = 0.0;
+    if ([messagePart.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+        NSString *string = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
+        NSDictionary *attributes = @{NSFontAttributeName :LSMediumFont(14)};
+        CGSize stringSize = [string sizeWithAttributes:attributes];
+        CGFloat width = stringSize.width + 20;
+        if (self.contentView.frame.size.width * LSBubbleViewWidthMultiplier > width) {
+           return width;
         }
     }
+    return self.contentView.frame.size.width * LSBubbleViewWidthMultiplier;
 }
-
 
 @end

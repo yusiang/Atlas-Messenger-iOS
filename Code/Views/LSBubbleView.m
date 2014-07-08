@@ -45,7 +45,7 @@
         [self addSubview:self.textView];
         
         self.imageView = [[UIImageView alloc] init];
-        self.imageView.layer.cornerRadius = 4;
+        self.imageView.layer.cornerRadius = 8;
         self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.imageView];
     
@@ -94,7 +94,7 @@
 
 - (void)updateViewWithPresenter:(LSMessageCellPresenter *)presenter
 {
-    LYRMessagePart *part = [presenter.message.parts objectAtIndex:0];
+    LYRMessagePart *part = [presenter.message.parts objectAtIndex:[presenter indexForPart]];
     
     if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
         self.imageView.image = nil;

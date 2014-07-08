@@ -25,7 +25,7 @@
 /// @name Initializing a Presenter
 ///-------------------------------
 
-+ (instancetype)presenterWithMessage:(LYRMessage *)message persistanceManager:(LSPersistenceManager *)persistenceManager;
++ (instancetype)presenterWithMessage:(LYRMessage *)message indexPath:(NSIndexPath *)indexPath persistanceManager:(LSPersistenceManager *)persistenceManager;
 
 - (BOOL)messageWasSentByAuthenticatedUser;
 
@@ -33,6 +33,6 @@
 
 - (UIImage *)imageForMessageSender;
 
-- (BOOL)shouldShowAvatar;
+- (NSUInteger)indexForPart;
 
 @end

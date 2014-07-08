@@ -52,8 +52,8 @@ CGSize ItemSizeForPart(LYRMessagePart *part, CGFloat width)
         }
     }
     
-    if (40 > itemSize.height) {
-        itemSize = CGSizeMake(itemSize.width, 50);
+    if (30 > itemSize.height) {
+        itemSize = CGSizeMake(itemSize.width, 30);
     }
     
     return itemSize;
@@ -124,8 +124,10 @@ static CGFloat const LSComposeViewIncrease = 24;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
     if (self.messages.count > 1) {
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[[[self.messages lastObject] parts] count] - 1 inSection:self.messages.count - 1];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }
 }
 
@@ -151,9 +153,8 @@ static CGFloat const LSComposeViewIncrease = 24;
 {
     [self.collectionView reloadData];
     if (self.messages.count > 0) {
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
-                                    atScrollPosition:UICollectionViewScrollPositionBottom
-                                            animated:YES];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[[[self.messages lastObject] parts] count] - 1 inSection:self.messages.count - 1];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }
 }
 
@@ -161,12 +162,12 @@ static CGFloat const LSComposeViewIncrease = 24;
 # pragma mark Collection View Data Source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.messages.count;
+    return [[[self.messages objectAtIndex:section] parts] count];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 1;
+    return self.messages.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -178,38 +179,49 @@ static CGFloat const LSComposeViewIncrease = 24;
 
 - (void)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
-    LYRMessage *nextMessage = nil;
-    LYRMessage *previousMessage = nil;
-    
-    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.row]
+    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.section]
+                                                                           indexPath:indexPath
                                                                   persistanceManager:self.persistanceManager];
+    presenter.shouldShowSenderImage = [self cellShouldShowSenderImageForSection:indexPath.section];
+    [cell updateWithPresenter:presenter];
+}
+
+- (BOOL)cellShouldShowSenderImageForSection:(NSUInteger)section
+{
+    LYRMessage *message = [self.messages objectAtIndex:section];
+    LYRMessage *previousMessage;
+    
+    //If there is a previous message...
+    if (self.messages.count > 0 && self.messages.count - 1 > section) {
+        previousMessage = [self.messages objectAtIndex:(section + 1)];
+    }
+    
+    //Check if it was sent by the same user as the current message
+    if ([previousMessage.sentByUserID isEqualToString:message.sentByUserID]) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
+- (BOOL)cellShouldShowSenderLabelForSection:(NSUInteger)section
+{
+    LYRMessage *message = [self.messages objectAtIndex:section];
+    LYRMessage *nextMessage;
     
     //If there is a next message....
-    if (indexPath.row > 0 && indexPath.row < self.messages.count - 1) {
-        nextMessage = [self.messages objectAtIndex:(indexPath.row - 1)];
-    }
-    
-    //If there is a previous message
-    if (self.messages.count > 0 && indexPath.row < self.messages.count - 1) {
-        previousMessage = [self.messages objectAtIndex:(indexPath.row + 1)];
-    }
-    
-    //If cell should show sender Image
-    if (![previousMessage.sentByUserID isEqualToString:message.sentByUserID]) {
-        presenter.shouldShowSenderImage = YES;
+    if (section > 0 && self.messages.count - 1 > section) {
+        nextMessage = [self.messages objectAtIndex:(section - 1)];
     } else {
-        presenter.shouldShowSenderImage = NO;
+        return NO;
     }
     
-    //If cell should show sender ID
-    if (![nextMessage.sentByUserID isEqualToString:message.sentByUserID]) {
-        presenter.shouldShowSenderLabel = YES;
+    //Check if it was sent by the same user as the current message
+    if ([nextMessage.sentByUserID isEqualToString:message.sentByUserID]) {
+        return NO;
     } else {
-        presenter.shouldShowSenderLabel = NO;
+        return YES;
     }
-    
-    [cell updateWithPresenter:presenter];
 }
 
 #pragma mark
@@ -224,14 +236,18 @@ static CGFloat const LSComposeViewIncrease = 24;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
-    LYRMessagePart *part = [message.parts objectAtIndex:0];
+    LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
+    LYRMessagePart *part = [message.parts objectAtIndex:indexPath.row];
     return ItemSizeForPart(part, self.view.frame.size.width);
 }
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    return UIEdgeInsetsMake(0, 0, 48, 0);
+    if ([self cellShouldShowSenderLabelForSection:section]) {
+        return UIEdgeInsetsMake(20, 0, 0, 0);
+    } else {
+        return UIEdgeInsetsMake(6, 0, 0, 0);
+    }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -332,34 +348,7 @@ static CGFloat const LSComposeViewIncrease = 24;
 
 - (void)composeView:(LSComposeView *)composeView shouldChangeHeightForLines:(double)lines
 {
-    CGRect rect = composeView.frame;
-
-    if (lines > 2 && lines < 3) {
-        rect.size.height = LSComposeViewHeight;
-        if (rect.size.height < composeView.frame.size.height) {
-            rect.origin.y -= LSComposeViewIncrease;
-        }
-    }
-    
-    if (lines > 3 && lines < 4) {
-        rect.size.height = LSComposeViewHeight + LSComposeViewIncrease;
-        if (rect.size.height > composeView.frame.size.height) {
-            rect.origin.y -= LSComposeViewIncrease;
-        } else if (rect.size.height < composeView.frame.size.height) {
-            rect.origin.y += LSComposeViewIncrease;
-        }
-    }
-    
-    if (lines == 4) {
-        rect.size.height = LSComposeViewHeight + LSComposeViewIncrease * 2;
-        if (rect.size.height > composeView.frame.size.height) {
-            rect.origin.y -= LSComposeViewIncrease;
-        } else if (rect.size.height < composeView.frame.size.height) {
-            rect.origin.y += LSComposeViewIncrease;
-        }
-    }
-    
-    composeView.frame = rect;
+    //TODO:Implement functionality to grow text input view height to accomodate for multiple lines
 }
 
 #pragma mark
@@ -417,6 +406,7 @@ static CGFloat const LSComposeViewIncrease = 24;
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
+
 
 
 @end

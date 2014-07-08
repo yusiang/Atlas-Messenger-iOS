@@ -31,7 +31,6 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:FALSE animated:FALSE];
-    //[self.radioButton setSelected:selected];
     if (selected && !self.isSelected) {
         [self updateWithSelectionIndicator:YES];
         self.isSelected = TRUE;

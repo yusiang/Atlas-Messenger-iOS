@@ -22,8 +22,9 @@
 
 @implementation LSComposeView
 
-static CGFloat const LSComposeiewHorizontalMargin = 6;
-static CGFloat const LSComposeiewVerticalMargin = 6;
+//Compose View Margins
+static CGFloat const LSComposeviewHorizontalMargin = 6;
+static CGFloat const LSComposeviewVerticalMargin = 6;
 
 static CGFloat const LSCameraButtonWidth = 40;
 static CGFloat const LSSendButtonWidth = 50;
@@ -97,7 +98,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:self
                                                      attribute:NSLayoutAttributeLeft
                                                     multiplier:1.0
-                                                      constant:LSComposeiewVerticalMargin]];
+                                                      constant:LSComposeviewVerticalMargin]];
     // Height
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cameraButton
                                                      attribute:NSLayoutAttributeHeight
@@ -113,7 +114,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:self
                                                      attribute:NSLayoutAttributeBottom
                                                     multiplier:1.0
-                                                      constant:-LSComposeiewHorizontalMargin]];
+                                                      constant:-LSComposeviewHorizontalMargin]];
     
     //**********Send Button Constraints**********//
     // Width
@@ -132,7 +133,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:self
                                                      attribute:NSLayoutAttributeRight
                                                     multiplier:1.0
-                                                      constant:-LSComposeiewVerticalMargin]];
+                                                      constant:-LSComposeviewVerticalMargin]];
     // Height
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.sendButton
                                                      attribute:NSLayoutAttributeHeight
@@ -148,7 +149,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:self
                                                      attribute:NSLayoutAttributeBottom
                                                     multiplier:1.0
-                                                      constant:-LSComposeiewHorizontalMargin]];
+                                                      constant:-LSComposeviewHorizontalMargin]];
     
     //**********Text Input View Constraints**********//
     // Left Margin
@@ -158,7 +159,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:self.cameraButton
                                                      attribute:NSLayoutAttributeRight
                                                     multiplier:1.0
-                                                      constant:LSComposeiewVerticalMargin]];
+                                                      constant:LSComposeviewVerticalMargin]];
     
     // Right Margin
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
@@ -167,7 +168,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:self.sendButton
                                                      attribute:NSLayoutAttributeLeft
                                                     multiplier:1.0
-                                                      constant:-LSComposeiewVerticalMargin]];
+                                                      constant:-LSComposeviewVerticalMargin]];
     // Top Margin
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
                                                      attribute:NSLayoutAttributeTop
@@ -175,7 +176,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:self
                                                      attribute:NSLayoutAttributeTop
                                                     multiplier:1.0
-                                                      constant:LSComposeiewHorizontalMargin]];
+                                                      constant:LSComposeviewHorizontalMargin]];
     // Bottom Margin
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
                                                      attribute:NSLayoutAttributeBottom
@@ -183,7 +184,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:self
                                                      attribute:NSLayoutAttributeBottom
                                                     multiplier:1.0
-                                                      constant:-LSComposeiewHorizontalMargin]];
+                                                      constant:-LSComposeviewHorizontalMargin]];
 }
 
 - (void)cameraTapped
@@ -203,7 +204,7 @@ static CGFloat const LSButtonHeight = 28;
     }
     
     //If not text, don't send
-    if ([self.textInputView.text isEqualToString:@" "]) {
+    if (!(self.textInputView.text.length > 1)) {
         return;
     } else {
         [self.delegate composeView:self sendMessageWithText:self.textInputView.text];

@@ -22,10 +22,20 @@
 
 @implementation LSConversationCell
 
-static CGFloat const LSAvatarImageViewSizeRatio  = 0.60f;
+//Cell Constants
 static CGFloat const LSCellTopMargin = 12.0f;
 static CGFloat const LSCellHorizontalMargin = 12.0f;
 static CGFloat const LSCellBottomMargin = 6.0f;
+
+//Avatart Constants
+static CGFloat const LSAvatarImageViewSizeRatio  = 0.60f;
+
+//Sender Label Constants
+static CGFloat const LSCellSenderLabelRightMargin = -60.0f;
+
+//Date Label Constants
+static CGFloat const LSCellDateLabelLeftMargin = 6.0f;
+
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -33,16 +43,19 @@ static CGFloat const LSCellBottomMargin = 6.0f;
     if (self) {
         [self setBackgroundColor:[UIColor whiteColor]];
         
+        //Initialize Avatar Image
         self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:self.frame];
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.avatarImageView];
        
+        //Initialiaze Sender Image
         self.senderLabel = [[UILabel alloc] init];
         self.senderLabel.font = LSBoldFont(16);
         self.senderLabel.textColor = [UIColor darkGrayColor];
         self.senderLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.senderLabel];
         
+        //Initialize Message Text
         self.lastMessageTextView = [[UITextView alloc] init];
         self.lastMessageTextView.contentInset = UIEdgeInsetsMake(-4,-4,0,0);
         self.lastMessageTextView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -51,6 +64,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
         self.lastMessageTextView.textColor = [UIColor grayColor];
         [self.contentView addSubview:self.lastMessageTextView];
 
+        //Initialize Date Label
         self.dateLabel = [[UILabel alloc] init];
         self.dateLabel.font = LSMediumFont(12);
         self.dateLabel.textColor = [UIColor darkGrayColor];
@@ -92,6 +106,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
 - (void)setupConstraints
 {
     //**********Avatar Constraints**********//
+    //Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                           attribute:NSLayoutAttributeWidth
                                                           relatedBy:NSLayoutRelationEqual
@@ -100,7 +115,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                          multiplier:LSAvatarImageViewSizeRatio
                                                            constant:0]];
     
-    // Height constraint, half of parent view height
+    //Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                           attribute:NSLayoutAttributeHeight
                                                           relatedBy:NSLayoutRelationEqual
@@ -109,7 +124,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                          multiplier:LSAvatarImageViewSizeRatio
                                                            constant:0]];
     
-    // Center horizontally
+    //Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                           attribute:NSLayoutAttributeLeft
                                                           relatedBy:NSLayoutRelationEqual
@@ -118,17 +133,17 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                          multiplier:1.0
                                                            constant:LSCellHorizontalMargin]];
     
-    // Center vertically
+    //Center vertically
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                           attribute:NSLayoutAttributeCenterY
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.contentView
                                                           attribute:NSLayoutAttributeCenterY
                                                          multiplier:1.0
-                                                           constant:0.0]];
+                                                           constant:0]];
     
     //**********Sender Label Test Constraints**********//
-    
+    //Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
                                                                  attribute:NSLayoutAttributeLeft
                                                                  relatedBy:NSLayoutRelationEqual
@@ -136,15 +151,15 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
                                                                   constant:LSCellHorizontalMargin]];
-    
+    //Right Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
                                                                  attribute:NSLayoutAttributeRight
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
-                                                                  constant:-60]];
-    
+                                                                  constant:LSCellSenderLabelRightMargin]];
+    //Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
                                                                  attribute:NSLayoutAttributeTop
                                                                  relatedBy:NSLayoutRelationEqual
@@ -152,7 +167,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                                  attribute:NSLayoutAttributeTop
                                                                 multiplier:1.0
                                                                   constant:LSCellTopMargin]];
-    
+    //Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
                                                                  attribute:NSLayoutAttributeHeight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -162,6 +177,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                                   constant:0]];
     
     //**********Message Text Constraints**********//
+    //Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
                                                                  attribute:NSLayoutAttributeLeft
                                                                  relatedBy:NSLayoutRelationEqual
@@ -169,7 +185,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
                                                                   constant:LSCellHorizontalMargin]];
-    
+    //Right Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
                                                                  attribute:NSLayoutAttributeRight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -177,7 +193,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
                                                                   constant:-LSCellHorizontalMargin]];
-    
+    ///Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
                                                                  attribute:NSLayoutAttributeTop
                                                                  relatedBy:NSLayoutRelationEqual
@@ -185,7 +201,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
                                                                   constant:0]];
-    
+    //Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual
@@ -194,15 +210,16 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                                 multiplier:1.0
                                                                   constant:-LSCellBottomMargin]];
     
-     //**********Date Label Constraints**********//
+    //**********Date Label Constraints**********//
+    //Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
                                                                  attribute:NSLayoutAttributeLeft
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.senderLabel
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
-                                                                  constant:6]];
-    
+                                                                  constant:LSCellDateLabelLeftMargin]];
+    //Right Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
                                                                  attribute:NSLayoutAttributeRight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -210,7 +227,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
                                                                   constant:-LSCellHorizontalMargin]];
-    
+    //Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
                                                                  attribute:NSLayoutAttributeHeight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -218,7 +235,7 @@ static CGFloat const LSCellBottomMargin = 6.0f;
                                                                  attribute:NSLayoutAttributeHeight
                                                                 multiplier:1.0
                                                                   constant:0]];
-    
+    //Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
                                                                  attribute:NSLayoutAttributeTop
                                                                  relatedBy:NSLayoutRelationEqual

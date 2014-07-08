@@ -23,6 +23,13 @@
 
 @implementation LSAuthenticationViewController
 
+static CGFloat const LSLogoCenterY = -100;
+static CGFloat const LSButtonWidthMultiple = 0.9;
+static CGFloat const LSButtonHeightMultiple = 0.08;
+
+static CGFloat const LSRegisterButtonCenterY = 140.0;
+static CGFloat const LSLoginButtonTopMargin = 20.0;
+
 - (void)viewDidLoad
 {
     NSAssert(self.APIManager, @"APIManager cannot be nil");
@@ -64,7 +71,7 @@
 - (void)setupLayoutConstraints
 {
     //**********Logo Constraints**********//
-    
+    //Center X
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.logo
                                                           attribute:NSLayoutAttributeCenterX
                                                           relatedBy:NSLayoutRelationEqual
@@ -72,33 +79,34 @@
                                                           attribute:NSLayoutAttributeCenterX
                                                          multiplier:1.0
                                                            constant:0]];
-    
+    //Center Y
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.logo
                                                           attribute:NSLayoutAttributeCenterY
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeCenterY
                                                          multiplier:1.0
-                                                           constant:-100]];
+                                                           constant:LSLogoCenterY]];
 
     
     //**********Register Button Constraints**********//
+    //Width
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.registerButton
                                                           attribute:NSLayoutAttributeWidth
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeWidth
-                                                         multiplier:0.9
+                                                         multiplier:LSButtonWidthMultiple
                                                            constant:0]];
-    
+    //Height
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.registerButton
                                                           attribute:NSLayoutAttributeHeight
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeHeight
-                                                         multiplier:0.08
+                                                         multiplier:LSButtonHeightMultiple
                                                            constant:0]];
-    
+    //Center X
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.registerButton
                                                           attribute:NSLayoutAttributeCenterX
                                                           relatedBy:NSLayoutRelationEqual
@@ -106,32 +114,33 @@
                                                           attribute:NSLayoutAttributeCenterX
                                                          multiplier:1.0
                                                            constant:0]];
-    
+    //Center Y
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.registerButton
                                                           attribute:NSLayoutAttributeCenterY
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeCenterY
                                                          multiplier:1.0
-                                                           constant:140]];
+                                                           constant:LSRegisterButtonCenterY]];
     
     //**********Login Button Constraints**********//
+    //Width
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.loginButton
                                                           attribute:NSLayoutAttributeWidth
                                                            relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeWidth
-                                                         multiplier:0.9
+                                                         multiplier:LSButtonWidthMultiple
                                                            constant:0]];
-    
+    //Height
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.loginButton
                                                           attribute:NSLayoutAttributeHeight
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeHeight
-                                                         multiplier:0.08
+                                                         multiplier:LSButtonHeightMultiple
                                                            constant:0]];
-    
+    //Center X
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.loginButton
                                                           attribute:NSLayoutAttributeCenterX
                                                           relatedBy:NSLayoutRelationEqual
@@ -139,14 +148,14 @@
                                                           attribute:NSLayoutAttributeCenterX
                                                          multiplier:1.0
                                                            constant:0]];
-    
+    //Top Margin
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.loginButton
                                                           attribute:NSLayoutAttributeTop
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.registerButton
                                                           attribute:NSLayoutAttributeBottom
                                                          multiplier:1.0
-                                                           constant:20]];
+                                                           constant:LSLoginButtonTopMargin]];
     
 }
 - (void)registerTapped
