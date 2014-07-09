@@ -86,6 +86,7 @@ static CGFloat const LSComposeViewHeight = 40;
     // Setup Collection View
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40)
                                              collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+    self.collectionView.contentInset = UIEdgeInsetsMake(10, 0, 20, 0);
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor whiteColor];
@@ -100,17 +101,6 @@ static CGFloat const LSComposeViewHeight = 40;
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 40, rect.size.width, LSComposeViewHeight)];
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
-    
-    // Register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messagesUpdated:) name:LSMessagesUpdatedNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -128,6 +118,23 @@ static CGFloat const LSComposeViewHeight = 40;
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[[[self.messages lastObject] parts] count] - 1 inSection:self.messages.count - 1];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }
+    
+    // Register for keyboard notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardWillShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messagesUpdated:) name:LSMessagesUpdatedNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)fetchMessages
@@ -331,7 +338,9 @@ static CGFloat const LSComposeViewHeight = 40;
         [alertView show];
     }
     CGRect rect = [[UIScreen mainScreen] bounds];
-    self.composeView.frame = CGRectMake(0, rect.size.height - 40, rect.size.width, 40);
+    [UIView animateWithDuration:0.2 animations:^{
+        self.composeView.frame = CGRectMake(0, rect.size.height - 40, rect.size.width, 40);
+    }];
 }
 
 - (void)cameraTapped
@@ -392,8 +401,8 @@ static CGFloat const LSComposeViewHeight = 40;
     NSString *mediaType = [info objectForKey:@"UIImagePickerControllerMediaType"];
     if ([mediaType isEqualToString:@"public.image"]) {
         CGRect frame = self.composeView.frame;
-        frame.size.height = 100;
-        frame.origin.y = self.view.frame.size.height - 100;
+        frame.size.height = 120;
+        frame.origin.y = self.view.frame.size.height - 120;
         self.composeView.frame = frame;
         self.selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
         [self.composeView updateWithImage:self.selectedImage];

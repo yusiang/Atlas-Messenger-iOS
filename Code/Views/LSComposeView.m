@@ -212,7 +212,8 @@ static CGFloat const LSButtonHeight = 28;
     
     // Reset text input view label
     [self.textInputView setText:@""];
-    [self.textInputView setAttributedText:nil];
+    [self.images removeAllObjects];
+    
 }
 
 - (void)updateWithImage:(UIImage *)image

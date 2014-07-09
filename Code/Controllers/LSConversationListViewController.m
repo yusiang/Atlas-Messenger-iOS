@@ -60,6 +60,12 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [self.tableView reloadData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)fetchLayerConversations
 {
     if (self.navigationController.topViewController == self) {
