@@ -59,7 +59,7 @@
     expect(self.APIManager).notTo.beNil();
 }
 
-- (void)testPublicPropertiesOnInitializations
+- (void)testPublicPropertiesOnInitialization
 {
     expect(self.APIManager.authenticatedURLSessionConfiguration).to.beNil();
     expect(self.APIManager.authenticatedSession).to.beNil();

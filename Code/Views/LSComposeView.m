@@ -22,7 +22,7 @@
 
 @implementation LSComposeView
 
-//Compose View Margins
+// Compose View Margins
 static CGFloat const LSComposeviewHorizontalMargin = 6;
 static CGFloat const LSComposeviewVerticalMargin = 6;
 
@@ -35,7 +35,7 @@ static CGFloat const LSButtonHeight = 28;
     self = [super initWithFrame:frame];
     if (self) {
 
-        //Initialize the Camera Button
+        // Initialize the Camera Button
         self.cameraButton = [[LSButton alloc] init];
         self.cameraButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.cameraButton.BackgroundColor = LSBlueColor();
@@ -47,7 +47,7 @@ static CGFloat const LSButtonHeight = 28;
         [self.cameraButton addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.cameraButton];
         
-        //Initialize the Text Input View
+        // Initialize the Text Input View
         self.textInputView = [[UITextView alloc] init];
         self.textInputView.contentInset = UIEdgeInsetsMake(-4, 0, 0, 0);
         self.textInputView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -59,7 +59,7 @@ static CGFloat const LSButtonHeight = 28;
         self.textInputView.accessibilityLabel = @"Compose TextView";
         [self addSubview:self.textInputView];
         
-        //Initialize the Send Button
+        // Initialize the Send Button
         self.sendButton = [[LSButton alloc] initWithText:@"Send"];
         self.sendButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.sendButton.backgroundColor = [UIColor clearColor];
@@ -70,7 +70,7 @@ static CGFloat const LSButtonHeight = 28;
         
         [self setupLayoutConstraints];
         
-        //Setup
+        // Setup
         self.backgroundColor = LSLighGrayColor();
         self.accessibilityLabel = @"composeView";
         self.images = [[NSMutableArray alloc] init];
@@ -196,21 +196,21 @@ static CGFloat const LSButtonHeight = 28;
 {
     [self.textInputView resignFirstResponder];
     
-    //Send Image
+    // Send Image
     if (self.images.count > 0) {
         for (UIImage *image in self.images) {
             [self.delegate composeView:self sendMessageWithImage:image];
         }
     }
     
-    //If not text, don't send
+    // If not text, don't send
     if (!(self.textInputView.text.length > 1)) {
         //
     } else {
         [self.delegate composeView:self sendMessageWithText:self.textInputView.text];
     }
     
-    //Reset text input view label
+    // Reset text input view label
     [self.textInputView setText:@""];
     [self.textInputView setAttributedText:nil];
 }

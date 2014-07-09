@@ -27,7 +27,7 @@ NSData *LSJPEGDataWithData(NSData *data)
     return data;
 }
 
-CGSize ItemSizeForPart(LYRMessagePart *part, CGFloat width)
+CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
 {
     CGSize itemSize;
     
@@ -59,6 +59,10 @@ CGSize ItemSizeForPart(LYRMessagePart *part, CGFloat width)
     return itemSize;
 }
 
+static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
+static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
+static CGFloat const LSComposeViewHeight = 40;
+
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -69,11 +73,6 @@ CGSize ItemSizeForPart(LYRMessagePart *part, CGFloat width)
 @end
 
 @implementation LSConversationViewController
-
-static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
-static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
-static CGFloat const LSComposeViewHeight = 40;
-static CGFloat const LSComposeViewIncrease = 24;
 
 - (void)viewDidLoad
 {
@@ -238,7 +237,7 @@ static CGFloat const LSComposeViewIncrease = 24;
 {
     LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
     LYRMessagePart *part = [message.parts objectAtIndex:indexPath.row];
-    return ItemSizeForPart(part, self.view.frame.size.width);
+    return LSItemSizeForPart(part, self.view.frame.size.width);
 }
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section

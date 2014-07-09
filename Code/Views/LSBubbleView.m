@@ -9,6 +9,11 @@
 #import "LSBubbleView.h"
 #import "LSUIConstants.h"
 
+static inline CGFloat LSDegreesToRadians(CGFloat angle)
+{
+    return (angle) / 180.0 * M_PI;
+}
+
 @interface LSBubbleView ()
 
 @property (nonatomic) UITextView *textView;
@@ -18,8 +23,6 @@
 @end
 
 @implementation LSBubbleView
-
-#define DegreesToRadians(angle) ((angle) / 180.0 * M_PI)
 
 - (id)init
 {
@@ -32,7 +35,7 @@
         self.arrow = [[UIView alloc] init];
         self.arrow.layer.cornerRadius = 2;
         self.arrow.translatesAutoresizingMaskIntoConstraints = NO;
-        self.arrow.transform = CGAffineTransformMakeRotation(DegreesToRadians(45));
+        self.arrow.transform = CGAffineTransformMakeRotation(LSDegreesToRadians(45));
         [self addSubview:self.arrow];
         
         self.textView = [[UITextView alloc] init];

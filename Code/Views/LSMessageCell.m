@@ -98,7 +98,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     
     //**********Avatar Image Constraints**********//
-    //Width
+    // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
@@ -107,7 +107,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewSize]];
     
-    //Height
+    // Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeHeight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -116,7 +116,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewSize]];
 
-    //Right Margin
+    // Right Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeRight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -125,7 +125,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:-LSAvatarImageViewInset]];
     
-    //Bottom Margin
+    // Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual
@@ -137,7 +137,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     
     //**********Bubble Image Constraints**********//
     LYRMessagePart *messagePart = [presenter.message.parts objectAtIndex:[presenter indexForPart]];
-    //Width
+    // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
@@ -146,7 +146,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:0
                                                                   constant:[self bubbleWidthForMessagePart:messagePart]]];
     
-    //Top Margin
+    // Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeTop
                                                                  relatedBy:NSLayoutRelationEqual
@@ -155,7 +155,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:0]];
 
-    //Right Margin
+    // Right Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeRight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -164,7 +164,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:-LSBubbleViewVerticalMargin]];
     
-    //Bottom Margin
+    // Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual
@@ -179,7 +179,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     
     //**********Avatar Image Constraints**********//
-    //Width
+    // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
@@ -188,7 +188,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewSize]];
     
-    //Height
+    // Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeHeight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -197,7 +197,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewSize]];
     
-    //Left Margin
+    // Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeLeft
                                                                  relatedBy:NSLayoutRelationEqual
@@ -206,7 +206,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:LSAvatarImageViewInset]];
     
-    //Bottom Margin
+    // Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual
@@ -218,7 +218,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     
     //**********Bubble Image Constraints**********//
     LYRMessagePart *messagePart = [presenter.message.parts objectAtIndex:[presenter indexForPart]];
-    //Width
+    // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
@@ -227,7 +227,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:[self bubbleWidthForMessagePart:messagePart]]];
     
-    //Top Margin
+    // Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeTop
                                                                  relatedBy:NSLayoutRelationEqual
@@ -236,7 +236,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:0.8
                                                                   constant:0]];
     
-    //Left Margin
+    // Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeLeft
                                                                  relatedBy:NSLayoutRelationEqual
@@ -245,7 +245,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                 multiplier:1.0
                                                                   constant:LSBubbleViewVerticalMargin]];
     
-    //Bottom Margin
+    // Bottom Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual

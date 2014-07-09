@@ -182,6 +182,12 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
             [self.tableView endUpdates];
         } else {
             NSLog(@"Conversation Not Deleted with Error %@", error);
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Delete Failed"
+                                                                message:[error localizedDescription]
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+            [alertView show];
         }
     }
 }
