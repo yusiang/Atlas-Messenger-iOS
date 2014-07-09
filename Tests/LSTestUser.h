@@ -11,6 +11,6 @@
 
 @interface LSTestUser : NSObject
 
-- (LSUser *)testUserWithNumber:(NSUInteger)number;
++ (LSUser *)testUserWithNumber:(NSUInteger)number;
 
 @end

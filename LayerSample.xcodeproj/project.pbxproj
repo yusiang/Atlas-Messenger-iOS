@@ -29,6 +29,9 @@
 		0AADB5D21947C8850083732B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D11947C8850083732B /* StoreKit.framework */; };
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		0AB1157C196460ED00B59DF8 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */; };
+		0AB8FE23196C82E600EA170C /* LSMessagePartCellPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB8FE22196C82E600EA170C /* LSMessagePartCellPresenter.m */; };
+		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
+		0AC3D70B196B29CD0089E49D /* LSBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC3D70A196B29CD0089E49D /* LSBubbleView.m */; };
 		0AD767721963104200582755 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD767711963104200582755 /* LSUtilities.m */; };
 		0AD767741963157600582755 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD767731963157600582755 /* camera@2x.png */; };
 		140D75B35BCA4D3395A4DC4B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931E36A3415C497CA3681E7F /* libPods.a */; };
@@ -102,6 +105,11 @@
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0AB1157A196460ED00B59DF8 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
 		0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
+		0AB8FE21196C82E600EA170C /* LSMessagePartCellPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSMessagePartCellPresenter.h; path = ../Controllers/LSMessagePartCellPresenter.h; sourceTree = "<group>"; };
+		0AB8FE22196C82E600EA170C /* LSMessagePartCellPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSMessagePartCellPresenter.m; path = ../Controllers/LSMessagePartCellPresenter.m; sourceTree = "<group>"; };
+		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
+		0AC3D709196B29CD0089E49D /* LSBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSBubbleView.h; sourceTree = "<group>"; };
+		0AC3D70A196B29CD0089E49D /* LSBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSBubbleView.m; sourceTree = "<group>"; };
 		0AD767701963104200582755 /* LSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUtilities.h; sourceTree = "<group>"; };
 		0AD767711963104200582755 /* LSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUtilities.m; sourceTree = "<group>"; };
 		0AD767731963157600582755 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
@@ -296,6 +304,8 @@
 				0A2324F41960DB8C00C1C98D /* LSConversationCellPresenter.m */,
 				0A52D5FF1962219D0030A34A /* LSMessageCellPresenter.h */,
 				0A52D6001962219D0030A34A /* LSMessageCellPresenter.m */,
+				0AB8FE21196C82E600EA170C /* LSMessagePartCellPresenter.h */,
+				0AB8FE22196C82E600EA170C /* LSMessagePartCellPresenter.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -319,6 +329,8 @@
 				259A57491950EB76000E27B0 /* LSMediaAttachement.m */,
 				259A574A1950EB76000E27B0 /* LSMessageCell.h */,
 				259A574B1950EB76000E27B0 /* LSMessageCell.m */,
+				0AC3D709196B29CD0089E49D /* LSBubbleView.h */,
+				0AC3D70A196B29CD0089E49D /* LSBubbleView.m */,
 				259A574C1950EB76000E27B0 /* LSUIConstants.h */,
 				259A574D1950EB76000E27B0 /* LSUIConstants.m */,
 				0A1B1382196607FF008D4F5A /* LSSelectionIndicator.h */,
@@ -330,6 +342,7 @@
 		259A576B1950EB83000E27B0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0ABEFFAE196B7686006FFFF3 /* logo@2x.png */,
 				0AD767731963157600582755 /* camera@2x.png */,
 				259A576C1950EB83000E27B0 /* Main.storyboard */,
 				259A576E1950EB83000E27B0 /* InfoPlist.strings */,
@@ -446,6 +459,7 @@
 			files = (
 				259A57751950EB83000E27B0 /* Images.xcassets in Resources */,
 				259A57761950EB83000E27B0 /* kevin.png in Resources */,
+				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
 				259A57731950EB83000E27B0 /* Main.storyboard in Resources */,
 				0AD767741963157600582755 /* camera@2x.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
@@ -537,6 +551,7 @@
 				0AB1157C196460ED00B59DF8 /* LSConversationListViewController.m in Sources */,
 				259A57501950EB76000E27B0 /* LSContactsSelectionViewController.m in Sources */,
 				259A574F1950EB76000E27B0 /* LSAPIManager.m in Sources */,
+				0AB8FE23196C82E600EA170C /* LSMessagePartCellPresenter.m in Sources */,
 				259A57631950EB76000E27B0 /* LSButton.m in Sources */,
 				259A57671950EB76000E27B0 /* LSInputTableViewCell.m in Sources */,
 				0A2324F51960DB8C00C1C98D /* LSConversationCellPresenter.m in Sources */,
@@ -551,6 +566,7 @@
 				259A57621950EB76000E27B0 /* LSAvatarImageView.m in Sources */,
 				0A52D5FB1961DB7D0030A34A /* LSTestUser.m in Sources */,
 				259A57551950EB76000E27B0 /* LSLoginViewController.m in Sources */,
+				0AC3D70B196B29CD0089E49D /* LSBubbleView.m in Sources */,
 				259A57611950EB76000E27B0 /* LSUser.m in Sources */,
 				259A576A1950EB76000E27B0 /* LSUIConstants.m in Sources */,
 				259A57691950EB76000E27B0 /* LSMessageCell.m in Sources */,

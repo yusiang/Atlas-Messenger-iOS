@@ -27,6 +27,42 @@ NSData *LSJPEGDataWithData(NSData *data)
     return data;
 }
 
+CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
+{
+    CGSize itemSize;
+    
+    //If Message Part is plain text...
+    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, width * 0.50, 0)];
+        textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
+        textView.font = LSMediumFont(14);
+        [textView sizeToFit];
+        itemSize = CGSizeMake(320, textView.frame.size.height);
+    }
+   
+    //If Message Part is an image...
+    if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
+        if (imageView.frame.size.height > imageView.frame.size.width) {
+            itemSize = CGSizeMake(320, 300);
+        } else {
+            CGFloat ratio = (184 / imageView.frame.size.width);
+            CGFloat height = imageView.frame.size.height * ratio;
+            itemSize = CGSizeMake(320, height + 8);
+        }
+    }
+    
+    if (30 > itemSize.height) {
+        itemSize = CGSizeMake(itemSize.width, 30);
+    }
+    
+    return itemSize;
+}
+
+static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
+static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
+static CGFloat const LSComposeViewHeight = 40;
+
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -38,8 +74,6 @@ NSData *LSJPEGDataWithData(NSData *data)
 
 @implementation LSConversationViewController
 
-static NSString *const LSCMessageCellIdentifier = @"messageCellIdentifier";
-static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -50,7 +84,7 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
     self.accessibilityLabel = @"Conversation";
     
     // Setup Collection View
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 48)
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40)
                                              collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -63,7 +97,7 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
     
     // Setup Compose View
     CGRect rect = [[UIScreen mainScreen] bounds];
-    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 48, rect.size.width, 48)];
+    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 40, rect.size.width, LSComposeViewHeight)];
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
     
@@ -89,8 +123,10 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
     if (self.messages.count > 1) {
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[[[self.messages lastObject] parts] count] - 1 inSection:self.messages.count - 1];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }
 }
 
@@ -104,7 +140,7 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
             [self fetchMessages];
         });
     }
-    
+
     NSAssert(self.conversation, @"Conversation should not be `nil`.");
     if (self.messages) self.messages = nil;
     NSOrderedSet *messages = [self.layerClient messagesForConversation:self.conversation];
@@ -116,9 +152,8 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 {
     [self.collectionView reloadData];
     if (self.messages.count > 0) {
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
-                                    atScrollPosition:UICollectionViewScrollPositionBottom
-                                            animated:YES];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[[[self.messages lastObject] parts] count] - 1 inSection:self.messages.count - 1];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }
 }
 
@@ -126,12 +161,12 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 # pragma mark Collection View Data Source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.messages.count;
+    return [[[self.messages objectAtIndex:section] parts] count];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 1;
+    return self.messages.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -143,8 +178,49 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 
 - (void)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.row] persistanceManager:self.persistanceManager];
+    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessage:[self.messages objectAtIndex:indexPath.section]
+                                                                           indexPath:indexPath
+                                                                  persistanceManager:self.persistanceManager];
+    presenter.shouldShowSenderImage = [self cellShouldShowSenderImageForSection:indexPath.section];
     [cell updateWithPresenter:presenter];
+}
+
+- (BOOL)cellShouldShowSenderImageForSection:(NSUInteger)section
+{
+    LYRMessage *message = [self.messages objectAtIndex:section];
+    LYRMessage *previousMessage;
+    
+    //If there is a previous message...
+    if (self.messages.count > 0 && self.messages.count - 1 > section) {
+        previousMessage = [self.messages objectAtIndex:(section + 1)];
+    }
+    
+    //Check if it was sent by the same user as the current message
+    if ([previousMessage.sentByUserID isEqualToString:message.sentByUserID]) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
+- (BOOL)cellShouldShowSenderLabelForSection:(NSUInteger)section
+{
+    LYRMessage *message = [self.messages objectAtIndex:section];
+    LYRMessage *nextMessage;
+    
+    //If there is a next message....
+    if (section > 0 && self.messages.count - 1 > section) {
+        nextMessage = [self.messages objectAtIndex:(section - 1)];
+    } else {
+        return NO;
+    }
+    
+    //Check if it was sent by the same user as the current message
+    if ([nextMessage.sentByUserID isEqualToString:message.sentByUserID]) {
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 #pragma mark
@@ -159,39 +235,18 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    LYRMessage *message = [self.messages objectAtIndex:indexPath.row];
-    LYRMessagePart *part = [message.parts objectAtIndex:0];
-    
-    CGSize itemSize;
-    
-    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
-        
-        //180 Is the width we want for the textView
-        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 180, 0)];
-        textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
-        textView.font = LSMediumFont(14);
-        [textView sizeToFit];
-        itemSize = CGSizeMake(320, textView.frame.size.height);
-        
-    } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
-        if (imageView.frame.size.height > imageView.frame.size.width) {
-            itemSize = CGSizeMake(320, 300);
-        } else {
-            CGFloat ratio = (184 / imageView.frame.size.width);
-            CGFloat height = imageView.frame.size.height * ratio;
-            itemSize = CGSizeMake(320, height + 8);
-        }
-    }
-    if (40 > itemSize.height) {
-        return CGSizeMake(itemSize.width, 50);
-    }
-    return itemSize;
+    LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
+    LYRMessagePart *part = [message.parts objectAtIndex:indexPath.row];
+    return LSItemSizeForPart(part, self.view.frame.size.width);
 }
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    return UIEdgeInsetsMake(0, 0, 48, 0);
+    if ([self cellShouldShowSenderLabelForSection:section]) {
+        return UIEdgeInsetsMake(20, 0, 0, 0);
+    } else {
+        return UIEdgeInsetsMake(6, 0, 0, 0);
+    }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -275,6 +330,8 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
                                                   otherButtonTitles:nil];
         [alertView show];
     }
+    CGRect rect = [[UIScreen mainScreen] bounds];
+    self.composeView.frame = CGRectMake(0, rect.size.height - 40, rect.size.width, 40);
 }
 
 - (void)cameraTapped
@@ -286,6 +343,11 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
                                   destructiveButtonTitle:nil
                                   otherButtonTitles:@"Choose Existing", @"Take Photo", nil];
     [actionSheet showInView:self.view];
+}
+
+- (void)composeView:(LSComposeView *)composeView shouldChangeHeightForLines:(double)lines
+{
+    //TODO:Implement functionality to grow text input view height to accomodate for multiple lines
 }
 
 #pragma mark
@@ -329,6 +391,10 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 {
     NSString *mediaType = [info objectForKey:@"UIImagePickerControllerMediaType"];
     if ([mediaType isEqualToString:@"public.image"]) {
+        CGRect frame = self.composeView.frame;
+        frame.size.height = 100;
+        frame.origin.y = self.view.frame.size.height - 100;
+        self.composeView.frame = frame;
         self.selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
         [self.composeView updateWithImage:self.selectedImage];
     }
@@ -339,6 +405,7 @@ static NSString *const LSMessagesUpdatedNotification = @"messagesUpdated";
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
+
 
 
 @end

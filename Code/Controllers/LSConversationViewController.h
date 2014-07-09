@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
 #import "LSPersistenceManager.h"
+#import "LSComposeView.h"
 
 @interface LSConversationViewController : UIViewController
 

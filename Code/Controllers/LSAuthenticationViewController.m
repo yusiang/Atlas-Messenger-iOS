@@ -15,13 +15,20 @@
 
 @interface LSAuthenticationViewController ()
 
-@property (nonatomic) UILabel *titleLabel;
+@property (nonatomic) UIImageView *logo;
 @property (nonatomic) LSButton *registerButton;
 @property (nonatomic) LSButton *loginButton;
 
 @end
 
 @implementation LSAuthenticationViewController
+
+static CGFloat const LSLogoCenterY = -100;
+static CGFloat const LSButtonWidthMultiple = 0.9;
+static CGFloat const LSButtonHeightMultiple = 0.08;
+
+static CGFloat const LSRegisterButtonCenterY = 140.0;
+static CGFloat const LSLoginButtonTopMargin = 20.0;
 
 - (void)viewDidLoad
 {
@@ -33,38 +40,124 @@
     self.title = @"Home";
     self.accessibilityLabel = @"Home Screen";
     
-    self.titleLabel = [[UILabel alloc] init];
-    self.titleLabel.translatesAutoresizingMaskIntoConstraints = FALSE;
-    self.titleLabel.text = @"Layer Chat";
-    self.titleLabel.font = LSMediumFont(42);
-    self.titleLabel.textColor = LSBlueColor();
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.titleLabel sizeToFit];
-    [self.view addSubview:self.titleLabel];
+    self.logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
+    self.logo.translatesAutoresizingMaskIntoConstraints = FALSE;
+    [self.view addSubview:self.logo];
     
     self.registerButton = [[LSButton alloc] initWithText:@"Register"];
     self.registerButton.translatesAutoresizingMaskIntoConstraints = FALSE;
     self.registerButton.backgroundColor = LSBlueColor();
+    self.registerButton.alpha = 0.8;
+    self.registerButton.textLabel.textColor = [UIColor whiteColor];
     [self.registerButton addTarget:self action:@selector(registerTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.registerButton];
     
     self.loginButton =[[LSButton alloc] initWithText:@"Login"];
-    self.loginButton.translatesAutoresizingMaskIntoConstraints = FALSE;
-    self.loginButton.borderColor = LSBlueColor();
-    self.loginButton.textColor = LSBlueColor();
-    self.loginButton.backgroundColor = [UIColor whiteColor];
+    self.loginButton.layer.borderColor = LSBlueColor().CGColor;
+    self.loginButton.textLabel.textColor = LSBlueColor();
+    self.loginButton.backgroundColor = LSGrayColor();
+    self.loginButton.alpha = 0.8;
     [self.loginButton addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.loginButton];
-
-    self.titleLabel.center = CGPointMake(self.view.center.x, self.view.center.y - 100);
     
-    self.registerButton.frame = CGRectMake(0, 0, 280, 60);
-    self.registerButton.center = CGPointMake(self.view.center.x, 380);
-    
-    self.loginButton.frame = CGRectMake(0, 0, 280, 60);
-    self.loginButton.center = CGPointMake(self.view.center.x, 460);
+    [self setupLayoutConstraints];
 }
 
+- (void)loadView
+{
+    [super loadView];
+}
+
+- (void)setupLayoutConstraints
+{
+    //**********Logo Constraints**********//
+    //Center X
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.logo
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0]];
+    //Center Y
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.logo
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1.0
+                                                           constant:LSLogoCenterY]];
+
+    
+    //**********Register Button Constraints**********//
+    //Width
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.registerButton
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeWidth
+                                                         multiplier:LSButtonWidthMultiple
+                                                           constant:0]];
+    //Height
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.registerButton
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeHeight
+                                                         multiplier:LSButtonHeightMultiple
+                                                           constant:0]];
+    //Center X
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.registerButton
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0]];
+    //Center Y
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.registerButton
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1.0
+                                                           constant:LSRegisterButtonCenterY]];
+    
+    //**********Login Button Constraints**********//
+    //Width
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.loginButton
+                                                          attribute:NSLayoutAttributeWidth
+                                                           relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeWidth
+                                                         multiplier:LSButtonWidthMultiple
+                                                           constant:0]];
+    //Height
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.loginButton
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeHeight
+                                                         multiplier:LSButtonHeightMultiple
+                                                           constant:0]];
+    //Center X
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.loginButton
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0]];
+    //Top Margin
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.loginButton
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.registerButton
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1.0
+                                                           constant:LSLoginButtonTopMargin]];
+    
+}
 - (void)registerTapped
 {
     LSRegistrationViewController *registrationViewController = [[LSRegistrationViewController alloc] init];
@@ -73,6 +166,7 @@
             [self.navigationController popViewControllerAnimated:NO];
         }
     }];
+    self.navigationController.navigationBarHidden = FALSE;
     registrationViewController.APIManager = self.APIManager;
     [self.navigationController pushViewController:registrationViewController animated:YES];
 }
@@ -85,6 +179,7 @@
             [self.navigationController popViewControllerAnimated:NO];
         }
     }];
+    self.navigationController.navigationBarHidden = FALSE;
     loginViewController.APIManager = self.APIManager;
     [self.navigationController pushViewController:loginViewController animated:YES];
 }

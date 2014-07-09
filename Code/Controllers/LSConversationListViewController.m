@@ -48,6 +48,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = [UIColor whiteColor];
     [self.tableView registerClass:[LSConversationCell class] forCellReuseIdentifier:LSConversationCellID];
+    
     // TODO: Nothing is removing this....
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationsUpdated:) name:@"conversationsUpdated" object:nil];
 }
@@ -169,10 +170,25 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     return YES;
 }
 
-
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
+        NSError *error;
+        BOOL success = [self.layerClient deleteConversation:[self.conversations objectAtIndex:indexPath.row] error:&error];
+        if (success) {
+            NSLog(@"Conversation Deleted!");
+            [self.tableView beginUpdates];
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self fetchLayerConversations];
+            [self.tableView endUpdates];
+        } else {
+            NSLog(@"Conversation Not Deleted with Error %@", error);
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Delete Failed"
+                                                                message:[error localizedDescription]
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        }
     }
 }
 @end

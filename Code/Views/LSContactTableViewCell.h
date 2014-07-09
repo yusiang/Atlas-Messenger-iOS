@@ -13,7 +13,6 @@
 
 @property (nonatomic, strong) LSSelectionIndicator *radioButton;
 
-// SBW: You can probably use the standard cell selection here...
 - (void)updateWithSelectionIndicator:(BOOL)selected;
 
 @end

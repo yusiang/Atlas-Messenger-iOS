@@ -18,17 +18,21 @@
 @interface LSMessageCellPresenter : NSObject
 
 @property (nonatomic, strong) LYRMessage *message;
+@property (nonatomic) BOOL shouldShowSenderImage;
+@property (nonatomic) BOOL shouldShowSenderLabel;
 
 ///-------------------------------
 /// @name Initializing a Presenter
 ///-------------------------------
 
-+ (instancetype)presenterWithMessage:(LYRMessage *)message persistanceManager:(LSPersistenceManager *)persistenceManager;
++ (instancetype)presenterWithMessage:(LYRMessage *)message indexPath:(NSIndexPath *)indexPath persistanceManager:(LSPersistenceManager *)persistenceManager;
 
 - (BOOL)messageWasSentByAuthenticatedUser;
 
 - (NSString *)labelForMessageSender;
 
 - (UIImage *)imageForMessageSender;
+
+- (NSUInteger)indexForPart;
 
 @end

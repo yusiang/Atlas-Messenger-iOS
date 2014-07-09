@@ -9,6 +9,11 @@
 #import "LSSelectionIndicator.h"
 #import "LSUIConstants.h"
 
+static inline CGFloat LSDegreesToRadians(CGFloat angle)
+{
+    return (angle) / 180.0 * M_PI;
+}
+
 @interface LSSelectionIndicator ()
 
 @property (nonatomic, strong) UIView *cutout;
@@ -33,10 +38,6 @@
         
         [self initCutout];
         [self initCheckMark];
-
-        
-//        UIView *checkMark =
-        
     }
     return self;
 }
@@ -72,7 +73,7 @@
 
     [self addSubview:self.checkMark];
     
-    self.checkMark.transform = CGAffineTransformMakeRotation(DegreesToRadians(-45));
+    self.checkMark.transform = CGAffineTransformMakeRotation(LSDegreesToRadians(-45));
     self.checkMark.alpha = 0.0f;
 }
 

@@ -11,13 +11,7 @@
 // SBW: What's up with the shadow API's? I'd probably use a category on UIButton if this stuff is really useful
 @interface LSButton : UIButton
 
-@property (nonatomic, strong) NSString *text;
-@property (nonatomic, strong) UIFont *font;
-@property (nonatomic, strong) UIColor *textColor;
-@property (nonatomic, strong) UIColor *borderColor;
-@property (nonatomic) double width;
-@property (nonatomic) double height;
-@property (nonatomic) double centerY;
+@property (nonatomic, strong) UILabel *textLabel;
 
 - (id)initWithText:(NSString *)text;
 

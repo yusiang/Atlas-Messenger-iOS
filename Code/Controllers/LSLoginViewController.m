@@ -39,31 +39,20 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     
     self.title = @"Login";
     self.accessibilityLabel = @"Login Screen";
-    
-    [self initializeLoginButton];
-    [self configureLayoutConstraints];
+
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSLoginlIdentifier];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    
+    //Done button added for testing purposes
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneTapped)];
+    doneButton.accessibilityLabel = @"Done";
+    [self.navigationItem setRightBarButtonItem:doneButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self.emailField becomeFirstResponder];
-}
-
-- (void)initializeLoginButton
-{
-    self.LoginButton = [[LSButton alloc] initWithText:@"Login"];
-    [self.loginButton addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
-    self.loginButton.enabled = NO;
-    [self.view addSubview:self.loginButton];
-}
-
-- (void)configureLayoutConstraints
-{
-    self.loginButton.frame = CGRectMake(0, 0, 280, 60);
-    self.loginButton.center = CGPointMake(self.view.center.x, 220);
 }
 
 #pragma mark 
@@ -115,6 +104,11 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
         default:
             break;
     }
+}
+
+- (void)doneTapped
+{
+    [self loginTapped];
 }
 
 - (void)loginTapped

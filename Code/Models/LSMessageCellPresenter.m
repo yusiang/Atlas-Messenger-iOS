@@ -10,23 +10,25 @@
 
 @interface LSMessageCellPresenter ()
 
-@property (nonatomic, strong) LSPersistenceManager *persistenceManager;
+@property (nonatomic) LSPersistenceManager *persistenceManager;
+@property (nonatomic) NSIndexPath *indexPath;
 
 @end
 
 @implementation LSMessageCellPresenter
 
-+ (instancetype)presenterWithMessage:(LYRMessage *)message persistanceManager:(LSPersistenceManager *)persistenceManager
++ (instancetype)presenterWithMessage:(LYRMessage *)message indexPath:(NSIndexPath *)indexPath persistanceManager:(LSPersistenceManager *)persistenceManager
 {
-    return [[self alloc] initWithMessage:message persistenceManager:persistenceManager];
+    return [[self alloc] initWithMessage:message indexPath:indexPath persistenceManager:persistenceManager];
 }
 
-- (id)initWithMessage:(LYRMessage *)message persistenceManager:(LSPersistenceManager *)persistenceManager
+- (id)initWithMessage:(LYRMessage *)message indexPath:(NSIndexPath *)indexPath persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     self = [super init];
     if (self) {
         _message = message;
         _persistenceManager = persistenceManager;
+        _indexPath = indexPath;
     }
     return self;
 }
@@ -54,6 +56,11 @@
 - (UIImage *)imageForMessageSender
 {
     return [UIImage imageNamed:@"kevin"];
+}
+
+- (NSUInteger)indexForPart
+{
+    return (NSUInteger)self.indexPath.row;
 }
 
 @end
