@@ -52,9 +52,9 @@ static void LSAlertWithError(NSError *error)
     LYRTestCleanKeychain();
     LYRSetLogLevelFromEnvironment();
     
-    NSDictionary *configDictionary = @{ LYRConfigurationCertificationURLKey: @"http://10.66.0.35:5555/certificates",
-                                        LYRConfigurationAuthenticationURLKey: @"https://10.66.0.35:7072/",
-                                        LYRConfigurationMessagingURLKey: @"https://10.66.0.35:7072/" };
+    NSDictionary *configDictionary = @{ LYRConfigurationCertificationURLKey: @"http://10.66.0.12:5555/certificates",
+                                        LYRConfigurationAuthenticationURLKey: @"https://10.66.0.12:7072/",
+                                        LYRConfigurationMessagingURLKey: @"https://10.66.0.12:7072/" };
     
     LYRConfiguration *configuration = [LYRConfiguration configurationWithDictionary:configDictionary];
     

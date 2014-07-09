@@ -44,7 +44,7 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
 
 - (void)initCutout
 {
-    self.cutout = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width - 4, self.frame.size.width - 4)];
+    self.cutout = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width - 2, self.frame.size.width - 2)];
     self.cutout.layer.cornerRadius = (self.frame.size.width - 2) / 2;
     self.cutout.center = self.center;
     self.cutout.backgroundColor = [UIColor whiteColor];

@@ -22,7 +22,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self addSelectionIndicator];
-        self.textLabel.font = LSMediumFont(18);
+        self.textLabel.font = LSMediumFont(14);
+    
         [self setSeparatorInset:UIEdgeInsetsMake(0, 20, 0, 0)];
     }
     return self;
