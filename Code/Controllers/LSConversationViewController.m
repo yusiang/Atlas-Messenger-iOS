@@ -266,6 +266,22 @@ static CGFloat const LSComposeViewHeight = 40;
     return 0;
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionReusableView *reusableview = nil;
+    
+    //TODO: Need a reusable collection view subclass here that displays a Name or Date
+    if (kind == UICollectionElementKindSectionHeader) {
+        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"HeaderView" forIndexPath:indexPath];
+    }
+    
+    //TODO: Need a reusable collection view subclass here that displays a read recipt
+    if (kind == UICollectionElementKindSectionFooter) {
+        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
+    }
+    return reusableview;
+}
+
 #pragma mark
 #pragma mark Keyboard Nofifications
 

@@ -97,12 +97,14 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
             [cell setText:@"First Name"];
             cell.textField.accessibilityLabel = @"First Name";
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
             self.firstNameField = cell.textField;
             break;
         case 1:
             [cell setText:@"Last Name"];
             cell.textField.accessibilityLabel = @"Last Name";
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
             self.lastNameField = cell.textField;
             break;
         case 2:

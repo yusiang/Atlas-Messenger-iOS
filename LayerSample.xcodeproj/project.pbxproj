@@ -28,6 +28,7 @@
 		0AADB5D01947C8800083732B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5CF1947C8800083732B /* Security.framework */; };
 		0AADB5D21947C8850083732B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D11947C8850083732B /* StoreKit.framework */; };
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
+		0AB0501A196E24F00029BC1B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB05019196E24F00029BC1B /* Crashlytics.framework */; };
 		0AB1157C196460ED00B59DF8 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
 		0AC3D70B196B29CD0089E49D /* LSBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC3D70A196B29CD0089E49D /* LSBubbleView.m */; };
@@ -102,6 +103,7 @@
 		0AADB5CF1947C8800083732B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0AADB5D11947C8850083732B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0AB05019196E24F00029BC1B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		0AB1157A196460ED00B59DF8 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
 		0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
 		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				0AADB5CE1947C87C0083732B /* QuartzCore.framework in Frameworks */,
 				0AADB5CC1947C8770083732B /* MobileCoreServices.framework in Frameworks */,
 				0AADB5CA1947C8710083732B /* libz.dylib in Frameworks */,
+				0AB0501A196E24F00029BC1B /* Crashlytics.framework in Frameworks */,
 				0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */,
 				0A0C242919477D8F00401B74 /* CoreGraphics.framework in Frameworks */,
 				0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */,
@@ -228,6 +231,7 @@
 		0A0C242519477D8F00401B74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0AB05019196E24F00029BC1B /* Crashlytics.framework */,
 				0AADB5D31947C88B0083732B /* SystemConfiguration.framework */,
 				0AADB5D11947C8850083732B /* StoreKit.framework */,
 				0AADB5CF1947C8800083732B /* Security.framework */,
@@ -375,6 +379,7 @@
 				0A0C242019477D8F00401B74 /* Frameworks */,
 				0A0C242119477D8F00401B74 /* Resources */,
 				A487A0EE4CB44DA78C108935 /* Copy Pods Resources */,
+				0AB05018196E249E0029BC1B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -471,6 +476,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0AB05018196E249E0029BC1B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run 0a0f48084316c34c98d99db32b6d9f9a93416892 9ae567b35b4bfc3f68296d25122038a6de4752faa8a5a2790506fbc165726882";
+		};
 		6D1B6C4F72A14767A34B248A /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

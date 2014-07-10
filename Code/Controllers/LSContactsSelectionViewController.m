@@ -217,8 +217,11 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)updateParticpantListWithSelectionAtIndex:(NSIndexPath *)indexPath
 {
-    NSString *key = [[self.contacts allKeys] objectAtIndex:indexPath.section];
+    NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[self.contacts allKeys]];
+    [mutableKeys sortUsingSelector:@selector(compare:)];
+    NSString *key = [mutableKeys objectAtIndex:indexPath.section];
     LSUser *user = [[self.contacts objectForKey:key] objectAtIndex:indexPath.row];
+    
     if ([self.selectedContacts containsObject:user]) {
         [self.selectedContacts removeObject:user];
     } else {

@@ -11,7 +11,17 @@
 #import "LSAvatarImageView.h"
 #import "LSMessageCellPresenter.h"
 
-@interface LSMessageCell : UICollectionViewCell
+@class LSMessageCell;
+
+@protocol LSMessageCellDelegate <NSObject>
+
+- (void)messageCell:(LSMessageCell *)cell deleteMessage:(LYRMessage *)message;
+
+@end
+
+@interface LSMessageCell : UICollectionViewCell 
+
+@property (nonatomic, weak) id<LSMessageCellDelegate>delegate;
 
 - (void)updateWithPresenter:(LSMessageCellPresenter *)presenter;
 
