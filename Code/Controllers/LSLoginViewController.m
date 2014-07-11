@@ -90,7 +90,6 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
             cell.textField.enablesReturnKeyAutomatically = YES;
             cell.textField.returnKeyType = UIReturnKeyNext;
             cell.textField.delegate = self;
-            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.emailField = cell.textField;
             break;
         case 1:
@@ -104,6 +103,7 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
         default:
             break;
     }
+    cell.textField.autocorrectionType = UITextAutocapitalizationTypeNone;
 }
 
 - (void)doneTapped
