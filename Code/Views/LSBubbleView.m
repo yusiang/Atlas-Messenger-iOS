@@ -32,6 +32,7 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
         self.layer.cornerRadius = 4;
         self.translatesAutoresizingMaskIntoConstraints = NO;
         
+// Commenting out for now because of issues related to overlapping autolayout constraints
 //        self.arrow = [[UIView alloc] init];
 //        self.arrow.layer.cornerRadius = 2;
 //        self.arrow.translatesAutoresizingMaskIntoConstraints = NO;

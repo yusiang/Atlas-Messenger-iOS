@@ -105,6 +105,8 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.view addSubview:self.composeView];
 }
 
+
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
