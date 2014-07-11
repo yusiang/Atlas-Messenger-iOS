@@ -124,6 +124,8 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
                 return;
             }
             
+            [UIImage imageNamed:@"kevin"];
+            
             NSError *serializationError = nil;
             NSDictionary *loginInfo = nil;
             BOOL success = [LSHTTPResponseSerializer responseObject:&loginInfo withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
@@ -183,9 +185,10 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         [self authenticateWithEmail:session.user.email password:session.user.password completion:^(LSUser *user, NSError *error) {
             completion(user, error);
         }];
+    } else {
+        NSError *error = [NSError errorWithDomain:@"Authentication Error" code:500 userInfo:@{@"error" : @"No authenticated session"}];
+        completion (nil, error);
     }
-    NSError *error = [NSError errorWithDomain:@"Authentication Error" code:500 userInfo:@{@"error" : @"No authenticated session"}];
-    completion (nil, error);
 }
 
 - (void)deauthenticateWithCompletion:(void(^)(BOOL success, NSError *error))completion

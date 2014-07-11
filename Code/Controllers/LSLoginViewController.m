@@ -90,8 +90,8 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
             cell.textField.enablesReturnKeyAutomatically = YES;
             cell.textField.returnKeyType = UIReturnKeyNext;
             cell.textField.delegate = self;
-            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.emailField = cell.textField;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             break;
         case 1:
             [cell setText:@"Password"];
@@ -100,6 +100,7 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
             cell.textField.returnKeyType = UIReturnKeySend;
             cell.textField.delegate = self;
             self.passwordField = cell.textField;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             break;
         default:
             break;

@@ -32,7 +32,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
+
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.backgroundColor = [UIColor whiteColor];
         
@@ -75,7 +75,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     [self setupSenderCellConstraintsWithPresenter:presenter];
     if (presenter.shouldShowSenderImage) {
         self.avatarImageView.alpha = 1.0;
-        [self.bubbleView displayArrowForSender];
+//        [self.bubbleView displayArrowForSender];
     } else {
         self.avatarImageView.alpha = 0.0;
     }
@@ -86,7 +86,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     [self setupRecipientCellConstraintsWithPresenter:presenter];
     if (presenter.shouldShowSenderImage) {
         self.avatarImageView.alpha = 1.0;
-        [self.bubbleView displayArrowForRecipient];
+//        [self.bubbleView displayArrowForRecipient];
     } else {
         self.avatarImageView.alpha = 0.0;
     }

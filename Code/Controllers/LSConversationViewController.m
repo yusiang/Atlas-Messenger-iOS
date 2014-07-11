@@ -29,6 +29,7 @@ NSData *LSJPEGDataWithData(NSData *data)
 
 CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
 {
+    CGRect rect = [[UIScreen mainScreen] bounds];
     CGSize itemSize;
     
     //If Message Part is plain text...
@@ -37,18 +38,18 @@ CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
         textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         textView.font = LSMediumFont(14);
         [textView sizeToFit];
-        itemSize = CGSizeMake(320, textView.frame.size.height);
+        itemSize = CGSizeMake(rect.size.width, textView.frame.size.height);
     }
    
     //If Message Part is an image...
     if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
         if (imageView.frame.size.height > imageView.frame.size.width) {
-            itemSize = CGSizeMake(320, 300);
+            itemSize = CGSizeMake(rect.size.width, 300);
         } else {
-            CGFloat ratio = (184 / imageView.frame.size.width);
+            CGFloat ratio = (rect.size.width - 136 / imageView.frame.size.width);
             CGFloat height = imageView.frame.size.height * ratio;
-            itemSize = CGSizeMake(320, height + 8);
+            itemSize = CGSizeMake(rect.size.width, height + 8);
         }
     }
     
@@ -83,9 +84,12 @@ static CGFloat const LSComposeViewHeight = 40;
     self.title = @"Conversation";
     self.accessibilityLabel = @"Conversation";
     
+    CGRect rect = [[UIScreen mainScreen] bounds];
+    
     // Setup Collection View
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40)
                                              collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+    self.collectionView.contentInset = UIEdgeInsetsMake(10, 0, 20, 0);
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor whiteColor];
@@ -96,22 +100,12 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:LSCMessageCellIdentifier];
     
     // Setup Compose View
-    CGRect rect = [[UIScreen mainScreen] bounds];
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 40, rect.size.width, LSComposeViewHeight)];
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
-    
-    // Register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messagesUpdated:) name:LSMessagesUpdatedNotification object:nil];
 }
+
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -128,19 +122,27 @@ static CGFloat const LSComposeViewHeight = 40;
          NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[[[self.messages lastObject] parts] count] - 1 inSection:self.messages.count - 1];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }
+    
+    // Register for keyboard notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardWillShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messagesUpdated:) name:LSMessagesUpdatedNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)fetchMessages
 {
-    if (self.navigationController.topViewController == self) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSOrderedSet *newMessages = [self.layerClient messagesForConversation:self.conversation];
-            NSLog(@"New Message Count %lu", (unsigned long)newMessages.count);
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"messagesUpdated" object:nil userInfo:nil];
-            [self fetchMessages];
-        });
-    }
-
     NSAssert(self.conversation, @"Conversation should not be `nil`.");
     if (self.messages) self.messages = nil;
     NSOrderedSet *messages = [self.layerClient messagesForConversation:self.conversation];
@@ -331,7 +333,9 @@ static CGFloat const LSComposeViewHeight = 40;
         [alertView show];
     }
     CGRect rect = [[UIScreen mainScreen] bounds];
-    self.composeView.frame = CGRectMake(0, rect.size.height - 40, rect.size.width, 40);
+    [UIView animateWithDuration:0.2 animations:^{
+        self.composeView.frame = CGRectMake(0, rect.size.height - 40, rect.size.width, 40);
+    }];
 }
 
 - (void)cameraTapped
@@ -392,8 +396,8 @@ static CGFloat const LSComposeViewHeight = 40;
     NSString *mediaType = [info objectForKey:@"UIImagePickerControllerMediaType"];
     if ([mediaType isEqualToString:@"public.image"]) {
         CGRect frame = self.composeView.frame;
-        frame.size.height = 100;
-        frame.origin.y = self.view.frame.size.height - 100;
+        frame.size.height = 120;
+        frame.origin.y = self.view.frame.size.height - 120;
         self.composeView.frame = frame;
         self.selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
         [self.composeView updateWithImage:self.selectedImage];

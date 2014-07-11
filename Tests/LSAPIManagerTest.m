@@ -27,6 +27,7 @@
 @interface LSAPIManagerTest : XCTestCase
 
 @property (nonatomic, strong) LSAPIManager *APIManager;
+@property (nonatomic, strong) LSApplicationController *controller;
 
 @end
 
@@ -36,22 +37,26 @@
 {
     [super setUp];
     
+    _controller = [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    _APIManager = self.controller.APIManager;
+    
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
     [self.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
         [latch decrementCount];
     }];
-    [latch decrementCount];
+    [latch waitTilCount:0];
 }
 
 - (void)tearDown
 {
     [super tearDown];
     self.APIManager = nil;
+    [self.controller.layerClient stop];
 }
 
 - (void)testRaisesOnAttempToInit
 {
-    expect([LSAPIManager new]).to.raise(NSInternalInconsistencyException);
+    expect(^{ [LSAPIManager new]; }).to.raise(NSInternalInconsistencyException);
 }
 
 - (void)testInitializingAPIManager
@@ -121,7 +126,15 @@
     LSUser *user = [LSTestUser testUserWithNumber:1];
     [self registerUser:user];
     
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:2 timeoutInterval:10];
+    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+        expect(success).to.beTruthy;
+        expect(error).to.beNil;
+        [latch decrementCount];
+    }];
+    
+    [latch waitTilCount:1];
+
     [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
         expect(user).toNot.beNil;
         expect(error).to.beNil;
@@ -134,17 +147,19 @@
 {
     [self registerUser:[LSTestUser testUserWithNumber:1]];
     
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:2 timeoutInterval:10];
     [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
         expect(success).to.beTruthy;
         expect(error).to.beNil;
+        [latch decrementCount];
     }];
+    [latch waitTilCount:1];
     
     [self registerUser:[LSTestUser testUserWithNumber:2]];
 
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     [self.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
         expect(contacts).toNot.beNil;
-        expect(contacts.count).to.equal(1);
+        expect(contacts.count).to.equal(2);
         expect(error).to.beNil;
         [latch decrementCount];
     }];
@@ -169,12 +184,13 @@
 {
     [self registerUser:[LSTestUser testUserWithNumber:1]];
     
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
+    [self.controller.layerClient stop];
     
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     LSSession *session = self.APIManager.authenticatedSession;
     [self.APIManager resumeSession:session completion:^(LSUser *user, NSError *error) {
         expect(user).toNot.beNil;
-        expect(user).to.equal([LSTestUser testUserWithNumber:1]);
+        expect(user.email).to.equal([LSTestUser testUserWithNumber:1].email);
         expect(error).to.beNil;
         [latch decrementCount];
     }];
@@ -192,15 +208,6 @@
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
-    
-}
-- (LSAPIManager *)APIManager
-{
-    if (!_APIManager) {
-        LSApplicationController *controller = [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
-        _APIManager = controller.APIManager;
-    }
-    return _APIManager;
 }
 
 - (void)registerUser:(LSUser *)user
@@ -212,11 +219,6 @@
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
-}
-
-- (void)testExample
-{
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 }
 
 @end

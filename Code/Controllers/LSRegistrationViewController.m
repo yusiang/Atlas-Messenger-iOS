@@ -96,25 +96,27 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
         case 0:
             [cell setText:@"First Name"];
             cell.textField.accessibilityLabel = @"First Name";
-            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
             self.firstNameField = cell.textField;
             break;
         case 1:
             [cell setText:@"Last Name"];
             cell.textField.accessibilityLabel = @"Last Name";
-            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
             self.lastNameField = cell.textField;
             break;
         case 2:
             [cell setText:@"Email Address"];
             cell.textField.accessibilityLabel = @"Email";
             cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.emailField = cell.textField;
             break;
         case 3:
             [cell setText:@"Password"];
             cell.textField.secureTextEntry = TRUE;
             cell.textField.accessibilityLabel = @"Password";
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.passwordField = cell.textField;
             break;
         case 4:
@@ -123,6 +125,7 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
             cell.textField.accessibilityLabel = @"Confirmation";
             self.passwordConfirmationField = cell.textField;
             cell.textField.returnKeyType = UIReturnKeySend;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             break;
         default:
             break;

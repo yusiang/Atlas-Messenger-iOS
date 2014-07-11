@@ -93,6 +93,8 @@ static CGFloat const LSCellDateLabelLeftMargin = 6.0f;
         [self.lastMessageTextView setFont:LSMediumFont(12)];
     } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
         self.lastMessageTextView.text = @"Attachemnt: Image";
+    } else if ([part.MIMEType isEqualToString:@"image/jpeg"]) {
+        self.lastMessageTextView.text = @"Attachemnt: Image";
     }
     
     // Set Date Text

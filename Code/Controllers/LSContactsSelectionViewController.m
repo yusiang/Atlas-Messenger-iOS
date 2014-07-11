@@ -8,10 +8,12 @@
 
 #import "LSContactsSelectionViewController.h"
 #import "LSContactTableViewCell.h"
+#import "LSUIConstants.h"
+#import "LSContactListHeader.h"
 
 @interface LSContactsSelectionViewController ()
 
-@property (nonatomic) NSArray *contacts;
+@property (nonatomic) NSDictionary *contacts;
 @property (nonatomic) NSMutableSet *selectedContacts;
 
 @end
@@ -22,9 +24,10 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
-    self = [super initWithStyle:UITableViewStylePlain];
+    self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         _selectedContacts = [NSMutableSet set];
+        
     }
     return self;
 }
@@ -33,23 +36,22 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 {
     [super viewDidLoad];
     
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     
     self.title = @"Select Contacts";
     self.accessibilityLabel = @"Contacts";
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
     
-    NSError *error = nil;
-    NSSet *contacts = [self filterContacts:[self.persistenceManager persistedUsersWithError:&error]];
-    self.contacts = [contacts sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
+    NSSet *filteredContacts = [self filteredContacts];
+    NSArray *sortedContacts = [[filteredContacts allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
+    self.contacts = [self sortContactsAlphabetically:sortedContacts];
     
     if (!self.contacts.count > 0) {
-        UILabel *label = [[UILabel alloc] init];
-        label.text = @"No Contacts";
-        label.accessibilityLabel = @"No Contacts";
-        [label sizeToFit];
-        label.center = self.view.center;
-        [self.view addSubview:label];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"emptyContacts"]];
+        imageView.center = self.view.center;
+        imageView.accessibilityLabel = @"Empty Contacts";
+        [self.view addSubview:imageView];
     }
     
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
@@ -69,15 +71,31 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     self.tableView.accessibilityLabel = @"Contact List";
 }
 
-- (NSSet *)filterContacts:(NSSet *)contacts
+//Removes the currently authenticated user from the contacts array
+- (NSSet *)filteredContacts
 {
-    NSMutableSet *contactsToEvaluate = [NSMutableSet setWithSet:contacts];
-    
-    LSSession *session = self.APIManager.authenticatedSession;
-    LSUser *authenticatedUser = session.user;
-    
-    [contactsToEvaluate removeObject:authenticatedUser];
+    NSError *error = nil;
+    NSMutableSet *contactsToEvaluate = [NSMutableSet setWithSet:[self.persistenceManager persistedUsersWithError:&error]];
+    [contactsToEvaluate removeObject:self.APIManager.authenticatedSession.user];
     return contactsToEvaluate;
+}
+
+//Groups users into arrays based on the fist letter of their first name.
+//Then creates a dictionary with Letters as keys and user arrays as objects
+- (NSDictionary *)sortContactsAlphabetically:(NSArray *)contacts
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    for (LSUser *user in contacts) {
+        NSString *firstName = user.firstName;
+        NSString *firstLetter = [[firstName substringToIndex:1] uppercaseString];
+        NSMutableArray *letterList = [dict objectForKey:firstLetter];
+        if (!letterList) {
+            letterList = [NSMutableArray array];
+        }
+        [letterList addObject:user];
+        [dict setObject:letterList forKey:firstLetter];
+    }
+    return dict;
 }
 
 #pragma mark - Actions
@@ -96,17 +114,21 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return [[self.contacts allKeys] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.contacts.count;
+    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
+    return [[self.contacts objectForKey:key] count];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    return 48;
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor whiteColor];
+    return view;
 }
 
 - (LSContactTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -118,7 +140,8 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)configureCell:(LSContactTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    LSUser *user = [self.contacts objectAtIndex:indexPath.row];
+    NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
+    LSUser *user = [[self.contacts objectForKey:key] objectAtIndex:indexPath.row];
     cell.textLabel.text = user.fullName;
     cell.accessibilityLabel = [NSString stringWithFormat:@"%@", user.fullName];
 }
@@ -128,9 +151,40 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     [cell updateWithSelectionIndicator:NO];
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 40;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 48;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 2;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
+    return [[LSContactListHeader alloc] initWithKey:key];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self updateParticpantListWithSelectionAtIndex:indexPath];
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    return [self sortedContactKeys];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    return 0;
 }
 
 #pragma mark
@@ -138,7 +192,9 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)updateParticpantListWithSelectionAtIndex:(NSIndexPath *)indexPath
 {
-    LSUser *user = [self.contacts objectAtIndex:indexPath.row];
+    NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
+    LSUser *user = [[self.contacts objectForKey:key] objectAtIndex:indexPath.row];
+    
     if ([self.selectedContacts containsObject:user]) {
         [self.selectedContacts removeObject:user];
     } else {
@@ -146,6 +202,12 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     }
 }
 
+- (NSArray *)sortedContactKeys
+{
+    NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[self.contacts allKeys]];
+    [mutableKeys sortUsingSelector:@selector(compare:)];
+    return mutableKeys;
+}
 
 
 @end
