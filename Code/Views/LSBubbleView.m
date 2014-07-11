@@ -32,11 +32,11 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
         self.layer.cornerRadius = 4;
         self.translatesAutoresizingMaskIntoConstraints = NO;
         
-        self.arrow = [[UIView alloc] init];
-        self.arrow.layer.cornerRadius = 2;
-        self.arrow.translatesAutoresizingMaskIntoConstraints = NO;
-        self.arrow.transform = CGAffineTransformMakeRotation(LSDegreesToRadians(45));
-        [self addSubview:self.arrow];
+//        self.arrow = [[UIView alloc] init];
+//        self.arrow.layer.cornerRadius = 2;
+//        self.arrow.translatesAutoresizingMaskIntoConstraints = NO;
+//        self.arrow.transform = CGAffineTransformMakeRotation(LSDegreesToRadians(45));
+//        [self addSubview:self.arrow];
         
         self.textView = [[UITextView alloc] init];
         self.textView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -105,6 +105,8 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
         
     } else if([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]){
         self.textView.text = nil;
+        [self.imageView setImage:[[UIImage alloc] initWithData:part.data]];
+    } else if ([part.MIMEType isEqualToString:@"image/jpeg"]) {
         [self.imageView setImage:[[UIImage alloc] initWithData:part.data]];
     }
     

@@ -48,7 +48,7 @@
 {
     if (!self.radioButton) {
         self.radioButton = [LSSelectionIndicator initWithDiameter:28];
-        self.radioButton.frame = CGRectMake(270, 10, 28, 28);
+        self.radioButton.frame = CGRectMake(270, 6, 28, 28);
         self.radioButton.accessibilityLabel = @"selectionIndicator";
         [self addSubview:self.radioButton];
     }

@@ -99,8 +99,8 @@ static void LSAlertWithError(NSError *error)
     //Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
-    //Declaring that I want to recieve push!
-    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+//    //Declaring that I want to recieve push!
+//    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     
     return YES;
 }

@@ -9,6 +9,7 @@
 #import "LSContactsSelectionViewController.h"
 #import "LSContactTableViewCell.h"
 #import "LSUIConstants.h"
+#import "LSContactListHeader.h"
 
 @interface LSContactsSelectionViewController ()
 
@@ -123,50 +124,10 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSString *key = [[self.contacts allKeys] objectAtIndex:section];
+    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
     return [[self.contacts objectForKey:key] count];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 48;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 26;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return 1;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    UIView *view = [[UIView alloc] init];
-    view.backgroundColor = [UIColor whiteColor];
-    
-    UIView *seperator = [[UIView alloc] init];
-    seperator.backgroundColor = LSGrayColor();
-    seperator.frame = CGRectMake(16, 25, 304, 1);
-    [view addSubview:seperator];
-    
-    
-    NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[self.contacts allKeys]];
-    [mutableKeys sortUsingSelector:@selector(compare:)];
-    NSString *key = [mutableKeys objectAtIndex:section];
-    
-    UILabel *label = [[UILabel alloc] init];
-    label.font = LSMediumFont(14);
-    label.text = key;
-    label.textColor = LSGrayColor();
-    [label sizeToFit];
-    label.center = CGPointMake(20, 14);
-    [view addSubview:label];
-    
-    return view;
-}
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
@@ -184,9 +145,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)configureCell:(LSContactTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[self.contacts allKeys]];
-    [mutableKeys sortUsingSelector:@selector(compare:)];
-    NSString *key = [mutableKeys objectAtIndex:indexPath.section];
+    NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
     LSUser *user = [[self.contacts objectForKey:key] objectAtIndex:indexPath.row];
     cell.textLabel.text = user.fullName;
     cell.accessibilityLabel = [NSString stringWithFormat:@"%@", user.fullName];
@@ -197,29 +156,48 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     [cell updateWithSelectionIndicator:NO];
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 40;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 48;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 2;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
+    return [[LSContactListHeader alloc] initWithKey:key];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self updateParticpantListWithSelectionAtIndex:indexPath];
 }
 
-//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
-//{
-//    return [self.contacts allKeys];
-//}
-//
-//- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
-//{
-//    return 1;
-//}
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    return [self sortedContactKeys];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    return 0;
+}
 
 #pragma mark
 #pragma mark Participant List Management Methods
 
 - (void)updateParticpantListWithSelectionAtIndex:(NSIndexPath *)indexPath
 {
-    NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[self.contacts allKeys]];
-    [mutableKeys sortUsingSelector:@selector(compare:)];
-    NSString *key = [mutableKeys objectAtIndex:indexPath.section];
+    NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
     LSUser *user = [[self.contacts objectForKey:key] objectAtIndex:indexPath.row];
     
     if ([self.selectedContacts containsObject:user]) {
@@ -229,6 +207,12 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     }
 }
 
+- (NSArray *)sortedContactKeys
+{
+    NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[self.contacts allKeys]];
+    [mutableKeys sortUsingSelector:@selector(compare:)];
+    return mutableKeys;
+}
 
 
 @end

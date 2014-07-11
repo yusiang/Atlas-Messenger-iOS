@@ -9,6 +9,7 @@
 #import "LSConversationListViewController.h"
 #import "LSContactsSelectionViewController.h"
 #import "LSConversationCell.h"
+#import "LSUIConstants.h"
 
 @interface LSConversationListViewController () <LSContactsSelectionViewControllerDelegate>
 
@@ -68,13 +69,6 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void)fetchLayerConversations
 {
-    if (self.navigationController.topViewController == self) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"conversationsUpdated" object:nil userInfo:nil];
-            [self fetchLayerConversations];
-        });
-    }
-    
     NSAssert(self.layerClient, @"Layer Controller should not be `nil`.");
     if (self.conversations) self.conversations = nil;
     NSOrderedSet *conversations = [self.layerClient conversationsForIdentifiers:nil];
@@ -148,6 +142,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     contactsViewController.persistenceManager = self.persistenceManager;
     contactsViewController.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:contactsViewController];
+    navigationController.navigationBar.tintColor = LSBlueColor();
     [self presentViewController:navigationController animated:YES completion:nil];
 }
 

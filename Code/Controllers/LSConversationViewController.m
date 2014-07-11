@@ -139,15 +139,6 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)fetchMessages
 {
-    if (self.navigationController.topViewController == self) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSOrderedSet *newMessages = [self.layerClient messagesForConversation:self.conversation];
-            NSLog(@"New Message Count %lu", (unsigned long)newMessages.count);
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"messagesUpdated" object:nil userInfo:nil];
-            [self fetchMessages];
-        });
-    }
-
     NSAssert(self.conversation, @"Conversation should not be `nil`.");
     if (self.messages) self.messages = nil;
     NSOrderedSet *messages = [self.layerClient messagesForConversation:self.conversation];
@@ -266,21 +257,21 @@ static CGFloat const LSComposeViewHeight = 40;
     return 0;
 }
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionReusableView *reusableview = nil;
-    
-    //TODO: Need a reusable collection view subclass here that displays a Name or Date
-    if (kind == UICollectionElementKindSectionHeader) {
-        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"HeaderView" forIndexPath:indexPath];
-    }
-    
-    //TODO: Need a reusable collection view subclass here that displays a read recipt
-    if (kind == UICollectionElementKindSectionFooter) {
-        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
-    }
-    return reusableview;
-}
+//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+//{
+////    UICollectionReusableView *reusableview = nil;
+////    
+////    //TODO: Need a reusable collection view subclass here that displays a Name or Date
+////    if (kind == UICollectionElementKindSectionHeader) {
+////        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"HeaderView" forIndexPath:indexPath];
+////    }
+////    
+////    //TODO: Need a reusable collection view subclass here that displays a read recipt
+////    if (kind == UICollectionElementKindSectionFooter) {
+////        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
+////    }
+////    return reusableview;
+//}
 
 #pragma mark
 #pragma mark Keyboard Nofifications
