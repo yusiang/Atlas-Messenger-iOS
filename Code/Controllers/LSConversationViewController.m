@@ -29,6 +29,7 @@ NSData *LSJPEGDataWithData(NSData *data)
 
 CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
 {
+    CGRect rect = [[UIScreen mainScreen] bounds];
     CGSize itemSize;
     
     //If Message Part is plain text...
@@ -37,18 +38,18 @@ CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
         textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         textView.font = LSMediumFont(14);
         [textView sizeToFit];
-        itemSize = CGSizeMake(320, textView.frame.size.height);
+        itemSize = CGSizeMake(rect.size.width, textView.frame.size.height);
     }
    
     //If Message Part is an image...
     if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
         if (imageView.frame.size.height > imageView.frame.size.width) {
-            itemSize = CGSizeMake(320, 300);
+            itemSize = CGSizeMake(rect.size.width, 300);
         } else {
-            CGFloat ratio = (184 / imageView.frame.size.width);
+            CGFloat ratio = (rect.size.width - 136 / imageView.frame.size.width);
             CGFloat height = imageView.frame.size.height * ratio;
-            itemSize = CGSizeMake(320, height + 8);
+            itemSize = CGSizeMake(rect.size.width, height + 8);
         }
     }
     
@@ -83,6 +84,8 @@ static CGFloat const LSComposeViewHeight = 40;
     self.title = @"Conversation";
     self.accessibilityLabel = @"Conversation";
     
+    CGRect rect = [[UIScreen mainScreen] bounds];
+    
     // Setup Collection View
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40)
                                              collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
@@ -97,7 +100,6 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:LSCMessageCellIdentifier];
     
     // Setup Compose View
-    CGRect rect = [[UIScreen mainScreen] bounds];
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 40, rect.size.width, LSComposeViewHeight)];
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
@@ -256,22 +258,6 @@ static CGFloat const LSComposeViewHeight = 40;
 {
     return 0;
 }
-
-//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-//{
-////    UICollectionReusableView *reusableview = nil;
-////    
-////    //TODO: Need a reusable collection view subclass here that displays a Name or Date
-////    if (kind == UICollectionElementKindSectionHeader) {
-////        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"HeaderView" forIndexPath:indexPath];
-////    }
-////    
-////    //TODO: Need a reusable collection view subclass here that displays a read recipt
-////    if (kind == UICollectionElementKindSectionFooter) {
-////        reusableview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterView" forIndexPath:indexPath];
-////    }
-////    return reusableview;
-//}
 
 #pragma mark
 #pragma mark Keyboard Nofifications

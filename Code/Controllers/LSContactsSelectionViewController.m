@@ -43,18 +43,15 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     self.accessibilityLabel = @"Contacts";
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
     
-    NSError *error = nil;
-    NSSet *contacts = [self filterContacts:[self.persistenceManager persistedUsersWithError:&error]];
-    NSArray *sortedContacts = [[contacts allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
+    NSSet *filteredContacts = [self filteredContacts];
+    NSArray *sortedContacts = [[filteredContacts allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
     self.contacts = [self sortContactsAlphabetically:sortedContacts];
     
     if (!self.contacts.count > 0) {
-        UILabel *label = [[UILabel alloc] init];
-        label.text = @"No Contacts";
-        label.accessibilityLabel = @"No Contacts";
-        [label sizeToFit];
-        label.center = self.view.center;
-        [self.view addSubview:label];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"emptyContacts"]];
+        imageView.center = self.view.center;
+        imageView.accessibilityLabel = @"Empty Contacts";
+        [self.view addSubview:imageView];
     }
     
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
@@ -74,18 +71,17 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     self.tableView.accessibilityLabel = @"Contact List";
 }
 
-- (NSSet *)filterContacts:(NSSet *)contacts
+//Removes the currently authenticated user from the contacts array
+- (NSSet *)filteredContacts
 {
-    NSMutableSet *contactsToEvaluate = [NSMutableSet setWithSet:contacts];
-    
-    LSSession *session = self.APIManager.authenticatedSession;
-    LSUser *authenticatedUser = session.user;
-    
-    [contactsToEvaluate removeObject:authenticatedUser];
-    
+    NSError *error = nil;
+    NSMutableSet *contactsToEvaluate = [NSMutableSet setWithSet:[self.persistenceManager persistedUsersWithError:&error]];
+    [contactsToEvaluate removeObject:self.APIManager.authenticatedSession.user];
     return contactsToEvaluate;
 }
 
+//Groups users into arrays based on the fist letter of their first name.
+//Then creates a dictionary with Letters as keys and user arrays as objects
 - (NSDictionary *)sortContactsAlphabetically:(NSArray *)contacts
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -99,7 +95,6 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
         [letterList addObject:user];
         [dict setObject:letterList forKey:firstLetter];
     }
-    NSLog(@"%@", dict);
     return dict;
 }
 
