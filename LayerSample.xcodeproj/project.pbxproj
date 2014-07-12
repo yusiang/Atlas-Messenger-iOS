@@ -20,6 +20,7 @@
 		0A52D5FB1961DB7D0030A34A /* LSTestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52D5FA1961DB7D0030A34A /* LSTestUser.m */; };
 		0A52D5FE1961FD0D0030A34A /* LSApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */; };
 		0A52D6011962219D0030A34A /* LSMessageCellPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52D6001962219D0030A34A /* LSMessageCellPresenter.m */; };
+		0AA09B361970BCEF007CD475 /* LSNotificationObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
 		0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C71947C86B0083732B /* CoreLocation.framework */; };
@@ -97,6 +98,8 @@
 		0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSApplicationController.m; sourceTree = "<group>"; };
 		0A52D5FF1962219D0030A34A /* LSMessageCellPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSMessageCellPresenter.h; sourceTree = "<group>"; };
 		0A52D6001962219D0030A34A /* LSMessageCellPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMessageCellPresenter.m; sourceTree = "<group>"; };
+		0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNotificationObserver.h; sourceTree = "<group>"; };
+		0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNotificationObserver.m; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0AADB5C51947C8600083732B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		0AADB5C71947C86B0083732B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -295,6 +298,8 @@
 				0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */,
 				0AD767701963104200582755 /* LSUtilities.h */,
 				0AD767711963104200582755 /* LSUtilities.m */,
+				0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */,
+				0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -567,6 +572,7 @@
 				0A1B1384196607FF008D4F5A /* LSSelectionIndicator.m in Sources */,
 				0A52D6011962219D0030A34A /* LSMessageCellPresenter.m in Sources */,
 				0AB1157C196460ED00B59DF8 /* LSConversationListViewController.m in Sources */,
+				0AA09B361970BCEF007CD475 /* LSNotificationObserver.m in Sources */,
 				259A57501950EB76000E27B0 /* LSContactsSelectionViewController.m in Sources */,
 				259A574F1950EB76000E27B0 /* LSAPIManager.m in Sources */,
 				259A57631950EB76000E27B0 /* LSButton.m in Sources */,

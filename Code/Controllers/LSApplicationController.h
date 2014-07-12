@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 #import "LSAPIManager.h"
+#import "LSNotificationObserver.h"
 
 /**
  @abstract The `LSAppController` class manages mission critical classes to the Layer Sample App
@@ -29,5 +30,6 @@
 @property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, strong) LSAPIManager *APIManager;
 @property (nonatomic, strong) LSPersistenceManager *persistenceManager;
+@property (nonatomic, strong) LSNotificationObserver *notificationObserver;
 
 @end

@@ -16,6 +16,8 @@
 #import "LSUtilities.h"
 #import "LSUIConstants.h"
 #import "LYRConfiguration.h"
+#import "LSNotificationObserver.h"
+
 #import <Crashlytics/Crashlytics.h>
 
 static void LSAlertWithError(NSError *error)
@@ -182,6 +184,7 @@ static void LSAlertWithError(NSError *error)
     conversationListViewController.layerClient = self.applicationController.layerClient;
     conversationListViewController.APIManager = self.applicationController.APIManager;
     conversationListViewController.persistenceManager = self.applicationController.persistenceManager;
+    conversationListViewController.notificationObserver = self.applicationController.notificationObserver;
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     conversationController.navigationBar.barTintColor = LSLighGrayColor();
     conversationController.navigationBar.tintColor = LSBlueColor();

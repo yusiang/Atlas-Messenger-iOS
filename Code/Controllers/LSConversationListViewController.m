@@ -130,6 +130,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     viewController.conversation = [self.conversations objectAtIndex:indexPath.row];
     viewController.layerClient = self.layerClient;
     viewController.persistanceManager = self.persistenceManager;
+    viewController.notificationObserver = self.notificationObserver;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -155,6 +156,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     contactsViewController.APIManager = self.APIManager;
     contactsViewController.persistenceManager = self.persistenceManager;
     contactsViewController.delegate = self;
+
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:contactsViewController];
     navigationController.navigationBar.tintColor = LSBlueColor();
     [self presentViewController:navigationController animated:YES completion:nil];

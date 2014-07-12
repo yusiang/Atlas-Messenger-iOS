@@ -10,11 +10,13 @@
 #import <LayerKit/LayerKit.h>
 #import "LSConversationViewController.h"
 #import "LSAPIManager.h"
+#import "LSNotificationObserver.h"
 
 @interface LSConversationListViewController : UITableViewController
 
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LSAPIManager *APIManager;
 @property (nonatomic) LSPersistenceManager *persistenceManager;
+@property (nonatomic) LSNotificationObserver *notificationObserver;
 
 @end

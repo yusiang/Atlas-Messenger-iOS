@@ -47,7 +47,18 @@ CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
         if (imageView.frame.size.height > imageView.frame.size.width) {
             itemSize = CGSizeMake(rect.size.width, 300);
         } else {
-            CGFloat ratio = (rect.size.width - 136 / imageView.frame.size.width);
+            CGFloat ratio = ((rect.size.width - 136) / imageView.frame.size.width);
+            CGFloat height = imageView.frame.size.height * ratio;
+            itemSize = CGSizeMake(rect.size.width, height + 8);
+        }
+    }
+    
+    if ([part.MIMEType isEqualToString:@"image/jpeg"]) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
+        if (imageView.frame.size.height > imageView.frame.size.width) {
+            itemSize = CGSizeMake(rect.size.width, 300);
+        } else {
+            CGFloat ratio = ((rect.size.width - 136) / imageView.frame.size.width);
             CGFloat height = imageView.frame.size.height * ratio;
             itemSize = CGSizeMake(rect.size.width, height + 8);
         }
@@ -83,6 +94,8 @@ static CGFloat const LSComposeViewHeight = 40;
     
     self.title = @"Conversation";
     self.accessibilityLabel = @"Conversation";
+    
+    self.notificationObserver.delegate = self;
     
     CGRect rect = [[UIScreen mainScreen] bounds];
     
@@ -415,6 +428,26 @@ static CGFloat const LSComposeViewHeight = 40;
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark
+#pragma mark Notification Observer Delegate
+
+- (void)notificationObserver:(LSNotificationObserver *)observert didCreateMessage:(LYRMessage *)message
+{
+    if ([message.conversation isEqual:self.conversation]) {
+        [self.collectionView reloadData];
+    }
+}
+
+- (void)notificationObserver:(LSNotificationObserver *)observert didUpdateMessage:(LYRMessage *)message
+{
+    [self.collectionView reloadData];
+}
+
+- (void)notificationObserver:(LSNotificationObserver *)observert didDeleteMessage:(LYRMessage *)message
+{
+    [self.collectionView reloadData];
 }
 
 
