@@ -249,7 +249,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         if (!response && error) {
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(nil, error);
+                    completion(NO, error);
                 });
             }
             return;
@@ -260,7 +260,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         if (!success) {
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(nil, serializationError);
+                    completion(NO, serializationError);
                 });
             }
             return;

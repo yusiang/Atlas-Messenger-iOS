@@ -52,6 +52,13 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     
     // TODO: Nothing is removing this....
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationsUpdated:) name:@"conversationsUpdated" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerObjectsDidChangeNotification:) name:LYRClientObjectsDidChangeNotification object:self.layerClient];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -65,6 +72,13 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification
+{
+    NSLog(@"Received notification: %@", notification);
+    [self fetchLayerConversations];
+    [self.tableView reloadData];
 }
 
 - (void)fetchLayerConversations
@@ -153,7 +167,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [self dismissViewControllerAnimated:YES completion:^{
         if (contacts.count > 0) {
             LSConversationViewController *controller = [LSConversationViewController new];
-            LYRConversation *conversation = [self.layerClient conversationWithIdentifier:nil participants:[[contacts valueForKey:@"userID"] allObjects]];
+            LYRConversation *conversation = [self.layerClient conversationWithParticipants:[[contacts valueForKey:@"userID"] allObjects]];
             controller.conversation = conversation;
             controller.layerClient = self.layerClient;
             controller.persistanceManager = self.persistenceManager;

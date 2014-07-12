@@ -65,7 +65,7 @@ static void LSAlertWithError(NSError *error)
     
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
-    [self.applicationController.layerClient startWithCompletion:^(BOOL success, NSError *error) {
+    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         NSLog(@"Started with success: %d, %@", success, error);
     }];
     

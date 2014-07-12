@@ -103,9 +103,16 @@ static CGFloat const LSComposeViewHeight = 40;
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 40, rect.size.width, LSComposeViewHeight)];
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerObjectsDidChangeNotification:) name:LYRClientObjectsDidChangeNotification object:self.layerClient];
 }
 
-
+- (void)didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification
+{
+    NSLog(@"Received notification: %@", notification);
+    [self fetchMessages];
+    [self.collectionView reloadData];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {

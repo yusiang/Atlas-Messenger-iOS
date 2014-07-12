@@ -51,7 +51,7 @@
 {
     [super tearDown];
     self.APIManager = nil;
-    [self.controller.layerClient stop];
+    [self.controller.layerClient disconnect];
 }
 
 - (void)testRaisesOnAttempToInit
@@ -184,7 +184,7 @@
 {
     [self registerUser:[LSTestUser testUserWithNumber:1]];
     
-    [self.controller.layerClient stop];
+    [self.controller.layerClient disconnect];
     
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     LSSession *session = self.APIManager.authenticatedSession;
