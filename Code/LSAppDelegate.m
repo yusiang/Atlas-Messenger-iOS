@@ -63,6 +63,7 @@ static void LSAlertWithError(NSError *error)
     
     //LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
     LYRClient *layerClient = [[LYRClient alloc] initWithConfiguration:configuration appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
+    [layerClient setValue:@(1) forKeyPath:@"synchronizationManager.syncInterval"];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
