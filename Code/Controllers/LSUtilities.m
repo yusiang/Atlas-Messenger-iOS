@@ -18,12 +18,12 @@ NSString *LSApplicationHost()
     if (LSIsRunningTests()) {
         return [NSProcessInfo processInfo].environment[@"LAYER_TEST_HOST"] ?: @"10.66.0.35";
     }
-    return @"10.66.0.12";
+    return @"199.223.234.118";
 }
 
 NSString *LSRailsHost()
 {
-    return @"10.66.0.12";
+    return @"199.223.234.118";
 }
 
 NSURL *LSLayerBaseURL(void)
