@@ -25,7 +25,7 @@
 // Cell Constants
 static CGFloat const LSCellTopMargin = 12.0f;
 static CGFloat const LSCellHorizontalMargin = 12.0f;
-static CGFloat const LSCellBottomMargin = 6.0f;
+static CGFloat const LSCellBottomMargin = 10.0f;
 
 // Avatart Constants
 static CGFloat const LSAvatarImageViewSizeRatio  = 0.60f;
@@ -34,7 +34,7 @@ static CGFloat const LSAvatarImageViewSizeRatio  = 0.60f;
 static CGFloat const LSCellSenderLabelRightMargin = -60.0f;
 
 // Date Label Constants
-static CGFloat const LSCellDateLabelLeftMargin = 6.0f;
+static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
 
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -50,7 +50,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 6.0f;
        
         // Initialiaze Sender Image
         self.senderLabel = [[UILabel alloc] init];
-        self.senderLabel.font = LSBoldFont(16);
+        self.senderLabel.font = LSBoldFont(14);
         self.senderLabel.textColor = [UIColor darkGrayColor];
         self.senderLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.senderLabel];
@@ -99,7 +99,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 6.0f;
     
     // Set Date Text
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat: @"HH:mm"];
+    [formatter setDateFormat:@"hh:mm a"];
     self.dateLabel.text = [formatter stringFromDate:presenter.message.sentAt];
 }
 
@@ -228,7 +228,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 6.0f;
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
-                                                                  constant:-LSCellHorizontalMargin]];
+                                                                  constant:-4]];
     // Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
                                                                  attribute:NSLayoutAttributeHeight

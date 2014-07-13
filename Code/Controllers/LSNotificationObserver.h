@@ -22,13 +22,11 @@ typedef NS_ENUM(NSInteger, LYRObjectChangeType) {
 
 @optional
 
-- (void)notificationObserver:(LSNotificationObserver *)observert didCreateConversation:(LYRConversation *)conversation;
-- (void)notificationObserver:(LSNotificationObserver *)observert didUpdateConversation:(LYRConversation *)conversation;
-- (void)notificationObserver:(LSNotificationObserver *)observert didDeleteConversation:(LYRConversation *)conversation;
+- (void)observerWillChangeContent:(LSNotificationObserver *)observer;
 
-- (void)notificationObserver:(LSNotificationObserver *)observert didCreateMessage:(LYRMessage *)message;
-- (void)notificationObserver:(LSNotificationObserver *)observert didUpdateMessage:(LYRMessage *)message;
-- (void)notificationObserver:(LSNotificationObserver *)observert didDeleteMessage:(LYRMessage *)message;
+- (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex;
+
+- (void)observerDidChangeContent:(LSNotificationObserver *)observer;
 
 @end
 
@@ -36,6 +34,6 @@ typedef NS_ENUM(NSInteger, LYRObjectChangeType) {
 
 @property (nonatomic, weak) id<LSNotificationObserverDelegate>delegate;
 
-- (id) initWithClient:(LYRClient *)layerClient;
+- (id) initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation;
 
 @end

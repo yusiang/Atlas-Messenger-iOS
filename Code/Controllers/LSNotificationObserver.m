@@ -8,10 +8,9 @@
 
 #import "LSNotificationObserver.h"
 
-
 @implementation LSNotificationObserver
 
-- (id)initWithClient:(LYRClient *)layerClient
+- (id)initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
 {
     self = [super init];
     if (self) {
@@ -22,66 +21,52 @@
     return self;
 }
 
+- (id) init
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
+}
+
 - (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
     NSLog(@"Received notification: %@", notification);
+    [self.delegate observerWillChangeContent:self];
+    
     NSArray *changes = [notification.userInfo objectForKey:LYRClientObjectChangesUserInfoKey];
     for (NSDictionary *change in changes) {
-
-        id changedObject = [change objectForKey:LYRObjectChangeObjectKey];
         
-        if ([changedObject isKindOfClass:[LYRMessage class]]) {
-            [self handleMessageUpdate:change];
-        }
-        
-        if ([changedObject isKindOfClass:[LYRConversation class]]) {
+        if ([[change objectForKey:LYRObjectChangeObjectKey] isKindOfClass:[LYRConversation class]]) {
             [self handleConversationUpdate:change];
         }
+        
+        if ([[change objectForKey:LYRObjectChangeObjectKey]isKindOfClass:[LYRMessage class]]) {
+            [self handleMessageUpdate:change];
+        }
     }
+    [self.delegate observerDidChangeContent:self];
 }
 
 - (void)handleConversationUpdate:(NSDictionary *)conversationUpdate
 {
-    LYRConversation *conversation = [conversationUpdate objectForKey:LYRObjectChangeObjectKey];
-    NSNumber *changeType = [conversationUpdate objectForKey:LYRObjectChangeTypeKey];
-    NSInteger change = [changeType integerValue];
-    
-//    //Create
-//    if (change == LYRObjectChangeTypeCreate) {
-//        [self.delegate notificationObserver:self didCreateConversation:conversation];
-//    }
-//    
-//    //Update
-//    if (change == LYRObjectChangeTypeUpdate) {
-//        [self.delegate notificationObserver:self didUpdateConversation:conversation];
-//    }
-//    
-//    //Delete
-//    if (change == LYRObjectChangeTypeDelete) {
-//        [self.delegate notificationObserver:self didDeleteConversation:conversation];
-//    }
+    if (![conversationUpdate objectForKey:@"property"]) {
+        LYRConversation *conversation = [conversationUpdate objectForKey:LYRObjectChangeObjectKey];
+        LYRObjectChangeType changeType = (LYRObjectChangeType)[[conversationUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
+        [self.delegate observer:self didChangeObject:conversation atIndex:0 forChangeType:changeType newIndexPath:0];
+    }
+
 }
 
 - (void)handleMessageUpdate:(NSDictionary *)messageUpdate
 {
-    LYRMessage *message = [messageUpdate objectForKey:LYRObjectChangeObjectKey];
-    NSNumber *changeType = [messageUpdate objectForKey:LYRObjectChangeTypeKey];
-    NSInteger change = [changeType integerValue];
-    
-    //Create
-    if (change == LYRObjectChangeTypeCreate) {
-        [self.delegate notificationObserver:self didCreateMessage:message];
+    if (![messageUpdate objectForKey:@"property"]) {
+        LYRMessage *message = [messageUpdate objectForKey:LYRObjectChangeObjectKey];
+        LYRObjectChangeType changeType = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
+        [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:changeType newIndexPath:0];
     }
-    
-    //Update
-    if (change == LYRObjectChangeTypeUpdate) {
-        [self.delegate notificationObserver:self didUpdateMessage:message];
-    }
-    
-    //Delete
-    if (change == LYRObjectChangeTypeDelete) {
-        [self.delegate notificationObserver:self didDeleteMessage:message];
-    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

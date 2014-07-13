@@ -16,7 +16,6 @@
 #import "LSUtilities.h"
 #import "LSUIConstants.h"
 #import "LYRConfiguration.h"
-#import "LSNotificationObserver.h"
 
 #import <Crashlytics/Crashlytics.h>
 
@@ -61,7 +60,6 @@ static void LSAlertWithError(NSError *error)
     
     LYRConfiguration *configuration = [LYRConfiguration configurationWithDictionary:configDictionary];
     
-    //LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
     LYRClient *layerClient = [[LYRClient alloc] initWithConfiguration:configuration appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
     [layerClient setValue:@(1) forKeyPath:@"synchronizationManager.syncInterval"];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
@@ -185,7 +183,6 @@ static void LSAlertWithError(NSError *error)
     conversationListViewController.layerClient = self.applicationController.layerClient;
     conversationListViewController.APIManager = self.applicationController.APIManager;
     conversationListViewController.persistenceManager = self.applicationController.persistenceManager;
-    conversationListViewController.notificationObserver = self.applicationController.notificationObserver;
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     conversationController.navigationBar.barTintColor = LSLighGrayColor();
     conversationController.navigationBar.tintColor = LSBlueColor();

@@ -32,6 +32,7 @@
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		0AB0501A196E24F00029BC1B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB05019196E24F00029BC1B /* Crashlytics.framework */; };
 		0AB1157C196460ED00B59DF8 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */; };
+		0ABAB02B1971E45000BE514F /* LSMessageCellHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABAB02A1971E45000BE514F /* LSMessageCellHeader.m */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
 		0AC3D70B196B29CD0089E49D /* LSBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC3D70A196B29CD0089E49D /* LSBubbleView.m */; };
 		0AD767721963104200582755 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD767711963104200582755 /* LSUtilities.m */; };
@@ -112,6 +113,8 @@
 		0AB05019196E24F00029BC1B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		0AB1157A196460ED00B59DF8 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
 		0AB1157B196460ED00B59DF8 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
+		0ABAB0291971E45000BE514F /* LSMessageCellHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSMessageCellHeader.h; path = ../Controllers/LSMessageCellHeader.h; sourceTree = "<group>"; };
+		0ABAB02A1971E45000BE514F /* LSMessageCellHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSMessageCellHeader.m; path = ../Controllers/LSMessageCellHeader.m; sourceTree = "<group>"; };
 		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		0AC3D709196B29CD0089E49D /* LSBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSBubbleView.h; sourceTree = "<group>"; };
 		0AC3D70A196B29CD0089E49D /* LSBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSBubbleView.m; sourceTree = "<group>"; };
@@ -320,6 +323,8 @@
 		259A573B1950EB76000E27B0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0ABAB0291971E45000BE514F /* LSMessageCellHeader.h */,
+				0ABAB02A1971E45000BE514F /* LSMessageCellHeader.m */,
 				259A573C1950EB76000E27B0 /* LSAvatarImageView.h */,
 				259A573D1950EB76000E27B0 /* LSAvatarImageView.m */,
 				259A573E1950EB76000E27B0 /* LSButton.h */,
@@ -595,6 +600,7 @@
 				259A576A1950EB76000E27B0 /* LSUIConstants.m in Sources */,
 				259A57691950EB76000E27B0 /* LSMessageCell.m in Sources */,
 				259A57591950EB76000E27B0 /* LSRegistrationViewController.m in Sources */,
+				0ABAB02B1971E45000BE514F /* LSMessageCellHeader.m in Sources */,
 				0AD767721963104200582755 /* LSUtilities.m in Sources */,
 				25918B9A195F960500D0FB1B /* LSSession.m in Sources */,
 			);

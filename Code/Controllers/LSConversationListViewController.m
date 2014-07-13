@@ -11,9 +11,10 @@
 #import "LSConversationCell.h"
 #import "LSUIConstants.h"
 
-@interface LSConversationListViewController () <LSContactsSelectionViewControllerDelegate>
+@interface LSConversationListViewController () <LSContactsSelectionViewControllerDelegate, LSNotificationObserverDelegate>
 
-@property (nonatomic, strong) NSOrderedSet *conversations;
+@property (nonatomic, strong) NSArray *conversations;
+@property (nonatomic, strong) LSNotificationObserver *notificationObserver;
 
 @end
 
@@ -50,10 +51,8 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     self.tableView.backgroundColor = [UIColor whiteColor];
     [self.tableView registerClass:[LSConversationCell class] forCellReuseIdentifier:LSConversationCellID];
     
-    // TODO: Nothing is removing this....
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationsUpdated:) name:@"conversationsUpdated" object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerObjectsDidChangeNotification:) name:LYRClientObjectsDidChangeNotification object:self.layerClient];
+    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversation:nil];
+    self.notificationObserver.delegate = self;
 }
 
 - (void)dealloc
@@ -85,9 +84,8 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 {
     NSAssert(self.layerClient, @"Layer Controller should not be `nil`.");
     if (self.conversations) self.conversations = nil;
-    NSOrderedSet *conversations = [self.layerClient conversationsForIdentifiers:nil];
-    NSLog(@"%lu Conversations For Authenticated User", (unsigned long)conversations.count);
-    self.conversations = conversations;
+    NSSet *conversations = (NSSet *)[self.layerClient conversationsForIdentifiers:nil];
+    self.conversations = [[conversations allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
 }
 
 - (void)conversationsUpdated:(NSNotification *)notification
@@ -107,7 +105,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     return self.conversations.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (LSConversationCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     LSConversationCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSConversationCellID];
     [self configureCell:cell forIndexPath:indexPath];
@@ -193,10 +191,6 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
         BOOL success = [self.layerClient deleteConversation:[self.conversations objectAtIndex:indexPath.row] error:&error];
         if (success) {
             NSLog(@"Conversation Deleted!");
-            [self.tableView beginUpdates];
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [self fetchLayerConversations];
-            [self.tableView endUpdates];
         } else {
             NSLog(@"Conversation Not Deleted with Error %@", error);
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Delete Failed"
@@ -207,5 +201,47 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
             [alertView show];
         }
     }
+}
+
+#pragma mark
+#pragma mark Notification Observer Delegate Methods
+
+- (void) observerWillChangeContent:(LSNotificationObserver *)observer
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
+{
+    if (!changeType == LYRObjectChangeTypeDelete) [self fetchLayerConversations];
+    NSUInteger conversationIndex = [self.conversations indexOfObject:object];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:conversationIndex inSection:0];
+    
+    if ([object isKindOfClass:[LYRConversation class]]) {
+        switch (changeType) {
+            case LYRObjectChangeTypeCreate:
+                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                break;
+            case LYRObjectChangeTypeUpdate:
+                [self configureCell:(LSConversationCell *)[self.tableView cellForRowAtIndexPath:indexPath] forIndexPath:indexPath];
+                break;
+            case LYRObjectChangeTypeDelete:
+                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                [self fetchLayerConversations];
+                break;
+            default:
+                break;
+        }
+    }
+    
+    if ([object isKindOfClass:[LYRMessage class]]) {
+        //Nothing for now
+    }
+}
+
+- (void) observerDidChangeContent:(LSNotificationObserver *)observer
+{
+    [self fetchLayerConversations];
+    [self.tableView endUpdates];
 }
 @end

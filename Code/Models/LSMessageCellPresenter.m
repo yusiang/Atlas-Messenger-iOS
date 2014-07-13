@@ -48,9 +48,14 @@
 - (NSString *)labelForMessageSender
 {
     NSError *error;
-    LSSession *session = [self.persistenceManager persistedSessionWithError:&error];
-    LSUser *authenticatedUser = session.user;
-    return authenticatedUser.fullName;
+    NSArray *persistedUsers = [[self.persistenceManager persistedUsersWithError:&error] allObjects];
+    LSUser *sender;
+    for (LSUser *user in persistedUsers) {
+        if ([[user valueForKeyPath:@"userID"] isEqualToString:self.message.sentByUserID]) {
+            sender = user;
+        }
+    }
+    return sender.fullName;
 }
 
 - (UIImage *)imageForMessageSender

@@ -32,7 +32,6 @@
         _layerClient = layerClient;
         _persistenceManager = persistenceManager;
         _APIManager = [LSAPIManager managerWithBaseURL:baseURL layerClient:layerClient];
-        _notificationObserver = [[LSNotificationObserver alloc] initWithClient:layerClient];
     }
     return self;
 }

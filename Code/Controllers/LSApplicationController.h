@@ -30,6 +30,5 @@
 @property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, strong) LSAPIManager *APIManager;
 @property (nonatomic, strong) LSPersistenceManager *persistenceManager;
-@property (nonatomic, strong) LSNotificationObserver *notificationObserver;
 
 @end
