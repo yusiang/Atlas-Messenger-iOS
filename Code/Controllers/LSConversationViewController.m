@@ -81,7 +81,7 @@ static CGFloat const LSComposeViewHeight = 40;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) LSComposeView *composeView;
-@property (nonatomic, strong) NSArray *messages;
+@property (nonatomic, strong) NSOrderedSet *messages;
 @property (nonatomic, strong) UIImage *selectedImage;
 @property (nonatomic, strong) LSNotificationObserver *observer;
 @property (nonatomic, strong) NSMutableArray *collectionViewUpdates;
@@ -163,8 +163,7 @@ static CGFloat const LSComposeViewHeight = 40;
 {
     NSAssert(self.conversation, @"Conversation should not be `nil`.");
     if (self.messages) self.messages = nil;
-    NSSet *messages = (NSSet *)[self.layerClient messagesForConversation:self.conversation];
-    self.messages = [[messages allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sentAt" ascending:YES]]];
+    self.messages = [self.layerClient messagesForConversation:self.conversation];
 }
 
 
