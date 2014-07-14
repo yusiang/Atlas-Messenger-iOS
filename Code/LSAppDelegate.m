@@ -50,7 +50,6 @@ static void LSAlertWithError(NSError *error)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    LYRTestCleanKeychain();
     LYRSetLogLevelFromEnvironment();
     
     LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
