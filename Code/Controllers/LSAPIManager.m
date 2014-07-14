@@ -179,15 +179,14 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     }
 }
 
-- (void)resumeSession:(LSSession *)session completion:(void(^)(LSUser *user, NSError *error))completion
+- (BOOL)resumeSession:(LSSession *)session error:(NSError **)error
 {
-    if (session) {
-        [self authenticateWithEmail:session.user.email password:session.user.password completion:^(LSUser *user, NSError *error) {
-            completion(user, error);
-        }];
+    if (self.layerClient.authenticatedUserID && session) {
+        self.authenticatedSession = session;
+        return YES;
     } else {
-        NSError *error = [NSError errorWithDomain:@"Authentication Error" code:500 userInfo:@{@"error" : @"No authenticated session"}];
-        completion (nil, error);
+        if (error) *error = [NSError errorWithDomain:@"Authentication Error" code:500 userInfo:@{@"error" : @"No authenticated session"}];
+        return NO;
     }
 }
 

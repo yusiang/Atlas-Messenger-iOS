@@ -37,9 +37,6 @@ static void LSAlertWithError(NSError *error)
 
 @interface LSAppDelegate ()
 
-@property (nonatomic) LYRClient *layerClient;
-@property (nonatomic) LSAPIManager *APIManager;
-@property (nonatomic) LSPersistenceManager *persistenceManager;
 @property (nonatomic) UINavigationController *navigationController;
 
 @end
@@ -76,15 +73,10 @@ static void LSAlertWithError(NSError *error)
     
     LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
     
-    if (session) {
-        [self.applicationController.APIManager resumeSession:session completion:^(LSUser *user, NSError *error) {
-            if (user) {
-                NSLog(@"Session resumed with user %@", user);
-                [self presentConversationsListViewController];
-            } else {
-                NSLog(@"An error occurred while resuming session");
-            }
-        }];
+    NSError *error = nil;
+    if ([self.applicationController.APIManager resumeSession:session error:&error]) {
+        NSLog(@"Session resumed: %@", session);
+        [self presentConversationsListViewController];
     }
     
     [self.window makeKeyAndVisible];
