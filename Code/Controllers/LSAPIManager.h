@@ -37,7 +37,7 @@ extern NSString *const LSUserDidDeauthenticateNotification;
 
 - (void)registerUser:(LSUser *)user completion:(void(^)(LSUser *user, NSError *error))completion;
 - (void)authenticateWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(LSUser *user, NSError *error))completion;
-- (void)resumeSession:(LSSession *)session completion:(void(^)(LSUser *user, NSError *error))completion;
+- (BOOL)resumeSession:(LSSession *)session error:(NSError **)error;
 - (void)deauthenticateWithCompletion:(void(^)(BOOL success, NSError *error))completion;
 
 ///-------------------------
