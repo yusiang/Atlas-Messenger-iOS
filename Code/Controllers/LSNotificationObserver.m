@@ -61,52 +61,42 @@
 
 - (void) processConversationChanges:(NSMutableArray *)conversationChanges
 {
-    NSMutableArray *conversations = [[NSMutableArray alloc] init];
-    for (NSDictionary *conversationUpdate in conversationChanges) {
-        if (![conversationUpdate objectForKey:@"property"]) {
-            LYRConversation *conversation = [conversationUpdate objectForKey:LYRObjectChangeObjectKey];
-            LYRObjectChangeType updateKey = (LYRObjectChangeType)[[conversationUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
-            switch (updateKey) {
-                case LYRObjectChangeTypeCreate:
-                    [conversations addObject:conversation];
-                    break;
-                case LYRObjectChangeTypeUpdate:
-                    [self handleConversationUpdate:conversation];
-                    break;
-                case LYRObjectChangeTypeDelete:
-                    [self handleConversationDeletion:conversation];
-                    break;
-                default:
-                    break;
-            }
+    for (int i = 0; i < conversationChanges.count; i++ ) {
+        NSDictionary *conversationUpdate = [conversationChanges objectAtIndex:i];
+        LYRObjectChangeType updateKey = (LYRObjectChangeType)[[conversationUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
+        switch (updateKey) {
+            case LYRObjectChangeTypeCreate:
+                [self handleConversationCreatation:[conversationUpdate objectForKey:LYRObjectChangeObjectKey] atIndex:i];
+                break;
+            case LYRObjectChangeTypeUpdate:
+                [self handleConversationUpdate:[conversationUpdate objectForKey:LYRObjectChangeObjectKey]];
+                break;
+            case LYRObjectChangeTypeDelete:
+                [self handleConversationDeletion:[conversationUpdate objectForKey:LYRObjectChangeObjectKey]];
+                break;
+            default:
+                break;
         }
-    }
-
-    NSArray *newConversations = [conversations sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessageReceivedAt" ascending:YES]]];
-    for (int i = 0; i < newConversations.count; i++) {
-        [self handleConversationCreatation:[newConversations objectAtIndex:i] atIndex:i];
     }
 }
 
 - (void)processMessageChanges:(NSMutableArray *)messageChanges
 {
-    for (NSDictionary *messageUpdate in messageChanges) {
-        if (![messageUpdate objectForKey:@"property"]) {
-            LYRMessage *message = [messageUpdate objectForKey:LYRObjectChangeObjectKey];
-            LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
-            switch (updateKey) {
-                case LYRObjectChangeTypeCreate:
-                    [self handleMessageCreatation:message];
-                    break;
-                case LYRObjectChangeTypeUpdate:
-                    [self handleMessageUpdate:message];
-                    break;
-                case LYRObjectChangeTypeDelete:
-                    [self handleMessageDeletion:message];
-                    break;
-                default:
-                    break;
-            }
+    for (int i = 0; i < messageChanges.count; i++) {
+        NSDictionary *messageUpdate = [messageChanges objectAtIndex:i];
+        LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
+        switch (updateKey) {
+            case LYRObjectChangeTypeCreate:
+                [self handleMessageCreatation:[messageUpdate objectForKey:LYRObjectChangeObjectKey]];
+                break;
+            case LYRObjectChangeTypeUpdate:
+                [self handleMessageUpdate:[messageUpdate objectForKey:LYRObjectChangeObjectKey]];
+                break;
+            case LYRObjectChangeTypeDelete:
+                [self handleMessageDeletion:[messageUpdate objectForKey:LYRObjectChangeObjectKey]];
+                break;
+            default:
+                break;
         }
     }
 }

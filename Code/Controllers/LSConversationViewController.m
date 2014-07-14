@@ -12,6 +12,7 @@
 #import "LSComposeView.h"
 #import "LSUIConstants.h"
 #import "LSMessageCellHeader.h"
+#import "LSUtilities.h"
 
 NSData *LSJPEGDataWithData(NSData *data)
 {
@@ -110,8 +111,10 @@ static CGFloat const LSComposeViewHeight = 40;
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
     
-    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversation:self.conversation];
-    self.notificationObserver.delegate = self;
+    if (!LSIsRunningTests()) {
+        self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversation:self.conversation];
+        self.notificationObserver.delegate = self;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -418,19 +421,17 @@ static CGFloat const LSComposeViewHeight = 40;
 {
     NSUInteger messageIndex = [self.messages indexOfObject:object];
     [self fetchMessages];
+    NSUInteger newMessageIndex = self.messages.count - 1;
     
     if ([object isKindOfClass:[LYRMessage class]]) {
         switch (changeType) {
             case LYRObjectChangeTypeCreate:
             
-                if (self.messages.count > self.collectionView.numberOfSections) {
-                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:self.collectionView.numberOfSections]];
-                }
+                // Insert the new messages
+                [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:newMessageIndex]];
                 
-                if (self.collectionView.numberOfSections > 1) {
-                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:self.collectionView.numberOfSections - 2]];
-                }
-                
+                // Adjusts the previous messages if it exists
+                if(self.messages.count > 1) [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newMessageIndex - 1]];
                 
                 break;
             case LYRObjectChangeTypeUpdate:

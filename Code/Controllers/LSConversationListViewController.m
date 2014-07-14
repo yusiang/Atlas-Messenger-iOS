@@ -10,6 +10,7 @@
 #import "LSContactsSelectionViewController.h"
 #import "LSConversationCell.h"
 #import "LSUIConstants.h"
+#import "LSUtilities.h"
 
 @interface LSConversationListViewController () <LSContactsSelectionViewControllerDelegate, LSNotificationObserverDelegate>
 
@@ -50,9 +51,6 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = [UIColor whiteColor];
     [self.tableView registerClass:[LSConversationCell class] forCellReuseIdentifier:LSConversationCellID];
-    
-    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversation:nil];
-    self.notificationObserver.delegate = self;
 }
 
 - (void)dealloc
@@ -65,11 +63,17 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [super viewWillAppear:animated];
     [self fetchLayerConversations];
     [self.tableView reloadData];
+    
+    if (!LSIsRunningTests()){
+        self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversation:nil];
+        self.notificationObserver.delegate = self;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    self.notificationObserver = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -230,6 +234,14 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
                 break;
             default:
                 break;
+        }
+    }
+    
+    if ([object isKindOfClass:[LYRMessage class]]) {
+        LYRMessage *message = object;
+        if ([self.conversations containsObject:message.conversation]) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.conversations indexOfObject:message.conversation] inSection:0];
+            [self configureCell:(LSConversationCell *)[self.tableView cellForRowAtIndexPath:indexPath] forIndexPath:indexPath];
         }
     }
 }

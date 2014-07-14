@@ -23,6 +23,9 @@ NSString *LSApplicationHost()
 
 NSString *LSRailsHost()
 {
+    if (LSIsRunningTests()) {
+        return @"10.66.0.12";
+    }
     return @"199.223.234.118";
 }
 
