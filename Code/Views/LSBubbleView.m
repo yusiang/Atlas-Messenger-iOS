@@ -106,7 +106,8 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
         
     } else if([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]){
         self.textView.text = nil;
-        [self.imageView setImage:[[UIImage alloc] initWithData:part.data]];
+        UIImage *image = [[UIImage alloc] initWithData:part.data];
+        [self.imageView setImage:image];
     } else if ([part.MIMEType isEqualToString:@"image/jpeg"]) {
         [self.imageView setImage:[[UIImage alloc] initWithData:part.data]];
     }

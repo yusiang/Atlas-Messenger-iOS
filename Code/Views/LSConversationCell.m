@@ -44,7 +44,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
         [self setBackgroundColor:[UIColor whiteColor]];
         
         // Initialize Avatar Image
-        self.avatarImageView = [[LSAvatarImageView alloc] initWithFrame:self.frame];
+        self.avatarImageView = [[LSAvatarImageView alloc] init];
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.avatarImageView];
        
@@ -78,13 +78,10 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
 
 - (void)updateWithPresenter:(LSConversationCellPresenter *)presenter
 {
-    // Set Sender Image
-    [self.avatarImageView setImage:[presenter conversationImage]];
-    
     // Set Sender Label
     self.senderLabel.text = presenter.conversationLabel;
     
-    // Set Last Message Text
+    // Set Last Message Text 
     LYRMessage *message = presenter.message;
     LYRMessagePart *part = [message.parts firstObject];
     
@@ -95,12 +92,14 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
         self.lastMessageTextView.text = @"Attachemnt: Image";
     } else if ([part.MIMEType isEqualToString:@"image/jpeg"]) {
         self.lastMessageTextView.text = @"Attachemnt: Image";
+    } else {
+        self.lastMessageTextView.text = @"DRAFT CONVERSATION: No Text!";
     }
     
     // Set Date Text
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"hh:mm a"];
-    self.dateLabel.text = [formatter stringFromDate:presenter.message.sentAt];
+    self.dateLabel.text = [formatter stringFromDate:presenter.conversation.lastMessageReceivedAt];
 }
 
 #pragma mark

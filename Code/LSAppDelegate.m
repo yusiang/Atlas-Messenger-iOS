@@ -54,13 +54,7 @@ static void LSAlertWithError(NSError *error)
     LYRTestCleanKeychain();
     LYRSetLogLevelFromEnvironment();
     
-    NSDictionary *configDictionary = @{ LYRConfigurationCertificationURLKey: @"http://199.223.234.118:5555/certificates",
-                                        LYRConfigurationAuthenticationURLKey: @"https://199.223.234.118:7072/",
-                                        LYRConfigurationMessagingURLKey: @"https://199.223.234.118:7072/" };
-    
-    LYRConfiguration *configuration = [LYRConfiguration configurationWithDictionary:configDictionary];
-    
-    LYRClient *layerClient = [[LYRClient alloc] initWithConfiguration:configuration appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
+    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
     [layerClient setValue:@(1) forKeyPath:@"synchronizationManager.syncInterval"];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     
@@ -100,8 +94,8 @@ static void LSAlertWithError(NSError *error)
     //Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
-//    //Declaring that I want to recieve push!
-//    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    //Declaring that I want to recieve push!
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     
     return YES;
 }
@@ -112,13 +106,13 @@ static void LSAlertWithError(NSError *error)
 }
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-//    NSError *error;
-//    BOOL success = [self.applicationController.layerClient updateDeviceToken:deviceToken error:&error];
-//    if (success) {
-//        NSLog(@"Application did register for remote notifications");
-//    } else {
-//        NSLog(@"Error updating Layer device token for push:%@", error);
-//    }
+    NSError *error;
+    BOOL success = [self.applicationController.layerClient updateDeviceToken:deviceToken error:&error];
+    if (success) {
+        NSLog(@"Application did register for remote notifications");
+    } else {
+        NSLog(@"Error updating Layer device token for push:%@", error);
+    }
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler

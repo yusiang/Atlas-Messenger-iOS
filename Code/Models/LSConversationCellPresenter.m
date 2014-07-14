@@ -47,7 +47,7 @@
 
 - (UIImage *)conversationImage
 {
-    return [UIImage imageNamed:@"kevin"];
+    return nil;
 }
 
 - (NSArray *)sortedFullNamesForParticiapnts:(NSSet *)participants

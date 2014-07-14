@@ -11,6 +11,6 @@
 
 @interface LSMessageCellHeader : UICollectionReusableView
 
-- (void)updateWithSenderName:(NSString *)senderName;
+- (void)updateWithSenderName:(NSString *)senderName timeStamp:(NSDate *)timeStamp;
 
 @end

@@ -9,13 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "LYRClient.h"
 
-
-typedef NS_ENUM(NSInteger, LYRObjectChangeType) {
-	LYRObjectChangeTypeCreate,
-	LYRObjectChangeTypeUpdate,
-	LYRObjectChangeTypeDelete
-};
-
 @class LSNotificationObserver;
 
 @protocol LSNotificationObserverDelegate <NSObject>

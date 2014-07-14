@@ -85,7 +85,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     NSAssert(self.layerClient, @"Layer Controller should not be `nil`.");
     if (self.conversations) self.conversations = nil;
     NSSet *conversations = (NSSet *)[self.layerClient conversationsForIdentifiers:nil];
-    self.conversations = [[conversations allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
+    self.conversations = [[conversations allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessageReceivedAt" ascending:NO]]];
 }
 
 - (void)conversationsUpdated:(NSNotification *)notification
@@ -213,29 +213,24 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
-    if (!changeType == LYRObjectChangeTypeDelete) [self fetchLayerConversations];
     NSUInteger conversationIndex = [self.conversations indexOfObject:object];
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:conversationIndex inSection:0];
+    [self fetchLayerConversations];
     
     if ([object isKindOfClass:[LYRConversation class]]) {
         switch (changeType) {
             case LYRObjectChangeTypeCreate:
-                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:newIndex inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
                 break;
             case LYRObjectChangeTypeUpdate:
                 [self configureCell:(LSConversationCell *)[self.tableView cellForRowAtIndexPath:indexPath] forIndexPath:indexPath];
                 break;
             case LYRObjectChangeTypeDelete:
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-                [self fetchLayerConversations];
                 break;
             default:
                 break;
         }
-    }
-    
-    if ([object isKindOfClass:[LYRMessage class]]) {
-        //Nothing for now
     }
 }
 

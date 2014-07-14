@@ -60,7 +60,6 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 - (void)updateWithPresenter:(LSMessageCellPresenter *)presenter
 {
     [self.contentView removeConstraints:self.contentView.constraints];
-    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     [self.bubbleView updateViewWithPresenter:presenter];
     
     if ([presenter messageWasSentByAuthenticatedUser]) {
@@ -94,9 +93,6 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 
 - (void)setupSenderCellConstraintsWithPresenter:(LSMessageCellPresenter *)presenter
 {
-    //Place Holder
-    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
-    
     //**********Avatar Image Constraints**********//
     // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
@@ -176,8 +172,6 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 
 - (void)setupRecipientCellConstraintsWithPresenter:(LSMessageCellPresenter *)presenter
 {
-   [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
-    
     //**********Avatar Image Constraints**********//
     // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
@@ -218,6 +212,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     
     //**********Bubble Image Constraints**********//
     LYRMessagePart *messagePart = [presenter.message.parts objectAtIndex:[presenter indexForPart]];
+    
     // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeWidth
@@ -264,6 +259,17 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
         CGFloat width = stringSize.width + 20;
         if (self.contentView.frame.size.width * LSBubbleViewWidthMultiplier > width) {
            return width;
+        }
+    }
+    
+    if ([messagePart.MIMEType isEqualToString:LYRMIMETypeImagePNG] || [messagePart.MIMEType isEqualToString:@"image/jpeg"]) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:messagePart.data]];
+    
+        if (imageView.frame.size.height > imageView.frame.size.width) {
+            CGFloat ratio = 300 / imageView.frame.size.height;
+            return imageView.frame.size.width * ratio;
+        } else {
+            return self.contentView.frame.size.width * LSBubbleViewWidthMultiplier;
         }
     }
     return self.contentView.frame.size.width * LSBubbleViewWidthMultiplier;
