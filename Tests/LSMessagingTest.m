@@ -63,17 +63,17 @@
     
     LYRConversation *conversation = [self.controller.layerClient conversationWithParticipants:@[user1.userID, user2.userID]];
     
-    for (int i = 0; i < 5000; i++) {
+    for (int i = 0; i < 1000; i++) {
         NSLog(@"Message Sent %d", i);
         [self sendMessageWithText:@"Sample Message" conversation:conversation];
     }
-    [tester waitForTimeInterval:60];
+    [tester waitForTimeInterval:20];
     [self deauthenticate];
     
     [tester waitForTimeInterval:2];
     [self loginUser:[LSTestUser testUserWithNumber:1]];
     
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:300];
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:30];
     [[NSNotificationCenter defaultCenter] addObserverForName:LYRClientObjectsDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         NSLog(@"%@", note);
         [latch decrementCount];
