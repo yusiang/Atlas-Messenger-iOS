@@ -16,7 +16,6 @@
 #import "LSUtilities.h"
 #import "LSUIConstants.h"
 #import "LYRConfiguration.h"
-
 #import <Crashlytics/Crashlytics.h>
 
 static void LSAlertWithError(NSError *error)
@@ -95,7 +94,7 @@ static void LSAlertWithError(NSError *error)
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
     //Declaring that I want to recieve push!
-    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    //[application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     
     return YES;
 }
