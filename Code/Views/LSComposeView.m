@@ -201,6 +201,7 @@ static CGFloat const LSButtonHeight = 28;
         for (UIImage *image in self.images) {
             [self.delegate composeView:self sendMessageWithImage:image];
         }
+        self.textInputView.font = LSMediumFont(16);
     }
     
     // If not text, don't send
