@@ -199,7 +199,8 @@ static CGFloat const LSButtonHeight = 28;
     // Send Image
     if (self.images.count > 0) {
         for (UIImage *image in self.images) {
-            [self.delegate composeView:self sendMessageWithImage:image];
+            UIImage *imageToSend = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationUp];
+            [self.delegate composeView:self sendMessageWithImage:imageToSend];
         }
         self.textInputView.font = LSMediumFont(16);
     }

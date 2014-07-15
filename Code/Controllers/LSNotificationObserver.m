@@ -87,7 +87,7 @@
         LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
         switch (updateKey) {
             case LYRObjectChangeTypeCreate:
-                [self handleMessageCreatation:[messageUpdate objectForKey:LYRObjectChangeObjectKey]];
+                [self handleMessageCreatation:[messageUpdate objectForKey:LYRObjectChangeObjectKey] atIndext:i];
                 break;
             case LYRObjectChangeTypeUpdate:
                 [self handleMessageUpdate:[messageUpdate objectForKey:LYRObjectChangeObjectKey]];
@@ -122,9 +122,9 @@
 #pragma mark
 #pragma mark Message Notification Dispatch
 
-- (void)handleMessageCreatation:(LYRMessage *)message
+- (void)handleMessageCreatation:(LYRMessage *)message atIndext:(NSUInteger)index
 {
-    [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:0];
+    [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
 }
 
 - (void)handleMessageUpdate:(LYRMessage *)message

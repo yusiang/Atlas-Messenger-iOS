@@ -104,12 +104,11 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
         self.imageView.image = nil;
         self.textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         
-    } else if([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]){
+    } else if([part.MIMEType isEqualToString:LYRMIMETypeImagePNG] || [part.MIMEType isEqualToString:@"image/jpeg"]){
         self.textView.text = nil;
         UIImage *image = [[UIImage alloc] initWithData:part.data];
-        [self.imageView setImage:image];
-    } else if ([part.MIMEType isEqualToString:@"image/jpeg"]) {
-        [self.imageView setImage:[[UIImage alloc] initWithData:part.data]];
+        UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
+        [self.imageView setImage:imageToDisplay];
     }
     
     if ([presenter messageWasSentByAuthenticatedUser]) {

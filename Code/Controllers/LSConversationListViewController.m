@@ -217,10 +217,9 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
-    NSUInteger conversationIndex = [self.conversations indexOfObject:object];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:conversationIndex inSection:0];
-    [self fetchLayerConversations];
-    
+    NSUInteger existingConversationIndex = [self.conversations indexOfObject:object];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:existingConversationIndex inSection:0];
+
     if ([object isKindOfClass:[LYRConversation class]]) {
         switch (changeType) {
             case LYRObjectChangeTypeCreate:

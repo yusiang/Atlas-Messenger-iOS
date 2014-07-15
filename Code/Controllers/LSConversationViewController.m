@@ -45,8 +45,10 @@ CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
    
     //If Message Part is an image...
     if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG] || [part.MIMEType isEqualToString:@"image/jpeg"]) {
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:part.data]];
-        
+        UIImage *image = [UIImage imageWithData:part.data];
+        UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:imageToDisplay];
+
         if (imageView.frame.size.height > imageView.frame.size.width) {
             itemSize = CGSizeMake(rect.size.width, 300);
         } else {
