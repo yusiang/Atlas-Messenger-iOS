@@ -85,7 +85,7 @@ static void LSAlertWithError(NSError *error)
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
     //Declaring that I want to recieve push!
-    //[application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     
     return YES;
 }
@@ -94,15 +94,16 @@ static void LSAlertWithError(NSError *error)
 {
     NSLog(@"Application failed to register for remote notifications with error %@", error);
 }
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    NSError *error;
-    BOOL success = [self.applicationController.layerClient updateDeviceToken:deviceToken error:&error];
-    if (success) {
-        NSLog(@"Application did register for remote notifications");
-    } else {
-        NSLog(@"Error updating Layer device token for push:%@", error);
-    }
+//    NSError *error;
+//    BOOL success = [self.applicationController.layerClient updateDeviceToken:deviceToken error:&error];
+//    if (success) {
+//        NSLog(@"Application did register for remote notifications");
+//    } else {
+//        NSLog(@"Error updating Layer device token for push:%@", error);
+//    }
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler

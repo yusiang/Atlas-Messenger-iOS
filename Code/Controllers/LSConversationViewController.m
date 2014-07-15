@@ -309,6 +309,13 @@ static CGFloat const LSComposeViewHeight = 40;
     }
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"sentAt"]) {
+        NSLog(@"Message sent");
+    }
+}
+
 - (void)composeView:(LSComposeView *)composeView sendMessageWithImage:(UIImage *)image
 {
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:LSJPEGDataWithData(UIImagePNGRepresentation(image))];
