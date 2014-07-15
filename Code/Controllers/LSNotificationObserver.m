@@ -74,23 +74,6 @@
 
 - (void) processConversationChanges:(NSMutableArray *)conversationChanges
 {
-//    for (int i = 0; i < conversationChanges.count; i++ ) {
-//        NSDictionary *conversationUpdate = [conversationChanges objectAtIndex:i];
-//        LYRObjectChangeType updateKey = (LYRObjectChangeType)[[conversationUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
-//        switch (updateKey) {
-//            case LYRObjectChangeTypeCreate:
-//                [self handleConversationCreatation:[conversationUpdate objectForKey:LYRObjectChangeObjectKey] atIndex:i];
-//                break;
-//            case LYRObjectChangeTypeUpdate:
-//                [self handleConversationUpdate:[conversationUpdate objectForKey:LYRObjectChangeObjectKey]];
-//                break;
-//            case LYRObjectChangeTypeDelete:
-//                [self handleConversationDeletion:[conversationUpdate objectForKey:LYRObjectChangeObjectKey]];
-//                break;
-//            default:
-//                break;
-//        }
-//    }
     [self.delegate observer:self didChangeObject:nil atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:0];
 }
 

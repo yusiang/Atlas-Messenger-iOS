@@ -21,7 +21,7 @@ CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
     
     //If Message Part is plain text...
     if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
-        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, width * 0.60, 0)];
+        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, width * 0.70, 0)];
         textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         textView.font = LSMediumFont(14);
         [textView sizeToFit];

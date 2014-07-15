@@ -26,11 +26,6 @@
 #import "LSAppDelegate.h"
 #import "LSTestUser.h"
 
-@interface LYRClient ()
-
-- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID;
-
-@end
 
 @interface LSUITest : KIFTestCase
 
@@ -72,7 +67,7 @@
     [tester tapViewWithAccessibilityLabel:@"Login Button"];
     [tester enterText:@"fakeEmail@layer.com" intoViewWithAccessibilityLabel:@"Email"];
     [tester enterText:@"fakePassword" intoViewWithAccessibilityLabel:@"Password"];
-    [tester tapViewWithAccessibilityLabel:@"Login Button"];
+    [tester tapViewWithAccessibilityLabel:@"Done"];
     [tester waitForViewWithAccessibilityLabel:@"Login Failed"];
     [tester tapViewWithAccessibilityLabel:@"OK"];
     [tester tapViewWithAccessibilityLabel:@"Home Screen"];
