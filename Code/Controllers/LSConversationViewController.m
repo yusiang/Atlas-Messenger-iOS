@@ -69,6 +69,44 @@ static NSString *const LSMessageCellIdentifier = @"messageCellIdentifier";
 static NSString *const LSMessageHeaderIdentifier = @"headerViewIdentifier";
 static CGFloat const LSComposeViewHeight = 40;
 
+@interface LSBlockOperation : NSOperation
+
+- (void)addExecutionBlock:(void (^)(void))block;
+
+@end
+
+@interface LSBlockOperation ()
+
+@property (nonatomic) NSMutableArray *executionBlocks;
+
+@end
+
+@implementation LSBlockOperation
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        _executionBlocks = [NSMutableArray new];
+    }
+    return self;
+}
+
+- (void)addExecutionBlock:(void (^)(void))block
+{
+    [self.executionBlocks addObject:[block copy]];
+}
+
+- (void)main
+{
+    for (void (^executionBlock)(void) in self.executionBlocks) {
+        executionBlock();
+    }
+}
+
+@end
+
+
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LSNotificationObserverDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -76,7 +114,7 @@ static CGFloat const LSComposeViewHeight = 40;
 @property (nonatomic, strong) NSOrderedSet *messages;
 @property (nonatomic, strong) LSNotificationObserver *observer;
 @property (nonatomic, strong) NSMutableArray *collectionViewUpdates;
-
+@property (nonatomic) LSBlockOperation *blockOperation;
 @end
 
 @implementation LSConversationViewController
@@ -423,33 +461,40 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void) observerWillChangeContent:(LSNotificationObserver *)observer
 {
-    //
+    self.blockOperation = [LSBlockOperation new];
 }
 
 - (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
     NSUInteger messageIndex = [self.messages indexOfObject:object];
-    [self fetchMessages];
     NSUInteger newMessageIndex = self.messages.count - 1;
     
+    __weak typeof(self) weakSelf = self;
     if ([object isKindOfClass:[LYRMessage class]]) {
         switch (changeType) {
-            case LYRObjectChangeTypeCreate:
-            
-                // Insert the new messages
-                [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:newMessageIndex]];
+            case LYRObjectChangeTypeCreate: {
                 
-                // Adjusts the previous messages if it exists
-                if(self.messages.count > 1) [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newMessageIndex - 1]];
+                [self.blockOperation addExecutionBlock:^{
+                    [weakSelf.collectionView insertSections:[NSIndexSet indexSetWithIndex:newMessageIndex]];
+                }];
+                
+//                // Adjusts the previous messages if it exists
+//                if(self.messages.count > 1) [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newMessageIndex - 1]];
                 
                 break;
-            case LYRObjectChangeTypeUpdate:
-                [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:messageIndex]];
+            }
+            case LYRObjectChangeTypeUpdate: {
+                [self.blockOperation addExecutionBlock:^{
+                    [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:messageIndex]];
+                }];
                 break;
-            case LYRObjectChangeTypeDelete:
-                [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:messageIndex]];
+            }
+            case LYRObjectChangeTypeDelete: {
+                [self.blockOperation addExecutionBlock:^{
+                    [weakSelf.collectionView deleteSections:[NSIndexSet indexSetWithIndex:messageIndex]];
+                }];
                 break;
-                
+            }
             default:
                 break;
         }
@@ -458,6 +503,11 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void) observerDidChangeContent:(LSNotificationObserver *)observer
 {
+    [self.collectionView performBatchUpdates:^{
+        [self.blockOperation  start];
+        [self fetchMessages];
+    } completion:nil];
+    self.blockOperation = nil;
     [self scrollToBottomOfCollectionView];
 }
 
