@@ -473,28 +473,27 @@ static CGFloat const LSComposeViewHeight = 40;
     if ([object isKindOfClass:[LYRMessage class]]) {
         switch (changeType) {
             case LYRObjectChangeTypeCreate: {
-                
                 [self.blockOperation addExecutionBlock:^{
                     [weakSelf.collectionView insertSections:[NSIndexSet indexSetWithIndex:newMessageIndex]];
+                    if(weakSelf.messages.count > 1) [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newMessageIndex - 1]];
                 }];
-                
-//                // Adjusts the previous messages if it exists
-//                if(self.messages.count > 1) [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newMessageIndex - 1]];
-                
-                break;
             }
+            break;
             case LYRObjectChangeTypeUpdate: {
+                if (messageIndex == NSNotFound) break;
                 [self.blockOperation addExecutionBlock:^{
                     [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:messageIndex]];
                 }];
-                break;
             }
+            break;
             case LYRObjectChangeTypeDelete: {
+                if (messageIndex == NSNotFound) break;
                 [self.blockOperation addExecutionBlock:^{
                     [weakSelf.collectionView deleteSections:[NSIndexSet indexSetWithIndex:messageIndex]];
                 }];
-                break;
+                
             }
+            break;
             default:
                 break;
         }

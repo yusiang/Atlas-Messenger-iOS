@@ -84,19 +84,22 @@
 {
     for (int i = 0; i < messageChanges.count; i++) {
         NSDictionary *messageUpdate = [messageChanges objectAtIndex:i];
-        LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
-        switch (updateKey) {
-            case LYRObjectChangeTypeCreate:
-                [self handleMessageCreatation:[messageUpdate objectForKey:LYRObjectChangeObjectKey] atIndext:i];
-                break;
-            case LYRObjectChangeTypeUpdate:
-                [self handleMessageUpdate:[messageUpdate objectForKey:LYRObjectChangeObjectKey]];
-                break;
-            case LYRObjectChangeTypeDelete:
-                [self handleMessageDeletion:[messageUpdate objectForKey:LYRObjectChangeObjectKey]];
-                break;
-            default:
-                break;
+        LYRMessage *message = [messageUpdate objectForKey:LYRObjectChangeObjectKey];
+        if (message.conversation == self.conversation) {
+            LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
+            switch (updateKey) {
+                case LYRObjectChangeTypeCreate:
+                    [self handleMessageCreatation:message atIndext:i];
+                    break;
+                case LYRObjectChangeTypeUpdate:
+                    [self handleMessageUpdate:message];
+                    break;
+                case LYRObjectChangeTypeDelete:
+                    [self handleMessageDeletion:message];
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
