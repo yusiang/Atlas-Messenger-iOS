@@ -33,8 +33,16 @@
         _layerClient.delegate = self;
         _persistenceManager = persistenceManager;
         _APIManager = [LSAPIManager managerWithBaseURL:baseURL layerClient:layerClient];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:) name:LYRClientWillBeginSynchronizationNotification object:layerClient];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:) name:LYRClientDidFinishSynchronizationNotification object:layerClient];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)layerClient:(LYRClient *)client didReceiveAuthenticationChallengeWithNonce:(NSString *)nonce
@@ -62,6 +70,16 @@
 {
     LSAlertWithError(error);
     NSLog(@"Layer Client did fail synchronization ");
+}
+
+- (void)didReceiveLayerClientWillBeginSynchronizationNotification:(NSNotification *)notification
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+}
+
+- (void)didReceiveLayerClientDidFinishSynchronizationNotification:(NSNotification *)notification
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
 @end
