@@ -12,6 +12,7 @@ PODS:
     - sqlite3/fts
   - FMDBMigrationManager (1.2.2):
     - FMDB/common (~> 2.3)
+  - Instabug (2.0)
   - KIF (3.0.7):
     - KIF/XCTest
   - KIF/XCTest (3.0.7)
@@ -49,6 +50,7 @@ PODS:
 
 DEPENDENCIES:
   - Expecta (~> 0.3.0)
+  - Instabug (~> 2.0)
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
   - layer-thrift (from `git@github.com:layerhq/lyr-thrift-common.git`)
@@ -67,6 +69,7 @@ SPEC CHECKSUMS:
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   FMDB: 31ec26773c7f7b7890a6038235a1f2bbd933a7cb
   FMDBMigrationManager: 22dc14f7b066728b041b3f4a0f4178489b2aa212
+  Instabug: b3b0a7d30ea6ce3242e7cc44813e801143b9009b
   KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
   layer-client-messaging-schema: 77a9245994fb58d0dc222f3669cda88b30a093e3

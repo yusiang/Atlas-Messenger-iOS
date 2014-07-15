@@ -29,3 +29,4 @@ NSString *LSLayerPersistencePath();
 
 LSPersistenceManager *LSPersitenceManager();
 
+void LSAlertWithError(NSError *error);

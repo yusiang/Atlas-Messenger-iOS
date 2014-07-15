@@ -65,3 +65,12 @@ LSPersistenceManager *LSPersitenceManager(void)
     }
     return [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
 }
+
+void LSAlertWithError(NSError *error)
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Unexpected Error"
+                                                        message:[error localizedDescription]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];
+}

@@ -17,16 +17,7 @@
 #import "LSUIConstants.h"
 #import "LYRConfiguration.h"
 #import <Crashlytics/Crashlytics.h>
-
-static void LSAlertWithError(NSError *error)
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Unexpected Error"
-                                                        message:[error localizedDescription]
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alertView show];
-}
-
+#import <Instabug/Instabug.h>
 
 @interface LYRClient ()
 
@@ -49,8 +40,10 @@ static void LSAlertWithError(NSError *error)
 {
     LYRSetLogLevelFromEnvironment();
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
+    
     LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
-    [layerClient setValue:@(1) forKeyPath:@"synchronizationManager.syncInterval"];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
@@ -58,10 +51,7 @@ static void LSAlertWithError(NSError *error)
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         NSLog(@"Started with success: %d, %@", success, error);
     }];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
-    
+
     LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
     authenticationViewController.layerClient = self.applicationController.layerClient;
     authenticationViewController.APIManager = self.applicationController.APIManager;
@@ -76,18 +66,27 @@ static void LSAlertWithError(NSError *error)
     NSError *error = nil;
     if ([self.applicationController.APIManager resumeSession:session error:&error]) {
         NSLog(@"Session resumed: %@", session);
+        [self loadContacts];
         [self presentConversationsListViewController];
     }
     
     [self.window makeKeyAndVisible];
     
-    //Kicking off Crashlytics
+    // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
-    //Declaring that I want to recieve push!
+    // Kicking off Instabg
+    [Instabug startWithToken:@"d17f36fc46f0b8073b5db3feb2d09888" captureSource:IBGCaptureSourceUIKit invocationEvent:IBGInvocationEventShake];
+    
+    // Declaring that I want to recieve push!
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     
     return YES;
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    [self loadContacts];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
