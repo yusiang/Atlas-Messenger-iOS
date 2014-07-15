@@ -14,21 +14,6 @@
 #import "LSMessageCellHeader.h"
 #import "LSUtilities.h"
 
-NSData *LSJPEGDataWithData(NSData *data)
-{
-    CGFloat compression = 0.9f;
-    CGFloat maxCompression = 0.1f;
-    int maxFileSize = 30*1024;
-    
-    UIImage *image = [UIImage imageWithData:data];
-    
-    while ([data length] > maxFileSize && compression > maxCompression) {
-        compression -= 0.1;
-        data = UIImageJPEGRepresentation(image, compression);
-    }
-    return data;
-}
-
 CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
 {
     CGRect rect = [[UIScreen mainScreen] bounds];
@@ -150,11 +135,6 @@ static CGFloat const LSComposeViewHeight = 40;
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 40, rect.size.width, LSComposeViewHeight)];
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
-    
-    if (!LSIsRunningTests()) {
-        self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversation:self.conversation];
-        self.notificationObserver.delegate = self;
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -163,6 +143,10 @@ static CGFloat const LSComposeViewHeight = 40;
     [self fetchMessages];
     [self.collectionView reloadData];
     [self scrollToBottomOfCollectionView];
+    if (!LSIsRunningTests()) {
+        self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
+        self.notificationObserver.delegate = self;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -358,7 +342,11 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)composeView:(LSComposeView *)composeView sendMessageWithImage:(UIImage *)image
 {
-    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:LSJPEGDataWithData(UIImagePNGRepresentation(image))];
+    NSData *imageData = UIImagePNGRepresentation(image);
+    UIImage *compressedImage = [self jpegDataForImage:[[UIImage imageWithData:imageData] CGImage] constraint:300];
+    NSData *compressedImageData = UIImageJPEGRepresentation(compressedImage, 0.25f);
+    
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:compressedImageData];
     LYRMessage *message = [self.layerClient messageWithConversation:self.conversation parts:@[ part ]];
     
     NSError *error;
@@ -378,6 +366,32 @@ static CGFloat const LSComposeViewHeight = 40;
     [UIView animateWithDuration:0.2 animations:^{
         self.composeView.frame = CGRectMake(0, rect.size.height - 40, rect.size.width, 40);
     }];
+}
+
+// Photo JPEG Compression
+- (UIImage *)jpegDataForImage:(CGImageRef)image constraint:(CGFloat)constraint
+{
+    CGFloat width = 1.0f * CGImageGetWidth(image);
+    CGFloat height = 1.0f * CGImageGetHeight(image);
+    CGSize previousSize = CGSizeMake(width, height);
+    CGSize newSize = [self sizeFromOriginalSize:previousSize withMaxConstraint:constraint];
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+    UIImage *assetImage = [UIImage imageWithCGImage:image];
+    [assetImage drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    return UIGraphicsGetImageFromCurrentImageContext();
+}
+
+// Photo Resizing
+- (CGSize)sizeFromOriginalSize:(CGSize)originalSize withMaxConstraint:(CGFloat)constraint
+{
+    if (originalSize.height > constraint && (originalSize.height > originalSize.width)) {
+        CGFloat heightRatio = constraint / originalSize.height;
+        return CGSizeMake(originalSize.width * heightRatio, constraint);
+    } else if (originalSize.width > constraint) {
+        CGFloat widthRatio = constraint / originalSize.width;
+        return CGSizeMake(constraint, originalSize.height * widthRatio);
+    }
+    return originalSize;
 }
 
 - (void)cameraTapped
@@ -466,32 +480,26 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
-    NSUInteger messageIndex = [self.messages indexOfObject:object];
-    NSUInteger newMessageIndex = self.messages.count - 1;
-    
     __weak typeof(self) weakSelf = self;
     if ([object isKindOfClass:[LYRMessage class]]) {
         switch (changeType) {
             case LYRObjectChangeTypeCreate: {
                 [self.blockOperation addExecutionBlock:^{
-                    [weakSelf.collectionView insertSections:[NSIndexSet indexSetWithIndex:newMessageIndex]];
-                    if(weakSelf.messages.count > 1) [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newMessageIndex - 1]];
+                    [weakSelf.collectionView insertSections:[NSIndexSet indexSetWithIndex:newIndex]];
+                    if(newIndex > 0) [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newIndex - 1]];
                 }];
             }
             break;
             case LYRObjectChangeTypeUpdate: {
-                if (messageIndex == NSNotFound) break;
                 [self.blockOperation addExecutionBlock:^{
-                    [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:messageIndex]];
+                    [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:index]];
                 }];
             }
             break;
             case LYRObjectChangeTypeDelete: {
-                if (messageIndex == NSNotFound) break;
                 [self.blockOperation addExecutionBlock:^{
-                    [weakSelf.collectionView deleteSections:[NSIndexSet indexSetWithIndex:messageIndex]];
+                    [weakSelf.collectionView deleteSections:[NSIndexSet indexSetWithIndex:index]];
                 }];
-                
             }
             break;
             default:

@@ -10,18 +10,25 @@
 
 @interface LSNotificationObserver ()
 
+@property (nonatomic) NSArray *conversations;
 @property (nonatomic) LYRConversation *conversation;
+@property (nonatomic) LYRClient *layerClient;
 
 @end
 
 @implementation LSNotificationObserver
 
-- (id)initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
+- (id)initWithClient:(LYRClient *)layerClient conversations:(NSArray *)conversations
 {
     self = [super init];
     if (self) {
+        _layerClient = layerClient;
+        _conversations = conversations;
         
-        _conversation = conversation;
+        if (conversations.count == 1) {
+            _conversation = [conversations objectAtIndex:0];
+        }
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerObjectsDidChangeNotification:) name:LYRClientObjectsDidChangeNotification object:layerClient];
         
     }
@@ -31,6 +38,12 @@
 - (id) init
 {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
+}
+
+
+- (void)setConversations:(NSArray *)conversations
+{
+    _conversations = conversations;
 }
 
 - (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
@@ -61,23 +74,24 @@
 
 - (void) processConversationChanges:(NSMutableArray *)conversationChanges
 {
-    for (int i = 0; i < conversationChanges.count; i++ ) {
-        NSDictionary *conversationUpdate = [conversationChanges objectAtIndex:i];
-        LYRObjectChangeType updateKey = (LYRObjectChangeType)[[conversationUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
-        switch (updateKey) {
-            case LYRObjectChangeTypeCreate:
-                [self handleConversationCreatation:[conversationUpdate objectForKey:LYRObjectChangeObjectKey] atIndex:i];
-                break;
-            case LYRObjectChangeTypeUpdate:
-                [self handleConversationUpdate:[conversationUpdate objectForKey:LYRObjectChangeObjectKey]];
-                break;
-            case LYRObjectChangeTypeDelete:
-                [self handleConversationDeletion:[conversationUpdate objectForKey:LYRObjectChangeObjectKey]];
-                break;
-            default:
-                break;
-        }
-    }
+//    for (int i = 0; i < conversationChanges.count; i++ ) {
+//        NSDictionary *conversationUpdate = [conversationChanges objectAtIndex:i];
+//        LYRObjectChangeType updateKey = (LYRObjectChangeType)[[conversationUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
+//        switch (updateKey) {
+//            case LYRObjectChangeTypeCreate:
+//                [self handleConversationCreatation:[conversationUpdate objectForKey:LYRObjectChangeObjectKey] atIndex:i];
+//                break;
+//            case LYRObjectChangeTypeUpdate:
+//                [self handleConversationUpdate:[conversationUpdate objectForKey:LYRObjectChangeObjectKey]];
+//                break;
+//            case LYRObjectChangeTypeDelete:
+//                [self handleConversationDeletion:[conversationUpdate objectForKey:LYRObjectChangeObjectKey]];
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+    [self.delegate observer:self didChangeObject:nil atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:0];
 }
 
 - (void)processMessageChanges:(NSMutableArray *)messageChanges
@@ -85,11 +99,11 @@
     for (int i = 0; i < messageChanges.count; i++) {
         NSDictionary *messageUpdate = [messageChanges objectAtIndex:i];
         LYRMessage *message = [messageUpdate objectForKey:LYRObjectChangeObjectKey];
-        if (message.conversation == self.conversation) {
+        if ([self.conversations containsObject:message.conversation]) {
             LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
             switch (updateKey) {
                 case LYRObjectChangeTypeCreate:
-                    [self handleMessageCreatation:message atIndext:i];
+                    [self handleMessageCreatation:message];
                     break;
                 case LYRObjectChangeTypeUpdate:
                     [self handleMessageUpdate:message];
@@ -125,19 +139,28 @@
 #pragma mark
 #pragma mark Message Notification Dispatch
 
-- (void)handleMessageCreatation:(LYRMessage *)message atIndext:(NSUInteger)index
+- (void)handleMessageCreatation:(LYRMessage *)message
 {
-    [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
+    NSArray *messages = [[self.layerClient messagesForConversation:message.conversation] array];
+    if ([messages containsObject:message]) {
+            [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:[messages indexOfObject:message]];
+    }
 }
 
 - (void)handleMessageUpdate:(LYRMessage *)message
 {
-    [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    NSArray *messages = [[self.layerClient messagesForConversation:message.conversation] array];
+    if ([messages containsObject:message]) {
+        [self.delegate observer:self didChangeObject:message atIndex:[messages indexOfObject:message] forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    }
 }
 
 - (void)handleMessageDeletion:(LYRMessage *)message
 {
-    [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeDelete newIndexPath:0];
+    NSArray *messages = [[self.layerClient messagesForConversation:message.conversation] array];
+    if ([messages containsObject:message]) {
+        [self.delegate observer:self didChangeObject:message atIndex:[messages indexOfObject:message] forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    }
 }
 
 - (void)dealloc

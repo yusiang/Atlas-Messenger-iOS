@@ -65,7 +65,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [self.tableView reloadData];
     
     if (!LSIsRunningTests()){
-        self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversation:nil];
+        self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:self.conversations];
         self.notificationObserver.delegate = self;
     }
 }
@@ -212,42 +212,17 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void) observerWillChangeContent:(LSNotificationObserver *)observer
 {
-    [self.tableView beginUpdates];
+    //Nothing for now
 }
 
 - (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
-    NSUInteger existingConversationIndex = [self.conversations indexOfObject:object];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:existingConversationIndex inSection:0];
-
-    if ([object isKindOfClass:[LYRConversation class]]) {
-        switch (changeType) {
-            case LYRObjectChangeTypeCreate:
-                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:newIndex inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-                break;
-            case LYRObjectChangeTypeUpdate:
-                [self configureCell:(LSConversationCell *)[self.tableView cellForRowAtIndexPath:indexPath] forIndexPath:indexPath];
-                break;
-            case LYRObjectChangeTypeDelete:
-                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-                break;
-            default:
-                break;
-        }
-    }
-    
-    if ([object isKindOfClass:[LYRMessage class]]) {
-        LYRMessage *message = object;
-        if ([self.conversations containsObject:message.conversation]) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.conversations indexOfObject:message.conversation] inSection:0];
-            [self configureCell:(LSConversationCell *)[self.tableView cellForRowAtIndexPath:indexPath] forIndexPath:indexPath];
-        }
-    }
+    // Nothing for now
 }
 
 - (void) observerDidChangeContent:(LSNotificationObserver *)observer
 {
     [self fetchLayerConversations];
-    [self.tableView endUpdates];
+    [self.tableView reloadData];
 }
 @end

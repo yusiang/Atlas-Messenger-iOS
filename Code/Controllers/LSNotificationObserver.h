@@ -27,6 +27,8 @@
 
 @property (nonatomic, weak) id<LSNotificationObserverDelegate>delegate;
 
-- (id) initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation;
+- (id) initWithClient:(LYRClient *)layerClient conversations:(NSArray *)conversations;
+
+- (void)setConversations:(NSArray *)conversations;
 
 @end
