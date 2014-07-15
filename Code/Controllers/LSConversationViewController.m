@@ -247,7 +247,7 @@ static CGFloat const LSComposeViewHeight = 40;
         } else if ([presenter shouldShowSenderLabel]) {
             [header updateWithSenderName:[presenter labelForMessageSender] timeStamp:nil];
         } else if ([presenter shouldShowTimeStamp]) {
-            [header updateWithSenderName:nil timeStamp:presenter.message.sentAt];
+            [header updateWithSenderName:nil timeStamp:presenter.message.receivedAt];
         }
     }
     return header;
@@ -513,15 +513,16 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.collectionView performBatchUpdates:^{
         [self.blockOperation  start];
         [self fetchMessages];
+        [[self.collectionView collectionViewLayout] invalidateLayout];
+        [self scrollToBottomOfCollectionView];
     } completion:nil];
     self.blockOperation = nil;
-    [self scrollToBottomOfCollectionView];
 }
 
 - (void)scrollToBottomOfCollectionView
 {
     if (self.messages.count > 1) {
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.messages.count - 1] atScrollPosition:UICollectionViewScrollPositionBottom animated:TRUE];
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.collectionView.numberOfSections - 1] atScrollPosition:UICollectionViewScrollPositionBottom animated:TRUE];
     }
 }
 
