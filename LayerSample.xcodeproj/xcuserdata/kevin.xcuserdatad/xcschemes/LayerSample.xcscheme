@@ -120,6 +120,11 @@
             value = "172.17.8.101"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "LAYER_CONFIGURATION_URL"
+            value = "na-3.preview.layer.com/client_configuration.json"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>

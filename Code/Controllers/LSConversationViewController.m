@@ -282,7 +282,7 @@ static CGFloat const LSComposeViewHeight = 40;
     NSString *identifier = self.APImanager.authenticatedSession.user.userID;
     LYRRecipientStatus status = [message recipientStatusForUserID:identifier];
     if (status == LYRRecipientStatusDelivered) {
-        [self.layerClient markMessageAsRead:message];
+        [self.layerClient markMessageAsRead:message error:nil];
     }
 }
 

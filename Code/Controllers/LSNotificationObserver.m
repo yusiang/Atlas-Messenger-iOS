@@ -124,26 +124,22 @@
 
 - (void)handleMessageCreatation:(LYRMessage *)message
 {
+    NSLog(@"The message index is %lu", (unsigned long)message.index);
     NSArray *messages = [[self.layerClient messagesForConversation:message.conversation] array];
     if ([messages containsObject:message]) {
-            [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:[messages indexOfObject:message]];
+        [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:[messages indexOfObject:message]];
     }
 }
 
 - (void)handleMessageUpdate:(LYRMessage *)message
 {
-    NSArray *messages = [[self.layerClient messagesForConversation:message.conversation] array];
-    if ([messages containsObject:message]) {
-        [self.delegate observer:self didChangeObject:message atIndex:[messages indexOfObject:message] forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
-    }
+    [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+
 }
 
 - (void)handleMessageDeletion:(LYRMessage *)message
 {
-    NSArray *messages = [[self.layerClient messagesForConversation:message.conversation] array];
-    if ([messages containsObject:message]) {
-        [self.delegate observer:self didChangeObject:message atIndex:[messages indexOfObject:message] forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
-    }
+    [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
 }
 
 - (void)dealloc
