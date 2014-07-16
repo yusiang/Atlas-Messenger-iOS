@@ -504,43 +504,48 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
-    __weak typeof(self) weakSelf = self;
-    if ([object isKindOfClass:[LYRMessage class]]) {
-        switch (changeType) {
-            case LYRObjectChangeTypeCreate: {
-                [self.blockOperation addExecutionBlock:^{
-                    [weakSelf.collectionView insertSections:[NSIndexSet indexSetWithIndex:newIndex]];
-                    if(newIndex > 0) [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newIndex - 1]];
-                }];
-            }
-            break;
-            case LYRObjectChangeTypeUpdate: {
-                [self.blockOperation addExecutionBlock:^{
-                    [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:index]];
-                }];
-            }
-            break;
-            case LYRObjectChangeTypeDelete: {
-                [self.blockOperation addExecutionBlock:^{
-                    [weakSelf.collectionView deleteSections:[NSIndexSet indexSetWithIndex:index]];
-                }];
-            }
-            break;
-            default:
-                break;
-        }
-    }
+//    __weak typeof(self) weakSelf = self;
+//    if ([object isKindOfClass:[LYRMessage class]]) {
+//        switch (changeType) {
+//            case LYRObjectChangeTypeCreate: {
+//                NSLog(@"Attempt to insert row at %lu", (unsigned long)index);
+//                [self.blockOperation addExecutionBlock:^{
+//                    [weakSelf.collectionView insertSections:[NSIndexSet indexSetWithIndex:newIndex]];
+//                    if(newIndex > 0) [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newIndex - 1]];
+//                }];
+//            }
+//            break;
+//            case LYRObjectChangeTypeUpdate: {
+//                NSLog(@"Attempt to update row at %lu", (unsigned long)index);
+//                [self.blockOperation addExecutionBlock:^{
+//                    [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:index]];
+//                }];
+//            }
+//            break;
+//            case LYRObjectChangeTypeDelete: {
+//                NSLog(@"Attempt to delete row at %lu", (unsigned long)index);
+//                [self.blockOperation addExecutionBlock:^{
+//                    [weakSelf.collectionView deleteSections:[NSIndexSet indexSetWithIndex:index]];
+//                }];
+//            }
+//            break;
+//            default:
+//                break;
+//        }
+//    }
 }
 
 - (void) observerDidChangeContent:(LSNotificationObserver *)observer
 {
-    [self.collectionView performBatchUpdates:^{
-        [self.blockOperation  start];
-        [self fetchMessages];
-        [[self.collectionView collectionViewLayout] invalidateLayout];
-        [self scrollToBottomOfCollectionView];
-    } completion:nil];
-    self.blockOperation = nil;
+    [self fetchMessages];
+    [self.collectionView reloadData];
+//    [self.collectionView performBatchUpdates:^{
+//        [self.blockOperation  start];
+//        [self fetchMessages];
+//        [[self.collectionView collectionViewLayout] invalidateLayout];
+//        [self scrollToBottomOfCollectionView];
+//    } completion:nil];
+//    self.blockOperation = nil;
 }
 
 - (void)scrollToBottomOfCollectionView

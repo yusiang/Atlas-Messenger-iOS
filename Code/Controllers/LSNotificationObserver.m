@@ -86,7 +86,7 @@
             LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
             switch (updateKey) {
                 case LYRObjectChangeTypeCreate:
-                    [self handleMessageCreatation:message];
+                    [self handleMessageCreatation:message atIndex:i];
                     break;
                 case LYRObjectChangeTypeUpdate:
                     [self handleMessageUpdate:message];
@@ -104,7 +104,7 @@
 #pragma mark
 #pragma mark Conversation Notification Dispatch
 
-- (void)handleConversationCreatation:(LYRConversation *)conversation atIndex:(NSUInteger) index
+- (void)handleConversationCreatation:(LYRConversation *)conversation atIndex:(NSUInteger)index
 {
     [self.delegate observer:self didChangeObject:conversation atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
 }
@@ -122,23 +122,20 @@
 #pragma mark
 #pragma mark Message Notification Dispatch
 
-- (void)handleMessageCreatation:(LYRMessage *)message
+- (void)handleMessageCreatation:(LYRMessage *)message atIndex:(NSUInteger)index
 {
-    NSLog(@"The message index is %lu", (unsigned long)message.index);
-    NSArray *messages = [[self.layerClient messagesForConversation:message.conversation] array];
-    if ([messages containsObject:message]) {
-        [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:[messages indexOfObject:message]];
-    }
+    [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
 }
 
 - (void)handleMessageUpdate:(LYRMessage *)message
 {
+    NSLog(@"Message index %lu", (unsigned long)message.index);
     [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
-
 }
 
 - (void)handleMessageDeletion:(LYRMessage *)message
 {
+    NSLog(@"Message index %lu", (unsigned long)message.index);
     [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
 }
 
