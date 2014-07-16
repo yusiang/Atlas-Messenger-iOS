@@ -81,6 +81,8 @@
     // Declaring that I want to recieve push!
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
+    
     return YES;
 }
 
@@ -149,6 +151,7 @@
             NSError *persistenceError = nil;
             BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
             if (success) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"contactsPersited" object:nil];
                 NSLog(@"Persisted contacts successfully: %@", contacts);
             } else {
                 NSLog(@"Failed persisting contacts: %@. Error: %@", contacts, persistenceError);

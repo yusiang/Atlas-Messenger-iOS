@@ -189,18 +189,18 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)cameraTapped
 {
-    [self.delegate cameraTapped];
+    [self.delegate composeViewDidTapCamera:self];
 }
 
 - (void)sendMessage
 {
+    [self.delegate composeViewShouldRestFrame:self];
     [self.textInputView resignFirstResponder];
     
     // Send Image
     if (self.images.count > 0) {
         for (UIImage *image in self.images) {
-            UIImage *imageToSend = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationUp];
-            [self.delegate composeView:self sendMessageWithImage:imageToSend];
+            [self.delegate composeView:self sendMessageWithImage:image];
         }
         self.textInputView.font = LSMediumFont(16);
     }
@@ -215,12 +215,13 @@ static CGFloat const LSButtonHeight = 28;
     // Reset text input view label
     [self.textInputView setText:@""];
     [self.images removeAllObjects];
-    
 }
 
 - (void)updateWithImage:(UIImage *)image
 {
     [self.images addObject:image];
+    
+    self.sendButton.textLabel.textColor = LSBlueColor();
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
     LSMediaAttachement *textAttachment = [[LSMediaAttachement alloc] init];
@@ -246,9 +247,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    CGFloat height = self.textInputView.contentSize.height;
-    double lines = height / textView.font.lineHeight;
-    [self.delegate composeView:self shouldChangeHeightForLines:(double)lines];
+    [self.delegate composeView:self setComposeViewHeight:textView.contentSize.height + 4];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text

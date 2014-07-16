@@ -7,6 +7,7 @@
 //
 
 #import "LSMediaAttachement.h"
+#import "LSUtilities.h"
 
 @interface LSMediaAttachement ()
 
@@ -19,19 +20,7 @@
 {
     CGRect systemImageRect = [super attachmentBoundsForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
     
-    CGRect rectToFit;
-    
-    if (systemImageRect.size.width > systemImageRect.size.height) {
-        double ratio = 100/systemImageRect.size.width;
-        double height = systemImageRect.size.height * ratio;
-        rectToFit = CGRectMake(0, 0, 100, height);
-    } else {
-        double ratio = 100/systemImageRect.size.height;
-        double width = systemImageRect.size.width * ratio;
-        rectToFit = CGRectMake(0, 0, width, 100);
-    }
-    
-    return rectToFit;
+    return LSImageRectForThumb(systemImageRect.size, 120);
 }
 
 

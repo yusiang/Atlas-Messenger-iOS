@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
+#import "LSPersistenceManager.h"
 
 /**
  @abstract The `LSUtilities` class provides convenince functions for app configuration
@@ -30,3 +31,5 @@ NSString *LSLayerPersistencePath();
 LSPersistenceManager *LSPersitenceManager();
 
 void LSAlertWithError(NSError *error);
+
+CGRect LSImageRectForThumb(CGSize size, NSUInteger maxConstraint);

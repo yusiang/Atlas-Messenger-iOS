@@ -99,6 +99,7 @@ static CGFloat const LSComposeViewHeight = 40;
 @property (nonatomic, strong) NSOrderedSet *messages;
 @property (nonatomic, strong) LSNotificationObserver *observer;
 @property (nonatomic, strong) NSMutableArray *collectionViewUpdates;
+@property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) LSBlockOperation *blockOperation;
 @end
 
@@ -162,6 +163,8 @@ static CGFloat const LSComposeViewHeight = 40;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification object:nil];
+    
+    self.keyboardIsOnScreen = FALSE;
     [self scrollToBottomOfCollectionView];
 }
 
@@ -288,13 +291,14 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)keyboardWasShown:(NSNotification*)notification
 {
+    self.keyboardIsOnScreen = TRUE;
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y + kbSize.height)];
         self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     } completion:^(BOOL finished) {
-        //
+        self.keyboardIsOnScreen = TRUE;
     }];
 }
 
@@ -306,7 +310,8 @@ static CGFloat const LSComposeViewHeight = 40;
         [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y - kbSize.height)];
         self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     } completion:^(BOOL finished) {
-        //
+        self.keyboardIsOnScreen = FALSE;
+        [self composeViewShouldRestFrame:nil];
     }];
 }
 
@@ -340,6 +345,23 @@ static CGFloat const LSComposeViewHeight = 40;
     }
 }
 
+- (void)composeViewShouldRestFrame:(LSComposeView *)composeView
+{
+    if (!self.keyboardIsOnScreen) {
+        CGRect rect = [[UIScreen mainScreen] bounds];
+        [self.composeView setFrame:CGRectMake(0, rect.size.height - 40, rect.size.width, 40)];
+    }
+}
+
+- (void)composeView:(LSComposeView *)composeView setComposeViewHeight:(CGFloat)height
+{
+    if (height < 135) {
+        CGRect rect = [[UIScreen mainScreen] bounds];
+        CGFloat yOriginOffset = composeView.frame.size.height - height;
+        [self.composeView setFrame:CGRectMake(0, composeView.frame.origin.y + yOriginOffset, rect.size.width, height)];
+    }
+}
+
 - (void)composeView:(LSComposeView *)composeView sendMessageWithImage:(UIImage *)image
 {
     NSData *imageData = UIImagePNGRepresentation(image);
@@ -362,10 +384,7 @@ static CGFloat const LSComposeViewHeight = 40;
                                                   otherButtonTitles:nil];
         [alertView show];
     }
-    CGRect rect = [[UIScreen mainScreen] bounds];
-    [UIView animateWithDuration:0.2 animations:^{
-        self.composeView.frame = CGRectMake(0, rect.size.height - 40, rect.size.width, 40);
-    }];
+
 }
 
 // Photo JPEG Compression
@@ -394,7 +413,7 @@ static CGFloat const LSComposeViewHeight = 40;
     return originalSize;
 }
 
-- (void)cameraTapped
+- (void)composeViewDidTapCamera:(LSComposeView *)composeView
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc]
                                   initWithTitle:nil
@@ -451,12 +470,19 @@ static CGFloat const LSComposeViewHeight = 40;
 {
     NSString *mediaType = [info objectForKey:@"UIImagePickerControllerMediaType"];
     if ([mediaType isEqualToString:@"public.image"]) {
-        CGRect frame = self.composeView.frame;
-        frame.size.height = 120;
-        frame.origin.y = self.view.frame.size.height - 120;
-        self.composeView.frame = frame;
+        
+        // Get the selected image
         UIImage *selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
-        NSLog (@"User did select image %@", selectedImage);
+        
+        //Get the rect we would like to display with a max height fo 120
+        CGRect imageRect = LSImageRectForThumb(selectedImage.size, 120);
+        
+        //Resize the compose view frame with the image
+        CGRect frame = self.composeView.frame;
+        frame.size.height = imageRect.size.height + 20;
+        frame.origin.y = self.view.frame.size.height - frame.size.height;
+        self.composeView.frame = frame;
+
         [self.composeView updateWithImage:selectedImage];
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
@@ -467,8 +493,6 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark
-#pragma mark Notification Observer Delegate
 
 #pragma mark
 #pragma mark Notification Observer Delegate Methods
