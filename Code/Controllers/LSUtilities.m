@@ -18,8 +18,8 @@ NSString *LSApplicationHost()
     if (LSIsRunningTests()) {
         return [NSProcessInfo processInfo].environment[@"LAYER_TEST_HOST"] ?: @"10.66.0.35";
     }
-    return @"na-3.preview.layer.com";
-    //return @"199.223.234.118";
+    //return @"na-3.preview.layer.com";
+    return @"199.223.234.118";
 }
 
 NSString *LSRailsHost()
@@ -27,8 +27,8 @@ NSString *LSRailsHost()
     if (LSIsRunningTests()) {
         return @"10.66.0.12";
     }
-    //return @"199.223.234.118";
-   return @"na-3.preview.layer.com";
+    return @"199.223.234.118";
+   //return @"na-3.preview.layer.com";
 }
 
 NSURL *LSLayerBaseURL(void)
@@ -43,8 +43,8 @@ NSURL *LSRailsBaseURL(void)
 
 NSUUID *LSLayerAppID(void)
 {
-    return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
-	//return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
+    //return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
+	return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
 }
 
 NSString *LSApplicationDataDirectory(void)
