@@ -10,6 +10,7 @@
 #import "LSAvatarImageView.h"
 #import "LSUIConstants.h"
 #import "LSUser.h"
+#import "LSUtilities.h"
 
 @interface LSConversationCell ()
 
@@ -85,12 +86,12 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
     LYRMessage *message = presenter.message;
     LYRMessagePart *part = [message.parts firstObject];
     
-    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+    if ([part.MIMEType isEqualToString:MIMETypeTextPlain()]) {
         self.lastMessageTextView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         [self.lastMessageTextView setFont:LSMediumFont(12)];
-    } else if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+    } else if ([part.MIMEType isEqualToString:MIMETypeImagePNG()]) {
         self.lastMessageTextView.text = @"Attachemnt: Image";
-    } else if ([part.MIMEType isEqualToString:@"image/jpeg"]) {
+    } else if ([part.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
         self.lastMessageTextView.text = @"Attachemnt: Image";
     } else {
         self.lastMessageTextView.text = @"DRAFT CONVERSATION: No Text!";

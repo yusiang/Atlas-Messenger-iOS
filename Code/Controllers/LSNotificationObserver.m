@@ -129,14 +129,16 @@
 
 - (void)handleMessageUpdate:(LYRMessage *)message
 {
-    NSLog(@"Message index %lu", (unsigned long)message.index);
-    [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    if (message.index) {
+        [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    }
 }
 
 - (void)handleMessageDeletion:(LYRMessage *)message
 {
-    NSLog(@"Message index %lu", (unsigned long)message.index);
-    [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    if (message.index) {
+        [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    }
 }
 
 - (void)dealloc

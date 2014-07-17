@@ -9,6 +9,7 @@
 #import "LSMessageCell.h"
 #import "LSUIConstants.h"
 #import "LSBubbleView.h"
+#import "LSUtilities.h"
 
 @interface LSMessageCell ()
 
@@ -252,7 +253,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 
 - (CGFloat)bubbleWidthForMessagePart:(LYRMessagePart *)messagePart
 {
-    if ([messagePart.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+    if ([messagePart.MIMEType isEqualToString:MIMETypeTextPlain()]) {
         NSString *string = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
         NSDictionary *attributes = @{NSFontAttributeName :LSMediumFont(14)};
         CGSize stringSize = [string sizeWithAttributes:attributes];
@@ -262,7 +263,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
         }
     }
     
-    if ([messagePart.MIMEType isEqualToString:LYRMIMETypeImagePNG] || [messagePart.MIMEType isEqualToString:@"image/jpeg"]) {
+    if ([messagePart.MIMEType isEqualToString:MIMETypeImagePNG()] || [messagePart.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
         UIImage *image = [UIImage imageWithData:messagePart.data];
         UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
         UIImageView *imageView = [[UIImageView alloc] initWithImage:imageToDisplay];

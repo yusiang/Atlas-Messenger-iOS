@@ -18,7 +18,7 @@ PODS:
   - KIF/XCTest (3.0.7)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - layer-client-messaging-schema (20140715104949748)
+  - layer-client-messaging-schema (20140717021208447)
   - layer-thrift (0.54.0):
     - thrift (~> 0.9.1)
   - LayerKit/Public (0.7.3):
@@ -26,7 +26,7 @@ PODS:
     - CocoaSPDY-Layer (~> 20140624141130730)
     - FMDB/standalone (~> 2.3)
     - FMDBMigrationManager (~> 1.2.2)
-    - layer-client-messaging-schema (~> 20140715104949748)
+    - layer-client-messaging-schema (~> 20140717021208447)
     - layer-thrift (~> 0.54.0)
     - RKSupport/RKPathTemplate
     - TransitionKit (~> 2.1.0)
@@ -35,7 +35,7 @@ PODS:
     - CocoaSPDY-Layer (~> 20140624141130730)
     - FMDB/standalone (~> 2.3)
     - FMDBMigrationManager (~> 1.2.2)
-    - layer-client-messaging-schema (~> 20140715104949748)
+    - layer-client-messaging-schema (~> 20140717021208447)
     - layer-thrift (~> 0.54.0)
     - LayerKit/Public
     - RKSupport/RKPathTemplate
@@ -72,9 +72,9 @@ SPEC CHECKSUMS:
   Instabug: b3b0a7d30ea6ce3242e7cc44813e801143b9009b
   KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
-  layer-client-messaging-schema: ff768ddb2ea1fe102c831be56fb3577cce777969
+  layer-client-messaging-schema: 3787c98f05854fe04e7879d3b1cae3e0c9898c14
   layer-thrift: d3a9850a8f7db40c3bb7ca60428b1c32b725a642
-  LayerKit: 6c67ac3414b36cb5bd79f0cbdee139756af0cbf4
+  LayerKit: c4e40ba5d4e11b16e471683417c3d4f62b4da01e
   RKSupport: 8fdbd2d96a5522ea57b17c8afb0e78eeeef74f0a
   sqlite3: 624a11eb032685c50adde3e0a549b1909eceb05e
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50

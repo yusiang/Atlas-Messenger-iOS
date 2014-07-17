@@ -20,7 +20,7 @@ CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
     CGSize itemSize;
     
     //If Message Part is plain text...
-    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+    if ([part.MIMEType isEqualToString:MIMETypeTextPlain()]) {
         UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, width * 0.70, 0)];
         textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         textView.font = LSMediumFont(14);
@@ -29,7 +29,7 @@ CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
     }
    
     //If Message Part is an image...
-    if ([part.MIMEType isEqualToString:LYRMIMETypeImagePNG] || [part.MIMEType isEqualToString:@"image/jpeg"]) {
+    if ([part.MIMEType isEqualToString:MIMETypeImagePNG()] || [part.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
         UIImage *image = [UIImage imageWithData:part.data];
         UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
         UIImageView *imageView = [[UIImageView alloc] initWithImage:imageToDisplay];
@@ -204,6 +204,8 @@ static CGFloat const LSComposeViewHeight = 40;
 - (void)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessages:self.messages indexPath:indexPath persistanceManager:self.persistanceManager];
+    NSData *data = [[[[self.messages objectAtIndex:indexPath.section] parts] objectAtIndex:0] data];
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     [self updateRecipientStatusForMessage:presenter.message];
     [cell updateWithPresenter:presenter];
 }
@@ -321,7 +323,7 @@ static CGFloat const LSComposeViewHeight = 40;
 - (void)composeView:(LSComposeView *)composeView sendMessageWithText:(NSString *)text
 {
     LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
-    LYRMessage *message = [self.layerClient messageWithConversation:self.conversation parts:@[ part ]];
+    LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
 
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];
@@ -368,8 +370,8 @@ static CGFloat const LSComposeViewHeight = 40;
     UIImage *compressedImage = [self jpegDataForImage:[[UIImage imageWithData:imageData] CGImage] constraint:300];
     NSData *compressedImageData = UIImageJPEGRepresentation(compressedImage, 0.25f);
     
-    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRMIMETypeImagePNG data:compressedImageData];
-    LYRMessage *message = [self.layerClient messageWithConversation:self.conversation parts:@[ part ]];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:MIMETypeImagePNG() data:compressedImageData];
+    LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];
@@ -504,48 +506,56 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
-//    __weak typeof(self) weakSelf = self;
-//    if ([object isKindOfClass:[LYRMessage class]]) {
-//        switch (changeType) {
-//            case LYRObjectChangeTypeCreate: {
-//                NSLog(@"Attempt to insert row at %lu", (unsigned long)index);
-//                [self.blockOperation addExecutionBlock:^{
-//                    [weakSelf.collectionView insertSections:[NSIndexSet indexSetWithIndex:newIndex]];
-//                    if(newIndex > 0) [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:newIndex - 1]];
-//                }];
-//            }
-//            break;
-//            case LYRObjectChangeTypeUpdate: {
-//                NSLog(@"Attempt to update row at %lu", (unsigned long)index);
-//                [self.blockOperation addExecutionBlock:^{
-//                    [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:index]];
-//                }];
-//            }
-//            break;
-//            case LYRObjectChangeTypeDelete: {
-//                NSLog(@"Attempt to delete row at %lu", (unsigned long)index);
-//                [self.blockOperation addExecutionBlock:^{
-//                    [weakSelf.collectionView deleteSections:[NSIndexSet indexSetWithIndex:index]];
-//                }];
-//            }
-//            break;
-//            default:
-//                break;
-//        }
-//    }
+    NSUInteger insertIndex = self.collectionView.numberOfSections + newIndex;
+    __weak typeof(self) weakSelf = self;
+    if ([object isKindOfClass:[LYRMessage class]]) {
+        switch (changeType) {
+            case LYRObjectChangeTypeCreate: {
+                [self.blockOperation addExecutionBlock:^{
+                    [weakSelf insertCellAtIndex:insertIndex];
+                }];
+            }
+            break;
+            case LYRObjectChangeTypeUpdate: {
+                [self.blockOperation addExecutionBlock:^{
+                    [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:index]];
+                }];
+            }
+            break;
+            case LYRObjectChangeTypeDelete: {
+                [self.blockOperation addExecutionBlock:^{
+                    [weakSelf.collectionView deleteSections:[NSIndexSet indexSetWithIndex:index]];
+                }];
+            }
+            break;
+            default:
+                break;
+        }
+    }
+}
+
+- (void)insertCellAtIndex:(NSUInteger)insertIndex
+{
+    if (insertIndex > self.messages.count) return;
+    NSLog(@"The number of section is %ld", (long)self.collectionView.numberOfSections);
+    NSLog(@"Attempt to insert row at %lu", (unsigned long)insertIndex);
+    if(insertIndex > 0) {
+        NSLog(@"Cell configured at index %lu", insertIndex - 1);
+        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:insertIndex - 1]];
+    }
+    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:insertIndex]];
+
 }
 
 - (void) observerDidChangeContent:(LSNotificationObserver *)observer
 {
     [self fetchMessages];
-    [self.collectionView reloadData];
-//    [self.collectionView performBatchUpdates:^{
-//        [self.blockOperation  start];
-//        [self fetchMessages];
-//        [[self.collectionView collectionViewLayout] invalidateLayout];
-//        [self scrollToBottomOfCollectionView];
-//    } completion:nil];
-//    self.blockOperation = nil;
+    [self.collectionView performBatchUpdates:^{
+        [self.blockOperation  start];
+    } completion:^(BOOL finished) {
+        [self scrollToBottomOfCollectionView];
+    }];
+    self.blockOperation = nil;
 }
 
 - (void)scrollToBottomOfCollectionView

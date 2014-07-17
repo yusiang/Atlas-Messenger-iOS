@@ -92,3 +92,20 @@ CGRect LSImageRectForThumb(CGSize size, NSUInteger maxConstraint)
     }
     return thumbRect;
 }
+
+NSString *MIMETypeTextPlain()
+{
+    return @"text/plain";
+}
+
+NSString *MIMETypeImagePNG()
+{
+    return @"image/png";
+}
+
+NSString *MIMETypeImageJPEG()
+{
+    return @"image/jpeg";
+}
+
+
