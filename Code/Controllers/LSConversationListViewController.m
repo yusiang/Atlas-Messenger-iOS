@@ -64,10 +64,8 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [self fetchLayerConversations];
     [self.tableView reloadData];
     
-    if (!LSIsRunningTests()){
-        self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:self.conversations];
-        self.notificationObserver.delegate = self;
-    }
+    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:self.conversations];
+    self.notificationObserver.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated

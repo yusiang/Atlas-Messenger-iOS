@@ -141,10 +141,16 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
                 self.authenticatedSession = session;
                 
                 [self.layerClient authenticateWithIdentityToken:loginInfo[@"layer_identity_token"] completion:^(NSString *authenticatedUserID, NSError *error) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
-                        completion(user, error);
-                    });
+                    if (error) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            completion(nil, error);
+                        });
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
+                            completion(user, error);
+                        });
+                    }
                 }];
             }
         }] resume];

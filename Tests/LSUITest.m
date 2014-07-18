@@ -220,7 +220,7 @@
     
     [self systemLoginUser:[self testUserWithNumber:1]];
     
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email]]];
 }
 
 //11. Send three messages to a user. Log out. Log back in with the same account. Verify that the old messages are still there in proper order.
@@ -243,8 +243,8 @@
     [self deauthenticate];
     
     [self systemLoginUser:[self testUserWithNumber:1]];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName]]];
-    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email]]];
     
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:[self testUserWithNumber:1].fullName]];
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:[self testUserWithNumber:1].fullName]];
@@ -268,17 +268,17 @@
     [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email]]];
     
     [self startConversationWithUsers:@[[self testUserWithNumber:3]]];
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:3].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:3].email]]];
     
     [self startConversationWithUsers:@[[self testUserWithNumber:2], [self testUserWithNumber:3]]];
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName, [self testUserWithNumber:3].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email, [self testUserWithNumber:3].email]]];
 }
 
 //13. Send three messages to a user. Log out. Log back in as the recipient user. Verify that the messages are there, marked as sent by the sender, in proper order.
@@ -301,12 +301,12 @@
 
     [self systemLoginUser:[self testUserWithNumber:2]];
 
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].fullName]]];
-    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].email]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].email]]];
 
-    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:[self testUserWithNumber:1].fullName]];
-    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:[self testUserWithNumber:1].fullName]];
-    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is another test message" andUser:[self testUserWithNumber:1].fullName]];
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:[self testUserWithNumber:1].email]];
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:[self testUserWithNumber:1].email]];
+    [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is another test message" andUser:[self testUserWithNumber:1].email]];
 }
 
 //14. Create three users. Log in as one of them. Start individual conversations with each contact and with both together. Open one of the individual conversations and send three messages. Open the group chat and send one message. Log out and back in as the recipient of the three messages. Verify that two conversations are listed – one with three messages and another group chat with one message, all with the proper participants.
@@ -326,19 +326,19 @@
     [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email]]];
     
     [self startConversationWithUsers:@[[self testUserWithNumber:3]]];
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:3].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:3].email]]];
     
     [self startConversationWithUsers:@[[self testUserWithNumber:2], [self testUserWithNumber:3]]];
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName, [self testUserWithNumber:3].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email, [self testUserWithNumber:3].email]]];
     
-    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email]]];
     [self sendMessageWithText:@"Hello"];
     [self sendMessageWithText:@"This is a test message"];
     [self sendMessageWithText:@"This is another test message"];
@@ -346,7 +346,7 @@
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
 
-    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName, [self testUserWithNumber:3].fullName]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email, [self testUserWithNumber:3].email]]];
     [self sendMessageWithText:@"Hello"];
     
     [self deauthenticate];
@@ -376,15 +376,15 @@
     [self deauthenticate];
     
     [self systemLoginUser:[self testUserWithNumber:2]];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].fullName]]];
-    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].email]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].email]]];
     [self sendMessageWithText:@"This is a test reply message"];
     
     [self deauthenticate];
     
     [self systemLoginUser:[self testUserWithNumber:1]];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName]]];
-    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email]]];
     
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:[self testUserWithNumber:1].fullName]];
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test reply message" andUser:[self testUserWithNumber:2].fullName]];
@@ -407,19 +407,19 @@
     [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email]]];
     
     [self startConversationWithUsers:@[[self testUserWithNumber:3]]];
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:3].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:3].email]]];
     
     [self startConversationWithUsers:@[[self testUserWithNumber:2], [self testUserWithNumber:3]]];
     [tester tapViewWithAccessibilityLabel:@"Back"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
-    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].fullName, [self testUserWithNumber:3].fullName]]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:2].email, [self testUserWithNumber:3].email]]];
     
-    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:3].fullName]]];
+    [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:3].email]]];
     [self sendMessageWithText:@"Hello"];
     [self sendMessageWithText:@"This is a test message"];
     [self sendMessageWithText:@"This is another test message"];
@@ -467,7 +467,7 @@
     
     [tester tapViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].fullName]]];
     
-    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[self testUserWithNumber:1].fullName]];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForemail:[self testUserWithNumber:1].fullName]];
 }
 
 //19. Push three images to known locations. Create three users. Log in as one and create a group chat with the other two. Send two text messages and one of the photos. Log in as the second user. Send another photo and two additional text messages. Log in as the third user. Verify that the prior messages are all there in the proper order from the proper senders.
@@ -520,11 +520,11 @@
     
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:[self testUserWithNumber:2].fullName]];
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is another test message" andUser:[self testUserWithNumber:2].fullName]];
-    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[self testUserWithNumber:2].fullName]];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForemail:[self testUserWithNumber:2].fullName]];
     
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"Hello" andUser:[self testUserWithNumber:1].fullName]];
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:@"This is a test message" andUser:[self testUserWithNumber:1].fullName]];
-    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[self testUserWithNumber:1].fullName]];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForemail:[self testUserWithNumber:1].fullName]];
 }
 
 //======== Factory Methods =========//
@@ -581,6 +581,7 @@
 
 - (void)systemLoginUser:(LSUser *)user
 {
+    [tester waitForTimeInterval:4];
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
     [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
         
@@ -607,14 +608,35 @@
         [tester tapViewWithAccessibilityLabel:user.fullName];
     }
     [tester tapViewWithAccessibilityLabel:@"Done"];
+    [self sendMessageWithText:@"Hello"];
     [tester waitForViewWithAccessibilityLabel:@"Conversation"];
 }
 
 - (NSString *)conversationCellLabelForParticipants:(NSArray *)participantNames
 {
+    NSSet *set = [[NSSet alloc] initWithArray:participantNames];
+    NSArray *sortedNames = [self sortedFullNamesForParticiapnts:set];
     LSConversationCellPresenter *presenter = [LSConversationCellPresenter new];
-    NSString *string = [presenter conversationLabelForParticipantNames:participantNames];
+    NSString *string = [presenter conversationLabelForParticipantNames:sortedNames];
     return string;
+}
+
+- (NSArray *)sortedFullNamesForParticiapnts:(NSSet *)participants
+{
+    NSError *error;
+    LSSession *session = [self.persistenceManager persistedSessionWithError:&error];
+    LSUser *authenticatedUser = session.user;
+    
+    NSMutableArray *fullNames = [NSMutableArray new];
+    NSSet *persistedUsers = [self.persistenceManager persistedUsersWithError:&error];
+    for (NSString *email in participants) {
+        for (LSUser *persistedUser in persistedUsers) {
+            if ([email isEqualToString:persistedUser.email] && ![email isEqualToString:authenticatedUser.email]) {
+                [fullNames addObject:persistedUser.fullName];
+            }
+        }
+    }
+    return [fullNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 }
 
 #pragma mark
@@ -630,8 +652,6 @@
     NSError *error;
     LSSession *session = [self.persistenceManager persistedSessionWithError:&error];
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:session.user.fullName]];
-    
-    [tester waitForTimeInterval:5];
 }
 
 - (NSString *)messageCellLabelForText:(NSString *)text andUser:(NSString *)fullName
@@ -651,13 +671,13 @@
 -(void)sendPhoto
 {
     [tester tapViewWithAccessibilityLabel:@"Send Button"];
-    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForUserID:[self testUserWithNumber:1].fullName]];
+    [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForemail:[self testUserWithNumber:1].fullName]];
     [tester waitForTimeInterval:10];
 }
 
-- (NSString *)imageCelLabelForUserID:(NSString *)fullName
+- (NSString *)imageCelLabelForemail:(NSString *)fullName
 {
-    return [NSString stringWithFormat:@"Photo sent by %@", fullName];
+    return @"image";
 }
 
 #pragma mark
@@ -670,7 +690,7 @@
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
-    [tester waitForTimeInterval:2];
+//    [tester waitForTimeInterval:2];
 }
 
 - (LSUser *)testUserWithNumber:(NSUInteger)number

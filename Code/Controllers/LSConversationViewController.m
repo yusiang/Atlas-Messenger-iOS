@@ -144,10 +144,9 @@ static CGFloat const LSComposeViewHeight = 40;
     [self fetchMessages];
     [self.collectionView reloadData];
     [self scrollToBottomOfCollectionView];
-    if (!LSIsRunningTests()) {
-        self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
-        self.notificationObserver.delegate = self;
-    }
+
+    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
+    self.notificationObserver.delegate = self;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -204,8 +203,6 @@ static CGFloat const LSComposeViewHeight = 40;
 - (void)configureCell:(LSMessageCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessages:self.messages indexPath:indexPath persistanceManager:self.persistanceManager];
-    NSData *data = [[[[self.messages objectAtIndex:indexPath.section] parts] objectAtIndex:0] data];
-    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     [self updateRecipientStatusForMessage:presenter.message];
     [cell updateWithPresenter:presenter];
 }

@@ -81,6 +81,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
 {
     // Set Sender Label
     self.senderLabel.text = presenter.conversationLabel;
+    self.accessibilityLabel = presenter.conversationLabel;
     
     // Set Last Message Text 
     LYRMessage *message = presenter.message;

@@ -81,9 +81,12 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
 - (void)setSelected:(BOOL)selected
 {
     if (selected) {
+        [self.cutout removeFromSuperview];
         [self addSubview:self.checkMark];
+
     } else {
         [self.checkMark removeFromSuperview];
+        [self addSubview:self.cutout];
     }
 }
 @end
