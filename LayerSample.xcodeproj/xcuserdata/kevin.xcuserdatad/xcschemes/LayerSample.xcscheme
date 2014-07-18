@@ -48,6 +48,9 @@
                   Identifier = "LSInMemoryPersistenceManagerTest">
                </Test>
                <Test
+                  Identifier = "LSMessagingTest">
+               </Test>
+               <Test
                   Identifier = "LSOnDiskPersistenceManagerTest">
                </Test>
                <Test

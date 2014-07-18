@@ -61,7 +61,7 @@
     LSUser *user2 = [self registerUser:[LSTestUser testUserWithNumber:2]];
     [tester waitForTimeInterval:2];
     
-    LYRConversation *conversation = [self.controller.layerClient conversationWithParticipants:@[user1.userID, user2.userID]];
+    LYRConversation *conversation = [LYRConversation conversationWithParticipants:@[user1.userID, user2.userID]];
     
     for (int i = 0; i < 1000; i++) {
         NSLog(@"Message Sent %d", i);
@@ -123,7 +123,7 @@
 - (void)sendMessageWithText:(NSString *)sampleText conversation:(LYRConversation *)conversation
 {
     LYRMessagePart *part = [LYRMessagePart messagePartWithText:sampleText];
-    LYRMessage *message = [self.controller.layerClient messageWithConversation:conversation parts:@[part]];
+    LYRMessage *message = [LYRMessage messageWithConversation:conversation parts:@[part]];
     
     NSError *error;
     BOOL success = [self.controller.layerClient sendMessage:message error:&error];

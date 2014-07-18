@@ -40,8 +40,6 @@
 {
     LYRSetLogLevelFromEnvironment();
     
-    LYRTestCleanKeychain();
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     
@@ -175,7 +173,10 @@
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     conversationController.navigationBar.barTintColor = LSLighGrayColor();
     conversationController.navigationBar.tintColor = LSBlueColor();
-    [self.navigationController presentViewController:conversationController animated:YES completion:nil];
+    [self.navigationController presentViewController:conversationController animated:YES completion:^{
+        //
+    }];
+    //[self.navigationController presentViewController:conversationController animated:YES completion:nil];
 }
 
 @end

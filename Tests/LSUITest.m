@@ -124,7 +124,7 @@
 {
     [self systemRegisterUser:[self testUserWithNumber:0]];
     [tester tapViewWithAccessibilityLabel:@"New"];
-    [tester waitForViewWithAccessibilityLabel:@"No Contacts"];
+    [tester waitForViewWithAccessibilityLabel:@"Empty Contacts"];
     
     [self deauthenticate];
     
@@ -148,9 +148,9 @@
     [tester waitForViewWithAccessibilityLabel:[self testUserWithNumber:2].fullName];
     [tester tapViewWithAccessibilityLabel:[self testUserWithNumber:2].fullName];
     
-    [tester waitForViewWithAccessibilityLabel:@"selectionIndicator"];
+    [tester waitForViewWithAccessibilityLabel:@"Selected Checkmark"];
     [tester tapViewWithAccessibilityLabel:[self testUserWithNumber:2].fullName];
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"selectionIndicator"];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Selected Checkmark"];
 }
 
 //7. Register two users. Log in. Tap the contact to check its checkbox. Tap the "+" to start a conversation and verify that the proper Conversation view is shown.
@@ -213,9 +213,9 @@
     [self systemLoginUser:[self testUserWithNumber:1]];
     
     [self startConversationWithUsers:@[[self testUserWithNumber:2]]];
-    
-    [tester waitForTimeInterval:5];
-    
+    [self sendMessageWithText:@"Hello"];
+    [tester waitForTimeInterval:1];
+   
     [self deauthenticate];
     
     [self systemLoginUser:[self testUserWithNumber:1]];
@@ -555,7 +555,7 @@
     [tester enterText:testUser.email intoViewWithAccessibilityLabel:@"Email"];
     [tester enterText:testUser.password intoViewWithAccessibilityLabel:@"Password"];
     [tester enterText:testUser.password intoViewWithAccessibilityLabel:@"Confirmation"];
-    [tester tapViewWithAccessibilityLabel:@"Register Button"];
+    [tester tapViewWithAccessibilityLabel:@"Done"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
 }
 
@@ -564,7 +564,7 @@
     [tester tapViewWithAccessibilityLabel:@"Login Button"];
     [tester enterText:testUser.email intoViewWithAccessibilityLabel:@"Email"];
     [tester enterText:testUser.password intoViewWithAccessibilityLabel:@"Password"];
-    [tester tapViewWithAccessibilityLabel:@"Login Button"];
+    [tester tapViewWithAccessibilityLabel:@"Done"];
     [tester waitForViewWithAccessibilityLabel:@"Conversations"];
 }
 
@@ -583,6 +583,7 @@
 {
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
     [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
+        
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
@@ -664,11 +665,12 @@
 
 - (void)deauthenticate
 {
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:2 timeoutInterval:5.0];
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
     [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
+    [tester waitForTimeInterval:2];
 }
 
 - (LSUser *)testUserWithNumber:(NSUInteger)number
