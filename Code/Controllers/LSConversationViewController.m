@@ -374,11 +374,10 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)composeView:(LSComposeView *)composeView sendMessageWithImage:(UIImage *)image
 {
-    NSData *imageData = UIImagePNGRepresentation(image);
-    UIImage *compressedImage = [self jpegDataForImage:[[UIImage imageWithData:imageData] CGImage] constraint:300];
-    NSData *compressedImageData = UIImageJPEGRepresentation(compressedImage, 0.25f);
+    UIImage *adjustedImage = [self adjustOrientationForImage:image];;
+    NSData *compressedImageData = [self jpegDataForImage:adjustedImage constraint:300];
     
-    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:MIMETypeImagePNG() data:compressedImageData];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:MIMETypeImageJPEG() data:compressedImageData];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     
     NSError *error;
@@ -397,17 +396,33 @@ static CGFloat const LSComposeViewHeight = 40;
 
 }
 
-// Photo JPEG Compression
-- (UIImage *)jpegDataForImage:(CGImageRef)image constraint:(CGFloat)constraint
+- (UIImage *)adjustOrientationForImage:(UIImage *)originalImage
 {
-    CGFloat width = 1.0f * CGImageGetWidth(image);
-    CGFloat height = 1.0f * CGImageGetHeight(image);
+    UIGraphicsBeginImageContextWithOptions(originalImage.size, NO, originalImage.scale);
+    [originalImage drawInRect:(CGRect){0, 0, originalImage.size}];
+    UIImage *fixedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return fixedImage;
+}
+
+// Photo JPEG Compression
+- (NSData *)jpegDataForImage:(UIImage *)image constraint:(CGFloat)constraint
+{
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+    CGImageRef ref = [[UIImage imageWithData:imageData] CGImage];
+    
+    CGFloat width = 1.0f * CGImageGetWidth(ref);
+    CGFloat height = 1.0f * CGImageGetHeight(ref);
+    
     CGSize previousSize = CGSizeMake(width, height);
     CGSize newSize = [self sizeFromOriginalSize:previousSize withMaxConstraint:constraint];
+    
     UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
-    UIImage *assetImage = [UIImage imageWithCGImage:image];
+    UIImage *assetImage = [UIImage imageWithCGImage:ref];
     [assetImage drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    return UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *imageToCompress = UIGraphicsGetImageFromCurrentImageContext();
+    
+    return UIImageJPEGRepresentation(imageToCompress, 0.25f);
 }
 
 // Photo Resizing
