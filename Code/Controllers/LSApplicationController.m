@@ -47,7 +47,18 @@
 
 - (void)layerClient:(LYRClient *)client didReceiveAuthenticationChallengeWithNonce:(NSString *)nonce
 {
-    NSLog(@"Layer Client did recieve authentication challenge");
+     NSLog(@"Layer Client did recieve authentication challenge");
+    LSUser *user = self.APIManager.authenticatedSession.user;
+    [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
+        if (user && !error) {
+            NSLog(@"silent auth successful");
+        } else {
+            [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+                NSLog(@"Silent auth failed, deauthenticating");
+            }];
+        }
+    }];
+   
 }
 
 - (void)layerClient:(LYRClient *)client didAuthenticateAsUserID:(NSString *)userID

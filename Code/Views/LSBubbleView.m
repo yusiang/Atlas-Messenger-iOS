@@ -105,11 +105,16 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
         self.imageView.image = nil;
         self.textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         self.textView.accessibilityLabel = self.textView.text;
-    } else if([part.MIMEType isEqualToString:MIMETypeImagePNG()] || [part.MIMEType isEqualToString:MIMETypeImagePNG()]){
+    } else if([part.MIMEType isEqualToString:MIMETypeImagePNG()] ) {
         self.textView.text = nil;
         UIImage *image = [[UIImage alloc] initWithData:part.data];
-        UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
-        [self.imageView setImage:imageToDisplay];
+        //UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
+        [self.imageView setImage:image];
+        self.imageView.accessibilityLabel = @"image";
+    } else if ([part.MIMEType isEqualToString:MIMETypeImageJPEG()]){
+        self.textView.text = nil;
+        UIImage *image = [[UIImage alloc] initWithData:part.data];
+        [self.imageView setImage:image];
         self.imageView.accessibilityLabel = @"image";
     }
     

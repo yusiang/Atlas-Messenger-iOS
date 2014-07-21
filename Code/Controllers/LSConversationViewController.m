@@ -29,10 +29,21 @@ CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
     }
    
     //If Message Part is an image...
-    if ([part.MIMEType isEqualToString:MIMETypeImagePNG()] || [part.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
+    if ([part.MIMEType isEqualToString:MIMETypeImagePNG()]) {
         UIImage *image = [UIImage imageWithData:part.data];
-        UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:imageToDisplay];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+        
+        if (imageView.frame.size.height > imageView.frame.size.width) {
+            itemSize = CGSizeMake(rect.size.width, 300);
+        } else {
+            CGFloat ratio = ((rect.size.width * .75) / imageView.frame.size.width);
+            itemSize = CGSizeMake(rect.size.width, imageView.frame.size.height * ratio);
+        }
+    }
+    
+    if ([part.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
+        UIImage *image = [UIImage imageWithData:part.data];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
 
         if (imageView.frame.size.height > imageView.frame.size.width) {
             itemSize = CGSizeMake(rect.size.width, 300);
@@ -43,7 +54,7 @@ CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
     }
     
     if (30 > itemSize.height) {
-        itemSize = CGSizeMake(itemSize.width, 30);
+        itemSize = CGSizeMake(rect.size.width, 30);
     }
     
     return itemSize;

@@ -82,7 +82,7 @@
     // Declaring that I want to recieve push!
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
     
     return YES;
 }
@@ -100,7 +100,7 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
 //    NSError *error;
-//    BOOL success = [self.applicationController.layerClient updateDeviceToken:deviceToken error:&error];
+//    BOOL success = [self.applicationController.layerClient updateRemoteNotificationDeviceToken:deviceToken error:&error];
 //    if (success) {
 //        NSLog(@"Application did register for remote notifications");
 //    } else {
@@ -110,7 +110,13 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    //TODO: Implement once LayerKit supports.
+//    NSError *error;
+//    BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:completionHandler];
+//    if (success) {
+//        NSLog(@"Application did remote notification sycn");
+//    } else {
+//        NSLog(@"Error handling push notification: %@", error);
+//    }
 }
 
 - (void)userDidAuthenticateNotification:(NSNotification *)notification

@@ -265,8 +265,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     
     if ([messagePart.MIMEType isEqualToString:MIMETypeImagePNG()] || [messagePart.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
         UIImage *image = [UIImage imageWithData:messagePart.data];
-        UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:imageToDisplay];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
         
         if (imageView.frame.size.height > imageView.frame.size.width) {
             CGFloat ratio = 300 / imageView.frame.size.height;
