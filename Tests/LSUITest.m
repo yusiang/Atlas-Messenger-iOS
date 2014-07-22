@@ -16,7 +16,6 @@
 #import "LSConversationViewController.h"
 #import "LSAuthenticationViewController.h"
 #import "LSUser.h"
-#import "LYRLog.h"
 #import "LYRCountdownLatch.h"
 #import "LSPersistenceManager.h"
 #import "LSConversationCellPresenter.h"

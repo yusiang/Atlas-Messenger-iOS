@@ -7,24 +7,13 @@
 //
 
 #import <LayerKit/LayerKit.h>
-#import <LayerKit/LYRLog.h>
-#import <LayerKit/LYRTestUtilities.h>
 #import "LSAppDelegate.h"
 #import "LSConversationListViewController.h"
 #import "LSAPIManager.h"
-#import "LYRTestUtilities.h"
 #import "LSUtilities.h"
 #import "LSUIConstants.h"
-#import "LYRConfiguration.h"
 #import <Crashlytics/Crashlytics.h>
 #import <Instabug/Instabug.h>
-
-@interface LYRClient ()
-
-- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID databasePath:(NSString *)path;
-- (id)initWithConfiguration:(LYRConfiguration *)configuration appID:(NSUUID *)appID databasePath:(NSString *)path;
-
-@end
 
 @interface LSAppDelegate ()
 
@@ -38,9 +27,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    LYRTestCleanKeychain();
-    LYRSetLogLevelFromEnvironment();
-    
+//    LYRTestCleanKeychain();
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     
