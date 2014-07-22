@@ -101,7 +101,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
     // Set Date Text
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"hh:mm a"];
-    self.dateLabel.text = [formatter stringFromDate:presenter.conversation.lastMessageReceivedAt];
+    self.dateLabel.text = [formatter stringFromDate:presenter.conversation.lastMessage.sentAt];
 }
 
 #pragma mark
