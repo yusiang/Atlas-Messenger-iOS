@@ -141,10 +141,16 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
                 self.authenticatedSession = session;
                 
                 [self.layerClient authenticateWithIdentityToken:loginInfo[@"layer_identity_token"] completion:^(NSString *authenticatedUserID, NSError *error) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
-                        completion(user, error);
-                    });
+                    if (error) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            completion(nil, error);
+                        });
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
+                            completion(user, error);
+                        });
+                    }
                 }];
             }
         }] resume];
@@ -179,15 +185,14 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     }
 }
 
-- (void)resumeSession:(LSSession *)session completion:(void(^)(LSUser *user, NSError *error))completion
+- (BOOL)resumeSession:(LSSession *)session error:(NSError **)error
 {
-    if (session) {
-        [self authenticateWithEmail:session.user.email password:session.user.password completion:^(LSUser *user, NSError *error) {
-            completion(user, error);
-        }];
+    if (self.layerClient.authenticatedUserID && session) {
+        self.authenticatedSession = session;
+        return YES;
     } else {
-        NSError *error = [NSError errorWithDomain:@"Authentication Error" code:500 userInfo:@{@"error" : @"No authenticated session"}];
-        completion (nil, error);
+        if (error) *error = [NSError errorWithDomain:@"Authentication Error" code:500 userInfo:@{@"error" : @"No authenticated session"}];
+        return NO;
     }
 }
 

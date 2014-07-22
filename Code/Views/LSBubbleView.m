@@ -8,6 +8,7 @@
 
 #import "LSBubbleView.h"
 #import "LSUIConstants.h"
+#import "LSUtilities.h"
 
 static inline CGFloat LSDegreesToRadians(CGFloat angle)
 {
@@ -100,15 +101,21 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
 {
     LYRMessagePart *part = [presenter.message.parts objectAtIndex:[presenter indexForPart]];
     
-    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+    if ([part.MIMEType isEqualToString:MIMETypeTextPlain()]) {
         self.imageView.image = nil;
         self.textView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
-        
-    } else if([part.MIMEType isEqualToString:LYRMIMETypeImagePNG]){
+        self.textView.accessibilityLabel = self.textView.text;
+    } else if([part.MIMEType isEqualToString:MIMETypeImagePNG()] ) {
         self.textView.text = nil;
-        [self.imageView setImage:[[UIImage alloc] initWithData:part.data]];
-    } else if ([part.MIMEType isEqualToString:@"image/jpeg"]) {
-        [self.imageView setImage:[[UIImage alloc] initWithData:part.data]];
+        UIImage *image = [[UIImage alloc] initWithData:part.data];
+        //UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
+        [self.imageView setImage:image];
+        self.imageView.accessibilityLabel = @"image";
+    } else if ([part.MIMEType isEqualToString:MIMETypeImageJPEG()]){
+        self.textView.text = nil;
+        UIImage *image = [[UIImage alloc] initWithData:part.data];
+        [self.imageView setImage:image];
+        self.imageView.accessibilityLabel = @"image";
     }
     
     if ([presenter messageWasSentByAuthenticatedUser]) {

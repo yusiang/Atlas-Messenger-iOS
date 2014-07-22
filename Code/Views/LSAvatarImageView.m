@@ -7,6 +7,7 @@
 //
 
 #import "LSAvatarImageView.h"
+#import "LSUIConstants.h"
 
 @implementation LSAvatarImageView
 
@@ -15,6 +16,7 @@
     self = [super init];
     if (self) {
         self.clipsToBounds = TRUE;
+        self.backgroundColor = LSGrayColor();
     }
     return self;
 }

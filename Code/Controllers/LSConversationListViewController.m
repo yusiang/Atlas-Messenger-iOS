@@ -10,6 +10,7 @@
 #import "LSContactsSelectionViewController.h"
 #import "LSConversationCell.h"
 #import "LSUIConstants.h"
+#import "LSUtilities.h"
 
 @interface LSConversationListViewController () <LSContactsSelectionViewControllerDelegate, LSNotificationObserverDelegate>
 
@@ -50,9 +51,6 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = [UIColor whiteColor];
     [self.tableView registerClass:[LSConversationCell class] forCellReuseIdentifier:LSConversationCellID];
-    
-    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversation:nil];
-    self.notificationObserver.delegate = self;
 }
 
 - (void)dealloc
@@ -65,11 +63,15 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [super viewWillAppear:animated];
     [self fetchLayerConversations];
     [self.tableView reloadData];
+    
+    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:self.conversations];
+    self.notificationObserver.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    self.notificationObserver = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -85,7 +87,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     NSAssert(self.layerClient, @"Layer Controller should not be `nil`.");
     if (self.conversations) self.conversations = nil;
     NSSet *conversations = (NSSet *)[self.layerClient conversationsForIdentifiers:nil];
-    self.conversations = [[conversations allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
+    self.conversations = [[conversations allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessage.sentAt" ascending:NO]]];
 }
 
 - (void)conversationsUpdated:(NSNotification *)notification
@@ -167,7 +169,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [self dismissViewControllerAnimated:YES completion:^{
         if (contacts.count > 0) {
             LSConversationViewController *controller = [LSConversationViewController new];
-            LYRConversation *conversation = [self.layerClient conversationWithParticipants:[[contacts valueForKey:@"userID"] allObjects]];
+            LYRConversation *conversation = [LYRConversation conversationWithParticipants:[[contacts valueForKey:@"userID"] allObjects]];
             controller.conversation = conversation;
             controller.layerClient = self.layerClient;
             controller.persistanceManager = self.persistenceManager;
@@ -208,40 +210,17 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void) observerWillChangeContent:(LSNotificationObserver *)observer
 {
-    [self.tableView beginUpdates];
+    //Nothing for now
 }
 
 - (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
-    if (!changeType == LYRObjectChangeTypeDelete) [self fetchLayerConversations];
-    NSUInteger conversationIndex = [self.conversations indexOfObject:object];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:conversationIndex inSection:0];
-    
-    if ([object isKindOfClass:[LYRConversation class]]) {
-        switch (changeType) {
-            case LYRObjectChangeTypeCreate:
-                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-                break;
-            case LYRObjectChangeTypeUpdate:
-                [self configureCell:(LSConversationCell *)[self.tableView cellForRowAtIndexPath:indexPath] forIndexPath:indexPath];
-                break;
-            case LYRObjectChangeTypeDelete:
-                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-                [self fetchLayerConversations];
-                break;
-            default:
-                break;
-        }
-    }
-    
-    if ([object isKindOfClass:[LYRMessage class]]) {
-        //Nothing for now
-    }
+    // Nothing for now
 }
 
 - (void) observerDidChangeContent:(LSNotificationObserver *)observer
 {
     [self fetchLayerConversations];
-    [self.tableView endUpdates];
+    [self.tableView reloadData];
 }
 @end

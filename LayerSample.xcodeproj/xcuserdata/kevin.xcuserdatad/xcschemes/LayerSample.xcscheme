@@ -39,40 +39,10 @@
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "LSAPIManagerTest">
-               </Test>
-               <Test
                   Identifier = "LSAPIManagerTest/testExample">
                </Test>
                <Test
-                  Identifier = "LSInMemoryPersistenceManagerTest">
-               </Test>
-               <Test
-                  Identifier = "LSOnDiskPersistenceManagerTest">
-               </Test>
-               <Test
-                  Identifier = "LSOnDiskPersistenceManagerTest/testInitializingWithEmptyDirectory">
-               </Test>
-               <Test
-                  Identifier = "LSOnDiskPersistenceManagerTest/testLoadingNonExistantSessionFileFailsWithoutError">
-               </Test>
-               <Test
-                  Identifier = "LSOnDiskPersistenceManagerTest/testLoadingNonExistantUsersFileFailsWithoutError">
-               </Test>
-               <Test
-                  Identifier = "LSOnDiskPersistenceManagerTest/testRemovingAllObjects">
-               </Test>
-               <Test
-                  Identifier = "LSOnDiskPersistenceManagerTest/testSessionPersistence">
-               </Test>
-               <Test
-                  Identifier = "LSOnDiskPersistenceManagerTest/testUsersPersistence">
-               </Test>
-               <Test
-                  Identifier = "LSPersistenceManagerTest">
-               </Test>
-               <Test
-                  Identifier = "LSPersistenceManagerTest/testRaisesOnAttempToInit">
+                  Identifier = "LSMessagingTest">
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifyASentPhotoIsRecievedByTheRecipient">

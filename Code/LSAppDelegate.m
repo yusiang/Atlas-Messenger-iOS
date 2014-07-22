@@ -7,40 +7,16 @@
 //
 
 #import <LayerKit/LayerKit.h>
-#import <LayerKit/LYRLog.h>
-#import <LayerKit/LYRTestUtilities.h>
 #import "LSAppDelegate.h"
 #import "LSConversationListViewController.h"
 #import "LSAPIManager.h"
-#import "LYRTestUtilities.h"
 #import "LSUtilities.h"
 #import "LSUIConstants.h"
-#import "LYRConfiguration.h"
-
 #import <Crashlytics/Crashlytics.h>
-
-static void LSAlertWithError(NSError *error)
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Unexpected Error"
-                                                        message:[error localizedDescription]
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alertView show];
-}
-
-
-@interface LYRClient ()
-
-- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID databasePath:(NSString *)path;
-- (id)initWithConfiguration:(LYRConfiguration *)configuration appID:(NSUUID *)appID databasePath:(NSString *)path;
-
-@end
+#import <Instabug/Instabug.h>
 
 @interface LSAppDelegate ()
 
-@property (nonatomic) LYRClient *layerClient;
-@property (nonatomic) LSAPIManager *APIManager;
-@property (nonatomic) LSPersistenceManager *persistenceManager;
 @property (nonatomic) UINavigationController *navigationController;
 
 @end
@@ -51,17 +27,11 @@ static void LSAlertWithError(NSError *error)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    LYRTestCleanKeychain();
-    LYRSetLogLevelFromEnvironment();
+//    LYRTestCleanKeychain();
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     
-    NSDictionary *configDictionary = @{ LYRConfigurationCertificationURLKey: @"http://10.66.0.12:5555/certificates",
-                                        LYRConfigurationAuthenticationURLKey: @"https://10.66.0.12:7072/",
-                                        LYRConfigurationMessagingURLKey: @"https://10.66.0.12:7072/" };
-    
-    LYRConfiguration *configuration = [LYRConfiguration configurationWithDictionary:configDictionary];
-    
-    LYRClient *layerClient = [[LYRClient alloc] initWithConfiguration:configuration appID:LSLayerAppID() databasePath:LSLayerPersistencePath()];
-    [layerClient setValue:@(1) forKeyPath:@"synchronizationManager.syncInterval"];
+    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
@@ -69,10 +39,7 @@ static void LSAlertWithError(NSError *error)
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         NSLog(@"Started with success: %d, %@", success, error);
     }];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
-    
+
     LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
     authenticationViewController.layerClient = self.applicationController.layerClient;
     authenticationViewController.APIManager = self.applicationController.APIManager;
@@ -84,36 +51,43 @@ static void LSAlertWithError(NSError *error)
     
     LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
     
-    if (session) {
-        [self.applicationController.APIManager resumeSession:session completion:^(LSUser *user, NSError *error) {
-            if (user) {
-                NSLog(@"Session resumed with user %@", user);
-                [self presentConversationsListViewController];
-            } else {
-                NSLog(@"An error occurred while resuming session");
-            }
-        }];
+    NSError *error = nil;
+    if ([self.applicationController.APIManager resumeSession:session error:&error]) {
+        NSLog(@"Session resumed: %@", session);
+        [self loadContacts];
+        [self presentConversationsListViewController];
     }
     
     [self.window makeKeyAndVisible];
     
-    //Kicking off Crashlytics
+    // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
-//    //Declaring that I want to recieve push!
-//    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    // Kicking off Instabg
+    [Instabug startWithToken:@"d17f36fc46f0b8073b5db3feb2d09888" captureSource:IBGCaptureSourceUIKit invocationEvent:IBGInvocationEventShake];
+    
+    // Declaring that I want to recieve push!
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
     
     return YES;
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    [self loadContacts];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
     NSLog(@"Application failed to register for remote notifications with error %@", error);
 }
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
 //    NSError *error;
-//    BOOL success = [self.applicationController.layerClient updateDeviceToken:deviceToken error:&error];
+//    BOOL success = [self.applicationController.layerClient updateRemoteNotificationDeviceToken:deviceToken error:&error];
 //    if (success) {
 //        NSLog(@"Application did register for remote notifications");
 //    } else {
@@ -123,7 +97,13 @@ static void LSAlertWithError(NSError *error)
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    //TODO: Implement once LayerKit supports.
+//    NSError *error;
+//    BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:completionHandler];
+//    if (success) {
+//        NSLog(@"Application did remote notification sycn");
+//    } else {
+//        NSLog(@"Error handling push notification: %@", error);
+//    }
 }
 
 - (void)userDidAuthenticateNotification:(NSNotification *)notification
@@ -165,6 +145,7 @@ static void LSAlertWithError(NSError *error)
             NSError *persistenceError = nil;
             BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
             if (success) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"contactsPersited" object:nil];
                 NSLog(@"Persisted contacts successfully: %@", contacts);
             } else {
                 NSLog(@"Failed persisting contacts: %@. Error: %@", contacts, persistenceError);
@@ -186,7 +167,10 @@ static void LSAlertWithError(NSError *error)
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     conversationController.navigationBar.barTintColor = LSLighGrayColor();
     conversationController.navigationBar.tintColor = LSBlueColor();
-    [self.navigationController presentViewController:conversationController animated:YES completion:nil];
+    [self.navigationController presentViewController:conversationController animated:YES completion:^{
+        //
+    }];
+    //[self.navigationController presentViewController:conversationController animated:YES completion:nil];
 }
 
 @end

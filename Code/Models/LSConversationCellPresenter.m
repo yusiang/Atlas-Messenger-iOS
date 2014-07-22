@@ -47,10 +47,10 @@
 
 - (UIImage *)conversationImage
 {
-    return [UIImage imageNamed:@"kevin"];
+    return nil;
 }
 
-- (NSArray *)sortedFullNamesForParticiapnts:(NSSet *)participants
+- (NSArray *)sortedFullNamesForParticiapnts:(NSSet *)participantIDs
 {
     NSError *error;
     LSSession *session = [self.persistenceManager persistedSessionWithError:&error];
@@ -58,7 +58,7 @@
     
     NSMutableArray *fullNames = [NSMutableArray new];
     NSSet *persistedUsers = [self.persistenceManager persistedUsersWithError:&error];
-    for (NSString *userID in participants) {
+    for (NSString *userID in participantIDs) {
         for (LSUser *persistedUser in persistedUsers) {
             if ([userID isEqualToString:persistedUser.userID] && ![userID isEqualToString:authenticatedUser.userID]) {
                 [fullNames addObject:persistedUser.fullName];

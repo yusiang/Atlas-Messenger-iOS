@@ -92,6 +92,7 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
             cell.textField.delegate = self;
             self.emailField = cell.textField;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             break;
         case 1:
             [cell setText:@"Password"];

@@ -36,6 +36,9 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 {
     [super viewDidLoad];
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"loadContacts" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadContactData) name:@"contactsPersited" object:nil];
+    
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     
@@ -43,9 +46,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     self.accessibilityLabel = @"Contacts";
     [self.tableView registerClass:[LSContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
     
-    NSSet *filteredContacts = [self filteredContacts];
-    NSArray *sortedContacts = [[filteredContacts allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
-    self.contacts = [self sortContactsAlphabetically:sortedContacts];
+    [self fetchContacts];
     
     if (!self.contacts.count > 0) {
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"emptyContacts"]];
@@ -69,6 +70,19 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
     
     self.tableView.accessibilityLabel = @"Contact List";
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)fetchContacts
+{
+    NSSet *filteredContacts = [self filteredContacts];
+    NSArray *sortedContacts = [[filteredContacts allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
+    self.contacts = [self sortContactsAlphabetically:sortedContacts];
 }
 
 //Removes the currently authenticated user from the contacts array
@@ -96,6 +110,12 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
         [dict setObject:letterList forKey:firstLetter];
     }
     return dict;
+}
+
+- (void)reloadContactData
+{
+    [self fetchContacts];
+    [self.tableView reloadData];
 }
 
 #pragma mark - Actions
@@ -153,7 +173,7 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 40;
+    return 48;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

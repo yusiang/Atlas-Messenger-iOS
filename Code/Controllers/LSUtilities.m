@@ -18,12 +18,17 @@ NSString *LSApplicationHost()
     if (LSIsRunningTests()) {
         return [NSProcessInfo processInfo].environment[@"LAYER_TEST_HOST"] ?: @"10.66.0.35";
     }
-    return @"10.66.0.12";
+    //return @"199.223.234.118";
+    return @"na-3.preview.layer.com";
 }
 
 NSString *LSRailsHost()
 {
-    return @"10.66.0.12";
+    if (LSIsRunningTests()) {
+        return @"10.66.0.35";
+    }
+    //return @"199.223.234.118";
+   return @"na-3.preview.layer.com";
 }
 
 NSURL *LSLayerBaseURL(void)
@@ -38,7 +43,10 @@ NSURL *LSRailsBaseURL(void)
 
 NSUUID *LSLayerAppID(void)
 {
-	return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
+    if (LSIsRunningTests()) {
+        return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
+    }
+    return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
 }
 
 NSString *LSApplicationDataDirectory(void)
@@ -62,3 +70,44 @@ LSPersistenceManager *LSPersitenceManager(void)
     }
     return [LSPersistenceManager persistenceManagerWithStoreAtPath:[LSApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
 }
+
+void LSAlertWithError(NSError *error)
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Unexpected Error"
+                                                        message:[error localizedDescription]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];
+}
+
+CGRect LSImageRectForThumb(CGSize size, NSUInteger maxConstraint)
+{
+    CGRect thumbRect;
+    if (size.width > size.height) {
+        double ratio = maxConstraint/size.width;
+        double height = size.height * ratio;
+        thumbRect = CGRectMake(0, 0, maxConstraint, height);
+    } else {
+        double ratio = maxConstraint/size.height;
+        double width = size.width * ratio;
+        thumbRect = CGRectMake(0, 0, width, maxConstraint);
+    }
+    return thumbRect;
+}
+
+NSString *MIMETypeTextPlain()
+{
+    return @"text/plain";
+}
+
+NSString *MIMETypeImagePNG()
+{
+    return @"image/png";
+}
+
+NSString *MIMETypeImageJPEG()
+{
+    return @"image/jpeg";
+}
+
+

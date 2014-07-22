@@ -9,6 +9,7 @@
 #import "LSMessageCell.h"
 #import "LSUIConstants.h"
 #import "LSBubbleView.h"
+#import "LSUtilities.h"
 
 @interface LSMessageCell ()
 
@@ -60,7 +61,6 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 - (void)updateWithPresenter:(LSMessageCellPresenter *)presenter
 {
     [self.contentView removeConstraints:self.contentView.constraints];
-    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
     [self.bubbleView updateViewWithPresenter:presenter];
     
     if ([presenter messageWasSentByAuthenticatedUser]) {
@@ -94,9 +94,6 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 
 - (void)setupSenderCellConstraintsWithPresenter:(LSMessageCellPresenter *)presenter
 {
-    //Place Holder
-    [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
-    
     //**********Avatar Image Constraints**********//
     // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
@@ -176,8 +173,6 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 
 - (void)setupRecipientCellConstraintsWithPresenter:(LSMessageCellPresenter *)presenter
 {
-   [self.avatarImageView setImage:[UIImage imageNamed:@"kevin"]];
-    
     //**********Avatar Image Constraints**********//
     // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
@@ -218,6 +213,7 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     
     //**********Bubble Image Constraints**********//
     LYRMessagePart *messagePart = [presenter.message.parts objectAtIndex:[presenter indexForPart]];
+    
     // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeWidth
@@ -257,13 +253,25 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 
 - (CGFloat)bubbleWidthForMessagePart:(LYRMessagePart *)messagePart
 {
-    if ([messagePart.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+    if ([messagePart.MIMEType isEqualToString:MIMETypeTextPlain()]) {
         NSString *string = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
         NSDictionary *attributes = @{NSFontAttributeName :LSMediumFont(14)};
         CGSize stringSize = [string sizeWithAttributes:attributes];
         CGFloat width = stringSize.width + 20;
         if (self.contentView.frame.size.width * LSBubbleViewWidthMultiplier > width) {
            return width;
+        }
+    }
+    
+    if ([messagePart.MIMEType isEqualToString:MIMETypeImagePNG()] || [messagePart.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
+        UIImage *image = [UIImage imageWithData:messagePart.data];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+        
+        if (imageView.frame.size.height > imageView.frame.size.width) {
+            CGFloat ratio = 300 / imageView.frame.size.height;
+            return imageView.frame.size.width * ratio;
+        } else {
+            return self.contentView.frame.size.width * LSBubbleViewWidthMultiplier;
         }
     }
     return self.contentView.frame.size.width * LSBubbleViewWidthMultiplier;

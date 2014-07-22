@@ -17,15 +17,14 @@
 
 @interface LSMessageCellPresenter : NSObject
 
+@property (nonatomic, strong) NSOrderedSet *messages;
 @property (nonatomic, strong) LYRMessage *message;
-@property (nonatomic) BOOL shouldShowSenderImage;
-@property (nonatomic) BOOL shouldShowSenderLabel;
 
 ///-------------------------------
 /// @name Initializing a Presenter
 ///-------------------------------
 
-+ (instancetype)presenterWithMessage:(LYRMessage *)message indexPath:(NSIndexPath *)indexPath persistanceManager:(LSPersistenceManager *)persistenceManager;
++ (instancetype)presenterWithMessages:(NSOrderedSet *)messages indexPath:(NSIndexPath *)indexPath persistanceManager:(LSPersistenceManager *)persistenceManager;
 
 - (BOOL)messageWasSentByAuthenticatedUser;
 
@@ -34,5 +33,11 @@
 - (UIImage *)imageForMessageSender;
 
 - (NSUInteger)indexForPart;
+
+- (BOOL)shouldShowSenderImage;
+
+- (BOOL)shouldShowSenderLabel;
+
+- (BOOL)shouldShowTimeStamp;
 
 @end

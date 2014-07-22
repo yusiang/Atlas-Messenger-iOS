@@ -44,12 +44,19 @@
     [self.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
         [latch decrementCount];
     }];
-    [latch waitTilCount:0];
+    
 }
 
 - (void)tearDown
 {
     [super tearDown];
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
+    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+        expect(success).to.beTruthy;
+        expect(error).to.beNil;
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:0];
     self.APIManager = nil;
     [self.controller.layerClient disconnect];
 }
@@ -186,15 +193,12 @@
     
     [self.controller.layerClient disconnect];
     
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     LSSession *session = self.APIManager.authenticatedSession;
-    [self.APIManager resumeSession:session completion:^(LSUser *user, NSError *error) {
-        expect(user).toNot.beNil;
-        expect(user.email).to.equal([LSTestUser testUserWithNumber:1].email);
-        expect(error).to.beNil;
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
+    expect(session).toNot.beNil;
+    NSError *error;
+    [self.APIManager resumeSession:session error:&error];
+    expect(session.user.email).to.equal([LSTestUser testUserWithNumber:1].email);
+    expect(error).to.beNil;
 }
 
 - (void)testToVerifyLogout

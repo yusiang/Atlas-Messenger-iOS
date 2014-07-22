@@ -70,21 +70,23 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
     mask.path = path.CGPath;
     
     self.checkMark.layer.mask = mask;
+    self.checkMark.accessibilityLabel = @"Selected Checkmark";
 
     [self addSubview:self.checkMark];
     
     self.checkMark.transform = CGAffineTransformMakeRotation(LSDegreesToRadians(-45));
-    self.checkMark.alpha = 0.0f;
+    self.checkMark.alpha = 1.0f;
 }
 
 - (void)setSelected:(BOOL)selected
 {
     if (selected) {
-        self.checkMark.alpha = 1.0f;
-        self.cutout.alpha = 0.0f;
+        [self.cutout removeFromSuperview];
+        [self addSubview:self.checkMark];
+
     } else {
-        self.checkMark.alpha = 0.0f;
-        self.cutout.alpha = 1.0f;
+        [self.checkMark removeFromSuperview];
+        [self addSubview:self.cutout];
     }
 }
 @end

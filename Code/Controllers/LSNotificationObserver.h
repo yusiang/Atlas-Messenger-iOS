@@ -9,13 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "LYRClient.h"
 
-
-typedef NS_ENUM(NSInteger, LYRObjectChangeType) {
-	LYRObjectChangeTypeCreate,
-	LYRObjectChangeTypeUpdate,
-	LYRObjectChangeTypeDelete
-};
-
 @class LSNotificationObserver;
 
 @protocol LSNotificationObserverDelegate <NSObject>
@@ -34,6 +27,8 @@ typedef NS_ENUM(NSInteger, LYRObjectChangeType) {
 
 @property (nonatomic, weak) id<LSNotificationObserverDelegate>delegate;
 
-- (id) initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation;
+- (id) initWithClient:(LYRClient *)layerClient conversations:(NSArray *)conversations;
+
+- (void)setConversations:(NSArray *)conversations;
 
 @end
