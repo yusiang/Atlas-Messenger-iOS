@@ -66,7 +66,6 @@
 		259A57761950EB83000E27B0 /* kevin.png in Resources */ = {isa = PBXBuildFile; fileRef = 259A57711950EB83000E27B0 /* kevin.png */; };
 		259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */; };
 		259A57801950EB92000E27B0 /* LSUITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577D1950EB92000E27B0 /* LSUITest.m */; };
-		259DE701197ED91F0042A685 /* LYRCountDownLatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 259DE700197ED91F0042A685 /* LYRCountDownLatch.m */; };
 		9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */; };
 /* End PBXBuildFile section */
 
@@ -174,8 +173,6 @@
 		259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KIFUITestActor+LSAdditions.m"; sourceTree = "<group>"; };
 		259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LayerSampleTests-Info.plist"; sourceTree = "<group>"; };
 		259A577D1950EB92000E27B0 /* LSUITest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUITest.m; sourceTree = "<group>"; };
-		259DE6FF197ED91F0042A685 /* LYRCountDownLatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRCountDownLatch.h; sourceTree = "<group>"; };
-		259DE700197ED91F0042A685 /* LYRCountDownLatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRCountDownLatch.m; sourceTree = "<group>"; };
 		53480A235A364E9AAAB2DC78 /* Pods-LayerSampleTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSampleTests.xcconfig"; path = "Pods/Pods-LayerSampleTests.xcconfig"; sourceTree = "<group>"; };
 		931E36A3415C497CA3681E7F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A939C393B9254AF5B6B4FB43 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -371,8 +368,6 @@
 		259A57781950EB92000E27B0 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				259DE6FF197ED91F0042A685 /* LYRCountDownLatch.h */,
-				259DE700197ED91F0042A685 /* LYRCountDownLatch.m */,
 				259A57791950EB92000E27B0 /* KIFUITestActor+LSAdditions.h */,
 				259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */,
 				259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */,
@@ -590,7 +585,6 @@
 				259A57631950EB76000E27B0 /* LSButton.m in Sources */,
 				259A57671950EB76000E27B0 /* LSInputTableViewCell.m in Sources */,
 				0A2324F51960DB8C00C1C98D /* LSConversationCellPresenter.m in Sources */,
-				259DE701197ED91F0042A685 /* LYRCountDownLatch.m in Sources */,
 				25918B97195F95F700D0FB1B /* LSPersistenceManager.m in Sources */,
 				0A080CDB196F7322001A7221 /* LSContactListHeader.m in Sources */,
 				259A57651950EB76000E27B0 /* LSContactTableViewCell.m in Sources */,

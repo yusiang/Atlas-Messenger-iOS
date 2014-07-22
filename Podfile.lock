@@ -7,6 +7,7 @@ PODS:
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
   - LayerKit (0.7.4)
+  - LYRCountDownLatch (0.9.0)
   - SVProgressHUD (HEAD based on 1.0)
 
 DEPENDENCIES:
@@ -15,11 +16,14 @@ DEPENDENCIES:
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
   - LayerKit (from `git@github.com:layerhq/releases-ios.git`)
+  - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
   LayerKit:
     :git: git@github.com:layerhq/releases-ios.git
+  LYRCountDownLatch:
+    :git: git@github.com:layerhq/LYRCountDownLatch.git
 
 SPEC CHECKSUMS:
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
@@ -27,6 +31,7 @@ SPEC CHECKSUMS:
   KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
   LayerKit: 2062b30b27e8b9f9365a21554f4ed5d81480588f
+  LYRCountDownLatch: b846aff18d79a97cfa45d8503d96b9a8b8d7e723
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
 
 COCOAPODS: 0.33.1
