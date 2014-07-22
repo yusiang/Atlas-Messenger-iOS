@@ -87,7 +87,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     NSAssert(self.layerClient, @"Layer Controller should not be `nil`.");
     if (self.conversations) self.conversations = nil;
     NSSet *conversations = (NSSet *)[self.layerClient conversationsForIdentifiers:nil];
-    self.conversations = [[conversations allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessageReceivedAt" ascending:NO]]];
+    self.conversations = [[conversations allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessage.sentAt" ascending:NO]]];
 }
 
 - (void)conversationsUpdated:(NSNotification *)notification
