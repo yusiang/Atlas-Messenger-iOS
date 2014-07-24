@@ -15,6 +15,62 @@
 #import <Crashlytics/Crashlytics.h>
 #import <Instabug/Instabug.h>
 
+NSData *LYRIssuerData(void)
+{
+    static NSString *issuerInBase64 = @"MQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ0FMSUZPUk5JQTEWMBQGA1UEBxMNU0FOIEZSQU5DSVNDTzEOMAwGA1UEChMFTEFZRVIxFjAUBgNVBAsTDVBMQVRGT1JNIFRFQU0xEjAQBgNVBAMTCUxBWUVSLkNPTTEcMBoGCSqGSIb3DQEJARYNZGV2QGxheWVyLmNvbQ==";
+    static NSData *layerCertificateIssuer = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        layerCertificateIssuer = [[NSData alloc] initWithBase64EncodedString:issuerInBase64 options:0];
+    });
+    return layerCertificateIssuer;
+}
+
+void LYRTestDeleteKeysFromKeychain(void)
+{
+    NSDictionary *query = @{ (__bridge id)kSecClass: (__bridge id)kSecClassKey,
+                             (__bridge id)kSecAttrKeyType: (__bridge id)kSecAttrKeyTypeRSA };
+    
+    OSStatus err = SecItemDelete((__bridge CFDictionaryRef)query);
+    if(!(err == noErr || err == errSecItemNotFound)) {
+        NSLog(@"SecItemDeleteError: %d", (int)err);
+    }
+}
+
+BOOL LYRTestDeleteCertificatesFromKeychain(void)
+{
+    NSDictionary *query = @{ (__bridge id)kSecClass: (__bridge id)kSecClassCertificate,
+                             (__bridge id)kSecAttrIssuer: LYRIssuerData() };
+    
+    OSStatus err = SecItemDelete((__bridge CFDictionaryRef)query);
+    if(!(err == noErr || err == errSecItemNotFound)) {
+        NSLog(@"SecItemDeleteError: %d", (int)err);
+        return NO;
+    }
+    return YES;
+}
+
+BOOL LYRTestDeleteIdentitiesFromKeychain(void)
+{
+    NSDictionary *query = @{ (__bridge id)kSecClass: (__bridge id)kSecClassIdentity,
+                             (__bridge id)kSecAttrIssuer: LYRIssuerData() };
+    OSStatus err = SecItemDelete((__bridge CFDictionaryRef)query);
+    if(!(err == noErr || err == errSecItemNotFound)) {
+        NSLog(@"SecItemDeleteError: %d", (int)err);
+        return NO;
+    }
+    return YES;
+}
+
+void LYRTestCleanKeychain(void)
+{
+    LYRTestDeleteKeysFromKeychain();
+    LYRTestDeleteCertificatesFromKeychain();
+    LYRTestDeleteIdentitiesFromKeychain();
+}
+
+extern void LYRSetLogLevelFromEnvironment();
+
 @interface LSAppDelegate ()
 
 @property (nonatomic) UINavigationController *navigationController;
@@ -27,7 +83,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    LYRTestCleanKeychain();
+    LYRSetLogLevelFromEnvironment();
+    LYRTestCleanKeychain();
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     
@@ -86,24 +143,30 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-//    NSError *error;
-//    BOOL success = [self.applicationController.layerClient updateRemoteNotificationDeviceToken:deviceToken error:&error];
-//    if (success) {
-//        NSLog(@"Application did register for remote notifications");
-//    } else {
-//        NSLog(@"Error updating Layer device token for push:%@", error);
-//    }
+    NSError *error;
+    BOOL success = [self.applicationController.layerClient updateRemoteNotificationDeviceToken:deviceToken error:&error];
+    if (success) {
+        NSLog(@"Application did register for remote notifications");
+    } else {
+        NSLog(@"Error updating Layer device token for push:%@", error);
+    }
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-//    NSError *error;
-//    BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:completionHandler];
-//    if (success) {
-//        NSLog(@"Application did remote notification sycn");
-//    } else {
-//        NSLog(@"Error handling push notification: %@", error);
-//    }
+    NSError *error;
+    BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
+        if (fetchResult == UIBackgroundFetchResultFailed) {
+            NSLog(@"Failed processing remote notification: %@", error);
+        }
+        completionHandler(fetchResult);
+    }];
+    if (success) {
+        NSLog(@"Application did remote notification sycn");
+    } else {
+        NSLog(@"Error handling push notification: %@", error);
+        completionHandler(UIBackgroundFetchResultNoData);
+    }
 }
 
 - (void)userDidAuthenticateNotification:(NSNotification *)notification
