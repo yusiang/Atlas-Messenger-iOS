@@ -1,6 +1,6 @@
 pod 'SVProgressHUD', :head
 pod 'Instabug', '~> 2.0'
-pod 'LayerKit', git: 'git@github.com:layerhq/releases-ios.git'
+pod 'LayerKit'
 
 target 'LayerSampleTests' do
   pod 'KIF', '~> 3.0'

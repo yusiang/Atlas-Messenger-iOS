@@ -88,6 +88,9 @@ extern void LYRSetLogLevelFromEnvironment();
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     
+    // Set Layer backend via configuration URL
+    [[NSUserDefaults standardUserDefaults] setObject:@"https://dev-1.preview.layer.com/client_configuration.json" forKey:@"LAYER_CONFIGURATION_URL"];
+    
     LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     

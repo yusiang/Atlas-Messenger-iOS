@@ -6,7 +6,7 @@ PODS:
   - KIF/XCTest (3.0.7)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - LayerKit (0.7.4)
+  - LayerKit (0.7.6)
   - LYRCountDownLatch (0.9.0)
   - SVProgressHUD (HEAD based on 1.0)
 
@@ -15,13 +15,11 @@ DEPENDENCIES:
   - Instabug (~> 2.0)
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
-  - LayerKit (from `git@github.com:layerhq/releases-ios.git`)
+  - LayerKit
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
-  LayerKit:
-    :git: git@github.com:layerhq/releases-ios.git
   LYRCountDownLatch:
     :git: git@github.com:layerhq/LYRCountDownLatch.git
 
@@ -30,7 +28,7 @@ SPEC CHECKSUMS:
   Instabug: b3b0a7d30ea6ce3242e7cc44813e801143b9009b
   KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
-  LayerKit: 8156b45902232b77b799814c8129a1a05b2b3b2f
+  LayerKit: d26eeef10bd1e24841745e6304b7e8b8c431ef01
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
 

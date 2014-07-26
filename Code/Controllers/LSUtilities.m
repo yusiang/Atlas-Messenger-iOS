@@ -22,15 +22,6 @@ NSString *LSApplicationHost()
     return @"na-3.preview.layer.com";
 }
 
-NSString *LSRailsHost()
-{
-    if (LSIsRunningTests()) {
-        return @"10.66.0.35";
-    }
-    //return @"199.223.234.118";
-   return @"na-3.preview.layer.com";
-}
-
 NSURL *LSLayerBaseURL(void)
 {
     return [NSURL URLWithString:[NSString stringWithFormat:@"https://%@:7072", LSApplicationHost()]];
@@ -38,7 +29,7 @@ NSURL *LSLayerBaseURL(void)
 
 NSURL *LSRailsBaseURL(void)
 {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@:8080", LSRailsHost()]];
+    return [NSURL URLWithString:@"https://layer-identity-provider.herokuapp.com"];
 }
 
 NSUUID *LSLayerAppID(void)
