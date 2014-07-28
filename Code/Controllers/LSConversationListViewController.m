@@ -169,7 +169,14 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     [self dismissViewControllerAnimated:YES completion:^{
         if (contacts.count > 0) {
             LSConversationViewController *controller = [LSConversationViewController new];
-            LYRConversation *conversation = [LYRConversation conversationWithParticipants:[[contacts valueForKey:@"userID"] allObjects]];
+
+            NSArray *participants = [[contacts valueForKey:@"userID"] allObjects];
+            LYRConversation *conversation = [self.layerClient conversationForParticipants:participants];
+
+            if (!conversation) {
+                conversation = [LYRConversation conversationWithParticipants:participants];
+            }
+
             controller.conversation = conversation;
             controller.layerClient = self.layerClient;
             controller.persistanceManager = self.persistenceManager;
