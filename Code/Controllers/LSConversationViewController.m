@@ -333,6 +333,8 @@ static CGFloat const LSComposeViewHeight = 40;
     LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
 
+    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: text} onObject:message];
+
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];
     if (success) {

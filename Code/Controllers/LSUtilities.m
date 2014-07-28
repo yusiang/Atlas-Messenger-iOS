@@ -13,20 +13,6 @@ BOOL LSIsRunningTests(void)
     return NSClassFromString(@"XCTestCase") != Nil;
 }
 
-NSString *LSApplicationHost()
-{
-    if (LSIsRunningTests()) {
-        return [NSProcessInfo processInfo].environment[@"LAYER_TEST_HOST"] ?: @"10.66.0.35";
-    }
-    //return @"199.223.234.118";
-    return @"na-3.preview.layer.com";
-}
-
-NSURL *LSLayerBaseURL(void)
-{
-    return [NSURL URLWithString:[NSString stringWithFormat:@"https://%@:7072", LSApplicationHost()]];
-}
-
 NSURL *LSRailsBaseURL(void)
 {
     return [NSURL URLWithString:@"https://layer-identity-provider.herokuapp.com"];
@@ -37,7 +23,7 @@ NSUUID *LSLayerAppID(void)
     if (LSIsRunningTests()) {
         return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
     }
-    return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
+    return [[NSUUID alloc] initWithUUIDString:@"9ae66b44-1682-11e4-92e4-0b53000001d0"];
 }
 
 NSString *LSApplicationDataDirectory(void)

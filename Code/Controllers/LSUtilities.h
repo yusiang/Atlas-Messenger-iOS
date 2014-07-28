@@ -16,10 +16,6 @@
 
 BOOL LSIsRunningTests();
 
-NSString *LSApplicationHost();
-
-NSURL *LSLayerBaseURL();
-
 NSURL *LSRailsBaseURL();;
 
 NSUUID *LSLayerAppID();
