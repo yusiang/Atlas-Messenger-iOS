@@ -1,9 +1,20 @@
 require 'rubygems'
-require 'bundler'
-require 'date'
 require 'plist'
-Bundler.setup
-require 'xctasks/test_task'
+begin
+  require 'bundler'
+  require 'date' 
+  begin
+    Bundler.setup
+    require 'xctasks/test_task'
+  rescue Bundler::GemNotFound => gemException
+    raise LoadError, gemException.to_s
+  end
+rescue LoadError => exception
+  unless ARGV.include?('init')
+    puts "Rescued exception: #{exception}"
+    puts "WARNING: Failed to load dependencies: Is the project initialized? Run `rake init`"
+  end
+end
 
 # Enable realtime output under Jenkins
 if ENV['JENKINS_HOME']
