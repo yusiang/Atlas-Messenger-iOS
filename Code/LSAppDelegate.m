@@ -14,6 +14,7 @@
 #import "LSUIConstants.h"
 #import <Crashlytics/Crashlytics.h>
 #import <Instabug/Instabug.h>
+#import <HockeySDK/HockeySDK.h>
 
 NSData *LYRIssuerData(void)
 {
@@ -122,10 +123,16 @@ extern void LYRSetLogLevelFromEnvironment();
     
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
-    
-    // Kicking off Instabg
+
+    // Start HockeyApp
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
+    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+
+    // Kicking off Instabug
     [Instabug startWithToken:@"d17f36fc46f0b8073b5db3feb2d09888" captureSource:IBGCaptureSourceUIKit invocationEvent:IBGInvocationEventShake];
-    
+
     // Declaring that I want to recieve push!
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     

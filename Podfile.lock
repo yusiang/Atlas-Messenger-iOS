@@ -1,5 +1,6 @@
 PODS:
   - Expecta (0.3.1)
+  - HockeySDK (3.5.6)
   - Instabug (2.0)
   - KIF (3.0.7):
     - KIF/XCTest
@@ -12,6 +13,7 @@ PODS:
 
 DEPENDENCIES:
   - Expecta (~> 0.3.0)
+  - HockeySDK (~> 3.5.6)
   - Instabug (~> 2.0)
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
@@ -25,6 +27,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
+  HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
   Instabug: b3b0a7d30ea6ce3242e7cc44813e801143b9009b
   KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
