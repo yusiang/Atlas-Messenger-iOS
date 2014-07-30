@@ -5,6 +5,12 @@ require 'plist'
 Bundler.setup
 require 'xctasks/test_task'
 
+# Enable realtime output under Jenkins
+if ENV['JENKINS_HOME']
+  STDOUT.sync = true
+  STDERR.sync = true
+end
+
 XCTasks::TestTask.new do |t|
   t.workspace = 'LayerSample.xcworkspace'
   t.schemes_dir = 'Tests/Schemes'
@@ -12,6 +18,35 @@ XCTasks::TestTask.new do |t|
   t.output_log = 'xcodebuild.log'
   t.settings["LAYER_TEST_HOST"] = (ENV['LAYER_TEST_HOST'] || 'localhost')
   t.subtasks = { app: 'LayerSampleTests' }
+end
+
+task :init do
+  puts green("Update submodules...")
+  run("git submodule update --init --recursive")
+  puts green("Checking for Homebrew...")
+  run("which brew > /dev/null && brew update; true")
+  run("which brew > /dev/null || ruby -e \"$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)\"")
+  puts green("Bundling Homebrew packages...")
+  packages = %w{rbenv ruby-build rbenv-gem-rehash rbenv-binstubs xctool thrift}
+  packages.each { |package| run("brew install #{package} || brew upgrade #{package}") }
+  puts green("Checking rbenv version...")
+  run("rbenv version-name || rbenv install")
+  puts green("Checking for Bundler...")
+  run("rbenv whence bundle | grep `cat .ruby-version` || rbenv exec gem install bundler")
+  puts green("Bundling Ruby Gems...")
+  run("rbenv exec bundle install --binstubs .bundle/bin --quiet")
+  puts green("Installing CocoaPods...")
+  run("rbenv exec bundle exec pod install --verbose")
+  puts green("Checking rbenv configuration...")
+  system <<-SH
+  if [ -f ~/.zshrc ]; then
+    grep -q 'rbenv init' ~/.zshrc || echo 'eval "$(rbenv init - --no-rehash)"' >> ~/.zshrc
+  else
+    grep -q 'rbenv init' ~/.bash_profile || echo 'eval "$(rbenv init - --no-rehash)"' >> ~/.bash_profile
+  fi
+  SH
+  puts "\n" + yellow("If first initialization, load rbenv by executing:")
+  puts grey("$ `eval \"$(rbenv init - --no-rehash)\"`")
 end
 
 task :release do
@@ -46,8 +81,10 @@ task :release do
   
   archive_path = 'LayerSample.xcarchive'
   
+  xcpretty_params = (ENV['LAYER_XCPRETTY_PARAMS'] || '')
+  
   # 4) Archive project with shenzhen, but pipe to xcpretty.
-  run("ipa build --verbose | xcpretty -c && exit ${PIPESTATUS[0]}")
+  run("ipa build --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
   
   # 5) Upload to HockeyApp.net via shenzhen.
   run("ipa distribute:hockeyapp --token af4ab86a0bee4fdab9b780fe4c26b8f2 --tags dev -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
@@ -74,4 +111,16 @@ def run(command)
   unless with_clean_env { system(command) }
     fail("Command exited with non-zero exit status (#{$?}): `#{command}`")
   end
+end
+
+def green(string)
+ "\033[1;32m* #{string}\033[0m"
+end
+
+def yellow(string)
+ "\033[1;33m>> #{string}\033[0m"
+end
+
+def grey(string)
+ "\033[0;37m#{string}\033[0m"
 end

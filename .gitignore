@@ -1,5 +1,6 @@
 Pods
 .DS_Store
+*.bundle
 xcuserdata
 LayerSample.xcworkspace/xcuserdata/*.xcuserdatad/
 LayerSample.xcworkspace/xcshareddata/xcschemes/*Tests.xcscheme
