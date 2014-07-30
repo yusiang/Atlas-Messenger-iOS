@@ -50,7 +50,7 @@ task :release do
   run("ipa build --verbose | xcpretty -c && exit ${PIPESTATUS[0]}")
   
   # 5) Upload to HockeyApp.net via shenzhen.
-  run("ipa distribute:hockeyapp --token af4ab86a0bee4fdab9b780fe4c26b8f2 --tags dev -m \"Local build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
+  run("ipa distribute:hockeyapp --token af4ab86a0bee4fdab9b780fe4c26b8f2 --tags dev -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
   
   # 6) Reset Info.plist.
   run("git checkout -- Resources/LayerSample-Info.plist")
