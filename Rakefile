@@ -1,10 +1,10 @@
 require 'rubygems'
-require 'plist'
 begin
   require 'bundler'
   require 'date' 
   begin
     Bundler.setup
+    require 'plist'
     require 'xctasks/test_task'
   rescue Bundler::GemNotFound => gemException
     raise LoadError, gemException.to_s
@@ -22,13 +22,15 @@ if ENV['JENKINS_HOME']
   STDERR.sync = true
 end
 
-XCTasks::TestTask.new do |t|
-  t.workspace = 'LayerSample.xcworkspace'
-  t.schemes_dir = 'Tests/Schemes'
-  t.runner = :xcpretty
-  t.output_log = 'xcodebuild.log'
-  t.settings["LAYER_TEST_HOST"] = (ENV['LAYER_TEST_HOST'] || 'localhost')
-  t.subtasks = { app: 'LayerSampleTests' }
+if defined?(XCTasks)
+  XCTasks::TestTask.new do |t|
+    t.workspace = 'LayerSample.xcworkspace'
+    t.schemes_dir = 'Tests/Schemes'
+    t.runner = :xcpretty
+    t.output_log = 'xcodebuild.log'
+    t.settings["LAYER_TEST_HOST"] = (ENV['LAYER_TEST_HOST'] || 'localhost')
+    t.subtasks = { app: 'LayerSampleTests' }
+  end
 end
 
 task :init do
