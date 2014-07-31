@@ -75,6 +75,7 @@ task :release do
   end
   
   # 1) Generate objects with: builder name/email (via git config), short-sha
+  layer_kit_version = `cat Podfile.lock | perl -n -e'/LayerKit \\((.+?)\\)/ && print $1'`.strip
   short_sha = `git rev-parse --short HEAD`.strip
   builder_name = `git config --get user.name`.strip
   builder_email = `git config --get user.email`.strip
@@ -85,6 +86,7 @@ task :release do
   
   info_plist = Plist::parse_xml(plist_path)
   info_plist['LYRBuildInformation'] = {
+    'LYRBuildLayerKitVersion' => layer_kit_version,
     'LYRBuildShortSha' => short_sha,
     'LYRBuildBuilderName' => builder_name,
     'LYRBuildBuilderEmail' => builder_email
@@ -100,7 +102,7 @@ task :release do
   
   xcpretty_params = (ENV['LAYER_XCPRETTY_PARAMS'] || '')
   
-  # 3.5) Move the shared scheme into the project directory.
+  # 3.5) Move the shared scheme into the workspace directory.
   FileUtils::Verbose.mkdir_p "LayerSample.xcworkspace/xcshareddata/xcschemes"
   FileUtils::Verbose.cp Dir.glob("Schemes/*.xcscheme"), "LayerSample.xcworkspace/xcshareddata/xcschemes"
   
