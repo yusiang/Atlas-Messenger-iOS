@@ -1,6 +1,7 @@
 pod 'SVProgressHUD', :head
 pod 'Instabug', '~> 2.0'
 pod 'LayerKit'
+pod 'HockeySDK', '~> 3.5.6'
 
 target 'LayerSampleTests' do
   pod 'KIF', '~> 3.0'
