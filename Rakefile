@@ -100,6 +100,10 @@ task :release do
   
   xcpretty_params = (ENV['LAYER_XCPRETTY_PARAMS'] || '')
   
+  # 3.5) Move the shared scheme into the project directory.
+  FileUtils::Verbose.mkdir_p "LayerSample.xcworkspace/xcshareddata/xcschemes"
+  FileUtils::Verbose.cp Dir.glob("Schemes/*.xcscheme"), "LayerSample.xcworkspace/xcshareddata/xcschemes"
+  
   # 4) Archive project with shenzhen, but pipe to xcpretty.
   run("ipa build --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
   
@@ -110,8 +114,8 @@ task :release do
   run("git checkout -- Resources/LayerSample-Info.plist")
   
   # 7) Clean up build data.
-  run("rm LayerSample.ipa")
-  run("rm LayerSample.app.dSYM.zip")
+  FileUtils::Verbose.rm "LayerSample.ipa"
+  FileUtils::Verbose.rm "LayerSample.app.dSYM.zip"
 end
 
 # Safe to run when Bundler is not available
