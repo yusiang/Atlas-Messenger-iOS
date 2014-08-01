@@ -110,7 +110,7 @@ task :release do
   run("ipa build --workspace LayerSample.xcworkspace --scheme LayerSample --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
   
   # 5) Upload to HockeyApp.net via shenzhen.
-  run("ipa distribute:hockeyapp --token af4ab86a0bee4fdab9b780fe4c26b8f2 --tags dev -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
+  run("ipa distribute:hockeyapp --token 4293de2a6ba5492c9d77b6faaf8d5343 --tags dev -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
   
   # 6) Reset Info.plist.
   run("git checkout -- Resources/LayerSample-Info.plist")
