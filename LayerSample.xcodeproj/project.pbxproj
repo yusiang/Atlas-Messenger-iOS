@@ -37,6 +37,7 @@
 		0AD767721963104200582755 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD767711963104200582755 /* LSUtilities.m */; };
 		0AD767741963157600582755 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD767731963157600582755 /* camera@2x.png */; };
 		0AF3D8E0197462A900FED313 /* LSMessagingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF3D8DF197462A900FED313 /* LSMessagingTest.m */; };
+		116357E6198AD1DB00C89F77 /* LSVersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 116357E5198AD1DB00C89F77 /* LSVersionView.m */; };
 		140D75B35BCA4D3395A4DC4B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 931E36A3415C497CA3681E7F /* libPods.a */; };
 		25203F85195F5FC800E41FA1 /* LSHTTPResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */; };
 		252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */; };
@@ -121,6 +122,8 @@
 		0AD767711963104200582755 /* LSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUtilities.m; sourceTree = "<group>"; };
 		0AD767731963157600582755 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
 		0AF3D8DF197462A900FED313 /* LSMessagingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMessagingTest.m; sourceTree = "<group>"; };
+		116357E4198AD1DB00C89F77 /* LSVersionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSVersionView.h; sourceTree = "<group>"; };
+		116357E5198AD1DB00C89F77 /* LSVersionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSVersionView.m; sourceTree = "<group>"; };
 		25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSHTTPResponseSerializer.h; sourceTree = "<group>"; };
 		25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSHTTPResponseSerializer.m; sourceTree = "<group>"; };
 		2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSPersistenceManagerTest.m; sourceTree = "<group>"; };
@@ -347,6 +350,8 @@
 				0A1B1383196607FF008D4F5A /* LSSelectionIndicator.m */,
 				0A080CD9196F7322001A7221 /* LSContactListHeader.h */,
 				0A080CDA196F7322001A7221 /* LSContactListHeader.m */,
+				116357E4198AD1DB00C89F77 /* LSVersionView.h */,
+				116357E5198AD1DB00C89F77 /* LSVersionView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -575,6 +580,7 @@
 			files = (
 				259A57681950EB76000E27B0 /* LSMediaAttachement.m in Sources */,
 				259A57531950EB76000E27B0 /* LSAuthenticationViewController.m in Sources */,
+				116357E6198AD1DB00C89F77 /* LSVersionView.m in Sources */,
 				259A57521950EB76000E27B0 /* LSConversationViewController.m in Sources */,
 				0A1B1384196607FF008D4F5A /* LSSelectionIndicator.m in Sources */,
 				0A52D6011962219D0030A34A /* LSMessageCellPresenter.m in Sources */,
