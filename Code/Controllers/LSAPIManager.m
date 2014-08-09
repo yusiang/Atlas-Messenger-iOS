@@ -36,10 +36,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     if (self) {
         _baseURL = baseURL;
         _layerClient = layerClient;
-        
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-        configuration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json", @"Content-Type": @"application/json", @"X_LAYER_APP_ID": [self.layerClient.appID UUIDString] };
-        _URLSession = [NSURLSession sessionWithConfiguration:configuration];
+        _URLSession = [self defaultURLSession];
     }
     return self;
 }
@@ -47,6 +44,13 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 - (id)init
 {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
+}
+
+- (NSURLSession *)defaultURLSession
+{
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    configuration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json", @"Content-Type": @"application/json", @"X_LAYER_APP_ID": [self.layerClient.appID UUIDString] };
+    return [NSURLSession sessionWithConfiguration:configuration];
 }
 
 - (void)registerUser:(LSUser *)user completion:(void (^)(LSUser *user, NSError *error))completion
@@ -178,6 +182,9 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         _authenticatedSession = authenticatedSession;
         _authenticatedURLSessionConfiguration = nil;
         
+        [self.URLSession invalidateAndCancel];
+        self.URLSession = [self defaultURLSession];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:authenticatedSession.user];
         });
@@ -197,7 +204,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 - (void)deauthenticateWithCompletion:(void(^)(BOOL success, NSError *error))completion
 {
-    //TODO: KC - Deauthenticate should STOP the sync manager but NOT cut off the SDK connection. Currently it is not stopping the sync manager.
     self.authenticatedSession = nil;
     if (completion) completion(YES, nil);
 }
