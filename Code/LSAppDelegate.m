@@ -202,8 +202,9 @@ extern void LYRSetLogLevelFromEnvironment();
         LSAlertWithError(error);
     }
     
-    [self.applicationController.layerClient deauthenticateWithCompletion:NULL];
-    [self.navigationController dismissViewControllerAnimated:YES completion:NO];
+    [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+        [self.navigationController dismissViewControllerAnimated:YES completion:NO];
+    }];
 }
 
 - (void)loadContacts
