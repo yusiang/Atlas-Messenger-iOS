@@ -124,8 +124,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
                 return;
             }
             
-            [UIImage imageNamed:@"kevin"];
-            
             NSError *serializationError = nil;
             NSDictionary *loginInfo = nil;
             BOOL success = [LSHTTPResponseSerializer responseObject:&loginInfo withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
