@@ -575,12 +575,14 @@ static CGFloat const LSComposeViewHeight = 40;
 - (void) observerDidChangeContent:(LSNotificationObserver *)observer
 {
     [self fetchMessages];
-    [self.collectionView performBatchUpdates:^{
-        [self.blockOperation  start];
-    } completion:^(BOOL finished) {
-        [self scrollToBottomOfCollectionView];
-    }];
-    self.blockOperation = nil;
+    [self.collectionView reloadData];
+    [self scrollToBottomOfCollectionView];
+//    [self.collectionView performBatchUpdates:^{
+//        [self.blockOperation  start];
+//    } completion:^(BOOL finished) {
+//        [self scrollToBottomOfCollectionView];
+//    }];
+//    self.blockOperation = nil;
 }
 
 - (void)scrollToBottomOfCollectionView
