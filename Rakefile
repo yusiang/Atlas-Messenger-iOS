@@ -107,7 +107,7 @@ task :release do
   FileUtils::Verbose.cp Dir.glob("Schemes/*.xcscheme"), "LayerSample.xcworkspace/xcshareddata/xcschemes"
   
   # 4) Archive project with shenzhen, but pipe to xcpretty.
-  run("ipa build --workspace LayerSample.xcworkspace --scheme LayerSample --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
+  run("ipa build --workspace LayerSample.xcworkspace --scheme LayerSample --configuration Release --embed Resources/LayerSample_In_House_Distribution.mobileprovision --identity 'iPhone Distribution: Phone.ly, Inc.' --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
   
   # 5) Upload to HockeyApp.net via shenzhen.
   run("ipa distribute:hockeyapp --token 4293de2a6ba5492c9d77b6faaf8d5343 --tags dev -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
