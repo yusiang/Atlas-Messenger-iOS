@@ -11,7 +11,7 @@
 
 @interface LSMessageCellHeader ()
 
-@property (nonatomic) UILabel *label;
+@property (nonatomic) UILabel *senderLabel;
 @property (nonatomic) UILabel *timeStamp;
 
 @end
@@ -20,30 +20,30 @@
 
 - (void)updateWithSenderName:(NSString *)senderName timeStamp:(NSDate *)timeStamp
 {
-    if (!self.label) {
-        self.label = [[UILabel alloc] init];
-        self.label.font = LSMediumFont(12);
-        self.label.textColor = LSGrayColor();
-        self.label.translatesAutoresizingMaskIntoConstraints = NO;
-        [self addSubview:self.label];
+    if (!self.senderLabel) {
+        self.senderLabel = [[UILabel alloc] init];
+        self.senderLabel.font = LSMediumFont(12);
+        self.senderLabel.textColor = [UIColor lightGrayColor];
+        self.senderLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self addSubview:self.senderLabel];
     }
     if (senderName) {
-       self.label.text = senderName;
+       self.senderLabel.text = senderName;
     } else {
-        self.label.text = nil;
+        self.senderLabel.text = nil;
     }
-    [self.label sizeToFit];
+    [self.senderLabel sizeToFit];
     
     if (!self.timeStamp) {
         self.timeStamp = [[UILabel alloc] init];
-        self.timeStamp.font = LSBoldFont(12);
-        self.timeStamp.textColor = LSGrayColor();
+        self.timeStamp.font = LSMediumFont(12);
+        self.timeStamp.textColor = [UIColor lightGrayColor];
         self.timeStamp.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.timeStamp];
     }
     if (timeStamp) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"MM/dd/yyyy hh:mma"];
+        [formatter setDateFormat:@"MMM dd, hh:mma"];
         self.timeStamp.text =  [formatter stringFromDate:timeStamp];
     } else {
         self.timeStamp.text = nil;
@@ -56,11 +56,11 @@
 
 - (void)configureLayoutConstraints
 {
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:72]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-6]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:52]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-2]];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.timeStamp attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.timeStamp attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.label attribute:NSLayoutAttributeTop multiplier:1.0 constant:-16]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.timeStamp attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.senderLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-16]];
 }
 
 @end

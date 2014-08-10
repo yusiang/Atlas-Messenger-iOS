@@ -32,7 +32,7 @@ static CGFloat const LSCellBottomMargin = 10.0f;
 static CGFloat const LSAvatarImageViewSizeRatio  = 0.60f;
 
 // Sender Label Constants
-static CGFloat const LSCellSenderLabelRightMargin = -60.0f;
+static CGFloat const LSCellSenderLabelRightMargin = -68.0f;
 
 // Date Label Constants
 static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
@@ -51,8 +51,8 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
        
         // Initialiaze Sender Image
         self.senderLabel = [[UILabel alloc] init];
-        self.senderLabel.font = LSBoldFont(14);
-        self.senderLabel.textColor = [UIColor darkGrayColor];
+        self.senderLabel.font = LSMediumFont(14);
+        self.senderLabel.textColor = [UIColor blackColor];
         self.senderLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.senderLabel];
         
@@ -67,6 +67,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
 
         // Initialize Date Label
         self.dateLabel = [[UILabel alloc] init];
+        self.dateLabel.textAlignment= NSTextAlignmentRight;
         self.dateLabel.font = LSMediumFont(12);
         self.dateLabel.textColor = [UIColor darkGrayColor];
         self.dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -99,8 +100,22 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
     }
     
     // Set Date Text
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    
+    unsigned int conversationDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents* conversationDateComponents = [calendar components:conversationDateFlags fromDate:presenter.conversation.lastMessage.sentAt];
+    NSDate *conversationDate = [calendar dateFromComponents:conversationDateComponents];
+    
+    unsigned int currentDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents* currentDateComponents = [calendar components:currentDateFlags fromDate:[NSDate date]];
+    NSDate *currentDate = [calendar dateFromComponents:currentDateComponents];
+    
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"hh:mm a"];
+    if ([conversationDate compare:currentDate] == NSOrderedAscending) {
+        [formatter setDateFormat:@"MMM dd"];
+    } else {
+        [formatter setDateFormat:@"hh:mm a"];
+    }
     self.dateLabel.text = [formatter stringFromDate:presenter.conversation.lastMessage.sentAt];
 }
 
@@ -229,7 +244,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
-                                                                  constant:-4]];
+                                                                  constant:-10]];
     // Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
                                                                  attribute:NSLayoutAttributeHeight

@@ -38,7 +38,7 @@ static CGFloat const LSButtonHeight = 28;
         // Initialize the Camera Button
         self.cameraButton = [[LSButton alloc] init];
         self.cameraButton.translatesAutoresizingMaskIntoConstraints = NO;
-        self.cameraButton.BackgroundColor = LSBlueColor();
+        self.cameraButton.BackgroundColor = LSLighGrayColor();
         self.cameraButton.accessibilityLabel = @"Cam Button";
         self.cameraButton.contentEdgeInsets = UIEdgeInsetsMake(4, 4, 4, 4);
         self.cameraButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -195,7 +195,7 @@ static CGFloat const LSButtonHeight = 28;
 - (void)sendMessage
 {
     [self.delegate composeViewShouldRestFrame:self];
-    [self.textInputView resignFirstResponder];
+    self.sendButton.textLabel.textColor = [UIColor grayColor];
     
     // Send Image
     if (self.images.count > 0) {
@@ -203,17 +203,11 @@ static CGFloat const LSButtonHeight = 28;
             [self.delegate composeView:self sendMessageWithImage:image];
         }
         self.textInputView.font = LSMediumFont(16);
-    }
-    
-    // If not text, don't send
-    if (!(self.textInputView.text.length > 1)) {
-        //
     } else {
-        [self.delegate composeView:self sendMessageWithText:self.textInputView.text];
+        if (self.textInputView.text.length) [self.delegate composeView:self sendMessageWithText:self.textInputView.text];
     }
     
-    // Reset text input view label
-    [self.textInputView setText:@""];
+    self.textInputView.text = @"";
     [self.images removeAllObjects];
 }
 

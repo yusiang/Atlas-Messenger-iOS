@@ -304,25 +304,34 @@ static CGFloat const LSComposeViewHeight = 40;
     self.keyboardIsOnScreen = TRUE;
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y + kbSize.height)];
-        self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
-    } completion:^(BOOL finished) {
-        self.keyboardIsOnScreen = TRUE;
-    }];
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
+    [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [self.collectionView setFrame:CGRectMake(self.collectionView.frame.origin.x, self.collectionView.frame.origin.y, self.collectionView.frame.size.width, self.collectionView.frame.size.height - kbSize.height)];
+    self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
+    [self scrollToBottomOfCollectionView];
+    [UIView commitAnimations];
+    
+    self.keyboardIsOnScreen = TRUE;
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)notification
 {
     NSDictionary* info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y - kbSize.height)];
-        self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
-    } completion:^(BOOL finished) {
-        self.keyboardIsOnScreen = FALSE;
-        [self composeViewShouldRestFrame:nil];
-    }];
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
+    [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [self.collectionView setFrame:CGRectMake(self.collectionView.frame.origin.x, self.collectionView.frame.origin.y, self.collectionView.frame.size.width, self.collectionView.frame.size.height + kbSize.height)];
+    self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
+    [UIView commitAnimations];
+   
+    self.keyboardIsOnScreen = FALSE;
+    [self composeViewShouldRestFrame:nil];
 }
 
 #pragma mark
@@ -526,50 +535,12 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void) observerWillChangeContent:(LSNotificationObserver *)observer
 {
-    self.blockOperation = [LSBlockOperation new];
+    //nothing to do for now
 }
 
 - (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
-    NSUInteger insertIndex = self.collectionView.numberOfSections + newIndex;
-    __weak typeof(self) weakSelf = self;
-    if ([object isKindOfClass:[LYRMessage class]]) {
-        switch (changeType) {
-            case LYRObjectChangeTypeCreate: {
-                [self.blockOperation addExecutionBlock:^{
-                    [weakSelf insertCellAtIndex:insertIndex];
-                }];
-            }
-            break;
-            case LYRObjectChangeTypeUpdate: {
-                [self.blockOperation addExecutionBlock:^{
-                    [weakSelf.collectionView reloadSections:[NSIndexSet indexSetWithIndex:index]];
-                }];
-            }
-            break;
-            case LYRObjectChangeTypeDelete: {
-                [self.blockOperation addExecutionBlock:^{
-                    [weakSelf.collectionView deleteSections:[NSIndexSet indexSetWithIndex:index]];
-                }];
-            }
-            break;
-            default:
-                break;
-        }
-    }
-}
-
-- (void)insertCellAtIndex:(NSUInteger)insertIndex
-{
-    if (insertIndex > self.messages.count) return;
-    NSLog(@"The number of section is %ld", (long)self.collectionView.numberOfSections);
-    NSLog(@"Attempt to insert row at %lu", (unsigned long)insertIndex);
-    if(insertIndex > 0) {
-        NSLog(@"Cell configured at index %lu", insertIndex - 1);
-        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:insertIndex - 1]];
-    }
-    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:insertIndex]];
-
+    //Nothing to do for now
 }
 
 - (void) observerDidChangeContent:(LSNotificationObserver *)observer
@@ -577,12 +548,6 @@ static CGFloat const LSComposeViewHeight = 40;
     [self fetchMessages];
     [self.collectionView reloadData];
     [self scrollToBottomOfCollectionView];
-//    [self.collectionView performBatchUpdates:^{
-//        [self.blockOperation  start];
-//    } completion:^(BOOL finished) {
-//        [self scrollToBottomOfCollectionView];
-//    }];
-//    self.blockOperation = nil;
 }
 
 - (void)scrollToBottomOfCollectionView

@@ -18,6 +18,14 @@ NSURL *LSRailsBaseURL(void)
     return [NSURL URLWithString:@"https://layer-identity-provider.herokuapp.com"];
 }
 
+NSString *LSLayerBaseURL()
+{
+    if (LSIsRunningTests()) {
+        return @"172.17.8.101/client_configuration.json";
+    }
+    return @"https://na-3.preview.layer.com/client_configuration.json";
+}
+
 NSUUID *LSLayerAppID(void)
 {
     if (LSIsRunningTests()) {
