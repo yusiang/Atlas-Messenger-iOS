@@ -21,11 +21,16 @@
 /// @name Initializing a Presenter
 ///-------------------------------
 
-+ (instancetype)presenterWithConversation:(LYRConversation *)conversation message:(LYRMessage *)message persistanceManager:(LSPersistenceManager *)persistenceManager;
++ (instancetype)presenterWithConversation:(LYRConversation *)conversation
+                                  message:(LYRMessage *)message
+                            dateFormatter:(NSDateFormatter *)dateFormatter
+                       persistanceManager:(LSPersistenceManager *)persistenceManager;
 
 - (NSString *)conversationLabel;
 
 - (UIImage *)conversationImage;
+
+- (NSString *)conversationDateLabel;
 
 //KC: Method made public for testing purposes
 - (NSString *)conversationLabelForParticipantNames:(NSArray *)participantNames;

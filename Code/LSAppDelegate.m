@@ -89,7 +89,7 @@ extern void LYRSetLogLevelFromEnvironment();
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     
     // Set Layer backend via configuration URL
-    [[NSUserDefaults standardUserDefaults] setObject:@"https://na-3.preview.layer.com/client_configuration.json" forKey:@"LAYER_CONFIGURATION_URL"];
+    [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL() forKey:@"LAYER_CONFIGURATION_URL"];
     
     LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
@@ -124,10 +124,10 @@ extern void LYRSetLogLevelFromEnvironment();
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
 
     // Start HockeyApp
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
-    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+//    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
+//    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
+//    [[BITHockeyManager sharedHockeyManager] startManager];
+//    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 
     // Declaring that I want to recieve push!
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
@@ -234,9 +234,11 @@ extern void LYRSetLogLevelFromEnvironment();
     conversationListViewController.layerClient = self.applicationController.layerClient;
     conversationListViewController.APIManager = self.applicationController.APIManager;
     conversationListViewController.persistenceManager = self.applicationController.persistenceManager;
+    
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     conversationController.navigationBar.barTintColor = LSLighGrayColor();
     conversationController.navigationBar.tintColor = LSBlueColor();
+    [[UINavigationBar appearance] setTitleTextAttributes: @{NSFontAttributeName: LSMediumFont(14)}];
     [self.navigationController presentViewController:conversationController animated:YES completion:^{
         //
     }];

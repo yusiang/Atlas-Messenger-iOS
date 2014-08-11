@@ -1,86 +1,35 @@
 PODS:
-  - CocoaLumberjack (1.8.1):
-    - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (1.8.1)
-  - CocoaLumberjack/Extensions (1.8.1):
-    - CocoaLumberjack/Core
-  - CocoaSPDY-Layer (20140807184219546)
   - Expecta (0.3.1)
-  - FMDB/common (2.3)
-  - FMDB/standalone (2.3):
-    - FMDB/common
-    - sqlite3/fts
-  - FMDBMigrationManager (1.3.1):
-    - FMDB/common (~> 2.3)
   - HockeySDK (3.5.6)
   - KIF (3.0.7):
     - KIF/XCTest
   - KIF/XCTest (3.0.7)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - layer-client-messaging-schema (20140806143305965)
-  - layer-thrift (0.56.0):
-    - thrift (~> 0.9.1)
-  - LayerKit (0.7.11):
-    - CocoaLumberjack (~> 1.8.1)
-    - CocoaSPDY-Layer (~> 20140807184219546)
-    - FMDB/standalone (~> 2.3)
-    - FMDBMigrationManager (~> 1.3.0)
-    - layer-client-messaging-schema (~> 20140806143305965)
-    - layer-thrift (~> 0.56.0)
-    - LayerKit/Public
-    - RKSupport/RKPathTemplate
-    - TransitionKit (~> 2.1.0)
-  - LayerKit/Public (0.7.11):
-    - CocoaLumberjack (~> 1.8.1)
-    - CocoaSPDY-Layer (~> 20140807184219546)
-    - FMDB/standalone (~> 2.3)
-    - FMDBMigrationManager (~> 1.3.0)
-    - layer-client-messaging-schema (~> 20140806143305965)
-    - layer-thrift (~> 0.56.0)
-    - RKSupport/RKPathTemplate
-    - TransitionKit (~> 2.1.0)
+  - LayerKit (0.7.11)
   - LYRCountDownLatch (0.9.0)
-  - RKSupport/RKPathTemplate (1.0.0)
-  - sqlite3/common (3.8.5)
-  - sqlite3/fts (3.8.5):
-    - sqlite3/common
   - SVProgressHUD (HEAD based on 1.0)
-  - thrift (0.9.1)
-  - TransitionKit (2.1.0)
 
 DEPENDENCIES:
   - Expecta (~> 0.3.0)
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
-  - LayerKit (from `git@github.com:layerhq/LayerKit.git`)
+  - LayerKit
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
-  LayerKit:
-    :git: git@github.com:layerhq/LayerKit.git
   LYRCountDownLatch:
     :git: git@github.com:layerhq/LYRCountDownLatch.git
 
 SPEC CHECKSUMS:
-  CocoaLumberjack: 9d198d6e19909b3b113a38c5f06f7bb8eedd0427
-  CocoaSPDY-Layer: 753fcb6b2743425d451e565ecd33029cd81863ee
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
-  FMDB: 31ec26773c7f7b7890a6038235a1f2bbd933a7cb
-  FMDBMigrationManager: 2bd36969dfce47955436945569c0d65ac8319678
   HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
   KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
-  layer-client-messaging-schema: c11dd808348cf13fe00d9a38a0ef65f25f999faa
-  layer-thrift: 0bd5ee9a44e4318f5f297436dbfe15b0b099dd59
-  LayerKit: 237294705be0ead9fe85c48c3a6d97453a9c0a0a
+  LayerKit: 1ba95abb89514f42868edfc27fab7e3e02c08aad
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
-  RKSupport: 8fdbd2d96a5522ea57b17c8afb0e78eeeef74f0a
-  sqlite3: 624a11eb032685c50adde3e0a549b1909eceb05e
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
-  thrift: b69f9820045ffa76eabe35674cdcc8daa5b1f75c
-  TransitionKit: 6a6f3ddda38ae758778aa889dcb930e4f8d64edc
 
 COCOAPODS: 0.33.1

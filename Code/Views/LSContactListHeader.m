@@ -26,14 +26,14 @@
         self.backgroundColor = [UIColor whiteColor];
 
         self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(10, 30, 300, 1)];
-        self.bottomBar.backgroundColor = [UIColor lightGrayColor];
+        self.bottomBar.backgroundColor = LSGrayColor();
         [self addSubview:self.bottomBar];
 
         
         self.keyLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 50, 20)];
-        self.keyLabel.font = LSBoldFont(14);
+        self.keyLabel.font = LSMediumFont(14);
         self.keyLabel.text = key;
-        self.keyLabel.textColor = [UIColor lightGrayColor];
+        self.keyLabel.textColor = LSGrayColor();
         [self addSubview:self.keyLabel];
     }
     return self;
