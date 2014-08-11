@@ -25,22 +25,19 @@
 @implementation LSConversationCellPresenter
 
 + (instancetype)presenterWithConversation:(LYRConversation *)conversation
-                                  message:(LYRMessage *)message
                             dateFormatter:(NSDateFormatter *)dateFormatter
                        persistanceManager:(LSPersistenceManager *)persistenceManager
 {
-    return [[self alloc] initWithConversation:conversation message:message dateFormatter:dateFormatter persistenceManager:persistenceManager];
+    return [[self alloc] initWithConversation:conversation dateFormatter:dateFormatter persistenceManager:persistenceManager];
 }
             
 - (id)initWithConversation:(LYRConversation *)conversation
-                   message:(LYRMessage *)message
              dateFormatter:(NSDateFormatter *)dateFormatter
         persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     self = [super init];
     if (self) {
         _conversation = conversation;
-        _message = message;
         _persistenceManager = persistenceManager;
         _dateFormatter = dateFormatter;
     }
