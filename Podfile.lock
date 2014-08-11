@@ -21,7 +21,7 @@ PODS:
   - layer-client-messaging-schema (20140806143305965)
   - layer-thrift (0.56.0):
     - thrift (~> 0.9.1)
-  - LayerKit (0.7.10):
+  - LayerKit (0.7.11):
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20140807184219546)
     - FMDB/standalone (~> 2.3)
@@ -31,7 +31,7 @@ PODS:
     - LayerKit/Public
     - RKSupport/RKPathTemplate
     - TransitionKit (~> 2.1.0)
-  - LayerKit/Public (0.7.10):
+  - LayerKit/Public (0.7.11):
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20140807184219546)
     - FMDB/standalone (~> 2.3)
@@ -75,7 +75,7 @@ SPEC CHECKSUMS:
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
   layer-client-messaging-schema: c11dd808348cf13fe00d9a38a0ef65f25f999faa
   layer-thrift: 0bd5ee9a44e4318f5f297436dbfe15b0b099dd59
-  LayerKit: 797d05fe90fa022aeed06978ede71b82c42f16e6
+  LayerKit: 237294705be0ead9fe85c48c3a6d97453a9c0a0a
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   RKSupport: 8fdbd2d96a5522ea57b17c8afb0e78eeeef74f0a
   sqlite3: 624a11eb032685c50adde3e0a549b1909eceb05e

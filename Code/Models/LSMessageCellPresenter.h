@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <LayerKit/LayerKit.h>
 #import "LSPersistenceManager.h"
-#import "LYRMessage.h"
 
 /**
  @abstract The `LSMessageCellPresenter` class models a message object and is used to present message information to the user interface
