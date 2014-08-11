@@ -63,7 +63,7 @@
 
 - (UIImage *)imageForMessageSender
 {
-    return [UIImage imageNamed:@"kevin"];
+    return nil;
 }
 
 - (NSUInteger)indexForPart
