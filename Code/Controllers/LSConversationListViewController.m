@@ -16,7 +16,7 @@
 
 @property (nonatomic, strong) NSArray *conversations;
 @property (nonatomic, strong) LSNotificationObserver *notificationObserver;
-
+@property (nonatomic, strong) NSDateFormatter *dateFormatter;
 @end
 
 @implementation LSConversationListViewController
@@ -51,6 +51,8 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = [UIColor whiteColor];
     [self.tableView registerClass:[LSConversationCell class] forCellReuseIdentifier:LSConversationCellID];
+    
+    self.dateFormatter = [[NSDateFormatter alloc] init];
 }
 
 - (void)dealloc
@@ -120,6 +122,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     LYRMessage *lastMessage = [[self.layerClient messagesForConversation:conversation] lastObject];
     LSConversationCellPresenter *presenter = [LSConversationCellPresenter presenterWithConversation:conversation
                                                                                             message:lastMessage
+                                                                                      dateFormatter:self.dateFormatter
                                                                                  persistanceManager:self.persistenceManager];
     [cell updateWithPresenter:presenter];
 }

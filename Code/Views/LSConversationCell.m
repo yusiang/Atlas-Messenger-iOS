@@ -99,24 +99,8 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
         self.lastMessageTextView.text = @"DRAFT CONVERSATION: No Text!";
     }
     
-    // Set Date Text
-    NSCalendar* calendar = [NSCalendar currentCalendar];
-    
-    unsigned int conversationDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-    NSDateComponents* conversationDateComponents = [calendar components:conversationDateFlags fromDate:presenter.conversation.lastMessage.sentAt];
-    NSDate *conversationDate = [calendar dateFromComponents:conversationDateComponents];
-    
-    unsigned int currentDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-    NSDateComponents* currentDateComponents = [calendar components:currentDateFlags fromDate:[NSDate date]];
-    NSDate *currentDate = [calendar dateFromComponents:currentDateComponents];
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    if ([conversationDate compare:currentDate] == NSOrderedAscending) {
-        [formatter setDateFormat:@"MMM dd"];
-    } else {
-        [formatter setDateFormat:@"hh:mm a"];
-    }
-    self.dateLabel.text = [formatter stringFromDate:presenter.conversation.lastMessage.sentAt];
+
+    self.dateLabel.text = [presenter conversationDateLabel];
 }
 
 #pragma mark

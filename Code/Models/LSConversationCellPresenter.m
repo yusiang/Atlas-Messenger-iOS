@@ -18,23 +18,31 @@
 @interface LSConversationCellPresenter ()
 
 @property (nonatomic, strong) LSPersistenceManager *persistenceManager;
+@property (nonatomic) NSDateFormatter *dateFormatter;
 
 @end
 
 @implementation LSConversationCellPresenter
 
-+ (instancetype)presenterWithConversation:(LYRConversation *)conversation message:(LYRMessage *)message persistanceManager:(LSPersistenceManager *)persistenceManager
++ (instancetype)presenterWithConversation:(LYRConversation *)conversation
+                                  message:(LYRMessage *)message
+                            dateFormatter:(NSDateFormatter *)dateFormatter
+                       persistanceManager:(LSPersistenceManager *)persistenceManager
 {
-    return [[self alloc] initWithConversation:conversation message:message persistenceManager:persistenceManager];
+    return [[self alloc] initWithConversation:conversation message:message dateFormatter:dateFormatter persistenceManager:persistenceManager];
 }
             
-- (id)initWithConversation:(LYRConversation *)conversation message:(LYRMessage *)message persistenceManager:(LSPersistenceManager *)persistenceManager
+- (id)initWithConversation:(LYRConversation *)conversation
+                   message:(LYRMessage *)message
+             dateFormatter:(NSDateFormatter *)dateFormatter
+        persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     self = [super init];
     if (self) {
         _conversation = conversation;
         _message = message;
         _persistenceManager = persistenceManager;
+        _dateFormatter = dateFormatter;
     }
     return self;
 }
@@ -48,6 +56,27 @@
 - (UIImage *)conversationImage
 {
     return nil;
+}
+
+- (NSString *)conversationDateLabel
+{
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    
+    unsigned int conversationDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents* conversationDateComponents = [calendar components:conversationDateFlags fromDate:self.conversation.lastMessage.sentAt];
+    NSDate *conversationDate = [calendar dateFromComponents:conversationDateComponents];
+    
+    unsigned int currentDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents* currentDateComponents = [calendar components:currentDateFlags fromDate:[NSDate date]];
+    NSDate *currentDate = [calendar dateFromComponents:currentDateComponents];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    if ([conversationDate compare:currentDate] == NSOrderedAscending) {
+        [formatter setDateFormat:@"MMM dd"];
+    } else {
+        [formatter setDateFormat:@"hh:mm a"];
+    }
+    return [formatter stringFromDate:self.conversation.lastMessage.sentAt];
 }
 
 - (NSArray *)sortedFullNamesForParticiapnts:(NSSet *)participantIDs
