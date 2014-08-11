@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LYRClient.h"
+#import <LayerKit/LayerKit.h>
 
 @class LSNotificationObserver;
 

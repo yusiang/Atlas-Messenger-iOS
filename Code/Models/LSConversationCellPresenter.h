@@ -7,9 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <LayerKit/LayerKit.h>
 #import "LSPersistenceManager.h"
-#import "LYRConversation.h"
-#import "LYRMessage.h"
 #import "LSUser.h"
 
 /**

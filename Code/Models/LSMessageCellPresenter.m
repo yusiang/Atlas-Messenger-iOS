@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
+#import <LayerKit/LayerKit.h>
 #import "LSMessageCellPresenter.h"
-#import "LYRConversation.h"
 
 @interface LSMessageCellPresenter ()
 
