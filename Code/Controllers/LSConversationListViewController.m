@@ -192,7 +192,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
             LSConversationViewController *controller = [LSConversationViewController new];
 
             NSArray *participants = [[contacts valueForKey:@"userID"] allObjects];
-            LYRConversation *conversation = [self.layerClient conversationForParticipants:participants];
+            LYRConversation *conversation = [[self.layerClient conversationsForParticipants:participants] anyObject];
 
             if (!conversation) {
                 conversation = [LYRConversation conversationWithParticipants:participants];
