@@ -6,7 +6,7 @@ PODS:
   - KIF/XCTest (3.0.7)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - LayerKit (0.7.11)
+  - LayerKit (0.7.12)
   - LYRCountDownLatch (0.9.0)
   - SVProgressHUD (HEAD based on 1.0)
 
@@ -15,11 +15,13 @@ DEPENDENCIES:
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
-  - LayerKit
+  - LayerKit (from `~/Dropbox//Layer/Builds/iOS/LayerKit-0.7.12`)
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
+  LayerKit:
+    :path: ~/Dropbox//Layer/Builds/iOS/LayerKit-0.7.12
   LYRCountDownLatch:
     :git: git@github.com:layerhq/LYRCountDownLatch.git
 
@@ -28,7 +30,7 @@ SPEC CHECKSUMS:
   HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
   KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
-  LayerKit: 1ba95abb89514f42868edfc27fab7e3e02c08aad
+  LayerKit: 612349f4d9bdcb292388988ac076adef50878f7e
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
 
