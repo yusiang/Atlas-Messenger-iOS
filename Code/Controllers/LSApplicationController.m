@@ -81,7 +81,7 @@
 - (void)layerClient:(LYRClient *)client didFailSynchronizationWithError:(NSError *)error
 {
     LSAlertWithError(error);
-    NSLog(@"Layer Client did fail synchronization ");
+    NSLog(@"Layer Client did fail synchronization with error: %@", error);
 }
 
 - (void)didReceiveLayerClientWillBeginSynchronizationNotification:(NSNotification *)notification
