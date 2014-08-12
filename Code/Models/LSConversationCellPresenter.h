@@ -22,7 +22,6 @@
 ///-------------------------------
 
 + (instancetype)presenterWithConversation:(LYRConversation *)conversation
-                            dateFormatter:(NSDateFormatter *)dateFormatter
                        persistanceManager:(LSPersistenceManager *)persistenceManager;
 
 - (NSString *)conversationLabel;
