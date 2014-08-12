@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LYRMessagePart.h"
+#import <LayerKit/LayerKit.h>
 #import "LSMessageCellPresenter.h"
 
 @interface LSBubbleView : UIView

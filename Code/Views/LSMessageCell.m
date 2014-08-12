@@ -16,6 +16,7 @@
 @property (nonatomic, strong) LSBubbleView *bubbleView;
 @property (nonatomic, strong) UILabel *senderLabel;
 @property (nonatomic, strong) LSAvatarImageView *avatarImageView;
+@property (nonatomic, strong) UIView *arrow;
 
 @end
 
@@ -27,6 +28,8 @@ static CGFloat const LSAvatarImageViewBottomMargin = -2.0f;
 
 static CGFloat const LSBubbleViewWidthMultiplier = 0.75f;
 static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
+
+static CGFloat const LSArrowSize = 16.0f;
 
 
 - (id)initWithFrame:(CGRect)frame
@@ -43,17 +46,19 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
         self.bubbleView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.bubbleView];
         
-        //Initialize the Sender Label
-        self.senderLabel = [[UILabel alloc] init];
-        self.senderLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.contentView addSubview:self.senderLabel];
-        
         //Initialize the sender Avatar Image View
         self.avatarImageView = [[LSAvatarImageView alloc] init];
         self.avatarImageView.layer.cornerRadius = (LSAvatarImageViewSize / 2);
         self.avatarImageView.clipsToBounds = YES;
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.avatarImageView];
+        
+        //Initialize the bubble view
+        self.arrow = [[UIView alloc] init];
+        self.arrow.layer.cornerRadius = 2;
+        self.arrow.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.contentView addSubview:self.arrow];
+        
     }
     return self;
 }
@@ -61,6 +66,8 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
 - (void)updateWithPresenter:(LSMessageCellPresenter *)presenter
 {
     [self.contentView removeConstraints:self.contentView.constraints];
+    self.arrow.layer.mask = nil;
+    
     [self.bubbleView updateViewWithPresenter:presenter];
     
     if ([presenter messageWasSentByAuthenticatedUser]) {
@@ -75,9 +82,10 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     [self setupSenderCellConstraintsWithPresenter:presenter];
     if (presenter.shouldShowSenderImage) {
         self.avatarImageView.alpha = 1.0;
-//        [self.bubbleView displayArrowForSender];
+        self.arrow.alpha = 1.0;
     } else {
         self.avatarImageView.alpha = 0.0;
+        self.arrow.alpha = 0.0;
     }
 }
 
@@ -86,9 +94,10 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
     [self setupRecipientCellConstraintsWithPresenter:presenter];
     if (presenter.shouldShowSenderImage) {
         self.avatarImageView.alpha = 1.0;
-//        [self.bubbleView displayArrowForRecipient];
+        self.arrow.alpha = 1.0;
     } else {
         self.avatarImageView.alpha = 0.0;
+        self.arrow.alpha = 0.0;
     }
 }
 
@@ -169,6 +178,43 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
                                                                   constant:0]];
+    
+    //**********Sender Arrow Constraints**********//
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.arrow
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.bubbleView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:-LSArrowSize / 2]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.arrow
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.avatarImageView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.0
+                                                                  constant:0]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.arrow
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:nil
+                                                                 attribute:NSLayoutAttributeNotAnAttribute
+                                                                multiplier:1.0
+                                                                  constant:LSArrowSize]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.arrow
+                                                                 attribute:NSLayoutAttributeWidth
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:nil
+                                                                 attribute:NSLayoutAttributeNotAnAttribute
+                                                                multiplier:1.0
+                                                                  constant:LSArrowSize]];
+
+    
+    self.arrow.backgroundColor = LSBlueColor();
+    [self cutArrowForSenderCell];
 }
 
 - (void)setupRecipientCellConstraintsWithPresenter:(LSMessageCellPresenter *)presenter
@@ -249,6 +295,68 @@ static CGFloat const LSBubbleViewVerticalMargin = 10.0f;
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
                                                                   constant:0]];
+    
+    //**********Sender Arrow Constraints**********//
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.arrow
+                                                                 attribute:NSLayoutAttributeRight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.bubbleView
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                multiplier:1.0
+                                                                  constant:LSArrowSize / 2]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.arrow
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.avatarImageView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.0
+                                                                  constant:0]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.arrow
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:nil
+                                                                 attribute:NSLayoutAttributeNotAnAttribute
+                                                                multiplier:1.0
+                                                                  constant:LSArrowSize]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.arrow
+                                                                 attribute:NSLayoutAttributeWidth
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:nil
+                                                                 attribute:NSLayoutAttributeNotAnAttribute
+                                                                multiplier:1.0
+                                                                  constant:LSArrowSize]];
+    self.arrow.backgroundColor = LSGrayColor();
+    [self cutArrowForRecipientCell];
+    
+}
+
+- (void)cutArrowForSenderCell
+{
+    UIBezierPath *path = [UIBezierPath new];
+    [path moveToPoint:(CGPoint){16, 8}];
+    [path addLineToPoint:(CGPoint){8, 2}];
+    [path addLineToPoint:(CGPoint){8, 14}];
+    //
+    CAShapeLayer *mask = [CAShapeLayer new];
+    mask.frame = self.arrow.bounds;
+    mask.path = path.CGPath;
+    self.arrow.layer.mask = mask;
+}
+
+- (void)cutArrowForRecipientCell
+{
+    UIBezierPath *path = [UIBezierPath new];
+    [path moveToPoint:(CGPoint){0, 8}];
+    [path addLineToPoint:(CGPoint){8, 2}];
+    [path addLineToPoint:(CGPoint){8, 14}];
+    //
+    CAShapeLayer *mask = [CAShapeLayer new];
+    mask.frame = self.arrow.bounds;
+    mask.path = path.CGPath;
+    self.arrow.layer.mask = mask;
 }
 
 - (CGFloat)bubbleWidthForMessagePart:(LYRMessagePart *)messagePart

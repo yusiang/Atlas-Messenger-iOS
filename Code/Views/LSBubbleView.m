@@ -10,11 +10,6 @@
 #import "LSUIConstants.h"
 #import "LSUtilities.h"
 
-static inline CGFloat LSDegreesToRadians(CGFloat angle)
-{
-    return (angle) / 180.0 * M_PI;
-}
-
 @interface LSBubbleView ()
 
 @property (nonatomic) UITextView *textView;
@@ -30,27 +25,20 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
     self = [super init];
     if (self) {
         
-        self.layer.cornerRadius = 4;
+        self.layer.cornerRadius = 8;
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        
-// Commenting out for now because of issues related to overlapping autolayout constraints
-//        self.arrow = [[UIView alloc] init];
-//        self.arrow.layer.cornerRadius = 2;
-//        self.arrow.translatesAutoresizingMaskIntoConstraints = NO;
-//        self.arrow.transform = CGAffineTransformMakeRotation(LSDegreesToRadians(45));
-//        [self addSubview:self.arrow];
-        
+    
         self.textView = [[UITextView alloc] init];
         self.textView.translatesAutoresizingMaskIntoConstraints = NO;
         self.textView.contentInset = UIEdgeInsetsMake(-4,0,0,0);
         self.textView.userInteractionEnabled = NO;
         self.textView.font = LSMediumFont(14);
-        self.textView.textColor = [UIColor whiteColor];
         self.textView.backgroundColor = [UIColor clearColor];
         [self addSubview:self.textView];
         
         self.imageView = [[UIImageView alloc] init];
-        self.imageView.layer.cornerRadius = 8;
+        self.imageView.layer.cornerRadius = 4;
+        self.imageView.clipsToBounds = YES;
         self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.imageView];
     
@@ -108,7 +96,6 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
     } else if([part.MIMEType isEqualToString:MIMETypeImagePNG()] ) {
         self.textView.text = nil;
         UIImage *image = [[UIImage alloc] initWithData:part.data];
-        //UIImage *imageToDisplay = [UIImage imageWithCGImage:[image CGImage] scale:1.0 orientation:UIImageOrientationRight];
         [self.imageView setImage:image];
         self.imageView.accessibilityLabel = @"image";
     } else if ([part.MIMEType isEqualToString:MIMETypeImageJPEG()]){
@@ -120,8 +107,12 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
     
     if ([presenter messageWasSentByAuthenticatedUser]) {
         self.backgroundColor = LSBlueColor();
+        self.textView.textColor = [UIColor whiteColor];
+        //[self displayArrowForSender];
     } else {
         self.backgroundColor = LSGrayColor();
+        self.textView.textColor = [UIColor blackColor];
+        //[self displayArrowForRecipient];
     }
     self.arrow.backgroundColor = [UIColor redColor];
 }

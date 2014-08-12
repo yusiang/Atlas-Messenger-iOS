@@ -1,6 +1,6 @@
 pod 'SVProgressHUD', :head
-pod 'Instabug', '~> 2.0'
 pod 'LayerKit'
+#pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
 pod 'HockeySDK', '~> 3.5.6'
 
 target 'LayerSampleTests' do

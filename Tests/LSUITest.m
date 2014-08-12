@@ -526,6 +526,34 @@
     [tester waitForViewWithAccessibilityLabel:[self imageCelLabelForemail:[self testUserWithNumber:1].fullName]];
 }
 
+- (void)testStarting5ConversationsAndSending5MessagesThenLoggingInOnRecipientsDevice
+{
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:2]];
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:3]];
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+    
+    for (int i = 0; i < 5; i++) {
+        [self startConversationWithUsers:@[[self testUserWithNumber:2], [self testUserWithNumber:3]]];
+        for (int i = 0; i < 5; i++) {
+           [self sendMessageWithText:[NSString stringWithFormat:@"Hello %d", i]];
+        }
+        [tester tapViewWithAccessibilityLabel:@"Back"];
+        [tester waitForViewWithAccessibilityLabel:@"Conversations"];
+    }
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:2]];
+    [tester waitForViewWithAccessibilityLabel:[self conversationCellLabelForParticipants:@[[self testUserWithNumber:1].fullName, [self testUserWithNumber:3].fullName]]];
+    [tester waitForTimeInterval:5];
+}
+
 //======== Factory Methods =========//
 
 - (void)presentAuthenticationViewController
@@ -643,9 +671,7 @@
 
 - (void)sendMessageWithText:(NSString *)text
 {
-    [tester tapViewWithAccessibilityLabel:@"Compose TextView"];
-    [tester waitForViewWithAccessibilityLabel:@"space"]; //Space represents that the keyboard is show, hence the focus is on the text entry box
-    [tester clearTextFromAndThenEnterText:text intoViewWithAccessibilityLabel:@"Compose TextView"];
+    [tester enterText:text intoViewWithAccessibilityLabel:@"Compose TextView"];
     [tester tapViewWithAccessibilityLabel:@"Send Button"];
     
     NSError *error;
@@ -689,7 +715,6 @@
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
-//    [tester waitForTimeInterval:2];
 }
 
 - (LSUser *)testUserWithNumber:(NSUInteger)number

@@ -1,20 +1,18 @@
 PODS:
   - Expecta (0.3.1)
   - HockeySDK (3.5.6)
-  - Instabug (2.0)
   - KIF (3.0.7):
     - KIF/XCTest
   - KIF/XCTest (3.0.7)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - LayerKit (0.7.6)
+  - LayerKit (0.7.11)
   - LYRCountDownLatch (0.9.0)
   - SVProgressHUD (HEAD based on 1.0)
 
 DEPENDENCIES:
   - Expecta (~> 0.3.0)
   - HockeySDK (~> 3.5.6)
-  - Instabug (~> 2.0)
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
   - LayerKit
@@ -28,10 +26,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
-  Instabug: b3b0a7d30ea6ce3242e7cc44813e801143b9009b
   KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
-  LayerKit: d26eeef10bd1e24841745e6304b7e8b8c431ef01
+  LayerKit: 1ba95abb89514f42868edfc27fab7e3e02c08aad
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
 
