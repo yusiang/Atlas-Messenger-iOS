@@ -66,6 +66,7 @@ task :init do
   puts grey("$ `eval \"$(rbenv init - --no-rehash)\"`")
 end
 
+desc "Builds and pushes a new release to Hockey App"
 task :release do
   # 0) Check for bad directory state.
   dirty_git = `git diff --shortstat 2> /dev/null | tail -n1` != ""
