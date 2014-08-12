@@ -11,11 +11,16 @@
 #import "LSConversationCell.h"
 #import "LSUIConstants.h"
 #import "LSUtilities.h"
+#import "LSVersionView.h"
+#import "LSApplicationController.h"
 
 @interface LSConversationListViewController () <LSContactsSelectionViewControllerDelegate, LSNotificationObserverDelegate>
 
 @property (nonatomic, strong) NSArray *conversations;
 @property (nonatomic, strong) LSNotificationObserver *notificationObserver;
+
+@property (nonatomic, strong) LSVersionView *versionView;
+
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 @end
 
@@ -51,6 +56,19 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = [UIColor whiteColor];
     [self.tableView registerClass:[LSConversationCell class] forCellReuseIdentifier:LSConversationCellID];
+
+    self.versionView = [[LSVersionView alloc] initWithFrame:CGRectZero];
+    self.versionView.topLabel.text = [LSApplicationController versionString];
+    self.versionView.bottomLabel.text = [LSApplicationController buildInformationString];
+
+    [self.versionView sizeToFit];
+
+    [self.tableView addSubview:self.versionView];
+
+    self.versionView.frame = CGRectMake((int)(self.tableView.frame.size.width / 2.0 - self.versionView.frame.size.width / 2.0),
+                                        -self.versionView.frame.size.height,
+                                        self.versionView.frame.size.width,
+                                        self.versionView.frame.size.height);
     
     self.dateFormatter = [[NSDateFormatter alloc] init];
 }
