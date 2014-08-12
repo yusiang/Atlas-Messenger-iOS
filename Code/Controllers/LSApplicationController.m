@@ -94,4 +94,37 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
++ (NSString *)versionString
+{
+    NSString *marketingVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
+    NSString *bundleVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"];
+
+    NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
+
+    NSString *versionString = nil;
+    if (buildInformation) {
+        NSString *layerKitVersion = buildInformation[@"LYRBuildLayerKitVersion"];
+        versionString = [NSString stringWithFormat:@"LayerSample v%@ (%@) - LayerKit v%@", marketingVersion, bundleVersion, layerKitVersion];
+    } else {
+        versionString = [NSString stringWithFormat:@"LayerSample v%@ (%@)", marketingVersion, bundleVersion];
+    }
+
+    return versionString;
+}
+
++ (NSString *)buildInformationString
+{
+    NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
+
+    if (!buildInformation) {
+        return [NSString stringWithFormat:@"Non-Release Build"];
+    }
+
+    NSString *buildSHA = buildInformation[@"LYRBuildShortSha"];
+    NSString *builderName = buildInformation[@"LYRBuildBuilderName"];
+    NSString *builderEmail = buildInformation[@"LYRBuildBuilderEmail"];
+
+    return [NSString stringWithFormat:@"Built by %@ (%@) SHA: %@", builderName, builderEmail, buildSHA];
+}
+
 @end

@@ -31,4 +31,18 @@
 @property (nonatomic, strong) LSAPIManager *APIManager;
 @property (nonatomic, strong) LSPersistenceManager *persistenceManager;
 
+/**
+ *  Constructs and returns a version string describing the current version of the application.
+ *
+ *  @return The version string suitable for display in the app.
+ */
++ (NSString *)versionString;
+
+/**
+ *  Constructs and returns a build string describing the context in which the app was built.
+ *
+ *  @return The build string suitable for display in the app.
+ */
++ (NSString *)buildInformationString;
+
 @end
