@@ -84,13 +84,17 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     LYRSetLogLevelFromEnvironment();
-    LYRTestCleanKeychain();
+
+    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL()]) {
+        LYRTestCleanKeychain();
+    } else {
+        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL() forKey:@"LAYER_CONFIGURATION_URL"];
+    }
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
-    
-    // Set Layer backend via configuration URL
-    [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL() forKey:@"LAYER_CONFIGURATION_URL"];
-    
+
     LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     

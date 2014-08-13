@@ -67,7 +67,6 @@
 		259A57731950EB83000E27B0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 259A576C1950EB83000E27B0 /* Main.storyboard */; };
 		259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 259A576E1950EB83000E27B0 /* InfoPlist.strings */; };
 		259A57751950EB83000E27B0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A57701950EB83000E27B0 /* Images.xcassets */; };
-		259A57761950EB83000E27B0 /* kevin.png in Resources */ = {isa = PBXBuildFile; fileRef = 259A57711950EB83000E27B0 /* kevin.png */; };
 		259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */; };
 		259A57801950EB92000E27B0 /* LSUITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577D1950EB92000E27B0 /* LSUITest.m */; };
 		9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */; };
@@ -176,7 +175,6 @@
 		259A576D1950EB83000E27B0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		259A576F1950EB83000E27B0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		259A57701950EB83000E27B0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		259A57711950EB83000E27B0 /* kevin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kevin.png; sourceTree = "<group>"; };
 		259A57721950EB83000E27B0 /* LayerSample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LayerSample-Info.plist"; sourceTree = "<group>"; };
 		259A57791950EB92000E27B0 /* KIFUITestActor+LSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KIFUITestActor+LSAdditions.h"; sourceTree = "<group>"; };
 		259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KIFUITestActor+LSAdditions.m"; sourceTree = "<group>"; };
@@ -373,7 +371,6 @@
 				259A576C1950EB83000E27B0 /* Main.storyboard */,
 				259A576E1950EB83000E27B0 /* InfoPlist.strings */,
 				259A57701950EB83000E27B0 /* Images.xcassets */,
-				259A57711950EB83000E27B0 /* kevin.png */,
 				259A57721950EB83000E27B0 /* LayerSample-Info.plist */,
 			);
 			path = Resources;
@@ -489,7 +486,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				259A57751950EB83000E27B0 /* Images.xcassets in Resources */,
-				259A57761950EB83000E27B0 /* kevin.png in Resources */,
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
 				259A57731950EB83000E27B0 /* Main.storyboard in Resources */,
 				0A27A9431997FD210070BD4F /* logout@2x.png in Resources */,
@@ -744,6 +740,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -759,6 +756,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

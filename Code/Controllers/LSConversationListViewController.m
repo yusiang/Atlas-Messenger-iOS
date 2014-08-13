@@ -21,7 +21,6 @@
 
 @property (nonatomic, strong) LSVersionView *versionView;
 
-@property (nonatomic, strong) NSDateFormatter *dateFormatter;
 @end
 
 @implementation LSConversationListViewController
@@ -69,8 +68,6 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
                                         -self.versionView.frame.size.height,
                                         self.versionView.frame.size.width,
                                         self.versionView.frame.size.height);
-    
-    self.dateFormatter = [[NSDateFormatter alloc] init];
 }
 
 - (void)dealloc
@@ -137,10 +134,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 - (void)configureCell:(LSConversationCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     LYRConversation *conversation = [self.conversations objectAtIndex:indexPath.row];
-    LYRMessage *lastMessage = [[self.layerClient messagesForConversation:conversation] lastObject];
     LSConversationCellPresenter *presenter = [LSConversationCellPresenter presenterWithConversation:conversation
-                                                                                            message:lastMessage
-                                                                                      dateFormatter:self.dateFormatter
                                                                                  persistanceManager:self.persistenceManager];
     [cell updateWithPresenter:presenter];
 }

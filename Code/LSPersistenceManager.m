@@ -10,10 +10,14 @@
 
 #define LSMustBeImplementedBySubclass() @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Must be implemented by concrete subclass." userInfo:nil]
 
-@interface LSInMemoryPersistenceManager : LSPersistenceManager
+@interface LSPersistenceManager ()
 
-@property (nonatomic) NSMutableSet *users;
+@property (nonatomic) NSSet *users;
 @property (nonatomic) LSSession *session;
+
+@end
+
+@interface LSInMemoryPersistenceManager : LSPersistenceManager
 
 @end
 
@@ -75,19 +79,10 @@
 
 @implementation LSInMemoryPersistenceManager
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        _users = [NSMutableSet set];
-    }
-    return self;
-}
-
 - (BOOL)persistUsers:(NSSet *)users error:(NSError **)error
 {
     NSParameterAssert(users);
-    [self.users unionSet:users];
+    self.users = users;
     return YES;
 }
 
@@ -109,7 +104,7 @@
 
 - (BOOL)deleteAllObjects:(NSError **)error
 {
-    [self.users removeAllObjects];
+    self.users = nil;
     self.session = nil;
     return YES;
 }
@@ -144,13 +139,19 @@
 - (BOOL)persistUsers:(NSSet *)users error:(NSError **)error
 {
     NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
+    self.users = users;
     return [NSKeyedArchiver archiveRootObject:users toFile:path];
 }
 
 - (NSSet *)persistedUsersWithError:(NSError **)error
 {
+    if (self.users) {
+        return self.users;
+    }
+
     NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
     NSSet *users = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    self.users = users;
     return users;
 }
 
@@ -169,19 +170,31 @@
             }
         }
     }
+
+    self.users = nil;
+    self.session = nil;
+
     return YES;
 }
 
 - (BOOL)persistSession:(LSSession *)session error:(NSError **)error
 {
     NSString *path = [self.path stringByAppendingPathComponent:@"Session.plist"];
+    self.session = session;
     return [NSKeyedArchiver archiveRootObject:session toFile:path];
 }
 
 - (LSSession *)persistedSessionWithError:(NSError **)error
 {
+    if (self.session) {
+        return self.session;
+    }
+
     NSString *path = [self.path stringByAppendingPathComponent:@"Session.plist"];
     LSSession *session = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+
+    self.session = session;
+
     return session;
 }
 
