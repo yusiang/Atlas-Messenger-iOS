@@ -115,6 +115,9 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
 
 - (void)loginTapped
 {
+    // Don't attempt to login multiple times with one in progress
+    if ([SVProgressHUD isVisible]) return;
+    
     LSInputTableViewCell *usernameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
     
