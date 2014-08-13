@@ -23,7 +23,8 @@ NSString *LSLayerConfigurationURL()
     if (LSIsRunningTests()) {
         return @"172.17.8.101/client_configuration.json";
     }
-    return @"https://na-3.preview.layer.com/client_configuration.json";
+//    return @"https://na-3.preview.layer.com/client_configuration.json";
+    return @"https://dev-1.preview.layer.com/client_configuration.json";
 }
 
 NSUUID *LSLayerAppID(void)
@@ -31,7 +32,10 @@ NSUUID *LSLayerAppID(void)
     if (LSIsRunningTests()) {
         return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
     }
-    return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
+//    return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
+    
+    // dev-1 (9ae66b44-1682-11e4-92e4-0b53000001d0)
+    return [[NSUUID alloc] initWithUUIDString:@"9ae66b44-1682-11e4-92e4-0b53000001d0"];
 }
 
 NSString *LSApplicationDataDirectory(void)
