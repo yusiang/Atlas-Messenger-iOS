@@ -47,7 +47,7 @@
 
 - (void)layerClient:(LYRClient *)client didReceiveAuthenticationChallengeWithNonce:(NSString *)nonce
 {
-     NSLog(@"Layer Client did recieve authentication challenge");
+     NSLog(@"Layer Client did recieve authentication challenge with nonce: %@", nonce);
     LSUser *user = self.APIManager.authenticatedSession.user;
     if (user) {
         [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
