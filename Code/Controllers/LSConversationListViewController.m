@@ -189,7 +189,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
             LYRConversation *conversation = [[self.layerClient conversationsForParticipants:participants] anyObject];
 
             if (!conversation) {
-                conversation = [LYRConversation conversationWithParticipants:[participants allObjects]];
+                conversation = [LYRConversation conversationWithParticipants:participants];
             }
 
             controller.conversation = conversation;
