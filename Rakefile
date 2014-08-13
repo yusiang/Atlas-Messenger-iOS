@@ -69,7 +69,7 @@ end
 desc "Builds and pushes a new release to Hockey App"
 task :release do
   # 0) Check for bad directory state.
-  dirty_git = `git diff --shortstat 2> /dev/null | tail -n1` != ""
+  dirty_git = `git diff --name-only | grep -v Podfile | wc -l |  awk '{print $1}'`.chomp != "0"
   
   if dirty_git
     abort("Unable to build: The release process must be done with a clean directory. Perhaps you could `git stash`?")
