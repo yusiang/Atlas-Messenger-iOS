@@ -35,6 +35,7 @@
     self = [super init];
     if (self) {
         _conversation = conversation;
+        _message = conversation.lastMessage;
         _persistenceManager = persistenceManager;
 
         if (!dateFormatter) {
