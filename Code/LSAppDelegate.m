@@ -88,7 +88,6 @@ extern void LYRSetLogLevelFromEnvironment();
     NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
     if (![currentConfigURL isEqualToString:LSLayerConfigurationURL()]) {
         LYRTestCleanKeychain();
-    } else {
         [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL() forKey:@"LAYER_CONFIGURATION_URL"];
     }
 
