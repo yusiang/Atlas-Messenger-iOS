@@ -185,11 +185,11 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
         if (contacts.count > 0) {
             LSConversationViewController *controller = [LSConversationViewController new];
 
-            NSArray *participants = [[contacts valueForKey:@"userID"] allObjects];
+            NSSet *participants = [contacts valueForKey:@"userID"];
             LYRConversation *conversation = [[self.layerClient conversationsForParticipants:participants] anyObject];
 
             if (!conversation) {
-                conversation = [LYRConversation conversationWithParticipants:participants];
+                conversation = [LYRConversation conversationWithParticipants:[participants allObjects]];
             }
 
             controller.conversation = conversation;
