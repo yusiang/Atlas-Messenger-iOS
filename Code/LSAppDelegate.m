@@ -211,10 +211,8 @@ extern void LYRSetLogLevelFromEnvironment();
         NSLog(@"Failed clearing persistent user session: %@", error);
         LSAlertWithError(error);
     }
-    
-    [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        [self.navigationController dismissViewControllerAnimated:YES completion:NO];
-    }];
+
+    [self.navigationController dismissViewControllerAnimated:YES completion:NO];
 }
 
 - (void)loadContacts
