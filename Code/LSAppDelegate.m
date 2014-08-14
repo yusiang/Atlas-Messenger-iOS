@@ -154,8 +154,7 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)updateCrashlyticsWithUser:(LSUser *)authenticatedUser
 {
-    if (!authenticatedUser) return;
-
+    // Note: If authenticatedUser is nil, this will nil out everything which is what we want.
     [Crashlytics setUserName:authenticatedUser.fullName];
     [Crashlytics setUserEmail:authenticatedUser.email];
     [Crashlytics setUserIdentifier:authenticatedUser.userID];
@@ -221,6 +220,10 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     NSError *error = nil;
     BOOL success = [self.applicationController.persistenceManager persistSession:nil error:&error];
+
+    // nil out all crashlytics user information.
+    [self updateCrashlyticsWithUser:nil];
+
     if (success) {
         NSLog(@"Cleared persisted user session");
     } else {
