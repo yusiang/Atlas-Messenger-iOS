@@ -75,6 +75,10 @@ task :release do
     abort("Unable to build: The release process must be done with a clean directory. Perhaps you could `git stash`?")
   end
   
+  # Clear Pods out
+  run "rm -rf Pods"
+  run "pod install"
+  
   # 1) Generate objects with: builder name/email (via git config), short-sha
   layer_kit_version = `cat Podfile.lock | perl -n -e'/LayerKit \\((.+?)\\)/ && print $1'`.strip
   short_sha = `git rev-parse --short HEAD`.strip
