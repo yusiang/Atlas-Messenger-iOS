@@ -83,6 +83,9 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Kicking off Crashlytics
+    [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
+
     LYRSetLogLevelFromEnvironment();
 
     NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
@@ -113,7 +116,12 @@ extern void LYRSetLogLevelFromEnvironment();
     self.window.rootViewController = self.navigationController;
     
     LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
-    
+    [self updateCrashlyticsWithUser:session.user];
+
+    // update the app ID and configuration URL in the crash metadata.
+    [Crashlytics setObjectValue:LSLayerConfigurationURL() forKey:@"ConfigurationURL"];
+    [Crashlytics setObjectValue:LSLayerAppID() forKey:@"AppID"];
+
     NSError *error = nil;
     if ([self.applicationController.APIManager resumeSession:session error:&error]) {
         NSLog(@"Session resumed: %@", session);
@@ -129,9 +137,6 @@ extern void LYRSetLogLevelFromEnvironment();
     }
     
     [self.window makeKeyAndVisible];
-    
-    // Kicking off Crashlytics
-    [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
 
     // Start HockeyApp
 //    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
@@ -145,6 +150,15 @@ extern void LYRSetLogLevelFromEnvironment();
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
     
     return YES;
+}
+
+- (void)updateCrashlyticsWithUser:(LSUser *)authenticatedUser
+{
+    if (!authenticatedUser) return;
+
+    [Crashlytics setUserName:authenticatedUser.fullName];
+    [Crashlytics setUserEmail:authenticatedUser.email];
+    [Crashlytics setUserIdentifier:authenticatedUser.userID];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -196,6 +210,8 @@ extern void LYRSetLogLevelFromEnvironment();
         NSLog(@"Failed persisting authenticated user: %@. Error: %@", session, error);
         LSAlertWithError(error);
     }
+
+    [self updateCrashlyticsWithUser:session.user];
 
     [self loadContacts];
     [self presentConversationsListViewController];
