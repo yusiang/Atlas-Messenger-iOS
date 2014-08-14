@@ -191,6 +191,10 @@ static CGFloat const LSComposeViewHeight = 40;
     self.messages = [self.layerClient messagesForConversation:self.conversation];
 }
 
+- (void)dealloc
+{
+    self.collectionView.delegate = nil;
+}
 
 # pragma mark
 # pragma mark Collection View Data Source
