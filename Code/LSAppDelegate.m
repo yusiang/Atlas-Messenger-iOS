@@ -119,6 +119,13 @@ extern void LYRSetLogLevelFromEnvironment();
         NSLog(@"Session resumed: %@", session);
         [self loadContacts];
         [self presentConversationsListViewController];
+    } else {
+        if (self.applicationController.layerClient.authenticatedUserID) {
+            NSLog(@"Encountered error while resuming session but Layer client is authenticating. Deauthenticating client...");
+            [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+                NSLog(@"Encountered a situation where");
+            }];
+        }
     }
     
     [self.window makeKeyAndVisible];
