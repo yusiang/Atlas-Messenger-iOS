@@ -65,44 +65,6 @@ static NSString *const LSMessageCellIdentifier = @"messageCellIdentifier";
 static NSString *const LSMessageHeaderIdentifier = @"headerViewIdentifier";
 static CGFloat const LSComposeViewHeight = 40;
 
-@interface LSBlockOperation : NSOperation
-
-- (void)addExecutionBlock:(void (^)(void))block;
-
-@end
-
-@interface LSBlockOperation ()
-
-@property (nonatomic) NSMutableArray *executionBlocks;
-
-@end
-
-@implementation LSBlockOperation
-
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        _executionBlocks = [NSMutableArray new];
-    }
-    return self;
-}
-
-- (void)addExecutionBlock:(void (^)(void))block
-{
-    [self.executionBlocks addObject:[block copy]];
-}
-
-- (void)main
-{
-    for (void (^executionBlock)(void) in self.executionBlocks) {
-        executionBlock();
-    }
-}
-
-@end
-
-
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LSNotificationObserverDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -110,8 +72,14 @@ static CGFloat const LSComposeViewHeight = 40;
 @property (nonatomic, strong) NSOrderedSet *messages;
 @property (nonatomic, strong) LSNotificationObserver *observer;
 @property (nonatomic, strong) NSMutableArray *collectionViewUpdates;
+
+@property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) BOOL keyboardIsOnScreen;
-@property (nonatomic) LSBlockOperation *blockOperation;
+
+- (void)scrollToBottomOfCollectionViewAnimated:(BOOL)animated;
+- (void)updateInsets;
+- (CGPoint)bottomOffset;
+
 @end
 
 @implementation LSConversationViewController
@@ -124,15 +92,14 @@ static CGFloat const LSComposeViewHeight = 40;
     
     self.title = @"Conversation";
     self.accessibilityLabel = @"Conversation";
-    
-    CGRect rect = [[UIScreen mainScreen] bounds];
-    
+
     // Setup Collection View
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40)
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
                                              collectionViewLayout:flowLayout];
-    
-    self.collectionView.contentInset = UIEdgeInsetsMake(10, 0, 20, 0);
+
+    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, LSComposeViewHeight, 0);
+
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor whiteColor];
@@ -142,11 +109,16 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.view addSubview:self.collectionView];
     [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:LSMessageCellIdentifier];
     [self.collectionView registerClass:[LSMessageCellHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LSMessageHeaderIdentifier];
-    
+
+    //self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
+
     // Setup Compose View
-    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, rect.size.height - 40, rect.size.width, LSComposeViewHeight)];
+    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight)];
     self.composeView.delegate = self;
     [self.view addSubview:self.composeView];
+
+    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
+    self.notificationObserver.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -154,10 +126,7 @@ static CGFloat const LSComposeViewHeight = 40;
     [super viewWillAppear:animated];
     [self fetchMessages];
     [self.collectionView reloadData];
-    [self scrollToBottomOfCollectionView];
-
-    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
-    self.notificationObserver.delegate = self;
+    [self scrollToBottomOfCollectionViewAnimated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -174,14 +143,15 @@ static CGFloat const LSComposeViewHeight = 40;
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification object:nil];
     
-    self.keyboardIsOnScreen = FALSE;
-    [self scrollToBottomOfCollectionView];
+    self.keyboardIsOnScreen = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)fetchMessages
@@ -313,9 +283,13 @@ static CGFloat const LSComposeViewHeight = 40;
     [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
     [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    [self.collectionView setFrame:CGRectMake(self.collectionView.frame.origin.x, self.collectionView.frame.origin.y, self.collectionView.frame.size.width, self.collectionView.frame.size.height - kbSize.height)];
+
+    self.keyboardHeight = kbSize.height;
+    [self updateInsets];
+
     self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
-    [self scrollToBottomOfCollectionView];
+    [self.collectionView setContentOffset:[self bottomOffset]];
+
     [UIView commitAnimations];
     
     self.keyboardIsOnScreen = TRUE;
@@ -330,10 +304,13 @@ static CGFloat const LSComposeViewHeight = 40;
     [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
     [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    [self.collectionView setFrame:CGRectMake(self.collectionView.frame.origin.x, self.collectionView.frame.origin.y, self.collectionView.frame.size.width, self.collectionView.frame.size.height + kbSize.height)];
+
+    self.keyboardHeight = 0;
+    [self updateInsets];
+
     self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     [UIView commitAnimations];
-   
+
     self.keyboardIsOnScreen = FALSE;
     [self composeViewShouldRestFrame:nil];
 }
@@ -365,13 +342,6 @@ static CGFloat const LSComposeViewHeight = 40;
     }
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"sentAt"]) {
-        NSLog(@"Message sent");
-    }
-}
-
 - (void)composeViewShouldRestFrame:(LSComposeView *)composeView
 {
     if (!self.keyboardIsOnScreen) {
@@ -382,10 +352,11 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)composeView:(LSComposeView *)composeView setComposeViewHeight:(CGFloat)height
 {
-    if (height < 135) {
-        CGRect rect = [[UIScreen mainScreen] bounds];
+    if (height < 135 && height != self.composeView.frame.size.height) {
         CGFloat yOriginOffset = composeView.frame.size.height - height;
-        [self.composeView setFrame:CGRectMake(0, composeView.frame.origin.y + yOriginOffset, rect.size.width, height)];
+        [self.composeView setFrame:CGRectMake(0, composeView.frame.origin.y + yOriginOffset, self.view.frame.size.width, height)];
+        [self updateInsets];
+        [self scrollToBottomOfCollectionViewAnimated:YES];
     }
 }
 
@@ -539,7 +510,6 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-
 #pragma mark
 #pragma mark Notification Observer Delegate Methods
 
@@ -557,13 +527,27 @@ static CGFloat const LSComposeViewHeight = 40;
 {
     [self fetchMessages];
     [self.collectionView reloadData];
-    [self scrollToBottomOfCollectionView];
+    [self scrollToBottomOfCollectionViewAnimated:YES];
 }
 
-- (void)scrollToBottomOfCollectionView
+- (void)updateInsets
+{
+    UIEdgeInsets existing = self.collectionView.contentInset;
+    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(existing.top, 0, self.keyboardHeight + self.composeView.frame.size.height, 0);
+}
+
+- (CGPoint)bottomOffset
+{
+    return CGPointMake(0, MAX(-self.collectionView.contentInset.top, self.collectionView.collectionViewLayout.collectionViewContentSize.height - (self.collectionView.frame.size.height - self.collectionView.contentInset.bottom)));
+
+}
+
+- (void)scrollToBottomOfCollectionViewAnimated:(BOOL)animated
 {
     if (self.messages.count > 1) {
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.collectionView.numberOfSections - 1] atScrollPosition:UICollectionViewScrollPositionBottom animated:TRUE];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.collectionView setContentOffset:[self bottomOffset] animated:animated];
+        });
     }
 }
 
