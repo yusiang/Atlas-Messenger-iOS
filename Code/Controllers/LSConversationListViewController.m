@@ -183,6 +183,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 {
     [self dismissViewControllerAnimated:YES completion:^{
         if (contacts.count > 0) {
+            
             LSConversationViewController *controller = [LSConversationViewController new];
 
             NSSet *participants = [contacts valueForKey:@"userID"];

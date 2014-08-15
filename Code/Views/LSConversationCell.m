@@ -96,7 +96,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
     } else if ([part.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
         self.lastMessageTextView.text = @"Attachemnt: Image";
     } else {
-        self.lastMessageTextView.text = @"DRAFT CONVERSATION: No Text!";
+        self.lastMessageTextView.text = @"Loading Messages...";
     }
     
 
