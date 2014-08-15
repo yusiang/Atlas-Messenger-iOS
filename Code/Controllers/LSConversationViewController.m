@@ -65,44 +65,6 @@ static NSString *const LSMessageCellIdentifier = @"messageCellIdentifier";
 static NSString *const LSMessageHeaderIdentifier = @"headerViewIdentifier";
 static CGFloat const LSComposeViewHeight = 40;
 
-@interface LSBlockOperation : NSOperation
-
-- (void)addExecutionBlock:(void (^)(void))block;
-
-@end
-
-@interface LSBlockOperation ()
-
-@property (nonatomic) NSMutableArray *executionBlocks;
-
-@end
-
-@implementation LSBlockOperation
-
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        _executionBlocks = [NSMutableArray new];
-    }
-    return self;
-}
-
-- (void)addExecutionBlock:(void (^)(void))block
-{
-    [self.executionBlocks addObject:[block copy]];
-}
-
-- (void)main
-{
-    for (void (^executionBlock)(void) in self.executionBlocks) {
-        executionBlock();
-    }
-}
-
-@end
-
-
 @interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LSNotificationObserverDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -111,7 +73,6 @@ static CGFloat const LSComposeViewHeight = 40;
 @property (nonatomic, strong) LSNotificationObserver *observer;
 @property (nonatomic, strong) NSMutableArray *collectionViewUpdates;
 @property (nonatomic) BOOL keyboardIsOnScreen;
-@property (nonatomic) LSBlockOperation *blockOperation;
 @end
 
 @implementation LSConversationViewController
@@ -362,13 +323,6 @@ static CGFloat const LSComposeViewHeight = 40;
                                                   cancelButtonTitle:@"OK"
                                                   otherButtonTitles:nil];
         [alertView show];
-    }
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"sentAt"]) {
-        NSLog(@"Message sent");
     }
 }
 
