@@ -72,9 +72,12 @@ static CGFloat const LSComposeViewHeight = 40;
 @property (nonatomic, strong) NSOrderedSet *messages;
 @property (nonatomic, strong) LSNotificationObserver *observer;
 @property (nonatomic, strong) NSMutableArray *collectionViewUpdates;
+
+@property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) BOOL keyboardIsOnScreen;
 
 - (void)scrollToBottomOfCollectionViewAnimated:(BOOL)animated;
+- (void)updateInsets;
 - (CGPoint)bottomOffset;
 
 @end
@@ -281,8 +284,8 @@ static CGFloat const LSComposeViewHeight = 40;
     [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
     [UIView setAnimationBeginsFromCurrentState:YES];
 
-    UIEdgeInsets existing = self.collectionView.contentInset;
-    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(existing.top, 0, kbSize.height + self.composeView.frame.size.height, 0);
+    self.keyboardHeight = kbSize.height;
+    [self updateInsets];
 
     self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     [self.collectionView setContentOffset:[self bottomOffset]];
@@ -302,8 +305,8 @@ static CGFloat const LSComposeViewHeight = 40;
     [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
     [UIView setAnimationBeginsFromCurrentState:YES];
 
-    UIEdgeInsets existing = self.collectionView.contentInset;
-    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(existing.top, 0, self.composeView.frame.size.height, 0);
+    self.keyboardHeight = 0;
+    [self updateInsets];
 
     self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     [UIView commitAnimations];
@@ -349,10 +352,11 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)composeView:(LSComposeView *)composeView setComposeViewHeight:(CGFloat)height
 {
-    if (height < 135) {
-        CGRect rect = [[UIScreen mainScreen] bounds];
+    if (height < 135 && height != self.composeView.frame.size.height) {
         CGFloat yOriginOffset = composeView.frame.size.height - height;
-        [self.composeView setFrame:CGRectMake(0, composeView.frame.origin.y + yOriginOffset, rect.size.width, height)];
+        [self.composeView setFrame:CGRectMake(0, composeView.frame.origin.y + yOriginOffset, self.view.frame.size.width, height)];
+        [self updateInsets];
+        [self scrollToBottomOfCollectionViewAnimated:YES];
     }
 }
 
@@ -524,6 +528,12 @@ static CGFloat const LSComposeViewHeight = 40;
     [self fetchMessages];
     [self.collectionView reloadData];
     [self scrollToBottomOfCollectionViewAnimated:YES];
+}
+
+- (void)updateInsets
+{
+    UIEdgeInsets existing = self.collectionView.contentInset;
+    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(existing.top, 0, self.keyboardHeight + self.composeView.frame.size.height, 0);
 }
 
 - (CGPoint)bottomOffset
