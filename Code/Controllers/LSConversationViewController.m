@@ -346,7 +346,9 @@ static CGFloat const LSComposeViewHeight = 40;
     LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
 
-    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: text} onObject:message];
+    NSString *senderName = self.APImanager.authenticatedSession.user.fullName;
+    NSString *pushText = [NSString stringWithFormat:@"%@: %@", senderName, text];
+    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
 
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];
@@ -394,6 +396,10 @@ static CGFloat const LSComposeViewHeight = 40;
     
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:MIMETypeImageJPEG() data:compressedImageData];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
+    
+    NSString *senderName = self.APImanager.authenticatedSession.user.fullName;
+    NSString *pushText = [NSString stringWithFormat:@"%@: Sent you a photo!", senderName];
+    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
     
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];

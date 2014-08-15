@@ -168,7 +168,15 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(LSContactTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [cell updateWithSelectionIndicator:NO];
+    NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
+    LSUser *user = [[self.contacts objectForKey:key] objectAtIndex:indexPath.row];
+    
+    if ([self.selectedContacts containsObject:user]) {
+        [cell updateWithSelectionIndicator:YES];
+    } else {
+        [cell updateWithSelectionIndicator:NO];
+    }
+   
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
