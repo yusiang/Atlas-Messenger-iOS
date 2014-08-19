@@ -13,6 +13,7 @@
 #import "LSUtilities.h"
 #import "LSVersionView.h"
 #import "LSApplicationController.h"
+#import <SVProgressHUD/SVProgressHUD.h>
 
 @interface LSConversationListViewController () <LSContactsSelectionViewControllerDelegate, LSNotificationObserverDelegate>
 
@@ -159,8 +160,11 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void)logoutTapped
 {
+    [SVProgressHUD show];
     [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        self.tableView = nil;
+
+        [SVProgressHUD dismiss];
+
         NSLog(@"Deauthenticated...");
     }];
 }

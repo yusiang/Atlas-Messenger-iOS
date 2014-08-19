@@ -204,8 +204,13 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 - (void)deauthenticateWithCompletion:(void(^)(BOOL success, NSError *error))completion
 {
-    self.authenticatedSession = nil;
-    if (completion) completion(YES, nil);
+    [self.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            self.authenticatedSession = nil;
+        }
+
+        if (completion) completion(success, error);
+    }];
 }
 
 - (void)loadContactsWithCompletion:(void(^)(NSSet *contacts, NSError *error))completion
