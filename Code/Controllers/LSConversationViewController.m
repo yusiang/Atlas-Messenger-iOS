@@ -182,6 +182,7 @@ static CGFloat const LSComposeViewHeight = 40;
 {
     LSMessageCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LSMessageCellIdentifier forIndexPath:indexPath];
     [self configureCell:cell forIndexPath:indexPath];
+    [self markMessageAtIndexPathAsRead:indexPath];
     return cell;
 }
 
@@ -190,6 +191,21 @@ static CGFloat const LSComposeViewHeight = 40;
     LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessages:self.messages indexPath:indexPath persistanceManager:self.persistanceManager];
     [self updateRecipientStatusForMessage:presenter.message];
     [cell updateWithPresenter:presenter];
+}
+
+- (void)markMessageAtIndexPathAsRead:(NSIndexPath *)indexPath
+{
+    LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
+    NSNumber *recipientStatus = [message.recipientStatusByUserID objectForKey:self.layerClient.authenticatedUserID];
+    if (![recipientStatus isEqualToNumber:[NSNumber numberWithInteger:LYRRecipientStatusRead]] ) {
+        NSError *error;
+        BOOL success = [self.layerClient markMessageAsRead:message error:&error];
+        if (success) {
+            NSLog(@"Message successfully marked as read");
+        } else {
+            NSLog(@"Failed to mark message as read with error %@", error);
+        }
+    }
 }
 
 #pragma mark
@@ -323,7 +339,7 @@ static CGFloat const LSComposeViewHeight = 40;
     LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
 
-    NSString *senderName = self.APImanager.authenticatedSession.user.fullName;
+    NSString *senderName = [self.persistanceManager persistedSessionWithError:nil].user.fullName;
     NSString *pushText = [NSString stringWithFormat:@"%@: %@", senderName, text];
     [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
 
@@ -368,7 +384,7 @@ static CGFloat const LSComposeViewHeight = 40;
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:MIMETypeImageJPEG() data:compressedImageData];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     
-    NSString *senderName = self.APImanager.authenticatedSession.user.fullName;
+    NSString *senderName = [self.persistanceManager persistedSessionWithError:nil].user.fullName;
     NSString *pushText = [NSString stringWithFormat:@"%@: Sent you a photo!", senderName];
     [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
     
