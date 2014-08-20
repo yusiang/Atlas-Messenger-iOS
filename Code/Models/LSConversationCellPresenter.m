@@ -60,6 +60,10 @@ static NSDateFormatter *dateFormatter;
 
 - (NSString *)conversationDateLabel
 {
+    if (!self.conversation.lastMessage.sentAt) {
+        return @"";
+    }
+    
     NSCalendar* calendar = [NSCalendar currentCalendar];
     
     unsigned int conversationDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
