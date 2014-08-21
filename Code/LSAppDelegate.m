@@ -85,7 +85,7 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
-
+    
     LYRSetLogLevelFromEnvironment();
 
     NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
@@ -96,14 +96,29 @@ extern void LYRSetLogLevelFromEnvironment();
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
+    
     LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
+    __block LSApplicationController *wController = self.applicationController;
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-        NSLog(@"Started with success: %d, %@", success, error);
+        if (success) {
+            LSSession *session = [wController.persistenceManager persistedSessionWithError:nil];
+            [self updateCrashlyticsWithUser:session.user];
+            NSError *error = nil;
+            if ([wController.APIManager resumeSession:session error:&error]) {
+                NSLog(@"Session resumed: %@", session);
+                [self loadContacts];
+                [self presentConversationsListViewController];
+            } else if (wController.layerClient.authenticatedUserID){
+                [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+                    NSLog(@"Encountered error while resuming session but Layer client is authenticated. Deauthenticating client...");
+                }];
+            }
+        }
     }];
 
     LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
@@ -114,40 +129,20 @@ extern void LYRSetLogLevelFromEnvironment();
     self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
     self.navigationController.navigationBar.tintColor = LSBlueColor();
     self.window.rootViewController = self.navigationController;
+    [self.window makeKeyAndVisible];
     
-    LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
-    [self updateCrashlyticsWithUser:session.user];
-
     // update the app ID and configuration URL in the crash metadata.
     [Crashlytics setObjectValue:LSLayerConfigurationURL() forKey:@"ConfigurationURL"];
     [Crashlytics setObjectValue:LSLayerAppID() forKey:@"AppID"];
 
-    NSError *error = nil;
-    if ([self.applicationController.APIManager resumeSession:session error:&error]) {
-        NSLog(@"Session resumed: %@", session);
-        [self loadContacts];
-        [self presentConversationsListViewController];
-    } else {
-        if (self.applicationController.layerClient.authenticatedUserID) {
-            NSLog(@"Encountered error while resuming session but Layer client is authenticating. Deauthenticating client...");
-            [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-                NSLog(@"Encountered a situation where");
-            }];
-        }
-    }
-    
-    [self.window makeKeyAndVisible];
-
     // Start HockeyApp
-//    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
-//    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
-//    [[BITHockeyManager sharedHockeyManager] startManager];
-//    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
+    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 
     // Declaring that I want to recieve push!
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
     
     return YES;
 }
@@ -269,7 +264,6 @@ extern void LYRSetLogLevelFromEnvironment();
     [self.navigationController presentViewController:conversationController animated:YES completion:^{
         //
     }];
-    //[self.navigationController presentViewController:conversationController animated:YES completion:nil];
 }
 
 @end

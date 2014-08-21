@@ -1,9 +1,7 @@
-dropbox_path = ENV['LAYER_DROPBOX_PATH'] || '~/Dropbox/'
-
 pod 'SVProgressHUD', :head
 pod 'LayerKit'
 #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
-#pod 'LayerKit', path: dropbox_path + "/Layer/Builds/iOS/LayerKit-0.7.12"
+#pod 'LayerKit', path: '~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.7.14'
 pod 'HockeySDK', '~> 3.5.6'
 
 target 'LayerSampleTests' do

@@ -554,6 +554,18 @@
     [tester waitForTimeInterval:5];
 }
 
+- (void)testCreating2Users10ConversationsBetweenThemAndSending10MessagesEach
+{
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:2]];
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
+}
+
 //======== Factory Methods =========//
 
 - (void)presentAuthenticationViewController
@@ -677,6 +689,18 @@
     NSError *error;
     LSSession *session = [self.persistenceManager persistedSessionWithError:&error];
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:session.user.fullName]];
+}
+
+- (void)createConversations:(NSUInteger)conversationCount withParticipants:(NSSet *)participants andMessages:(NSUInteger)messages
+{
+    for (int i = 0; i < conversationCount; i++) {
+        LYRConversation *conversation = [LYRConversation conversationWithParticipants:participants];
+        for (int m = 0; m < messages; m++) {
+            LYRMessagePart *part = [LYRMessagePart messagePartWithText:@"This is a test"];
+            LYRMessage *message = [LYRMessage messageWithConversation:conversation parts:@[part]];
+            [self.layerClient sendMessage:message error:nil];
+        }
+    }
 }
 
 - (NSString *)messageCellLabelForText:(NSString *)text andUser:(NSString *)fullName

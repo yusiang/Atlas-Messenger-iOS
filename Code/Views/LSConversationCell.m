@@ -26,7 +26,7 @@
 // Cell Constants
 static CGFloat const LSCellTopMargin = 12.0f;
 static CGFloat const LSCellHorizontalMargin = 12.0f;
-static CGFloat const LSCellBottomMargin = 10.0f;
+static CGFloat const LSCellBottomMargin = 12.0f;
 
 // Avatart Constants
 static CGFloat const LSAvatarImageViewSizeRatio  = 0.60f;
