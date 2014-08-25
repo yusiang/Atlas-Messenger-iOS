@@ -39,19 +39,85 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "LSAPIManagerTest">
+               </Test>
+               <Test
                   Identifier = "LSAPIManagerTest/testExample">
+               </Test>
+               <Test
+                  Identifier = "LSInMemoryPersistenceManagerTest">
                </Test>
                <Test
                   Identifier = "LSMessagingTest">
                </Test>
                <Test
+                  Identifier = "LSOnDiskPersistenceManagerTest">
+               </Test>
+               <Test
+                  Identifier = "LSPersistenceManagerTest">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testCreating2Users10ConversationsBetweenThemAndSending10MessagesEach">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testStarting5ConversationsAndSending5MessagesThenLoggingInOnRecipientsDevice">
+               </Test>
+               <Test
                   Identifier = "LSUITest/testToVerifyASentPhotoIsRecievedByTheRecipient">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyAddressBookFunctionalityForFirstTwoUsers">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyAddressBookSelectionIndicatorFunctionality">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyConversationPersistenceFunctionality">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyIncompleteInfoRegistrationFunctionality">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyIncorrectLoginCredentialsAlert">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyMultipleMessagesSentToMultipleRecipeientsAreReciecvedAndDisplayedForTheRecipients">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyNavigationBetweenContactsandConversations">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyRegistrationFunctionality">
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifySelectingAnImageFromTheCameraRollAndSending">
                </Test>
                <Test
+                  Identifier = "LSUITest/testToVerifySendingRecievingAndReplyingToAMessage">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifySentMessagePersistence">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyStartingAConversationWithTwoContacts">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifySuccesfulLogin">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifySuccesfullRecipetOfThreeMessages">
+               </Test>
+               <Test
                   Identifier = "LSUITest/testToVerifyThatPhotosAndMessagesAreAccuratelySentAndRecievedByMultipleParticipantsInAGroupChat">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyTheLatestMessageInANewConversationIsDisplayedInConversationList">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyThreeNewConversationsAreDisplayedInconversationList">
+               </Test>
+               <Test
+                  Identifier = "LSUITest/testToVerifyUIAnimimationsForSendingAMessage">
                </Test>
             </SkippedTests>
          </TestableReference>

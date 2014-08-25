@@ -84,21 +84,24 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Kicking off Crashlytics
+    
+    LSEnvironment environment = LSDevelopmentEnvironment;
+    
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
     LYRSetLogLevelFromEnvironment();
-
+   
     NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
-    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL()]) {
+    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(environment)]) {
         LYRTestCleanKeychain();
-        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL() forKey:@"LAYER_CONFIGURATION_URL"];
+        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(environment) forKey:@"LAYER_CONFIGURATION_URL"];
     }
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
     
-    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID()];
+    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID(environment)];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
@@ -106,6 +109,7 @@ extern void LYRSetLogLevelFromEnvironment();
     __block LSApplicationController *wController = self.applicationController;
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         if (success) {
+            NSLog(@"Layer Client is connected");
             LSSession *session = [wController.persistenceManager persistedSessionWithError:nil];
             [self updateCrashlyticsWithUser:session.user];
             NSError *error = nil;
@@ -132,8 +136,8 @@ extern void LYRSetLogLevelFromEnvironment();
     [self.window makeKeyAndVisible];
     
     // update the app ID and configuration URL in the crash metadata.
-    [Crashlytics setObjectValue:LSLayerConfigurationURL() forKey:@"ConfigurationURL"];
-    [Crashlytics setObjectValue:LSLayerAppID() forKey:@"AppID"];
+    [Crashlytics setObjectValue:LSLayerConfigurationURL(environment) forKey:@"ConfigurationURL"];
+    [Crashlytics setObjectValue:LSLayerAppID(environment) forKey:@"AppID"];
 
     // Start HockeyApp
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];

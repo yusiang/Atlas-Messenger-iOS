@@ -14,13 +14,19 @@
  @abstract The `LSUtilities` class provides convenince functions for app configuration
  */
 
+typedef enum {
+    LSProductionEnvironment,
+    LSDevelopmentEnvironment,
+    LSTestEnvironment
+} LSEnvironment;
+
 BOOL LSIsRunningTests();
 
 NSURL *LSRailsBaseURL();
 
-NSString *LSLayerConfigurationURL();
+NSString *LSLayerConfigurationURL(LSEnvironment);
 
-NSUUID *LSLayerAppID();
+NSUUID *LSLayerAppID(LSEnvironment);
 
 NSString *LSApplicationDataDirectory();
 

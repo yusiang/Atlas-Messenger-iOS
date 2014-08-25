@@ -7,6 +7,7 @@
 //
 
 #import "LSPersistenceManager.h"
+#import "LSUtilities.h"
 
 BOOL LSIsRunningTests(void)
 {
@@ -18,24 +19,39 @@ NSURL *LSRailsBaseURL(void)
     return [NSURL URLWithString:@"https://layer-identity-provider.herokuapp.com"];
 }
 
-NSString *LSLayerConfigurationURL()
+NSString *LSLayerConfigurationURL(LSEnvironment environment)
 {
-    if (LSIsRunningTests()) {
-        return @"172.17.8.101/client_configuration.json";
+    switch (environment) {
+        case LSProductionEnvironment:
+            return @"https://na-3.preview.layer.com/client_configuration.json";
+            break;
+        case LSDevelopmentEnvironment:
+            return @"https://dev-1.preview.layer.com/client_configuration.json";
+            break;
+        case LSTestEnvironment:
+            return @"172.17.8.101/client_configuration.json";
+            break;
+            
+        default:
+            break;
     }
-    return @"https://na-3.preview.layer.com/client_configuration.json";
-//    return @"https://dev-1.preview.layer.com/client_configuration.json";
 }
 
-NSUUID *LSLayerAppID(void)
+NSUUID *LSLayerAppID(LSEnvironment environment)
 {
-    if (LSIsRunningTests()) {
-        return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
+    switch (environment) {
+        case LSProductionEnvironment:
+            return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
+            break;
+        case LSDevelopmentEnvironment:
+            return [[NSUUID alloc] initWithUUIDString:@"9ae66b44-1682-11e4-92e4-0b53000001d0"];
+            break;
+        case LSTestEnvironment:
+            return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
+            break;
+        default:
+            break;
     }
-    return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
-    
-    // dev-1 (9ae66b44-1682-11e4-92e4-0b53000001d0)
-//    return [[NSUUID alloc] initWithUUIDString:@"9ae66b44-1682-11e4-92e4-0b53000001d0"];
 }
 
 NSString *LSApplicationDataDirectory(void)
@@ -44,12 +60,21 @@ NSString *LSApplicationDataDirectory(void)
     return ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
 }
 
-NSString *LSLayerPersistencePath(void)
+NSString *LSLayerPersistencePath(LSEnvironment environment)
 {
-    if (LSIsRunningTests()) {
-        return nil;
+    switch (environment) {
+        case LSProductionEnvironment:
+            return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
+            break;
+        case LSDevelopmentEnvironment:
+            return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
+            break;
+        case LSTestEnvironment:
+            return nil;
+            break;
+        default:
+            break;
     }
-    return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID()]];
 }
 
 LSPersistenceManager *LSPersitenceManager(void)

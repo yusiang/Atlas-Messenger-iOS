@@ -35,7 +35,6 @@ static NSString *const LSTestUser3Email = @"tester3@layer.com";
 static NSString *const LSTestUser3Password = @"password3";
 static NSString *const LSTestUser3Confirmation = @"password3";
 
-
 +(LSUser *)testUserWithNumber:(NSUInteger)number
 {
     LSUser *user = [[LSUser alloc] init];
