@@ -6,13 +6,14 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSConversationCell.h"
+#import "LYRConversationCell.h"
 #import "LSAvatarImageView.h"
 #import "LSUIConstants.h"
 #import "LSUser.h"
 #import "LSUtilities.h"
+#import "LYRConversationPresenter.h"
 
-@interface LSConversationCell ()
+@interface LYRConversationCell ()
 
 @property (nonatomic) LSAvatarImageView *avatarImageView;
 @property (nonatomic) UILabel *senderLabel;
@@ -21,7 +22,7 @@
 
 @end
 
-@implementation LSConversationCell
+@implementation LYRConversationCell
 
 // Cell Constants
 static CGFloat const LSCellTopMargin = 12.0f;
@@ -78,29 +79,14 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
     return self;
 }
 
-- (void)updateWithPresenter:(LSConversationCellPresenter *)presenter
+- (void)updateWithPresenter:(id<LYRConversationCellPresenter>)presenter
 {
-    // Set Sender Label
-    self.senderLabel.text = presenter.conversationLabel;
-    self.accessibilityLabel = presenter.conversationLabel;
+    self.senderLabel.text = [presenter titleText];
+    self.dateLabel.text = [presenter dateText];
+    self.lastMessageTextView.text = [presenter lastMessageText];
+    self.avatarImageView.image = [presenter avatarImage];
     
-    // Set Last Message Text 
-    LYRMessage *message = presenter.message;
-    LYRMessagePart *part = [message.parts firstObject];
-    
-    if ([part.MIMEType isEqualToString:MIMETypeTextPlain()]) {
-        self.lastMessageTextView.text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
-        [self.lastMessageTextView setFont:LSMediumFont(12)];
-    } else if ([part.MIMEType isEqualToString:MIMETypeImagePNG()]) {
-        self.lastMessageTextView.text = @"Attachemnt: Image";
-    } else if ([part.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
-        self.lastMessageTextView.text = @"Attachemnt: Image";
-    } else {
-        self.lastMessageTextView.text = @"Loading Messages...";
-    }
-    
-
-    self.dateLabel.text = [presenter conversationDateLabel];
+    [self setNeedsUpdateConstraints];
 }
 
 #pragma mark

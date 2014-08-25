@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
-#import "LSUser.h"
 #import "LSConversationCellPresenter.h"
+#import "LSUser.h"
 
-@interface LSConversationCell : UITableViewCell
+@interface LYRConversationCell : UITableViewCell
 
-- (void)updateWithPresenter:(LSConversationCellPresenter *)presenter;
+- (void)updateWithPresenter:(id<LYRConversationCellPresenter>)presenter;
 
 @end

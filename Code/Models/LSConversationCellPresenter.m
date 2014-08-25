@@ -35,7 +35,6 @@
     self = [super init];
     if (self) {
         _conversation = conversation;
-        _message = conversation.lastMessage;
         _persistenceManager = persistenceManager;
 
         if (!dateFormatter) {
@@ -45,20 +44,16 @@
     return self;
 }
 
-- (NSString *)conversationLabel
+- (NSString *)titleText
 {
     NSArray *sortedParticipantNames = [self sortedFullNamesForParticiapnts:self.conversation.participants];
     return [self conversationLabelForParticipantNames:sortedParticipantNames];
 }
 
-- (UIImage *)conversationImage
-{
-    return nil;
-}
 
 static NSDateFormatter *dateFormatter;
 
-- (NSString *)conversationDateLabel
+- (NSString *)dateText
 {
     if (!self.conversation.lastMessage.sentAt) {
         return @"";
@@ -81,6 +76,22 @@ static NSDateFormatter *dateFormatter;
     }
     return [dateFormatter stringFromDate:self.conversation.lastMessage.sentAt];
 }
+
+- (NSString *)lastMessageText
+{
+    LYRMessage *message = self.conversation.lastMessage;
+    LYRMessagePart *part = [message.parts firstObject];
+    
+    if ([part.MIMEType isEqualToString:MIMETypeTextPlain()]) {
+        return [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
+    } else if ([part.MIMEType isEqualToString:MIMETypeImagePNG()]) {
+        return @"Attachemnt: Image";
+    } else if ([part.MIMEType isEqualToString:MIMETypeImageJPEG()]) {
+        return @"Attachemnt: Image";
+    }
+    return @"Loading Messages...";
+}
+
 
 - (NSArray *)sortedFullNamesForParticiapnts:(NSSet *)participantIDs
 {
@@ -110,5 +121,10 @@ static NSDateFormatter *dateFormatter;
         }
     }
     return conversationLabel;
+}
+
+- (UIImage *)avatarImage
+{
+    return [UIImage imageNamed:@"EKvin"];
 }
 @end

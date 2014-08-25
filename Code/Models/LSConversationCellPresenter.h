@@ -9,13 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 #import "LSPersistenceManager.h"
+#import "LYRConversationPresenter.h"
 #import "LSUser.h"
+#import "LSUtilities.h"
 
 /**
  @abstract The `LSConversationCellPresenter` class models a conversation object and is used to present conversation information to the user interface
  */
 
-@interface LSConversationCellPresenter : NSObject
+@interface LSConversationCellPresenter : NSObject <LYRConversationCellPresenter>
 
 ///-------------------------------
 /// @name Initializing a Presenter
@@ -24,16 +26,14 @@
 + (instancetype)presenterWithConversation:(LYRConversation *)conversation
                        persistanceManager:(LSPersistenceManager *)persistenceManager;
 
-- (NSString *)conversationLabel;
+- (NSString *)titleText;
 
-- (UIImage *)conversationImage;
+- (NSString *)dateText;
 
-- (NSString *)conversationDateLabel;
+- (NSString *)lastMessageText;
 
-//KC: Method made public for testing purposes
-- (NSString *)conversationLabelForParticipantNames:(NSArray *)participantNames;
+- (UIImage *)avatarImage;
 
 @property (nonatomic, strong) LYRConversation *conversation;
-@property (nonatomic, strong) LYRMessage *message;
 
 @end

@@ -14,6 +14,7 @@
 #import "LSUIConstants.h"
 #import <Crashlytics/Crashlytics.h>
 #import <HockeySDK/HockeySDK.h>
+#import "LSConversationListViewController.h"
 
 NSData *LYRIssuerData(void)
 {
