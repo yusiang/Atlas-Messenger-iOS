@@ -160,7 +160,17 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 - (void)deauthenticate
 {
-    self.authenticatedSession = nil;
+    if (self.authenticatedSession) {
+        _authenticatedSession = nil;
+        _authenticatedURLSessionConfiguration = nil;
+        
+        [self.URLSession invalidateAndCancel];
+        self.URLSession = [self defaultURLSession];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:self.authenticatedSession.user];
+        });
+    }
 }
 
 - (void)loadContactsWithCompletion:(void(^)(NSSet *contacts, NSError *error))completion
@@ -261,16 +271,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidAuthenticateNotification object:authenticatedSession.user];
-        });
-    } else if (!authenticatedSession && self.authenticatedSession) {
-        _authenticatedSession = authenticatedSession;
-        _authenticatedURLSessionConfiguration = nil;
-        
-        [self.URLSession invalidateAndCancel];
-        self.URLSession = [self defaultURLSession];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:authenticatedSession.user];
         });
     }
 }
