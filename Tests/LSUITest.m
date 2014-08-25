@@ -554,6 +554,37 @@
     [tester waitForTimeInterval:5];
 }
 
+- (void)testCreating2Users10ConversationsBetweenThemAndSending10MessagesEach
+{
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:2]];
+    [self deauthenticate];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
+}
+
+- (void)testToVerifyPushNotificationsAreWorking
+{
+    [self systemRegisterUser:[self testUserWithNumber:1]];
+    
+    [self deauthenticate];
+    
+    [self systemRegisterUser:[self testUserWithNumber:2]];
+    
+    [self createConversations:10 withParticipants:nil andMessages:10];
+    
+    [tester waitForTimeInterval:10];
+    
+    [self deauthenticate];
+    
+    [tester waitForTimeInterval:10];
+    
+    [self systemLoginUser:[self testUserWithNumber:1]];
+}
+
 //======== Factory Methods =========//
 
 - (void)presentAuthenticationViewController
@@ -679,6 +710,21 @@
     [tester waitForViewWithAccessibilityLabel:[self messageCellLabelForText:text andUser:session.user.fullName]];
 }
 
+- (void)createConversations:(NSUInteger)conversationCount withParticipants:(NSSet *)participants andMessages:(NSUInteger)messages
+{
+    NSSet *persistedUsers = [self.persistenceManager persistedUsersWithError:nil];
+    
+    for (int i = 0; i < conversationCount; i++) {
+        NSSet *participantIDs = [persistedUsers valueForKey:@"userID"];
+        LYRConversation *conversation = [LYRConversation conversationWithParticipants:participantIDs];
+        for (int m = 0; m < messages; m++) {
+            LYRMessagePart *part = [LYRMessagePart messagePartWithText:@"This is a test"];
+            LYRMessage *message = [LYRMessage messageWithConversation:conversation parts:@[part]];
+            [self.layerClient sendMessage:message error:nil];
+        }
+    }
+}
+
 - (NSString *)messageCellLabelForText:(NSString *)text andUser:(NSString *)fullName
 {
     return text;
@@ -720,6 +766,14 @@
 - (LSUser *)testUserWithNumber:(NSUInteger)number
 {
     return [LSTestUser testUserWithNumber:number];
+}
+
+- (LSUser *)testUserWithFirstName:(NSString *)firstName lastName:(NSString *)lastName
+{
+    LSUser *user = [[LSUser alloc] init];
+    user.firstName = firstName;
+    user.lastName = lastName;
+    return user;
 }
 
 @end

@@ -110,8 +110,6 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:LSMessageCellIdentifier];
     [self.collectionView registerClass:[LSMessageCellHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LSMessageHeaderIdentifier];
 
-    //self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
-
     // Setup Compose View
     self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight)];
     self.composeView.delegate = self;

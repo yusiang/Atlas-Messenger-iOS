@@ -162,10 +162,12 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 {
     [SVProgressHUD show];
     [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-
+        if (success) {
+            NSLog(@"Deauthenticated...");
+        } else {
+            LSAlertWithError(error);
+        }
         [SVProgressHUD dismiss];
-
-        NSLog(@"Deauthenticated...");
     }];
 }
 
