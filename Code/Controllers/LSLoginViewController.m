@@ -11,13 +11,14 @@
 #import "LSInputTableViewCell.h"
 #import "LSConversationListViewController.h"
 #import "LSButton.h"
+#import "LSUtilities.h"
 
 @interface LSLoginViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) LSButton *loginButton;
 @property (nonatomic, weak) UITextField *emailField;
 @property (nonatomic, weak) UITextField *passwordField;
-@property (nonatomic, copy) void (^completionBlock)(LSUser *);
+@property (nonatomic, copy) void (^completionBlock)(NSString *authenticatedUserID);
 @end
 
 @implementation LSLoginViewController
@@ -122,13 +123,28 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     LSInputTableViewCell *passwordCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
     
     [SVProgressHUD show];
-    [self.APIManager authenticateWithEmail:usernameCell.textField.text password:passwordCell.textField.text completion:^(LSUser *user, NSError *error) {
-        [SVProgressHUD dismiss];
-        if (user) {
-            if (self.completionBlock) self.completionBlock(user);
+    
+    [self.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+        if (!nonce) {
+            LSAlertWithError(error);
+            [SVProgressHUD dismiss];
         } else {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
+            [self.APIManager authenticateWithEmail:usernameCell.textField.text password:passwordCell.textField.text nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+                if (!identityToken) {
+                    LSAlertWithError(error);
+                    [SVProgressHUD dismiss];
+                } else {
+                    [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                        if (!authenticatedUserID) {
+                            LSAlertWithError(error);
+                            [SVProgressHUD dismiss];
+                        } else {
+                            if (self.completionBlock) self.completionBlock(authenticatedUserID);
+                            [SVProgressHUD dismiss];
+                        }
+                    }];
+                }
+            }];
         }
     }];
 }

@@ -13,8 +13,9 @@
 
 @interface LSLoginViewController : UITableViewController
 
+@property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, strong) LSAPIManager *APIManager;
 
-- (void)setCompletionBlock:(void (^)(LSUser *user))completion;
+- (void)setCompletionBlock:(void (^)(NSString *authenticatedUserID))completion;
 
 @end

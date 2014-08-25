@@ -38,6 +38,8 @@
 		0ABAB02B1971E45000BE514F /* LSMessageCellHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABAB02A1971E45000BE514F /* LSMessageCellHeader.m */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
 		0AC3D70B196B29CD0089E49D /* LSBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC3D70A196B29CD0089E49D /* LSBubbleView.m */; };
+		0ACFA6BB19ABDFE800062A5C /* LSKeychainUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACFA6BA19ABDFE800062A5C /* LSKeychainUtilities.m */; };
+		0ACFA6BC19ABE0C800062A5C /* LSKeychainUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACFA6BA19ABDFE800062A5C /* LSKeychainUtilities.m */; };
 		0AD767721963104200582755 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD767711963104200582755 /* LSUtilities.m */; };
 		0AF3D8E0197462A900FED313 /* LSMessagingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF3D8DF197462A900FED313 /* LSMessagingTest.m */; };
 		116357E6198AD1DB00C89F77 /* LSVersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 116357E5198AD1DB00C89F77 /* LSVersionView.m */; };
@@ -125,18 +127,20 @@
 		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		0AC3D709196B29CD0089E49D /* LSBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSBubbleView.h; sourceTree = "<group>"; };
 		0AC3D70A196B29CD0089E49D /* LSBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSBubbleView.m; sourceTree = "<group>"; };
+		0ACFA6B919ABDFE800062A5C /* LSKeychainUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSKeychainUtilities.h; sourceTree = "<group>"; };
+		0ACFA6BA19ABDFE800062A5C /* LSKeychainUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSKeychainUtilities.m; sourceTree = "<group>"; };
 		0AD767701963104200582755 /* LSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUtilities.h; sourceTree = "<group>"; };
 		0AD767711963104200582755 /* LSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUtilities.m; sourceTree = "<group>"; };
 		0AF3D8DF197462A900FED313 /* LSMessagingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMessagingTest.m; sourceTree = "<group>"; };
 		116357E4198AD1DB00C89F77 /* LSVersionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSVersionView.h; sourceTree = "<group>"; };
 		116357E5198AD1DB00C89F77 /* LSVersionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSVersionView.m; sourceTree = "<group>"; };
-		25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSHTTPResponseSerializer.h; sourceTree = "<group>"; };
-		25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSHTTPResponseSerializer.m; sourceTree = "<group>"; };
+		25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSHTTPResponseSerializer.h; path = ../LSHTTPResponseSerializer.h; sourceTree = "<group>"; };
+		25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSHTTPResponseSerializer.m; path = ../LSHTTPResponseSerializer.m; sourceTree = "<group>"; };
 		2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSPersistenceManagerTest.m; sourceTree = "<group>"; };
-		25918B95195F95F700D0FB1B /* LSPersistenceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSPersistenceManager.h; sourceTree = "<group>"; };
-		25918B96195F95F700D0FB1B /* LSPersistenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSPersistenceManager.m; sourceTree = "<group>"; };
-		25918B98195F960500D0FB1B /* LSSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSession.h; sourceTree = "<group>"; };
-		25918B99195F960500D0FB1B /* LSSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSession.m; sourceTree = "<group>"; };
+		25918B95195F95F700D0FB1B /* LSPersistenceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSPersistenceManager.h; path = ../LSPersistenceManager.h; sourceTree = "<group>"; };
+		25918B96195F95F700D0FB1B /* LSPersistenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSPersistenceManager.m; path = ../LSPersistenceManager.m; sourceTree = "<group>"; };
+		25918B98195F960500D0FB1B /* LSSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSSession.h; path = ../LSSession.h; sourceTree = "<group>"; };
+		25918B99195F960500D0FB1B /* LSSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSSession.m; path = ../LSSession.m; sourceTree = "<group>"; };
 		259A57151950EB76000E27B0 /* LSAPIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAPIManager.h; sourceTree = "<group>"; };
 		259A57161950EB76000E27B0 /* LSAPIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAPIManager.m; sourceTree = "<group>"; };
 		259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsSelectionViewController.h; sourceTree = "<group>"; };
@@ -277,12 +281,6 @@
 				259A57311950EB76000E27B0 /* main.m */,
 				259A57321950EB76000E27B0 /* Models */,
 				259A573B1950EB76000E27B0 /* Views */,
-				25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */,
-				25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */,
-				25918B95195F95F700D0FB1B /* LSPersistenceManager.h */,
-				25918B96195F95F700D0FB1B /* LSPersistenceManager.m */,
-				25918B98195F960500D0FB1B /* LSSession.h */,
-				25918B99195F960500D0FB1B /* LSSession.m */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -290,6 +288,10 @@
 		259A57121950EB76000E27B0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */,
+				25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */,
+				25918B95195F95F700D0FB1B /* LSPersistenceManager.h */,
+				25918B96195F95F700D0FB1B /* LSPersistenceManager.m */,
 				259A57151950EB76000E27B0 /* LSAPIManager.h */,
 				259A57161950EB76000E27B0 /* LSAPIManager.m */,
 				259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */,
@@ -306,6 +308,8 @@
 				259A57291950EB76000E27B0 /* LSRegistrationViewController.m */,
 				0A52D5FC1961FD0D0030A34A /* LSApplicationController.h */,
 				0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */,
+				0ACFA6B919ABDFE800062A5C /* LSKeychainUtilities.h */,
+				0ACFA6BA19ABDFE800062A5C /* LSKeychainUtilities.m */,
 				0AD767701963104200582755 /* LSUtilities.h */,
 				0AD767711963104200582755 /* LSUtilities.m */,
 				0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */,
@@ -317,6 +321,8 @@
 		259A57321950EB76000E27B0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				25918B98195F960500D0FB1B /* LSSession.h */,
+				25918B99195F960500D0FB1B /* LSSession.m */,
 				259A57391950EB76000E27B0 /* LSUser.h */,
 				259A573A1950EB76000E27B0 /* LSUser.m */,
 				0A2324F31960DB8C00C1C98D /* LSConversationCellPresenter.h */,
@@ -617,6 +623,7 @@
 				259A57611950EB76000E27B0 /* LSUser.m in Sources */,
 				259A576A1950EB76000E27B0 /* LSUIConstants.m in Sources */,
 				259A57691950EB76000E27B0 /* LSMessageCell.m in Sources */,
+				0ACFA6BB19ABDFE800062A5C /* LSKeychainUtilities.m in Sources */,
 				259A57591950EB76000E27B0 /* LSRegistrationViewController.m in Sources */,
 				0ABAB02B1971E45000BE514F /* LSMessageCellHeader.m in Sources */,
 				0AD767721963104200582755 /* LSUtilities.m in Sources */,
@@ -628,6 +635,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ACFA6BC19ABE0C800062A5C /* LSKeychainUtilities.m in Sources */,
 				252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */,
 				0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */,
 				259A57801950EB92000E27B0 /* LSUITest.m in Sources */,

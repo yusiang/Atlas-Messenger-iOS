@@ -161,8 +161,9 @@ static CGFloat const LSLoginButtonTopMargin = 20.0;
 - (void)registerTapped
 {
     LSRegistrationViewController *registrationViewController = [[LSRegistrationViewController alloc] init];
-    [registrationViewController setCompletionBlock:^(LSUser *user) {
-        if (user) {
+    registrationViewController.layerClient = self.layerClient;
+    [registrationViewController setCompletionBlock:^(NSString *authenticatedUserId) {
+        if (authenticatedUserId) {
             [self.navigationController popViewControllerAnimated:NO];
         }
     }];
@@ -174,8 +175,9 @@ static CGFloat const LSLoginButtonTopMargin = 20.0;
 - (void)loginTapped
 {
     LSLoginViewController *loginViewController = [[LSLoginViewController alloc] init];
-    [loginViewController setCompletionBlock:^(LSUser *user) {
-        if (user) {
+    loginViewController.layerClient = self.layerClient;
+    [loginViewController setCompletionBlock:^(NSString *authenticatedUserId) {
+        if (authenticatedUserId) {
             [self.navigationController popViewControllerAnimated:NO];
         }
     }];
