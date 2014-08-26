@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "LSSelectionIndicator.h"
+#import "LYRContactPresenter.h"
 
-@interface LSContactTableViewCell : UITableViewCell
+@interface LYRContactTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) LSSelectionIndicator *radioButton;
+- (void)updateWithPresenter:(id<LYRContactPresenter>)presenter;
 
 - (void)updateWithSelectionIndicator:(BOOL)selected;
 

@@ -10,9 +10,11 @@
 #import <LayerKit/LayerKit.h>
 #import "LSAPIManager.h"
 #import "LSPersistenceManager.h"
+#import "LSApplicationController.h"
 
 @interface LSConversationListViewController : LYRConversationListViewController
 
+@property (nonatomic, strong) LSApplicationController *applicationController;
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LSAPIManager *APIManager;
 @property (nonatomic) LSPersistenceManager *persistenceManager;

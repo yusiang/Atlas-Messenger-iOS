@@ -6,16 +6,17 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSContactTableViewCell.h"
+#import "LYRContactTableViewCell.h"
 #import "LSUIConstants.h"
 
-@interface LSContactTableViewCell ()
+@interface LYRContactTableViewCell ()
 
+@property (nonatomic, strong) LSSelectionIndicator *selectionIndicator;
 @property (nonatomic) BOOL isSelected;
 
 @end
 
-@implementation LSContactTableViewCell
+@implementation LYRContactTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -27,6 +28,13 @@
         [self setSeparatorInset:UIEdgeInsetsMake(0, 20, 0, 0)];
     }
     return self;
+}
+- (void)updateWithPresenter:(id<LYRContactPresenter>)presenter
+{
+    self.textLabel.text = [presenter nameText];
+    self.detailTextLabel.text = [presenter subtitleText];
+    self.imageView.image = [presenter avatarImage];
+    [self setNeedsUpdateConstraints];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
@@ -46,17 +54,17 @@
 
 - (void) addSelectionIndicator
 {
-    if (!self.radioButton) {
-        self.radioButton = [LSSelectionIndicator initWithDiameter:28];
-        self.radioButton.frame = CGRectMake(270, 6, 28, 28);
-        self.radioButton.accessibilityLabel = @"selectionIndicator";
-        [self addSubview:self.radioButton];
+    if (!self.selectionIndicator) {
+        self.selectionIndicator = [LSSelectionIndicator initWithDiameter:28];
+        self.selectionIndicator.frame = CGRectMake(270, 6, 28, 28);
+        self.selectionIndicator.accessibilityLabel = @"selectionIndicator";
+        [self addSubview:self.selectionIndicator];
     }
 }
 
 - (void)updateWithSelectionIndicator:(BOOL)selected
 {
-    [self.radioButton setSelected:selected];
+    [self.selectionIndicator setSelected:selected];
 }
 
 @end

@@ -258,6 +258,7 @@ extern void LYRSetLogLevelFromEnvironment();
 - (void)presentConversationsListViewController
 {    
     LSConversationListViewController *conversationListViewController = [LSConversationListViewController new];
+    conversationListViewController.applicationController = self.applicationController;
     conversationListViewController.layerClient = self.applicationController.layerClient;
     conversationListViewController.APIManager = self.applicationController.APIManager;
     conversationListViewController.persistenceManager = self.applicationController.persistenceManager;

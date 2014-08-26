@@ -15,8 +15,9 @@
 #import "SVProgressHUD.h"
 #import "LSContactsSelectionViewController.h"
 #import "LSUIConstants.h"
+#import "LSContactListViewController.h"
 
-@interface LSConversationListViewController () <LSNotificationObserverDelegate, LSContactsSelectionViewControllerDelegate>
+@interface LSConversationListViewController () <LSNotificationObserverDelegate, LSContactListViewControllerDelegate>
 
 @property (nonatomic, strong) NSArray *conversations;
 @property (nonatomic, strong) NSArray *filteredConversations;
@@ -200,10 +201,9 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void)newConversationTapped
 {
-    LSContactsSelectionViewController *contactsViewController = [LSContactsSelectionViewController new];
-    contactsViewController.APIManager = self.APIManager;
-    contactsViewController.persistenceManager = self.persistenceManager;
-    contactsViewController.delegate = self;
+    LSContactListViewController *contactsViewController = [LSContactListViewController new];
+    contactsViewController.applicationController = self.applicationController;
+    contactsViewController.selectionDelegate = self;
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:contactsViewController];
     navigationController.navigationBar.tintColor = LSBlueColor();

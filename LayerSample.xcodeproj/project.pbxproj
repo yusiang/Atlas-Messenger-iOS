@@ -28,6 +28,10 @@
 		0A741CD119ABE62600F9C569 /* LYRConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A741CCC19ABE62600F9C569 /* LYRConversationListViewController.m */; };
 		0A741CD219ABE62600F9C569 /* LYRDataSourceChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A741CCF19ABE62600F9C569 /* LYRDataSourceChange.m */; };
 		0A741CD519ABE67700F9C569 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A741CD419ABE67700F9C569 /* LSConversationListViewController.m */; };
+		0A7A732C19ABFE2C0074FCA8 /* LYRContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7A732819ABFE2C0074FCA8 /* LYRContactCell.m */; };
+		0A7A732D19ABFE2C0074FCA8 /* LYRContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7A732A19ABFE2C0074FCA8 /* LYRContactListViewController.m */; };
+		0A7A733019ABFF790074FCA8 /* LSContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7A732F19ABFF790074FCA8 /* LSContactListViewController.m */; };
+		0A7A733319AC04AE0074FCA8 /* LSContactCellPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7A733219AC04AE0074FCA8 /* LSContactCellPresenter.m */; };
 		0AA09B361970BCEF007CD475 /* LSNotificationObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
@@ -60,7 +64,7 @@
 		259A57621950EB76000E27B0 /* LSAvatarImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A573D1950EB76000E27B0 /* LSAvatarImageView.m */; };
 		259A57631950EB76000E27B0 /* LSButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A573F1950EB76000E27B0 /* LSButton.m */; };
 		259A57641950EB76000E27B0 /* LSComposeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57411950EB76000E27B0 /* LSComposeView.m */; };
-		259A57651950EB76000E27B0 /* LSContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57431950EB76000E27B0 /* LSContactTableViewCell.m */; };
+		259A57651950EB76000E27B0 /* LYRContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57431950EB76000E27B0 /* LYRContactTableViewCell.m */; };
 		259A57661950EB76000E27B0 /* LYRConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57451950EB76000E27B0 /* LYRConversationCell.m */; };
 		259A57671950EB76000E27B0 /* LSInputTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57471950EB76000E27B0 /* LSInputTableViewCell.m */; };
 		259A57681950EB76000E27B0 /* LSMediaAttachement.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57491950EB76000E27B0 /* LSMediaAttachement.m */; };
@@ -119,6 +123,15 @@
 		0A741CCF19ABE62600F9C569 /* LYRDataSourceChange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRDataSourceChange.m; sourceTree = "<group>"; };
 		0A741CD319ABE67700F9C569 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
 		0A741CD419ABE67700F9C569 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
+		0A7A732719ABFE2C0074FCA8 /* LYRContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRContactCell.h; sourceTree = "<group>"; };
+		0A7A732819ABFE2C0074FCA8 /* LYRContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRContactCell.m; sourceTree = "<group>"; };
+		0A7A732919ABFE2C0074FCA8 /* LYRContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRContactListViewController.h; sourceTree = "<group>"; };
+		0A7A732A19ABFE2C0074FCA8 /* LYRContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRContactListViewController.m; sourceTree = "<group>"; };
+		0A7A732B19ABFE2C0074FCA8 /* LYRContactPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRContactPresenter.h; sourceTree = "<group>"; };
+		0A7A732E19ABFF790074FCA8 /* LSContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactListViewController.h; sourceTree = "<group>"; };
+		0A7A732F19ABFF790074FCA8 /* LSContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactListViewController.m; sourceTree = "<group>"; };
+		0A7A733119AC04AE0074FCA8 /* LSContactCellPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactCellPresenter.h; sourceTree = "<group>"; };
+		0A7A733219AC04AE0074FCA8 /* LSContactCellPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactCellPresenter.m; sourceTree = "<group>"; };
 		0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNotificationObserver.h; sourceTree = "<group>"; };
 		0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNotificationObserver.m; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -171,8 +184,8 @@
 		259A573F1950EB76000E27B0 /* LSButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSButton.m; sourceTree = "<group>"; };
 		259A57401950EB76000E27B0 /* LSComposeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSComposeView.h; sourceTree = "<group>"; };
 		259A57411950EB76000E27B0 /* LSComposeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSComposeView.m; sourceTree = "<group>"; };
-		259A57421950EB76000E27B0 /* LSContactTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactTableViewCell.h; sourceTree = "<group>"; };
-		259A57431950EB76000E27B0 /* LSContactTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactTableViewCell.m; sourceTree = "<group>"; };
+		259A57421950EB76000E27B0 /* LYRContactTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LYRContactTableViewCell.h; path = ../../Views/LYRContactTableViewCell.h; sourceTree = "<group>"; };
+		259A57431950EB76000E27B0 /* LYRContactTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LYRContactTableViewCell.m; path = ../../Views/LYRContactTableViewCell.m; sourceTree = "<group>"; };
 		259A57441950EB76000E27B0 /* LYRConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LYRConversationCell.h; path = ../Views/LYRConversationCell.h; sourceTree = "<group>"; };
 		259A57451950EB76000E27B0 /* LYRConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LYRConversationCell.m; path = ../Views/LYRConversationCell.m; sourceTree = "<group>"; };
 		259A57461950EB76000E27B0 /* LSInputTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSInputTableViewCell.h; sourceTree = "<group>"; };
@@ -280,6 +293,7 @@
 		0A741CC819ABE62600F9C569 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				0A7A732619ABFE2C0074FCA8 /* ContactList Component */,
 				0A7A732519ABFB760074FCA8 /* ConversationList Component */,
 				0A7A732419ABF1DA0074FCA8 /* Zac Drafts */,
 			);
@@ -309,6 +323,20 @@
 			name = "ConversationList Component";
 			sourceTree = "<group>";
 		};
+		0A7A732619ABFE2C0074FCA8 /* ContactList Component */ = {
+			isa = PBXGroup;
+			children = (
+				259A57421950EB76000E27B0 /* LYRContactTableViewCell.h */,
+				259A57431950EB76000E27B0 /* LYRContactTableViewCell.m */,
+				0A7A732719ABFE2C0074FCA8 /* LYRContactCell.h */,
+				0A7A732819ABFE2C0074FCA8 /* LYRContactCell.m */,
+				0A7A732919ABFE2C0074FCA8 /* LYRContactListViewController.h */,
+				0A7A732A19ABFE2C0074FCA8 /* LYRContactListViewController.m */,
+				0A7A732B19ABFE2C0074FCA8 /* LYRContactPresenter.h */,
+			);
+			path = "ContactList Component";
+			sourceTree = "<group>";
+		};
 		259A57111950EB76000E27B0 /* Code */ = {
 			isa = PBXGroup;
 			children = (
@@ -335,6 +363,8 @@
 			children = (
 				259A57151950EB76000E27B0 /* LSAPIManager.h */,
 				259A57161950EB76000E27B0 /* LSAPIManager.m */,
+				0A7A732E19ABFF790074FCA8 /* LSContactListViewController.h */,
+				0A7A732F19ABFF790074FCA8 /* LSContactListViewController.m */,
 				259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */,
 				259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */,
 				0A741CD319ABE67700F9C569 /* LSConversationListViewController.h */,
@@ -366,6 +396,8 @@
 				0A2324F41960DB8C00C1C98D /* LSConversationCellPresenter.m */,
 				0A52D5FF1962219D0030A34A /* LSMessageCellPresenter.h */,
 				0A52D6001962219D0030A34A /* LSMessageCellPresenter.m */,
+				0A7A733119AC04AE0074FCA8 /* LSContactCellPresenter.h */,
+				0A7A733219AC04AE0074FCA8 /* LSContactCellPresenter.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -381,8 +413,6 @@
 				259A573F1950EB76000E27B0 /* LSButton.m */,
 				259A57401950EB76000E27B0 /* LSComposeView.h */,
 				259A57411950EB76000E27B0 /* LSComposeView.m */,
-				259A57421950EB76000E27B0 /* LSContactTableViewCell.h */,
-				259A57431950EB76000E27B0 /* LSContactTableViewCell.m */,
 				259A57461950EB76000E27B0 /* LSInputTableViewCell.h */,
 				259A57471950EB76000E27B0 /* LSInputTableViewCell.m */,
 				259A57481950EB76000E27B0 /* LSMediaAttachement.h */,
@@ -630,7 +660,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A741CD519ABE67700F9C569 /* LSConversationListViewController.m in Sources */,
+				0A7A732D19ABFE2C0074FCA8 /* LYRContactListViewController.m in Sources */,
 				259A57681950EB76000E27B0 /* LSMediaAttachement.m in Sources */,
+				0A7A733019ABFF790074FCA8 /* LSContactListViewController.m in Sources */,
 				259A57531950EB76000E27B0 /* LSAuthenticationViewController.m in Sources */,
 				116357E6198AD1DB00C89F77 /* LSVersionView.m in Sources */,
 				259A57521950EB76000E27B0 /* LSConversationViewController.m in Sources */,
@@ -641,14 +673,16 @@
 				259A574F1950EB76000E27B0 /* LSAPIManager.m in Sources */,
 				259A57631950EB76000E27B0 /* LSButton.m in Sources */,
 				259A57671950EB76000E27B0 /* LSInputTableViewCell.m in Sources */,
+				0A7A733319AC04AE0074FCA8 /* LSContactCellPresenter.m in Sources */,
 				0A741CD219ABE62600F9C569 /* LYRDataSourceChange.m in Sources */,
 				0A741CD019ABE62600F9C569 /* ZacConversationExample.m in Sources */,
 				0A2324F51960DB8C00C1C98D /* LSConversationCellPresenter.m in Sources */,
 				25918B97195F95F700D0FB1B /* LSPersistenceManager.m in Sources */,
 				0A080CDB196F7322001A7221 /* LSContactListHeader.m in Sources */,
-				259A57651950EB76000E27B0 /* LSContactTableViewCell.m in Sources */,
+				259A57651950EB76000E27B0 /* LYRContactTableViewCell.m in Sources */,
 				0A52D5FE1961FD0D0030A34A /* LSApplicationController.m in Sources */,
 				259A57641950EB76000E27B0 /* LSComposeView.m in Sources */,
+				0A7A732C19ABFE2C0074FCA8 /* LYRContactCell.m in Sources */,
 				259A575D1950EB76000E27B0 /* main.m in Sources */,
 				25203F85195F5FC800E41FA1 /* LSHTTPResponseSerializer.m in Sources */,
 				259A57661950EB76000E27B0 /* LYRConversationCell.m in Sources */,

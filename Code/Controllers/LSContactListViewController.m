@@ -1,33 +1,30 @@
 //
-//  LSContactsViewController.m
+//  LSContactListViewController.m
 //  LayerSample
 //
-//  Created by Kevin Coleman on 6/12/14.
+//  Created by Kevin Coleman on 8/25/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSContactsSelectionViewController.h"
+#import "LSContactListViewController.h"
 #import "LYRContactTableViewCell.h"
-#import "LSUIConstants.h"
-#import "LSContactListHeader.h"
+#import "LSContactCellPresenter.h"
 
-@interface LSContactsSelectionViewController ()
+@interface LSContactListViewController ()
 
 @property (nonatomic) NSDictionary *contacts;
 @property (nonatomic) NSMutableSet *selectedContacts;
-
 @end
 
-@implementation LSContactsSelectionViewController
+@implementation LSContactListViewController
 
-NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
 
-- (id)initWithStyle:(UITableViewStyle)style
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:UITableViewStyleGrouped];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        _selectedContacts = [NSMutableSet set];
-        
+        // Custom initialization
     }
     return self;
 }
@@ -39,14 +36,10 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     [[NSNotificationCenter defaultCenter] postNotificationName:@"loadContacts" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadContactData) name:@"contactsPersited" object:nil];
     
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.allowsMultipleSelectionDuringEditing = NO;
-    
     self.title = @"Select Contacts";
     self.accessibilityLabel = @"Contacts";
-    [self.tableView registerClass:[LYRContactTableViewCell class] forCellReuseIdentifier:LSContactCellIdentifier];
     
-    [self fetchContacts];
+    
     
     if (!self.contacts.count > 0) {
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"emptyContacts"]];
@@ -63,13 +56,17 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     self.navigationItem.leftBarButtonItem = cancelButtonItem;
     
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                                                         style:UIBarButtonItemStyleDone
-                                                                        target:self
-                                                                        action:@selector(doneButtonTapped:)];
+                                                                       style:UIBarButtonItemStyleDone
+                                                                      target:self
+                                                                      action:@selector(doneButtonTapped:)];
     doneButtonItem.accessibilityLabel = @"Done";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
-    
-    self.tableView.accessibilityLabel = @"Contact List";
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self fetchContacts];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -83,14 +80,15 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     NSSet *filteredContacts = [self filteredContacts];
     NSArray *sortedContacts = [[filteredContacts allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
     self.contacts = [self sortContactsAlphabetically:sortedContacts];
+    [self.tableView reloadData];
 }
 
 //Removes the currently authenticated user from the contacts array
 - (NSSet *)filteredContacts
 {
     NSError *error = nil;
-    NSMutableSet *contactsToEvaluate = [NSMutableSet setWithSet:[self.persistenceManager persistedUsersWithError:&error]];
-    [contactsToEvaluate removeObject:self.APIManager.authenticatedSession.user];
+    NSMutableSet *contactsToEvaluate = [NSMutableSet setWithSet:[self.applicationController.persistenceManager persistedUsersWithError:&error]];
+    [contactsToEvaluate removeObject:self.applicationController.APIManager.authenticatedSession.user];
     return contactsToEvaluate;
 }
 
@@ -112,107 +110,55 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     return dict;
 }
 
-- (void)reloadContactData
-{
-    [self fetchContacts];
-    [self.tableView reloadData];
-}
-
-#pragma mark - Actions
-
-- (void)cancelButtonTapped:(id)sender
-{
-    [self.delegate contactsSelectionViewControllerDidCancel:self];
-}
-
-- (void)doneButtonTapped:(id)sender
-{
-    [self.delegate contactsSelectionViewController:self didSelectContacts:self.selectedContacts];
-}
-
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (NSUInteger)numberOfSectionsInViewController:(LYRContactListViewController *)contactListViewController
 {
     return [[self.contacts allKeys] count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSUInteger)contactListViewController:(LYRContactListViewController *)contactListViewController numberOfContactsInSection:(NSUInteger )section
 {
     NSString *key = [[self sortedContactKeys] objectAtIndex:section];
     return [[self.contacts objectForKey:key] count];
 }
 
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    UIView *view = [[UIView alloc] init];
-    view.backgroundColor = [UIColor whiteColor];
-    return view;
-}
-
-- (LYRContactTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    LYRContactTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSContactCellIdentifier];
-    [self configureCell:cell forIndexPath:indexPath];
-    return cell;
-}
-
-- (void)configureCell:(LYRContactTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
+- (id<LYRContactPresenter>)contactListViewController:(LYRContactListViewController *)contactListViewController presenterForContactAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
     LSUser *user = [[self.contacts objectForKey:key] objectAtIndex:indexPath.row];
-    cell.textLabel.text = user.fullName;
-    cell.accessibilityLabel = [NSString stringWithFormat:@"%@", user.fullName];
+    return [LSContactCellPresenter presenterWithUser:user];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(LYRContactTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)contactListViewController:(LYRContactListViewController *)contactListViewController didSearchWithString:(NSString *)searchString completion:(void (^)())completion
 {
-    NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
-    LSUser *user = [[self.contacts objectForKey:key] objectAtIndex:indexPath.row];
+    NSString *wildcard = [NSString stringWithFormat:@"*%@*", searchString];
     
-    if ([self.selectedContacts containsObject:user]) {
-        [cell updateWithSelectionIndicator:YES];
-    } else {
-        [cell updateWithSelectionIndicator:NO];
-    }
-   
+//    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", wildcard];
+//    NSArray *resultArray = [[self.contacts allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(key1 == %@) AND (key2==%@)", @"tt",@"vv"]];
+//    NSSet *filteredUsers = [allUsers filteredSetUsingPredicate:filterPredicate];
+//    NSSet *filteredUserIDs = [filteredUsers valueForKey:@"userID"];
+//    
+//    NSMutableOrderedSet *filteredConversations = [NSMutableOrderedSet orderedSet];
+//    for (LYRConversation *conversation in self.conversations) {
+//        for (NSString *participantID in filteredUserIDs) {
+//            if ([conversation.participants containsObject:participantID]) {
+//                [filteredConversations addObject:conversation];
+//            }
+//        }
+//    }
+//    
+//    // do a filter of the search
+//    self.filteredConversations = [filteredConversations array];
+    completion();
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 48;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 48;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return 2;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
-    return [[LSContactListHeader alloc] initWithKey:key];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)contactListViewController:(LYRContactListViewController *)contactListViewController didSelectContactAtIndex:(NSIndexPath *)indexPath
 {
     [self updateParticpantListWithSelectionAtIndex:indexPath];
 }
 
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+- (NSUInteger)contactListViewController:(LYRContactListViewController *)contactListViewController heightForContactAtIndex:(NSUInteger)index
 {
-    return [self sortedContactKeys];
-}
-
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
-{
-    return 0;
+    return 48;
 }
 
 #pragma mark
@@ -237,5 +183,20 @@ NSString *const LSContactCellIdentifier = @"contactCellIdentifier";
     return mutableKeys;
 }
 
+- (void)reloadContactData
+{
+    [self fetchContacts];
+    [self.tableView reloadData];
+}
+
+- (void)cancelButtonTapped:(id)sender
+{
+   // [self.delegate contactsSelectionViewControllerDidCancel:self];
+}
+
+- (void)doneButtonTapped:(id)sender
+{
+   // [self.delegate contactsSelectionViewController:self didSelectContacts:self.selectedContacts];
+}
 
 @end
