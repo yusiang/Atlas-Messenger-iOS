@@ -15,8 +15,5 @@
 @interface LSConversationListViewController : LYRConversationListViewController
 
 @property (nonatomic, strong) LSApplicationController *applicationController;
-@property (nonatomic) LYRClient *layerClient;
-@property (nonatomic) LSAPIManager *APIManager;
-@property (nonatomic) LSPersistenceManager *persistenceManager;
 
 @end

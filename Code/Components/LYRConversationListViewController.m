@@ -79,19 +79,15 @@ static NSString* const LYRConversationCellReuseIdentifier = @"LYRConversationCel
     }
 }
 
-#pragma mark - LYRConversationListViewControllerDataSource
-
-- (NSUInteger)numberOfConversationsInViewController:(LYRConversationListViewController *)conversationListViewController
-{
-    return 0;
-}
-
-- (id<LYRConversationCellPresenter>)conversationListViewController:(LYRConversationListViewController *)conversationListViewController presenterForConversationAtIndex:(NSUInteger)index
-{
-    return nil;
-}
-
 #pragma mark - Table view data source
+
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.delegate respondsToSelector:@selector(conversationListViewController:heightForConversationAtIndex:)]) {
+        return [self.delegate conversationListViewController:self heightForConversationAtIndex:indexPath.row];
+    }
+    return 80;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

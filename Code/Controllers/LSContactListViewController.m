@@ -196,12 +196,12 @@
 
 - (void)cancelButtonTapped:(id)sender
 {
-   // [self.delegate contactsSelectionViewControllerDidCancel:self];
+   [self.selectionDelegate contactsSelectionViewControllerDidCancel:self];
 }
 
 - (void)doneButtonTapped:(id)sender
 {
-   // [self.delegate contactsSelectionViewController:self didSelectContacts:self.selectedContacts];
+   [self.selectionDelegate contactsSelectionViewController:self didSelectContacts:self.selectedContacts];
 }
 
 @end

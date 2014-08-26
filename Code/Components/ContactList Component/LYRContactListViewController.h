@@ -16,19 +16,19 @@
 @required
 
 /**
- *  Asks the data source for the number of Sections to display in the LYRContactListViewController.
+ *  Asks the data source for the number of Sections to display in the LYRContactListViewController. Sections coorespond to letters in the alphabet
  *
- *  @param contactListViewController An object representing the contact list view controller requesting this information.
+ *  @param contactListViewController An object representing the contact list view controller requesting the information
  *
- *  @return The number of sectionsto display.
+ *  @return The number of sections to display.
  */
 - (NSUInteger)numberOfSectionsInViewController:(LYRContactListViewController *)contactListViewController;
 
 /**
- *  Asks the data source for the number of contacts to display in the LYRContactListViewController.
+ *  Asks the data source for the number of contacts to display in each section of the LYRContactListViewController.
  *
- *  @param contactListViewController An object representing the contact list view controller requesting this information.
- *  @param section                   The section
+ *  @param contactListViewController An object representing the contact list view controller requesting the information.
+ *  @param section                   The section for which the view controller is requesting the number of contacts
  *
  *  @return The number of contacts for the section
  */

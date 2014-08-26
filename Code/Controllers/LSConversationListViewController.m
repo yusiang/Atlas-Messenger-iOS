@@ -35,14 +35,14 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 {
     [super viewDidLoad];
     
-    NSAssert(self.layerClient, @"`self.layerClient` cannot be nil");
-    NSAssert(self.persistenceManager, @"persistenceManager cannot be nil");
-    NSAssert(self.APIManager, @"APIManager cannot be nil");
+    // Make sure the applicationController object is not nil
+    NSAssert(self.applicationController, @"`self.applicationController` cannot be nil");
     
+    // Titles for the VC and accessiblitiy
     self.title = @"Conversations";
     self.accessibilityLabel = @"Conversation List";
     
-    // Setup Navigation Item
+    // Left navigation item
     UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"logout"]
                                                                      style:UIBarButtonItemStylePlain
                                                                     target:self
@@ -50,6 +50,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     logoutButton.accessibilityLabel = @"logout";
     [self.navigationItem setLeftBarButtonItem:logoutButton];
     
+    // Right navigation item
     UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"compose"]
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
@@ -57,6 +58,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     newConversationButton.accessibilityLabel = @"New";
     [self.navigationItem setRightBarButtonItem:newConversationButton];
     
+    // Adds a version view to the top tableView behind the Navigation bar
     [self addVersionView];
 }
 
@@ -64,15 +66,19 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 {
     [super viewWillAppear:animated];
     
+    // Load Layer Conversation List
     [self fetchLayerConversations];
     
-    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:self.conversations];
+    // Adds thev view controller as the LSNotification Observer so that it can listen to changes from Layer
+    self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.applicationController.layerClient conversations:self.conversations];
     self.notificationObserver.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    // Removes self as observer
     self.notificationObserver = nil;
 }
 
@@ -83,11 +89,19 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (void)fetchLayerConversations
 {
-    NSAssert(self.layerClient, @"Layer Controller should not be `nil`.");
-    if (self.conversations) self.conversations = nil;
-    NSSet *conversations = (NSSet *)[self.layerClient conversationsForIdentifiers:nil];
+    // Make sure the Layer Client object is not nil
+    NSAssert(self.applicationController.layerClient, @"Layer Client should not be `nil`.");
+
+    // Fetch all conversations from LayerKit
+    NSSet *conversations = (NSSet *)[self.applicationController.layerClient conversationsForIdentifiers:nil];
+    
+    // Sort the messages according to the Last Message sent at date
     self.conversations = [[conversations allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessage.sentAt" ascending:NO]]];
+    
+    // Set the array we will use for searching
     self.filteredConversations = [conversations allObjects];
+    
+    // Tells super view to reload table view data
     [self reloadConversations];
 }
 
@@ -109,13 +123,13 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (id<LYRConversationCellPresenter>)conversationListViewController:(LYRConversationListViewController *)conversationListViewController presenterForConversationAtIndex:(NSUInteger)index
 {
-    return [LSConversationCellPresenter presenterWithConversation:[[self currentDataArray] objectAtIndex:index] persistanceManager:self.persistenceManager];
+    return [LSConversationCellPresenter presenterWithConversation:[[self currentDataArray] objectAtIndex:index] persistanceManager:self.applicationController.persistenceManager];
 }
 
 - (void)conversationListViewController:(LYRConversationListViewController *)conversationListViewController deleteConversationAtIndex:(NSUInteger)index
 {
     NSError *error;
-    BOOL success = [self.layerClient deleteConversation:[[self currentDataArray] objectAtIndex:index] error:&error];
+    BOOL success = [self.applicationController.layerClient deleteConversation:[[self currentDataArray] objectAtIndex:index] error:&error];
     if (success) {
         NSLog(@"Conversation Deleted!");
     } else {
@@ -129,18 +143,9 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     }
 }
 
-- (void)conversationListViewController:(LYRConversationListViewController *)conversationListViewcontroller didSelectConversationAtIndex:(NSUInteger)index
-{
-    LSConversationViewController *viewController = [LSConversationViewController new];
-    viewController.conversation = [[self currentDataArray] objectAtIndex:index];
-    viewController.layerClient = self.layerClient;
-    viewController.persistanceManager = self.persistenceManager;
-    [self.navigationController pushViewController:viewController animated:YES];
-}
-
 - (void)conversationListViewController:(LYRConversationListViewController *)conversationListViewController didSearchWithString:(NSString *)searchString completion:(void (^)())completion
 {
-    NSSet *allUsers = [self.persistenceManager persistedUsersWithError:NULL];
+    NSSet *allUsers = [self.applicationController.persistenceManager persistedUsersWithError:NULL];
     
     NSString *wildcard = [NSString stringWithFormat:@"*%@*", searchString];
     
@@ -162,27 +167,20 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     completion();
 }
 
-- (void)contactsSelectionViewControllerDidCancel:(LSContactsSelectionViewController *)contactsSelectionViewController
+#pragma mark - LYRConversationListViewControllerDelegate methods
+
+- (void)conversationListViewController:(LYRConversationListViewController *)conversationListViewcontroller didSelectConversationAtIndex:(NSUInteger)index
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    LSConversationViewController *viewController = [LSConversationViewController new];
+    viewController.conversation = [[self currentDataArray] objectAtIndex:index];
+    viewController.layerClient = self.applicationController.layerClient;
+    viewController.persistanceManager = self.applicationController.persistenceManager;
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
-#pragma mark
-#pragma mark Notification Observer Delegate Methods
-
-- (void) observerinChangeContent:(LSNotificationObserver *)observer
+- (CGFloat)conversationListViewController:(LYRConversationListViewController *)conversationListViewcontroller heightForConversationAtIndex:(NSUInteger)index
 {
-    //Nothing for now
-}
-
-- (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
-{
-    // Nothing for now
-}
-
-- (void) observerDidChangeContent:(LSNotificationObserver *)observer
-{
-    [self fetchLayerConversations];
+    return 80;
 }
 
 #pragma mark
@@ -191,7 +189,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 - (void)logoutTapped
 {
     [SVProgressHUD show];
-    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+    [self.applicationController.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
         
         [SVProgressHUD dismiss];
         
@@ -220,19 +218,45 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
             LSConversationViewController *controller = [LSConversationViewController new];
             
             NSSet *participants = [contacts valueForKey:@"userID"];
-            LYRConversation *conversation = [[self.layerClient conversationsForParticipants:participants] anyObject];
+            LYRConversation *conversation = [[self.applicationController.layerClient conversationsForParticipants:participants] anyObject];
             
             if (!conversation) {
                 conversation = [LYRConversation conversationWithParticipants:participants];
             }
             
             controller.conversation = conversation;
-            controller.layerClient = self.layerClient;
-            controller.persistanceManager = self.persistenceManager;
+            controller.layerClient = self.applicationController.layerClient;
+            controller.persistanceManager = self.applicationController.persistenceManager;
             [self.navigationController pushViewController:controller animated:YES];
         }
     }];
 }
+
+- (void) contactsSelectionViewControllerDidCancel:(LSContactListViewController *)contactsSelectionViewController
+{
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+#pragma mark
+#pragma mark Notification Observer Delegate Methods
+
+- (void) observerWillChangeContent:(LSNotificationObserver *)observer
+{
+    //Nothing for now
+}
+
+- (void)observer:(LSNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
+{
+    // Nothing for now
+}
+
+- (void) observerDidChangeContent:(LSNotificationObserver *)observer
+{
+    [self fetchLayerConversations];
+}
+
+#pragma mark - LSVersionView add method
 
 - (void)addVersionView
 {
@@ -249,4 +273,6 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
                                         self.versionView.frame.size.width,
                                         self.versionView.frame.size.height);
 }
+
+
 @end
