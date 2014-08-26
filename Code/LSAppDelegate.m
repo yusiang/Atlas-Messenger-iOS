@@ -57,7 +57,7 @@ extern void LYRSetLogLevelFromEnvironment();
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
     // Ask LayerKit to connect
-    __block LSApplicationController *wController = self.applicationController;
+    __weak LSApplicationController *wController = self.applicationController;
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         if (success) {
             NSLog(@"Layer Client is connected");
