@@ -110,6 +110,11 @@
     return dict;
 }
 
+- (CGFloat)contactListViewController:(LYRContactListViewController *)contactListViewController heightForContactAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 58;
+}
+
 - (NSUInteger)numberOfSectionsInViewController:(LYRContactListViewController *)contactListViewController
 {
     return [[self.contacts allKeys] count];

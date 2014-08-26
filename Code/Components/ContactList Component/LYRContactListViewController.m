@@ -21,6 +21,15 @@
 
 NSString *const LYRContactCellIdentifier = @"contactCellIdentifier";
 
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super initWithStyle:UITableViewStyleGrouped];
+    if (self) {
+        
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -82,6 +91,19 @@ NSString *const LYRContactCellIdentifier = @"contactCellIdentifier";
 }
 
 #pragma mark - Table view data source
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.dataSource respondsToSelector:@selector(contactListViewController:heightForContactAtIndexPath:)]) {
+        return [self.delegate contactListViewController:self heightForContactAtIndexPath:indexPath];
+    }
+    return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 10;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

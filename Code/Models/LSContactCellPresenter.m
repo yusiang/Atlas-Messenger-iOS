@@ -37,12 +37,12 @@
 
 - (NSString *)subtitleText
 {
-    return nil;
+    return @"(425) 445-6042";
 }
 
 - (UIImage *)avatarImage
 {
-    return nil;
+    return nil; //[UIImage imageNamed:@"kevin"];
 }
 
 - (LYRContactAccessoryType)accessoryType

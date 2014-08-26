@@ -83,7 +83,7 @@
 - (void)contactListViewController:(LYRContactListViewController *)contactListViewController didSelectContactAtIndexPath:(NSIndexPath *)indexPath;
 
 
-- (NSUInteger)contactListViewController:(LYRContactListViewController *)contactListViewController heightForContactAtIndex:(NSUInteger)index;
+- (CGFloat)contactListViewController:(LYRContactListViewController *)contactListViewController heightForContactAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
