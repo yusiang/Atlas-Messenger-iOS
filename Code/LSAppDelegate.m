@@ -14,60 +14,7 @@
 #import "LSUIConstants.h"
 #import <Crashlytics/Crashlytics.h>
 #import <HockeySDK/HockeySDK.h>
-
-NSData *LYRIssuerData(void)
-{
-    static NSString *issuerInBase64 = @"MQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ0FMSUZPUk5JQTEWMBQGA1UEBxMNU0FOIEZSQU5DSVNDTzEOMAwGA1UEChMFTEFZRVIxFjAUBgNVBAsTDVBMQVRGT1JNIFRFQU0xEjAQBgNVBAMTCUxBWUVSLkNPTTEcMBoGCSqGSIb3DQEJARYNZGV2QGxheWVyLmNvbQ==";
-    static NSData *layerCertificateIssuer = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        layerCertificateIssuer = [[NSData alloc] initWithBase64EncodedString:issuerInBase64 options:0];
-    });
-    return layerCertificateIssuer;
-}
-
-void LYRTestDeleteKeysFromKeychain(void)
-{
-    NSDictionary *query = @{ (__bridge id)kSecClass: (__bridge id)kSecClassKey,
-                             (__bridge id)kSecAttrKeyType: (__bridge id)kSecAttrKeyTypeRSA };
-    
-    OSStatus err = SecItemDelete((__bridge CFDictionaryRef)query);
-    if(!(err == noErr || err == errSecItemNotFound)) {
-        NSLog(@"SecItemDeleteError: %d", (int)err);
-    }
-}
-
-BOOL LYRTestDeleteCertificatesFromKeychain(void)
-{
-    NSDictionary *query = @{ (__bridge id)kSecClass: (__bridge id)kSecClassCertificate,
-                             (__bridge id)kSecAttrIssuer: LYRIssuerData() };
-    
-    OSStatus err = SecItemDelete((__bridge CFDictionaryRef)query);
-    if(!(err == noErr || err == errSecItemNotFound)) {
-        NSLog(@"SecItemDeleteError: %d", (int)err);
-        return NO;
-    }
-    return YES;
-}
-
-BOOL LYRTestDeleteIdentitiesFromKeychain(void)
-{
-    NSDictionary *query = @{ (__bridge id)kSecClass: (__bridge id)kSecClassIdentity,
-                             (__bridge id)kSecAttrIssuer: LYRIssuerData() };
-    OSStatus err = SecItemDelete((__bridge CFDictionaryRef)query);
-    if(!(err == noErr || err == errSecItemNotFound)) {
-        NSLog(@"SecItemDeleteError: %d", (int)err);
-        return NO;
-    }
-    return YES;
-}
-
-void LYRTestCleanKeychain(void)
-{
-    LYRTestDeleteKeysFromKeychain();
-    LYRTestDeleteCertificatesFromKeychain();
-    LYRTestDeleteIdentitiesFromKeychain();
-}
+#import "LSKeychainUtilities.h"
 
 extern void LYRSetLogLevelFromEnvironment();
 
@@ -83,40 +30,48 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Kicking off Crashlytics
-    
+    // Set LayerKit log level
+    LYRSetLogLevelFromEnvironment();
+
+    // Setup environment configuration
     LSEnvironment environment = LSDevelopmentEnvironment;
     
+    // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
-    LYRSetLogLevelFromEnvironment();
-   
+    // If we are pointing at a new server, we need to clear the keychain
     NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
     if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(environment)]) {
         LYRTestCleanKeychain();
         [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(environment) forKey:@"LAYER_CONFIGURATION_URL"];
     }
 
+    // Setup notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
     
+    // Configure application controllers
     LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID(environment)];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
-    
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
-    __block LSApplicationController *wController = self.applicationController;
+    // Ask LayerKit to connect
+    __weak LSApplicationController *wController = self.applicationController;
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         if (success) {
             NSLog(@"Layer Client is connected");
             LSSession *session = [wController.persistenceManager persistedSessionWithError:nil];
             [self updateCrashlyticsWithUser:session.user];
-            NSError *error = nil;
+            NSError *error;
+            
+            // If we have a session, resume
             if ([wController.APIManager resumeSession:session error:&error]) {
                 NSLog(@"Session resumed: %@", session);
                 [self loadContacts];
                 [self presentConversationsListViewController];
+            
+            // If we have an authenticated user ID and no session, we must log out
             } else if (wController.layerClient.authenticatedUserID){
                 [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
                     NSLog(@"Encountered error while resuming session but Layer client is authenticated. Deauthenticating client...");
@@ -125,9 +80,12 @@ extern void LYRSetLogLevelFromEnvironment();
         }
     }];
 
+    // Setup the authentication view controller
     LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
     authenticationViewController.layerClient = self.applicationController.layerClient;
     authenticationViewController.APIManager = self.applicationController.APIManager;
+    
+    // Setup our navigation controller
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
     self.navigationController.navigationBarHidden = TRUE;
     self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
@@ -135,7 +93,7 @@ extern void LYRSetLogLevelFromEnvironment();
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     
-    // update the app ID and configuration URL in the crash metadata.
+    // Update the app ID and configuration URL in the crash metadata.
     [Crashlytics setObjectValue:LSLayerConfigurationURL(environment) forKey:@"ConfigurationURL"];
     [Crashlytics setObjectValue:LSLayerAppID(environment) forKey:@"AppID"];
 
@@ -161,6 +119,7 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    // Coming back to the foreground so we refresh the contact list
     [self loadContacts];
 }
 
@@ -190,7 +149,7 @@ extern void LYRSetLogLevelFromEnvironment();
         completionHandler(fetchResult);
     }];
     if (success) {
-        NSLog(@"Application did remote notification sycn");
+        NSLog(@"Application did complete remote notification sycn");
     } else {
         NSLog(@"Error handling push notification: %@", error);
         completionHandler(UIBackgroundFetchResultNoData);

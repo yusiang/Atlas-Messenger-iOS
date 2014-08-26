@@ -13,6 +13,7 @@
 #import "LSConversationListViewController.h"
 #import "LSAppDelegate.h"
 #import "LSUser.h"
+#import "LSUtilities.h"
 
 @interface LSRegistrationViewController () <UITextFieldDelegate, UITableViewDelegate>
 
@@ -23,7 +24,7 @@
 @property (nonatomic, weak) UITextField *passwordField;
 @property (nonatomic, weak) UITextField *passwordConfirmationField;
 
-@property (nonatomic, copy) void (^completionBlock)(LSUser *);
+@property (nonatomic, copy) void (^completionBlock)(NSString *authenticatedUserID);
 
 @end
 
@@ -154,12 +155,33 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     
     [SVProgressHUD show];
     [self.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
-        [SVProgressHUD dismiss];
         if (user) {
-            if (self.completionBlock) self.completionBlock(user);
+            [self.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+                if (nonce) {
+                    [self.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+                        if (identityToken) {
+                            [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                                if (authenticatedUserID) {
+                                    if (self.completionBlock) self.completionBlock(authenticatedUserID);
+                                    [SVProgressHUD dismiss];
+                                } else {
+                                    LSAlertWithError(error);
+                                    [SVProgressHUD dismiss];
+                                }
+                            }];
+                        } else {
+                            LSAlertWithError(error);
+                            [SVProgressHUD dismiss];
+                        }
+                    }];
+                } else {
+                    LSAlertWithError(error);
+                    [SVProgressHUD dismiss];
+                }
+            }];
         } else {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Registration Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
+            LSAlertWithError(error);
+            [SVProgressHUD dismiss];
         }
     }];
 }
