@@ -155,29 +155,34 @@ static NSString *const LSRegistrationCellIdentifier = @"registrationCellIdentifi
     
     [SVProgressHUD show];
     [self.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
-        [self.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-            if (!nonce) {
-                LSAlertWithError(error);
-                [SVProgressHUD dismiss];
-            } else {
-                [self.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
-                    if (!identityToken) {
-                        LSAlertWithError(error);
-                        [SVProgressHUD dismiss];
-                    } else {
-                        [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-                            if (!authenticatedUserID) {
-                                LSAlertWithError(error);
-                                [SVProgressHUD dismiss];
-                            } else {
-                               if (self.completionBlock) self.completionBlock(authenticatedUserID);
-                                [SVProgressHUD dismiss];
-                            }
-                        }];
-                    }
-                }];
-            }
-        }];
+        if (user) {
+            [self.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+                if (nonce) {
+                    [self.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+                        if (identityToken) {
+                            [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                                if (authenticatedUserID) {
+                                    if (self.completionBlock) self.completionBlock(authenticatedUserID);
+                                    [SVProgressHUD dismiss];
+                                } else {
+                                    LSAlertWithError(error);
+                                    [SVProgressHUD dismiss];
+                                }
+                            }];
+                        } else {
+                            LSAlertWithError(error);
+                            [SVProgressHUD dismiss];
+                        }
+                    }];
+                } else {
+                    LSAlertWithError(error);
+                    [SVProgressHUD dismiss];
+                }
+            }];
+        } else {
+            LSAlertWithError(error);
+            [SVProgressHUD dismiss];
+        }
     }];
 }
 

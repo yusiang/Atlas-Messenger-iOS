@@ -125,26 +125,26 @@ static NSString *const LSLoginlIdentifier = @"loginCellIdentifier";
     [SVProgressHUD show];
     
     [self.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-        if (!nonce) {
-            LSAlertWithError(error);
-            [SVProgressHUD dismiss];
-        } else {
+        if (nonce) {
             [self.APIManager authenticateWithEmail:usernameCell.textField.text password:passwordCell.textField.text nonce:nonce completion:^(NSString *identityToken, NSError *error) {
-                if (!identityToken) {
-                    LSAlertWithError(error);
-                    [SVProgressHUD dismiss];
-                } else {
+                if (identityToken) {
                     [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-                        if (!authenticatedUserID) {
-                            LSAlertWithError(error);
+                        if (authenticatedUserID) {
+                            if (self.completionBlock) self.completionBlock(authenticatedUserID);
                             [SVProgressHUD dismiss];
                         } else {
-                            if (self.completionBlock) self.completionBlock(authenticatedUserID);
+                            LSAlertWithError(error);
                             [SVProgressHUD dismiss];
                         }
                     }];
+                } else {
+                    LSAlertWithError(error);
+                    [SVProgressHUD dismiss];
                 }
             }];
+        } else {
+            LSAlertWithError(error);
+            [SVProgressHUD dismiss];
         }
     }];
 }
