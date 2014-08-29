@@ -49,7 +49,6 @@
 		0AFE3FF419B0E1BD00FCA264 /* LSAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57161950EB76000E27B0 /* LSAPIManager.m */; };
 		0AFE3FF519B0E1BD00FCA264 /* LSContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7A732F19ABFF790074FCA8 /* LSContactListViewController.m */; };
 		0AFE3FF619B0E1BD00FCA264 /* LSContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE1A14619B0D8F300BFB754 /* LSContactViewController.m */; };
-		0AFE3FF719B0E1BD00FCA264 /* LSContactsSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */; };
 		0AFE3FF819B0E1BD00FCA264 /* LSConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A741CD419ABE67700F9C569 /* LSConversationListViewController.m */; };
 		0AFE3FF919B0E1BD00FCA264 /* LSConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571C1950EB76000E27B0 /* LSConversationViewController.m */; };
 		0AFE3FFA19B0E1BD00FCA264 /* LSAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A571E1950EB76000E27B0 /* LSAuthenticationViewController.m */; };
@@ -77,6 +76,9 @@
 		0AFE401119B0E1BD00FCA264 /* LSBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC3D70A196B29CD0089E49D /* LSBubbleView.m */; };
 		0AFE401219B0E1BD00FCA264 /* LSUIConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A574D1950EB76000E27B0 /* LSUIConstants.m */; };
 		0AFE401319B0E1BD00FCA264 /* LSVersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 116357E5198AD1DB00C89F77 /* LSVersionView.m */; };
+		0AFE401719B0E57A00FCA264 /* LYRUIConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE401619B0E57A00FCA264 /* LYRUIConversationListViewController.m */; };
+		0AFE401E19B0E68900FCA264 /* LYRUIConversationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE401D19B0E68900FCA264 /* LYRUIConversationTableViewCell.m */; };
+		0AFE402119B0EC8C00FCA264 /* LSConversationListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE402019B0EC8C00FCA264 /* LSConversationListTVC.m */; };
 		252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */; };
 		259A57731950EB83000E27B0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 259A576C1950EB83000E27B0 /* Main.storyboard */; };
 		259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 259A576E1950EB83000E27B0 /* InfoPlist.strings */; };
@@ -179,6 +181,13 @@
 		0AE1A15519B0DC5100BFB754 /* LSKeychainUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSKeychainUtilities.h; sourceTree = "<group>"; };
 		0AE1A15619B0DC5100BFB754 /* LSKeychainUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSKeychainUtilities.m; sourceTree = "<group>"; };
 		0AF3D8DF197462A900FED313 /* LSMessagingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMessagingTest.m; sourceTree = "<group>"; };
+		0AFE401519B0E57A00FCA264 /* LYRUIConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIConversationListViewController.h; sourceTree = "<group>"; };
+		0AFE401619B0E57A00FCA264 /* LYRUIConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIConversationListViewController.m; sourceTree = "<group>"; };
+		0AFE401B19B0E64A00FCA264 /* LYRUIConversationPresenting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIConversationPresenting.h; sourceTree = "<group>"; };
+		0AFE401C19B0E68900FCA264 /* LYRUIConversationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIConversationTableViewCell.h; sourceTree = "<group>"; };
+		0AFE401D19B0E68900FCA264 /* LYRUIConversationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIConversationTableViewCell.m; sourceTree = "<group>"; };
+		0AFE401F19B0EC8C00FCA264 /* LSConversationListTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSConversationListTVC.h; path = ../LSConversationListTVC.h; sourceTree = "<group>"; };
+		0AFE402019B0EC8C00FCA264 /* LSConversationListTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSConversationListTVC.m; path = ../LSConversationListTVC.m; sourceTree = "<group>"; };
 		116357E4198AD1DB00C89F77 /* LSVersionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSVersionView.h; sourceTree = "<group>"; };
 		116357E5198AD1DB00C89F77 /* LSVersionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSVersionView.m; sourceTree = "<group>"; };
 		25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSHTTPResponseSerializer.h; path = ../LSHTTPResponseSerializer.h; sourceTree = "<group>"; };
@@ -190,8 +199,6 @@
 		25918B99195F960500D0FB1B /* LSSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSSession.m; path = ../LSSession.m; sourceTree = "<group>"; };
 		259A57151950EB76000E27B0 /* LSAPIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAPIManager.h; sourceTree = "<group>"; };
 		259A57161950EB76000E27B0 /* LSAPIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAPIManager.m; sourceTree = "<group>"; };
-		259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactsSelectionViewController.h; sourceTree = "<group>"; };
-		259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactsSelectionViewController.m; sourceTree = "<group>"; };
 		259A571B1950EB76000E27B0 /* LSConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationViewController.h; sourceTree = "<group>"; };
 		259A571C1950EB76000E27B0 /* LSConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationViewController.m; sourceTree = "<group>"; };
 		259A571D1950EB76000E27B0 /* LSAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationViewController.h; sourceTree = "<group>"; };
@@ -318,7 +325,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0A741CC819ABE62600F9C569 /* Components */ = {
+		0A741CC819ABE62600F9C569 /* Components - Coleman */ = {
 			isa = PBXGroup;
 			children = (
 				0AE1A13819B0D7BF00BFB754 /* Contact Vew Component */,
@@ -326,6 +333,7 @@
 				0A7A732519ABFB760074FCA8 /* Conversation List Component */,
 				0A7A732419ABF1DA0074FCA8 /* Zac Drafts */,
 			);
+			name = "Components - Coleman";
 			path = Components;
 			sourceTree = "<group>";
 		};
@@ -385,10 +393,84 @@
 			name = "Contact Vew Component";
 			sourceTree = "<group>";
 		};
+		0AFE401419B0E29300FCA264 /* Components - Watters */ = {
+			isa = PBXGroup;
+			children = (
+				0AFE402619B0F61400FCA264 /* Contact List Component */,
+				0AFE402519B0F60200FCA264 /* Conversation List Component */,
+			);
+			name = "Components - Watters";
+			sourceTree = "<group>";
+		};
+		0AFE402219B0F51100FCA264 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				0AD767701963104200582755 /* LSUtilities.h */,
+				0AD767711963104200582755 /* LSUtilities.m */,
+				0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */,
+				0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */,
+				0AE1A15519B0DC5100BFB754 /* LSKeychainUtilities.h */,
+				0AE1A15619B0DC5100BFB754 /* LSKeychainUtilities.m */,
+				0A52D5FC1961FD0D0030A34A /* LSApplicationController.h */,
+				0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */,
+				25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */,
+				25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */,
+				25918B95195F95F700D0FB1B /* LSPersistenceManager.h */,
+				25918B96195F95F700D0FB1B /* LSPersistenceManager.m */,
+				25918B98195F960500D0FB1B /* LSSession.h */,
+				25918B99195F960500D0FB1B /* LSSession.m */,
+				259A57151950EB76000E27B0 /* LSAPIManager.h */,
+				259A57161950EB76000E27B0 /* LSAPIManager.m */,
+			);
+			name = Application;
+			sourceTree = "<group>";
+		};
+		0AFE402319B0F53200FCA264 /* Component Impl - Coleman */ = {
+			isa = PBXGroup;
+			children = (
+				0A7A732E19ABFF790074FCA8 /* LSContactListViewController.h */,
+				0A7A732F19ABFF790074FCA8 /* LSContactListViewController.m */,
+				0AE1A14519B0D8F300BFB754 /* LSContactViewController.h */,
+				0AE1A14619B0D8F300BFB754 /* LSContactViewController.m */,
+				0A741CD319ABE67700F9C569 /* LSConversationListViewController.h */,
+				0A741CD419ABE67700F9C569 /* LSConversationListViewController.m */,
+			);
+			name = "Component Impl - Coleman";
+			sourceTree = "<group>";
+		};
+		0AFE402419B0F56F00FCA264 /* Component Impl - Watters */ = {
+			isa = PBXGroup;
+			children = (
+				0AFE401F19B0EC8C00FCA264 /* LSConversationListTVC.h */,
+				0AFE402019B0EC8C00FCA264 /* LSConversationListTVC.m */,
+			);
+			name = "Component Impl - Watters";
+			sourceTree = "<group>";
+		};
+		0AFE402519B0F60200FCA264 /* Conversation List Component */ = {
+			isa = PBXGroup;
+			children = (
+				0AFE401B19B0E64A00FCA264 /* LYRUIConversationPresenting.h */,
+				0AFE401C19B0E68900FCA264 /* LYRUIConversationTableViewCell.h */,
+				0AFE401D19B0E68900FCA264 /* LYRUIConversationTableViewCell.m */,
+				0AFE401519B0E57A00FCA264 /* LYRUIConversationListViewController.h */,
+				0AFE401619B0E57A00FCA264 /* LYRUIConversationListViewController.m */,
+			);
+			name = "Conversation List Component";
+			sourceTree = "<group>";
+		};
+		0AFE402619B0F61400FCA264 /* Contact List Component */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Contact List Component";
+			sourceTree = "<group>";
+		};
 		259A57111950EB76000E27B0 /* Code */ = {
 			isa = PBXGroup;
 			children = (
-				0A741CC819ABE62600F9C569 /* Components */,
+				0AFE401419B0E29300FCA264 /* Components - Watters */,
+				0A741CC819ABE62600F9C569 /* Components - Coleman */,
 				259A57121950EB76000E27B0 /* Controllers */,
 				259A572E1950EB76000E27B0 /* LayerSample-Prefix.pch */,
 				259A572F1950EB76000E27B0 /* LSAppDelegate.h */,
@@ -403,22 +485,9 @@
 		259A57121950EB76000E27B0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				25203F83195F5FC800E41FA1 /* LSHTTPResponseSerializer.h */,
-				25203F84195F5FC800E41FA1 /* LSHTTPResponseSerializer.m */,
-				25918B95195F95F700D0FB1B /* LSPersistenceManager.h */,
-				25918B96195F95F700D0FB1B /* LSPersistenceManager.m */,
-				25918B98195F960500D0FB1B /* LSSession.h */,
-				25918B99195F960500D0FB1B /* LSSession.m */,
-				259A57151950EB76000E27B0 /* LSAPIManager.h */,
-				259A57161950EB76000E27B0 /* LSAPIManager.m */,
-				0A7A732E19ABFF790074FCA8 /* LSContactListViewController.h */,
-				0A7A732F19ABFF790074FCA8 /* LSContactListViewController.m */,
-				0AE1A14519B0D8F300BFB754 /* LSContactViewController.h */,
-				0AE1A14619B0D8F300BFB754 /* LSContactViewController.m */,
-				259A57171950EB76000E27B0 /* LSContactsSelectionViewController.h */,
-				259A57181950EB76000E27B0 /* LSContactsSelectionViewController.m */,
-				0A741CD319ABE67700F9C569 /* LSConversationListViewController.h */,
-				0A741CD419ABE67700F9C569 /* LSConversationListViewController.m */,
+				0AFE402419B0F56F00FCA264 /* Component Impl - Watters */,
+				0AFE402319B0F53200FCA264 /* Component Impl - Coleman */,
+				0AFE402219B0F51100FCA264 /* Application */,
 				259A571B1950EB76000E27B0 /* LSConversationViewController.h */,
 				259A571C1950EB76000E27B0 /* LSConversationViewController.m */,
 				259A571D1950EB76000E27B0 /* LSAuthenticationViewController.h */,
@@ -429,14 +498,6 @@
 				259A57291950EB76000E27B0 /* LSRegistrationViewController.m */,
 				0AE1A14C19B0DA8700BFB754 /* LSAuthenticationTableViewController.h */,
 				0AE1A14D19B0DA8700BFB754 /* LSAuthenticationTableViewController.m */,
-				0A52D5FC1961FD0D0030A34A /* LSApplicationController.h */,
-				0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */,
-				0AD767701963104200582755 /* LSUtilities.h */,
-				0AD767711963104200582755 /* LSUtilities.m */,
-				0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */,
-				0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */,
-				0AE1A15519B0DC5100BFB754 /* LSKeychainUtilities.h */,
-				0AE1A15619B0DC5100BFB754 /* LSKeychainUtilities.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -728,6 +789,7 @@
 				0AFE3FED19B0E1BD00FCA264 /* LYRConversationListViewController.m in Sources */,
 				0AFE3FEE19B0E1BD00FCA264 /* LYRConversationCell.m in Sources */,
 				0AFE3FEF19B0E1BD00FCA264 /* LYRDataSourceChange.m in Sources */,
+				0AFE402119B0EC8C00FCA264 /* LSConversationListTVC.m in Sources */,
 				0AFE3FF019B0E1BD00FCA264 /* ZacConversationExample.m in Sources */,
 				0AFE3FF119B0E1BD00FCA264 /* LSHTTPResponseSerializer.m in Sources */,
 				0AFE3FF219B0E1BD00FCA264 /* LSPersistenceManager.m in Sources */,
@@ -735,7 +797,6 @@
 				0AFE3FF419B0E1BD00FCA264 /* LSAPIManager.m in Sources */,
 				0AFE3FF519B0E1BD00FCA264 /* LSContactListViewController.m in Sources */,
 				0AFE3FF619B0E1BD00FCA264 /* LSContactViewController.m in Sources */,
-				0AFE3FF719B0E1BD00FCA264 /* LSContactsSelectionViewController.m in Sources */,
 				0AFE3FF819B0E1BD00FCA264 /* LSConversationListViewController.m in Sources */,
 				0AFE3FF919B0E1BD00FCA264 /* LSConversationViewController.m in Sources */,
 				0AFE3FFA19B0E1BD00FCA264 /* LSAuthenticationViewController.m in Sources */,
@@ -760,6 +821,8 @@
 				0AFE400E19B0E1BD00FCA264 /* LSInputTableViewCell.m in Sources */,
 				0AFE400F19B0E1BD00FCA264 /* LSMediaAttachement.m in Sources */,
 				0AFE401019B0E1BD00FCA264 /* LSMessageCell.m in Sources */,
+				0AFE401719B0E57A00FCA264 /* LYRUIConversationListViewController.m in Sources */,
+				0AFE401E19B0E68900FCA264 /* LYRUIConversationTableViewCell.m in Sources */,
 				0AFE401119B0E1BD00FCA264 /* LSBubbleView.m in Sources */,
 				0AFE401219B0E1BD00FCA264 /* LSUIConstants.m in Sources */,
 				0AFE401319B0E1BD00FCA264 /* LSVersionView.m in Sources */,

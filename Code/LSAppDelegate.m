@@ -17,12 +17,15 @@
 #import "LSKeychainUtilities.h"
 #import "LSContactViewController.h"
 #import "LSAuthenticationTableViewController.h"
+#import "LYRUIConversationListViewController.h"
+#import "LSConversationListTVC.h"
 
 extern void LYRSetLogLevelFromEnvironment();
 
 @interface LSAppDelegate ()
 
 @property (nonatomic) UINavigationController *navigationController;
+@property (nonatomic, strong) LSConversationListTVC *listTVC;
 
 @end
 
@@ -214,12 +217,12 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)presentConversationsListViewController
 {
-    LSConversationListViewController *conversationListViewController = [LSConversationListViewController new];
-    conversationListViewController.applicationController = self.applicationController;
-    
-    //    LSContactViewController *controller = [[LSContactViewController alloc] init];
-    //    controller.user = self.applicationController.APIManager.authenticatedSession.user;
-    //    [self.navigationController pushViewController:controller animated:TRUE];
+//    LSConversationListViewController *conversationListViewController = [LSConversationListViewController new];
+//    conversationListViewController.applicationController = self.applicationController;
+   
+    LYRUIConversationListViewController *conversationListViewController = [LYRUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
+    self.listTVC = [[LSConversationListTVC alloc] init];
+    conversationListViewController.delegate = self.listTVC;
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
     conversationController.navigationBar.barTintColor = LSLighGrayColor();
@@ -228,6 +231,10 @@ extern void LYRSetLogLevelFromEnvironment();
     [self.navigationController presentViewController:conversationController animated:YES completion:^{
         //
     }];
+    
+    //    LSContactViewController *controller = [[LSContactViewController alloc] init];
+    //    controller.user = self.applicationController.APIManager.authenticatedSession.user;
+    //    [self.navigationController pushViewController:controller animated:TRUE];
 }
 
 @end
