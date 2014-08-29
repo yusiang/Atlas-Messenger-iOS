@@ -99,7 +99,7 @@ static CGFloat const LSComposeViewHeight = 40;
                                              collectionViewLayout:flowLayout];
 
     self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, LSComposeViewHeight, 0);
-
+    self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor whiteColor];
@@ -340,7 +340,7 @@ static CGFloat const LSComposeViewHeight = 40;
     NSString *senderName = [self.persistanceManager persistedSessionWithError:nil].user.fullName;
     NSString *pushText = [NSString stringWithFormat:@"%@: %@", senderName, text];
     [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
-
+    
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];
     if (success) {

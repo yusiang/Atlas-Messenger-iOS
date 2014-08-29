@@ -211,6 +211,7 @@ extern void LYRSetLogLevelFromEnvironment();
             LSAlertWithError(error);
         }
     }];
+
 }
 
 - (void)presentConversationsListViewController
