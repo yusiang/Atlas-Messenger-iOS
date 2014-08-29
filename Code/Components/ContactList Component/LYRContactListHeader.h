@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LSContactListHeader : UIView
+@interface LYRContactListHeader : UIView
 
 - (id)initWithKey:(NSString *)key;
 

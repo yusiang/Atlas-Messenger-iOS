@@ -9,6 +9,8 @@
 #import "LYRContactListViewController.h"
 #import "LYRContactTableViewCell.h"
 #import "LYRDataSourceChange.h"
+#import "LYRContactListHeader.h"
+#import "LSUIConstants.h"
 
 @interface LYRContactListViewController () <UISearchDisplayDelegate, UISearchBarDelegate>
 
@@ -34,14 +36,13 @@ NSString *const LYRContactCellIdentifier = @"contactCellIdentifier";
 {
     [super viewDidLoad];
     
-    self.dataSource = self;
-    self.delegate = self;
-    
     self.tableView.rowHeight = 80.0f;
+    self.tableView.sectionFooterHeight = 0.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     
-    [self.tableView registerClass:[LYRContactTableViewCell class] forCellReuseIdentifier:LYRContactCellIdentifier];
+    self.contactTableViewCell = [LYRContactTableViewCell new];
+    [self.tableView registerClass:[self.contactTableViewCell class] forCellReuseIdentifier:LYRContactCellIdentifier];
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
     self.searchBar.delegate = self;
@@ -52,13 +53,15 @@ NSString *const LYRContactCellIdentifier = @"contactCellIdentifier";
     self.searchController.searchResultsDataSource = self;
     
     self.searchController.searchResultsTableView.rowHeight = 80.0f;
-    [self.searchController.searchResultsTableView registerClass:[LYRContactTableViewCell class] forCellReuseIdentifier:LYRContactCellIdentifier];
+    [self.searchController.searchResultsTableView registerClass:[self.contactTableViewCell class] forCellReuseIdentifier:LYRContactCellIdentifier];
+    
+    [self configureCellAppearance];
     
     self.tableView.contentOffset = CGPointMake(0, 40);
     self.tableView.tableHeaderView = self.searchBar;
 }
 
-- (BOOL)searchActive
+- (BOOL)isSearching
 {
     return self.searchController.active;
 }
@@ -97,12 +100,12 @@ NSString *const LYRContactCellIdentifier = @"contactCellIdentifier";
     if ([self.dataSource respondsToSelector:@selector(contactListViewController:heightForContactAtIndexPath:)]) {
         return [self.delegate contactListViewController:self heightForContactAtIndexPath:indexPath];
     }
-    return 0;
+    return 58;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 10;
+    return 40;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -126,11 +129,12 @@ NSString *const LYRContactCellIdentifier = @"contactCellIdentifier";
     LYRContactTableViewCell *contactCell = [tableView dequeueReusableCellWithIdentifier:LYRContactCellIdentifier forIndexPath:indexPath];
     
     NSAssert([self.dataSource respondsToSelector:@selector(contactListViewController:presenterForContactAtIndexPath:)], @"The dataSource must implement conversationListViewController:presenterForConversationAtIndex:");
-    id<LYRContactPresenter> presenter = [self.dataSource contactListViewController:self presenterForContactAtIndexPath:indexPath];
+    id<LYRContactCellPresenter> presenter = [self.dataSource contactListViewController:self presenterForContactAtIndexPath:indexPath];
+    UIControl *selectionIndicator = [self.delegate contactListViewController:self selectionIndicatorForContactAtIndexPath:indexPath];
     
     // Configure the cell...
     [contactCell updateWithPresenter:presenter];
-    
+    [contactCell updateWithSelectionIndicator:selectionIndicator];
     return contactCell;
 }
 
@@ -141,14 +145,27 @@ NSString *const LYRContactCellIdentifier = @"contactCellIdentifier";
     }
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if ([self.delegate respondsToSelector:@selector(contactListViewController:letterForContactsInSection:)]) {
+        return [[LYRContactListHeader alloc] initWithKey:[self.delegate contactListViewController:self letterForContactsInSection:section]];
+    }
+    return nil;
+}
+
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return FALSE;
+    return NO;
+}
+
+- (void)configureCellAppearance
+{
+    [[UILabel appearanceWhenContainedIn:[self.contactTableViewCell class], nil] setFont:LSMediumFont(28)];
 }
 
 - (void)reloadContacts
 {
-    if (self.searchController.active) {
+    if (self.isSearching) {
         [self.searchController.searchResultsTableView reloadData];
     } else {
         [self.tableView reloadData];

@@ -19,3 +19,4 @@
 @property (nonatomic) LSAPIManager *APIManager;
 
 @end
+

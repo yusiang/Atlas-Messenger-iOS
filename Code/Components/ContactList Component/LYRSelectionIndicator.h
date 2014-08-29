@@ -8,10 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LSSelectionIndicator : UIView
+@interface LYRSelectionIndicator : UIButton
 
 + (instancetype)initWithDiameter:(CGFloat)diameter;
-
-- (void)setSelected:(BOOL)selected;
 
 @end

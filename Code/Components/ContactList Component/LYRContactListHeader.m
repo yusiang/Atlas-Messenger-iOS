@@ -6,17 +6,17 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSContactListHeader.h"
+#import "LYRContactListHeader.h"
 #import "LSUIConstants.h"
 
-@interface LSContactListHeader ()
+@interface LYRContactListHeader ()
 
 @property (nonatomic) UIView *bottomBar;
 @property (nonatomic) UILabel *keyLabel;
 
 @end
 
-@implementation LSContactListHeader
+@implementation LYRContactListHeader
 
 - (id)initWithKey:(NSString *)key
 {

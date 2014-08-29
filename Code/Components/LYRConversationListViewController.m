@@ -7,7 +7,6 @@
 //
 
 #import "LYRConversationListViewController.h"
-#import "ZacConversationExample.h"
 #import "LYRDataSourceChange.h"
 #import "LYRConversationCell.h"
 
@@ -18,36 +17,33 @@
 
 @end
 
-static NSString* const LYRConversationCellReuseIdentifier = @"LYRConversationCellReuseIdentifier";
+static NSString *const LYRConversationCellReuseIdentifier = @"LYRConversationCellReuseIdentifier";
 
 @implementation LYRConversationListViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    self.dataSource = self;
-    self.delegate = self;
     
     self.tableView.rowHeight = 80.0f;
     [self.tableView registerClass:[LYRConversationCell class] forCellReuseIdentifier:LYRConversationCellReuseIdentifier];
-
+    
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
     self.searchBar.delegate = self;
-
+    
     self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
     self.searchController.delegate = self;
     self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsDataSource = self;
-
+    
     self.searchController.searchResultsTableView.rowHeight = 80.0f;
     [self.searchController.searchResultsTableView registerClass:[LYRConversationCell class] forCellReuseIdentifier:LYRConversationCellReuseIdentifier];
-
+    
     self.tableView.contentOffset = CGPointMake(0, 40);
     self.tableView.tableHeaderView = self.searchBar;
 }
 
-- (BOOL)searchActive
+- (BOOL)isSearching
 {
     return self.searchController.active;
 }
@@ -94,20 +90,20 @@ static NSString* const LYRConversationCellReuseIdentifier = @"LYRConversationCel
     if ([self.dataSource respondsToSelector:@selector(numberOfConversationsInViewController:)]) {
         return [self.dataSource numberOfConversationsInViewController:self];
     }
-
+    
     return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     LYRConversationCell *conversationCell = [tableView dequeueReusableCellWithIdentifier:LYRConversationCellReuseIdentifier forIndexPath:indexPath];
-
+    
     NSAssert([self.dataSource respondsToSelector:@selector(conversationListViewController:presenterForConversationAtIndex:)], @"The dataSource must implement conversationListViewController:presenterForConversationAtIndex:");
     id<LYRConversationCellPresenter> presenter = [self.dataSource conversationListViewController:self presenterForConversationAtIndex:indexPath.row];
-
+    
     // Configure the cell...
     [conversationCell updateWithPresenter:presenter];
-
+    
     return conversationCell;
 }
 
@@ -120,13 +116,16 @@ static NSString* const LYRConversationCellReuseIdentifier = @"LYRConversationCel
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self.dataSource respondsToSelector:@selector(conversationListViewController:deleteConversationAtIndex:)];
+    if ([self.dataSource respondsToSelector:@selector(conversationListViewController:shouldDeleteConversationAtIndex:)]) {
+        return [self.dataSource conversationListViewController:self shouldDeleteConversationAtIndex:indexPath.row];
+    }
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-
+        
         // Inform the data source that a deletion has occurred. But we'll get back a
         // reloadConversations or an applyConversationChanges based on the deletion, so don't optimistically delete.
         if ([self.dataSource respondsToSelector:@selector(conversationListViewController:deleteConversationAtIndex:)]) {
@@ -147,7 +146,7 @@ static NSString* const LYRConversationCellReuseIdentifier = @"LYRConversationCel
 - (void)applyConversationChanges:(NSArray *)changes
 {
     [self.tableView beginUpdates];
-
+    
     for (LYRDataSourceChange *change in changes) {
         if (change.type == LYRDataSourceChangeTypeUpdate) {
             [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:change.newIndex inSection:0]]
@@ -163,7 +162,7 @@ static NSString* const LYRConversationCellReuseIdentifier = @"LYRConversationCel
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
         }
     }
-
+    
     [self.tableView endUpdates];
 }
 

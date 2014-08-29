@@ -67,6 +67,16 @@
  */
 - (void)conversationListViewController:(LYRConversationListViewController *)conversationListViewController deleteConversationAtIndex:(NSUInteger)index;
 
+/**
+ *  Asks the delegate if deletion should be enabled for the specific conversation
+ *
+ *  @param conversationListViewController The conversation list view controller which the user used to attempt deletion of a conversation.
+ *  @param index                          The index of the conversation that is attempting to be deleted.
+ *
+ *  @return A boolean value telling to the controller wether or not the conversation is eligible for deletion
+ */
+- (BOOL)conversationListViewController:(LYRConversationListViewController *)conversationListViewController shouldDeleteConversationAtIndex:(NSUInteger)index;
+
 @end
 
 @protocol LYRConversationListViewControllerDelegate <NSObject>
@@ -93,10 +103,10 @@
 
 @end
 
-@interface LYRConversationListViewController : UITableViewController <LYRConversationListViewControllerDataSource, LYRConversationListViewControllerDelegate>
+@interface LYRConversationListViewController : UITableViewController
 
 /// YES if the search is currently active and the search results are expected to be returned in the data source methods.
-@property (readonly, nonatomic) BOOL searchActive;
+@property (readonly, nonatomic) BOOL isSearching;
 
 /// The search bar used for search.
 @property (readonly, nonatomic) UISearchBar *searchBar;

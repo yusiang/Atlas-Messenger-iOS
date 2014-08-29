@@ -13,11 +13,10 @@
 #import "LSConversationCellPresenter.h"
 #import "LSConversationViewController.h"
 #import "SVProgressHUD.h"
-#import "LSContactsSelectionViewController.h"
 #import "LSUIConstants.h"
 #import "LSContactListViewController.h"
 
-@interface LSConversationListViewController () <LSNotificationObserverDelegate, LSContactListViewControllerDelegate>
+@interface LSConversationListViewController () <LSNotificationObserverDelegate, LSContactListViewControllerDelegate, LYRConversationListViewControllerDelegate, LYRConversationListViewControllerDataSource>
 
 @property (nonatomic, strong) NSArray *conversations;
 @property (nonatomic, strong) NSArray *filteredConversations;
@@ -35,12 +34,15 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 {
     [super viewDidLoad];
     
-    // Make sure the applicationController object is not nil
-    NSAssert(self.applicationController, @"`self.applicationController` cannot be nil");
+    self.dataSource = self;
+    self.delegate = self;
     
     // Titles for the VC and accessiblitiy
     self.title = @"Conversations";
     self.accessibilityLabel = @"Conversation List";
+    
+    // Make sure the applicationController object is not nil
+    NSAssert(self.applicationController, @"`self.applicationController` cannot be nil");
     
     // Left navigation item
     UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"logout"]
@@ -58,13 +60,14 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     newConversationButton.accessibilityLabel = @"New";
     [self.navigationItem setRightBarButtonItem:newConversationButton];
     
-    // Adds a version view to the top tableView behind the Navigation bar
-    [self addVersionView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    // Adds a version view to the top tableView behind the Navigation bar
+    [self addVersionView];
     
     // Load Layer Conversation List
     [self fetchLayerConversations];
@@ -91,7 +94,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 {
     // Make sure the Layer Client object is not nil
     NSAssert(self.applicationController.layerClient, @"Layer Client should not be `nil`.");
-
+    
     // Fetch all conversations from LayerKit
     NSSet *conversations = (NSSet *)[self.applicationController.layerClient conversationsForIdentifiers:nil];
     
@@ -99,7 +102,11 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
     self.conversations = [[conversations allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessage.sentAt" ascending:NO]]];
     
     // Set the array we will use for searching
-    self.filteredConversations = [conversations allObjects];
+    if (!self.filterPredicate) {
+        self.filteredConversations = [conversations allObjects];
+    } else {
+        [self filterConversationsForSearchPredicate:self.filterPredicate];
+    }
     
     // Tells super view to reload table view data
     [self reloadConversations];
@@ -107,10 +114,9 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 - (NSArray *)currentDataArray
 {
-    if (self.searchActive) {
+    if (self.isSearching) {
         return self.filteredConversations;
     }
-    
     return self.conversations;
 }
 
@@ -134,37 +140,20 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
         NSLog(@"Conversation Deleted!");
     } else {
         NSLog(@"Conversation Not Deleted with Error %@", error);
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Delete Failed"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
+        LSAlertWithError(error);
     }
 }
 
 - (void)conversationListViewController:(LYRConversationListViewController *)conversationListViewController didSearchWithString:(NSString *)searchString completion:(void (^)())completion
 {
-    NSSet *allUsers = [self.applicationController.persistenceManager persistedUsersWithError:NULL];
-    
-    NSString *wildcard = [NSString stringWithFormat:@"*%@*", searchString];
-    
-    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", wildcard];
-    NSSet *filteredUsers = [allUsers filteredSetUsingPredicate:filterPredicate];
-    NSSet *filteredUserIDs = [filteredUsers valueForKey:@"userID"];
-    
-    NSMutableOrderedSet *filteredConversations = [NSMutableOrderedSet orderedSet];
-    for (LYRConversation *conversation in self.conversations) {
-        for (NSString *participantID in filteredUserIDs) {
-            if ([conversation.participants containsObject:participantID]) {
-                [filteredConversations addObject:conversation];
-            }
-        }
-    }
-    
-    // do a filter of the search
-    self.filteredConversations = [filteredConversations array];
+    self.filterPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchString]];
+    [self filterConversationsForSearchPredicate:self.filterPredicate];
     completion();
+}
+
+- (void)conversationListViewControllerDidEndSearch:(LYRConversationListViewController *)conversationListViewController
+{
+    [self reloadConversations];
 }
 
 #pragma mark - LYRConversationListViewControllerDelegate methods
@@ -184,16 +173,40 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 }
 
 #pragma mark
+#pragma mark Conversation search filter method
+
+- (void)filterConversationsForSearchPredicate:(NSPredicate *)predicater
+{
+    NSSet *allUsers = [self.applicationController.persistenceManager persistedUsersWithError:NULL];
+    NSSet *filteredUsers = [allUsers filteredSetUsingPredicate:self.filterPredicate];
+    NSSet *filteredUserIDs = [filteredUsers valueForKey:@"userID"];
+    
+    NSMutableOrderedSet *filteredConversations = [NSMutableOrderedSet orderedSet];
+    for (LYRConversation *conversation in self.conversations) {
+        for (NSString *participantID in filteredUserIDs) {
+            if ([conversation.participants containsObject:participantID]) {
+                [filteredConversations addObject:conversation];
+            }
+        }
+    }
+    // do a filter of the search
+    self.filteredConversations = [filteredConversations array];
+}
+
+#pragma mark
 #pragma mark Bar Button Functionality Methods
 
 - (void)logoutTapped
 {
     [SVProgressHUD show];
-    [self.applicationController.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        
+    [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            [self.applicationController.APIManager deauthenticate];
+            NSLog(@"Deauthenticated...");
+        } else {
+            LSAlertWithError(error);
+        }
         [SVProgressHUD dismiss];
-        
-        NSLog(@"Deauthenticated...");
     }];
 }
 
@@ -210,7 +223,7 @@ static NSString *const LSConversationCellID = @"conversationCellIdentifier";
 
 #pragma mark - LSContactsSelectionViewControllerDelegate methods
 
-- (void)contactsSelectionViewController:(LSContactsSelectionViewController *)contactsSelectionViewController didSelectContacts:(NSSet *)contacts
+- (void)contactsSelectionViewController:(LSContactListViewController *)contactsSelectionViewController didSelectContacts:(NSSet *)contacts
 {
     [self dismissViewControllerAnimated:YES completion:^{
         if (contacts.count > 0) {

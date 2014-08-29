@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LYRContactPresenter.h"
+#import "LYRContactCellPresenter.h"
 
 @class LYRContactListViewController;
 
+/**
+ *  The contact list data source requests data for the contact list
+ */
 @protocol LYRContactListDataSource <NSObject>
 
 @required
@@ -42,7 +45,7 @@
  *
  *  @return An instance conforming to the LYRContactPresenter protocol.
  */
-- (id<LYRContactPresenter>)contactListViewController:(LYRContactListViewController *)contactListViewController presenterForContactAtIndexPath:(NSIndexPath *)indexPath;
+- (id<LYRContactCellPresenter>)contactListViewController:(LYRContactListViewController *)contactListViewController presenterForContactAtIndexPath:(NSIndexPath *)indexPath;
 
 @optional
 
@@ -82,21 +85,53 @@
  */
 - (void)contactListViewController:(LYRContactListViewController *)contactListViewController didSelectContactAtIndexPath:(NSIndexPath *)indexPath;
 
+/**
+ *  Called on the delegate when a table view section is about to appear. This method should return a single letter that represents a group of contacts
+ *
+ *  @param contactListViewController The contact list view controller object requesting the string
+ *  @param section                   The section for which a string is being requested
+ *
+ *  @return The string to be displayed in the section header
+ */
+- (NSString *)contactListViewController:(LYRContactListViewController *)contactListViewController letterForContactsInSection:(NSUInteger)section;
 
+/**
+ *  Called on the delegate when a cell is about to be displayed. Provides controll over the height of contact cells
+ *
+ *  @param contactListViewController The contact list view controller object requesting the cell height
+ *  @param indexPath                 The indexPath for the contact
+ *
+ *  @return The value for cell height
+ */
 - (CGFloat)contactListViewController:(LYRContactListViewController *)contactListViewController heightForContactAtIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ *  Asks the delegate for a selection indicator for a given contact
+ *
+ *  @param contactListViewController The contact list view controller object requesting the selection indicator
+ *  @param indexPath                 The index path for the contact
+ *
+ *  @return a control object for the selection indicator. This should be a button which has views set for highlighted and normal state
+ */
+- (UIControl *)contactListViewController:(LYRContactListViewController *)contactListViewController selectionIndicatorForContactAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
-@interface LYRContactListViewController : UITableViewController <LYRContactListDataSource, LYRContactListDelegate>
+@interface LYRContactListViewController : UITableViewController
+
+@property (nonatomic, strong) UITableViewCell *contactTableViewCell;
+
+/// YES if the search is currently active and the search results are expected to be returned in the data source methods.
+@property (nonatomic, readonly) BOOL isSearching;
 
 /// The search bar used for search.
-@property (readonly, nonatomic) UISearchBar *searchBar;
+@property (nonatomic, readonly) UISearchBar *searchBar;
 
 /// The data source for displaying the list of contacts.
-@property (weak, nonatomic) id<LYRContactListDataSource> dataSource;
+@property (nonatomic, weak) id<LYRContactListDataSource> dataSource;
 
 /// The delegate for the contact list view controller.
-@property (weak, nonatomic) id<LYRContactListDelegate> delegate;
+@property (nonatomic, weak) id<LYRContactListDelegate> delegate;
 
 /**
  *  Forces a reload of all contacts.
@@ -104,3 +139,4 @@
 - (void)reloadContacts;
 
 @end
+

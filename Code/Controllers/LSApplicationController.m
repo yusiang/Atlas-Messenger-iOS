@@ -47,16 +47,20 @@
 
 - (void)layerClient:(LYRClient *)client didReceiveAuthenticationChallengeWithNonce:(NSString *)nonce
 {
-     NSLog(@"Layer Client did recieve authentication challenge with nonce: %@", nonce);
+    NSLog(@"Layer Client did recieve authentication challenge with nonce: %@", nonce);
     LSUser *user = self.APIManager.authenticatedSession.user;
     if (user) {
-        [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
-            if (user && !error) {
-                NSLog(@"silent auth successful");
-            } else {
-                [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-                    NSLog(@"Silent auth failed, deauthenticating");
+        [self.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+            if (identityToken) {
+                [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                    if (authenticatedUserID) {
+                        NSLog(@"Silent auth in response to auth challenge successfull");
+                    } else {
+                        LSAlertWithError(error);
+                    }
                 }];
+            } else {
+                LSAlertWithError(error);
             }
         }];
     }
@@ -96,9 +100,9 @@
 {
     NSString *marketingVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
     NSString *bundleVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"];
-
+    
     NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
-
+    
     NSString *versionString = nil;
     if (buildInformation) {
         NSString *layerKitVersion = buildInformation[@"LYRBuildLayerKitVersion"];
@@ -106,22 +110,22 @@
     } else {
         versionString = [NSString stringWithFormat:@"LayerSample v%@ (%@)", marketingVersion, bundleVersion];
     }
-
+    
     return versionString;
 }
 
 + (NSString *)buildInformationString
 {
     NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
-
+    
     if (!buildInformation) {
         return [NSString stringWithFormat:@"Non-Release Build"];
     }
-
+    
     NSString *buildSHA = buildInformation[@"LYRBuildShortSha"];
     NSString *builderName = buildInformation[@"LYRBuildBuilderName"];
     NSString *builderEmail = buildInformation[@"LYRBuildBuilderEmail"];
-
+    
     return [NSString stringWithFormat:@"Built by %@ (%@) SHA: %@", builderName, builderEmail, buildSHA];
 }
 

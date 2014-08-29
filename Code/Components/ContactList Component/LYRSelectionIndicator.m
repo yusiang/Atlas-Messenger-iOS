@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSSelectionIndicator.h"
+#import "LYRSelectionIndicator.h"
 #import "LSUIConstants.h"
 
 static inline CGFloat LSDegreesToRadians(CGFloat angle)
@@ -14,14 +14,14 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
     return (angle) / 180.0 * M_PI;
 }
 
-@interface LSSelectionIndicator ()
+@interface LYRSelectionIndicator ()
 
 @property (nonatomic, strong) UIView *cutout;
 @property (nonatomic, strong) UIView *checkMark;
 
 @end
 
-@implementation LSSelectionIndicator
+@implementation LYRSelectionIndicator
 
 + (instancetype)initWithDiameter:(CGFloat)diameter
 {
@@ -32,23 +32,16 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
 {
     self = [super init];
     if (self) {
-        self.frame = CGRectMake(0, 0, diameter, diameter);
-        self.layer.cornerRadius = diameter / 2;
-        self.backgroundColor = LSGrayColor();
         
-        [self initCutout];
+        self.layer.cornerRadius = diameter / 2;
+        
+        self.backgroundColor = [UIColor whiteColor];
+        self.layer.borderWidth = 1;
+        self.layer.borderColor = LSGrayColor().CGColor;
+    
         [self initCheckMark];
     }
     return self;
-}
-
-- (void)initCutout
-{
-    self.cutout = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width - 2, self.frame.size.width - 2)];
-    self.cutout.layer.cornerRadius = (self.frame.size.width - 2) / 2;
-    self.cutout.center = self.center;
-    self.cutout.backgroundColor = [UIColor whiteColor];
-    [self addSubview:self.cutout];
 }
 
 #define DegreesToRadians(angle) ((angle) / 180.0 * M_PI)
@@ -71,22 +64,22 @@ static inline CGFloat LSDegreesToRadians(CGFloat angle)
     
     self.checkMark.layer.mask = mask;
     self.checkMark.accessibilityLabel = @"Selected Checkmark";
-
-    [self addSubview:self.checkMark];
-    
     self.checkMark.transform = CGAffineTransformMakeRotation(LSDegreesToRadians(-45));
-    self.checkMark.alpha = 1.0f;
+    
+    self.checkMark.alpha = 0.0f;
+    [self addSubview:self.checkMark];
 }
 
-- (void)setSelected:(BOOL)selected
+- (void)setHighlighted:(BOOL)highlighted
 {
-    if (selected) {
-        [self.cutout removeFromSuperview];
-        [self addSubview:self.checkMark];
-
+    [super setHighlighted:highlighted];
+    if (highlighted) {
+        self.backgroundColor = LSGrayColor();
+        self.checkMark.alpha = 1.0;
     } else {
-        [self.checkMark removeFromSuperview];
-        [self addSubview:self.cutout];
+        self.backgroundColor = [UIColor whiteColor];
+        self.checkMark.alpha = 0.0;
     }
 }
+
 @end

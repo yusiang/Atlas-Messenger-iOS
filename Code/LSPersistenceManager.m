@@ -148,7 +148,7 @@
     if (self.users) {
         return self.users;
     }
-
+    
     NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
     NSSet *users = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     self.users = users;
@@ -170,10 +170,10 @@
             }
         }
     }
-
+    
     self.users = nil;
     self.session = nil;
-
+    
     return YES;
 }
 
@@ -189,13 +189,27 @@
     if (self.session) {
         return self.session;
     }
-
+    
     NSString *path = [self.path stringByAppendingPathComponent:@"Session.plist"];
     LSSession *session = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-
+    
     self.session = session;
-
+    
     return session;
+}
+
+- (void)performContactSearchWithString:(NSString *)searchString completion:(void (^)(NSSet *contacts, NSError *error))completion
+{
+    NSError *error;
+    NSSet *allContacts = [self persistedUsersWithError:&error];
+    if (error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(nil, nil);
+        });
+    } else {
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchString]];
+        completion([allContacts filteredSetUsingPredicate:searchPredicate], nil);
+    }
 }
 
 @end

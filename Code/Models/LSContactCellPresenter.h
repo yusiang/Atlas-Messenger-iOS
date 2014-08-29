@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LYRContactPresenter.h"
+#import "LYRContactCellPresenter.h"
 #import "LSUser.h"
 
-@interface LSContactCellPresenter : NSObject <LYRContactPresenter>
+@interface LSContactCellPresenter : NSObject <LYRContactCellPresenter>
 
 ///-------------------------------
 /// @name Initializing a Presenter
@@ -19,8 +19,11 @@
 + (instancetype)presenterWithUser:(LSUser *)user;
 
 - (NSString *)nameText;
+
 - (NSString *)subtitleText;
+
 - (UIImage *)avatarImage;
-- (LYRContactAccessoryType)accessoryType;
+
+- (UIButton *)selectionIndicator;
 
 @end

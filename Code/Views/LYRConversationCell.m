@@ -49,7 +49,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
         self.avatarImageView = [[LSAvatarImageView alloc] init];
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.avatarImageView];
-       
+        
         // Initialiaze Sender Image
         self.senderLabel = [[UILabel alloc] init];
         self.senderLabel.font = LSMediumFont(14);
@@ -65,7 +65,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
         self.lastMessageTextView.font = LSMediumFont(12);
         self.lastMessageTextView.textColor = [UIColor grayColor];
         [self.contentView addSubview:self.lastMessageTextView];
-
+        
         // Initialize Date Label
         self.dateLabel = [[UILabel alloc] init];
         self.dateLabel.textAlignment= NSTextAlignmentRight;
@@ -96,39 +96,39 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
     //**********Avatar Constraints**********//
     // Width
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.contentView
-                                                          attribute:NSLayoutAttributeHeight
-                                                         multiplier:LSAvatarImageViewSizeRatio
-                                                           constant:0]];
+                                                                 attribute:NSLayoutAttributeWidth
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                multiplier:LSAvatarImageViewSizeRatio
+                                                                  constant:0]];
     
     // Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
-                                                          attribute:NSLayoutAttributeHeight
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.contentView
-                                                          attribute:NSLayoutAttributeHeight
-                                                         multiplier:LSAvatarImageViewSizeRatio
-                                                           constant:0]];
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                multiplier:LSAvatarImageViewSizeRatio
+                                                                  constant:0]];
     
     // Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
-                                                          attribute:NSLayoutAttributeLeft
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.contentView
-                                                          attribute:NSLayoutAttributeLeft
-                                                         multiplier:1.0
-                                                           constant:LSCellHorizontalMargin]];
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                multiplier:1.0
+                                                                  constant:LSCellHorizontalMargin]];
     
     // Center vertically
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
-                                                          attribute:NSLayoutAttributeCenterY
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.contentView
-                                                          attribute:NSLayoutAttributeCenterY
-                                                         multiplier:1.0
-                                                           constant:0]];
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.0
+                                                                  constant:0]];
     
     //**********Sender Label Test Constraints**********//
     // Left Margin

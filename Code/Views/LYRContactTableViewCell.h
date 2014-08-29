@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSSelectionIndicator.h"
-#import "LYRContactPresenter.h"
+#import "LYRSelectionIndicator.h"
+#import "LYRContactCellPresenter.h"
 
 @interface LYRContactTableViewCell : UITableViewCell
 
-- (void)updateWithPresenter:(id<LYRContactPresenter>)presenter;
+- (void)updateWithPresenter:(id<LYRContactCellPresenter>)presenter;
 
-- (void)updateWithSelectionIndicator:(BOOL)selected;
+- (void)updateWithSelectionIndicator:(UIControl *)selectionIndicator;
 
 @end
+

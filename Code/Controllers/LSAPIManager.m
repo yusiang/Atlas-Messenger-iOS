@@ -53,9 +53,13 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     return [NSURLSession sessionWithConfiguration:configuration];
 }
 
+#pragma mark
+#pragma mark Public Authentication Methods
+
 - (void)registerUser:(LSUser *)user completion:(void (^)(LSUser *user, NSError *error))completion
 {
     NSParameterAssert(completion);
+    
     NSError *error = nil;
     if (! [user validate:&error]) {
         completion(nil, error);
@@ -83,7 +87,9 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         BOOL success = [LSHTTPResponseSerializer responseObject:&userDetails withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (success) {
             NSLog(@"Loaded User Response: %@", userDetails);
-            [self authenticateWithEmail:user.email password:user.password completion:completion];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(user, serializationError);
+            });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(nil, serializationError);
@@ -92,7 +98,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     }] resume];
 }
 
-- (void)authenticateWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(LSUser *user, NSError *error))completion
+- (void)authenticateWithEmail:(NSString *)email password:(NSString *)password nonce:(NSString *)nonce completion:(void(^)(NSString *identityToken, NSError *error))completion;
 {
     NSParameterAssert(completion);
     
@@ -104,91 +110,48 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     
     if (!password.length) {
         NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{ NSLocalizedDescriptionKey : @"Please enter your password in order to login"}];
+        completion( nil, error);
+        return;
+    }
+    
+    if (!nonce.length) {
+        NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{ NSLocalizedDescriptionKey : @"Application must supply authenticate nonce to complete"}];
         completion(nil, error);
         return;
     }
     
-    [self.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-        if (!nonce) {
+    NSURL *URL = [NSURL URLWithString:@"users/sign_in.json" relativeToURL:self.baseURL];
+    NSDictionary *parameters = @{ @"user": @{ @"email": email, @"password": password }, @"nonce": nonce };
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"POST";
+    request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+    
+    [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (!response && error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(nil, error);
             });
             return;
         }
         
-        NSURL *URL = [NSURL URLWithString:@"users/sign_in.json" relativeToURL:self.baseURL];
-        NSDictionary *parameters = @{ @"user": @{ @"email": email, @"password": password }, @"nonce": nonce };
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
-        request.HTTPMethod = @"POST";
-        request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
-        
-        [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (!response && error) {
-                completion(nil, error);
-                return;
-            }
-            
-            NSError *serializationError = nil;
-            NSDictionary *loginInfo = nil;
-            BOOL success = [LSHTTPResponseSerializer responseObject:&loginInfo withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
-            if (!success) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(nil, serializationError);
-                });
-            } else {
-                NSString *authToken = loginInfo[@"authentication_token"];
-                LSUser *user = [LSUser userFromDictionaryRepresentation:loginInfo[@"user"]];
-                user.password = password;
-                LSSession *session = [LSSession sessionWithAuthenticationToken:authToken user:user];
-                self.authenticatedSession = session;
-                
-                [self.layerClient authenticateWithIdentityToken:loginInfo[@"layer_identity_token"] completion:^(NSString *authenticatedUserID, NSError *error) {
-                    if (error) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            completion(nil, error);
-                        });
-                    } else {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            NSLog(@"Authenticated with layer userID:%@, error=%@", authenticatedUserID, error);
-                            completion(user, error);
-                        });
-                    }
-                }];
-            }
-        }] resume];
-    }];
-}
-
-- (void)setAuthenticatedSession:(LSSession *)authenticatedSession
-{
-    if (authenticatedSession && !self.authenticatedSession) {
-        _authenticatedSession = authenticatedSession;
-        
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-        sessionConfiguration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json",
-                                                        @"Content-Type": @"application/json",
-                                                        @"X_AUTH_EMAIL" : authenticatedSession.user.email,
-                                                        @"X_AUTH_TOKEN": authenticatedSession.authenticationToken,
-                                                        @"X_LAYER_APP_ID": [self.layerClient.appID UUIDString]};
-        _authenticatedURLSessionConfiguration = sessionConfiguration;
-        
-        [self.URLSession finishTasksAndInvalidate];
-        self.URLSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidAuthenticateNotification object:authenticatedSession.user];
-        });
-    } else if (!authenticatedSession && self.authenticatedSession) {
-        _authenticatedSession = authenticatedSession;
-        _authenticatedURLSessionConfiguration = nil;
-        
-        [self.URLSession invalidateAndCancel];
-        self.URLSession = [self defaultURLSession];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:authenticatedSession.user];
-        });
-    }
+        NSError *serializationError = nil;
+        NSDictionary *loginInfo = nil;
+        BOOL success = [LSHTTPResponseSerializer responseObject:&loginInfo withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
+        if (!success) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil, serializationError);
+            });
+        } else {
+            NSString *authToken = loginInfo[@"authentication_token"];
+            LSUser *user = [LSUser userFromDictionaryRepresentation:loginInfo[@"user"]];
+            user.password = password;
+            LSSession *session = [LSSession sessionWithAuthenticationToken:authToken user:user];
+            self.authenticatedSession = session;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(loginInfo[@"layer_identity_token"], error);
+            });
+        }
+    }] resume];
 }
 
 - (BOOL)resumeSession:(LSSession *)session error:(NSError **)error
@@ -202,19 +165,25 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     }
 }
 
-- (void)deauthenticateWithCompletion:(void(^)(BOOL success, NSError *error))completion
+- (void)deauthenticate
 {
-    [self.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        if (success) {
-            self.authenticatedSession = nil;
-        }
-
-        if (completion) completion(success, error);
-    }];
+    if (self.authenticatedSession) {
+        _authenticatedSession = nil;
+        _authenticatedURLSessionConfiguration = nil;
+        
+        [self.URLSession invalidateAndCancel];
+        self.URLSession = [self defaultURLSession];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:self.authenticatedSession.user];
+        });
+    }
 }
 
 - (void)loadContactsWithCompletion:(void(^)(NSSet *contacts, NSError *error))completion
 {
+    NSParameterAssert(completion);
+    
     NSURL *URL = [NSURL URLWithString:@"users.json" relativeToURL:self.baseURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"GET";
@@ -257,6 +226,8 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 - (void)deleteAllContactsWithCompletion:(void(^)(BOOL completion, NSError *error))completion
 {
+    NSParameterAssert(completion);
+    
     NSURL *URL = [NSURL URLWithString:@"users/all" relativeToURL:self.baseURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"DELETE";
@@ -288,5 +259,30 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             });
         }
     }] resume];
+}
+
+#pragma mark
+#pragma mark Private implementation methods
+
+- (void)setAuthenticatedSession:(LSSession *)authenticatedSession
+{
+    if (authenticatedSession && !self.authenticatedSession) {
+        _authenticatedSession = authenticatedSession;
+        
+        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        sessionConfiguration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json",
+                                                        @"Content-Type": @"application/json",
+                                                        @"X_AUTH_EMAIL" : authenticatedSession.user.email,
+                                                        @"X_AUTH_TOKEN": authenticatedSession.authenticationToken,
+                                                        @"X_LAYER_APP_ID": [self.layerClient.appID UUIDString]};
+        _authenticatedURLSessionConfiguration = sessionConfiguration;
+        
+        [self.URLSession finishTasksAndInvalidate];
+        self.URLSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidAuthenticateNotification object:authenticatedSession.user];
+        });
+    }
 }
 @end

@@ -11,7 +11,7 @@
 
 @interface LYRContactTableViewCell ()
 
-@property (nonatomic, strong) LSSelectionIndicator *selectionIndicator;
+@property (nonatomic, strong) UIControl *selectionIndicator;
 @property (nonatomic) BOOL isSelected;
 
 @end
@@ -22,14 +22,13 @@
 {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self addSelectionIndicator];
         self.textLabel.font = LSMediumFont(14);
-    
+        
         [self setSeparatorInset:UIEdgeInsetsMake(0, 20, 0, 0)];
     }
     return self;
 }
-- (void)updateWithPresenter:(id<LYRContactPresenter>)presenter
+- (void)updateWithPresenter:(id<LYRContactCellPresenter>)presenter
 {
     self.textLabel.text = [presenter nameText];
     self.detailTextLabel.text = [presenter subtitleText];
@@ -37,34 +36,25 @@
     [self setNeedsUpdateConstraints];
 }
 
+- (void)updateWithSelectionIndicator:(UIControl *)selectionIndicator
+{
+    self.selectionIndicator = selectionIndicator;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:FALSE animated:FALSE];
     if (selected && !self.isSelected) {
-        [self updateWithSelectionIndicator:YES];
+        [self.selectionIndicator setHighlighted:YES];
         self.isSelected = TRUE;
     } else if(!selected && !self.isSelected) {
         self.isSelected = FALSE;
-        [self updateWithSelectionIndicator:FALSE];
+        [self.selectionIndicator setHighlighted:NO];
     } else if (selected && self.isSelected) {
         self.isSelected = FALSE;
-        [self updateWithSelectionIndicator:FALSE];
+        [self.selectionIndicator setHighlighted:NO];
     }
-}
-
-- (void) addSelectionIndicator
-{
-    if (!self.selectionIndicator) {
-        self.selectionIndicator = [LSSelectionIndicator initWithDiameter:28];
-        self.selectionIndicator.frame = CGRectMake(270, 6, 28, 28);
-        self.selectionIndicator.accessibilityLabel = @"selectionIndicator";
-        [self addSubview:self.selectionIndicator];
-    }
-}
-
-- (void)updateWithSelectionIndicator:(BOOL)selected
-{
-    [self.selectionIndicator setSelected:selected];
 }
 
 @end
+

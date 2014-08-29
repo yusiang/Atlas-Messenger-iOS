@@ -28,7 +28,7 @@
 {
     return [[self alloc] initWithConversation:conversation persistenceManager:persistenceManager];
 }
-            
+
 - (id)initWithConversation:(LYRConversation *)conversation
         persistenceManager:(LSPersistenceManager *)persistenceManager
 {
@@ -36,7 +36,7 @@
     if (self) {
         _conversation = conversation;
         _persistenceManager = persistenceManager;
-
+        
         if (!dateFormatter) {
             dateFormatter = [[NSDateFormatter alloc] init];
         }
@@ -125,6 +125,6 @@ static NSDateFormatter *dateFormatter;
 
 - (UIImage *)avatarImage
 {
-    return [UIImage imageNamed:@"EKvin"];
+    return [UIImage imageNamed:@"back"];
 }
 @end
