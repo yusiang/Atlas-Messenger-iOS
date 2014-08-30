@@ -158,15 +158,12 @@
 {
     NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
     LSUser *user = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
-    //
-    //    if ([self.selectedContacts containsObject:user]) {
-    //        [self.selectedContacts removeObject:user];
-    //    } else {
-    //        [self.selectedContacts addObject:user];
-    //    }
-    LSContactViewController *controller = [LSContactViewController new];
-    controller.user = user;
-    [self.navigationController pushViewController:controller animated:TRUE];
+
+    if ([self.selectedContacts containsObject:user]) {
+        [self.selectedContacts removeObject:user];
+    } else {
+        [self.selectedContacts addObject:user];
+    }
 }
 
 // Returns the appropriate letter cooresponding to each section

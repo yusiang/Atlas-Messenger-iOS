@@ -54,6 +54,11 @@
     return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
 }
 
+- (NSString *)participantIdentifier
+{
+    return self.userID;
+}
+
 - (BOOL)validate:(NSError *__autoreleasing *)error
 {
     if (!self.email) {

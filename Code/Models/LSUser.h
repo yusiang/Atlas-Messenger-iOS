@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LYRUIParticipant.h"
 
-@interface LSUser : NSObject <NSCoding>
+@interface LSUser : NSObject <NSCoding, LYRUIParticipant>
 
 + (instancetype)userFromDictionaryRepresentation:(NSDictionary *)representation;
 
@@ -19,7 +20,9 @@
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *passwordConfirmation;
+@property (nonatomic, readonly) NSString *participantIdentifier;
 
 - (BOOL)validate:(NSError **)error;
+
 
 @end

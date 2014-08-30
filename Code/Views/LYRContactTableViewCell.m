@@ -28,6 +28,7 @@
     }
     return self;
 }
+
 - (void)updateWithPresenter:(id<LYRContactCellPresenter>)presenter
 {
     self.textLabel.text = [presenter nameText];

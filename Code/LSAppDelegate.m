@@ -9,6 +9,7 @@
 #import <LayerKit/LayerKit.h>
 #import "LSAppDelegate.h"
 #import "LSConversationListViewController.h"
+#import "LSUIConversationListViewController.h"
 #import "LSAPIManager.h"
 #import "LSUtilities.h"
 #import "LSUIConstants.h"
@@ -18,14 +19,12 @@
 #import "LSContactViewController.h"
 #import "LSAuthenticationTableViewController.h"
 #import "LYRUIConversationListViewController.h"
-#import "LSConversationListTVC.h"
 
 extern void LYRSetLogLevelFromEnvironment();
 
 @interface LSAppDelegate ()
 
 @property (nonatomic) UINavigationController *navigationController;
-@property (nonatomic, strong) LSConversationListTVC *listTVC;
 
 @end
 
@@ -220,11 +219,10 @@ extern void LYRSetLogLevelFromEnvironment();
 //    LSConversationListViewController *conversationListViewController = [LSConversationListViewController new];
 //    conversationListViewController.applicationController = self.applicationController;
    
-    LYRUIConversationListViewController *conversationListViewController = [LYRUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
-    self.listTVC = [[LSConversationListTVC alloc] init];
-    conversationListViewController.delegate = self.listTVC;
+    LSUIConversationListViewController *controller = [[LSUIConversationListViewController alloc] init];
+    controller.applicationController = self.applicationController;
     
-    UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:conversationListViewController];
+    UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:controller];
     conversationController.navigationBar.barTintColor = LSLighGrayColor();
     conversationController.navigationBar.tintColor = LSBlueColor();
     [[UINavigationBar appearance] setTitleTextAttributes: @{NSFontAttributeName: LSMediumFont(14)}];

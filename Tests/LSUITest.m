@@ -19,7 +19,6 @@
 #import "LYRCountdownLatch.h"
 #import "LSPersistenceManager.h"
 #import "LSConversationCellPresenter.h"
-#import "LSContactsSelectionViewController.h"
 #import "LSApplicationController.h"
 #import "LSAuthenticationViewController.h"
 #import "LSAppDelegate.h"
@@ -596,11 +595,7 @@
 }
 - (void)presentConversationsListViewController
 {
-    [system presentViewControllerWithClass:[LSConversationListViewController class] withinNavigationControllerWithNavigationBarClass:[UINavigationBar class] toolbarClass:nil configurationBlock:^(id viewController) {
-        [(LSConversationListViewController *)viewController setLayerClient:self.layerClient];
-        [(LSConversationListViewController *)viewController setAPIManager:self.APIManager];
-        [(LSConversationListViewController *)viewController setPersistenceManager:self.persistenceManager];
-    }];
+
 }
 
 #pragma mark
@@ -639,14 +634,14 @@
 
 - (void)systemLoginUser:(LSUser *)user
 {
-    [tester waitForTimeInterval:4];
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
-    [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
-        
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
-    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
+//    [tester waitForTimeInterval:4];
+//    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
+//    [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
+//        
+//        [latch decrementCount];
+//    }];
+//    [latch waitTilCount:0];
+//    [tester waitForViewWithAccessibilityLabel:@"Conversations"];
 }
 
 - (void)logout
@@ -675,8 +670,8 @@
     NSSet *set = [[NSSet alloc] initWithArray:participantNames];
     NSArray *sortedNames = [self sortedFullNamesForParticiapnts:set];
     LSConversationCellPresenter *presenter = [LSConversationCellPresenter new];
-    NSString *string = [presenter conversationLabelForParticipantNames:sortedNames];
-    return string;
+    //NSString *string = [presenter conversationLabelForParticipantNames:sortedNames];
+    //return string;
 }
 
 - (NSArray *)sortedFullNamesForParticiapnts:(NSSet *)participants
@@ -757,9 +752,9 @@
 - (void)deauthenticate
 {
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
-    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        [latch decrementCount];
-    }];
+//    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+//        [latch decrementCount];
+//    }];
     [latch waitTilCount:0];
 }
 
