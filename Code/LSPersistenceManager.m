@@ -211,5 +211,23 @@
         completion([allContacts filteredSetUsingPredicate:searchPredicate], nil);
     }
 }
+- (NSSet *)participantsForIdentifiers:(NSSet *)identifiers;
+{
+    NSMutableSet *participants = [[NSMutableSet alloc] init];
+    NSError *error;
+    NSSet *allContacts = [self persistedUsersWithError:&error];
+    if (error) {
+        return nil;
+    } else {
+        for (NSString *participantIdentifier in identifiers) {
+            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(userID like[cd] %@)", [NSString stringWithFormat:@"*%@*", participantIdentifier]];
+            NSSet * set = [allContacts filteredSetUsingPredicate:searchPredicate];
+            if ([set allObjects].count > 0) {
+                [participants addObject:[[set allObjects] firstObject]];
+            }
+        }
+    }
+    return [NSSet setWithSet:participants];
+}
 
 @end

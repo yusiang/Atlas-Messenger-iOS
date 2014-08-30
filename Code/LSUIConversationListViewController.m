@@ -10,6 +10,8 @@
 #import "LYRUIParticipantPickerController.h"
 #import "LSConversationViewController.h"
 #import "SVProgressHUD.h"
+#import "LSConversationViewController.h"
+#import "LSUser.h"
 
 @interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIParticipantPickerControllerDelegate>
 
@@ -41,7 +43,11 @@
 
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
-    // Dont Care
+    LSConversationViewController *viewController = [LSConversationViewController new];
+    viewController.conversation = conversation;
+    viewController.layerClient = self.applicationController.layerClient;
+    viewController.persistanceManager = self.applicationController.persistenceManager;
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)conversationListViewControllerDidCancel:(LYRUIConversationListViewController *)conversationListViewController
@@ -49,9 +55,14 @@
     //Dont Care
 }
 
-- (NSString *)conversationLabelForParticipants:(NSSet *)participants inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController
+- (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController
 {
-    return @"Kevin Coleman, Blake Watters";
+    NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIDs];
+    NSString *conversationLabel = @"";
+    for (LSUser *user in participants) {
+        conversationLabel = [NSString stringWithFormat:@"%@ %@", conversationLabel, user.fullName];
+    }
+    return conversationLabel;
 }
 
 #pragma mark

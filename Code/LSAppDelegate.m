@@ -219,7 +219,7 @@ extern void LYRSetLogLevelFromEnvironment();
 //    LSConversationListViewController *conversationListViewController = [LSConversationListViewController new];
 //    conversationListViewController.applicationController = self.applicationController;
    
-    LSUIConversationListViewController *controller = [[LSUIConversationListViewController alloc] init];
+    LSUIConversationListViewController *controller = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
     controller.applicationController = self.applicationController;
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:controller];

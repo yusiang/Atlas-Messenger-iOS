@@ -29,6 +29,8 @@
  */
 - (void)performContactSearchWithString:(NSString *)searchString completion:(void(^)(NSSet *contacts, NSError *error))completion;
 
+- (NSSet *)participantsForIdentifiers:(NSSet *)identifiers;
+
 - (BOOL)deleteAllObjects:(NSError **)error;
 
 @end
