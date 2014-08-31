@@ -19,6 +19,13 @@
 		0A27A9431997FD210070BD4F /* logout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9421997FD210070BD4F /* logout@2x.png */; };
 		0A27A9451997FE110070BD4F /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9441997FE110070BD4F /* back@2x.png */; };
 		0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */; };
+		0A85116C19B386BD00861447 /* LYRUIConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A85116B19B386BD00861447 /* LYRUIConversationViewController.m */; };
+		0A85117119B3875D00861447 /* LYRUIMessageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A85117019B3875C00861447 /* LYRUIMessageCollectionViewCell.m */; };
+		0A85117419B387AE00861447 /* LYRUIIncomingMessageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A85117319B387AE00861447 /* LYRUIIncomingMessageCollectionViewCell.m */; };
+		0A85117719B387C300861447 /* LYRUIOutgoingMessageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A85117619B387C300861447 /* LYRUIOutgoingMessageCollectionViewCell.m */; };
+		0A85117D19B3880700861447 /* LYRUIMessageInputToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A85117C19B3880700861447 /* LYRUIMessageInputToolbar.m */; };
+		0A85118019B3882600861447 /* UIMessageComposeTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A85117F19B3882600861447 /* UIMessageComposeTextView.m */; };
+		0A85118319B3885800861447 /* LYRUIConversationCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A85118219B3885800861447 /* LYRUIConversationCollectionViewFlowLayout.m */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
 		0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C71947C86B0083732B /* CoreLocation.framework */; };
@@ -140,6 +147,21 @@
 		0A7A732F19ABFF790074FCA8 /* LSContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactListViewController.m; sourceTree = "<group>"; };
 		0A7A733119AC04AE0074FCA8 /* LSContactCellPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactCellPresenter.h; sourceTree = "<group>"; };
 		0A7A733219AC04AE0074FCA8 /* LSContactCellPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactCellPresenter.m; sourceTree = "<group>"; };
+		0A85116A19B386BD00861447 /* LYRUIConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIConversationViewController.h; sourceTree = "<group>"; };
+		0A85116B19B386BD00861447 /* LYRUIConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIConversationViewController.m; sourceTree = "<group>"; };
+		0A85116E19B3873E00861447 /* LYRUIMessagePresenting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LYRUIMessagePresenting.h; sourceTree = "<group>"; };
+		0A85116F19B3875C00861447 /* LYRUIMessageCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIMessageCollectionViewCell.h; sourceTree = "<group>"; };
+		0A85117019B3875C00861447 /* LYRUIMessageCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIMessageCollectionViewCell.m; sourceTree = "<group>"; };
+		0A85117219B387AE00861447 /* LYRUIIncomingMessageCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIIncomingMessageCollectionViewCell.h; sourceTree = "<group>"; };
+		0A85117319B387AE00861447 /* LYRUIIncomingMessageCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIIncomingMessageCollectionViewCell.m; sourceTree = "<group>"; };
+		0A85117519B387C300861447 /* LYRUIOutgoingMessageCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIOutgoingMessageCollectionViewCell.h; sourceTree = "<group>"; };
+		0A85117619B387C300861447 /* LYRUIOutgoingMessageCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIOutgoingMessageCollectionViewCell.m; sourceTree = "<group>"; };
+		0A85117B19B3880700861447 /* LYRUIMessageInputToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIMessageInputToolbar.h; sourceTree = "<group>"; };
+		0A85117C19B3880700861447 /* LYRUIMessageInputToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIMessageInputToolbar.m; sourceTree = "<group>"; };
+		0A85117E19B3882600861447 /* UIMessageComposeTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIMessageComposeTextView.h; sourceTree = "<group>"; };
+		0A85117F19B3882600861447 /* UIMessageComposeTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIMessageComposeTextView.m; sourceTree = "<group>"; };
+		0A85118119B3885800861447 /* LYRUIConversationCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIConversationCollectionViewFlowLayout.h; sourceTree = "<group>"; };
+		0A85118219B3885800861447 /* LYRUIConversationCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIConversationCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNotificationObserver.h; sourceTree = "<group>"; };
 		0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNotificationObserver.m; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -388,6 +410,28 @@
 			path = "ContactList Component";
 			sourceTree = "<group>";
 		};
+		0A85116D19B386C100861447 /* Conversation Component */ = {
+			isa = PBXGroup;
+			children = (
+				0A85117B19B3880700861447 /* LYRUIMessageInputToolbar.h */,
+				0A85117C19B3880700861447 /* LYRUIMessageInputToolbar.m */,
+				0A85117E19B3882600861447 /* UIMessageComposeTextView.h */,
+				0A85117F19B3882600861447 /* UIMessageComposeTextView.m */,
+				0A85116F19B3875C00861447 /* LYRUIMessageCollectionViewCell.h */,
+				0A85117019B3875C00861447 /* LYRUIMessageCollectionViewCell.m */,
+				0A85117519B387C300861447 /* LYRUIOutgoingMessageCollectionViewCell.h */,
+				0A85117619B387C300861447 /* LYRUIOutgoingMessageCollectionViewCell.m */,
+				0A85117219B387AE00861447 /* LYRUIIncomingMessageCollectionViewCell.h */,
+				0A85117319B387AE00861447 /* LYRUIIncomingMessageCollectionViewCell.m */,
+				0A85116A19B386BD00861447 /* LYRUIConversationViewController.h */,
+				0A85116B19B386BD00861447 /* LYRUIConversationViewController.m */,
+				0A85116E19B3873E00861447 /* LYRUIMessagePresenting.h */,
+				0A85118119B3885800861447 /* LYRUIConversationCollectionViewFlowLayout.h */,
+				0A85118219B3885800861447 /* LYRUIConversationCollectionViewFlowLayout.m */,
+			);
+			name = "Conversation Component";
+			sourceTree = "<group>";
+		};
 		0AE1A13819B0D7BF00BFB754 /* Contact Vew Component */ = {
 			isa = PBXGroup;
 			children = (
@@ -407,6 +451,7 @@
 		0AFE401419B0E29300FCA264 /* Components - Watters */ = {
 			isa = PBXGroup;
 			children = (
+				0A85116D19B386C100861447 /* Conversation Component */,
 				0AFE402619B0F61400FCA264 /* Contact List Component */,
 				0AFE402519B0F60200FCA264 /* Conversation List Component */,
 			);
@@ -799,6 +844,7 @@
 			files = (
 				0AFE3FE519B0E1BD00FCA264 /* LYRContactViewController.m in Sources */,
 				0AFE3FE619B0E1BD00FCA264 /* LYRContactHeaderCell.m in Sources */,
+				0A85117419B387AE00861447 /* LYRUIIncomingMessageCollectionViewCell.m in Sources */,
 				0AFE3FE719B0E1BD00FCA264 /* LYRContactActionCell.m in Sources */,
 				0AFE3FE819B0E1BD00FCA264 /* LYRContactDetailCell.m in Sources */,
 				0AFE3FE919B0E1BD00FCA264 /* LYRSelectionIndicator.m in Sources */,
@@ -810,12 +856,15 @@
 				0AFE3FEE19B0E1BD00FCA264 /* LYRConversationCell.m in Sources */,
 				0AFE3FEF19B0E1BD00FCA264 /* LYRDataSourceChange.m in Sources */,
 				0AFE3FF019B0E1BD00FCA264 /* ZacConversationExample.m in Sources */,
+				0A85118319B3885800861447 /* LYRUIConversationCollectionViewFlowLayout.m in Sources */,
 				0AFE3FF119B0E1BD00FCA264 /* LSHTTPResponseSerializer.m in Sources */,
 				0AFE3FF219B0E1BD00FCA264 /* LSPersistenceManager.m in Sources */,
+				0A85117719B387C300861447 /* LYRUIOutgoingMessageCollectionViewCell.m in Sources */,
 				0AFE3FF319B0E1BD00FCA264 /* LSSession.m in Sources */,
 				0AFE3FF419B0E1BD00FCA264 /* LSAPIManager.m in Sources */,
 				0AFE3FF519B0E1BD00FCA264 /* LSContactListViewController.m in Sources */,
 				0AFE3FF619B0E1BD00FCA264 /* LSContactViewController.m in Sources */,
+				0A85116C19B386BD00861447 /* LYRUIConversationViewController.m in Sources */,
 				0AFE3FF819B0E1BD00FCA264 /* LSConversationListViewController.m in Sources */,
 				0AFE3FF919B0E1BD00FCA264 /* LSConversationViewController.m in Sources */,
 				0AFE3FFA19B0E1BD00FCA264 /* LSAuthenticationViewController.m in Sources */,
@@ -824,6 +873,7 @@
 				0AFE3FFE19B0E1BD00FCA264 /* LSApplicationController.m in Sources */,
 				0AFE3FFF19B0E1BD00FCA264 /* LSUtilities.m in Sources */,
 				0AED4A3619B1311D001C8EE7 /* LYRUIParticipantTableViewCell.m in Sources */,
+				0A85117119B3875D00861447 /* LYRUIMessageCollectionViewCell.m in Sources */,
 				0AFE400019B0E1BD00FCA264 /* LSNotificationObserver.m in Sources */,
 				0AFE400119B0E1BD00FCA264 /* LSKeychainUtilities.m in Sources */,
 				0AFE400219B0E1BD00FCA264 /* LSAppDelegate.m in Sources */,
@@ -843,9 +893,11 @@
 				0AFE400F19B0E1BD00FCA264 /* LSMediaAttachement.m in Sources */,
 				0AFE401019B0E1BD00FCA264 /* LSMessageCell.m in Sources */,
 				0AFE401719B0E57A00FCA264 /* LYRUIConversationListViewController.m in Sources */,
+				0A85117D19B3880700861447 /* LYRUIMessageInputToolbar.m in Sources */,
 				0AFE401E19B0E68900FCA264 /* LYRUIConversationTableViewCell.m in Sources */,
 				0AED4A3319B1307B001C8EE7 /* LYRUIParticipantPickerController.m in Sources */,
 				0AFE401119B0E1BD00FCA264 /* LSBubbleView.m in Sources */,
+				0A85118019B3882600861447 /* UIMessageComposeTextView.m in Sources */,
 				0AFE401219B0E1BD00FCA264 /* LSUIConstants.m in Sources */,
 				0AFE401319B0E1BD00FCA264 /* LSVersionView.m in Sources */,
 				0AFE3FE419B0E19C00FCA264 /* main.m in Sources */,

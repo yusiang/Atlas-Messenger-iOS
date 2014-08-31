@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:LYRUIMessageInputToolbar.h">
+   </FileRef>
+   <FileRef
+      location = "group:LYRUIMessageInputToolbar.m">
+   </FileRef>
+   <FileRef
       location = "group:LayerSample.xcodeproj">
    </FileRef>
    <FileRef
