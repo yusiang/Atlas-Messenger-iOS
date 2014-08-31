@@ -14,14 +14,14 @@
 @protocol LYRUIParticipantTableViewControllerDelegate <NSObject>
 
 /**
- @abstract Tells the receiver that the user has selected a set of participants from a participant selection view.
+ @abstract Tells the receiver that the user has selected a participants from a participant selection view.
  @param participantSelectionViewController The participant selection view in which the selection was made.
- @param participants The set of participants that was selected.
+ @param participant The participants that was selected.
  */
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant;
 
 /**
- *  Informs the data source that a search has been made with the following search string. After the completion block is called, the `contactListViewController:presenterForContactAtIndex:` method will be called for each search result.
+ *  Informs the delegate that a search has been made with the following search string. After the completion block is called, the `contactListViewController:presenterForContactAtIndex:` method will be called for each search result.
  *
  *  @param contactListViewController An object representing the contact list view controller.
  *  @param searchString              The search string that was just used for search.
@@ -30,9 +30,16 @@
 
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSDictionary *filteredParticipants))completion;
 
+/**
+ @abstract Informst the delegate that the user tapped the `cancel` button
+ */
 - (void)participantTableViewControllerDidSelectCancelButton;
 
+/**
+ @abstract Informst the delegate that the user tapped the `done` button
+ */
 - (void)participantTableViewControllerDidSelectDoneButton;
+
 @end
 
 @interface LYRUIParticipantTableViewController : UITableViewController
@@ -44,8 +51,21 @@
  */
 @property (nonatomic) Class<LYRUIParticipantPresenting> participantCellClass;
 
+/**
+ @abstract The delegate for the participantTableViewController
+ */
 @property (nonatomic, weak) id<LYRUIParticipantTableViewControllerDelegate>delegate;
 
+/**
+ @abstract A dictionary containing a set of dictionaries each cooresponding to a unique letter in the alphabet
+ */
 @property (nonatomic, strong) NSDictionary *participants;
+
+/**
+ @abstract The seclection indicator used to indicate a contact has been selected. Should have views configured for both highlighted and non highlighted state
+ @default `LYRUISelectionIndicator`
+ @raises NSInternalInconsistencyException Raised if the value is mutated after the receiver has been presented.
+ */
+@property (nonatomic, strong) UIControl *selectionIndicator;
 
 @end

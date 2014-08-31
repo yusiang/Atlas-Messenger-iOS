@@ -84,7 +84,7 @@ typedef enum  {
  */
 @property (nonatomic) Class<LYRUIParticipantPresenting> cellClass;
 
-@property (nonatomic, assign) LYRUIParticipantPickerSortType *participantPickerSortType;
+@property (nonatomic, assign) LYRUIParticipantPickerSortType participantPickerSortType;
 
 @end
 

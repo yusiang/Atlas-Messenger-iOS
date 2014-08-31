@@ -15,7 +15,7 @@
 
 @property (nonatomic, strong) LSBubbleView *bubbleView;
 @property (nonatomic, strong) UILabel *senderLabel;
-@property (nonatomic, strong) LSAvatarImageView *avatarImageView;
+@property (nonatomic, strong) LYRUIAvatarImageView *avatarImageView;
 @property (nonatomic, strong) UIView *arrow;
 
 @end
@@ -47,7 +47,7 @@ static CGFloat const LSArrowSize = 16.0f;
         [self.contentView addSubview:self.bubbleView];
         
         //Initialize the sender Avatar Image View
-        self.avatarImageView = [[LSAvatarImageView alloc] init];
+        self.avatarImageView = [[LYRUIAvatarImageView alloc] init];
         self.avatarImageView.layer.cornerRadius = (LSAvatarImageViewSize / 2);
         self.avatarImageView.clipsToBounds = YES;
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;

@@ -19,18 +19,19 @@
 
 @implementation LSUIConversationListViewController
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.delegate = self;
     
-    // Left navigation item
-    UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"logout"]
-                                                                     style:UIBarButtonItemStylePlain
-                                                                    target:self
-                                                                    action:@selector(logoutTapped)];
-    logoutButton.accessibilityLabel = @"logout";
-    [self.navigationItem setLeftBarButtonItem:logoutButton];
+//    // Left navigation item
+//    UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"logout"]
+//                                                                     style:UIBarButtonItemStylePlain
+//                                                                    target:self
+//                                                                    action:@selector(logoutTapped)];
+//    logoutButton.accessibilityLabel = @"logout";
+//    [self.navigationItem setLeftBarButtonItem:logoutButton];
     
     // Right navigation item
     UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"compose"]
@@ -58,9 +59,11 @@
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController
 {
     NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIDs];
-    NSString *conversationLabel = @"";
-    for (LSUser *user in participants) {
-        conversationLabel = [NSString stringWithFormat:@"%@ %@", conversationLabel, user.fullName];
+    LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
+    NSString *conversationLabel = firstUser.fullName;
+    for (int i = 1; i < [[participants allObjects] count]; i++) {
+        LSUser *user = [[participants allObjects] objectAtIndex:i];
+        conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.fullName];
     }
     return conversationLabel;
 }

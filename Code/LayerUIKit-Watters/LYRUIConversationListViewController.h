@@ -21,6 +21,7 @@
  */
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation;
 
+//TODO Discuss if this is necessary
 /**
  @abstract Tells the delegate that the conversation list was dismissed without making a selection.
  @param conversationListViewController The conversation list that was dismissed.
@@ -28,10 +29,10 @@
 - (void)conversationListViewControllerDidCancel:(LYRUIConversationListViewController *)conversationListViewController;
 
 /**
- @abstract Asks the delegate for the name of a participant of a conversation in a conversation list.
- @param participant The identifier of a participant in a conversation within the conversation list.
+ @abstract Asks the delegate for the Conversation Label for a given set of participants in a conversation.
+ @param participants The identifiers for participants in a conversation within the conversation list.
  @param conversationListViewController The conversation list in which the participant appears.
- @return The name of the participant to be displayed on the conversation list.
+ @return The conversation label to be displayed for a given conversation in the conversation list.
  */
 - (NSString *)conversationLabelForParticipants:(NSSet *)participants inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController;
 

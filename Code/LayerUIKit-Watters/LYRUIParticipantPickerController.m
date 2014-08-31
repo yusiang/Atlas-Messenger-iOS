@@ -33,8 +33,12 @@
     if (self) {
         
         _participants = participants;
-        
         _sortedParticipants = [self sortAndGroupContactListByAlphabet:participants];
+        _selectedParticipants = [NSMutableSet new];
+        
+        self.cellClass = [LYRUIParticipantTableViewCell class];
+        self.allowsMultipleSelection = YES;
+        self.participantPickerSortType = LYRUIParticipantPickerControllerSortTypeFirst;
         
         self.participantTableViewController.delegate = self;
         self.participantTableViewController.participants = _sortedParticipants;
@@ -58,11 +62,16 @@
     return self.participantTableViewController.tableView.allowsMultipleSelection;
 }
 
+- (void)setCellClass:(Class<LYRUIParticipantPresenting>)cellClass
+{
+    self.participantTableViewController.participantCellClass = cellClass;
+}
+
 #pragma mark - Participant Table View Controller Delegate Methods
 
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    if (!self.allowsMultipleSelection) {
+    if (self.allowsMultipleSelection) {
         if ([self.selectedParticipants containsObject:participant]) {
             [self.selectedParticipants removeObject:participant];
         } else {
@@ -92,7 +101,18 @@
 
 - (NSDictionary *)sortAndGroupContactListByAlphabet:(NSSet *)participants
 {
-    NSArray *sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"fullName" ascending:YES]]];
+    NSArray *sortedParticipants;
+    switch (self.participantPickerSortType) {
+        case LYRUIParticipantPickerControllerSortTypeFirst:
+            sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
+            break;
+        case LYRUIParticipantPickerControllerSortTypeLast:
+            sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES]]];
+            break;
+        default:
+            break;
+    }
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     for (id<LYRUIParticipant>participant in sortedParticipants) {
         NSString *firstName = participant.firstName;
@@ -106,4 +126,5 @@
     }
     return dict;
 }
+
 @end

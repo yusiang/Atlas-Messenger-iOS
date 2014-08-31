@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
-#import "LSConversationCellPresenter.h"
-#import "LSUser.h"
+#import "LYRConversationPresenter.h"
 
 @interface LYRConversationCell : UITableViewCell
 

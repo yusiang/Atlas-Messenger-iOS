@@ -14,7 +14,6 @@ NSString *LYRUIMIMETypeImagePNG;  /// image/png
 NSString *LYRUIMIMETypeImageJPEG;  /// image/jpeg
 NSString *LYRUIMIMETypeLocation;  /// location
 
-//NSLocalized String
 /**
  @abstract The `LYRUIConversationPresenting` protocol must be adopted by any view component
  that wishes to present a Layer conversation object.

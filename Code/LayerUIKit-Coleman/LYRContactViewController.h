@@ -8,12 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "LYRContactCellPresenter.h"
-#import "LSApplicationController.h"
 #import "LYRContactHeaderCell.h"
 #import "LYRContactDetailCell.h"
 #import "LYRContactActionCell.h"
-#import "LSUser.h"
-
 
 typedef enum {
     LYRContactViewCellPhoneType,
@@ -51,6 +48,6 @@ typedef enum {
 
 @property (nonatomic, strong) id<LYRContactViewControllerDelegate>delegate;
 
-@property (nonatomic, strong) LSUser *contact;
+//@property (nonatomic, strong) LSUser *contact;
 
 @end

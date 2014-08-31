@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIMessageComposeTextView.h"
+#import "LYRUIMessageComposeTextView.h"
 
 @interface LYRUIMessageInputToolbar : UIToolbar
 
 // auto-resizing message composition field
-@property (nonatomic) UIMessageComposeTextView *textView;
+@property (nonatomic) LYRUIMessageComposeTextView *textView;
 
 // When set, draws to the left of the compose text area. Default to `nil`
 @property (nonatomic) UIButton *accessoryButton;

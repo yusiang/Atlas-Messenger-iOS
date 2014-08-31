@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSAvatarImageView.h"
+#import "LYRUIAvatarImageView.h"
 #import "LSUIConstants.h"
 
-@implementation LSAvatarImageView
+@implementation LYRUIAvatarImageView
 
 - (id)init
 {
@@ -31,6 +31,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.layer.cornerRadius = self.frame.size.width / 2;
+    self.layer.cornerRadius = self.frame.size.height / 2;
+    
 }
 @end

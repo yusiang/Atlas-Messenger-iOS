@@ -107,7 +107,10 @@ extern void LYRSetLogLevelFromEnvironment();
     // Declaring that I want to recieve push!
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     
+    [self configureGlobalUserInterfaceAttributes];
+    
     return YES;
+    
 }
 
 - (void)updateCrashlyticsWithUser:(LSUser *)authenticatedUser
@@ -216,23 +219,24 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)presentConversationsListViewController
 {
-//    LSConversationListViewController *conversationListViewController = [LSConversationListViewController new];
-//    conversationListViewController.applicationController = self.applicationController;
-   
+//    LSContactViewController *controller = [[LSContactViewController alloc] init];
+//    controller.user = self.applicationController.APIManager.authenticatedSession.user;
+//    [self.navigationController pushViewController:controller animated:TRUE];
+
     LSUIConversationListViewController *controller = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
+    controller.allowsEditing = TRUE;
     controller.applicationController = self.applicationController;
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:controller];
-    conversationController.navigationBar.barTintColor = LSLighGrayColor();
-    conversationController.navigationBar.tintColor = LSBlueColor();
-    [[UINavigationBar appearance] setTitleTextAttributes: @{NSFontAttributeName: LSMediumFont(14)}];
-    [self.navigationController presentViewController:conversationController animated:YES completion:^{
-        //
-    }];
+    [self.navigationController presentViewController:conversationController animated:YES completion:nil];
     
-    //    LSContactViewController *controller = [[LSContactViewController alloc] init];
-    //    controller.user = self.applicationController.APIManager.authenticatedSession.user;
-    //    [self.navigationController pushViewController:controller animated:TRUE];
+}
+
+- (void)configureGlobalUserInterfaceAttributes
+{
+    [[UINavigationBar appearance] setTintColor:LSBlueColor()];
+    [[UINavigationBar appearance] setBarTintColor:LSLighGrayColor()];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: LSMediumFont(14)}];
 }
 
 @end

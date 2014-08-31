@@ -4,6 +4,8 @@ target 'LayerSample' do
   #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
   #pod 'LayerKit', path: '~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.7.14'
   pod 'HockeySDK', '~> 3.5.6'
+  pod 'LayerUIKit-Coleman', path: '.'
+  pod 'LayerUIKit-Watters', path: '.'
 end
 
 target 'LayerSampleTests' do

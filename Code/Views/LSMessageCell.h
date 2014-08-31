@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
-#import "LSAvatarImageView.h"
+#import "LYRUIAvatarImageView.h"
 #import "LSMessageCellPresenter.h"
 
 @class LSMessageCell;

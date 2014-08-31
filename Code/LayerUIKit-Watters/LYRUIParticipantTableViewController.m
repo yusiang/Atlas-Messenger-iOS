@@ -7,6 +7,8 @@
 //
 
 #import "LYRUIParticipantTableViewController.h"
+#import "LYRUIPaticipantSectionHeaderView.h"
+#import "LYRUISelectionIndicator.h"
 
 @interface LYRUIParticipantTableViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
 
@@ -22,9 +24,12 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
-    self = [super initWithStyle:style];
+    self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        // Custom initialization
+        
+        self.title = @"Participants";
+        self.accessibilityLabel = @"Participants";
+        
     }
     return self;
 }
@@ -32,6 +37,8 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:20];
     
     self.filteredParticipants = self.participants;
     
@@ -50,7 +57,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     self.tableView.rowHeight = 80.0f;
     self.tableView.sectionFooterHeight = 0.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.tableView.allowsMultipleSelection = YES;
     self.tableView.contentOffset = CGPointMake(0, 40);
     self.tableView.tableHeaderView = self.searchBar;
     [self.tableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
@@ -114,7 +121,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 0;
+    return 40;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -127,13 +134,16 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     NSString *key = [[self sortedContactKeys] objectAtIndex:section];
     return [[[self currentDataArray] objectForKey:key] count];
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
     id<LYRUIParticipant> participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
     
     UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRParticipantCellIdentifier];
+    
     [participantCell presentParticipant:participant];
+    
     return participantCell;
 }
 
@@ -146,12 +156,8 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    return [[UIView alloc] init];
-}
-
-- (void)configureCellAppearance
-{
-
+    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
+    return [[LYRUIPaticipantSectionHeaderView alloc] initWithKey:key];
 }
 
 - (void)reloadContacts

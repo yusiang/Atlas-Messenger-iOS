@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSAuthenticationViewController.h"
 #import "LSApplicationController.h"
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>

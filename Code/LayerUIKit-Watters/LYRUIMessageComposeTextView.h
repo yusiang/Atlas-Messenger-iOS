@@ -1,5 +1,5 @@
 //
-//  UIMessageComposeTextView.h
+//  LYRUIMessageComposeTextView.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 8/31/14.
@@ -15,7 +15,7 @@ NSString *LYRUIMIMETypeImageJPEG;  /// image/jpeg
 NSString *LYRUIMIMETypeLocation;  /// location
 
 // Auto-resizing. Support insertion of audio and videos?
-@interface UIMessageComposeTextView : UITextView
+@interface LYRUIMessageComposeTextView : UITextView
 
 - (void)insertImage:(UIImage *)image;
 

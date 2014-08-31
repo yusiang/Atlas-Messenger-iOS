@@ -1,25 +1,25 @@
 //
-//  LYRUIConversationTableViewCell.m
+//  LSConversationViewCell.m
 //  LayerSample
 //
-//  Created by Kevin Coleman on 8/29/14.
+//  Created by Kevin Coleman on 6/10/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LYRUIConversationTableViewCell.h"
-#import "LSAvatarImageView.h"
+#import "LYRConversationCell.h"
 #import "LSUIConstants.h"
+#import "LYRConversationPresenter.h"
 
-@interface LYRUIConversationTableViewCell ()
+@interface LYRConversationCell ()
 
-@property (nonatomic) LSAvatarImageView *avatarImageView;
+@property (nonatomic) UIImageView *avatarImageView;
 @property (nonatomic) UILabel *senderLabel;
 @property (nonatomic) UILabel *dateLabel;
 @property (nonatomic) UITextView *lastMessageTextView;
 
 @end
 
-@implementation LYRUIConversationTableViewCell
+@implementation LYRConversationCell
 
 // Cell Constants
 static CGFloat const LSCellTopMargin = 12.0f;
@@ -43,7 +43,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
         [self setBackgroundColor:[UIColor whiteColor]];
         
         // Initialize Avatar Image
-        self.avatarImageView = [[LSAvatarImageView alloc] init];
+        self.avatarImageView = [[UIImageView alloc] init];
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.avatarImageView];
         
@@ -76,23 +76,18 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
     return self;
 }
 
-- (void)presentConversation:(LYRConversation *)conversation withLabel:(NSString *)conversationLabel
+- (void)updateWithPresenter:(id<LYRConversationCellPresenter>)presenter
 {
-    self.senderLabel.text = conversationLabel;
-    LYRMessage *message = conversation.lastMessage;
-    LYRMessagePart *messagePart = [message.parts objectAtIndex:0];
-    if (messagePart) {
-        self.lastMessageTextView.text = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
-    } else if (messagePart.MIMEType == LYRUIMIMETypeImageJPEG) {
-        self.lastMessageTextView.text = @"Attachement: Image";
-    } else if (messagePart.MIMEType == LYRUIMIMETypeImagePNG) {
-        self.lastMessageTextView.text = @"Attachement: Image";
-    } else if (messagePart.MIMEType == LYRUIMIMETypeLocation) {
-        self.lastMessageTextView.text = @"Attachement: Location";
-    }
+    self.senderLabel.text = [presenter titleText];
+    self.dateLabel.text = [presenter dateText];
+    self.lastMessageTextView.text = [presenter lastMessageText];
+    self.avatarImageView.image = [presenter avatarImage];
+    
     [self setNeedsUpdateConstraints];
 }
 
+#pragma mark
+#pragma mark Layout Code
 - (void)setupConstraints
 {
     //**********Avatar Constraints**********//
@@ -235,11 +230,11 @@ static CGFloat const LSCellDateLabelLeftMargin = 2.0f;
                                                                   constant:LSCellTopMargin]];
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+- (void)updateConstraints
 {
-    [super setSelected:FALSE animated:TRUE];
-
-    // Configure the view for the selected state
+    [super updateConstraints];
+    self.avatarImageView.layer.cornerRadius = (LSAvatarImageViewSizeRatio * self.frame.size.height) / 2;
+    self.avatarImageView.clipsToBounds = YES;
 }
 
 @end
