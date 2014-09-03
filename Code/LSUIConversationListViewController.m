@@ -12,8 +12,11 @@
 #import "SVProgressHUD.h"
 #import "LSConversationViewController.h"
 #import "LSUser.h"
+#import "LSUIParticipantPickerDataSource.h"
 
 @interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIParticipantPickerControllerDelegate>
+
+@property (nonatomic, strong) LSUIParticipantPickerDataSource *participantPickerDataSource;
 
 @end
 
@@ -23,24 +26,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.allowsEditing = NO;
     self.delegate = self;
     
-//    // Left navigation item
-//    UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"logout"]
-//                                                                     style:UIBarButtonItemStylePlain
-//                                                                    target:self
-//                                                                    action:@selector(logoutTapped)];
-//    logoutButton.accessibilityLabel = @"logout";
-//    [self.navigationItem setLeftBarButtonItem:logoutButton];
+    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    
+    // Left navigation item
+    UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"logout"]
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(logoutButtonTapped)];
+    logoutButton.accessibilityLabel = @"logout";
+    [self.navigationItem setLeftBarButtonItem:logoutButton];
     
     // Right navigation item
-    UIBarButtonItem *newConversationButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"compose"]
+    UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"compose"]
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
-                                                                             action:@selector(newConversationTapped)];
-    newConversationButton.accessibilityLabel = @"New";
-    [self.navigationItem setRightBarButtonItem:newConversationButton];
+                                                                             action:@selector(composeButtonTapped)];
+    composeButton.accessibilityLabel = @"New";
+    [self.navigationItem setRightBarButtonItem:composeButton];
 }
+
+#pragma mark LYRUIConversationListViewControllerDelegate methods
 
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
@@ -53,7 +62,7 @@
 
 - (void)conversationListViewControllerDidCancel:(LYRUIConversationListViewController *)conversationListViewController
 {
-    //Dont Care
+    //Dont Care - Not even sure we need this
 }
 
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController
@@ -68,10 +77,9 @@
     return conversationLabel;
 }
 
-#pragma mark
-#pragma mark Bar Button Functionality Methods
+#pragma mark - Bar Button Functionality Methods
 
-- (void)logoutTapped
+- (void)logoutButtonTapped
 {
     [SVProgressHUD show];
     [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
@@ -85,13 +93,15 @@
     }];
 }
 
-- (void)newConversationTapped
+- (void)composeButtonTapped
 {
-    NSSet *participants = [self.applicationController.persistenceManager persistedUsersWithError:nil];
-    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:participants];
+    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:self.participantPickerDataSource
+                                                                                                              sortType:LYRUIParticipantPickerControllerSortTypeFirst];
     controller.participantPickerDelegate = self;
     [self presentViewController:controller animated:TRUE completion:nil];
 }
+
+#pragma mark - LYRUIParticipantTableViewControllerDelegate methods
 
 - (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
 {

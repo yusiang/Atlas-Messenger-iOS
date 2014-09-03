@@ -30,6 +30,9 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
         self.title = @"Participants";
         self.accessibilityLabel = @"Participants";
         
+        self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:20];
+        self.participantCellClass = [LYRUIParticipantTableViewCell class];
+        
     }
     return self;
 }
@@ -38,29 +41,19 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 {
     [super viewDidLoad];
     
-    self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:20];
-    
-    self.filteredParticipants = self.participants;
-    
-    self.participantCellClass = [LYRUIParticipantTableViewCell class];
-    
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
     self.searchBar.delegate = self;
     
     self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+    self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.searchController.delegate = self;
     self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsDataSource = self;
-    self.searchController.searchResultsTableView.rowHeight = 80.0f;
-    [self.searchController.searchResultsTableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
-    
-    self.tableView.rowHeight = 80.0f;
-    self.tableView.sectionFooterHeight = 0.0;
+
+    self.tableView.allowsMultipleSelection = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.allowsMultipleSelection = YES;
-    self.tableView.contentOffset = CGPointMake(0, 40);
+    self.tableView.sectionFooterHeight = 0.0;
     self.tableView.tableHeaderView = self.searchBar;
-    [self.tableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
     
     // Left bar button item is the text Cancel
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
@@ -74,9 +67,22 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                        style:UIBarButtonItemStyleDone
                                                                       target:self
-                                                                      action:@selector(doneButtonTapped)];
+                                                                action:@selector(doneButtonTapped)];
     doneButtonItem.accessibilityLabel = @"Done";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.filteredParticipants = self.participants;
+    
+    self.tableView.rowHeight = 58.0f;
+    [self.tableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
+    
+    self.searchController.searchResultsTableView.rowHeight = 48.0f;
+    [self.searchController.searchResultsTableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
 }
 
 - (NSDictionary *)currentDataArray
@@ -116,7 +122,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 58;
+    return 48;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

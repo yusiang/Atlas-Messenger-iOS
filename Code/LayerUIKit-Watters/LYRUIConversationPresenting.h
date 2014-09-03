@@ -26,4 +26,6 @@ NSString *LYRUIMIMETypeLocation;  /// location
  */
 - (void)presentConversation:(LYRConversation *)conversation withLabel:(NSString *)conversationLabel;
 
+- (void)shouldShowAvatarImage:(BOOL)shouldShowAvatarImage;
+
 @end

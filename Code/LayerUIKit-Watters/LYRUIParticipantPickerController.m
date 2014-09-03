@@ -20,46 +20,42 @@
 
 @implementation LYRUIParticipantPickerController
 
-+ (instancetype)participantPickerWithParticipants:(NSSet *)participants
++ (instancetype)participantPickerWithParticipants:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
-    return [[self alloc] initWithParticipants:participants];
+    return [[self alloc] initWithDataSource:dataSource sortType:sortType];
 }
 
-- (id)initWithParticipants:(NSSet *)participants
+- (id)initWithDataSource:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
     self.participantTableViewController = [[LYRUIParticipantTableViewController alloc] init];
     
     self = [super initWithRootViewController:self.participantTableViewController];
     if (self) {
         
-        _participants = participants;
-        _sortedParticipants = [self sortAndGroupContactListByAlphabet:participants];
-        _selectedParticipants = [NSMutableSet new];
+        self.participantPickerSortType = sortType;
+        self.dataSource = dataSource;
         
         self.cellClass = [LYRUIParticipantTableViewCell class];
         self.allowsMultipleSelection = YES;
-        self.participantPickerSortType = LYRUIParticipantPickerControllerSortTypeFirst;
         
-        self.participantTableViewController.delegate = self;
+        self.participants = [self.dataSource participants];
+        self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
+        self.selectedParticipants = [NSMutableSet new];
+        
         self.participantTableViewController.participants = _sortedParticipants;
-        
+        self.participantTableViewController.delegate = self;
     }
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
 {
-    self.participantTableViewController.tableView.allowsMultipleSelection = allowsMultipleSelection;
+    self.participantTableViewController.allowsMultipleSelection = allowsMultipleSelection;
 }
 
 - (BOOL)allowsMultipleSelection
 {
-    return self.participantTableViewController.tableView.allowsMultipleSelection;
+    return self.participantTableViewController.allowsMultipleSelection;
 }
 
 - (void)setCellClass:(Class<LYRUIParticipantPresenting>)cellClass
@@ -84,11 +80,11 @@
 
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSDictionary *))completion
 {
-    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchText]];
-    NSSet *filteredParticipants = [self.participants filteredSetUsingPredicate:searchPredicate];
-    completion ([self sortAndGroupContactListByAlphabet:filteredParticipants]);
-    
+    [self.dataSource searchForParticipantsMatchingText:searchText completion:^(NSSet *participants) {
+        completion ([self sortAndGroupContactListByAlphabet:participants]);
+    }];
 }
+
 - (void)participantTableViewControllerDidSelectCancelButton
 {
     [self.participantPickerDelegate participantSelectionViewControllerDidCancel:self];
@@ -115,8 +111,19 @@
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     for (id<LYRUIParticipant>participant in sortedParticipants) {
-        NSString *firstName = participant.firstName;
-        NSString *firstLetter = [[firstName substringToIndex:1] uppercaseString];
+        NSString *sortName;
+        switch (self.participantPickerSortType) {
+            case LYRUIParticipantPickerControllerSortTypeFirst:
+                sortName = participant.firstName;
+                break;
+            case LYRUIParticipantPickerControllerSortTypeLast:
+                sortName = participant.lastName;
+                break;
+            default:
+                break;
+        }
+        
+        NSString *firstLetter = [[sortName substringToIndex:1] uppercaseString];
         NSMutableArray *letterList = [dict objectForKey:firstLetter];
         if (!letterList) {
             letterList = [NSMutableArray array];

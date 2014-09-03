@@ -22,7 +22,7 @@
 #import "LSApplicationController.h"
 #import "LSAuthenticationViewController.h"
 #import "LSAppDelegate.h"
-#import "LSTestUser.h"
+#import "LYRUITestUser.h"
 
 
 @interface LSUITest : KIFTestCase
@@ -760,7 +760,7 @@
 
 - (LSUser *)testUserWithNumber:(NSUInteger)number
 {
-    return [LSTestUser testUserWithNumber:number];
+    return [LYRUITestUser testUserWithNumber:number];
 }
 
 - (LSUser *)testUserWithFirstName:(NSString *)firstName lastName:(NSString *)lastName

@@ -10,10 +10,10 @@
 #import "LSAPIManager.h"
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
-#import "LSTestUser.h"
+#import "LYRUITestUser.h"
 #import "LSUtilities.h"
 #import "LSPersistenceManager.h"
-#import "LSTestUser.h"
+#import "LYRUITestUser.h"
 #import "LYRCountdownLatch.h"
 #import "LSApplicationController.h"
 #import "LSAppDelegate.h"
@@ -53,12 +53,12 @@
 
 - (void)testSending5000Messages
 {
-    LSUser *user1 = [self registerUser:[LSTestUser testUserWithNumber:1]];
+    LSUser *user1 = [self registerUser:[LYRUITestUser testUserWithNumber:1]];
     [tester waitForTimeInterval:2];
     
     [self deauthenticate];
     
-    LSUser *user2 = [self registerUser:[LSTestUser testUserWithNumber:2]];
+    LSUser *user2 = [self registerUser:[LYRUITestUser testUserWithNumber:2]];
     [tester waitForTimeInterval:2];
     
     LYRConversation *conversation = [LYRConversation conversationWithParticipants:@[user1.userID, user2.userID]];
@@ -71,7 +71,7 @@
     [self deauthenticate];
     
     [tester waitForTimeInterval:2];
-    [self loginUser:[LSTestUser testUserWithNumber:1]];
+    [self loginUser:[LYRUITestUser testUserWithNumber:1]];
     
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:30];
     [[NSNotificationCenter defaultCenter] addObserverForName:LYRClientObjectsDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {

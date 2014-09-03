@@ -9,14 +9,17 @@
 #import "LYRUIConversationListViewController.h"
 #import "LYRDataSourceChange.h"
 #import "LYRUIConstants.h"
+#import "LYRUIChangeNotificationObserver.h"
 
-@interface LYRUIConversationListViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
+@interface LYRUIConversationListViewController () <UISearchBarDelegate, UISearchDisplayDelegate, LYRUIChangeNotificationObserverDelegate>
 
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
-@property (nonatomic, strong) NSSet *conversations;
-@property (nonatomic, strong) NSMutableSet *filteredConversations;
+@property (nonatomic, strong) NSArray *conversations;
+@property (nonatomic, strong) NSMutableArray *filteredConversations;
+@property (nonatomic, strong) NSPredicate *searchPredicate;
 @property (nonatomic, strong) LYRClient *layerClient;
+@property (nonatomic, strong) LYRUIChangeNotificationObserver *changeNotificationObserver;
 
 @end
 
@@ -35,15 +38,18 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self = [super initWithStyle:UITableViewStylePlain];
     if (self)  {
         
+        NSAssert(!self.layerClient, @"LayerClient cannot be nil");
+        
         self.title = @"Conversations";
         self.accessibilityLabel = @"Conversations";
         
-        _layerClient = layerClient;
-        _conversations = [layerClient conversationsForIdentifiers:nil];
+        self.layerClient = layerClient;
         
+        // Setting the default public user interface properties
         self.allowsEditing = YES;
         self.cellClass = [LYRUIConversationTableViewCell class];
         self.rowHeight = 80;
+        
     }
     return self;
 }
@@ -51,6 +57,8 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self fetchLayerConversations];
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
     self.searchBar.delegate = self;
@@ -60,18 +68,16 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsDataSource = self;
     
-    self.tableView.contentOffset = CGPointMake(0, 40);
     self.tableView.tableHeaderView = self.searchBar;
     
-    [[LYRUIConversationTableViewCell appearance] setTitleFont:LSMediumFont(14)];
-    [[LYRUIConversationTableViewCell appearance] setTitleColor:[UIColor blackColor]];
-    [[LYRUIConversationTableViewCell appearance] setSubtitleFont:LSMediumFont(12)];
-    [[LYRUIConversationTableViewCell appearance] setSubtitleColor:[UIColor grayColor]];
+    [self configureTableViewCellAppearance];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self.tableView setContentOffset:CGPointMake(0, 44)];
     
     self.tableView.rowHeight = self.rowHeight;
     [self.tableView registerClass:self.cellClass forCellReuseIdentifier:LYRUIConversationCellReuseIdentifier];
@@ -79,9 +85,20 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self.searchController.searchResultsTableView.rowHeight = self.rowHeight;
     [self.searchController.searchResultsTableView registerClass:self.cellClass forCellReuseIdentifier:LYRUIConversationCellReuseIdentifier];
     
+    self.changeNotificationObserver = [[LYRUIChangeNotificationObserver alloc] initWithClient:self.layerClient conversations:self.conversations];
+    self.changeNotificationObserver.delegate = self;
+    
     if (self.allowsEditing) {
         [self addEditButton];
     }
+}
+
+- (void)configureTableViewCellAppearance
+{
+    [[LYRUIConversationTableViewCell appearance] setTitleFont:LSMediumFont(14)];
+    [[LYRUIConversationTableViewCell appearance] setTitleColor:[UIColor blackColor]];
+    [[LYRUIConversationTableViewCell appearance] setSubtitleFont:LSMediumFont(12)];
+    [[LYRUIConversationTableViewCell appearance] setSubtitleColor:[UIColor grayColor]];
 }
 
 - (void)addEditButton
@@ -94,12 +111,34 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self.navigationItem.leftBarButtonItem = editButtonItem;
 }
 
-- (BOOL)isSearching
+#pragma mark Data source load and configuration methods
+
+- (void)fetchLayerConversations
 {
-    return self.searchController.active;
+    NSSet *conversations = [self.layerClient conversationsForIdentifiers:nil];
+    
+    self.conversations = [conversations sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessage.sentAt" ascending:NO]]];
+    
+    if (!self.searchPredicate) {
+        self.filteredConversations = [NSMutableArray arrayWithArray:self.conversations];
+    } else {
+        //[self filterConversationsForSearchPredicate:self.searchPredicate];
+    }
+    
+    [self reloadConversations];
 }
 
-- (NSSet *)currentDataSet
+- (void)reloadConversations
+{
+    if (self.searchController.active) {
+        [self.searchController.searchResultsTableView reloadData];
+    } else {
+        [self.tableView reloadData];
+    }
+}
+
+// Returns appropriate data set depending on search state
+- (NSArray *)currentDataSet
 {
     if (self.isSearching) {
         return self.filteredConversations;
@@ -107,17 +146,22 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     return self.conversations;
 }
 
+- (BOOL)isSearching
+{
+    return self.searchController.active;
+}
+
 #pragma mark - Public setters
 
 - (void) setCellClass:(Class<LYRUIConversationPresenting>)cellClass
 {
-    //TODO Raise if this gets set after TV is on screen. How?
+    //NSAssert(self.view.window, @"Cannot set cellClass after the view has been loaded");
     _cellClass = cellClass;
 }
 
 - (void)setRowHeight:(CGFloat)rowHeight
 {
-    //TODO Raise if this gets set after TV is on screen. How?
+    //NSAssert(self.view.window, @"Cannot set rowHeight after the view has been loaded");
     _rowHeight = rowHeight;
 }
 
@@ -125,7 +169,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
-    // We react to changes
+    // We react to search begining
 }
 
 - (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller
@@ -142,17 +186,17 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[self currentDataSet] allObjects] count];
+    return [[self currentDataSet] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LYRConversation *conversation = [[[self currentDataSet] allObjects] objectAtIndex:indexPath.row];
+    LYRConversation *conversation = [[self currentDataSet] objectAtIndex:indexPath.row];
     NSString *conversationLabel = [self.delegate conversationLabelForParticipants:conversation.participants inConversationListViewController:self];
     
-   UITableViewCell<LYRUIConversationPresenting> *conversationCell = [tableView dequeueReusableCellWithIdentifier:LYRUIConversationCellReuseIdentifier forIndexPath:indexPath];
+    UITableViewCell<LYRUIConversationPresenting> *conversationCell = [tableView dequeueReusableCellWithIdentifier:LYRUIConversationCellReuseIdentifier forIndexPath:indexPath];
     [conversationCell presentConversation:conversation withLabel:conversationLabel];
-    
+    [conversationCell shouldShowAvatarImage:FALSE];
     return conversationCell;
 }
 
@@ -164,7 +208,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.layerClient deleteConversation:[[[self currentDataSet] allObjects] objectAtIndex:indexPath.row] error:nil];
+        [self.layerClient deleteConversation:[[self currentDataSet] objectAtIndex:indexPath.row] error:nil];
     }
 }
 
@@ -172,15 +216,12 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.delegate conversationListViewController:self didSelectConversation:[[[self currentDataSet] allObjects] objectAtIndex:indexPath.row]];
+    [self.delegate conversationListViewController:self didSelectConversation:[[self currentDataSet] objectAtIndex:indexPath.row]];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.rowHeight) {
-        return self.rowHeight;
-    }
-    return 80;
+    return self.rowHeight;
 }
 
 #pragma mark - Conversation Editing Methods
@@ -207,14 +248,22 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     return UITableViewCellEditingStyleDelete;
 }
 
-#pragma mark - Reload data
-- (void)reloadConversations
+#pragma mark
+#pragma mark Notification Observer Delegate Methods
+
+- (void) observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
-    if (self.searchController.active) {
-        [self.searchController.searchResultsTableView reloadData];
-    } else {
-        [self.tableView reloadData];
-    }
+    //Nothing for now
+}
+
+- (void)observer:(LYRUIChangeNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
+{
+    // Nothing for now
+}
+
+- (void) observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
+{
+    [self fetchLayerConversations];
 }
 
 #pragma mark - TableView Cell Animations

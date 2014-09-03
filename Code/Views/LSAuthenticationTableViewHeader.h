@@ -10,4 +10,6 @@
 
 @interface LSAuthenticationTableViewHeader : UIView
 
+@property (nonatomic) BOOL showsContent;
+
 @end

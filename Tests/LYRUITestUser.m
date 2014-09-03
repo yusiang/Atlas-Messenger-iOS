@@ -1,15 +1,14 @@
 //
-//  LSTestUsers.m
+//  LYRUITestUser.m
 //  LayerSample
 //
-//  Created by Kevin Coleman on 6/30/14.
+//  Created by Kevin Coleman on 9/2/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSTestUser.h"
+#import "LYRUITestUser.h"
 
-@implementation LSTestUser
-
+@implementation LYRUITestUser
 
 static NSString *const LSTestUser0FirstName = @"Layer";
 static NSString *const LSTestUser0LastName = @"Tester0";

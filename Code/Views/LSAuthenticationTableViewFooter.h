@@ -25,4 +25,6 @@ typedef enum{
 @interface LSAuthenticationTableViewFooter : UIView
 
 @property (nonatomic, weak) id<LSAuthenticationTableViewFooterDelegate>delegate;
+@property (nonatomic) LSAuthenticationState authenticationState;
+
 @end

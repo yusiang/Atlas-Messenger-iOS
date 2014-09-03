@@ -19,6 +19,7 @@
 #import "LSContactViewController.h"
 #import "LSAuthenticationTableViewController.h"
 #import "LYRUIConversationListViewController.h"
+#import "LSAuthenticationViewController.h"
 
 extern void LYRSetLogLevelFromEnvironment();
 
@@ -38,7 +39,7 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LSProductionEnvironment;
+    LSEnvironment environment = LSDevelopmentEnvironment;
     
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
@@ -87,6 +88,8 @@ extern void LYRSetLogLevelFromEnvironment();
     LSAuthenticationTableViewController *authenticationViewController = [LSAuthenticationTableViewController new];
     authenticationViewController.applicationController = self.applicationController;
     
+    //LSAuthenticationViewController *authenticationViewController = [LSAuthenticationViewController new];
+    
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
     self.navigationController.navigationBarHidden = TRUE;
     self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
@@ -99,10 +102,10 @@ extern void LYRSetLogLevelFromEnvironment();
     [Crashlytics setObjectValue:LSLayerAppID(environment) forKey:@"AppID"];
     
     // Start HockeyApp
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
-    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+//    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
+//    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
+//    [[BITHockeyManager sharedHockeyManager] startManager];
+//    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
     // Declaring that I want to recieve push!
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];

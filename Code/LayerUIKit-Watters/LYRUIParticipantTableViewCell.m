@@ -24,6 +24,7 @@
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     if (self) {
         
+        self.isSelected = NO;
         self.textLabel.font = LSMediumFont(14);
         [self setSeparatorInset:UIEdgeInsetsMake(0, 20, 0, 0)];
         
@@ -41,13 +42,36 @@
 
 - (void)updateConstraints
 {
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator
+                                                                 attribute:NSLayoutAttributeWidth
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:nil
+                                                                 attribute:NSLayoutAttributeNotAnAttribute
+                                                                multiplier:1.0
+                                                                  constant:30]];
     
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:nil attribute:NSLayoutAttributeNotAnAttribute
+                                                                multiplier:1.0
+                                                                  constant:30]];
     
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.0
+                                                                  constant:0]];
     
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:-20]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator
+                                                                 attribute:NSLayoutAttributeRight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:-20]];
     
     [super updateConstraints];
 }
@@ -55,7 +79,16 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:NO animated:animated];
-    [self.selectionIndicator setHighlighted:selected];
+    if (selected && !self.isSelected) {
+        [self.selectionIndicator setHighlighted:YES];
+        self.isSelected = TRUE;
+    } else if(!selected && !self.isSelected) {
+        self.isSelected = FALSE;
+        [self.selectionIndicator setHighlighted:NO];
+    } else if (selected && self.isSelected) {
+        self.isSelected = FALSE;
+        [self.selectionIndicator setHighlighted:NO];
+    }
 }
 
 @end

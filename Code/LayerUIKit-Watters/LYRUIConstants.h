@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 UIColor *LSBlueColor();
 
 UIColor *LSGrayColor();

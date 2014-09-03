@@ -10,6 +10,12 @@
 #import "LYRUIParticipantTableViewCell.h"
 #import "LYRUIParticipant.h"
 
+typedef enum : NSUInteger {
+    LYRUIParticipantPickerControllerSortTypeFirst,
+    LYRUIParticipantPickerControllerSortTypeLast,
+}LYRUIParticipantPickerSortType;
+
+
 @class LYRUIParticipantPickerController;
 
 /**
@@ -33,10 +39,26 @@
 
 @end
 
-typedef enum  {
-    LYRUIParticipantPickerControllerSortTypeFirst,
-    LYRUIParticipantPickerControllerSortTypeLast,
-}LYRUIParticipantPickerSortType;
+/**
+ @abstract Objects wishing to act as the data source for a participant picker must adopt the `LYRUIParticipantsPickerDataSource` protocol.
+ */
+@protocol LYRUIParticipantPickerDataSource <NSObject>
+
+/**
+ @abstract The set of participants to be presented in the picker. Each object in the returned collection must conform to the `LYRUIParticipant` protocol.
+ @discussion The picker presents the returned participants in alphabetical order sectioned by the value returned by the `sectionText` property.
+ */
+@property (nonatomic, strong) NSSet *participants;
+
+/**
+ @abstract Asynchronously searches for participants that match the given search text.
+ @discussion Invoked by the participant picker controller when the user inputs text into the search bar. The receiver is
+ to perform the search, build a set of matching participants, and then call the completion block. The controller will section
+ the participants using the value returned by the `sectionText` property and present them in alphabetical order.
+ */
+- (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *participants))completion;
+
+@end
 
 @interface LYRUIParticipantPickerController : UINavigationController
 
@@ -50,16 +72,19 @@ typedef enum  {
  @returns A new participant picker initialized with the given set of participants.
  @raises NSInvalidArgumentException Raised if any object in the given set of participants does not conform to the `LYRUIParticipant` protocol.
  */
-+ (instancetype)participantPickerWithParticipants:(NSSet *)participants;
++ (instancetype)participantPickerWithParticipants:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType;
 
 ///----------------------------------------
 /// @name Accessing the Set of Participants
 ///----------------------------------------
 
-/**
- @abstract Returns the set of participants with which the receiver was initialized.
- */
-@property (nonatomic, readonly) NSSet *participants;
+@property (nonatomic) LYRUIParticipantPickerSortType sortType;
+
+///-----------------------------------------
+/// @name Accessing the Picker Data Source
+///-----------------------------------------
+
+@property (nonatomic, weak) id<LYRUIParticipantPickerDataSource> dataSource;
 
 ///-----------------------------------------
 /// @name Accessing the Picker Delegate

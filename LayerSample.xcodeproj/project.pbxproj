@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A06D20319AC157F00C5D912 /* kevin.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A06D20219AC157F00C5D912 /* kevin.png */; };
 		0A0C242719477D8F00401B74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242619477D8F00401B74 /* Foundation.framework */; };
 		0A0C242919477D8F00401B74 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242819477D8F00401B74 /* CoreGraphics.framework */; };
 		0A0C242B19477D8F00401B74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242A19477D8F00401B74 /* UIKit.framework */; };
@@ -19,10 +18,16 @@
 		0A27A9431997FD210070BD4F /* logout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9421997FD210070BD4F /* logout@2x.png */; };
 		0A27A9451997FE110070BD4F /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9441997FE110070BD4F /* back@2x.png */; };
 		0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */; };
+		0A51BD1A19B66570004105DC /* LYRUIParticipantPickerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */; };
+		0A51BD1D19B66A98004105DC /* LYRUITestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1C19B66A98004105DC /* LYRUITestUser.m */; };
+		0A51BD1F19B686BD004105DC /* LYUIAuthenticationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1E19B686BD004105DC /* LYUIAuthenticationTest.m */; };
+		0A51BD2119B686F6004105DC /* LYRUIConversationListTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */; };
+		0A51BD2419B68B9C004105DC /* LSUIParticipantPickerDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD2319B68B9C004105DC /* LSUIParticipantPickerDataSource.m */; };
 		0A6B47C319B3966D00D485D1 /* LSHTTPResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6B47C219B3966D00D485D1 /* LSHTTPResponseSerializer.m */; };
 		0A6B47C619B3967A00D485D1 /* LSPersistenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6B47C519B3967A00D485D1 /* LSPersistenceManager.m */; };
 		0A6B47C919B3968200D485D1 /* LSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6B47C819B3968200D485D1 /* LSSession.m */; };
 		0A6B47CA19B3975A00D485D1 /* LSAuthenticationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE1A14D19B0DA8700BFB754 /* LSAuthenticationTableViewController.m */; };
+		0A6C702719B3F49100778823 /* LSAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6C702619B3F49100778823 /* LSAuthenticationViewController.m */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
 		0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C71947C86B0083732B /* CoreLocation.framework */; };
@@ -85,7 +90,6 @@
 
 /* Begin PBXFileReference section */
 		00BB08DDDB0C48DBBA3E6FA1 /* Pods-LayerSample.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.xcconfig"; path = "Pods/Pods-LayerSample.xcconfig"; sourceTree = "<group>"; };
-		0A06D20219AC157F00C5D912 /* kevin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kevin.png; sourceTree = "<group>"; };
 		0A0C242319477D8F00401B74 /* LayerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LayerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A0C242619477D8F00401B74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0A0C242819477D8F00401B74 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -99,8 +103,13 @@
 		0A27A9421997FD210070BD4F /* logout@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout@2x.png"; sourceTree = "<group>"; };
 		0A27A9441997FE110070BD4F /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
 		0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAPIManagerTest.m; sourceTree = "<group>"; };
-		0A52D5F91961DB7D0030A34A /* LSTestUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSTestUser.h; sourceTree = "<group>"; };
-		0A52D5FA1961DB7D0030A34A /* LSTestUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSTestUser.m; sourceTree = "<group>"; };
+		0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIParticipantPickerTest.m; sourceTree = "<group>"; };
+		0A51BD1B19B66A98004105DC /* LYRUITestUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUITestUser.h; sourceTree = "<group>"; };
+		0A51BD1C19B66A98004105DC /* LYRUITestUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUITestUser.m; sourceTree = "<group>"; };
+		0A51BD1E19B686BD004105DC /* LYUIAuthenticationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYUIAuthenticationTest.m; sourceTree = "<group>"; };
+		0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIConversationListTest.m; sourceTree = "<group>"; };
+		0A51BD2219B68B9C004105DC /* LSUIParticipantPickerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUIParticipantPickerDataSource.h; sourceTree = "<group>"; };
+		0A51BD2319B68B9C004105DC /* LSUIParticipantPickerDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUIParticipantPickerDataSource.m; sourceTree = "<group>"; };
 		0A52D5FC1961FD0D0030A34A /* LSApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSApplicationController.h; sourceTree = "<group>"; };
 		0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSApplicationController.m; sourceTree = "<group>"; };
 		0A52D5FF1962219D0030A34A /* LSMessageCellPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSMessageCellPresenter.h; sourceTree = "<group>"; };
@@ -111,6 +120,8 @@
 		0A6B47C519B3967A00D485D1 /* LSPersistenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSPersistenceManager.m; sourceTree = "<group>"; };
 		0A6B47C719B3968200D485D1 /* LSSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSession.h; sourceTree = "<group>"; };
 		0A6B47C819B3968200D485D1 /* LSSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSession.m; sourceTree = "<group>"; };
+		0A6C702519B3F49100778823 /* LSAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSAuthenticationViewController.h; path = ../../LSAuthenticationViewController.h; sourceTree = "<group>"; };
+		0A6C702619B3F49100778823 /* LSAuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSAuthenticationViewController.m; path = ../../LSAuthenticationViewController.m; sourceTree = "<group>"; };
 		0A741CD319ABE67700F9C569 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
 		0A741CD419ABE67700F9C569 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
 		0A7A732E19ABFF790074FCA8 /* LSContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactListViewController.h; sourceTree = "<group>"; };
@@ -167,8 +178,6 @@
 		259A57311950EB76000E27B0 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		259A57391950EB76000E27B0 /* LSUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUser.h; sourceTree = "<group>"; };
 		259A573A1950EB76000E27B0 /* LSUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUser.m; sourceTree = "<group>"; };
-		259A573C1950EB76000E27B0 /* LYRUIAvatarImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIAvatarImageView.h; sourceTree = "<group>"; };
-		259A573D1950EB76000E27B0 /* LYRUIAvatarImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIAvatarImageView.m; sourceTree = "<group>"; };
 		259A573E1950EB76000E27B0 /* LSButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSButton.h; sourceTree = "<group>"; };
 		259A573F1950EB76000E27B0 /* LSButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSButton.m; sourceTree = "<group>"; };
 		259A57401950EB76000E27B0 /* LSComposeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSComposeView.h; sourceTree = "<group>"; };
@@ -276,6 +285,8 @@
 		0AD3095519B390F7003D2AF6 /* Common View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				0A6C702519B3F49100778823 /* LSAuthenticationViewController.h */,
+				0A6C702619B3F49100778823 /* LSAuthenticationViewController.m */,
 				259A571B1950EB76000E27B0 /* LSConversationViewController.h */,
 				259A571C1950EB76000E27B0 /* LSConversationViewController.m */,
 				259A57211950EB76000E27B0 /* LSLoginViewController.h */,
@@ -329,6 +340,8 @@
 			children = (
 				0AEAD3A419B127B1006B4455 /* LSUIConversationListViewController.h */,
 				0AEAD3A519B127B1006B4455 /* LSUIConversationListViewController.m */,
+				0A51BD2219B68B9C004105DC /* LSUIParticipantPickerDataSource.h */,
+				0A51BD2319B68B9C004105DC /* LSUIParticipantPickerDataSource.m */,
 			);
 			name = "Component Impl - Watters";
 			sourceTree = "<group>";
@@ -378,15 +391,12 @@
 		259A573B1950EB76000E27B0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				0A06D20219AC157F00C5D912 /* kevin.png */,
 				0AE1A14F19B0DAE900BFB754 /* LSAuthenticationTableViewFooter.h */,
 				0AE1A15019B0DAE900BFB754 /* LSAuthenticationTableViewFooter.m */,
 				0AE1A15119B0DAE900BFB754 /* LSAuthenticationTableViewHeader.h */,
 				0AE1A15219B0DAE900BFB754 /* LSAuthenticationTableViewHeader.m */,
 				0ABAB0291971E45000BE514F /* LSMessageCellHeader.h */,
 				0ABAB02A1971E45000BE514F /* LSMessageCellHeader.m */,
-				259A573C1950EB76000E27B0 /* LYRUIAvatarImageView.h */,
-				259A573D1950EB76000E27B0 /* LYRUIAvatarImageView.m */,
 				259A573E1950EB76000E27B0 /* LSButton.h */,
 				259A573F1950EB76000E27B0 /* LSButton.m */,
 				259A57401950EB76000E27B0 /* LSComposeView.h */,
@@ -427,12 +437,15 @@
 				259A57791950EB92000E27B0 /* KIFUITestActor+LSAdditions.h */,
 				259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */,
 				259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */,
-				0A52D5F91961DB7D0030A34A /* LSTestUser.h */,
-				0A52D5FA1961DB7D0030A34A /* LSTestUser.m */,
 				259A577D1950EB92000E27B0 /* LSUITest.m */,
 				0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */,
 				2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */,
 				0AF3D8DF197462A900FED313 /* LSMessagingTest.m */,
+				0A51BD1B19B66A98004105DC /* LYRUITestUser.h */,
+				0A51BD1C19B66A98004105DC /* LYRUITestUser.m */,
+				0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */,
+				0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */,
+				0A51BD1E19B686BD004105DC /* LYUIAuthenticationTest.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -534,7 +547,6 @@
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
 				259A57731950EB83000E27B0 /* Main.storyboard in Resources */,
 				0A27A9431997FD210070BD4F /* logout@2x.png in Resources */,
-				0A06D20319AC157F00C5D912 /* kevin.png in Resources */,
 				0A27A9451997FE110070BD4F /* back@2x.png in Resources */,
 				0A27A9411997FC490070BD4F /* compose@2x.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
@@ -634,7 +646,9 @@
 			files = (
 				0A6B47CA19B3975A00D485D1 /* LSAuthenticationTableViewController.m in Sources */,
 				0A6B47C619B3967A00D485D1 /* LSPersistenceManager.m in Sources */,
+				0A6C702719B3F49100778823 /* LSAuthenticationViewController.m in Sources */,
 				0A6B47C919B3968200D485D1 /* LSSession.m in Sources */,
+				0A51BD1D19B66A98004105DC /* LYRUITestUser.m in Sources */,
 				0AEAD3A619B127B1006B4455 /* LSUIConversationListViewController.m in Sources */,
 				0AFE3FF419B0E1BD00FCA264 /* LSAPIManager.m in Sources */,
 				0AFE3FF519B0E1BD00FCA264 /* LSContactListViewController.m in Sources */,
@@ -665,6 +679,7 @@
 				0AFE401119B0E1BD00FCA264 /* LSBubbleView.m in Sources */,
 				0AFE401319B0E1BD00FCA264 /* LSVersionView.m in Sources */,
 				0AFE3FE419B0E19C00FCA264 /* main.m in Sources */,
+				0A51BD2419B68B9C004105DC /* LSUIParticipantPickerDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,11 +687,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A51BD1F19B686BD004105DC /* LYUIAuthenticationTest.m in Sources */,
 				252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */,
+				0A51BD2119B686F6004105DC /* LYRUIConversationListTest.m in Sources */,
 				0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */,
 				259A57801950EB92000E27B0 /* LSUITest.m in Sources */,
 				0AF3D8E0197462A900FED313 /* LSMessagingTest.m in Sources */,
 				259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */,
+				0A51BD1A19B66570004105DC /* LYRUIParticipantPickerTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -802,7 +820,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "469F2BCF-7585-45C9-BB82-067E189B999E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

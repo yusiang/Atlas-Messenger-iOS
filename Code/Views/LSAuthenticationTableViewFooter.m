@@ -13,7 +13,6 @@
 
 @property (nonatomic, strong) UIButton *primaryActionButton;
 @property (nonatomic, strong) UIButton *secondaryActionButton;
-@property (nonatomic) LSAuthenticationState authenticationState;
 
 @end
 
@@ -53,12 +52,9 @@ static NSString *LSRegisterText = @"Create Account";
         [self addSubview:self.secondaryActionButton];
         
         [self updateConstraints];
-        
-        [self setAuthenticationState:LSAuthenticationStateLogin];
     }
     return self;
 }
-
 
 - (void)updateConstraints
 {

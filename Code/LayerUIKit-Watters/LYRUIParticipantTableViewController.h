@@ -68,4 +68,10 @@
  */
 @property (nonatomic, strong) UIControl *selectionIndicator;
 
+/**
+ @abstract A Boolean value that determines whether multiple participants can be selected at once.
+ @discussion The defauly value of this property is `YES`.
+ */
+@property (nonatomic, assign) BOOL allowsMultipleSelection;
+
 @end
