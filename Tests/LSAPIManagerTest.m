@@ -144,7 +144,7 @@
     [self.controller.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
         expect(success).to.beTruthy;
         expect(error).to.beNil;
-        [self.APIManager deauthenticate];
+        //[self.APIManager deauthenticate];
         [latch decrementCount];
     }];
     [latch waitTilCount:1];

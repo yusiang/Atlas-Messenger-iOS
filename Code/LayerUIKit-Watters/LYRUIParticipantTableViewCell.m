@@ -24,13 +24,14 @@
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        self.isSelected = NO;
-        self.textLabel.font = LSMediumFont(14);
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self setSeparatorInset:UIEdgeInsetsMake(0, 20, 0, 0)];
         
         self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
         self.selectionIndicator.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.selectionIndicator];
+        
+        [self updateConstraints];
     }
     return self;
 }
@@ -38,6 +39,7 @@
 - (void)presentParticipant:(id<LYRUIParticipant>)participant
 {
     self.textLabel.text = [participant fullName];
+    self.accessibilityLabel = [participant fullName];
 }
 
 - (void)updateConstraints
@@ -78,17 +80,22 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
-    [super setSelected:NO animated:animated];
-    if (selected && !self.isSelected) {
-        [self.selectionIndicator setHighlighted:YES];
-        self.isSelected = TRUE;
-    } else if(!selected && !self.isSelected) {
-        self.isSelected = FALSE;
-        [self.selectionIndicator setHighlighted:NO];
-    } else if (selected && self.isSelected) {
-        self.isSelected = FALSE;
-        [self.selectionIndicator setHighlighted:NO];
+    [super setSelected:selected animated:animated];
+    [self.selectionIndicator setHighlighted:selected];
+    if (self.selectionIndicator.highlighted) {
+        self.selectionIndicator.accessibilityLabel = [NSString stringWithFormat:@"%@ selected", self.accessibilityLabel];
+    } else {
+        self.selectionIndicator.accessibilityLabel = @"";
     }
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    // Configure UI Appearance Proxy
+    self.textLabel.font = self.titleFont;
+    self.textLabel.textColor = self.titleColor;
 }
 
 @end

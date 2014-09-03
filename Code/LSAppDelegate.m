@@ -39,7 +39,7 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LSDevelopmentEnvironment;
+    LSEnvironment environment = LSTestEnvironment;
     
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];

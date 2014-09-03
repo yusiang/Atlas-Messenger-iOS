@@ -9,10 +9,12 @@
 #import "LYRUIParticipantTableViewController.h"
 #import "LYRUIPaticipantSectionHeaderView.h"
 #import "LYRUISelectionIndicator.h"
+#import "LYRUIConstants.h"
 
 @interface LYRUIParticipantTableViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (nonatomic, strong) NSDictionary *filteredParticipants;
+@property (nonatomic, strong) NSMutableSet *selectedParticipants;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) UISearchBar *searchBar;
 
@@ -33,6 +35,10 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
         self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:20];
         self.participantCellClass = [LYRUIParticipantTableViewCell class];
         
+        self.selectedParticipants = [[NSMutableSet alloc] init];
+        
+        [self configureAppearance];
+        
     }
     return self;
 }
@@ -42,6 +48,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     [super viewDidLoad];
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+    self.searchBar.accessibilityLabel = @"Search Bar";
     self.searchBar.delegate = self;
     
     self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
@@ -50,7 +57,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsDataSource = self;
 
-    self.tableView.allowsMultipleSelection = NO;
+    self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionFooterHeight = 0.0;
     self.tableView.tableHeaderView = self.searchBar;
@@ -153,10 +160,21 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     return participantCell;
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([[tableView indexPathsForSelectedRows] containsObject:indexPath]) {
+        [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
+    } else {
+        return indexPath;
+    }
+    return nil;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
     id<LYRUIParticipant> participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
+
     [self.delegate participantTableViewController:self didSelectParticipant:participant];
 }
 
@@ -196,7 +214,14 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (void)doneButtonTapped
 {
-    [self.delegate participantTableViewControllerDidSelectDoneButton];
+    //[tableView indexPathsForSelectedRows];
+    [self.delegate participantTableViewControllerDidSelectDoneButtonWithSelectedParticipants:self.selectedParticipants];
+}
+
+- (void)configureAppearance
+{
+    [[LYRUIParticipantTableViewCell appearance] setTitleColor:[UIColor blackColor]];
+    [[LYRUIParticipantTableViewCell appearance] setTitleFont:LSMediumFont(14)];
 }
 
 @end

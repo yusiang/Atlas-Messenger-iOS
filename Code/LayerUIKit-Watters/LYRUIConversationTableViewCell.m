@@ -143,6 +143,7 @@ static NSDateFormatter *dateFormatter;
         
         self.avatarImageView = [[LYRUIAvatarImageView alloc] init];
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.avatarImageView setSenderFirstName:@"Kevin" lastName:@"Coleman"];
         [self.contentView addSubview:self.avatarImageView];
         
         self.cellHorizontalMargin = 12.0f;

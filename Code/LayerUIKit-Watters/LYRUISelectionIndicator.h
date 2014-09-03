@@ -12,4 +12,6 @@
 
 + (instancetype)initWithDiameter:(CGFloat)diameter;
 
+- (void)setHighlighted:(BOOL)highlighted;
+
 @end

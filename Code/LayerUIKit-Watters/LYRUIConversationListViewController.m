@@ -196,7 +196,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     
     UITableViewCell<LYRUIConversationPresenting> *conversationCell = [tableView dequeueReusableCellWithIdentifier:LYRUIConversationCellReuseIdentifier forIndexPath:indexPath];
     [conversationCell presentConversation:conversation withLabel:conversationLabel];
-    [conversationCell shouldShowAvatarImage:FALSE];
+    [conversationCell shouldShowAvatarImage:TRUE];
     return conversationCell;
 }
 

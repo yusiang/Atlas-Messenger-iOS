@@ -48,6 +48,12 @@
     return self;
 }
 
+- (id)init
+{
+    [NSException raise:@"Invalid" format:@"Failed to call designated initializer"];
+    return nil;
+}
+
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
 {
     self.participantTableViewController.allowsMultipleSelection = allowsMultipleSelection;
@@ -67,15 +73,7 @@
 
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    if (self.allowsMultipleSelection) {
-        if ([self.selectedParticipants containsObject:participant]) {
-            [self.selectedParticipants removeObject:participant];
-        } else {
-            [self.selectedParticipants addObject:participant];
-        }
-    } else {
-        [self.participantPickerDelegate participantSelectionViewController:self didSelectParticipants:[NSSet setWithObject:participant]];
-    }
+    //
 }
 
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSDictionary *))completion

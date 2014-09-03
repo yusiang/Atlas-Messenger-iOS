@@ -9,6 +9,12 @@
 #import "LYRUIAvatarImageView.h"
 #import "LSUIConstants.h"
 
+@interface LYRUIAvatarImageView ()
+
+@property (nonatomic, strong) UILabel *initialsLabel;
+
+@end
+
 @implementation LYRUIAvatarImageView
 
 - (id)init
@@ -21,17 +27,23 @@
     return self;
 }
 
-- (void)setSenderName:(NSString *)senderName
+- (void)setSenderFirstName:(NSString *)firstName lastName:(NSString *)lastName
 {
-    if (_senderName != senderName) {
-        _senderName = senderName;
-    }
+    NSString *firstInitial = [[firstName substringToIndex:1] uppercaseString];
+    NSString *lastInitial = [[lastName substringToIndex:1] uppercaseString];
+    
+    self.initialsLabel = [UILabel new];
+    self.initialsLabel.font = LSMediumFont(24);
+    self.initialsLabel.textColor = [UIColor whiteColor];
+    self.initialsLabel.text = [NSString stringWithFormat:@"%@%@", firstInitial, lastInitial];
+    [self.initialsLabel sizeToFit];
+    [self addSubview:self.initialsLabel];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     self.layer.cornerRadius = self.frame.size.height / 2;
-    
 }
+
 @end

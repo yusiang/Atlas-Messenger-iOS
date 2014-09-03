@@ -589,8 +589,7 @@
 - (void)presentAuthenticationViewController
 {
     [system presentViewControllerWithClass:[LSAuthenticationViewController class] withinNavigationControllerWithNavigationBarClass:[UINavigationBar class] toolbarClass:nil configurationBlock:^(id viewController) {
-        [(LSAuthenticationViewController *)viewController setLayerClient:self.layerClient];
-        [(LSAuthenticationViewController *)viewController setAPIManager:self.APIManager];
+
     }];
 }
 - (void)presentConversationsListViewController
@@ -672,6 +671,7 @@
     LSConversationCellPresenter *presenter = [LSConversationCellPresenter new];
     //NSString *string = [presenter conversationLabelForParticipantNames:sortedNames];
     //return string;
+    return @"";
 }
 
 - (NSArray *)sortedFullNamesForParticiapnts:(NSSet *)participants

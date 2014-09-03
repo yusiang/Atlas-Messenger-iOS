@@ -18,6 +18,8 @@
 		0A27A9431997FD210070BD4F /* logout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9421997FD210070BD4F /* logout@2x.png */; };
 		0A27A9451997FE110070BD4F /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9441997FE110070BD4F /* back@2x.png */; };
 		0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */; };
+		0A5150F319B7871A00C6E045 /* LYRUITestInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A916B8719B77CDC00479CBD /* LYRUITestInterface.m */; };
+		0A5150F419B7872300C6E045 /* LYRUITestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1C19B66A98004105DC /* LYRUITestUser.m */; };
 		0A51BD1A19B66570004105DC /* LYRUIParticipantPickerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */; };
 		0A51BD1D19B66A98004105DC /* LYRUITestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1C19B66A98004105DC /* LYRUITestUser.m */; };
 		0A51BD1F19B686BD004105DC /* LYUIAuthenticationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1E19B686BD004105DC /* LYUIAuthenticationTest.m */; };
@@ -128,6 +130,8 @@
 		0A7A732F19ABFF790074FCA8 /* LSContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactListViewController.m; sourceTree = "<group>"; };
 		0A7A733119AC04AE0074FCA8 /* LSContactCellPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactCellPresenter.h; sourceTree = "<group>"; };
 		0A7A733219AC04AE0074FCA8 /* LSContactCellPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSContactCellPresenter.m; sourceTree = "<group>"; };
+		0A916B8619B77CDC00479CBD /* LYRUITestInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUITestInterface.h; sourceTree = "<group>"; };
+		0A916B8719B77CDC00479CBD /* LYRUITestInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUITestInterface.m; sourceTree = "<group>"; };
 		0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNotificationObserver.h; sourceTree = "<group>"; };
 		0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNotificationObserver.m; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -438,6 +442,8 @@
 				259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */,
 				259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */,
 				259A577D1950EB92000E27B0 /* LSUITest.m */,
+				0A916B8619B77CDC00479CBD /* LYRUITestInterface.h */,
+				0A916B8719B77CDC00479CBD /* LYRUITestInterface.m */,
 				0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */,
 				2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */,
 				0AF3D8DF197462A900FED313 /* LSMessagingTest.m */,
@@ -687,6 +693,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A5150F419B7872300C6E045 /* LYRUITestUser.m in Sources */,
+				0A5150F319B7871A00C6E045 /* LYRUITestInterface.m in Sources */,
 				0A51BD1F19B686BD004105DC /* LYUIAuthenticationTest.m in Sources */,
 				252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */,
 				0A51BD2119B686F6004105DC /* LYRUIConversationListTest.m in Sources */,
@@ -818,7 +826,10 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/**",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "469F2BCF-7585-45C9-BB82-067E189B999E";
 				WRAPPER_EXTENSION = app;
@@ -845,7 +856,10 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/**",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "4E3EE0A6-E531-4C93-B1FF-85FE682FC936";
 				WRAPPER_EXTENSION = app;

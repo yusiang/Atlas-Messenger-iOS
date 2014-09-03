@@ -99,25 +99,30 @@
 {
      __block LSUser *authenticatedUser;
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    [self.APIManager authenticateWithEmail:testUser.email password:testUser.password completion:^(LSUser *user, NSError *error) {
-        expect(user).toNot.beNil;
+    
+    [self.controller.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+        expect(nonce).toNot.beNil;
         expect(error).to.beNil;
-        authenticatedUser = user;
-        [latch decrementCount];
+        [self.APIManager authenticateWithEmail:testUser.email password:testUser.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+            expect(identityToken).toNot.beNil;
+            expect(error).to.beNil;
+            [self.controller.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                expect(authenticatedUserID).toNot.beNil;
+                expect(error).to.beNil;
+                [latch decrementCount];
+            }];
+        }];
     }];
+
     [latch waitTilCount:0];
     return authenticatedUser;
 }
 
 - (void)deauthenticate
 {
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        expect(success).to.beTruthy;
-        expect(error).to.beNil;
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
+    [self.APIManager deauthenticate];
+    expect(self.APIManager.authenticatedSession).to.beNil;
+    expect(self.APIManager.authenticatedURLSessionConfiguration).to.beNil;
 }
 
 - (void)sendMessageWithText:(NSString *)sampleText conversation:(LYRConversation *)conversation
