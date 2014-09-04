@@ -35,6 +35,8 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (id)initConversationlistViewControllerWithLayerClient:(LYRClient *)layerClient
 {
+    self.allowsEditing = YES;
+    
     self = [super initWithStyle:UITableViewStylePlain];
     if (self)  {
         
@@ -46,7 +48,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
         self.layerClient = layerClient;
         
         // Setting the default public user interface properties
-        self.allowsEditing = YES;
+
         self.cellClass = [LYRUIConversationTableViewCell class];
         self.rowHeight = 80;
         
@@ -61,6 +63,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     [self fetchLayerConversations];
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+    self.searchBar.accessibilityLabel = @"Search Bar";
     self.searchBar.delegate = self;
     
     self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
@@ -69,6 +72,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self.searchController.searchResultsDataSource = self;
     
     self.tableView.tableHeaderView = self.searchBar;
+    self.tableView.accessibilityLabel = @"Conversation List";
     
     [self configureTableViewCellAppearance];
 }

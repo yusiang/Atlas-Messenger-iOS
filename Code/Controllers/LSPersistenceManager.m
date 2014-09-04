@@ -109,6 +109,26 @@
     return YES;
 }
 
+- (void)performContactSearchWithString:(NSString *)searchString completion:(void(^)(NSSet *contacts, NSError *error))completion
+{
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchString]];
+    completion([self.users filteredSetUsingPredicate:searchPredicate], nil);
+}
+
+- (NSSet *)participantsForIdentifiers:(NSSet *)identifiers
+{
+    NSMutableSet *participants = [[NSMutableSet alloc] init];
+    
+    for (NSString *participantIdentifier in identifiers) {
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(userID like[cd] %@)", [NSString stringWithFormat:@"*%@*", participantIdentifier]];
+        NSSet * set = [self.users filteredSetUsingPredicate:searchPredicate];
+        if ([set allObjects].count > 0) {
+            [participants addObject:[[set allObjects] firstObject]];
+        }
+    }
+    return [NSSet setWithSet:participants];
+}
+
 @end
 
 @implementation LSOnDiskPersistenceManager
@@ -211,6 +231,7 @@
         completion([allContacts filteredSetUsingPredicate:searchPredicate], nil);
     }
 }
+
 - (NSSet *)participantsForIdentifiers:(NSSet *)identifiers;
 {
     NSMutableSet *participants = [[NSMutableSet alloc] init];

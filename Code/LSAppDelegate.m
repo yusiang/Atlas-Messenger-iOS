@@ -222,12 +222,8 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)presentConversationsListViewController
 {
-//    LSContactViewController *controller = [[LSContactViewController alloc] init];
-//    controller.user = self.applicationController.APIManager.authenticatedSession.user;
-//    [self.navigationController pushViewController:controller animated:TRUE];
-
     LSUIConversationListViewController *controller = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
-    controller.allowsEditing = TRUE;
+    controller.allowsEditing = YES;
     controller.applicationController = self.applicationController;
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:controller];

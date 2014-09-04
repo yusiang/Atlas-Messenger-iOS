@@ -18,6 +18,8 @@
 		0A27A9431997FD210070BD4F /* logout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9421997FD210070BD4F /* logout@2x.png */; };
 		0A27A9451997FE110070BD4F /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9441997FE110070BD4F /* back@2x.png */; };
 		0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */; };
+		0A48C92919B7D2D100B536AB /* LYRUILayerContentFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A48C92819B7D2D100B536AB /* LYRUILayerContentFactory.m */; };
+		0A48C92C19B7F49900B536AB /* LYRUITestParticipantCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A48C92B19B7F49900B536AB /* LYRUITestParticipantCell.m */; };
 		0A5150F319B7871A00C6E045 /* LYRUITestInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A916B8719B77CDC00479CBD /* LYRUITestInterface.m */; };
 		0A5150F419B7872300C6E045 /* LYRUITestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1C19B66A98004105DC /* LYRUITestUser.m */; };
 		0A51BD1A19B66570004105DC /* LYRUIParticipantPickerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */; };
@@ -105,6 +107,10 @@
 		0A27A9421997FD210070BD4F /* logout@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout@2x.png"; sourceTree = "<group>"; };
 		0A27A9441997FE110070BD4F /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
 		0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAPIManagerTest.m; sourceTree = "<group>"; };
+		0A48C92719B7D2D100B536AB /* LYRUILayerContentFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUILayerContentFactory.h; sourceTree = "<group>"; };
+		0A48C92819B7D2D100B536AB /* LYRUILayerContentFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUILayerContentFactory.m; sourceTree = "<group>"; };
+		0A48C92A19B7F49900B536AB /* LYRUITestParticipantCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUITestParticipantCell.h; sourceTree = "<group>"; };
+		0A48C92B19B7F49900B536AB /* LYRUITestParticipantCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUITestParticipantCell.m; sourceTree = "<group>"; };
 		0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIParticipantPickerTest.m; sourceTree = "<group>"; };
 		0A51BD1B19B66A98004105DC /* LYRUITestUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUITestUser.h; sourceTree = "<group>"; };
 		0A51BD1C19B66A98004105DC /* LYRUITestUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUITestUser.m; sourceTree = "<group>"; };
@@ -450,8 +456,12 @@
 				0A51BD1B19B66A98004105DC /* LYRUITestUser.h */,
 				0A51BD1C19B66A98004105DC /* LYRUITestUser.m */,
 				0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */,
+				0A48C92A19B7F49900B536AB /* LYRUITestParticipantCell.h */,
+				0A48C92B19B7F49900B536AB /* LYRUITestParticipantCell.m */,
 				0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */,
 				0A51BD1E19B686BD004105DC /* LYUIAuthenticationTest.m */,
+				0A48C92719B7D2D100B536AB /* LYRUILayerContentFactory.h */,
+				0A48C92819B7D2D100B536AB /* LYRUILayerContentFactory.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -656,6 +666,7 @@
 				0A6B47C919B3968200D485D1 /* LSSession.m in Sources */,
 				0A51BD1D19B66A98004105DC /* LYRUITestUser.m in Sources */,
 				0AEAD3A619B127B1006B4455 /* LSUIConversationListViewController.m in Sources */,
+				0A48C92919B7D2D100B536AB /* LYRUILayerContentFactory.m in Sources */,
 				0AFE3FF419B0E1BD00FCA264 /* LSAPIManager.m in Sources */,
 				0AFE3FF519B0E1BD00FCA264 /* LSContactListViewController.m in Sources */,
 				0AFE3FF619B0E1BD00FCA264 /* LSContactViewController.m in Sources */,
@@ -666,6 +677,7 @@
 				0AFE3FFE19B0E1BD00FCA264 /* LSApplicationController.m in Sources */,
 				0AFE3FFF19B0E1BD00FCA264 /* LSUtilities.m in Sources */,
 				0AFE400019B0E1BD00FCA264 /* LSNotificationObserver.m in Sources */,
+				0A48C92C19B7F49900B536AB /* LYRUITestParticipantCell.m in Sources */,
 				0AFE400119B0E1BD00FCA264 /* LSKeychainUtilities.m in Sources */,
 				0AFE400219B0E1BD00FCA264 /* LSAppDelegate.m in Sources */,
 				0AFE400319B0E1BD00FCA264 /* LSContactPresenter.m in Sources */,

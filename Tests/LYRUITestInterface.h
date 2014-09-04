@@ -21,9 +21,9 @@
 /// Authentication Methods
 ///******************************
 
-- (void)registerUser:(LSUser *)user;
+- (NSString *)registerUser:(LSUser *)user;
 
-- (void)authenticateWithEmail:(NSString *)email password:(NSString *)password;
+- (NSString *)authenticateWithEmail:(NSString *)email password:(NSString *)password;
 
 - (void)logout;
 

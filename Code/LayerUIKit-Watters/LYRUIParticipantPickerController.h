@@ -109,6 +109,14 @@ typedef enum : NSUInteger {
  */
 @property (nonatomic) Class<LYRUIParticipantPresenting> cellClass;
 
+/**
+ @abstract Configures the height of each row in the receiver.
+ @default 44.0f
+ @raises NSInternalInconsistencyException Raised if the value is mutated after the receiver has been presented.
+ */
+@property (nonatomic, assign) CGFloat rowHeight;
+
+
 @property (nonatomic, assign) LYRUIParticipantPickerSortType participantPickerSortType;
 
 @end

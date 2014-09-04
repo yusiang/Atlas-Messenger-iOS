@@ -79,6 +79,7 @@ static CGFloat const LSCellDateLabelLeftMargin = 0.0f;
 
 - (void)presentConversation:(LYRConversation *)conversation withLabel:(NSString *)conversationLabel
 {
+    self.accessibilityLabel = conversationLabel;
     self.senderLabel.text = conversationLabel;
     self.dateLabel.text = [self dateLabelForLastMessage:conversation.lastMessage];
     

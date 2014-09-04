@@ -34,21 +34,25 @@
     return self;
 }
 
-- (void)registerUser:(LSUser *)user
+- (NSString *)registerUser:(LSUser *)user
 {
+    __block NSString *userID;
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     [self.applicationController.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
         expect(user).toNot.beNil;
         expect(error).to.beNil;
+        userID = user.userID;
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
+    return userID;
 }
 
-- (void)authenticateWithEmail:(NSString *)email password:(NSString *)password
+- (NSString *)authenticateWithEmail:(NSString *)email password:(NSString *)password
 {
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:3 timeoutInterval:10];
 
+    __block NSString *userID;
     [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
         expect(nonce).toNot.beNil;
         expect(error).to.beNil;
@@ -60,11 +64,14 @@
             [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
                 expect(authenticatedUserID).toNot.beNil;
                 expect(error).to.beNil;
+                userID = authenticatedUserID;
                 [latch decrementCount];
             }];
         }];
     }];
+
     [latch waitTilCount:0];
+    return userID;
 }
 
 - (void)logout

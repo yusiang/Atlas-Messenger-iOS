@@ -13,8 +13,8 @@
 
 @property (nonatomic, strong) NSSet *participants;
 @property (nonatomic, strong) NSDictionary *sortedParticipants;
-@property (nonatomic, strong) NSMutableSet *selectedParticipants;
 @property (nonatomic, strong) LYRUIParticipantTableViewController *participantTableViewController;
+@property (nonatomic) BOOL isOnScreen;
 
 @end
 
@@ -28,19 +28,21 @@
 - (id)initWithDataSource:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
     self.participantTableViewController = [[LYRUIParticipantTableViewController alloc] init];
-    
+   
     self = [super initWithRootViewController:self.participantTableViewController];
     if (self) {
+        
+         self.isOnScreen = FALSE;
         
         self.participantPickerSortType = sortType;
         self.dataSource = dataSource;
         
-        self.cellClass = [LYRUIParticipantTableViewCell class];
-        self.allowsMultipleSelection = YES;
+        [self setAllowsMultipleSelection:YES];
+        [self setCellClass:[LYRUIParticipantTableViewCell class]];
+        [self setRowHeight:48];
         
         self.participants = [self.dataSource participants];
         self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
-        self.selectedParticipants = [NSMutableSet new];
         
         self.participantTableViewController.participants = _sortedParticipants;
         self.participantTableViewController.delegate = self;
@@ -56,6 +58,9 @@
 
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
 {
+    if (self.isOnScreen) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot change multiple selection mode after view has been loaded" userInfo:nil];
+    }
     self.participantTableViewController.allowsMultipleSelection = allowsMultipleSelection;
 }
 
@@ -66,7 +71,31 @@
 
 - (void)setCellClass:(Class<LYRUIParticipantPresenting>)cellClass
 {
+    if (self.isOnScreen) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot change cell class after view has been loaded" userInfo:nil];
+    }
     self.participantTableViewController.participantCellClass = cellClass;
+}
+
+- (void)setRowHeight:(CGFloat)rowHeight
+{
+    if (self.isOnScreen) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot change row height after view has been loaded" userInfo:nil];
+    }
+    self.participantTableViewController.tableView.rowHeight = rowHeight;
+}
+
+#pragma mark - VC Lifecycle Methods
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.isOnScreen = TRUE;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.isOnScreen = FALSE;
 }
 
 #pragma mark - Participant Table View Controller Delegate Methods
@@ -88,9 +117,9 @@
     [self.participantPickerDelegate participantSelectionViewControllerDidCancel:self];
 }
 
-- (void)participantTableViewControllerDidSelectDoneButton
+- (void)participantTableViewControllerDidSelectDoneButtonWithSelectedParticipants:(NSMutableSet *)selectedParticipants
 {
-    [self.participantPickerDelegate participantSelectionViewController:self didSelectParticipants:self.selectedParticipants];
+    [self.participantPickerDelegate participantSelectionViewController:self didSelectParticipants:selectedParticipants];
 }
 
 - (NSDictionary *)sortAndGroupContactListByAlphabet:(NSSet *)participants

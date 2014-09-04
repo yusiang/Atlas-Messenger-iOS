@@ -87,6 +87,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         BOOL success = [LSHTTPResponseSerializer responseObject:&userDetails withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (success) {
             NSLog(@"Loaded User Response: %@", userDetails);
+            user.userID = [userDetails objectForKey:@"id"];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(user, serializationError);
             });

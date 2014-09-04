@@ -57,6 +57,9 @@
                   Identifier = "LSPersistenceManagerTest">
                </Test>
                <Test
+                  Identifier = "LSUITest">
+               </Test>
+               <Test
                   Identifier = "LSUITest/testCreating2Users10ConversationsBetweenThemAndSending10MessagesEach">
                </Test>
                <Test
@@ -118,6 +121,15 @@
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifyUIAnimimationsForSendingAMessage">
+               </Test>
+               <Test
+                  Identifier = "LYRUIConversationListTest">
+               </Test>
+               <Test
+                  Identifier = "LYRUIParticipantPickerTest/testToVerifyCustomCellImplementationFunctionality">
+               </Test>
+               <Test
+                  Identifier = "LYUIAuthenticationTest">
                </Test>
             </SkippedTests>
          </TestableReference>

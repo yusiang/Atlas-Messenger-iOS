@@ -6,17 +6,16 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
+#import <XCTest/XCTest.h>
 #import "KIFTestCase.h"
 #import <KIF/KIF.h>
+#import <OCMock/OCMock.h>
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
 #import "KIFSystemTestActor+ViewControllerActions.h"
 #import "KIFUITestActor+LSAdditions.h"
 #import "LYRCountdownLatch.h"
-#import "LSPersistenceManager.h"
-#import "LSConversationCellPresenter.h"
 #import "LSApplicationController.h"
-#import "LSAuthenticationViewController.h"
 #import "LSAppDelegate.h"
 #import "LYRUIParticipantPickerController.h"
 #import "LSUIParticipantPickerDataSource.h"
@@ -24,6 +23,7 @@
 #import "LYRCountDownLatch.h"
 #import "LYRUITestInterface.h"
 #import "LYRUIParticipantTableViewCell.h"
+#import "LYRUITestParticipantCell.h"
 
 @interface LYRUIParticipantPickerTest : XCTestCase
 
@@ -113,8 +113,8 @@
     
     LSUIParticipantPickerDataSource *dataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.testInterface.applicationController.persistenceManager];
     LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:dataSource sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    controller.allowsMultipleSelection = NO;
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
-        controller.allowsMultipleSelection = NO;
         [tester tapViewWithAccessibilityLabel:user1.fullName];
         [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
         [tester tapViewWithAccessibilityLabel:user2.fullName];
@@ -138,8 +138,8 @@
     
     LSUIParticipantPickerDataSource *dataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.testInterface.applicationController.persistenceManager];
     LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:dataSource sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    controller.allowsMultipleSelection = YES;
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
-        controller.allowsMultipleSelection = YES;
         [tester tapViewWithAccessibilityLabel:user1.fullName];
         [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
         [tester tapViewWithAccessibilityLabel:user2.fullName];
@@ -214,25 +214,36 @@
 }
 
 //Verify that the cell can be overridden and a new UI presented.
-- (void)testToVerifyCustomCellImplementationFunctionality
+- (void)testToVerifyCustomCellClassFunctionality
 {
     LSUser *user1 = [LYRUITestUser testUserWithNumber:1];
     
     LSUIParticipantPickerDataSource *dataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.testInterface.applicationController.persistenceManager];
     LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:dataSource sortType:LYRUIParticipantPickerControllerSortTypeFirst];
-    controller.cellClass = [UITableViewCell class];
+    controller.cellClass = [LYRUITestParticipantCell class];
+    
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
         
-        expect([[tester waitForViewWithAccessibilityLabel:user1.fullName] class]).to.equal([UITableViewCell class]);
-        expect([[tester waitForViewWithAccessibilityLabel:user1.fullName] class]).toNot.equal([UITableViewCell class]);
-
+        expect([[tester waitForViewWithAccessibilityLabel:user1.fullName] class]).to.equal([LYRUITestParticipantCell class]);
+        expect([[tester waitForViewWithAccessibilityLabel:user1.fullName] class]).toNot.equal([LYRUIParticipantTableViewCell class]);
+        
     }];
+    //TODO - Finish This Test
 }
 
 //Verify that the row height can be configured.
 - (void)testToVerifyCustomRowHeightFunctionality
 {
+    LSUser *user1 = [LYRUITestUser testUserWithNumber:1];
     
+    LSUIParticipantPickerDataSource *dataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.testInterface.applicationController.persistenceManager];
+    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:dataSource sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    controller.rowHeight = 80;
+    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
+        
+        expect([tester waitForViewWithAccessibilityLabel:user1.fullName].frame.size.height).to.equal(80);
+        
+    }];
 }
 
 //Verify that the sectioning can be changed by returning different values for the sectionText property (i.e. first name vs. last name).
@@ -241,16 +252,26 @@
     
 }
 
-//Test that attempting to change the cell class after the view is loaded results in a runtime error.
+//Test that attempts to change the cell class after the view is loaded results in a runtime error.
 - (void)testToVerifyChangingCellClassAfterViewLoadRaiseException
 {
-    
+    LSUIParticipantPickerDataSource *dataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.testInterface.applicationController.persistenceManager];
+    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:dataSource sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
+        [tester waitForTimeInterval:2];
+        expect(^{ [modalViewController setCellClass:[UITableView class]]; }).to.raise(NSInternalInconsistencyException);
+    }];
 }
 
 //Test that attempting to change the row height after the view is loaded results in a runtime error.
 - (void)testToVerifyChangingRowHeightAfterViewLoadRaiseException
 {
-    
+    LSUIParticipantPickerDataSource *dataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.testInterface.applicationController.persistenceManager];
+    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:dataSource sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
+        [tester waitForTimeInterval:2];
+        expect(^{ [modalViewController setRowHeight:80]; }).to.raise(NSInternalInconsistencyException);
+    }];
 }
 
 - (NSString *)selectionIndicatoraccessibilityLabelForUser:(LSUser *)testUser

@@ -56,11 +56,13 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     self.searchController.delegate = self;
     self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsDataSource = self;
-
+    self.searchController.searchResultsTableView.rowHeight = 48.0f;
+    
     self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionFooterHeight = 0.0;
     self.tableView.tableHeaderView = self.searchBar;
+    self.tableView.rowHeight = 48.0f;
     
     // Left bar button item is the text Cancel
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
@@ -79,16 +81,21 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
 }
 
+- (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
+{
+    _allowsMultipleSelection = allowsMultipleSelection;
+    self.tableView.allowsMultipleSelection = allowsMultipleSelection;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
     self.filteredParticipants = self.participants;
     
-    self.tableView.rowHeight = 58.0f;
+    
     [self.tableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
     
-    self.searchController.searchResultsTableView.rowHeight = 48.0f;
     [self.searchController.searchResultsTableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
 }
 
@@ -126,11 +133,6 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 }
 
 #pragma mark - Table view data source
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 48;
-}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -214,7 +216,11 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (void)doneButtonTapped
 {
-    //[tableView indexPathsForSelectedRows];
+    for (NSIndexPath *indexPath in [self.tableView indexPathsForSelectedRows]) {
+         NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
+        id<LYRUIParticipant> participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
+        [self.selectedParticipants addObject:participant];
+    }
     [self.delegate participantTableViewControllerDidSelectDoneButtonWithSelectedParticipants:self.selectedParticipants];
 }
 

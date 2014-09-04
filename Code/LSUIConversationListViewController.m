@@ -27,7 +27,6 @@
 {
     [super viewDidLoad];
     
-    self.allowsEditing = NO;
     self.delegate = self;
     
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
@@ -67,7 +66,14 @@
 
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController
 {
-    NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIDs];
+    NSMutableSet *participantIdentifiers = [NSMutableSet setWithSet:participantIDs];
+    
+    if ([participantIdentifiers containsObject:self.applicationController.layerClient.authenticatedUserID]) {
+        [participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
+    }
+    
+    NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers];
+
     LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
     NSString *conversationLabel = firstUser.fullName;
     for (int i = 1; i < [[participants allObjects] count]; i++) {
