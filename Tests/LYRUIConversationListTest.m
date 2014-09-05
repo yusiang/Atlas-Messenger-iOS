@@ -96,7 +96,6 @@
     [self registerAndAuthenticateUser];
     
     LSUser *testUser = [self randomUser];
-    
     [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
     
     [tester swipeViewWithAccessibilityLabel:@"Conversation List" inDirection:KIFSwipeDirectionDown];
@@ -104,55 +103,41 @@
     NSString *searchText = @"This is fake text";
     [tester tapViewWithAccessibilityLabel:@"Search Bar"];
     [tester enterText:searchText intoViewWithAccessibilityLabel:@"Search Bar"];
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:[self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]]];
+    //[tester waitForAbsenceOfViewWithAccessibilityLabel:[self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]]];
 }
 
 //Test swipe to delete for deleting a conversation. Verify the conversation is deleted from the table and from the Layer client.
 - (void)testToVerifyDeletionOfConversationFunctionality
 {
-    [(LYRUIConversationListViewController *)[UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController.presentedViewController setAllowsEditing:TRUE];
-                                            
-    NSError *error;
-    NSSet *users = [self.testInterface.applicationController.persistenceManager persistedUsersWithError:&error];
-    expect(users).toNot.beNil;
-    expect(error).to.beNil;
+    [self registerAndAuthenticateUser];
     
-    LSUser *user = [[users allObjects] objectAtIndex:0];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user.userID] number:1];
+    LSUser *testUser = [self randomUser];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
     
-    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user.userID]];
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
     [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
-    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@ ", user.fullName]];
+    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@ ", testUser.fullName]];
     [tester waitForAbsenceOfViewWithAccessibilityLabel:conversationLabel];
 }
 
 //Test engaging editing mode and deleting several conversations at once. Verify that all conversations selected are deleted from the table and from the Layer client.
 - (void)testToVerifyEditingModeAndMultipleConversationDeletionFunctionality
 {
-    UINavigationController *navigationController = (UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)[navigationController topViewController];
-    [controller setAllowsEditing:TRUE];
+    [self registerAndAuthenticateUser];
     
-    NSError *error;
-    NSSet *users = [self.testInterface.applicationController.persistenceManager persistedUsersWithError:&error];
-    expect(users).toNot.beNil;
-    expect(error).to.beNil;
+    LSUser *testUser1 = [self randomUser];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser1.userID] number:1];
     
-    LSUser *user0 = [[users allObjects] objectAtIndex:0];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user0.userID] number:1];
-  
-    LSUser *user1 = [[users allObjects] objectAtIndex:1];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    LSUser *testUser2 = [self randomUser];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser2.userID] number:1];
     
-    LSUser *user2 = [[users allObjects] objectAtIndex:2];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user2.userID] number:1];
+    LSUser *testUser3 = [self randomUser];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser3.userID] number:1];
     
     [tester waitForTimeInterval:5];
     [tester tapViewWithAccessibilityLabel:@"Edit"];
-    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@", user0.fullName]];
+    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@", testUser1.fullName]];
     [tester waitForTimeInterval:10];
-    //[tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete, %@", user0.fullName]];
-   
 }
 
 //Disable editing and verify that the controller does not permit the user to attempt to edit or engage swipe to delete.
@@ -350,6 +335,10 @@
     expect(error).to.beNil;
     
     int randomNumber = arc4random_uniform((int)users.count);
-    return [[users allObjects] objectAtIndex:randomNumber];
+    LSUser *user = [[users allObjects] objectAtIndex:randomNumber];
+    while ([user.userID isEqual:self.testInterface.applicationController.layerClient.authenticatedUserID]) {
+        user = [self randomUser];
+    }
+    return user;
 }
 @end
