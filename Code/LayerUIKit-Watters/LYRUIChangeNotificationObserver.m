@@ -47,7 +47,7 @@
 
 - (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
-    NSLog(@"Received notification: %@", notification);
+    //NSLog(@"Received notification: %@", notification);
     [self.delegate observerWillChangeContent:self];
     
     NSMutableArray *conversationArray = [[NSMutableArray alloc] init];

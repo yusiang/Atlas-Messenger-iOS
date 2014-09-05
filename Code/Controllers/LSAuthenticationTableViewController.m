@@ -15,12 +15,13 @@
 
 @interface LSAuthenticationTableViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIScrollViewDelegate>
 
+@property (nonatomic, strong) UITextField *firstName;
+@property (nonatomic, strong) UITextField *lastName;
+@property (nonatomic, strong) UITextField *email;
+@property (nonatomic, strong) UITextField *password;
+@property (nonatomic, strong) UITextField *confirmation;
+
 @property (nonatomic) LSAuthenticationState authenticationState;
-@property (nonatomic) UITextField *email;
-@property (nonatomic) UITextField *password;
-@property (nonatomic) UITextField *firstName;
-@property (nonatomic) UITextField *lastName;
-@property (nonatomic) UITextField *passwordConfirmation;
 @property (nonatomic, strong) LSAuthenticationTableViewHeader *tableViewHeader;
 @property (nonatomic, copy) void (^completionBlock)(NSString *authenticatedUserID);
 @property (nonatomic) BOOL isEditing;
@@ -90,6 +91,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (void)configureCell:(LSInputTableViewCell *)cell forIndexPath:(NSIndexPath *)path
 {
+    cell.textField.text = nil;
     cell.textField.delegate = self;
     cell.textField.returnKeyType = UIReturnKeyNext;
     cell.textField.enablesReturnKeyAutomatically = YES;
@@ -104,14 +106,15 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     cell.textField.returnKeyType = UIReturnKeyNext;
                     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                     cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    cell.textField.text = self.email.text;
                     self.email = cell.textField;
-                    self.email.delegate = self;
                     break;
                 case 1:
                     [cell setText:@"Password"];
                     cell.textField.secureTextEntry = YES;
                     cell.textField.returnKeyType = UIReturnKeySend;
                     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    cell.textField.text = self.password.text;
                     self.password = cell.textField;
                     break;
                 default:
@@ -122,42 +125,32 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             switch (path.row) {
                 case 0:
                     [cell setText:@"First Name"];
+                    cell.textField.secureTextEntry = NO;
                     cell.textField.enablesReturnKeyAutomatically = YES;
                     cell.textField.returnKeyType = UIReturnKeyNext;
                     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                     cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    cell.textField.text = self.firstName.text;
                     self.firstName = cell.textField;
                     break;
                 case 1:
                     [cell setText:@"Last Name"];
+                    cell.textField.secureTextEntry = NO;
                     cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
                     cell.textField.enablesReturnKeyAutomatically = YES;
                     cell.textField.returnKeyType = UIReturnKeyNext;
                     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                     cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    cell.textField.text = self.lastName.text;
                     self.lastName = cell.textField;
-                    break;
-                case 2:
-                    [cell setText:@"Email"];
-                    cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
-                    cell.textField.enablesReturnKeyAutomatically = YES;
-                    cell.textField.returnKeyType = UIReturnKeyNext;
-                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-                    self.email = cell.textField;
-                    break;
-                case 3:
-                    [cell setText:@"Password"];
-                    cell.textField.secureTextEntry = YES;
-                    cell.textField.returnKeyType = UIReturnKeyNext;
-                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-                    self.password = cell.textField;
                     break;
                 case 4:
                     [cell setText:@"Confirmation"];
                     cell.textField.secureTextEntry = YES;
                     cell.textField.returnKeyType = UIReturnKeySend;
                     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-                    self.passwordConfirmation = cell.textField;
+                    cell.textField.text = self.confirmation.text;
+                    self.confirmation = cell.textField;
                     break;
                 default:
                     break;
@@ -206,22 +199,26 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (void)authenticationTableViewFooter:(LSAuthenticationTableViewFooter *)tableViewFooter primaryActionButtonTappedWithAuthenticationState:(LSAuthenticationState)authenticationState
 {
-    [self setTableViewEditing];
     switch (authenticationState) {
+        
         case LSAuthenticationStateLogin:
-            if (self.email.text.length && self.password.text.length) {
+         
+            if (self.isEditing) {
                 [self loginTapped];
             } else {
-                [self.email becomeFirstResponder];
+                [self setTableViewEditing];
             }
             break;
+    
         case LSAuthenticationStateRegister:
-            if (self.firstName.text.length && self.lastName.text.length && self.email.text.length && self.password.text.length && self.passwordConfirmation.text.length) {
+            
+            if (self.isEditing) {
                 [self registerTapped];
             } else {
-                [self.firstName becomeFirstResponder];
+                [self setTableViewEditing];
             }
             break;
+        
         default:
             break;
     }
@@ -235,18 +232,22 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (void)setTableViewEditing
 {
-    self.isEditing = TRUE;
-    [self.tableView beginUpdates];
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView endUpdates];
+    if (!self.isEditing) {
+        self.isEditing = TRUE;
+        [self.tableView beginUpdates];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView endUpdates];
+    }
 }
 
 - (void)setTableViewNotEditing
 {
-    self.isEditing = FALSE;
-    [self.tableView beginUpdates];
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView endUpdates];
+    if (self.isEditing) {
+        self.isEditing = FALSE;
+        [self.tableView beginUpdates];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView endUpdates];
+    }
 }
 
 - (void)configureTableViewForAuthenticationState:(LSAuthenticationState)authenticationState
@@ -256,22 +257,12 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     switch (authenticationState) {
         case LSAuthenticationStateLogin:
             
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:4 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.firstName becomeFirstResponder];
+            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:1 inSection:0], [NSIndexPath indexPathForRow:4 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
             
             break;
         case LSAuthenticationStateRegister:
             
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.email becomeFirstResponder];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:1 inSection:0], [NSIndexPath indexPathForRow:4 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
             
             break;
         default:
@@ -302,8 +293,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             } else if (textField == self.email) {
                 [self.password becomeFirstResponder];
             } else if (textField == self.password) {
-                [self.passwordConfirmation becomeFirstResponder];
-            } else if (textField == self.passwordConfirmation) {
+                [self.confirmation becomeFirstResponder];
+            } else if (textField == self.confirmation) {
                 [self registerTapped];
             }
             break;
@@ -311,6 +302,12 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             break;
     }
     return YES;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    [self setTableViewEditing];
+    return TRUE;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -354,7 +351,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [user setLastName:self.lastName.text];
     [user setEmail:self.email.text];
     [user setPassword:self.password.text];
-    [user setPasswordConfirmation:self.passwordConfirmation.text];
+    [user setPasswordConfirmation:self.confirmation.text];
     
     [SVProgressHUD show];
     [self.applicationController.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {

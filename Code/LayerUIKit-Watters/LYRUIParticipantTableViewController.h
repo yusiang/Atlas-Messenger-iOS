@@ -74,4 +74,11 @@
  */
 @property (nonatomic, assign) BOOL allowsMultipleSelection;
 
+/**
+ @abstract Sets the height for cells within the receiver.
+ @default `48.0`
+ @raises NSInternalInconsistencyException Raised if the value is mutated after the receiver has been presented.
+ */
+@property (nonatomic, assign) CGFloat rowHeight;
+
 @end

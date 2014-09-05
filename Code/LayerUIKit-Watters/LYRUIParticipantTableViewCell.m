@@ -30,8 +30,8 @@
         self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
         self.selectionIndicator.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.selectionIndicator];
-        
         [self updateConstraints];
+        
     }
     return self;
 }
@@ -40,6 +40,11 @@
 {
     self.textLabel.text = [participant fullName];
     self.accessibilityLabel = [participant fullName];
+}
+
+- (void)updateWithSelectionIndicator:(UIControl *)selectionIndicator
+{
+
 }
 
 - (void)updateConstraints

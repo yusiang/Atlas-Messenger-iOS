@@ -75,6 +75,11 @@
     LSMustBeImplementedBySubclass();
 }
 
+- (void)performContactSearchWithString:(NSString *)searchString completion:(void(^)(NSSet *contacts, NSError *error))completion
+{
+    LSMustBeImplementedBySubclass();
+}
+
 @end
 
 @implementation LSInMemoryPersistenceManager

@@ -22,30 +22,31 @@
 
 + (instancetype)participantPickerWithParticipants:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
+    NSAssert(dataSource, @"Data Source cannot be nil");
     return [[self alloc] initWithDataSource:dataSource sortType:sortType];
 }
 
 - (id)initWithDataSource:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
     self.participantTableViewController = [[LYRUIParticipantTableViewController alloc] init];
-   
+    self.participantTableViewController.delegate = self;
+    
     self = [super initWithRootViewController:self.participantTableViewController];
     if (self) {
         
-         self.isOnScreen = FALSE;
-        
-        self.participantPickerSortType = sortType;
+        // Set properties from designated initializer
         self.dataSource = dataSource;
-        
+        self.participantPickerSortType = sortType;
+
+        // Set default configuration for public properties
         [self setAllowsMultipleSelection:YES];
         [self setCellClass:[LYRUIParticipantTableViewCell class]];
         [self setRowHeight:48];
         
-        self.participants = [self.dataSource participants];
-        self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
-        
-        self.participantTableViewController.participants = _sortedParticipants;
-        self.participantTableViewController.delegate = self;
+        // Accessibility
+        self.title = @"Participants";
+        self.accessibilityLabel = @"Participants";
+    
     }
     return self;
 }
@@ -56,6 +57,31 @@
     return nil;
 }
 
+#pragma mark - VC Lifecycle Methods
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+   
+    self.participants = [self.dataSource participants];
+    self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
+    self.participantTableViewController.participants = self.sortedParticipants;
+    
+    self.isOnScreen = TRUE;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    self.isOnScreen = FALSE;
+}
+
+#pragma mark Public property setters and getters
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
 {
     if (self.isOnScreen) {
@@ -77,25 +103,22 @@
     self.participantTableViewController.participantCellClass = cellClass;
 }
 
+- (Class<LYRUIParticipantPresenting>)cellClass
+{
+    return self.participantTableViewController.participantCellClass;
+}
+
 - (void)setRowHeight:(CGFloat)rowHeight
 {
     if (self.isOnScreen) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot change row height after view has been loaded" userInfo:nil];
     }
-    self.participantTableViewController.tableView.rowHeight = rowHeight;
+    self.participantTableViewController.rowHeight = rowHeight;
 }
 
-#pragma mark - VC Lifecycle Methods
-- (void)viewWillAppear:(BOOL)animated
+- (CGFloat)rowHeight
 {
-    [super viewWillAppear:animated];
-    self.isOnScreen = TRUE;
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    self.isOnScreen = FALSE;
+    return self.participantTableViewController.rowHeight;
 }
 
 #pragma mark - Participant Table View Controller Delegate Methods
@@ -125,6 +148,7 @@
 - (NSDictionary *)sortAndGroupContactListByAlphabet:(NSSet *)participants
 {
     NSArray *sortedParticipants;
+    
     switch (self.participantPickerSortType) {
         case LYRUIParticipantPickerControllerSortTypeFirst:
             sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];

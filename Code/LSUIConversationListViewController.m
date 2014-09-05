@@ -72,8 +72,12 @@
         [participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
     }
     
+    if (!participantIdentifiers.count > 0) return @"";
+    
     NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers];
-
+    
+    if (!participants.count > 0) return @"";
+    
     LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
     NSString *conversationLabel = firstUser.fullName;
     for (int i = 1; i < [[participants allObjects] count]; i++) {

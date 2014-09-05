@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSPredicate *searchPredicate;
 @property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, strong) LYRUIChangeNotificationObserver *changeNotificationObserver;
+@property (nonatomic) BOOL isOnScreen;
 
 @end
 
@@ -40,22 +41,29 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self = [super initWithStyle:UITableViewStylePlain];
     if (self)  {
         
-        NSAssert(!self.layerClient, @"LayerClient cannot be nil");
-        
-        self.title = @"Conversations";
-        self.accessibilityLabel = @"Conversations";
-        
+        // Set properties from designated initializer
         self.layerClient = layerClient;
         
-        // Setting the default public user interface properties
-
-        self.cellClass = [LYRUIConversationTableViewCell class];
-        self.rowHeight = 80;
+        // Set default configuration for public properties
+        [self setCellClass:[LYRUIConversationTableViewCell class]];
+        [self setRowHeight:80];
+        [self setAllowsEditing:TRUE];
+        
+        // Accessibility
+        self.title = @"Conversations";
+        self.accessibilityLabel = @"Conversations";
         
     }
     return self;
 }
 
+- (id) init
+{
+    [NSException raise:@"Invalid" format:@"Failed to call designated initializer"];
+    return nil;
+}
+
+#pragma mark - VC Lifecycle Methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -95,16 +103,55 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     if (self.allowsEditing) {
         [self addEditButton];
     }
+    
+    self.isOnScreen = TRUE;
 }
 
-- (void)configureTableViewCellAppearance
+- (void)viewDidDisappear:(BOOL)animated
 {
-    [[LYRUIConversationTableViewCell appearance] setTitleFont:LSMediumFont(14)];
-    [[LYRUIConversationTableViewCell appearance] setTitleColor:[UIColor blackColor]];
-    [[LYRUIConversationTableViewCell appearance] setSubtitleFont:LSMediumFont(12)];
-    [[LYRUIConversationTableViewCell appearance] setSubtitleColor:[UIColor grayColor]];
+    [super viewDidDisappear:animated];
+    
+    self.isOnScreen = NO;
 }
 
+#pragma mark - Public setters
+
+- (void)setAllowsEditing:(BOOL)allowsEditing
+{
+    if (self.isOnScreen) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot set editing mode after the view has been loaded" userInfo:nil];
+    }
+    
+    _allowsEditing = allowsEditing;
+
+    if (self.navigationItem.leftBarButtonItem && !allowsEditing) {
+        self.navigationItem.leftBarButtonItem = nil;
+    }
+}
+
+- (void) setCellClass:(Class<LYRUIConversationPresenting>)cellClass
+{
+    if (self.isOnScreen) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot set cellClass after the view has been loaded" userInfo:nil];
+    }
+    
+    
+    if (![cellClass conformsToProtocol:@protocol(LYRUIConversationPresenting)]) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cell class cellClass must conform to LYRUIConversationPresenting Protocol" userInfo:nil];
+
+    }
+    _cellClass = cellClass;
+}
+
+- (void)setRowHeight:(CGFloat)rowHeight
+{
+    if (self.isOnScreen) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot set rowHeight after the view has been loaded" userInfo:nil];
+    }
+    _rowHeight = rowHeight;
+}
+
+#pragma mark - Navigation Bar Edit Button
 - (void)addEditButton
 {
     UIBarButtonItem *editButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"
@@ -153,20 +200,6 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 - (BOOL)isSearching
 {
     return self.searchController.active;
-}
-
-#pragma mark - Public setters
-
-- (void) setCellClass:(Class<LYRUIConversationPresenting>)cellClass
-{
-    //NSAssert(self.view.window, @"Cannot set cellClass after the view has been loaded");
-    _cellClass = cellClass;
-}
-
-- (void)setRowHeight:(CGFloat)rowHeight
-{
-    //NSAssert(self.view.window, @"Cannot set rowHeight after the view has been loaded");
-    _rowHeight = rowHeight;
 }
 
 #pragma mark - UISearchDisplayDelegate Methods
@@ -257,7 +290,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void) observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
-    //Nothing for now
+    // Nothing for now
 }
 
 - (void)observer:(LYRUIChangeNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
@@ -292,6 +325,14 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
         }
     }
     [self.tableView endUpdates];
+}
+
+- (void)configureTableViewCellAppearance
+{
+    [[LYRUIConversationTableViewCell appearance] setTitleFont:LSMediumFont(14)];
+    [[LYRUIConversationTableViewCell appearance] setTitleColor:[UIColor blackColor]];
+    [[LYRUIConversationTableViewCell appearance] setSubtitleFont:LSMediumFont(12)];
+    [[LYRUIConversationTableViewCell appearance] setSubtitleColor:[UIColor grayColor]];
 }
 
 @end

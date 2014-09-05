@@ -94,6 +94,7 @@ extern void LYRSetLogLevelFromEnvironment();
     self.navigationController.navigationBarHidden = TRUE;
     self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
     self.navigationController.navigationBar.tintColor = LSBlueColor();
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     
@@ -223,7 +224,6 @@ extern void LYRSetLogLevelFromEnvironment();
 - (void)presentConversationsListViewController
 {
     LSUIConversationListViewController *controller = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
-    controller.allowsEditing = YES;
     controller.applicationController = self.applicationController;
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:controller];

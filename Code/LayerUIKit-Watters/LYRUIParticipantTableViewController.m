@@ -33,8 +33,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
         self.accessibilityLabel = @"Participants";
         
         self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:20];
-        self.participantCellClass = [LYRUIParticipantTableViewCell class];
-        
+    
         self.selectedParticipants = [[NSMutableSet alloc] init];
         
         [self configureAppearance];
@@ -56,13 +55,12 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     self.searchController.delegate = self;
     self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsDataSource = self;
-    self.searchController.searchResultsTableView.rowHeight = 48.0f;
     
     self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionFooterHeight = 0.0;
     self.tableView.tableHeaderView = self.searchBar;
-    self.tableView.rowHeight = 48.0f;
+    
     
     // Left bar button item is the text Cancel
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
@@ -93,9 +91,10 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     
     self.filteredParticipants = self.participants;
     
-    
+    self.tableView.rowHeight = self.rowHeight;
     [self.tableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
     
+    self.searchController.searchResultsTableView.rowHeight = self.rowHeight;
     [self.searchController.searchResultsTableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
 }
 
@@ -133,6 +132,11 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 }
 
 #pragma mark - Table view data source
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return self.rowHeight;
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
