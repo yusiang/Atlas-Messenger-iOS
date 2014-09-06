@@ -83,13 +83,13 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self.tableView.accessibilityLabel = @"Conversation List";
     
     [self configureTableViewCellAppearance];
+    
+    [self.tableView setContentOffset:CGPointMake(0, 44)];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self.tableView setContentOffset:CGPointMake(0, 44)];
     
     self.tableView.rowHeight = self.rowHeight;
     [self.tableView registerClass:self.cellClass forCellReuseIdentifier:LYRUIConversationCellReuseIdentifier];
@@ -134,7 +134,6 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     if (self.isOnScreen) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot set cellClass after the view has been loaded" userInfo:nil];
     }
-    
     
     if (![cellClass conformsToProtocol:@protocol(LYRUIConversationPresenting)]) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cell class cellClass must conform to LYRUIConversationPresenting Protocol" userInfo:nil];
@@ -233,7 +232,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     
     UITableViewCell<LYRUIConversationPresenting> *conversationCell = [tableView dequeueReusableCellWithIdentifier:LYRUIConversationCellReuseIdentifier forIndexPath:indexPath];
     [conversationCell presentConversation:conversation withLabel:conversationLabel];
-    [conversationCell shouldShowAvatarImage:TRUE];
+    [conversationCell shouldShowAvatarImage:FALSE];
     return conversationCell;
 }
 

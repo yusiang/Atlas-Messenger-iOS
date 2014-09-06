@@ -28,10 +28,10 @@
 
 // nil suppresses the behavior?
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date;
+
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(LYRRecipientStatus)recipientStatus;
 
 @end
-
 
 /**
  Expectations:
@@ -41,10 +41,10 @@
 
 @interface LYRUIConversationViewController : UIViewController
 
-+ (instancetype)conversationViewControllerWithConversation:(LYRConversation *)conversation;
++ (instancetype)conversationViewControllerWithConversation:(LYRConversation *)conversation layerClient:(LYRClient *)layerClient;
 
 @property (nonatomic, weak) id<LYRUIConversationViewControllerDataSource> dataSource;
-@property (nonatomic, readonly) LYRUIMessageInputToolbar *inputToolbar;
+@property (nonatomic, strong) UIViewController *composeViewController;
 @property (nonatomic, assign) BOOL allowsEditing;
 
 @end

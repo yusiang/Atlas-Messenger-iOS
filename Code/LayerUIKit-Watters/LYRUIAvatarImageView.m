@@ -21,6 +21,7 @@
 {
     self = [super init];
     if (self) {
+        
         self.clipsToBounds = TRUE;
         self.backgroundColor = LSGrayColor();
     }

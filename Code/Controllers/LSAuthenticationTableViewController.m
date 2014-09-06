@@ -237,6 +237,9 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         [self.tableView beginUpdates];
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView endUpdates];
+        
+        LSInputTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+        [cell.textField becomeFirstResponder];
     }
 }
 

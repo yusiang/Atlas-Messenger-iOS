@@ -13,6 +13,7 @@
 #import "LSUIConstants.h"
 #import "LSMessageCellHeader.h"
 #import "LSUtilities.h"
+#import "LYRUIComposeViewController.h"
 
 CGSize LSItemSizeForPart(LYRMessagePart *part, CGFloat width)
 {
@@ -117,6 +118,14 @@ static CGFloat const LSComposeViewHeight = 40;
 
     self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
     self.notificationObserver.delegate = self;
+    
+    UIViewController *controller = [[UIViewController alloc] init];
+    controller.view.frame = CGRectMake(0, 0, 300, 400);
+    controller.view.backgroundColor = [UIColor redColor];
+    [self.view addSubview:controller.view];
+    [self addChildViewController:controller];
+    [controller didMoveToParentViewController:self];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated

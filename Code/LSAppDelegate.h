@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "LSApplicationController.h"
+#import "LSUIConversationListViewController.h"
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic) LSApplicationController *applicationController;
+
+@property (nonatomic) LSUIConversationListViewController *viewController;
 
 @end

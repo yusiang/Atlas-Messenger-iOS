@@ -90,74 +90,72 @@
     [tester waitForViewWithAccessibilityLabel:testUser.fullName];
 }
 
-//Search for text that does not appear in any message and verify the list is empty.
-- (void)testToVerifyMessageSearchFunctionalityForUnknownMessageText
-{
-    [self registerAndAuthenticateUser];
-    
-    LSUser *testUser = [self randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
-    
-    [tester swipeViewWithAccessibilityLabel:@"Conversation List" inDirection:KIFSwipeDirectionDown];
-    
-    NSString *searchText = @"This is fake text";
-    [tester tapViewWithAccessibilityLabel:@"Search Bar"];
-    [tester enterText:searchText intoViewWithAccessibilityLabel:@"Search Bar"];
-    //[tester waitForAbsenceOfViewWithAccessibilityLabel:[self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]]];
-}
+////Search for text that does not appear in any message and verify the list is empty.
+//- (void)testToVerifyMessageSearchFunctionalityForUnknownMessageText
+//{
+//    [self registerAndAuthenticateUser];
+//    
+//    LSUser *testUser = [self randomUser];
+//    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
+//    
+//    [tester swipeViewWithAccessibilityLabel:@"Conversation List" inDirection:KIFSwipeDirectionDown];
+//    
+//    NSString *searchText = @"This is fake text";
+//    [tester tapViewWithAccessibilityLabel:@"Search Bar"];
+//    [tester enterText:searchText intoViewWithAccessibilityLabel:@"Search Bar"];
+//    //[tester waitForAbsenceOfViewWithAccessibilityLabel:[self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]]];
+//}
+//
+////Test swipe to delete for deleting a conversation. Verify the conversation is deleted from the table and from the Layer client.
+//- (void)testToVerifyDeletionOfConversationFunctionality
+//{
+//    [self registerAndAuthenticateUser];
+//    
+//    LSUser *testUser = [self randomUser];
+//    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
+//    
+//    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
+//    [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
+//    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@ ", testUser.fullName]];
+//    [tester waitForAbsenceOfViewWithAccessibilityLabel:conversationLabel];
+//}
+//
+////Test engaging editing mode and deleting several conversations at once. Verify that all conversations selected are deleted from the table and from the Layer client.
+//- (void)testToVerifyEditingModeAndMultipleConversationDeletionFunctionality
+//{
+//    [self registerAndAuthenticateUser];
+//    
+//    LSUser *testUser1 = [self randomUser];
+//    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser1.userID] number:1];
+//    
+//    LSUser *testUser2 = [self randomUser];
+//    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser2.userID] number:1];
+//    
+//    LSUser *testUser3 = [self randomUser];
+//    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser3.userID] number:1];
+//    
+//    [tester waitForTimeInterval:5];
+//    [tester tapViewWithAccessibilityLabel:@"Edit"];
+//    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@", testUser1.fullName]];
+//}
 
-//Test swipe to delete for deleting a conversation. Verify the conversation is deleted from the table and from the Layer client.
-- (void)testToVerifyDeletionOfConversationFunctionality
+//Disable editing and verify that the controller does not permit the user to attempt to edit or engage swipe to delete.
+- (void)testToVerifyDisablingEditModeDoesNotAllowUserToDeleteConversations
 {
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate.viewController setAllowsEditing:FALSE];
+    
     [self registerAndAuthenticateUser];
     
     LSUser *testUser = [self randomUser];
     [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
-    [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
-    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@ ", testUser.fullName]];
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:conversationLabel];
-}
-
-//Test engaging editing mode and deleting several conversations at once. Verify that all conversations selected are deleted from the table and from the Layer client.
-- (void)testToVerifyEditingModeAndMultipleConversationDeletionFunctionality
-{
-    [self registerAndAuthenticateUser];
-    
-    LSUser *testUser1 = [self randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser1.userID] number:1];
-    
-    LSUser *testUser2 = [self randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser2.userID] number:1];
-    
-    LSUser *testUser3 = [self randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser3.userID] number:1];
-    
-    [tester waitForTimeInterval:5];
-    [tester tapViewWithAccessibilityLabel:@"Edit"];
-    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@", testUser1.fullName]];
-    [tester waitForTimeInterval:10];
-}
-
-//Disable editing and verify that the controller does not permit the user to attempt to edit or engage swipe to delete.
-- (void)testToVerifyDisablingEditModeDoesNotAllowUserToDeleteConversations
-{
-    NSError *error;
-    NSSet *users = [self.testInterface.applicationController.persistenceManager persistedUsersWithError:&error];
-    expect(users).toNot.beNil;
-    expect(error).to.beNil;
-    
-    LSUser *user3 = [[users allObjects] objectAtIndex:3];
-    //[self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user3.userID] number:1];
-    
-    [(LYRUIConversationListViewController *)[UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController.presentedViewController setAllowsEditing:FALSE];
     
     [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Edit"];
     
-    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user3.userID]];
     [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
-    [tester waitForTimeInterval:10];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete, %@", conversationLabel]];
 }
 
 //Customize the fonts and colors using UIAppearance and verify that the configuration is respected.
@@ -169,20 +167,16 @@
     [[LYRUIConversationTableViewCell appearance] setTitleFont:testFont];
     [[LYRUIConversationTableViewCell appearance] setTitleColor:testColor];
     
-    NSError *error;
-    NSSet *users = [self.testInterface.applicationController.persistenceManager persistedUsersWithError:&error];
-    expect(users).toNot.beNil;
-    expect(error).to.beNil;
+    [self registerAndAuthenticateUser];
     
-    LSUser *user0 = [[users allObjects] lastObject];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user0.userID] number:1];
-
-    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user0.userID]];
+    LSUser *testUser = [self randomUser];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
+    
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
     
     LYRUIConversationTableViewCell *cell = (LYRUIConversationTableViewCell *)[tester waitForViewWithAccessibilityLabel:conversationLabel];
     expect(cell.titleFont).to.equal(testFont);
     expect(cell.titleColor).to.equal(testColor);
-
 }
 
 //Customize the row height and ensure that it is respected.
@@ -190,19 +184,15 @@
 {
     CGFloat testHeight = 100;
     
-    UINavigationController *navigationController = (UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)[navigationController topViewController];
-    [controller setRowHeight:testHeight];
-   
-    NSError *error;
-    NSSet *users = [self.testInterface.applicationController.persistenceManager persistedUsersWithError:&error];
-    expect(users).toNot.beNil;
-    expect(error).to.beNil;
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate.viewController setRowHeight:testHeight];
     
-    LSUser *user = [[users allObjects] lastObject];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user.userID] number:1];
+    [self registerAndAuthenticateUser];
     
-    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user.userID]];
+    LSUser *testUser = [self randomUser];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
+    
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
     
     LYRUIConversationTableViewCell *cell = (LYRUIConversationTableViewCell *)[tester waitForViewWithAccessibilityLabel:conversationLabel];
     
@@ -212,61 +202,61 @@
 //Customize the cell class and ensure that the correct cell is used to render the table.
 -(void)testToVerifyCustomCellClassFunctionality
 {
-    UINavigationController *navigationController = (UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)[navigationController topViewController];
-    [controller setCellClass:[LYRUITestConversationCell class]];
-
-    NSError *error;
-    NSSet *users = [self.testInterface.applicationController.persistenceManager persistedUsersWithError:&error];
-    expect(users).toNot.beNil;
-    expect(error).to.beNil;
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate.viewController setCellClass:[LYRUITestConversationCell class]];
     
-    LSUser *user = [[users allObjects] lastObject];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user.userID] number:1];
+    [self registerAndAuthenticateUser];
     
-    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user.userID]];
+    LSUser *testUser = [self randomUser];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
+    
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
     
     id cell = [tester waitForViewWithAccessibilityLabel:conversationLabel];
     
-//    expect([cell class]).to.equal([LYRUITestConversationCell class]);
-//    expect([cell class]).toNot.equal([LYRUIConversationTableViewCell class]);
+    expect([cell class]).to.equal([LYRUITestConversationCell class]);
+    expect([cell class]).toNot.equal([LYRUIConversationTableViewCell class]);
 }
 
 //Verify that attempting to provide a cell class that does not conform to LYRUIConversationPresenting results in a runtime exception.
 - (void)testToVerifyCustomCellClassNotConformingToProtocolRaisesException
 {
-    UINavigationController *navigationController = (UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)[navigationController topViewController];
-    //[controller setCellClass:[LYRUITestConversationCell class]];
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    expect(^{ [appDelegate.viewController setCellClass:[UITableViewCell class]]; }).to.raise(NSInternalInconsistencyException);
 }
 
 //Verify that attempting to change the cell class after the table is loaded results in a runtime error.
 - (void)testToVerifyChangingCellClassAfterViewLoadRaiseException
 {
-    UINavigationController *navigationController = (UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)[navigationController topViewController];
+    [self registerAndAuthenticateUser];
+    UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
+    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
     expect(^{ [controller setCellClass:[LYRUITestConversationCell class]]; }).to.raise(NSInternalInconsistencyException);
 }
 
 //Verify that attempting to change the cell class after the table is loaded results in a runtime error.
 - (void)testToVerifyChangingCellHeighAfterViewLoadRaiseException
 {
-    UINavigationController *navigationController = (UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)[navigationController topViewController];
+    [self registerAndAuthenticateUser];
+    UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
+    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
     expect(^{ [controller setRowHeight:40]; }).to.raise(NSInternalInconsistencyException);
 }
 
 //Verify that attempting to change the cell class after the table is loaded results in a runtime error.
 - (void)testToVerifyChangingEditingSettingAfterViewLoadRaiseException
 {
-    UINavigationController *navigationController = (UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)[navigationController topViewController];
+    [self registerAndAuthenticateUser];
+    UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
+    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
     expect(^{ [controller setAllowsEditing:TRUE]; }).to.raise(NSInternalInconsistencyException);
 }
 
 //Synchronize a new conversation and verify that it live updates into the conversation list.
 - (void)testToVerifyCreatingANewConversationLiveUpdatesConversationList
 {
+    [self registerAndAuthenticateUser];
+    
     NSString *userID = self.testInterface.applicationController.layerClient.authenticatedUserID;
     [self.testInterface logout];
     
@@ -287,6 +277,8 @@
     
     [tester waitForViewWithAccessibilityLabel:[self conversationLabelForParticipants:conversation.participants]];
 }
+
+#pragma mark - Factory Methods
 
 - (void)registerAndAuthenticateUser
 {
