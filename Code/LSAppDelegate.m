@@ -28,6 +28,7 @@ extern void LYRSetLogLevelFromEnvironment();
 
 @synthesize window;
 
+// Fake Commit to build an app
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Set LayerKit log level
