@@ -10,9 +10,9 @@
 
 @interface LYRUIComposeViewController : UIViewController
 
-@property (nonatomic, strong) UIControl *leftControlItem;
+@property (nonatomic, strong) UIButton *leftControlItem;
 
-@property (nonatomic, strong) UIControl *rightControlItem;
+@property (nonatomic, strong) UIButton *rightControlItem;
 
 @property (nonatomic, strong) UITextView *textInputView;
 

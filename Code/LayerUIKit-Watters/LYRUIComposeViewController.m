@@ -29,14 +29,16 @@ static CGFloat const LSButtonHeight = 28;
     // Initialize the Camera Button
     self.leftControlItem = [[UIButton alloc] init];
     self.leftControlItem.translatesAutoresizingMaskIntoConstraints = NO;
-    self.leftControlItem.BackgroundColor = [UIColor redColor];
+    self.leftControlItem.BackgroundColor = [UIColor greenColor];
     self.leftControlItem.accessibilityLabel = @"Cam Button";
+    self.leftControlItem.imageView.image = [UIImage imageNamed:@"camera"];
     self.leftControlItem.layer.cornerRadius = 2;
-    [self.leftControlItem addTarget:self action:@selector(cameraTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.leftControlItem addTarget:self action:@selector(leftControlItemTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.leftControlItem];
     
     // Initialize the Text Input View
     self.textInputView = [[UITextView alloc] init];
+    self.textInputView.delegate = self;
     self.textInputView.translatesAutoresizingMaskIntoConstraints = NO;
     self.textInputView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.textInputView.layer.borderWidth = 1;
@@ -47,8 +49,10 @@ static CGFloat const LSButtonHeight = 28;
     // Initialize the Send Button
     self.rightControlItem = [[UIButton alloc] init];
     self.rightControlItem.translatesAutoresizingMaskIntoConstraints = NO;
-    self.rightControlItem.backgroundColor = [UIColor clearColor];
-    [self.rightControlItem addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
+    [self.rightControlItem setTitle:@"SEND" forState:UIControlStateNormal];
+    [self.rightControlItem setTitleColor:UIControlStateNormal forState:UIControlStateNormal];
+
+    [self.rightControlItem addTarget:self action:@selector(rightControlItemTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightControlItem];
     
     [self setupLayoutConstraints];
@@ -73,7 +77,7 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftControlItem
                                                      attribute:NSLayoutAttributeLeft
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
+                                                        toItem:self.view
                                                      attribute:NSLayoutAttributeLeft
                                                     multiplier:1.0
                                                       constant:LSComposeviewVerticalMargin]];
@@ -89,7 +93,7 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftControlItem
                                                      attribute:NSLayoutAttributeBottom
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
+                                                        toItem:self.view
                                                      attribute:NSLayoutAttributeBottom
                                                     multiplier:1.0
                                                       constant:-LSComposeviewHorizontalMargin]];
@@ -108,7 +112,7 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightControlItem
                                                      attribute:NSLayoutAttributeRight
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
+                                                        toItem:self.view
                                                      attribute:NSLayoutAttributeRight
                                                     multiplier:1.0
                                                       constant:-LSComposeviewVerticalMargin]];
@@ -124,7 +128,7 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightControlItem
                                                      attribute:NSLayoutAttributeBottom
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
+                                                        toItem:self.view
                                                      attribute:NSLayoutAttributeBottom
                                                     multiplier:1.0
                                                       constant:-LSComposeviewHorizontalMargin]];
@@ -151,7 +155,7 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
                                                      attribute:NSLayoutAttributeTop
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
+                                                        toItem:self.view
                                                      attribute:NSLayoutAttributeTop
                                                     multiplier:1.0
                                                       constant:LSComposeviewHorizontalMargin]];
@@ -159,18 +163,20 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
                                                      attribute:NSLayoutAttributeBottom
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
+                                                        toItem:self.view
                                                      attribute:NSLayoutAttributeBottom
                                                     multiplier:1.0
                                                       constant:-LSComposeviewHorizontalMargin]];
 }
 
-- (void)cameraTapped
+- (void)leftControlItemTapped
 {
-    //[self.delegate composeViewDidTapCamera:self];
+    self.rightControlItem.titleLabel.text = @"SEND";
+    self.rightControlItem.titleLabel.font = [UIFont systemFontOfSize:4];
+    self.rightControlItem.titleLabel.textColor = [UIColor whiteColor];
 }
 
-- (void)sendMessage
+- (void)rightControlItemTapped
 {
 //    [self.delegate composeViewShouldRestFrame:self];
 //    self.rightControlItem.textLabel.textColor = [UIColor grayColor];

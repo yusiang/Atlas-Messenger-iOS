@@ -119,8 +119,8 @@ static CGFloat const LSComposeViewHeight = 40;
     self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
     self.notificationObserver.delegate = self;
     
-    UIViewController *controller = [[UIViewController alloc] init];
-    controller.view.frame = CGRectMake(0, 0, 300, 400);
+    LYRUIComposeViewController *controller = [[LYRUIComposeViewController alloc] init];
+    controller.view.frame = self.composeView.frame;
     controller.view.backgroundColor = [UIColor redColor];
     [self.view addSubview:controller.view];
     [self addChildViewController:controller];
