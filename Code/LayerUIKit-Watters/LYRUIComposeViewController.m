@@ -7,12 +7,14 @@
 //
 
 #import "LYRUIComposeViewController.h"
+#import "LYRUIConstants.h"
 
 @interface LYRUIComposeViewController () <UITextViewDelegate>
 
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic, strong) NSMutableArray *contentParts;
 @property (nonatomic) CGFloat textViewContentSizeHeight;
+@property (nonatomic) CGSize defaultSize;
 
 @end
 
@@ -33,9 +35,9 @@ static CGFloat const LSButtonHeight = 28;
     // Initialize the Camera Button
     self.leftControlItem = [[UIButton alloc] init];
     self.leftControlItem.translatesAutoresizingMaskIntoConstraints = NO;
-    self.leftControlItem.BackgroundColor = [UIColor greenColor];
     self.leftControlItem.accessibilityLabel = @"Cam Button";
-    self.leftControlItem.imageView.image = [UIImage imageNamed:@"camera"];
+    self.leftControlItem.contentEdgeInsets = UIEdgeInsetsMake(4, 6, 4, 6);
+    [self.leftControlItem setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
     self.leftControlItem.layer.cornerRadius = 2;
     [self.leftControlItem addTarget:self action:@selector(leftControlItemTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.leftControlItem];
@@ -49,7 +51,6 @@ static CGFloat const LSButtonHeight = 28;
     self.textInputView.layer.cornerRadius = 4.0f;
     self.textInputView.font = [UIFont systemFontOfSize:14];
     self.textInputView.accessibilityLabel = @"Compose TextView";
-    self.textViewContentSizeHeight = self.textInputView.contentSize.height;
     [self.view addSubview:self.textInputView];
     
     // Initialize the Send Button
@@ -58,20 +59,21 @@ static CGFloat const LSButtonHeight = 28;
     self.rightControlItem.titleLabel.font = [UIFont systemFontOfSize:16];
     [self.rightControlItem setTitle:@"SEND" forState:UIControlStateNormal];
     [self.rightControlItem setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [self.rightControlItem setTitleColor:[UIColor blueColor] forState:UIControlStateHighlighted];
+    [self.rightControlItem setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
     [self.rightControlItem addTarget:self action:@selector(rightControlItemTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightControlItem];
     
     [self setupLayoutConstraints];
     
     // Setup
-    self.view.backgroundColor = [UIColor grayColor];
+    self.view.backgroundColor =  LSLighGrayColor();
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     self.keyboardIsOnScreen = NO;
+    self.defaultSize = self.view.frame.size;
 }
 
 - (void)setupLayoutConstraints
@@ -184,13 +186,19 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)leftControlItemTapped
 {
-
+    
 }
 
 - (void)rightControlItemTapped
 {
-    [self.rightControlItem setHighlighted:FALSE];
-
+    if (self.textInputView.text.length > 0) {
+        [self.delegate composeViewController:self didTapSendButtonWithText:self.textInputView.text];
+        self.textInputView.text = @"";
+        [self.rightControlItem setHighlighted:FALSE];
+        if (self.defaultSize.height != self.view.frame.size.height) {
+            [self adjustFrameForHeightDifference:self.defaultSize.height - self.view.frame.size.height];
+        }
+    }
 }
 
 - (void)updateWithImage:(UIImage *)image
@@ -213,7 +221,6 @@ static CGFloat const LSButtonHeight = 28;
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     self.textViewContentSizeHeight = textView.contentSize.height;
-    [self.rightControlItem setHighlighted:TRUE];
     return YES;
 }
 
@@ -227,8 +234,11 @@ static CGFloat const LSButtonHeight = 28;
 {
     if (self.textViewContentSizeHeight != textView.contentSize.height) {
         CGFloat heightDiff = textView.contentSize.height - self.textViewContentSizeHeight;
-        [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - heightDiff , self.view.frame.size.width, self.view.frame.size.height + heightDiff)];
+        [self adjustFrameForHeightDifference:heightDiff];
         self.textViewContentSizeHeight = textView.contentSize.height;
+    }
+    if (textView.text.length > 0) {
+        [self.rightControlItem setHighlighted:TRUE];
     }
 }
 
@@ -247,6 +257,9 @@ static CGFloat const LSButtonHeight = 28;
     return YES;
 }
 
-
+- (void)adjustFrameForHeightDifference:(CGFloat)heightDifference
+{
+    [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - heightDifference , self.view.frame.size.width, self.view.frame.size.height + heightDifference)];
+}
 
 @end

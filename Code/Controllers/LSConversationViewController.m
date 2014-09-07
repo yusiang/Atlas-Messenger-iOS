@@ -66,7 +66,7 @@ static NSString *const LSMessageCellIdentifier = @"messageCellIdentifier";
 static NSString *const LSMessageHeaderIdentifier = @"headerViewIdentifier";
 static CGFloat const LSComposeViewHeight = 40;
 
-@interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LSNotificationObserverDelegate>
+@interface LSConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, LSComposeViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LSNotificationObserverDelegate, LYRUIComposeViewControllerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) LSComposeView *composeView;
@@ -115,19 +115,19 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.collectionView registerClass:[LSMessageCellHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LSMessageHeaderIdentifier];
 
     // Setup Compose View
-//    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight)];
-//    self.composeView.delegate = self;
-//    [self.view addSubview:self.composeView];
+    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight)];
+    self.composeView.delegate = self;
+    [self.view addSubview:self.composeView];
 
     self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
     self.notificationObserver.delegate = self;
-    
-    self.composeViewController = [[LYRUIComposeViewController alloc] init];
-    self.composeViewController.view.frame = CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight);
-    self.composeViewController.view.backgroundColor = [UIColor lightGrayColor];
-    [self.view addSubview:self.composeViewController.view];
-    [self addChildViewController:self.composeViewController];
-    [self.composeViewController didMoveToParentViewController:self];
+//    
+//    self.composeViewController = [[LYRUIComposeViewController alloc] init];
+//    self.composeViewController.delegate = self;
+//    self.composeViewController.view.frame = CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight);
+//    [self.view addSubview:self.composeViewController.view];
+//    [self addChildViewController:self.composeViewController];
+//    [self.composeViewController didMoveToParentViewController:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -312,7 +312,8 @@ static CGFloat const LSComposeViewHeight = 40;
     self.keyboardHeight = kbSize.height;
     [self updateInsets];
 
-    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x, self.composeViewController.view.frame.origin.y - kbSize.height, self.composeViewController.view.frame.size.width, self.composeViewController.view.frame.size.height);
+//    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x, self.composeViewController.view.frame.origin.y - kbSize.height, self.composeViewController.view.frame.size.width, self.composeViewController.view.frame.size.height);
+    self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     [self.collectionView setContentOffset:[self bottomOffset]];
 
     [UIView commitAnimations];
@@ -333,7 +334,8 @@ static CGFloat const LSComposeViewHeight = 40;
     self.keyboardHeight = 0;
     [self updateInsets];
 
-    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x, self.composeViewController.view.frame.origin.y + kbSize.height, self.composeViewController.view.frame.size.width, self.composeViewController.view.frame.size.height);
+//    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x, self.composeViewController.view.frame.origin.y + kbSize.height, self.composeViewController.view.frame.size.width, self.composeViewController.view.frame.size.height);
+    self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
     [UIView commitAnimations];
 
     self.keyboardIsOnScreen = FALSE;
@@ -342,6 +344,31 @@ static CGFloat const LSComposeViewHeight = 40;
 
 #pragma mark
 #pragma mark LSComposeViewDelegate
+
+- (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapSendButtonWithText:(NSString *)text
+{
+    LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
+    LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
+    
+    NSString *senderName = [self.persistanceManager persistedSessionWithError:nil].user.fullName;
+    NSString *pushText = [NSString stringWithFormat:@"%@: %@", senderName, text];
+    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
+    
+    NSError *error;
+    BOOL success = [self.layerClient sendMessage:message error:&error];
+    if (success) {
+        NSLog(@"Messages Succesfully Sent");
+    } else {
+        NSLog(@"The error is %@", error);
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+
+}
 
 - (void)composeView:(LSComposeView *)composeView sendMessageWithText:(NSString *)text
 {

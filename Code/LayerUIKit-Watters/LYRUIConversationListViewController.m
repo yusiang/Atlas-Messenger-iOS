@@ -215,7 +215,9 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    //TODO Figure out if we want to perform search or force developers
+    [self.delegate conversationListViewController:self didSearchWithString:searchText completion:^{
+        [self reloadConversations];
+    }];
 }
 
 #pragma mark - Table view data source methods

@@ -16,4 +16,6 @@
 
 - (void)setCompletionBlock:(void (^)(NSString *authenticatedUserID))completion;
 
+- (void)resetState;
+
 @end

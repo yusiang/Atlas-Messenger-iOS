@@ -24,6 +24,7 @@ extern void LYRSetLogLevelFromEnvironment();
 @interface LSAppDelegate ()
 
 @property (nonatomic) UINavigationController *navigationController;
+@property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
 
 @end
 
@@ -37,7 +38,7 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LSProductionEnvironment;
+    LSEnvironment environment = LSDevelopmentEnvironment;
     
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
@@ -83,10 +84,10 @@ extern void LYRSetLogLevelFromEnvironment();
         }
     }];
     
-    LSAuthenticationTableViewController *authenticationViewController = [LSAuthenticationTableViewController new];
-    authenticationViewController.applicationController = self.applicationController;
+    self.authenticationViewController = [LSAuthenticationTableViewController new];
+    self.authenticationViewController.applicationController = self.applicationController;
     
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:authenticationViewController];
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
     self.navigationController.navigationBarHidden = TRUE;
     self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
     self.navigationController.navigationBar.tintColor = LSBlueColor();
@@ -224,7 +225,9 @@ extern void LYRSetLogLevelFromEnvironment();
     self.viewController.allowsEditing = FALSE;
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-    [self.navigationController presentViewController:conversationController animated:YES completion:nil];
+    [self.navigationController presentViewController:conversationController animated:YES completion:^{
+        [self.authenticationViewController resetState];
+    }];
     
 }
 

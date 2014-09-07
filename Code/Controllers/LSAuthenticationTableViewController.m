@@ -50,7 +50,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     [super viewDidLoad];
     [self.tableView setContentOffset:CGPointMake(0, 140)];
-    self.authenticationState = LSAuthenticationStateLogin;
 }
 
 - (void)didReceiveMemoryWarning
@@ -161,6 +160,13 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     }
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(LSInputTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.isEditing && indexPath.row == 0) {
+       [cell.textField becomeFirstResponder];
+    }
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (self.isEditing && self.authenticationState == LSAuthenticationStateRegister) {
@@ -207,6 +213,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                 [self loginTapped];
             } else {
                 [self setTableViewEditing];
+                [self.email becomeFirstResponder];
             }
             break;
     
@@ -216,6 +223,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                 [self registerTapped];
             } else {
                 [self setTableViewEditing];
+                [self.firstName becomeFirstResponder];
             }
             break;
         
@@ -230,13 +238,21 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [self configureTableViewForAuthenticationState:authenticationState];
 }
 
+- (void)cancelButtonTappedForAuthenticationTableViewFooter:(LSAuthenticationTableViewFooter *)tableViewFooter
+{
+    [self setTableViewNotEditing];
+}
+
 - (void)setTableViewEditing
 {
     if (!self.isEditing) {
         self.isEditing = TRUE;
         [self.tableView beginUpdates];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [self.tableView endUpdates];
+        [self.tableViewHeader setShowsContent:FALSE];
+        [UIView animateWithDuration:0.3 animations:^{
+            [self.tableView endUpdates];
+        }];
+        
     }
 }
 
@@ -245,8 +261,10 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     if (self.isEditing) {
         self.isEditing = FALSE;
         [self.tableView beginUpdates];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [self.tableView endUpdates];
+        [self.tableViewHeader setShowsContent:TRUE];
+        [UIView animateWithDuration:0.3 animations:^{
+            [self.tableView endUpdates];
+        }];
     }
 }
 
@@ -384,6 +402,18 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             [SVProgressHUD dismiss];
         }
     }];
+}
+
+- (void)resetState;
+{
+    self.authenticationState = LSAuthenticationStateLogin;
+    self.isEditing = NO;
+    self.firstName.text = nil;
+    self.lastName.text = nil;
+    self.email.text = nil;
+    self.password.text = nil;
+    self.confirmation.text = nil;
+    [self.tableView reloadData];
 }
 
 @end

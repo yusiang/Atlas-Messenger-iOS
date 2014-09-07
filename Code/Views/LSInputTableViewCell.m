@@ -24,7 +24,7 @@
 - (void)setText:(NSString *)text
 {
     self.textField.placeholder = text;
-    self.textField.font = LSMediumFont(18);
+    self.textField.font = LSMediumFont(16);
     self.textField.textColor = [UIColor darkGrayColor];
     [self.textField sizeToFit];
     self.textField.frame = CGRectMake(20, 14, self.frame.size.width - 20, self.textField.frame.size.height);

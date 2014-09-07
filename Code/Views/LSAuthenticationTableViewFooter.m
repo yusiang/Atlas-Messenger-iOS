@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) UIButton *primaryActionButton;
 @property (nonatomic, strong) UIButton *secondaryActionButton;
+@property (nonatomic, strong) UIButton *cancelButton;
 
 @end
 
@@ -20,6 +21,7 @@
 
 static NSString *LSLoginText = @"Login To Layer";
 static NSString *LSRegisterText = @"Create Account";
+static NSString *LSCancelText = @"Or, Cancel";
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -50,6 +52,17 @@ static NSString *LSRegisterText = @"Create Account";
         self.secondaryActionButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         [self.secondaryActionButton addTarget:self action:@selector(secondaryActionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.secondaryActionButton];
+        
+//        self.cancelButton = [[UIButton alloc] init];
+//        self.cancelButton.backgroundColor = [UIColor redColor];
+//        [self.cancelButton setTitleColor:LSBlueColor() forState:UIControlStateNormal];
+//        [self.cancelButton setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
+//        self.cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
+//        self.cancelButton.titleLabel.font = LSMediumFont(12);
+//        self.cancelButton.titleLabel.textColor = LSBlueColor();
+//        self.cancelButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+//        [self.cancelButton addTarget:self action:@selector(cancelButtonWasTapped) forControlEvents:UIControlEventTouchUpInside];
+//        [self addSubview:self.cancelButton];
         
         [self updateConstraints];
     }
@@ -124,6 +137,37 @@ static NSString *LSRegisterText = @"Create Account";
                                                     multiplier:1.0
                                                       constant:40]];
     
+//    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cancelButton
+//                                                     attribute:NSLayoutAttributeCenterX
+//                                                     relatedBy:NSLayoutRelationEqual
+//                                                        toItem:self
+//                                                     attribute:NSLayoutAttributeCenterX
+//                                                    multiplier:1.0
+//                                                      constant:0]];
+//    
+//    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cancelButton
+//                                                     attribute:NSLayoutAttributeTop
+//                                                     relatedBy:NSLayoutRelationEqual
+//                                                        toItem:self.secondaryActionButton
+//                                                     attribute:NSLayoutAttributeBottom
+//                                                    multiplier:1.0
+//                                                      constant:40]];
+//    
+//    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cancelButton
+//                                                     attribute:NSLayoutAttributeWidth
+//                                                     relatedBy:NSLayoutRelationEqual
+//                                                        toItem:nil
+//                                                     attribute:NSLayoutAttributeNotAnAttribute
+//                                                    multiplier:1.0
+//                                                      constant:200]];
+//    
+//    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cancelButton
+//                                                     attribute:NSLayoutAttributeHeight
+//                                                     relatedBy:NSLayoutRelationEqual
+//                                                        toItem:nil
+//                                                     attribute:NSLayoutAttributeNotAnAttribute
+//                                                    multiplier:1.0
+//                                                      constant:40]];
     
     [super updateConstraints];
 }
@@ -143,6 +187,7 @@ static NSString *LSRegisterText = @"Create Account";
         default:
             break;
     }
+    [self.cancelButton setTitle:LSCancelText forState:UIControlStateNormal];
     _authenticationState = authenticationState;
 }
 
@@ -169,6 +214,11 @@ static NSString *LSRegisterText = @"Create Account";
             [self.delegate authenticationTableViewFooter:self secondaryActionButtonTappedWithAuthenticationState:self.authenticationState];
         }];
     }];
+}
+
+- (void)cancelButtonWasTapped
+{
+    [self.delegate cancelButtonTappedForAuthenticationTableViewFooter:self];
 }
 
 @end

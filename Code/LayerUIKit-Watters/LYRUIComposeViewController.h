@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class LYRUIComposeViewController;
+
+@protocol LYRUIComposeViewControllerDelegate <NSObject>
+
+- (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapSendButtonWithText:(NSString *)text;
+
+@end
+
 @interface LYRUIComposeViewController : UIViewController
 
 @property (nonatomic, strong) UIButton *leftControlItem;
@@ -15,5 +23,7 @@
 @property (nonatomic, strong) UIButton *rightControlItem;
 
 @property (nonatomic, strong) UITextView *textInputView;
+
+@property (nonatomic, weak) id<LYRUIComposeViewControllerDelegate>delegate;
 
 @end
