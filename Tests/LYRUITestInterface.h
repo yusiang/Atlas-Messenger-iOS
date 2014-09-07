@@ -37,6 +37,10 @@
 
 - (void)deleteContacts;
 
+- (LSUser *)randomUser;
+
+- (LSUser *)registerAndAuthenticateUser:(LSUser *)user;
+
 @property (nonatomic, strong) LSApplicationController *applicationController;
 
 @end

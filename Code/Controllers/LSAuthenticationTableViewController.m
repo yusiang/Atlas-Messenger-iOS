@@ -128,7 +128,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     cell.textField.secureTextEntry = NO;
                     cell.textField.enablesReturnKeyAutomatically = YES;
                     cell.textField.returnKeyType = UIReturnKeyNext;
-                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
                     cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
                     cell.textField.text = self.firstName.text;
                     self.firstName = cell.textField;
@@ -139,7 +139,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
                     cell.textField.enablesReturnKeyAutomatically = YES;
                     cell.textField.returnKeyType = UIReturnKeyNext;
-                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
                     cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
                     cell.textField.text = self.lastName.text;
                     self.lastName = cell.textField;
@@ -237,9 +237,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         [self.tableView beginUpdates];
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView endUpdates];
-        
-        LSInputTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-        [cell.textField becomeFirstResponder];
     }
 }
 

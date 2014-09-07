@@ -114,4 +114,26 @@
     expect(success).to.beTruthy;
 }
 
+- (LSUser *)randomUser
+{
+    NSError *error;
+    NSSet *users = [self.applicationController.persistenceManager persistedUsersWithError:&error];
+    expect(users).toNot.beNil;
+    expect(error).to.beNil;
+    
+    int randomNumber = arc4random_uniform((int)users.count);
+    LSUser *user = [[users allObjects] objectAtIndex:randomNumber];
+    while ([user.userID isEqual:self.applicationController.layerClient.authenticatedUserID]) {
+        user = [self randomUser];
+    }
+    return user;
+}
+
+- (void)registerAndAuthenticateUser:(LSUser *)user
+{
+    [self registerUser:user];
+    [self authenticateWithEmail:user.email password:user.password];
+    [self loadContacts];
+}
+
 @end

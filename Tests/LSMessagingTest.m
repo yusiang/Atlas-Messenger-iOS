@@ -21,11 +21,15 @@
 #import "KIFSystemTestActor+ViewControllerActions.h"
 #import "KIFUITestActor+LSAdditions.h"
 #import "LSNotificationObserver.h"
+#import "LYRUITestInterface.h"
+#import "LYRUILayerContentFactory.h"
 
 @interface LSMessagingTest : XCTestCase <LSNotificationObserverDelegate>
 
 @property (nonatomic, strong) LSAPIManager *APIManager;
 @property (nonatomic, strong) LSApplicationController *controller;
+@property (nonatomic, strong) LYRUITestInterface *testInterface;
+@property (nonatomic, strong) LYRUILayerContentFactory *layerContentFactory;
 
 @end
 
@@ -35,14 +39,9 @@
 {
     [super setUp];
     
-    _controller = [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
-    _APIManager = self.controller.APIManager;
-    
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
-    [self.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
+    LSApplicationController *applicationController =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    self.testInterface = [LYRUITestInterface testInterfaceWithApplicationController:applicationController];
+    self.layerContentFactory = [LYRUILayerContentFactory layerContentFactoryWithLayerClient:applicationController.layerClient];
 }
 
 - (void)tearDown
@@ -53,20 +52,14 @@
 
 - (void)testSending5000Messages
 {
-    LSUser *user1 = [self registerUser:[LYRUITestUser testUserWithNumber:1]];
-    [tester waitForTimeInterval:2];
+    NSString *testUser0 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:0]];
+    NSString *testUser1 = [self.testInterface randomUser].userID;
+    NSString *testUser2 = [self.testInterface randomUser].userID;
     
-    [self deauthenticate];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     
-    LSUser *user2 = [self registerUser:[LYRUITestUser testUserWithNumber:2]];
-    [tester waitForTimeInterval:2];
-    
-    LYRConversation *conversation = [LYRConversation conversationWithParticipants:@[user1.userID, user2.userID]];
-    
-    for (int i = 0; i < 1000; i++) {
-        NSLog(@"Message Sent %d", i);
-        [self sendMessageWithText:@"Sample Message" conversation:conversation];
-    }
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObjects:testUser0, testUser1, testUser2, nil] number:100];
+
     [tester waitForTimeInterval:20];
     [self deauthenticate];
     

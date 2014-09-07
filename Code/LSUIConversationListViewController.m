@@ -108,7 +108,7 @@
     LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:self.participantPickerDataSource
                                                                                                               sortType:LYRUIParticipantPickerControllerSortTypeFirst];
     controller.participantPickerDelegate = self;
-    controller.allowsMultipleSelection = NO;
+    controller.allowsMultipleSelection = YES;
     [self presentViewController:controller animated:TRUE completion:nil];
 }
 

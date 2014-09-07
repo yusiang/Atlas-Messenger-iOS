@@ -60,9 +60,9 @@
 //Load the list and verify that all conversations returned by conversationForIdentifiers: is presented in the list.
 - (void)testToVerifyConversationListDisplaysAllConversationsInLayer
 {
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     
-    LSUser *testUser = [self randomUser];
+    LSUser *testUser = [self.testInterface randomUser];
     
     NSSet *participantIdentifiers = [NSSet setWithObjects:testUser.userID, nil];
     [self.layerContentFactory conversationsWithParticipants:participantIdentifiers number:4];
@@ -76,9 +76,9 @@
 //Search for text that exists in a known message and verify that it appears.
 - (void)testToVerfiyMessageSearchFunctionalityForKnownMessageText
 {
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     
-    LSUser *testUser = [self randomUser];
+    LSUser *testUser = [self.testInterface randomUser];
     
     [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
     
@@ -145,9 +145,9 @@
     LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate.viewController setAllowsEditing:FALSE];
     
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     
-    LSUser *testUser = [self randomUser];
+    LSUser *testUser = [self.testInterface randomUser];
     [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
@@ -167,9 +167,9 @@
     [[LYRUIConversationTableViewCell appearance] setTitleFont:testFont];
     [[LYRUIConversationTableViewCell appearance] setTitleColor:testColor];
     
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     
-    LSUser *testUser = [self randomUser];
+    LSUser *testUser = [self.testInterface randomUser];
     [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
@@ -187,9 +187,9 @@
     LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate.viewController setRowHeight:testHeight];
     
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     
-    LSUser *testUser = [self randomUser];
+    LSUser *testUser = [self.testInterface randomUser];
     [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
@@ -205,9 +205,9 @@
     LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate.viewController setCellClass:[LYRUITestConversationCell class]];
     
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     
-    LSUser *testUser = [self randomUser];
+    LSUser *testUser = [self.testInterface randomUser];
     [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
@@ -228,7 +228,7 @@
 //Verify that attempting to change the cell class after the table is loaded results in a runtime error.
 - (void)testToVerifyChangingCellClassAfterViewLoadRaiseException
 {
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
     LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
     expect(^{ [controller setCellClass:[LYRUITestConversationCell class]]; }).to.raise(NSInternalInconsistencyException);
@@ -237,7 +237,7 @@
 //Verify that attempting to change the cell class after the table is loaded results in a runtime error.
 - (void)testToVerifyChangingCellHeighAfterViewLoadRaiseException
 {
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
     LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
     expect(^{ [controller setRowHeight:40]; }).to.raise(NSInternalInconsistencyException);
@@ -246,7 +246,7 @@
 //Verify that attempting to change the cell class after the table is loaded results in a runtime error.
 - (void)testToVerifyChangingEditingSettingAfterViewLoadRaiseException
 {
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
     LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
     expect(^{ [controller setAllowsEditing:TRUE]; }).to.raise(NSInternalInconsistencyException);
@@ -255,7 +255,7 @@
 //Synchronize a new conversation and verify that it live updates into the conversation list.
 - (void)testToVerifyCreatingANewConversationLiveUpdatesConversationList
 {
-    [self registerAndAuthenticateUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     
     NSString *userID = self.testInterface.applicationController.layerClient.authenticatedUserID;
     [self.testInterface logout];
@@ -279,15 +279,6 @@
 }
 
 #pragma mark - Factory Methods
-
-- (void)registerAndAuthenticateUser
-{
-    LSUser *user = [LYRUITestUser testUserWithNumber:3];
-    [self.testInterface registerUser:user];
-    [self.testInterface authenticateWithEmail:user.email password:user.password];
-    [self.testInterface loadContacts];
-    [tester waitForTimeInterval:1];
-}
 
 - (void)registerTestUsers
 {
@@ -319,18 +310,5 @@
     return conversationLabel;
 }
 
-- (LSUser *)randomUser
-{
-    NSError *error;
-    NSSet *users = [self.testInterface.applicationController.persistenceManager persistedUsersWithError:&error];
-    expect(users).toNot.beNil;
-    expect(error).to.beNil;
-    
-    int randomNumber = arc4random_uniform((int)users.count);
-    LSUser *user = [[users allObjects] objectAtIndex:randomNumber];
-    while ([user.userID isEqual:self.testInterface.applicationController.layerClient.authenticatedUserID]) {
-        user = [self randomUser];
-    }
-    return user;
-}
+
 @end

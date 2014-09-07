@@ -328,7 +328,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void)configureTableViewCellAppearance
 {
-    [[LYRUIConversationTableViewCell appearance] setTitleFont:LSMediumFont(14)];
+    [[LYRUIConversationTableViewCell appearance] setTitleFont:LSMediumFont(16)];
     [[LYRUIConversationTableViewCell appearance] setTitleColor:[UIColor blackColor]];
     [[LYRUIConversationTableViewCell appearance] setSubtitleFont:LSMediumFont(12)];
     [[LYRUIConversationTableViewCell appearance] setSubtitleColor:[UIColor grayColor]];

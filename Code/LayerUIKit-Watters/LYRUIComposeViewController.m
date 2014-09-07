@@ -10,6 +10,10 @@
 
 @interface LYRUIComposeViewController () <UITextViewDelegate>
 
+@property (nonatomic) BOOL keyboardIsOnScreen;
+@property (nonatomic, strong) NSMutableArray *contentParts;
+@property (nonatomic) CGFloat textViewContentSizeHeight;
+
 @end
 
 @implementation LYRUIComposeViewController
@@ -43,15 +47,18 @@ static CGFloat const LSButtonHeight = 28;
     self.textInputView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.textInputView.layer.borderWidth = 1;
     self.textInputView.layer.cornerRadius = 4.0f;
+    self.textInputView.font = [UIFont systemFontOfSize:14];
     self.textInputView.accessibilityLabel = @"Compose TextView";
+    self.textViewContentSizeHeight = self.textInputView.contentSize.height;
     [self.view addSubview:self.textInputView];
     
     // Initialize the Send Button
     self.rightControlItem = [[UIButton alloc] init];
     self.rightControlItem.translatesAutoresizingMaskIntoConstraints = NO;
+    self.rightControlItem.titleLabel.font = [UIFont systemFontOfSize:16];
     [self.rightControlItem setTitle:@"SEND" forState:UIControlStateNormal];
-    [self.rightControlItem setTitleColor:UIControlStateNormal forState:UIControlStateNormal];
-
+    [self.rightControlItem setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.rightControlItem setTitleColor:[UIColor blueColor] forState:UIControlStateHighlighted];
     [self.rightControlItem addTarget:self action:@selector(rightControlItemTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightControlItem];
     
@@ -59,6 +66,12 @@ static CGFloat const LSButtonHeight = 28;
     
     // Setup
     self.view.backgroundColor = [UIColor grayColor];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.keyboardIsOnScreen = NO;
 }
 
 - (void)setupLayoutConstraints
@@ -171,41 +184,25 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)leftControlItemTapped
 {
-    self.rightControlItem.titleLabel.text = @"SEND";
-    self.rightControlItem.titleLabel.font = [UIFont systemFontOfSize:4];
-    self.rightControlItem.titleLabel.textColor = [UIColor whiteColor];
+
 }
 
 - (void)rightControlItemTapped
 {
-//    [self.delegate composeViewShouldRestFrame:self];
-//    self.rightControlItem.textLabel.textColor = [UIColor grayColor];
-//    
-//    // Send Image
-//    if (self.images.count > 0) {
-//        for (UIImage *image in self.images) {
-//            [self.delegate composeView:self sendMessageWithImage:image];
-//        }
-//        self.textInputView.font = LSMediumFont(16);
-//    } else {
-//        if (self.textInputView.text.length) [self.delegate composeView:self sendMessageWithText:self.textInputView.text];
-//    }
-//    
-//    self.textInputView.text = @"";
-//    [self.images removeAllObjects];
+    [self.rightControlItem setHighlighted:FALSE];
+
 }
 
 - (void)updateWithImage:(UIImage *)image
 {
-//{
-//    [self.images addObject:image];
-//    
-//    self.rightControlItem.textLabel.textColor = LSBlueColor();
-//    
-//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
+    [self.contentParts addObject:image];
+    
+    [self.rightControlItem setHighlighted:TRUE];
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
 //    LSMediaAttachement *textAttachment = [[LSMediaAttachement alloc] init];
 //    textAttachment.image = image;
-//    
+    
 //    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
 //    [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
 //    self.textInputView.attributedText = attrStringWithImage;
@@ -215,27 +212,28 @@ static CGFloat const LSButtonHeight = 28;
 #pragma mark TextViewDelegate Methods
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+    self.textViewContentSizeHeight = textView.contentSize.height;
+    [self.rightControlItem setHighlighted:TRUE];
     return YES;
 }
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
-    //self.rightControlItem.textLabel.textColor = [UIColor grayColor];
+    [self.rightControlItem setHighlighted:FALSE];
     return YES;
 }
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    //[self.delegate composeView:self setComposeViewHeight:textView.contentSize.height + 4];
+    if (self.textViewContentSizeHeight != textView.contentSize.height) {
+        CGFloat heightDiff = textView.contentSize.height - self.textViewContentSizeHeight;
+        [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - heightDiff , self.view.frame.size.width, self.view.frame.size.height + heightDiff)];
+        self.textViewContentSizeHeight = textView.contentSize.height;
+    }
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-//    if ([text isEqualToString:@"\n"]) {
-//        [textView resignFirstResponder];
-//    } else {
-//        self.rightControlItem.textLabel.textColor = LSBlueColor();
-//    }
     return YES;
 }
 

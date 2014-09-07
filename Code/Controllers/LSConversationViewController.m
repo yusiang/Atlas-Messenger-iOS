@@ -73,6 +73,7 @@ static CGFloat const LSComposeViewHeight = 40;
 @property (nonatomic, strong) NSOrderedSet *messages;
 @property (nonatomic, strong) LSNotificationObserver *observer;
 @property (nonatomic, strong) NSMutableArray *collectionViewUpdates;
+@property (nonatomic, strong) LYRUIComposeViewController *composeViewController;
 
 @property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) BOOL keyboardIsOnScreen;
@@ -107,25 +108,26 @@ static CGFloat const LSComposeViewHeight = 40;
     self.collectionView.alwaysBounceVertical = TRUE;
     self.collectionView.bounces = TRUE;
     self.collectionView.accessibilityLabel = @"collectionView";
+    self.collectionView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
     [self.view addSubview:self.collectionView];
+
     [self.collectionView registerClass:[LSMessageCell class] forCellWithReuseIdentifier:LSMessageCellIdentifier];
     [self.collectionView registerClass:[LSMessageCellHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LSMessageHeaderIdentifier];
 
     // Setup Compose View
-    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight)];
-    self.composeView.delegate = self;
-    [self.view addSubview:self.composeView];
+//    self.composeView = [[LSComposeView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight)];
+//    self.composeView.delegate = self;
+//    [self.view addSubview:self.composeView];
 
     self.notificationObserver = [[LSNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
     self.notificationObserver.delegate = self;
     
-    LYRUIComposeViewController *controller = [[LYRUIComposeViewController alloc] init];
-    controller.view.frame = self.composeView.frame;
-    controller.view.backgroundColor = [UIColor redColor];
-    [self.view addSubview:controller.view];
-    [self addChildViewController:controller];
-    [controller didMoveToParentViewController:self];
-    
+    self.composeViewController = [[LYRUIComposeViewController alloc] init];
+    self.composeViewController.view.frame = CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight);
+    self.composeViewController.view.backgroundColor = [UIColor lightGrayColor];
+    [self.view addSubview:self.composeViewController.view];
+    [self addChildViewController:self.composeViewController];
+    [self.composeViewController didMoveToParentViewController:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -310,7 +312,7 @@ static CGFloat const LSComposeViewHeight = 40;
     self.keyboardHeight = kbSize.height;
     [self updateInsets];
 
-    self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y - kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
+    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x, self.composeViewController.view.frame.origin.y - kbSize.height, self.composeViewController.view.frame.size.width, self.composeViewController.view.frame.size.height);
     [self.collectionView setContentOffset:[self bottomOffset]];
 
     [UIView commitAnimations];
@@ -331,7 +333,7 @@ static CGFloat const LSComposeViewHeight = 40;
     self.keyboardHeight = 0;
     [self updateInsets];
 
-    self.composeView.frame = CGRectMake(self.composeView.frame.origin.x, self.composeView.frame.origin.y + kbSize.height, self.composeView.frame.size.width, self.composeView.frame.size.height);
+    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x, self.composeViewController.view.frame.origin.y + kbSize.height, self.composeViewController.view.frame.size.width, self.composeViewController.view.frame.size.height);
     [UIView commitAnimations];
 
     self.keyboardIsOnScreen = FALSE;
