@@ -17,6 +17,7 @@
     if (self) {
         _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 5, 300, 45)];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.alpha = 0.5;
     }
     return self;
 }

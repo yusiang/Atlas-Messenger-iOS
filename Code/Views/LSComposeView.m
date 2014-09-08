@@ -40,7 +40,6 @@ static CGFloat const LSButtonHeight = 28;
         self.cameraButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.cameraButton.BackgroundColor = LSLighGrayColor();
         self.cameraButton.accessibilityLabel = @"Cam Button";
-        self.cameraButton.contentEdgeInsets = UIEdgeInsetsMake(4, 4, 4, 4);
         self.cameraButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
         self.cameraButton.layer.cornerRadius = 2;
         [self.cameraButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];

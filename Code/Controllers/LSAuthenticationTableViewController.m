@@ -49,6 +49,9 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.frame];
+    [imageView setImage:[UIImage imageNamed:@"background"]];
+    self.tableView.backgroundView = imageView;
     [self.tableView setContentOffset:CGPointMake(0, 140)];
 }
 
@@ -94,7 +97,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     cell.textField.delegate = self;
     cell.textField.returnKeyType = UIReturnKeyNext;
     cell.textField.enablesReturnKeyAutomatically = YES;
-    
+
     switch (self.authenticationState) {
         case LSAuthenticationStateLogin:
             switch (path.row) {
@@ -162,6 +165,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(LSInputTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    cell.alpha = 0.5;
     if (self.isEditing && indexPath.row == 0) {
        [cell.textField becomeFirstResponder];
     }

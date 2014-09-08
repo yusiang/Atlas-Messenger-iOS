@@ -13,8 +13,6 @@
 		0A0C244619477D8F00401B74 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C244519477D8F00401B74 /* XCTest.framework */; };
 		0A0C244719477D8F00401B74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242619477D8F00401B74 /* Foundation.framework */; };
 		0A0C244819477D8F00401B74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242A19477D8F00401B74 /* UIKit.framework */; };
-		0A27A93D1997ED8D0070BD4F /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A93C1997ED8C0070BD4F /* camera@2x.png */; };
-		0A27A9411997FC490070BD4F /* compose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9401997FC490070BD4F /* compose@2x.png */; };
 		0A27A9431997FD210070BD4F /* logout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9421997FD210070BD4F /* logout@2x.png */; };
 		0A27A9451997FE110070BD4F /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9441997FE110070BD4F /* back@2x.png */; };
 		0A36AABB19B91FCD0070D25A /* LYRUITestConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A36AABA19B91FCD0070D25A /* LYRUITestConversationCell.m */; };
@@ -43,6 +41,11 @@
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		0AB0501A196E24F00029BC1B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB05019196E24F00029BC1B /* Crashlytics.framework */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
+		0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B519BD4CFA005142ED /* more@2x.png */; };
+		0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B719BD4CFA005142ED /* compose@2x.png */; };
+		0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B819BD4CFA005142ED /* compose.png */; };
+		0AD6C4C019BD4CFF005142ED /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4BF19BD4CFF005142ED /* camera@2x.png */; };
+		0AD6C4C219BD4D3C005142ED /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4C119BD4D3C005142ED /* background@2x.png */; };
 		0AEAD3A619B127B1006B4455 /* LSUIConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEAD3A519B127B1006B4455 /* LSUIConversationListViewController.m */; };
 		0AF3D8E0197462A900FED313 /* LSMessagingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF3D8DF197462A900FED313 /* LSMessagingTest.m */; };
 		0AFE3FE419B0E19C00FCA264 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57311950EB76000E27B0 /* main.m */; };
@@ -102,8 +105,6 @@
 		0A0C244519477D8F00401B74 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0A2324F31960DB8C00C1C98D /* LSConversationCellPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationCellPresenter.h; sourceTree = "<group>"; };
 		0A2324F41960DB8C00C1C98D /* LSConversationCellPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationCellPresenter.m; sourceTree = "<group>"; };
-		0A27A93C1997ED8C0070BD4F /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
-		0A27A9401997FC490070BD4F /* compose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compose@2x.png"; sourceTree = "<group>"; };
 		0A27A9421997FD210070BD4F /* logout@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout@2x.png"; sourceTree = "<group>"; };
 		0A27A9441997FE110070BD4F /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
 		0A36AAB919B91FCD0070D25A /* LYRUITestConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUITestConversationCell.h; sourceTree = "<group>"; };
@@ -156,6 +157,11 @@
 		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		0AC3D709196B29CD0089E49D /* LSBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSBubbleView.h; sourceTree = "<group>"; };
 		0AC3D70A196B29CD0089E49D /* LSBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSBubbleView.m; sourceTree = "<group>"; };
+		0AD6C4B519BD4CFA005142ED /* more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2x.png"; sourceTree = "<group>"; };
+		0AD6C4B719BD4CFA005142ED /* compose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compose@2x.png"; sourceTree = "<group>"; };
+		0AD6C4B819BD4CFA005142ED /* compose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compose.png; sourceTree = "<group>"; };
+		0AD6C4BF19BD4CFF005142ED /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
+		0AD6C4C119BD4D3C005142ED /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
 		0AD767701963104200582755 /* LSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUtilities.h; sourceTree = "<group>"; };
 		0AD767711963104200582755 /* LSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUtilities.m; sourceTree = "<group>"; };
 		0AE1A14519B0D8F300BFB754 /* LSContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactViewController.h; sourceTree = "<group>"; };
@@ -310,6 +316,17 @@
 			name = "Common View Controllers";
 			sourceTree = "<group>";
 		};
+		0AD6C4B419BD4CD6005142ED /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				0AD6C4BF19BD4CFF005142ED /* camera@2x.png */,
+				0AD6C4B519BD4CFA005142ED /* more@2x.png */,
+				0AD6C4B719BD4CFA005142ED /* compose@2x.png */,
+				0AD6C4B819BD4CFA005142ED /* compose.png */,
+			);
+			name = Icons;
+			sourceTree = "<group>";
+		};
 		0AFE402219B0F51100FCA264 /* Application Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -429,10 +446,10 @@
 		259A576B1950EB83000E27B0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0AD6C4B419BD4CD6005142ED /* Icons */,
 				0A27A9441997FE110070BD4F /* back@2x.png */,
-				0A27A9401997FC490070BD4F /* compose@2x.png */,
+				0AD6C4C119BD4D3C005142ED /* background@2x.png */,
 				0A27A9421997FD210070BD4F /* logout@2x.png */,
-				0A27A93C1997ED8C0070BD4F /* camera@2x.png */,
 				0ABEFFAE196B7686006FFFF3 /* logo@2x.png */,
 				259A576E1950EB83000E27B0 /* InfoPlist.strings */,
 				259A57701950EB83000E27B0 /* Images.xcassets */,
@@ -561,13 +578,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AD6C4C019BD4CFF005142ED /* camera@2x.png in Resources */,
+				0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */,
 				259A57751950EB83000E27B0 /* Images.xcassets in Resources */,
+				0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */,
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
 				0A27A9431997FD210070BD4F /* logout@2x.png in Resources */,
+				0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */,
 				0A27A9451997FE110070BD4F /* back@2x.png in Resources */,
-				0A27A9411997FC490070BD4F /* compose@2x.png in Resources */,
+				0AD6C4C219BD4D3C005142ED /* background@2x.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
-				0A27A93D1997ED8D0070BD4F /* camera@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

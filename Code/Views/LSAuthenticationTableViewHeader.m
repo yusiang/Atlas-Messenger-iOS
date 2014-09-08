@@ -23,7 +23,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.backgroundColor = LSLighGrayColor();
+        self.backgroundColor = [UIColor clearColor];
         
         self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
         self.logoView.translatesAutoresizingMaskIntoConstraints = NO;

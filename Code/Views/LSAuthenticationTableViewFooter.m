@@ -28,7 +28,7 @@ static NSString *LSCancelText = @"Or, Cancel";
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.backgroundColor = LSLighGrayColor();
+        self.backgroundColor = [UIColor clearColor];
         
         self.primaryActionButton = [[UIButton alloc] init];
         [self.primaryActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
