@@ -31,6 +31,10 @@
 		0A6B47C919B3968200D485D1 /* LSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6B47C819B3968200D485D1 /* LSSession.m */; };
 		0A6B47CA19B3975A00D485D1 /* LSAuthenticationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE1A14D19B0DA8700BFB754 /* LSAuthenticationTableViewController.m */; };
 		0A6C702719B3F49100778823 /* LSAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A6C702619B3F49100778823 /* LSAuthenticationViewController.m */; };
+		0A7023C219BE4C84004FF43E /* selection-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023BE19BE4C84004FF43E /* selection-indicator.png */; };
+		0A7023C319BE4C84004FF43E /* unselected-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023BF19BE4C84004FF43E /* unselected-indicator.png */; };
+		0A7023C419BE4C84004FF43E /* selection-indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023C019BE4C84004FF43E /* selection-indicator@2x.png */; };
+		0A7023C519BE4C84004FF43E /* unselected-indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023C119BE4C84004FF43E /* unselected-indicator@2x.png */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
 		0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C71947C86B0083732B /* CoreLocation.framework */; };
@@ -80,7 +84,7 @@
 		259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 259A576E1950EB83000E27B0 /* InfoPlist.strings */; };
 		259A57751950EB83000E27B0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A57701950EB83000E27B0 /* Images.xcassets */; };
 		259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */; };
-		259A57801950EB92000E27B0 /* LSUITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577D1950EB92000E27B0 /* LSUITest.m */; };
+		259A57801950EB92000E27B0 /* LSSampleAppUITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577D1950EB92000E27B0 /* LSSampleAppUITest.m */; };
 		9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */; };
 		B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */; };
 /* End PBXBuildFile section */
@@ -133,6 +137,10 @@
 		0A6B47C819B3968200D485D1 /* LSSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSession.m; sourceTree = "<group>"; };
 		0A6C702519B3F49100778823 /* LSAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSAuthenticationViewController.h; path = ../../LSAuthenticationViewController.h; sourceTree = "<group>"; };
 		0A6C702619B3F49100778823 /* LSAuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSAuthenticationViewController.m; path = ../../LSAuthenticationViewController.m; sourceTree = "<group>"; };
+		0A7023BE19BE4C84004FF43E /* selection-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selection-indicator.png"; sourceTree = "<group>"; };
+		0A7023BF19BE4C84004FF43E /* unselected-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselected-indicator.png"; sourceTree = "<group>"; };
+		0A7023C019BE4C84004FF43E /* selection-indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selection-indicator@2x.png"; sourceTree = "<group>"; };
+		0A7023C119BE4C84004FF43E /* unselected-indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselected-indicator@2x.png"; sourceTree = "<group>"; };
 		0A741CD319ABE67700F9C569 /* LSConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSConversationListViewController.h; sourceTree = "<group>"; };
 		0A741CD419ABE67700F9C569 /* LSConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationListViewController.m; sourceTree = "<group>"; };
 		0A7A732E19ABFF790074FCA8 /* LSContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSContactListViewController.h; sourceTree = "<group>"; };
@@ -212,7 +220,7 @@
 		259A57791950EB92000E27B0 /* KIFUITestActor+LSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KIFUITestActor+LSAdditions.h"; sourceTree = "<group>"; };
 		259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KIFUITestActor+LSAdditions.m"; sourceTree = "<group>"; };
 		259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LayerSampleTests-Info.plist"; sourceTree = "<group>"; };
-		259A577D1950EB92000E27B0 /* LSUITest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUITest.m; sourceTree = "<group>"; };
+		259A577D1950EB92000E27B0 /* LSSampleAppUITest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSampleAppUITest.m; sourceTree = "<group>"; };
 		53480A235A364E9AAAB2DC78 /* Pods-LayerSampleTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSampleTests.xcconfig"; path = "Pods/Pods-LayerSampleTests.xcconfig"; sourceTree = "<group>"; };
 		931E36A3415C497CA3681E7F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -448,6 +456,10 @@
 			children = (
 				0AD6C4B419BD4CD6005142ED /* Icons */,
 				0A27A9441997FE110070BD4F /* back@2x.png */,
+				0A7023BE19BE4C84004FF43E /* selection-indicator.png */,
+				0A7023BF19BE4C84004FF43E /* unselected-indicator.png */,
+				0A7023C019BE4C84004FF43E /* selection-indicator@2x.png */,
+				0A7023C119BE4C84004FF43E /* unselected-indicator@2x.png */,
 				0AD6C4C119BD4D3C005142ED /* background@2x.png */,
 				0A27A9421997FD210070BD4F /* logout@2x.png */,
 				0ABEFFAE196B7686006FFFF3 /* logo@2x.png */,
@@ -464,18 +476,18 @@
 				259A57791950EB92000E27B0 /* KIFUITestActor+LSAdditions.h */,
 				259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */,
 				259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */,
-				0A48C92A19B7F49900B536AB /* LYRUITestParticipantCell.h */,
 				0A36AAB919B91FCD0070D25A /* LYRUITestConversationCell.h */,
 				0A36AABA19B91FCD0070D25A /* LYRUITestConversationCell.m */,
+				0A48C92A19B7F49900B536AB /* LYRUITestParticipantCell.h */,
 				0A48C92B19B7F49900B536AB /* LYRUITestParticipantCell.m */,
-				259A577D1950EB92000E27B0 /* LSUITest.m */,
 				0A916B8619B77CDC00479CBD /* LYRUITestInterface.h */,
 				0A916B8719B77CDC00479CBD /* LYRUITestInterface.m */,
+				0A51BD1B19B66A98004105DC /* LYRUITestUser.h */,
+				0A51BD1C19B66A98004105DC /* LYRUITestUser.m */,
+				259A577D1950EB92000E27B0 /* LSSampleAppUITest.m */,
 				0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */,
 				2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */,
 				0AF3D8DF197462A900FED313 /* LSMessagingTest.m */,
-				0A51BD1B19B66A98004105DC /* LYRUITestUser.h */,
-				0A51BD1C19B66A98004105DC /* LYRUITestUser.m */,
 				0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */,
 				0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */,
 				0A51BD1E19B686BD004105DC /* LYUIAuthenticationTest.m */,
@@ -579,6 +591,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AD6C4C019BD4CFF005142ED /* camera@2x.png in Resources */,
+				0A7023C319BE4C84004FF43E /* unselected-indicator.png in Resources */,
+				0A7023C519BE4C84004FF43E /* unselected-indicator@2x.png in Resources */,
+				0A7023C419BE4C84004FF43E /* selection-indicator@2x.png in Resources */,
 				0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */,
 				259A57751950EB83000E27B0 /* Images.xcassets in Resources */,
 				0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */,
@@ -587,6 +602,7 @@
 				0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */,
 				0A27A9451997FE110070BD4F /* back@2x.png in Resources */,
 				0AD6C4C219BD4D3C005142ED /* background@2x.png in Resources */,
+				0A7023C219BE4C84004FF43E /* selection-indicator.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -733,7 +749,7 @@
 				252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */,
 				0A51BD2119B686F6004105DC /* LYRUIConversationListTest.m in Sources */,
 				0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */,
-				259A57801950EB92000E27B0 /* LSUITest.m in Sources */,
+				259A57801950EB92000E27B0 /* LSSampleAppUITest.m in Sources */,
 				0AF3D8E0197462A900FED313 /* LSMessagingTest.m in Sources */,
 				259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */,
 				0A51BD1A19B66570004105DC /* LYRUIParticipantPickerTest.m in Sources */,

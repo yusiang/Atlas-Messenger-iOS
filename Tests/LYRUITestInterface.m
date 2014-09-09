@@ -22,13 +22,13 @@
         
         _applicationController = applicationController;
         
-        LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-        [_applicationController.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
-            expect(completion).to.beTruthy;
-            expect(error).to.beNil;
-            [latch decrementCount];
-        }];
-        [latch waitTilCount:0];
+//        LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
+//        [_applicationController.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
+//            expect(completion).to.beTruthy;
+//            expect(error).to.beNil;
+//            [latch decrementCount];
+//        }];
+//        [latch waitTilCount:0];
         
     }
     return self;
@@ -135,5 +135,34 @@
     [self authenticateWithEmail:user.email password:user.password];
     [self loadContacts];
 }
+
+- (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs
+{
+    NSMutableSet *participantIdentifiers = [NSMutableSet setWithSet:participantIDs];
+    
+    if ([participantIdentifiers containsObject:self.applicationController.layerClient.authenticatedUserID]) {
+        [participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
+    }
+    
+    if (!participantIdentifiers.count > 0) return @"";
+    
+    NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers];
+    
+    if (!participants.count > 0) return @"";
+    
+    LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
+    NSString *conversationLabel = firstUser.fullName;
+    for (int i = 1; i < [[participants allObjects] count]; i++) {
+        LSUser *user = [[participants allObjects] objectAtIndex:i];
+        conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.fullName];
+    }
+    return conversationLabel;
+}
+
+- (NSString *)selectionIndicatorAccessibilityLabelForFullName:(NSString *)fullName
+{
+    return [NSString stringWithFormat:@"%@ selected", fullName];
+}
+
 
 @end

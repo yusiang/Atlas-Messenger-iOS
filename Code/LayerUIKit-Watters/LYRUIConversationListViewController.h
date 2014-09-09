@@ -96,4 +96,12 @@
  */
 @property (nonatomic, assign) CGFloat rowHeight;
 
+/**
+ @abstract Tells the receiver if is should display an image representing a conversation
+ @discussion Typically, this image will be an avatar image representing the user;
+ @default TRUE
+ @raises NSInternalInconsistencyException Raised if the value is mutated after the receiver has been presented.
+ */
+@property (nonatomic, assign) BOOL showsConversationImage;
+
 @end

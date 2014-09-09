@@ -35,7 +35,7 @@ UIFont *LSBoldFont(CGFloat size)
     return [UIFont fontWithName:LSFontBold size:size];
 }
 
-UIFont *LSHeavyLight(CGFloat size)
+UIFont *LSLightFont(CGFloat size)
 {
     return [UIFont fontWithName:LSFontLight size:size];;
 }

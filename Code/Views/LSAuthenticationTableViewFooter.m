@@ -28,12 +28,10 @@ static NSString *LSCancelText = @"Or, Cancel";
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.backgroundColor = [UIColor clearColor];
-        
         self.primaryActionButton = [[UIButton alloc] init];
         [self.primaryActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.primaryActionButton setTitleColor:LSLighGrayColor() forState:UIControlStateHighlighted];
-        self.primaryActionButton.titleLabel.font = LSMediumFont(16);
+        self.primaryActionButton.titleLabel.font = LSLightFont(16);
         self.primaryActionButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.primaryActionButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.primaryActionButton.backgroundColor = LSBlueColor();
@@ -47,7 +45,7 @@ static NSString *LSCancelText = @"Or, Cancel";
         [self.secondaryActionButton setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
         self.secondaryActionButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.secondaryActionButton.backgroundColor = [UIColor clearColor];
-        self.secondaryActionButton.titleLabel.font = LSMediumFont(16);
+        self.secondaryActionButton.titleLabel.font = LSLightFont(16);
         self.secondaryActionButton.titleLabel.textColor = LSBlueColor();
         self.secondaryActionButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         [self.secondaryActionButton addTarget:self action:@selector(secondaryActionButtonTapped) forControlEvents:UIControlEventTouchUpInside];

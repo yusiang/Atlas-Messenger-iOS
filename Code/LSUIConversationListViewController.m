@@ -13,8 +13,9 @@
 #import "LSConversationViewController.h"
 #import "LSUser.h"
 #import "LSUIParticipantPickerDataSource.h"
+#import "LYRUIConversationViewController.h"
 
-@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIParticipantPickerControllerDelegate>
+@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIParticipantPickerControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) LSUIParticipantPickerDataSource *participantPickerDataSource;
 
@@ -35,15 +36,14 @@
     UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"]
                                                                      style:UIBarButtonItemStylePlain
                                                                     target:self
-                                                                    action:@selector(logoutButtonTapped)];
+                                                                    action:@selector(moreButtonTapped)];
     logoutButton.accessibilityLabel = @"logout";
     [self.navigationItem setLeftBarButtonItem:logoutButton];
     
     // Right navigation item
-    UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"compose"]
-                                                                              style:UIBarButtonItemStylePlain
-                                                                             target:self
-                                                                             action:@selector(composeButtonTapped)];
+    UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
+                                                                                   target:self
+                                                                                   action:@selector(composeButtonTapped)];
     composeButton.accessibilityLabel = @"New";
     [self.navigationItem setRightBarButtonItem:composeButton];
 }
@@ -52,6 +52,9 @@
 
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
+    //LYRUIConversationViewController *controller = [LYRUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
+    
+    
     LSConversationViewController *viewController = [LSConversationViewController new];
     viewController.conversation = conversation;
     viewController.layerClient = self.applicationController.layerClient;
@@ -89,7 +92,46 @@
 
 #pragma mark - Bar Button Functionality Methods
 
-- (void)logoutButtonTapped
+- (void)moreButtonTapped
+{
+    NSString *user = self.applicationController.APIManager.authenticatedSession.user.fullName;
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:nil
+                                  delegate:self
+                                  cancelButtonTitle:@"Cancel"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:[NSString stringWithFormat:@"Logout - %@", user], @"Reload Contacts", nil];
+
+    [actionSheet showInView:self.view];
+}
+
+- (void)composeButtonTapped
+{
+    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:self.participantPickerDataSource
+                                                                                                              sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    controller.participantPickerDelegate = self;
+    controller.allowsMultipleSelection = YES;
+    [self presentViewController:controller animated:TRUE completion:nil];
+}
+
+#pragma mark
+#pragma mark UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:
+            [self logout];
+            break;
+        case 1:
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"loadContacts" object:nil];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)logout
 {
     [SVProgressHUD show];
     [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
@@ -101,15 +143,6 @@
         }
         [SVProgressHUD dismiss];
     }];
-}
-
-- (void)composeButtonTapped
-{
-    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:self.participantPickerDataSource
-                                                                                                              sortType:LYRUIParticipantPickerControllerSortTypeFirst];
-    controller.participantPickerDelegate = self;
-    controller.allowsMultipleSelection = YES;
-    [self presentViewController:controller animated:TRUE completion:nil];
 }
 
 #pragma mark - LYRUIParticipantTableViewControllerDelegate methods

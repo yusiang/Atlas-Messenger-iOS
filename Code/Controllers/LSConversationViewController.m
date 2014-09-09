@@ -128,6 +128,9 @@ static CGFloat const LSComposeViewHeight = 40;
 //    [self.view addSubview:self.composeViewController.view];
 //    [self addChildViewController:self.composeViewController];
 //    [self.composeViewController didMoveToParentViewController:self];
+    
+    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, -60)
+                                                         forBarMetrics:UIBarMetricsDefault];
 }
 
 - (void)viewWillAppear:(BOOL)animated

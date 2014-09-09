@@ -15,9 +15,15 @@
  */
 @interface LYRUIConversationTableViewCell : UITableViewCell <LYRUIConversationPresenting>
 
-@property (nonatomic) UIFont *titleFont UI_APPEARANCE_SELECTOR;
-@property (nonatomic) UIColor *titleColor UI_APPEARANCE_SELECTOR;
-@property (nonatomic) UIFont *subtitleFont UI_APPEARANCE_SELECTOR;
-@property (nonatomic) UIColor *subtitleColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic) UIFont *conversationLabelFont UI_APPEARANCE_SELECTOR;
+@property (nonatomic) UIColor *conversationLableColor UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic) UIFont *lastMessageTextFont UI_APPEARANCE_SELECTOR;
+@property (nonatomic) UIColor *lastMessageTextColor UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic) UIFont *dateLabelFont UI_APPEARANCE_SELECTOR;
+@property (nonatomic) UIColor *dateLabelColor UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
 
 @end

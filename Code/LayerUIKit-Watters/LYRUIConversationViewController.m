@@ -7,9 +7,12 @@
 //
 
 #import "LYRUIConversationViewController.h"
-#import "LYRUIMessageCollectionViewCell.h"
+#import "LYRUIOutgoingMessageCollectionViewCell.h"
+#import "LYRUIIncomingMessageCollectionViewCell.h"
+#import "LYRUIConstants.h"
+#import "LYRUIUtilities.h"
 
-@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIComposeViewControllerDelegate>
 
 @property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, strong) LYRConversation *conversation;
@@ -22,9 +25,12 @@
 
 @implementation LYRUIConversationViewController
 
-static NSString *const LYRUIMessageCellIdentifier = @"messageCellIdentifier";
+static NSString *const LYRUIIncomingMessageCellIdentifier = @"incomingMessageCellIdentifier";
+static NSString *const LYRUIOutgoingMessageCellIdentifier = @"outgoingMessageCellIdentifier";
+
 static NSString *const LSMessageHeaderIdentifier = @"headerViewIdentifier";
 static CGFloat const LSComposeViewHeight = 40;
+static CGFloat const LSMaxCellWidth = 240;
 
 + (instancetype)conversationViewControllerWithConversation:(LYRConversation *)conversation layerClient:(LYRClient *)layerClient;
 {
@@ -67,13 +73,19 @@ static CGFloat const LSComposeViewHeight = 40;
     self.collectionView.bounces = TRUE;
     self.collectionView.accessibilityLabel = @"collectionView";
     [self.view addSubview:self.collectionView];
-    [self.collectionView registerClass:[LYRUIMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIMessageCellIdentifier];
+    [self.collectionView registerClass:[LYRUIIncomingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier];
+    [self.collectionView registerClass:[LYRUIOutgoingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier];
     //[self.collectionView registerClass:[LSMessageCellHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LSMessageHeaderIdentifier];
     
     // Setup Compose View
-    self.composeViewController = [[UIViewController alloc] init];
-    self.composeViewController.view.frame = CGRectMake(0, 100, 320, 40);
+    self.composeViewController = [[LYRUIComposeViewController alloc] init];
+    self.composeViewController.delegate = self;
+    self.composeViewController.view.frame = CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight);
+    [self.view addSubview:self.composeViewController.view];
     [self addChildViewController:self.composeViewController];
+    [self.composeViewController didMoveToParentViewController:self];
+    
+    [self configureMessageBubbleAppearance];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -135,18 +147,19 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    LYRUIMessageCollectionViewCell  *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LYRUIMessageCellIdentifier forIndexPath:indexPath];
-    [self configureCell:cell forIndexPath:indexPath];
-    //[self markMessageAtIndexPathAsRead:indexPath];
+    LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
+    LYRMessagePart *messagePart = [message.parts objectAtIndex:indexPath.row];
+    
+    LYRUIMessageCollectionViewCell <LYRUIMessagePresenting> *cell;
+    if ([self.layerClient.authenticatedUserID isEqualToString:message.sentByUserID]) {
+        cell =  [self.collectionView dequeueReusableCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier forIndexPath:indexPath];
+    } else {
+        cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier forIndexPath:indexPath];
+    }
+    [cell presentMessage:messagePart fromParticipant:nil];
     return cell;
 }
 
-- (void)configureCell:(LYRUIMessageCollectionViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
-{
-//    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessages:self.messages indexPath:indexPath persistanceManager:self.persistanceManager];
-//    [self updateRecipientStatusForMessage:presenter.message];
-//    [cell updateWithPresenter:presenter];
-}
 
 - (void)markMessageAtIndexPathAsRead:(NSIndexPath *)indexPath
 {
@@ -175,14 +188,32 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    CGRect rect = [[UIScreen mainScreen] bounds];
+    CGFloat itemHeight;
+    
     LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
     LYRMessagePart *part = [message.parts objectAtIndex:indexPath.row];
-    return CGSizeMake(320, 10);
+    
+    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+        NSString *text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
+        CGSize size = LYRUITextPlainSize(text, LSMediumFont(12));
+        itemHeight = size.height + 16;
+    } else if ([part.MIMEType isEqualToString:LYRMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+        UIImage *image = [UIImage imageWithData:part.data];
+        CGSize size = LYRUIImageSize(image, rect);
+        itemHeight = size.height + 16;
+    } else if ([part.MIMEType isEqualToString:LYRMIMETypeLocation]){
+        itemHeight = 200;
+    } else {
+        itemHeight = 200;
+    }
+     
+    return CGSizeMake(rect.size.width, itemHeight);
 }
 
 - (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    return UIEdgeInsetsMake(0, 0, 6, 0);
+    return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -195,35 +226,15 @@ static CGFloat const LSComposeViewHeight = 40;
     return 0;
 }
 
-//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-//{
-//    LSMessageCellHeader *header = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LSMessageHeaderIdentifier forIndexPath:indexPath];
-//    if (kind == UICollectionElementKindSectionHeader ) {
-//        LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessages:self.messages indexPath:indexPath persistanceManager:self.persistanceManager];
-//        if ([presenter shouldShowSenderLabel] && [presenter shouldShowTimeStamp]) {
-//            [header updateWithSenderName:[presenter labelForMessageSender] timeStamp:presenter.message.sentAt];
-//        } else if ([presenter shouldShowSenderLabel]) {
-//            [header updateWithSenderName:[presenter labelForMessageSender] timeStamp:nil];
-//        } else if ([presenter shouldShowTimeStamp]) {
-//            [header updateWithSenderName:nil timeStamp:presenter.message.receivedAt];
-//        }
-//    }
-//    return header;
-//}
-//
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
-//{
-//    CGRect bounds = [[UIScreen mainScreen] bounds];
-//    LSMessageCellPresenter *presenter = [LSMessageCellPresenter presenterWithMessages:self.messages indexPath:[NSIndexPath indexPathForItem:0 inSection:section] persistanceManager:self.persistanceManager];
-//    if ([presenter shouldShowSenderLabel] && [presenter shouldShowTimeStamp]) {
-//        return CGSizeMake(bounds.size.width, 60);
-//    } else if ([presenter shouldShowSenderLabel]) {
-//        return CGSizeMake(bounds.size.width, 40);
-//    } else if ([presenter shouldShowTimeStamp]) {
-//        return CGSizeMake(bounds.size.width, 40);
-//    }
-//    return CGSizeZero;
-//}
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    return [[UICollectionReusableView alloc] init];
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    return CGSizeMake(320, 20);
+}
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
@@ -522,5 +533,12 @@ static CGFloat const LSComposeViewHeight = 40;
     }
 }
 
-
+- (void)configureMessageBubbleAppearance
+{
+    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
+    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(12)];
+    
+    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
+    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(12)];
+}
 @end

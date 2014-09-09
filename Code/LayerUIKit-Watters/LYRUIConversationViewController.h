@@ -10,6 +10,7 @@
 #import <LayerKit/LayerKit.h>
 #import "LYRUIParticipant.h"
 #import "LYRUIMessageInputToolbar.h"
+#import "LYRUIComposeViewController.h"
 
 /**
  Required Reading:
@@ -18,6 +19,7 @@
  * https://github.com/objcio/issue-3-collection-view-layouts
  * http://skeuo.com/uicollectionview-custom-layout-tutorial
  */
+
 
 @class LYRUIConversationViewController;
 
@@ -38,13 +40,12 @@
  * Uses collection view
  * Messages are grouped into sections by time. When a new time period is encountered you create a section. I'm guessing we use intervals of like 15-30 mins (maybe configurable)
  */
-
 @interface LYRUIConversationViewController : UIViewController
 
 + (instancetype)conversationViewControllerWithConversation:(LYRConversation *)conversation layerClient:(LYRClient *)layerClient;
 
 @property (nonatomic, weak) id<LYRUIConversationViewControllerDataSource> dataSource;
-@property (nonatomic, strong) UIViewController *composeViewController;
+@property (nonatomic, strong) LYRUIComposeViewController *composeViewController;
 @property (nonatomic, assign) BOOL allowsEditing;
 
 @end

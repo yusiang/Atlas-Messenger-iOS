@@ -32,8 +32,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
         self.title = @"Participants";
         self.accessibilityLabel = @"Participants";
         
-        self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:20];
-    
+        self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
         self.selectedParticipants = [[NSMutableSet alloc] init];
         
         [self configureAppearance];
@@ -115,12 +114,12 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
-    // Don't Care
+    //
 }
 
 - (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller
 {
-    // Don't Care
+    //
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
@@ -166,6 +165,12 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     return participantCell;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
+    return [[LYRUIPaticipantSectionHeaderView alloc] initWithKey:key];
+}
+
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([[tableView indexPathsForSelectedRows] containsObject:indexPath]) {
@@ -180,14 +185,23 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 {
     NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
     id<LYRUIParticipant> participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
-
     [self.delegate participantTableViewController:self didSelectParticipant:participant];
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+#pragma mark UIBarButtonItem implementation methods
+- (void)cancelButtonTapped
 {
-    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
-    return [[LYRUIPaticipantSectionHeaderView alloc] initWithKey:key];
+    [self.delegate participantTableViewControllerDidSelectCancelButton];
+}
+
+- (void)doneButtonTapped
+{
+    for (NSIndexPath *indexPath in [self.tableView indexPathsForSelectedRows]) {
+         NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
+        id<LYRUIParticipant> participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
+        [self.selectedParticipants addObject:participant];
+    }
+    [self.delegate participantTableViewControllerDidSelectDoneButtonWithSelectedParticipants:self.selectedParticipants];
 }
 
 - (void)reloadContacts
@@ -213,25 +227,10 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     return mutableKeys;
 }
 
-- (void)cancelButtonTapped
-{
-    [self.delegate participantTableViewControllerDidSelectCancelButton];
-}
-
-- (void)doneButtonTapped
-{
-    for (NSIndexPath *indexPath in [self.tableView indexPathsForSelectedRows]) {
-         NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
-        id<LYRUIParticipant> participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
-        [self.selectedParticipants addObject:participant];
-    }
-    [self.delegate participantTableViewControllerDidSelectDoneButtonWithSelectedParticipants:self.selectedParticipants];
-}
-
 - (void)configureAppearance
 {
     [[LYRUIParticipantTableViewCell appearance] setTitleColor:[UIColor blackColor]];
-    [[LYRUIParticipantTableViewCell appearance] setTitleFont:LSMediumFont(14)];
+    [[LYRUIParticipantTableViewCell appearance] setTitleFont:LSLightFont(14)];
 }
 
 @end

@@ -45,7 +45,6 @@
 
 - (NSSet *)participants
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"loadContacts" object:nil];
     return _participants;
 }
 

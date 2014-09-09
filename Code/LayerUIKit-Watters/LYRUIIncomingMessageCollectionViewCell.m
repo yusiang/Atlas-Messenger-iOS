@@ -14,18 +14,31 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        
+       self.bubbleView.backgroundColor = LSLighGrayColor();
+        
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)updateConstraints
 {
-    // Drawing code
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImage
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                multiplier:1.0
+                                                                  constant:10]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.avatarImage
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:10]];
+    [super updateConstraints];
 }
-*/
 
 @end

@@ -19,20 +19,21 @@
 
 @implementation LYRUIParticipantTableViewCell
 
+static CGFloat const LSSelectionIndicatorSize = 30;
+static CGFloat const LSSelectionIndicatorRightMargin = -20;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     if (self) {
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        [self setSeparatorInset:UIEdgeInsetsMake(0, 20, 0, 0)];
         
-        self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
+        self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:LSSelectionIndicatorSize];
         self.selectionIndicator.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.selectionIndicator];
-        [self updateConstraints];
-        
     }
+    
     return self;
 }
 
@@ -40,6 +41,7 @@
 {
     self.textLabel.text = [participant fullName];
     self.accessibilityLabel = [participant fullName];
+    [self updateConstraints];
 }
 
 - (void)updateWithSelectionIndicator:(UIControl *)selectionIndicator
@@ -55,14 +57,14 @@
                                                                     toItem:nil
                                                                  attribute:NSLayoutAttributeNotAnAttribute
                                                                 multiplier:1.0
-                                                                  constant:30]];
+                                                                  constant:LSSelectionIndicatorSize]];
     
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator
                                                                  attribute:NSLayoutAttributeHeight
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:nil attribute:NSLayoutAttributeNotAnAttribute
                                                                 multiplier:1.0
-                                                                  constant:30]];
+                                                                  constant:LSSelectionIndicatorSize]];
     
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator
                                                                  attribute:NSLayoutAttributeCenterY
@@ -78,7 +80,7 @@
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
-                                                                  constant:-20]];
+                                                                  constant:LSSelectionIndicatorRightMargin]];
     
     [super updateConstraints];
 }
@@ -87,6 +89,7 @@
 {
     [super setSelected:selected animated:animated];
     [self.selectionIndicator setHighlighted:selected];
+    
     if (self.selectionIndicator.highlighted) {
         self.selectionIndicator.accessibilityLabel = [NSString stringWithFormat:@"%@ selected", self.accessibilityLabel];
     } else {

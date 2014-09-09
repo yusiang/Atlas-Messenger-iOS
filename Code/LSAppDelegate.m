@@ -223,6 +223,7 @@ extern void LYRSetLogLevelFromEnvironment();
     self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
     self.viewController.applicationController = self.applicationController;
     self.viewController.allowsEditing = FALSE;
+    self.viewController.showsConversationImage = TRUE;
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [self.navigationController presentViewController:conversationController animated:YES completion:^{
@@ -235,7 +236,11 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     [[UINavigationBar appearance] setTintColor:LSBlueColor()];
     [[UINavigationBar appearance] setBarTintColor:LSLighGrayColor()];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: LSMediumFont(14)}];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: LSLightFont(16)}];
+    
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : LSMediumFont(14)} forState:UIControlStateNormal];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LSBlueColor()];
+
 }
 
 @end

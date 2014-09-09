@@ -32,7 +32,7 @@
         self.textView.translatesAutoresizingMaskIntoConstraints = NO;
         self.textView.contentInset = UIEdgeInsetsMake(-4,0,0,0);
         self.textView.userInteractionEnabled = NO;
-        self.textView.font = LSMediumFont(14);
+        self.textView.font = LSLightFont(14);
         self.textView.backgroundColor = [UIColor clearColor];
         [self addSubview:self.textView];
         

@@ -18,11 +18,9 @@
 @property (nonatomic) UITextView *lastMessageTextView;
 @property (nonatomic) BOOL shouldShowAvatarImage;
 
-@property (nonatomic) NSLayoutConstraint *avatarImageHeightConstraint;
-@property (nonatomic) NSLayoutConstraint *avatarImageWidthConstraint;
-
 @property (nonatomic) CGFloat senderLabelHeight;
 @property (nonatomic) CGFloat dateLabelHeight;
+@property (nonatomic) CGFloat dateLabelWidth;
 
 @property (nonatomic) CGFloat cellHorizontalMargin;
 @property (nonatomic) CGFloat avatarImageSizeRatio;
@@ -33,13 +31,12 @@
 
 // Cell Constants
 static CGFloat const LSCellVerticalMargin = 12.0f;
+static CGFloat const LSConversationLabelRightPadding = -6;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
-        [self setBackgroundColor:[UIColor whiteColor]];
         
         if (!dateFormatter) {
             dateFormatter = [[NSDateFormatter alloc] init];
@@ -52,26 +49,20 @@ static CGFloat const LSCellVerticalMargin = 12.0f;
         
         // Initialiaze Sender Image
         self.senderLabel = [[UILabel alloc] init];
-        self.senderLabel.font = self.titleFont;
-        self.senderLabel.textColor = self.titleColor;
         self.senderLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.senderLabel];
         
         // Initialize Message Text
         self.lastMessageTextView = [[UITextView alloc] init];
-        self.lastMessageTextView.contentInset = UIEdgeInsetsMake(-10,-4,0,0);
         self.lastMessageTextView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.lastMessageTextView.contentInset = UIEdgeInsetsMake(-10,-4,0,0);
         self.lastMessageTextView.userInteractionEnabled = NO;
-        self.lastMessageTextView.font = self.subtitleFont;
-        self.lastMessageTextView.textColor = self.subtitleColor;
         [self.contentView addSubview:self.lastMessageTextView];
 
         // Initialize Date Label
         self.dateLabel = [[UILabel alloc] init];
-        self.dateLabel.textAlignment= NSTextAlignmentLeft;
-        self.dateLabel.font = LSMediumFont(12);
-        self.dateLabel.textColor = [UIColor darkGrayColor];
         self.dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.dateLabel.textAlignment= NSTextAlignmentRight;
         [self.contentView addSubview:self.dateLabel];
         
         self.cellHorizontalMargin = 10.0f;
@@ -101,7 +92,6 @@ static CGFloat const LSCellVerticalMargin = 12.0f;
     }
    
     [self configureLayoutConstraintsForLabels];
-    [self updateLayoutConstraints];
 }
 
 static NSDateFormatter *dateFormatter;
@@ -133,10 +123,16 @@ static NSDateFormatter *dateFormatter;
 - (void)configureLayoutConstraintsForLabels
 {
     // Configure per UI Appearance Proxy
-    self.senderLabel.font = self.titleFont;
-    self.senderLabel.textColor = self.titleColor;
-    self.lastMessageTextView.font = self.subtitleFont;
-    self.lastMessageTextView.textColor = self.subtitleColor;
+    self.senderLabel.font = self.conversationLabelFont;
+    self.senderLabel.textColor = self.conversationLableColor;
+    
+    self.lastMessageTextView.font = self.lastMessageTextFont;
+    self.lastMessageTextView.textColor = self.lastMessageTextColor;
+    
+    self.dateLabel.font = self.dateLabelFont;
+    self.dateLabel.textColor = self.dateLabelColor;
+    
+    self.backgroundColor = [UIColor whiteColor];
     
     NSDictionary *senderLabelAttributes = @{NSFontAttributeName:self.senderLabel.font};
     CGSize senderLabelSize = [self.senderLabel.text sizeWithAttributes:senderLabelAttributes];
@@ -145,21 +141,19 @@ static NSDateFormatter *dateFormatter;
     NSDictionary *dateLabelAttributes = @{NSFontAttributeName:self.dateLabel.font};
     CGSize dateLabelSize = [self.dateLabel.text sizeWithAttributes:dateLabelAttributes];
     self.dateLabelHeight = dateLabelSize.height;
+    self.dateLabelWidth = dateLabelSize.width + 4;
 }
 
-- (void)shouldShowAvatarImage:(BOOL)shouldShowAvatarImage
+- (void)shouldShowConversationImage:(BOOL)shouldShowConversationImage
 {
-    _shouldShowAvatarImage = shouldShowAvatarImage;
+    _shouldShowAvatarImage = shouldShowConversationImage;
     
-    if (shouldShowAvatarImage) {
-        
+    if (shouldShowConversationImage) {
         self.avatarImageSizeRatio = 0.60f;
     }
-    
-    [self updateAvatarImageViewConstraints];
 }
 
-- (void)updateAvatarImageViewConstraints
+- (void)updateConstraints
 {
     //**********Avatar Constraints**********//
     // Width
@@ -197,12 +191,9 @@ static NSDateFormatter *dateFormatter;
                                                                  attribute:NSLayoutAttributeCenterY
                                                                 multiplier:1.0
                                                                   constant:0]];
+    
 
-}
-
-- (void)updateLayoutConstraints
-{
-    //**********Sender Label Constraints**********//
+    //**********Conversation Label Constraints**********//
     // Left Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
                                                                  attribute:NSLayoutAttributeLeft
@@ -219,7 +210,7 @@ static NSDateFormatter *dateFormatter;
                                                                     toItem:self.dateLabel
                                                                  attribute:NSLayoutAttributeLeft
                                                                 multiplier:1.0
-                                                                  constant:-6]];
+                                                                  constant:LSConversationLabelRightPadding]];
     // Top Margin
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderLabel
                                                                  attribute:NSLayoutAttributeTop
@@ -263,7 +254,7 @@ static NSDateFormatter *dateFormatter;
                                                                     toItem:nil
                                                                  attribute:NSLayoutAttributeNotAnAttribute
                                                                 multiplier:1.0
-                                                                  constant:60]];
+                                                                  constant:self.dateLabelWidth]];
 
     //**********Message Text Constraints**********//
     //Left Margin
@@ -290,7 +281,7 @@ static NSDateFormatter *dateFormatter;
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
                                                                   constant:8]];
-    // Bottom Margin
+    // Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
                                                                  attribute:NSLayoutAttributeHeight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -298,6 +289,7 @@ static NSDateFormatter *dateFormatter;
                                                                  attribute:NSLayoutAttributeNotAnAttribute
                                                                 multiplier:1.0
                                                                   constant:self.lastMessageTextView.font.lineHeight * 2]];
+    [super updateConstraints];
 }
 
 - (void)layoutSubviews
@@ -305,6 +297,7 @@ static NSDateFormatter *dateFormatter;
     [super layoutSubviews];
     
     CGFloat seperatorInset;
+    
     if (self.shouldShowAvatarImage) {
         seperatorInset = self.frame.size.height * self.avatarImageSizeRatio + self.cellHorizontalMargin * 2;
     } else {

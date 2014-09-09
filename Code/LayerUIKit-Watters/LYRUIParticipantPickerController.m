@@ -121,11 +121,21 @@
     return self.participantTableViewController.rowHeight;
 }
 
+- (void)setParticipantPickerSortType:(LYRUIParticipantPickerSortType)participantPickerSortType
+{
+    if (self.isOnScreen) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot change sort type after view has been loaded" userInfo:nil];
+    }
+    _sortType = participantPickerSortType;
+}
+
 #pragma mark - Participant Table View Controller Delegate Methods
 
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    //
+    if (!self.allowsMultipleSelection) {
+        [self.participantPickerDelegate participantSelectionViewController:self didSelectParticipants:[NSSet setWithObject:participant]];
+    }
 }
 
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSDictionary *))completion

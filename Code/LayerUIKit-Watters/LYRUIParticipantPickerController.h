@@ -10,6 +10,9 @@
 #import "LYRUIParticipantTableViewCell.h"
 #import "LYRUIParticipant.h"
 
+/**
+ @abstract The `LYRUIParticipantPickerSortType` allows for configuration of sorting order of the participant list
+ */
 typedef enum : NSUInteger {
     LYRUIParticipantPickerControllerSortTypeFirst,
     LYRUIParticipantPickerControllerSortTypeLast,
@@ -60,6 +63,9 @@ typedef enum : NSUInteger {
 
 @end
 
+/**
+ @abstract Displays a list of participants in a navigation controller and allows for searching of participants
+ */
 @interface LYRUIParticipantPickerController : UINavigationController
 
 ///------------------------------------
@@ -116,7 +122,11 @@ typedef enum : NSUInteger {
  */
 @property (nonatomic, assign) CGFloat rowHeight;
 
-
+/**
+ @abstract Configures the sort type of the receiver.
+ @default LYRUIParticipantPickerControllerSortTypeFirst
+ @raises NSInternalInconsistencyException Raised if the value is mutated after the receiver has been presented.
+ */
 @property (nonatomic, assign) LYRUIParticipantPickerSortType participantPickerSortType;
 
 @end

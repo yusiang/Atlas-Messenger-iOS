@@ -14,9 +14,14 @@
  */
 @protocol LYRUIParticipant <NSObject>
 
+/**
+ @abstract The first name of the participant as it should be presented in the user interface.
+ */
 @property (nonatomic, readonly) NSString *firstName;
 
-
+/**
+ @abstract The last name of the participant as it should be presented in the user interface.
+ */
 @property (nonatomic, readonly) NSString *lastName;
 
 /**

@@ -12,6 +12,6 @@
 
 @protocol LYRUIMessagePresenting <NSObject>
 
-- (void)presentMessage:(LYRMessage *)message fromParticipant:(id<LYRUIParticipant>)participant;
+- (void)presentMessage:(LYRMessagePart *)message fromParticipant:(id<LYRUIParticipant>)participant;
 
 @end

@@ -46,7 +46,6 @@
 
 - (void)tearDown
 {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
 
@@ -72,6 +71,18 @@
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
+}
+
+- (void)testSendingDanAndNoahAFuckTonOfMessages
+{
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
+    
+    NSSet *participants = [NSSet setWithObjects:@"e51e1517-d2b5-42b3-ad47-499ccdedd6fc", @"4261656f-da0e-44da-b5e5-84a9b267a6dd", @"b79671cf-a132-45f9-9249-ac397d6e6c76", @"7c58970e-8803-464f-83df-9389cdbfdf01", nil];
+    for (int i = 0; i < 10; i++) {
+         [self.layerContentFactory conversationsWithParticipants:participants number:1];
+        [tester waitForTimeInterval:10];
+    }
+    [tester waitForTimeInterval:20];
 }
 
 - (LSUser *)registerUser:(LSUser *)testUser

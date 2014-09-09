@@ -36,8 +36,6 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (id)initConversationlistViewControllerWithLayerClient:(LYRClient *)layerClient
 {
-    self.allowsEditing = YES;
-    
     self = [super initWithStyle:UITableViewStylePlain];
     if (self)  {
         
@@ -48,6 +46,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
         [self setCellClass:[LYRUIConversationTableViewCell class]];
         [self setRowHeight:80];
         [self setAllowsEditing:TRUE];
+        [self setShowsConversationImage:TRUE];
         
         // Accessibility
         self.title = @"Conversations";
@@ -82,9 +81,9 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self.tableView.tableHeaderView = self.searchBar;
     self.tableView.accessibilityLabel = @"Conversation List";
     
-    [self configureTableViewCellAppearance];
-    
     [self.tableView setContentOffset:CGPointMake(0, 44)];
+    
+    [self configureTableViewCellAppearance];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -151,6 +150,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 }
 
 #pragma mark - Navigation Bar Edit Button
+
 - (void)addEditButton
 {
     UIBarButtonItem *editButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit"
@@ -166,7 +166,6 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 - (void)fetchLayerConversations
 {
     NSSet *conversations = [self.layerClient conversationsForIdentifiers:nil];
-    
     self.conversations = [conversations sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessage.sentAt" ascending:NO]]];
     
     if (!self.searchPredicate) {
@@ -215,9 +214,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    [self.delegate conversationListViewController:self didSearchWithString:searchText completion:^{
-        [self reloadConversations];
-    }];
+
 }
 
 #pragma mark - Table view data source methods
@@ -234,7 +231,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     
     UITableViewCell<LYRUIConversationPresenting> *conversationCell = [tableView dequeueReusableCellWithIdentifier:LYRUIConversationCellReuseIdentifier forIndexPath:indexPath];
     [conversationCell presentConversation:conversation withLabel:conversationLabel];
-    [conversationCell shouldShowAvatarImage:FALSE];
+    [conversationCell shouldShowConversationImage:self.showsConversationImage];
     return conversationCell;
 }
 
@@ -264,6 +261,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 #pragma mark - Conversation Editing Methods
 
+// Set table view into editing mode and change left bar buttong to a done button
 - (void)editButtonTapped
 {
     [self.tableView setEditing:YES animated:YES];
@@ -330,10 +328,13 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void)configureTableViewCellAppearance
 {
-    [[LYRUIConversationTableViewCell appearance] setTitleFont:LSMediumFont(16)];
-    [[LYRUIConversationTableViewCell appearance] setTitleColor:[UIColor blackColor]];
-    [[LYRUIConversationTableViewCell appearance] setSubtitleFont:LSMediumFont(12)];
-    [[LYRUIConversationTableViewCell appearance] setSubtitleColor:[UIColor grayColor]];
+    [[LYRUIConversationTableViewCell appearance] setConversationLabelFont:LSLightFont(14)];
+    [[LYRUIConversationTableViewCell appearance] setConversationLableColor:[UIColor blackColor]];
+    [[LYRUIConversationTableViewCell appearance] setLastMessageTextFont:LSLightFont(12)];
+    [[LYRUIConversationTableViewCell appearance] setLastMessageTextColor:[UIColor grayColor]];
+    [[LYRUIConversationTableViewCell appearance] setDateLabelFont:LSLightFont(12)];
+    [[LYRUIConversationTableViewCell appearance] setDateLabelColor:[UIColor darkGrayColor]];
+    [[LYRUIConversationTableViewCell appearance] setBackgroundColor:[UIColor whiteColor]];
 }
 
 @end

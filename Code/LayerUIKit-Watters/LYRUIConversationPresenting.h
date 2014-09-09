@@ -26,6 +26,9 @@ NSString *LYRUIMIMETypeLocation;  /// location
  */
 - (void)presentConversation:(LYRConversation *)conversation withLabel:(NSString *)conversationLabel;
 
-- (void)shouldShowAvatarImage:(BOOL)shouldShowAvatarImage;
+/**
+ @abstract Tells the receiver to display an avatar image or no.
+ */
+- (void)shouldShowConversationImage:(BOOL)shouldShowConversationImage;
 
 @end

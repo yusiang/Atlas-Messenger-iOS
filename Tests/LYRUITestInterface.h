@@ -41,6 +41,10 @@
 
 - (LSUser *)registerAndAuthenticateUser:(LSUser *)user;
 
+- (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs;
+
+- (NSString *)selectionIndicatorAccessibilityLabelForUser:(LSUser *)testUser;
+
 @property (nonatomic, strong) LSApplicationController *applicationController;
 
 @end

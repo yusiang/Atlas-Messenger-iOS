@@ -23,8 +23,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.backgroundColor = [UIColor clearColor];
-        
         self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
         self.logoView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.logoView];
@@ -35,7 +33,7 @@
         self.textView.textAlignment = NSTextAlignmentCenter;
         self.textView.backgroundColor = [UIColor clearColor];
         self.textView.text = @"The open communications platform for the internet.";
-        self.textView.font = LSMediumFont(12);
+        self.textView.font = LSLightFont(12);
         [self addSubview:self.textView];
         
         [self updateConstraints];
