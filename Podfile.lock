@@ -1,12 +1,12 @@
 PODS:
   - Expecta (0.3.1)
   - HockeySDK (3.5.6)
-  - KIF (3.0.7):
+  - KIF (3.0.8):
     - KIF/XCTest
-  - KIF/XCTest (3.0.7)
+  - KIF/XCTest (3.0.8)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - LayerKit (0.7.15)
+  - LayerKit (0.7.14)
   - LayerUIKit-Coleman (0.1.0)
   - LayerUIKit-Watters (0.1.0)
   - LYRCountDownLatch (0.9.0)
@@ -18,7 +18,7 @@ DEPENDENCIES:
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
-  - LayerKit (from `~/Desktop/LayerKit-0.7.15`)
+  - LayerKit
   - LayerUIKit-Coleman (from `.`)
   - LayerUIKit-Watters (from `.`)
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
@@ -26,8 +26,6 @@ DEPENDENCIES:
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
-  LayerKit:
-    :path: ~/Desktop/LayerKit-0.7.15
   LayerUIKit-Coleman:
     :path: .
   LayerUIKit-Watters:
@@ -38,9 +36,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
-  KIF: 685ab7b49c1092732b7cb3106cc957366b01e225
+  KIF: 2db5e8cf59136dd1267d49cca0d55883389b09d3
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
-  LayerKit: 6d03bb93bbac107f59fe019aa7cc50cb35e65407
+  LayerKit: fde932ab71903d0afea2a1d34ae6a8e93d425697
   LayerUIKit-Coleman: 89e324cd6888abe0c8603e015503445d5a560c14
   LayerUIKit-Watters: ef9ef1f8041509d03e598f18ca493f46eb3c7234
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf

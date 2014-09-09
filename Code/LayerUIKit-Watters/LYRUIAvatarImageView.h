@@ -12,6 +12,4 @@
 
 @property (nonatomic, strong) NSString *senderName;
 
-- (void)setSenderFirstName:(NSString *)firstName lastName:(NSString *)lastName;
-
 @end
