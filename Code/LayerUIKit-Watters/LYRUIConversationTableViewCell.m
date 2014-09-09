@@ -150,7 +150,9 @@ static NSDateFormatter *dateFormatter;
     
     if (shouldShowConversationImage) {
         self.avatarImageSizeRatio = 0.60f;
+        self.avatarImageView.image = [UIImage imageNamed:@"logo-icon-blue"];
     }
+    [self updateConstraintsIfNeeded];
 }
 
 - (void)updateConstraints

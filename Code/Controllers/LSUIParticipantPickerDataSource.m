@@ -30,22 +30,25 @@
         
         _persistenceManager = persistenceManager;
         
-        NSError *error;
-        _participants = [persistenceManager persistedUsersWithError:&error];
-        
     }
     return self;
+}
+
+- (id) init
+{
+     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
 
 - (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchText]];
-    completion([self.participants filteredSetUsingPredicate:searchPredicate]);
+    completion([[self participants] filteredSetUsingPredicate:searchPredicate]);
 }
 
 - (NSSet *)participants
 {
-    return _participants;
+    NSError *error;
+    return [self.persistenceManager persistedUsersWithError:&error];
 }
 
 @end

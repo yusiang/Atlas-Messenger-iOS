@@ -12,6 +12,8 @@
 #import "LYRCountDownLatch.h"
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
+#import <KIF/KIF.h>
+#import "KIFSystemTestActor+ViewControllerActions.h"
 
 @interface LYRUITestInterface : NSObject
 

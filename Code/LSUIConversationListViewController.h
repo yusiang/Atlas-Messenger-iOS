@@ -11,8 +11,14 @@
 #import "LSUIConstants.h"
 #import "LSUtilities.h"
 
+/**
+ @abstract Subclass of the `LYRUIConversationListViewController. Presents a list of conversations in time series order
+ */
 @interface LSUIConversationListViewController : LYRUIConversationListViewController
 
+/**
+ @abstract The controller object for the application.
+ */
 @property (nonatomic, strong) LSApplicationController *applicationController;
 
 @end

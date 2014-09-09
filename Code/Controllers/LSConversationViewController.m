@@ -131,6 +131,16 @@ static CGFloat const LSComposeViewHeight = 40;
     
     [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, -60)
                                                          forBarMetrics:UIBarMetricsDefault];
+    
+    UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(collectionViewSwippedLeft:)];
+    swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.collectionView addGestureRecognizer:swipeGestureRecognizer];
+    
+}
+
+- (void)collectionViewSwippedLeft:(UISwipeGestureRecognizer *)swipeGestureRecognizer
+{
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated

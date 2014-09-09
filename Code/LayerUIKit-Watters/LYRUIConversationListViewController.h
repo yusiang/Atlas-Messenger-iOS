@@ -36,14 +36,14 @@
  */
 - (NSString *)conversationLabelForParticipants:(NSSet *)participants inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController;
 
-/**
- *  Informs the data source that a search has been made with the following search string. After the completion block is called, the `comversationListViewController:presenterForConversationAtIndex:` method will be called for each search result.
- *
- *  @param conversationListViewController An object representing the conversation list view controller.
- *  @param searchString                   The search string that was just used for search.
- *  @param completion                     The completion block that should be called when the results are fetched from the search.
- */
-- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSearchWithString:(NSString *)searchString completion:(void (^)())completion;
+///**
+// *  Informs the data source that a search has been made with the following search string. After the completion block is called, the `comversationListViewController:presenterForConversationAtIndex:` method will be called for each search result.
+// *
+// *  @param conversationListViewController An object representing the conversation list view controller.
+// *  @param searchString                   The search string that was just used for search.
+// *  @param completion                     The completion block that should be called when the results are fetched from the search.
+// */
+//- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSearchWithString:(NSString *)searchString completion:(void (^)())completion;
 
 @end
 

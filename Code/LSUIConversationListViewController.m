@@ -52,9 +52,6 @@
 
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
-    //LYRUIConversationViewController *controller = [LYRUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
-    
-    
     LSConversationViewController *viewController = [LSConversationViewController new];
     viewController.conversation = conversation;
     viewController.layerClient = self.applicationController.layerClient;
@@ -75,11 +72,11 @@
         [participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
     }
     
-    if (!participantIdentifiers.count > 0) return @"";
+    if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
     NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers];
     
-    if (!participants.count > 0) return @"";
+    if (!participants.count > 0) return @"No Matching Participants";
     
     LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
     NSString *conversationLabel = firstUser.fullName;
@@ -111,7 +108,7 @@
                                                                                                               sortType:LYRUIParticipantPickerControllerSortTypeFirst];
     controller.participantPickerDelegate = self;
     controller.allowsMultipleSelection = YES;
-    [self presentViewController:controller animated:TRUE completion:nil];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 #pragma mark
@@ -173,4 +170,5 @@
         }
     }];
 }
+
 @end

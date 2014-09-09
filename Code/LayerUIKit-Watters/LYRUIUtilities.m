@@ -8,11 +8,12 @@
 
 #import "LYRUIUtilities.h"
 
-CGSize LYRUITextPlainSize(NSString *string, UIFont *font)
+CGSize LYRUITextPlainSize(NSString *text, UIFont *font)
 {
-    CGRect rect = [string boundingRectWithSize:CGSizeMake(240, 900)
+    NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text
+                                                                         attributes:@{NSFontAttributeName: font}];
+    CGRect rect = [attributedText boundingRectWithSize:(CGSize){240, CGFLOAT_MAX}
                                        options:NSStringDrawingUsesLineFragmentOrigin
-                                    attributes:@{NSFontAttributeName:font}
                                        context:nil];
     return rect.size;
 }
