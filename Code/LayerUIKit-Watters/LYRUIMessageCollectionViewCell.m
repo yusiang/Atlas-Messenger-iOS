@@ -8,10 +8,14 @@
 
 #import "LYRUIMessageCollectionViewCell.h"
 #import "LYRUIUtilities.h"
+#import "LYRUIIncomingMessageCollectionViewCell.h"
 
 @interface LYRUIMessageCollectionViewCell ()
 
-@property (nonatomic) CGFloat LYRUIBubbleViewWidth;
+@property (nonatomic) CGFloat bubbleViewWidth;
+@property (nonatomic) CGFloat imageViewDiameter;
+@property (nonatomic) NSString *textText;
+@property (nonatomic) NSLayoutConstraint *bubbleViewWidthConstraint;
 
 @end
 
@@ -29,11 +33,16 @@
         [self.contentView addSubview:self.bubbleView];
         
         self.avatarImage = [[UIImageView alloc] init];
-        self.avatarImage.backgroundColor = [UIColor redColor];
+        self.avatarImage.backgroundColor = LSGrayColor();
         self.avatarImage.layer.cornerRadius = 12;
         self.avatarImage.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.avatarImage];
         
+        if ([self isKindOfClass:[LYRUIIncomingMessageCollectionViewCell class]]) {
+            self.imageViewDiameter = 24;
+        } else {
+            self.imageViewDiameter = 0;
+        }
     }
     return self;
 }
@@ -43,26 +52,42 @@
     if ([messagePart.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
         NSString *text = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
         [self.bubbleView updateWithText:text];
-        self.LYRUIBubbleViewWidth = LYRUITextPlainSize(text, LSMediumFont(12)).width + 28;
+        self.textText = text;
     } else if ([messagePart.MIMEType isEqualToString:LYRMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
         UIImage *image = [UIImage imageWithData:messagePart.data];
         [self.bubbleView updateWithImage:image];
-        self.LYRUIBubbleViewWidth = LYRUIImageSize(image, self.frame).width;
+        self.bubbleViewWidth = LYRUIImageSize(image).width;
     } else if ([messagePart.MIMEType isEqualToString:LYRMIMETypeLocation]) {
         //
     }
 }
 
+- (void)updateBubbleViewWidth:(CGFloat)width
+{
+    if ([[self.contentView constraints] containsObject:self.bubbleViewWidthConstraint]) {
+        [self.contentView removeConstraint:self.bubbleViewWidthConstraint];
+    }
+    
+    self.bubbleViewWidth = width + 28; //Adding 28 to account for 16px bubble view horizontal padding and 12px default textview padding
+    self.bubbleViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.bubbleView
+                                                                  attribute:NSLayoutAttributeWidth
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:nil
+                                                                  attribute:NSLayoutAttributeNotAnAttribute
+                                                                 multiplier:1.0
+                                                                   constant:self.bubbleViewWidth];
+    [self.contentView addConstraint:self.bubbleViewWidthConstraint];
+}
+
 - (void)updateConstraints
 {
-    
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImage
                                                                  attribute:NSLayoutAttributeWidth
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:nil
                                                                  attribute:NSLayoutAttributeNotAnAttribute
                                                                 multiplier:1.0
-                                                                  constant:24]];
+                                                                  constant:self.imageViewDiameter]];
     
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImage
                                                                  attribute:NSLayoutAttributeHeight
@@ -70,7 +95,7 @@
                                                                     toItem:nil
                                                                  attribute:NSLayoutAttributeNotAnAttribute
                                                                 multiplier:1.0
-                                                                  constant:24]];
+                                                                  constant:self.imageViewDiameter]];
     
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImage
                                                                  attribute:NSLayoutAttributeBottom
@@ -79,14 +104,6 @@
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
                                                                   constant:0]];
-    
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
-                                                                 attribute:NSLayoutAttributeWidth
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:nil
-                                                                 attribute:NSLayoutAttributeNotAnAttribute
-                                                                multiplier:1.0
-                                                                  constant:self.LYRUIBubbleViewWidth]];
     
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                  attribute:NSLayoutAttributeHeight
@@ -113,5 +130,6 @@
     self.bubbleView.bubbleContentView.textColor = self.messageTextColor;
     self.bubbleView.bubbleContentView.font = self.messageTextFont;
 }
+
 
 @end

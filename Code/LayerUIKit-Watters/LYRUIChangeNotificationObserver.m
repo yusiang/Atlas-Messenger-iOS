@@ -2,7 +2,7 @@
 //  LYRUIChangeNotificationObserver.m
 //  Pods
 //
-//  Created by Kevin Coleman on 9/2/14.
+//  Created by Kevin Coleman on 9/10/14.
 //
 //
 
@@ -22,6 +22,7 @@
 {
     self = [super init];
     if (self) {
+        
         _layerClient = layerClient;
         _conversations = conversations;
         
@@ -40,6 +41,7 @@
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
 
+
 - (void)setConversations:(NSArray *)conversations
 {
     _conversations = conversations;
@@ -47,7 +49,7 @@
 
 - (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
-    //NSLog(@"Received notification: %@", notification);
+    NSLog(@"Received notification: %@", notification);
     [self.delegate observerWillChangeContent:self];
     
     NSMutableArray *conversationArray = [[NSMutableArray alloc] init];
@@ -144,6 +146,5 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 @end

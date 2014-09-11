@@ -14,4 +14,6 @@
 
 - (void)presentMessage:(LYRMessagePart *)message fromParticipant:(id<LYRUIParticipant>)participant;
 
+- (void)updateBubbleViewWidth:(CGFloat)width;
+
 @end

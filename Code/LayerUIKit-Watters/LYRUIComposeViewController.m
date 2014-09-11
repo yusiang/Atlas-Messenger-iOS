@@ -24,8 +24,8 @@
 static CGFloat const LSComposeviewHorizontalMargin = 6;
 static CGFloat const LSComposeviewVerticalMargin = 6;
 
-static CGFloat const LSleftControlItemWidth = 40;
-static CGFloat const LSrightControlItemWidth = 50;
+static CGFloat const LSleftAccessoryButtonWidth = 40;
+static CGFloat const LSrightAccessoryButtonWidth = 50;
 static CGFloat const LSButtonHeight = 28;
 
 - (void)viewDidLoad
@@ -33,13 +33,13 @@ static CGFloat const LSButtonHeight = 28;
     [super viewDidLoad];
     
     // Initialize the Camera Button
-    self.leftControlItem = [[UIButton alloc] init];
-    self.leftControlItem.translatesAutoresizingMaskIntoConstraints = NO;
-    self.leftControlItem.accessibilityLabel = @"Cam Button";
-    [self.leftControlItem setImage:[UIImage imageNamed:@"compose"] forState:UIControlStateNormal];
-    self.leftControlItem.layer.cornerRadius = 2;
-    [self.leftControlItem addTarget:self action:@selector(leftControlItemTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.leftControlItem];
+    self.leftAccessoryButton = [[UIButton alloc] init];
+    self.leftAccessoryButton.translatesAutoresizingMaskIntoConstraints = NO;
+    self.leftAccessoryButton.accessibilityLabel = @"Cam Button";
+    [self.leftAccessoryButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
+    self.leftAccessoryButton.layer.cornerRadius = 2;
+    [self.leftAccessoryButton addTarget:self action:@selector(leftAccessoryButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.leftAccessoryButton];
     
     // Initialize the Text Input View
     self.textInputView = [[UITextView alloc] init];
@@ -53,14 +53,14 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addSubview:self.textInputView];
     
     // Initialize the Send Button
-    self.rightControlItem = [[UIButton alloc] init];
-    self.rightControlItem.translatesAutoresizingMaskIntoConstraints = NO;
-    self.rightControlItem.titleLabel.font = [UIFont systemFontOfSize:16];
-    [self.rightControlItem setTitle:@"SEND" forState:UIControlStateNormal];
-    [self.rightControlItem setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [self.rightControlItem setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
-    [self.rightControlItem addTarget:self action:@selector(rightControlItemTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.rightControlItem];
+    self.rightAccessoryButton = [[UIButton alloc] init];
+    self.rightAccessoryButton.translatesAutoresizingMaskIntoConstraints = NO;
+    self.rightAccessoryButton.titleLabel.font = [UIFont systemFontOfSize:16];
+    [self.rightAccessoryButton setTitle:@"SEND" forState:UIControlStateNormal];
+    [self.rightAccessoryButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.rightAccessoryButton setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
+    [self.rightAccessoryButton addTarget:self action:@selector(rightAccessoryButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.rightAccessoryButton];
     
     [self setupLayoutConstraints];
     
@@ -75,20 +75,51 @@ static CGFloat const LSButtonHeight = 28;
     self.defaultSize = self.view.frame.size;
 }
 
+- (void)insertImage:(UIImage *)image
+{
+    [self.contentParts addObject:image];
+    
+    [self.rightAccessoryButton setHighlighted:TRUE];
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
+    //    LSMediaAttachement *textAttachment = [[LSMediaAttachement alloc] init];
+    //    textAttachment.image = image;
+    
+    //    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+    //    [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
+    //    self.textInputView.attributedText = attrStringWithImage;
+}
+
+- (void)insertVideoAtPath:(NSString *)videoPath
+{
+    
+}
+
+- (void)insertAudioAtPath:(NSString *)path
+{
+    
+}
+
+- (void)insertLocation:(CLLocationCoordinate2D)location
+{
+    
+}
+
+
 - (void)setupLayoutConstraints
 {
     //**********Camera Button Constraints**********//
     // Width
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftControlItem
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
                                                      attribute:NSLayoutAttributeWidth
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:nil
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
-                                                      constant:LSleftControlItemWidth]];
+                                                      constant:LSleftAccessoryButtonWidth]];
     
     // Left Margin
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftControlItem
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
                                                      attribute:NSLayoutAttributeLeft
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self.view
@@ -96,7 +127,7 @@ static CGFloat const LSButtonHeight = 28;
                                                     multiplier:1.0
                                                       constant:LSComposeviewVerticalMargin]];
     // Height
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftControlItem
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
                                                      attribute:NSLayoutAttributeHeight
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:nil
@@ -104,7 +135,7 @@ static CGFloat const LSButtonHeight = 28;
                                                     multiplier:1.0
                                                       constant:LSButtonHeight]];
     // Bottom Margin
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftControlItem
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
                                                      attribute:NSLayoutAttributeBottom
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self.view
@@ -114,16 +145,16 @@ static CGFloat const LSButtonHeight = 28;
     
     //**********Send Button Constraints**********//
     // Width
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightControlItem
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
                                                      attribute:NSLayoutAttributeWidth
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:nil
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
-                                                      constant:LSrightControlItemWidth]];
+                                                      constant:LSrightAccessoryButtonWidth]];
     
     // Right Margin
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightControlItem
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
                                                      attribute:NSLayoutAttributeRight
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self.view
@@ -131,7 +162,7 @@ static CGFloat const LSButtonHeight = 28;
                                                     multiplier:1.0
                                                       constant:-LSComposeviewVerticalMargin]];
     // Height
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightControlItem
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
                                                      attribute:NSLayoutAttributeHeight
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:nil
@@ -139,7 +170,7 @@ static CGFloat const LSButtonHeight = 28;
                                                     multiplier:1.0
                                                       constant:LSButtonHeight]];
     // Bottom Margin
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightControlItem
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
                                                      attribute:NSLayoutAttributeBottom
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self.view
@@ -152,7 +183,7 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
                                                      attribute:NSLayoutAttributeLeft
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.leftControlItem
+                                                        toItem:self.leftAccessoryButton
                                                      attribute:NSLayoutAttributeRight
                                                     multiplier:1.0
                                                       constant:LSComposeviewVerticalMargin]];
@@ -161,7 +192,7 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
                                                      attribute:NSLayoutAttributeRight
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.rightControlItem
+                                                        toItem:self.rightAccessoryButton
                                                      attribute:NSLayoutAttributeLeft
                                                     multiplier:1.0
                                                       constant:-LSComposeviewVerticalMargin]];
@@ -183,36 +214,21 @@ static CGFloat const LSButtonHeight = 28;
                                                       constant:-LSComposeviewHorizontalMargin]];
 }
 
-- (void)leftControlItemTapped
+- (void)leftAccessoryButtonTapped
 {
-    
+    [self.delegate composeViewController:self didTapLeftAccessoryButton:self.leftAccessoryButton];
 }
 
-- (void)rightControlItemTapped
+- (void)rightAccessoryButtonTapped
 {
     if (self.textInputView.text.length > 0) {
-        [self.delegate composeViewController:self didTapSendButtonWithText:self.textInputView.text];
+        [self.delegate composeViewController:self didTapRightAccessoryButton:self.rightAccessoryButton];
         self.textInputView.text = @"";
-        [self.rightControlItem setHighlighted:FALSE];
+        [self.rightAccessoryButton setHighlighted:FALSE];
         if (self.defaultSize.height != self.view.frame.size.height) {
             [self adjustFrameForHeightDifference:self.defaultSize.height - self.view.frame.size.height];
         }
     }
-}
-
-- (void)updateWithImage:(UIImage *)image
-{
-    [self.contentParts addObject:image];
-    
-    [self.rightControlItem setHighlighted:TRUE];
-    
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
-//    LSMediaAttachement *textAttachment = [[LSMediaAttachement alloc] init];
-//    textAttachment.image = image;
-    
-//    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
-//    [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
-//    self.textInputView.attributedText = attrStringWithImage;
 }
 
 #pragma mark
@@ -225,7 +241,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
-    [self.rightControlItem setHighlighted:FALSE];
+    [self.rightAccessoryButton setHighlighted:FALSE];
     return YES;
 }
 
@@ -237,7 +253,7 @@ static CGFloat const LSButtonHeight = 28;
         self.textViewContentSizeHeight = textView.contentSize.height;
     }
     if (textView.text.length > 0) {
-        [self.rightControlItem setHighlighted:TRUE];
+        [self.rightAccessoryButton setHighlighted:TRUE];
     }
 }
 

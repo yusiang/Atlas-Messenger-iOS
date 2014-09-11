@@ -29,9 +29,10 @@ static CGFloat const LYRUIBubbleViewPadding = 8;
     if (self) {
         
         self.bubbleContentView = [[UITextView alloc] init];
+        self.bubbleContentView.scrollEnabled = NO;
+        self.bubbleContentView.userInteractionEnabled = NO;
         self.layer.cornerRadius = 16;
         self.clipsToBounds = TRUE;
-        self.bubbleContentView.contentInset = UIEdgeInsetsMake(-8, 0, 0, 0);
         self.bubbleContentView.translatesAutoresizingMaskIntoConstraints = NO;
         self.bubbleContentView.backgroundColor = [UIColor clearColor];
         [self addSubview:self.bubbleContentView];
@@ -60,8 +61,8 @@ static CGFloat const LYRUIBubbleViewPadding = 8;
 - (void)updateConstraints
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleContentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-LYRUIBubbleViewPadding * 2]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleContentView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0 constant:-LYRUIBubbleViewPadding * 2]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:8]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleContentView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleContentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleContentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:8]];
     
     [super updateConstraints];

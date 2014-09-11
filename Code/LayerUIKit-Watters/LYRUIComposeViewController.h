@@ -7,20 +7,31 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
 @class LYRUIComposeViewController;
 
 @protocol LYRUIComposeViewControllerDelegate <NSObject>
 
-- (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapSendButtonWithText:(NSString *)text;
+- (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapRightAccessoryButton:(UIButton *)rightAccessoryButton;
+
+- (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapLeftAccessoryButton:(UIButton *)leftAccessoryButton;
 
 @end
 
 @interface LYRUIComposeViewController : UIViewController
 
-@property (nonatomic, strong) UIButton *leftControlItem;
+- (void)insertImage:(UIImage *)image;
 
-@property (nonatomic, strong) UIButton *rightControlItem;
+- (void)insertVideoAtPath:(NSString *)videoPath;
+
+- (void)insertAudioAtPath:(NSString *)path;
+
+- (void)insertLocation:(CLLocationCoordinate2D)location;
+
+@property (nonatomic, strong) UIButton *leftAccessoryButton;
+
+@property (nonatomic, strong) UIButton *rightAccessoryButton;
 
 @property (nonatomic, strong) UITextView *textInputView;
 

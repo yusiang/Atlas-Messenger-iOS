@@ -10,4 +10,4 @@
 
 CGSize LYRUITextPlainSize(NSString *string, UIFont *font);
 
-CGSize LYRUIImageSize(UIImage *image, CGRect rect);
+CGSize LYRUIImageSize(UIImage *image);

@@ -2,7 +2,7 @@
 //  LYRUIChangeNotificationObserver.h
 //  Pods
 //
-//  Created by Kevin Coleman on 9/2/14.
+//  Created by Kevin Coleman on 9/10/14.
 //
 //
 
@@ -11,7 +11,7 @@
 
 @class LYRUIChangeNotificationObserver;
 
-@protocol LYRUIChangeNotificationObserverDelegate <NSObject>
+@protocol LYRUIChangeNotificationObserverDelegate<NSObject>
 
 @optional
 

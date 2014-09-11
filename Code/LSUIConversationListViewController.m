@@ -13,7 +13,7 @@
 #import "LSConversationViewController.h"
 #import "LSUser.h"
 #import "LSUIParticipantPickerDataSource.h"
-#import "LYRUIConversationViewController.h"
+#import "LSUIConversationViewController.h"
 
 @interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIParticipantPickerControllerDelegate, UIActionSheetDelegate>
 
@@ -52,10 +52,8 @@
 
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
-    LSConversationViewController *viewController = [LSConversationViewController new];
-    viewController.conversation = conversation;
-    viewController.layerClient = self.applicationController.layerClient;
-    viewController.persistanceManager = self.applicationController.persistenceManager;
+    LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
+    viewController.persistenceManager = self.applicationController.persistenceManager;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

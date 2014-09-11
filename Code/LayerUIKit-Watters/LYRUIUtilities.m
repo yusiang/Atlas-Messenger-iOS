@@ -18,16 +18,16 @@ CGSize LYRUITextPlainSize(NSString *text, UIFont *font)
     return rect.size;
 }
 
-CGSize LYRUIImageSize(UIImage *image, CGRect rect)
+CGSize LYRUIImageSize(UIImage *image)
 {
     CGSize itemSize;
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     if (imageView.frame.size.height > imageView.frame.size.width) {
-        itemSize = CGSizeMake(rect.size.width, 300);
+        itemSize = CGSizeMake(240, 300);
     } else {
-        CGFloat ratio = ((rect.size.width * .75) / imageView.frame.size.width);
-        itemSize = CGSizeMake(rect.size.width, imageView.frame.size.height * ratio);
+        CGFloat ratio = ((240 * .75) / imageView.frame.size.width);
+        itemSize = CGSizeMake(240, imageView.frame.size.height * ratio);
     }
     return itemSize;
 }
