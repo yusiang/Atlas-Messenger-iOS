@@ -19,6 +19,9 @@
 
 @property (nonatomic) CGFloat bubbleViewVerticalPadding;
 
+@property (nonatomic, strong) UIFont *font;
+@property (nonatomic, strong) UIColor *color;
+
 @end
 
 @implementation LYRUIMessageBubbleView
@@ -105,14 +108,14 @@ static CGFloat const LYRUIBubbleViewPadding = 8;
 
 - (void)updateBubbleViewWithFont:(UIFont *)font color:(UIColor *)color
 {
-    NSLog(@"The font is %@", font);
-    NSLog(@"The color is %@", color);
-    self.bubbleContentView.font = font;
-    self.bubbleContentView.textColor = color;
+    self.font = font;
+    self.color = color;
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    self.bubbleContentView.textColor = self.color;
+    self.bubbleContentView.font = self.font;
 }
 @end
