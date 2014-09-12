@@ -10,4 +10,6 @@
 
 @interface LYRUIConversationCollectionViewFooter : UICollectionReusableView
 
+- (void)updateWithAttributedStringForRecipientStatus:(NSString *)recipientStatus;
+
 @end

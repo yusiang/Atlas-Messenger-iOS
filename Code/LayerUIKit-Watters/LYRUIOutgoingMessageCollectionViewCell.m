@@ -8,6 +8,13 @@
 
 #import "LYRUIOutgoingMessageCollectionViewCell.h"
 
+@interface LYRUIOutgoingMessageCollectionViewCell ()
+
+@property (nonatomic, strong) UIFont *font;
+@property (nonatomic, strong) UIColor *color;
+
+@end
+
 @implementation LYRUIOutgoingMessageCollectionViewCell
 
 - (id)initWithFrame:(CGRect)frame

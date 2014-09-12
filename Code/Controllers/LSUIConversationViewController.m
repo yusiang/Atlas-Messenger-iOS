@@ -58,8 +58,26 @@ static NSDateFormatter *dateFormatter;
 
 }
 
-- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForOfRecipientStatus:(LYRRecipientStatus)recipientStatus forMessage:(LYRMessage *)message atIndexPath:(NSIndexPath *)indexPath
+- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
+    NSArray *recipients = [recipientStatus allKeys];
+    NSInteger status = [[recipientStatus valueForKey:[recipients firstObject]] integerValue];
+    switch (status) {
+        case LYRRecipientStatusInvalid:
+            return @"Message Not Sent";
+            break;
+        case LYRRecipientStatusSent:
+            return @"Sent";
+            break;
+        case LYRRecipientStatusDelivered:
+            return @"Delivered";
+            break;
+        case LYRRecipientStatusRead:
+            return @"Message Read";
+            break;
+        default:
+            break;
+    }
     return nil;
 }
 

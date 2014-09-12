@@ -15,7 +15,7 @@
 #import "LYRUIUtilities.h"
 #import "LYRUIChangeNotificationObserver.h"
 #import "LYRUIConversationCollectionViewFlowLayout.h"
-
+#import "LYRUIMessageBubbleView.h"
 
 @interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIComposeViewControllerDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
 
@@ -232,7 +232,7 @@ static CGFloat const LSMaxCellWidth = 240;
     } else {
         LYRUIConversationCollectionViewFooter *footer = [self.collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:LYRUIMessageCellFooterIdentifier forIndexPath:indexPath];
         if ([self shouldDisplayReadReceiptForSection:indexPath.section]) {
-            
+            [footer updateWithAttributedStringForRecipientStatus:[self.dataSource conversationViewController:self attributedStringForDisplayOfRecipientStatus:message.recipientStatusByUserID]];
         }
         return footer;
     }
@@ -240,13 +240,10 @@ static CGFloat const LSMaxCellWidth = 240;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
-    LYRMessage *message = [self.messages objectAtIndex:section];
+    if ([self shouldDisplayReadReceiptForSection:section]) {
+        return CGSizeMake(320, 20);
+    }
     return CGSizeMake(320, 4);
-}
-
-- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-{
-    
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
@@ -315,6 +312,7 @@ static CGFloat const LSMaxCellWidth = 240;
 
 - (BOOL)shouldDisplayReadReceiptForSection:(NSUInteger)section
 {
+    NSUInteger messages = self.messages.count;
     if (section == self.messages.count - 1) {
         return YES;
     }
@@ -323,7 +321,6 @@ static CGFloat const LSMaxCellWidth = 240;
 
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGRect rect = [[UIScreen mainScreen] bounds];
     LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
     LYRMessagePart *part = [message.parts objectAtIndex:indexPath.row];
     

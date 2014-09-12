@@ -9,6 +9,7 @@
 #import "LYRUIMessageCollectionViewCell.h"
 #import "LYRUIUtilities.h"
 #import "LYRUIIncomingMessageCollectionViewCell.h"
+#import "LYRUIOutgoingMessageCollectionViewCell.h"
 
 @interface LYRUIMessageCollectionViewCell ()
 
@@ -127,8 +128,9 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.bubbleView.bubbleContentView.textColor = self.messageTextColor;
-    self.bubbleView.bubbleContentView.font = self.messageTextFont;
+    
+    [self.bubbleView updateBubbleViewWithFont:self.messageTextFont color:self.messageTextColor];
+
 }
 
 

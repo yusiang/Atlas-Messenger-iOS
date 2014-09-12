@@ -1,5 +1,5 @@
 //
-//  LRYUIMessageBubbleVIew.h
+//  LRYUIMessageBubbleView.h
 //  Pods
 //
 //  Created by Kevin Coleman on 9/8/14.
@@ -15,7 +15,7 @@ extern NSString * const LYRMIMETypeImagePNG;  /// image/png
 extern NSString * const LYRMIMETypeImageJPEG; /// image/jpeg
 extern NSString * const LYRMIMETypeLocation;  /// location/coordinate
 
-@interface LYRUIMessageBubbleView : UIView
+@interface LYRUIMessageBubbleView : UIView <UIAppearanceContainer>
 
 - (void)updateWithText:(NSString *)text;
 
@@ -23,6 +23,12 @@ extern NSString * const LYRMIMETypeLocation;  /// location/coordinate
 
 - (void) updateWithLocation:(CLLocationCoordinate2D)location;
 
+- (void)updateBubbleViewWithFont:(UIFont *)font color:(UIColor *)color;
+
 @property (nonatomic, strong) UITextView *bubbleContentView;
+
+@property (nonatomic, strong) UIImageView *bubbleImageView;
+
+
 
 @end
