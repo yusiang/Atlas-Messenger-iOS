@@ -8,6 +8,7 @@
 
 #import "LYRUIComposeViewController.h"
 #import "LYRUIConstants.h"
+#import "LYRUIMediaAttachment.h"
 
 @interface LYRUIComposeViewController () <UITextViewDelegate>
 
@@ -82,12 +83,14 @@ static CGFloat const LSButtonHeight = 28;
     [self.rightAccessoryButton setHighlighted:TRUE];
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
-    //    LSMediaAttachement *textAttachment = [[LSMediaAttachement alloc] init];
-    //    textAttachment.image = image;
+    LYRUIMediaAttachment *textAttachment = [[LYRUIMediaAttachment alloc] init];
+    textAttachment.image = image;
+
+    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+    [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
+    self.textInputView.attributedText = attrStringWithImage;
     
-    //    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
-    //    [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
-    //    self.textInputView.attributedText = attrStringWithImage;
+    [self adjustFrameForHeightDifference:100];
 }
 
 - (void)insertVideoAtPath:(NSString *)videoPath
