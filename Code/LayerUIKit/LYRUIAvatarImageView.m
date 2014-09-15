@@ -7,7 +7,7 @@
 //
 
 #import "LYRUIAvatarImageView.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 
 @interface LYRUIAvatarImageView ()
 

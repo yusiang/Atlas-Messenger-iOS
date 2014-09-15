@@ -8,15 +8,13 @@
 
 #import <LayerKit/LayerKit.h>
 #import "LSAppDelegate.h"
-#import "LSConversationListViewController.h"
 #import "LSUIConversationListViewController.h"
 #import "LSAPIManager.h"
 #import "LSUtilities.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 #import <Crashlytics/Crashlytics.h>
 #import <HockeySDK/HockeySDK.h>
 #import "LSKeychainUtilities.h"
-#import "LSContactViewController.h"
 #import "LSAuthenticationTableViewController.h"
 
 extern void LYRSetLogLevelFromEnvironment();

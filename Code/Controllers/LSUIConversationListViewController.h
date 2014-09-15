@@ -8,7 +8,7 @@
 
 #import "LYRUIConversationListViewController.h"
 #import "LSApplicationController.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 #import "LSUtilities.h"
 
 /**

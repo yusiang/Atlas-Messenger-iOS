@@ -7,7 +7,7 @@
 //
 
 #import "LSMessageCellHeader.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 
 @interface LSMessageCellHeader ()
 

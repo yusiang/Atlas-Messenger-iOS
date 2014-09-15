@@ -8,9 +8,7 @@
 
 #import "LSUIConversationListViewController.h"
 #import "LYRUIParticipantPickerController.h"
-#import "LSConversationViewController.h"
 #import "SVProgressHUD.h"
-#import "LSConversationViewController.h"
 #import "LSUser.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUIConversationViewController.h"

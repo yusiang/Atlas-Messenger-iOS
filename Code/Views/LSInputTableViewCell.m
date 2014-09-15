@@ -7,7 +7,7 @@
 //
 
 #import "LSInputTableViewCell.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 
 @implementation LSInputTableViewCell
 

@@ -8,7 +8,7 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = "LayerUIKit-Watters"
+  s.name             = "LayerUIKit"
   s.version          = "0.1.0"
   s.summary          = "A short description of LayerUIKit."
   s.license          = 'MIT'
@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/layerhq/layer-sample-ios.git", :tag => s.version.to_s }
   s.platform         = :ios, '7.0'
   s.requires_arc     = true
-  s.source_files     = 'Code/LayerUIKit-Watters'
+  s.source_files     = 'Code/LayerUIKit'
 end

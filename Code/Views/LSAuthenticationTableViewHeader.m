@@ -7,7 +7,7 @@
 //
 
 #import "LSAuthenticationTableViewHeader.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 
 @interface LSAuthenticationTableViewHeader ()
 

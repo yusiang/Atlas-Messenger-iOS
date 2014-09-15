@@ -7,7 +7,7 @@
 //
 
 #import "LYRUIParticipantTableViewCell.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 #import "LYRUISelectionIndicator.h"
 
 @interface LYRUIParticipantTableViewCell ()

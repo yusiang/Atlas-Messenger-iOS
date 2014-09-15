@@ -8,7 +8,7 @@
 
 #import "LYRUIConversationTableViewCell.h"
 #import "LYRUIAvatarImageView.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 
 @interface LYRUIConversationTableViewCell ()
 

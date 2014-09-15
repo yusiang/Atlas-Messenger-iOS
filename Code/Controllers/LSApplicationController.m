@@ -7,7 +7,6 @@
 //
 
 #import "LSApplicationController.h"
-#import "LSConversationListViewController.h"
 #import "LSUtilities.h"
 
 @interface LSApplicationController () <LYRClientDelegate>

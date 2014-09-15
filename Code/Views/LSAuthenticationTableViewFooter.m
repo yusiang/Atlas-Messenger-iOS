@@ -7,7 +7,7 @@
 //
 
 #import "LSAuthenticationTableViewFooter.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 
 @interface LSAuthenticationTableViewFooter ()
 

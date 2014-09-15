@@ -7,7 +7,7 @@
 //
 
 #import "LSVersionView.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 
 @interface LSVersionView ()
 
