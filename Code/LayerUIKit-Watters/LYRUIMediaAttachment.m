@@ -7,14 +7,14 @@
 //
 
 #import "LYRUIMediaAttachment.h"
+#import "LYRUIUtilities.h"
 
 @implementation LYRUIMediaAttachment
 
 - (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex
 {
     CGRect systemImageRect = [super attachmentBoundsForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
-    
-    return LSImageRectForThumb(systemImageRect.size, 120);
+    return LYRUIImageRectForThumb(systemImageRect.size, 120);
 }
 
 

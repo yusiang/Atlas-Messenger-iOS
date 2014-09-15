@@ -152,8 +152,6 @@
     [self dismissViewControllerAnimated:YES completion:^{
         if (participants.count > 0) {
             
-            LSConversationViewController *controller = [LSConversationViewController new];
-            
             NSSet *participantIdentifiers = [participants valueForKey:@"participantIdentifier"];
             LYRConversation *conversation = [[self.applicationController.layerClient conversationsForParticipants:participantIdentifiers] anyObject];
             
@@ -161,10 +159,9 @@
                 conversation = [LYRConversation conversationWithParticipants:participantIdentifiers];
             }
             
-            controller.conversation = conversation;
-            controller.layerClient = self.applicationController.layerClient;
-            controller.persistanceManager = self.applicationController.persistenceManager;
-            [self.navigationController pushViewController:controller animated:YES];
+            LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
+            viewController.persistenceManager = self.applicationController.persistenceManager;
+            [self.navigationController pushViewController:viewController animated:YES];
         }
     }];
 }

@@ -143,6 +143,21 @@ static CGFloat const LSComposeViewHeight = 40;
     
 }
 
+- (void)countUnreadMessages
+{
+    __block NSUInteger unreadCount = 0;
+    NSSet *conversations = [self.layerClient conversationsForIdentifiers:nil];
+    [conversations enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id obj, BOOL *stop) {
+        NSOrderedSet *messages = [self.layerClient messagesForConversation:obj];
+        [messages enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            LYRRecipientStatus status = [obj recipientStatusForUserID:self.layerClient.authenticatedUserID];
+            if (status == LYRRecipientStatusDelivered) {
+                unreadCount += 1;
+            }
+        }];
+    }];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];

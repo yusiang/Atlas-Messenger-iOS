@@ -37,4 +37,6 @@
 
 @property (nonatomic, weak) id<LYRUIComposeViewControllerDelegate>delegate;
 
+@property (nonatomic) NSMutableArray *messageContentParts;
+
 @end

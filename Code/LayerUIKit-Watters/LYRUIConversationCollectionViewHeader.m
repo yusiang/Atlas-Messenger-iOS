@@ -54,6 +54,7 @@
 
 - (void)updateWithAttributedStringForDate:(NSString *)date
 {
+    if (!date) return;
     NSMutableAttributedString *dateString = [[NSMutableAttributedString alloc] initWithString:date];
     NSRange range = [date rangeOfString:@","];
     NSRange boldedRange = NSMakeRange(0, range.location);

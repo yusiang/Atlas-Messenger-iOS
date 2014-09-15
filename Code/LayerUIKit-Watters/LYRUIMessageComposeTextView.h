@@ -9,12 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
-NSString *LYRUIMIMETypeTextPlain; /// text/plain
-NSString *LYRUIMIMETypeImagePNG;  /// image/png
-NSString *LYRUIMIMETypeImageJPEG;  /// image/jpeg
-NSString *LYRUIMIMETypeLocation;  /// location
-
 // Auto-resizing. Support insertion of audio and videos?
+
 @interface LYRUIMessageComposeTextView : UITextView
 
 - (void)insertImage:(UIImage *)image;

@@ -50,15 +50,15 @@
 
 - (void)presentMessage:(LYRMessagePart *)messagePart fromParticipant:(id<LYRUIParticipant>)participant
 {
-    if ([messagePart.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+    if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         NSString *text = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
         [self.bubbleView updateWithText:text];
         self.textText = text;
-    } else if ([messagePart.MIMEType isEqualToString:LYRMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG]) {
         UIImage *image = [UIImage imageWithData:messagePart.data];
         [self.bubbleView updateWithImage:image];
         self.bubbleViewWidth = LYRUIImageSize(image).width;
-    } else if ([messagePart.MIMEType isEqualToString:LYRMIMETypeLocation]) {
+    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeLocation]) {
         //
     }
 }

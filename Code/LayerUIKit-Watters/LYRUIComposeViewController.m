@@ -13,7 +13,6 @@
 @interface LYRUIComposeViewController () <UITextViewDelegate>
 
 @property (nonatomic) BOOL keyboardIsOnScreen;
-@property (nonatomic, strong) NSMutableArray *contentParts;
 @property (nonatomic) CGFloat textViewContentSizeHeight;
 @property (nonatomic) CGSize defaultSize;
 
@@ -49,7 +48,8 @@ static CGFloat const LSButtonHeight = 28;
     self.textInputView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.textInputView.layer.borderWidth = 1;
     self.textInputView.layer.cornerRadius = 4.0f;
-    self.textInputView.font = [UIFont systemFontOfSize:14];
+    self.textInputView.font = LSLightFont(16);
+    self.textInputView.textContainerInset = UIEdgeInsetsMake(4, 0, 0, 0);
     self.textInputView.accessibilityLabel = @"Compose TextView";
     [self.view addSubview:self.textInputView];
     
@@ -65,6 +65,7 @@ static CGFloat const LSButtonHeight = 28;
     
     [self setupLayoutConstraints];
     
+    self.messageContentParts = [[NSMutableArray alloc] init];
     // Setup
     self.view.backgroundColor =  LSLighGrayColor();
 }
@@ -73,12 +74,15 @@ static CGFloat const LSButtonHeight = 28;
 {
     [super viewWillAppear:animated];
     self.keyboardIsOnScreen = NO;
-    self.defaultSize = self.view.frame.size;
+    
+    if (!self.defaultSize.height) {
+        self.defaultSize = self.view.frame.size;
+    }
 }
 
 - (void)insertImage:(UIImage *)image
 {
-    [self.contentParts addObject:image];
+    [self.messageContentParts addObject:image];
     
     [self.rightAccessoryButton setHighlighted:TRUE];
     
@@ -89,8 +93,7 @@ static CGFloat const LSButtonHeight = 28;
     NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
     [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
     self.textInputView.attributedText = attrStringWithImage;
-    
-    [self adjustFrameForHeightDifference:100];
+    [self adjustFrameForHeightDifference:110];
 }
 
 - (void)insertVideoAtPath:(NSString *)videoPath
@@ -224,7 +227,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)rightAccessoryButtonTapped
 {
-    if (self.textInputView.text.length > 0) {
+    if (self.textInputView.text.length > 0 || self.textInputView.attributedText) {
         [self.delegate composeViewController:self didTapRightAccessoryButton:self.rightAccessoryButton];
         self.textInputView.text = @"";
         [self.rightAccessoryButton setHighlighted:FALSE];
@@ -262,6 +265,9 @@ static CGFloat const LSButtonHeight = 28;
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
+    if (textView.attributedText) {
+        //Press return key
+    }
     return YES;
 }
 
@@ -277,7 +283,10 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)adjustFrameForHeightDifference:(CGFloat)heightDifference
 {
-    [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - heightDifference , self.view.frame.size.width, self.view.frame.size.height + heightDifference)];
+    [UIView animateWithDuration:0.1 animations:^{
+        [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - heightDifference , self.view.frame.size.width, self.view.frame.size.height + heightDifference)];
+    }];
+
 }
 
 @end

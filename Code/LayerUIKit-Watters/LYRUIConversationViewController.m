@@ -173,14 +173,13 @@ static CGFloat const LSMaxCellWidth = 240;
         cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier forIndexPath:indexPath];
     }
     [cell presentMessage:messagePart fromParticipant:nil];
-    NSLog(@"Size is %f", [self sizeForItemAtIndexPath:indexPath].width);
     [cell updateBubbleViewWidth:[self sizeForItemAtIndexPath:indexPath].width];
+    [self updateRecipientStatusForMessage:message];
     return cell;
 }
 
-- (void)markMessageAtIndexPathAsRead:(NSIndexPath *)indexPath
+- (void)updateRecipientStatusForMessage:(LYRMessage *)message
 {
-    LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
     NSNumber *recipientStatus = [message.recipientStatusByUserID objectForKey:self.layerClient.authenticatedUserID];
     if (![recipientStatus isEqualToNumber:[NSNumber numberWithInteger:LYRRecipientStatusRead]] ) {
         NSError *error;
@@ -312,8 +311,8 @@ static CGFloat const LSMaxCellWidth = 240;
 
 - (BOOL)shouldDisplayReadReceiptForSection:(NSUInteger)section
 {
-    NSUInteger messages = self.messages.count;
-    if (section == self.messages.count - 1) {
+    LYRMessage *message = [self.messages objectAtIndex:section];
+    if (section == self.messages.count - 1 && message.sentByUserID == self.layerClient.authenticatedUserID) {
         return YES;
     }
     return NO;
@@ -325,32 +324,21 @@ static CGFloat const LSMaxCellWidth = 240;
     LYRMessagePart *part = [message.parts objectAtIndex:indexPath.row];
     
     CGSize size;
-    if ([part.MIMEType isEqualToString:LYRMIMETypeTextPlain]) {
+    if ([part.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         NSString *text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         size = LYRUITextPlainSize(text, [[LYRUIOutgoingMessageCollectionViewCell appearance] messageTextFont]);
         size.height = size.height + 20; // Adding 16 to account for default vertical content inset with textView
-    } else if ([part.MIMEType isEqualToString:LYRMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRMIMETypeImagePNG]) {
+    } else if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
         UIImage *image = [UIImage imageWithData:part.data];
         size = LYRUIImageSize(image);
         size.height = size.height + 20;
-    } else if ([part.MIMEType isEqualToString:LYRMIMETypeLocation]){
+    } else if ([part.MIMEType isEqualToString:LYRUIMIMETypeLocation]){
         size = CGSizeMake(240, 20);
     } else {
         //
     }
     return size;
 }
-
-# pragma mark
-# pragma mark Cell UI Configuration Methods
-//- (void)updateRecipientStatusForMessage:(LYRMessage *)message
-//{
-//    NSString *identifier = self.APImanager.authenticatedSession.user.userID;
-//    LYRRecipientStatus status = [message recipientStatusForUserID:identifier];
-//    if (status == LYRRecipientStatusDelivered) {
-//        [self.layerClient markMessageAsRead:message error:nil];
-//    }
-//}
 
 #pragma mark
 #pragma mark Keyboard Nofifications
@@ -400,12 +388,88 @@ static CGFloat const LSMaxCellWidth = 240;
 
 - (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapRightAccessoryButton:(UIButton *)rightAccessoryButton
 {
-    LYRMessagePart *part = [LYRMessagePart messagePartWithText:composeViewController.textInputView.text];
+    if (composeViewController.messageContentParts) {
+        [self sendMessageWithContentParts:composeViewController.messageContentParts];
+    }
+    if (self.composeViewController.textInputView.text.length > 1) {
+        [self sendMessageWithText:composeViewController.textInputView.text];
+    }
+}
+
+- (void)sendMessageWithContentParts:(NSMutableArray *)messageContentParts
+{
+    for (id object in messageContentParts){
+        if ([object isKindOfClass:[UIImage class]]) {
+            [self sendMessageWithImage:object];
+        } else if ([object isKindOfClass:[CLLocation class]]) {
+            [self sendMessageWithLocation:object];
+        }
+    }
+}
+
+- (void)sendMessageWithText:(NSString *)text
+{
+    LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     
-//    NSString *senderName = [self.persistanceManager persistedSessionWithError:nil].user.fullName;
-//    NSString *pushText = [NSString stringWithFormat:@"%@: %@", senderName, text];
-//    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
+    id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
+    NSString *pushText = [NSString stringWithFormat:@"%@: %@", [sender fullName], text];
+    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
+    
+    NSError *error;
+    BOOL success = [self.layerClient sendMessage:message error:&error];
+    if (success) {
+        NSLog(@"Messages Succesfully Sent");
+    } else {
+        NSLog(@"The error is %@", error);
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+- (void)sendMessageWithImage:(UIImage *)image
+{
+    UIImage *adjustedImage = LYRUIAdjustOrientationForImage(image);
+    NSData *compressedImageData =  LYRUIJPEGDataForImageWithConstraint(adjustedImage, 300);
+    
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeImageJPEG data:compressedImageData];
+    LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
+    
+    id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
+    NSString *pushText = [NSString stringWithFormat:@"%@: %@", [sender fullName], @"New Image"];
+    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
+    
+    NSError *error;
+    BOOL success = [self.layerClient sendMessage:message error:&error];
+    if (success) {
+        NSLog(@"Messages Succesfully Sent");
+    } else {
+        NSLog(@"The error is %@", error);
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+- (void)sendMessageWithLocation:(CLLocation *)location
+{
+    NSNumber *lat = [NSNumber numberWithDouble:location.coordinate.latitude];
+    NSNumber *lon = [NSNumber numberWithDouble:location.coordinate.longitude];
+    NSDictionary *locationDictionary = @{@"lat" : lat,
+                                         @"lon" : lon};
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeLocation data:[NSKeyedArchiver archivedDataWithRootObject:locationDictionary]];
+    LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
+    
+    id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
+    NSString *pushText = [NSString stringWithFormat:@"%@: %@", [sender fullName], @"New Location"];
+    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
     
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];
@@ -474,9 +538,6 @@ static CGFloat const LSMaxCellWidth = 240;
         // Get the selected image
         UIImage *selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
         
-        //Get the rect we would like to display with a max height fo 120
-        //CGRect imageRect = LSImageRectForThumb(selectedImage.size, 120);
-        
         [self.composeViewController insertImage:selectedImage];
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
@@ -487,48 +548,6 @@ static CGFloat const LSMaxCellWidth = 240;
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (UIImage *)adjustOrientationForImage:(UIImage *)originalImage
-{
-    UIGraphicsBeginImageContextWithOptions(originalImage.size, NO, originalImage.scale);
-    [originalImage drawInRect:(CGRect){0, 0, originalImage.size}];
-    UIImage *fixedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return fixedImage;
-}
-
-// Photo JPEG Compression
-- (NSData *)jpegDataForImage:(UIImage *)image constraint:(CGFloat)constraint
-{
-    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
-    CGImageRef ref = [[UIImage imageWithData:imageData] CGImage];
-    
-    CGFloat width = 1.0f * CGImageGetWidth(ref);
-    CGFloat height = 1.0f * CGImageGetHeight(ref);
-    
-    CGSize previousSize = CGSizeMake(width, height);
-    CGSize newSize = [self sizeFromOriginalSize:previousSize withMaxConstraint:constraint];
-    
-    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
-    UIImage *assetImage = [UIImage imageWithCGImage:ref];
-    [assetImage drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    UIImage *imageToCompress = UIGraphicsGetImageFromCurrentImageContext();
-    
-    return UIImageJPEGRepresentation(imageToCompress, 0.25f);
-}
-
-// Photo Resizing
-- (CGSize)sizeFromOriginalSize:(CGSize)originalSize withMaxConstraint:(CGFloat)constraint
-{
-    if (originalSize.height > constraint && (originalSize.height > originalSize.width)) {
-        CGFloat heightRatio = constraint / originalSize.height;
-        return CGSizeMake(originalSize.width * heightRatio, constraint);
-    } else if (originalSize.width > constraint) {
-        CGFloat widthRatio = constraint / originalSize.width;
-        return CGSizeMake(constraint, originalSize.height * widthRatio);
-    }
-    return originalSize;
 }
 
 #pragma mark
@@ -581,5 +600,7 @@ static CGFloat const LSMaxCellWidth = 240;
     [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(14)];
     
     [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
-    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(14)];  }
+    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(14)];
+}
+
 @end

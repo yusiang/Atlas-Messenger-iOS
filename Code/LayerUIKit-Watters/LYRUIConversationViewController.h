@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
+#import <MapKit/MapKit.h>
 #import "LYRUIParticipant.h"
 #import "LYRUIMessageInputToolbar.h"
 #import "LYRUIComposeViewController.h"

@@ -75,7 +75,7 @@
 
 - (void) processConversationChanges:(NSMutableArray *)conversationChanges
 {
-    [self.delegate observer:self didChangeObject:nil atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:0];
+    [self.delegate observer:self didChangeObject:nil atIndex:0 forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
 }
 
 - (void)processMessageChanges:(NSMutableArray *)messageChanges
