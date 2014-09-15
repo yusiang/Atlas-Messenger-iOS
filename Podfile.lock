@@ -7,7 +7,6 @@ PODS:
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
   - LayerKit (0.7.16)
-  - LayerUIKit-Coleman (0.1.0)
   - LayerUIKit-Watters (0.1.0)
   - LYRCountDownLatch (0.9.0)
   - OCMock (3.1.1)
@@ -19,15 +18,12 @@ DEPENDENCIES:
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
   - LayerKit
-  - LayerUIKit-Coleman (from `.`)
   - LayerUIKit-Watters (from `.`)
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - OCMock (~> 3.1)
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
-  LayerUIKit-Coleman:
-    :path: .
   LayerUIKit-Watters:
     :path: .
   LYRCountDownLatch:
@@ -39,7 +35,6 @@ SPEC CHECKSUMS:
   KIF: 2db5e8cf59136dd1267d49cca0d55883389b09d3
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
   LayerKit: a3f6e3dc029b0c9aff8d962b5a9206934e68e76b
-  LayerUIKit-Coleman: 89e324cd6888abe0c8603e015503445d5a560c14
   LayerUIKit-Watters: ef9ef1f8041509d03e598f18ca493f46eb3c7234
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
