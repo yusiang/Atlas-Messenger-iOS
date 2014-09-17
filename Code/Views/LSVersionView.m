@@ -24,12 +24,12 @@
 
     self.topLabel = [[UILabel alloc] init];
     self.topLabel.font = LSBoldFont(12.0);
-    self.topLabel.textColor = LSGrayColor();
+    self.topLabel.textColor = [UIColor grayColor];
     self.topLabel.textAlignment = NSTextAlignmentCenter;
 
     self.bottomLabel = [[UILabel alloc] init];
     self.bottomLabel.font = LSMediumFont(11.0);
-    self.bottomLabel.textColor = LSGrayColor();
+    self.bottomLabel.textColor = [UIColor grayColor];
     self.bottomLabel.textAlignment = NSTextAlignmentCenter;
 
     [self addSubview:self.topLabel];

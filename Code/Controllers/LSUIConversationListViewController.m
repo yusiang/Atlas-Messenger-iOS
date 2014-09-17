@@ -12,10 +12,12 @@
 #import "LSUser.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUIConversationViewController.h"
+#import "LSVersionView.h"
 
 @interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIParticipantPickerControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) LSUIParticipantPickerDataSource *participantPickerDataSource;
+@property (nonatomic, strong) LSVersionView *versionView;
 
 @end
 
@@ -44,6 +46,19 @@
                                                                                    action:@selector(composeButtonTapped)];
     composeButton.accessibilityLabel = @"New";
     [self.navigationItem setRightBarButtonItem:composeButton];
+    
+    self.versionView = [[LSVersionView alloc] initWithFrame:CGRectZero];
+    self.versionView.topLabel.text = [LSApplicationController versionString];
+    self.versionView.bottomLabel.text = [LSApplicationController buildInformationString];
+    
+    [self.versionView sizeToFit];
+    
+    [self.tableView addSubview:self.versionView];
+    
+    self.versionView.frame = CGRectMake((int)(self.tableView.frame.size.width / 2.0 - self.versionView.frame.size.width / 2.0),
+                                        -self.versionView.frame.size.height,
+                                        self.versionView.frame.size.width,
+                                        self.versionView.frame.size.height);
 }
 
 #pragma mark LYRUIConversationListViewControllerDelegate methods
