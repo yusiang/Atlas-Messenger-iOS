@@ -34,6 +34,12 @@ static NSString *const LSTestUser3Email = @"tester3@layer.com";
 static NSString *const LSTestUser3Password = @"password3";
 static NSString *const LSTestUser3Confirmation = @"password3";
 
+static NSString *const LSTestUser4FirstName = @"Layer";
+static NSString *const LSTestUser4LastName = @"Tester4";
+static NSString *const LSTestUser4Email = @"tester4@layer.com";
+static NSString *const LSTestUser4Password = @"password4";
+static NSString *const LSTestUser4Confirmation = @"password4";
+
 +(LSUser *)testUserWithNumber:(NSUInteger)number
 {
     LSUser *user = [[LSUser alloc] init];
@@ -65,6 +71,13 @@ static NSString *const LSTestUser3Confirmation = @"password3";
             [user setEmail:LSTestUser3Email];
             [user setPassword:LSTestUser3Password];
             [user setPasswordConfirmation:LSTestUser3Confirmation];
+            break;
+        case 4:
+            [user setFirstName:LSTestUser4FirstName];
+            [user setLastName:LSTestUser4LastName];
+            [user setEmail:LSTestUser4Email];
+            [user setPassword:LSTestUser4Password];
+            [user setPasswordConfirmation:LSTestUser4Confirmation];
             break;
         default:
             break;

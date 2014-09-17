@@ -57,6 +57,9 @@
                   Identifier = "LSPersistenceManagerTest">
                </Test>
                <Test
+                  Identifier = "LSSampleAppUITest">
+               </Test>
+               <Test
                   Identifier = "LSUITest">
                </Test>
                <Test
@@ -126,7 +129,7 @@
                   Identifier = "LYRUIConversationListTest">
                </Test>
                <Test
-                  Identifier = "LYRUIParticipantPickerTest">
+                  Identifier = "LYRUIConversationViewTest">
                </Test>
                <Test
                   Identifier = "LYRUIParticipantPickerTest/testToVerifyCustomCellImplementationFunctionality">

@@ -36,7 +36,7 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LSProductionEnvironment;
+    LSEnvironment environment = LSDevelopmentEnvironment;
     
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
@@ -97,11 +97,11 @@ extern void LYRSetLogLevelFromEnvironment();
     [Crashlytics setObjectValue:LSLayerConfigurationURL(environment) forKey:@"ConfigurationURL"];
     [Crashlytics setObjectValue:LSLayerAppID(environment) forKey:@"AppID"];
     
-    // Start HockeyApp
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
-    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+//    // Start HockeyApp
+//    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
+//    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
+//    [[BITHockeyManager sharedHockeyManager] startManager];
+//    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
     // Declaring that I want to recieve push!
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
@@ -144,11 +144,14 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
+    __block NSURL *conversationID = [NSURL URLWithString:[userInfo valueForKeyPath:@"layer.event_url"]];
+    __block LYRClient *wClient = self.applicationController.layerClient;
     NSError *error;
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
         if (fetchResult == UIBackgroundFetchResultFailed) {
             NSLog(@"Failed processing remote notification: %@", error);
         }
+
         completionHandler(fetchResult);
     }];
     if (success) {

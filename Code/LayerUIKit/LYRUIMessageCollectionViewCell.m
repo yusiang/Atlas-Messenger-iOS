@@ -54,10 +54,12 @@
         NSString *text = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
         [self.bubbleView updateWithText:text];
         self.textText = text;
+        self.accessibilityLabel = [NSString stringWithFormat:@"Message: %@", text];
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG]) {
         UIImage *image = [UIImage imageWithData:messagePart.data];
         [self.bubbleView updateWithImage:image];
         self.bubbleViewWidth = LYRUIImageSize(image).width;
+        self.accessibilityLabel = [NSString stringWithFormat:@"Message: Photo"];
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeLocation]) {
         //
     }
@@ -69,7 +71,7 @@
         [self.contentView removeConstraint:self.bubbleViewWidthConstraint];
     }
     
-    self.bubbleViewWidth = width + 28; //Adding 28 to account for 16px bubble view horizontal padding and 12px default textview padding
+    self.bubbleViewWidth = width + 24; //Adding 28 to account for 16px bubble view horizontal padding and 12px default textview padding
     self.bubbleViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                   attribute:NSLayoutAttributeWidth
                                                                   relatedBy:NSLayoutRelationEqual

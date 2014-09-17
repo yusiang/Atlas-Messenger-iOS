@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSLayoutConstraint *contentHeightConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *contentCenterXConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *contentCenterYConstraint;
+@property (nonatomic) CGFloat bubbleViewPadding;
 
 @property (nonatomic) CGFloat bubbleViewHeight;
 
@@ -26,14 +27,12 @@
 
 @implementation LYRUIMessageBubbleView
 
-static CGFloat const LYRUIBubbleViewPadding = 8;
-
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.layer.cornerRadius = 16;
+        self.layer.cornerRadius = 12;
         self.clipsToBounds = TRUE;
     
     }
@@ -43,16 +42,16 @@ static CGFloat const LYRUIBubbleViewPadding = 8;
 - (void)updateWithText:(NSString *)text
 {
     [self removeSubviewsAndConstraints];
-    
     self.bubbleContentView = [[UITextView alloc] init];
-    self.bubbleContentView.textColor = [UIColor blackColor];
+    self.bubbleContentView.backgroundColor = [UIColor clearColor];
     self.bubbleContentView.text = text;
     self.bubbleContentView.scrollEnabled = NO;
     self.bubbleContentView.userInteractionEnabled = NO;
     self.bubbleContentView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.bubbleContentView.backgroundColor = [UIColor clearColor];
     self.bubbleContentView.textContainerInset = UIEdgeInsetsZero;
     [self addSubview:self.bubbleContentView];
+    
+    self.bubbleViewPadding = 6;
     [self updateConstraintsForContentView:self.bubbleContentView];
 }
 
@@ -63,10 +62,12 @@ static CGFloat const LYRUIBubbleViewPadding = 8;
     self.bubbleImageView = [[UIImageView alloc] initWithImage:image];
     self.bubbleImageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.bubbleImageView.contentMode = UIViewContentModeScaleAspectFill;
-    self.bubbleImageView.layer.cornerRadius = 16;
+    self.bubbleImageView.layer.cornerRadius = 12;
     self.bubbleImageView.clipsToBounds = TRUE;
     self.bubbleImageView.backgroundColor = [UIColor redColor];
     [self addSubview:self.bubbleImageView];
+    
+    self.bubbleViewPadding = 0;
     [self updateConstraintsForContentView:self.bubbleImageView];
 }
 
@@ -75,14 +76,12 @@ static CGFloat const LYRUIBubbleViewPadding = 8;
     //[self removeSubviews];
 }
 
-
-
 - (void)updateConstraintsForContentView:(UIView *)contentView
 {
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-LYRUIBubbleViewPadding * 2]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-self.bubbleViewPadding * 2]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:LYRUIBubbleViewPadding]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:self.bubbleViewPadding]];
     
     [super updateConstraints];
 }

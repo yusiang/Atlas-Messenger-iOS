@@ -14,11 +14,16 @@ NSString * const LYRUIMIMETypeImagePNG = @"image/png";
 NSString * const LYRUIMIMETypeImageJPEG = @"image/jpeg";
 NSString * const LYRUIMIMETypeLocation = @"location/coordinate";
 
+CGFloat LYRUIMaxCellWidth()
+{
+    return 200;
+}
+
 CGSize LYRUITextPlainSize(NSString *text, UIFont *font)
 {
     NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text
                                                                          attributes:@{NSFontAttributeName: font}];
-    CGRect rect = [attributedText boundingRectWithSize:(CGSize){240, CGFLOAT_MAX}
+    CGRect rect = [attributedText boundingRectWithSize:(CGSize){LYRUIMaxCellWidth(), CGFLOAT_MAX}
                                        options:NSStringDrawingUsesLineFragmentOrigin
                                        context:nil];
     return rect.size;
@@ -30,10 +35,10 @@ CGSize LYRUIImageSize(UIImage *image)
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     if (imageView.frame.size.height > imageView.frame.size.width) {
-        itemSize = CGSizeMake(240, 300);
+        itemSize = CGSizeMake(LYRUIMaxCellWidth(), 300);
     } else {
-        CGFloat ratio = (240 / imageView.frame.size.width);
-        itemSize = CGSizeMake(240, imageView.frame.size.height * ratio);
+        CGFloat ratio = (LYRUIMaxCellWidth() / imageView.frame.size.width);
+        itemSize = CGSizeMake(LYRUIMaxCellWidth(), imageView.frame.size.height * ratio);
     }
     return itemSize;
 }
@@ -94,4 +99,5 @@ NSData *LYRUIJPEGDataForImageWithConstraint(UIImage *image, CGFloat constraint)
     
     return UIImageJPEGRepresentation(imageToCompress, 0.25f);
 }
+
 

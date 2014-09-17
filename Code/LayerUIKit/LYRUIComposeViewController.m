@@ -9,6 +9,7 @@
 #import "LYRUIComposeViewController.h"
 #import "LYRUIConstants.h"
 #import "LYRUIMediaAttachment.h"
+#import "LYRUIUtilities.h"
 
 @interface LYRUIComposeViewController () <UITextViewDelegate>
 
@@ -35,7 +36,7 @@ static CGFloat const LSButtonHeight = 28;
     // Initialize the Camera Button
     self.leftAccessoryButton = [[UIButton alloc] init];
     self.leftAccessoryButton.translatesAutoresizingMaskIntoConstraints = NO;
-    self.leftAccessoryButton.accessibilityLabel = @"Cam Button";
+    self.leftAccessoryButton.accessibilityLabel = @"Camera Button";
     [self.leftAccessoryButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
     self.leftAccessoryButton.layer.cornerRadius = 2;
     [self.leftAccessoryButton addTarget:self action:@selector(leftAccessoryButtonTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -50,12 +51,13 @@ static CGFloat const LSButtonHeight = 28;
     self.textInputView.layer.cornerRadius = 4.0f;
     self.textInputView.font = LSLightFont(16);
     self.textInputView.textContainerInset = UIEdgeInsetsMake(4, 0, 0, 0);
-    self.textInputView.accessibilityLabel = @"Compose TextView";
+    self.textInputView.accessibilityLabel = @"Text Input View";
     [self.view addSubview:self.textInputView];
     
     // Initialize the Send Button
     self.rightAccessoryButton = [[UIButton alloc] init];
     self.rightAccessoryButton.translatesAutoresizingMaskIntoConstraints = NO;
+    self.rightAccessoryButton.accessibilityLabel = @"Send Button";
     self.rightAccessoryButton.titleLabel.font = [UIFont systemFontOfSize:16];
     [self.rightAccessoryButton setTitle:@"SEND" forState:UIControlStateNormal];
     [self.rightAccessoryButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -93,7 +95,10 @@ static CGFloat const LSButtonHeight = 28;
     NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
     [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
     self.textInputView.attributedText = attrStringWithImage;
-    [self adjustFrameForHeightDifference:110];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    CGRect rect = LYRUIImageRectForThumb(imageView.frame.size, 100);
+    [self adjustFrameForHeightDifference:rect.size.height];
 }
 
 - (void)insertVideoAtPath:(NSString *)videoPath

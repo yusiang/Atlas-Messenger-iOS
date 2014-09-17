@@ -42,16 +42,6 @@ static NSDateFormatter *dateFormatter;
 
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
-//    NSCalendar* calendar = [NSCalendar currentCalendar];
-//    
-//    unsigned int conversationDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-//    NSDateComponents* conversationDateComponents = [calendar components:conversationDateFlags fromDate:date];
-//    NSDate *conversationDate = [calendar dateFromComponents:conversationDateComponents];
-//    
-//    unsigned int currentDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-//    NSDateComponents* currentDateComponents = [calendar components:currentDateFlags fromDate:[NSDate date]];
-//    NSDate *currentDate = [calendar dateFromComponents:currentDateComponents];
-
     [dateFormatter setDateFormat:@"MMM dd, hh:mma"];
     NSString *dateLabel = [dateFormatter stringFromDate:date];
     return dateLabel;

@@ -41,7 +41,7 @@
 
 - (LSUser *)randomUser;
 
-- (LSUser *)registerAndAuthenticateUser:(LSUser *)user;
+- (NSString *)registerAndAuthenticateUser:(LSUser *)user;
 
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs;
 

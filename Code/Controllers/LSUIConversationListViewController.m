@@ -31,12 +31,12 @@
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
     // Left navigation item
-    UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"]
+    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"]
                                                                      style:UIBarButtonItemStylePlain
                                                                     target:self
-                                                                    action:@selector(moreButtonTapped)];
-    logoutButton.accessibilityLabel = @"logout";
-    [self.navigationItem setLeftBarButtonItem:logoutButton];
+                                                                    action:@selector(meunButtonTapped)];
+    menuButton.accessibilityLabel = @"logout";
+    [self.navigationItem setLeftBarButtonItem:menuButton];
     
     // Right navigation item
     UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
@@ -85,7 +85,7 @@
 
 #pragma mark - Bar Button Functionality Methods
 
-- (void)moreButtonTapped
+- (void)meunButtonTapped
 {
     NSString *user = self.applicationController.APIManager.authenticatedSession.user.fullName;
     UIActionSheet *actionSheet = [[UIActionSheet alloc]

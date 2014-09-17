@@ -17,5 +17,4 @@
     return LYRUIImageRectForThumb(systemImageRect.size, 120);
 }
 
-
 @end

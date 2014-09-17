@@ -22,14 +22,6 @@
         
         _applicationController = applicationController;
         
-//        LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-//        [_applicationController.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
-//            expect(completion).to.beTruthy;
-//            expect(error).to.beNil;
-//            [latch decrementCount];
-//        }];
-//        [latch waitTilCount:0];
-        
     }
     return self;
 }
@@ -108,6 +100,14 @@
 
 - (void)deleteContacts
 {
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
+    [self.applicationController.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
+        expect(completion).to.beTruthy;
+        expect(error).to.beNil;
+        [latch decrementCount];
+    }];
+    [latch waitTilCount:0];
+    
     NSError *error;
     BOOL success = [self.applicationController.persistenceManager deleteAllObjects:&error];
     expect(error).to.beNil;
@@ -126,14 +126,19 @@
     while ([user.userID isEqual:self.applicationController.layerClient.authenticatedUserID]) {
         user = [self randomUser];
     }
+    while (!user) {
+        user = [self randomUser];
+    }
+    
     return user;
 }
 
-- (void)registerAndAuthenticateUser:(LSUser *)user
+- (NSString *)registerAndAuthenticateUser:(LSUser *)user
 {
     [self registerUser:user];
-    [self authenticateWithEmail:user.email password:user.password];
+    NSString *userID =  [self authenticateWithEmail:user.email password:user.password];
     [self loadContacts];
+    return userID;
 }
 
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs

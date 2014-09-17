@@ -40,7 +40,6 @@ static NSString *const LYRUIMessageCellFooterIdentifier = @"messageCellFooterIde
 
 static NSString *const LSMessageHeaderIdentifier = @"headerViewIdentifier";
 static CGFloat const LSComposeViewHeight = 40;
-static CGFloat const LSMaxCellWidth = 240;
 
 + (instancetype)conversationViewControllerWithConversation:(LYRConversation *)conversation layerClient:(LYRClient *)layerClient;
 {
@@ -327,13 +326,12 @@ static CGFloat const LSMaxCellWidth = 240;
     if ([part.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         NSString *text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         size = LYRUITextPlainSize(text, [[LYRUIOutgoingMessageCollectionViewCell appearance] messageTextFont]);
-        size.height = size.height + 20; // Adding 16 to account for default vertical content inset with textView
+        size.height = size.height + 14; // Adding 16 to account for default vertical content inset with textView
     } else if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
         UIImage *image = [UIImage imageWithData:part.data];
         size = LYRUIImageSize(image);
-        size.height = size.height + 20;
     } else if ([part.MIMEType isEqualToString:LYRUIMIMETypeLocation]){
-        size = CGSizeMake(240, 20);
+        size = CGSizeMake(LYRUIMaxCellWidth(), 20);
     } else {
         //
     }
