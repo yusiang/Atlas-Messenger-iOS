@@ -48,8 +48,8 @@
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    self.dateLabel.text = @"";
-    self.participantLabel.text = @"";
+    self.dateLabel.text = nil;
+    self.participantLabel.text = nil;
 }
 
 - (void)updateWithAttributedStringForDate:(NSString *)date
@@ -61,7 +61,7 @@
     [dateString beginEditing];
     
     [dateString addAttribute:NSFontAttributeName
-                       value:LSBoldFont(12)
+                       value:LSMediumFont(12)
                        range:boldedRange];
     
     [dateString endEditing];
@@ -77,13 +77,13 @@
         [self removeConstraint:self.dateLabelHeightConstraint];
     }
 
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:12]];
     self.dateLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.dateLabel.frame.size.width];
     self.dateLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.dateLabel.frame.size.height];
     
     [self addConstraint:self.dateLabelWidthConstraint];
     [self addConstraint:self.dateLabelHeightConstraint];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:12]];
 }
 
 - (void)updateWithAttributedStringForParticipantName:(NSString *)participantName
@@ -104,13 +104,13 @@
         [self removeConstraint:self.participantLabelHeightConstraint];
     }
   
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:44]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-4]];
     self.participantLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.participantLabel.frame.size.width];
     self.participantLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.participantLabel.frame.size.height];
     
     [self addConstraint:self.participantLabelWidthConstraint];
     [self addConstraint:self.participantLabelHeightConstraint];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:44]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-4]];
 }
 
 

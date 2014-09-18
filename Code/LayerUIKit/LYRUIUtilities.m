@@ -43,18 +43,20 @@ CGSize LYRUIImageSize(UIImage *image)
     return itemSize;
 }
 
-CGRect LYRUIImageRectForThumb(CGSize size, NSUInteger maxConstraint)
+CGRect LYRUIImageRectConstrainedToSize(CGSize imageSize, CGSize maxSize)
 {
     CGRect thumbRect;
-    if (size.width > size.height) {
-        double ratio = maxConstraint/size.width;
-        double height = size.height * ratio;
-        thumbRect = CGRectMake(0, 0, maxConstraint, height);
+
+    if (imageSize.width > imageSize.height) {
+        double ratio = maxSize.width/imageSize.width;
+        double height = imageSize.height * ratio;
+        thumbRect = CGRectMake(0, 0, maxSize.width, height);
     } else {
-        double ratio = maxConstraint/size.height;
-        double width = size.width * ratio;
-        thumbRect = CGRectMake(0, 0, width, maxConstraint);
+        double ratio = maxSize.height/imageSize.height;
+        double width = imageSize.width * ratio;
+        thumbRect = CGRectMake(0, 0, width, maxSize.height);
     }
+    
     return thumbRect;
 }
 

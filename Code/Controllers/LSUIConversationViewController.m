@@ -25,13 +25,6 @@ static NSDateFormatter *dateFormatter;
     }
     
     self.dataSource = self;
-   
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
@@ -43,9 +36,7 @@ static NSDateFormatter *dateFormatter;
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
     [dateFormatter setDateFormat:@"MMM dd, hh:mma"];
-    NSString *dateLabel = [dateFormatter stringFromDate:date];
-    return dateLabel;
-
+    return [dateFormatter stringFromDate:date];
 }
 
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus

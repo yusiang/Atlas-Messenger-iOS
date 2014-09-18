@@ -7,14 +7,19 @@
 //
 
 #import "LYRUIConversationViewController.h"
+#import "LYRUIConversationCollectionViewFlowLayout.h"
+
 #import "LYRUIOutgoingMessageCollectionViewCell.h"
 #import "LYRUIIncomingMessageCollectionViewCell.h"
+
 #import "LYRUIConversationCollectionViewHeader.h"
 #import "LYRUIConversationCollectionViewFooter.h"
+
 #import "LYRUIConstants.h"
 #import "LYRUIUtilities.h"
+
 #import "LYRUIChangeNotificationObserver.h"
-#import "LYRUIConversationCollectionViewFlowLayout.h"
+
 #import "LYRUIMessageBubbleView.h"
 
 @interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIComposeViewControllerDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
@@ -22,9 +27,12 @@
 @property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, strong) LYRConversation *conversation;
 @property (nonatomic, strong) NSOrderedSet *messages;
+
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UIViewController *inputToolbar;
+
 @property (nonatomic, strong) LYRUIChangeNotificationObserver *changeNotificationObserver;
+
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat keyboardHeight;
 
@@ -38,8 +46,12 @@ static NSString *const LYRUIOutgoingMessageCellIdentifier = @"outgoingMessageCel
 static NSString *const LYRUIMessageCellHeaderIdentifier = @"messageCellHeaderIdentifier";
 static NSString *const LYRUIMessageCellFooterIdentifier = @"messageCellFooterIdentifier";
 
-static NSString *const LSMessageHeaderIdentifier = @"headerViewIdentifier";
 static CGFloat const LSComposeViewHeight = 40;
+
+- (id)init
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
+}
 
 + (instancetype)conversationViewControllerWithConversation:(LYRConversation *)conversation layerClient:(LYRClient *)layerClient;
 {
@@ -51,14 +63,15 @@ static CGFloat const LSComposeViewHeight = 40;
     self = [super init];
     if (self) {
         
-        NSAssert(layerClient, @"`self.layerController` cannot be nil");
-        NSAssert(conversation, @"`self.conversation` cannont be nil");
+        NSAssert(layerClient, @"`Layer Client` cannot be nil");
+        NSAssert(conversation, @"`Conversation` cannont be nil");
         
         self.title = @"Conversation";
         self.accessibilityLabel = @"Conversation";
         
         self.conversation = conversation;
         self.layerClient = layerClient;
+        
     }
     return self;
 }
@@ -68,26 +81,16 @@ static CGFloat const LSComposeViewHeight = 40;
     [super viewDidLoad];
     
     // Setup Collection View
-    //LYRUIConversationCollectionViewFlowLayout *layout = [[LYRUIConversationCollectionViewFlowLayout alloc] init];
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
-                                             collectionViewLayout:layout];
-    
-    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 40, 0);
-    
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, LSComposeViewHeight, 0);
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.alwaysBounceVertical = TRUE;
     self.collectionView.bounces = TRUE;
     self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-    self.collectionView.accessibilityLabel = @"collectionView";
+    self.collectionView.accessibilityLabel = @"Conversation Collection View";
     [self.view addSubview:self.collectionView];
-    
-    [self.collectionView registerClass:[LYRUIIncomingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier];
-    [self.collectionView registerClass:[LYRUIOutgoingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier];
-    [self.collectionView registerClass:[LYRUIConversationCollectionViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYRUIMessageCellHeaderIdentifier];
-    [self.collectionView registerClass:[LYRUIConversationCollectionViewFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:LYRUIMessageCellFooterIdentifier];
     
     // Setup Compose View
     self.composeViewController = [[LYRUIComposeViewController alloc] init];
@@ -97,9 +100,17 @@ static CGFloat const LSComposeViewHeight = 40;
     [self addChildViewController:self.composeViewController];
     [self.composeViewController didMoveToParentViewController:self];
     
+    // Register reusable collection view cells, header and footer
+    [self.collectionView registerClass:[LYRUIIncomingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier];
+    [self.collectionView registerClass:[LYRUIOutgoingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier];
+    [self.collectionView registerClass:[LYRUIConversationCollectionViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYRUIMessageCellHeaderIdentifier];
+    [self.collectionView registerClass:[LYRUIConversationCollectionViewFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:LYRUIMessageCellFooterIdentifier];
+
+    // Setup Layer Change notification observer
     self.changeNotificationObserver = [[LYRUIChangeNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
     self.changeNotificationObserver.delegate = self;
-    
+
+    // Configure defualt cell appearance
     [self configureMessageBubbleAppearance];
 }
 
@@ -114,7 +125,6 @@ static CGFloat const LSComposeViewHeight = 40;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -136,27 +146,29 @@ static CGFloat const LSComposeViewHeight = 40;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
-- (void)fetchMessages
-{
-    NSAssert(self.conversation, @"Conversation should not be `nil`.");
-    if (self.messages) self.messages = nil;
-    self.messages = [self.layerClient messagesForConversation:self.conversation];
-}
-
 - (void)dealloc
 {
     self.collectionView.delegate = nil;
 }
 
-# pragma mark
-# pragma mark Collection View Data Source
+#pragma mark - Refresh Data Source
+
+- (void)fetchMessages
+{
+    self.messages = [self.layerClient messagesForConversation:self.conversation];
+}
+
+# pragma mark - Collection View Data Source
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
+    // MessageParts correspond to rows in a section
     return [[[self.messages objectAtIndex:section] parts] count];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
+    // Messages correspond to sections
     return self.messages.count;
 }
 
@@ -167,28 +179,20 @@ static CGFloat const LSComposeViewHeight = 40;
     
     LYRUIMessageCollectionViewCell <LYRUIMessagePresenting> *cell;
     if ([self.layerClient.authenticatedUserID isEqualToString:message.sentByUserID]) {
+       
+        // If the message was sent by the currently authenticated user, it is outgoing
         cell =  [self.collectionView dequeueReusableCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier forIndexPath:indexPath];
     } else {
+        
+        // If the message was sent by someone other than the currently authenticated user, it is incoming
         cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier forIndexPath:indexPath];
     }
     [cell presentMessage:messagePart fromParticipant:nil];
+    
+    // Sets the width of the bubble view
     [cell updateBubbleViewWidth:[self sizeForItemAtIndexPath:indexPath].width];
     [self updateRecipientStatusForMessage:message];
     return cell;
-}
-
-- (void)updateRecipientStatusForMessage:(LYRMessage *)message
-{
-    NSNumber *recipientStatus = [message.recipientStatusByUserID objectForKey:self.layerClient.authenticatedUserID];
-    if (![recipientStatus isEqualToNumber:[NSNumber numberWithInteger:LYRRecipientStatusRead]] ) {
-        NSError *error;
-        BOOL success = [self.layerClient markMessageAsRead:message error:&error];
-        if (success) {
-            NSLog(@"Message successfully marked as read");
-        } else {
-            NSLog(@"Failed to mark message as read with error %@", error);
-        }
-    }
 }
 
 #pragma mark
@@ -199,7 +203,7 @@ static CGFloat const LSComposeViewHeight = 40;
     //Nothing to do for now
 }
 
-#pragma mark – UICollectionViewDelegateFlowLayout
+#pragma mark – UICollectionViewDelegateFlowLayout Methods
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -266,6 +270,28 @@ static CGFloat const LSComposeViewHeight = 40;
     return CGSizeMake([[UIScreen mainScreen] bounds].size.width, height);
 }
 
+#pragma mark - Recipient Status Methods
+
+- (void)updateRecipientStatusForMessage:(LYRMessage *)message
+{
+    NSNumber *recipientStatus = [message.recipientStatusByUserID objectForKey:self.layerClient.authenticatedUserID];
+    if (![recipientStatus isEqualToNumber:[NSNumber numberWithInteger:LYRRecipientStatusRead]] ) {
+        dispatch_queue_t recipientStateQueue = dispatch_queue_create("com.sample.layer", NULL);
+        dispatch_async(recipientStateQueue, ^{
+            NSError *error;
+            BOOL success = [self.layerClient markMessageAsRead:message error:&error];
+            if (success) {
+                NSLog(@"Message successfully marked as read");
+            } else {
+                NSLog(@"Failed to mark message as read with error %@", error);
+            }
+
+        });
+    }
+}
+
+#pragma mark - UI Configuration Methods
+
 - (BOOL)shouldDisplayDateLabelForSection:(NSUInteger)section
 {
     // If it is the first section, show date label
@@ -326,14 +352,10 @@ static CGFloat const LSComposeViewHeight = 40;
     if ([part.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         NSString *text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
         size = LYRUITextPlainSize(text, [[LYRUIOutgoingMessageCollectionViewCell appearance] messageTextFont]);
-        size.height = size.height + 16; // Adding 16 to account for default vertical content inset with textView
+        size.height = size.height + 16; // Adding 16 to account for default vertical padding for text in bubble view
     } else if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
         UIImage *image = [UIImage imageWithData:part.data];
         size = LYRUIImageSize(image);
-    } else if ([part.MIMEType isEqualToString:LYRUIMIMETypeLocation]){
-        size = CGSizeMake(LYRUIMaxCellWidth(), 20);
-    } else {
-        //
     }
     return size;
 }
@@ -355,7 +377,11 @@ static CGFloat const LSComposeViewHeight = 40;
     self.keyboardHeight = kbSize.height;
     [self updateInsets];
     
-    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x, self.composeViewController.view.frame.origin.y - kbSize.height, self.composeViewController.view.frame.size.width, self.composeViewController.view.frame.size.height);
+    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x,
+                                                       self.composeViewController.view.frame.origin.y - kbSize.height,
+                                                       self.composeViewController.view.frame.size.width,
+                                                       self.composeViewController.view.frame.size.height);
+    
     [self.collectionView setContentOffset:[self bottomOffset]];
     
     [UIView commitAnimations];
@@ -376,7 +402,10 @@ static CGFloat const LSComposeViewHeight = 40;
     self.keyboardHeight = 0;
     [self updateInsets];
     
-    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x, self.composeViewController.view.frame.origin.y + kbSize.height, self.composeViewController.view.frame.size.width, self.composeViewController.view.frame.size.height);
+    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x,
+                                                       self.composeViewController.view.frame.origin.y + kbSize.height,
+                                                       self.composeViewController.view.frame.size.width,
+                                                       self.composeViewController.view.frame.size.height);
     [UIView commitAnimations];
     
     self.keyboardIsOnScreen = FALSE;
@@ -394,12 +423,28 @@ static CGFloat const LSComposeViewHeight = 40;
     }
 }
 
+- (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapLeftAccessoryButton:(UIButton *)leftAccessoryButton
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:nil
+                                  delegate:self
+                                  cancelButtonTitle:@"Cancel"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:@"Select Photo", @"Take Photo", nil];
+    [actionSheet showInView:self.view];
+}
+
+#pragma mark Message Sent Methods
+
 - (void)sendMessageWithContentParts:(NSMutableArray *)messageContentParts
 {
     for (id object in messageContentParts){
+        
         if ([object isKindOfClass:[UIImage class]]) {
             [self sendMessageWithImage:object];
-        } else if ([object isKindOfClass:[CLLocation class]]) {
+        }
+        
+        if ([object isKindOfClass:[CLLocation class]]) {
             [self sendMessageWithLocation:object];
         }
     }
@@ -409,24 +454,7 @@ static CGFloat const LSComposeViewHeight = 40;
 {
     LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
-    
-    id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
-    NSString *pushText = [NSString stringWithFormat:@"%@: %@", [sender fullName], text];
-    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
-    
-    NSError *error;
-    BOOL success = [self.layerClient sendMessage:message error:&error];
-    if (success) {
-        NSLog(@"Messages Succesfully Sent");
-    } else {
-        NSLog(@"The error is %@", error);
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
-    }
+    [self sendMessage:message pushText:text];
 }
 
 - (void)sendMessageWithImage:(UIImage *)image
@@ -436,24 +464,7 @@ static CGFloat const LSComposeViewHeight = 40;
     
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeImageJPEG data:compressedImageData];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
-    
-    id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
-    NSString *pushText = [NSString stringWithFormat:@"%@: %@", [sender fullName], @"New Image"];
-    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
-    
-    NSError *error;
-    BOOL success = [self.layerClient sendMessage:message error:&error];
-    if (success) {
-        NSLog(@"Messages Succesfully Sent");
-    } else {
-        NSLog(@"The error is %@", error);
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
-    }
+    [self sendMessage:message pushText:@"New Image"];
 }
 
 - (void)sendMessageWithLocation:(CLLocation *)location
@@ -462,12 +473,19 @@ static CGFloat const LSComposeViewHeight = 40;
     NSNumber *lon = [NSNumber numberWithDouble:location.coordinate.longitude];
     NSDictionary *locationDictionary = @{@"lat" : lat,
                                          @"lon" : lon};
+    
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeLocation data:[NSKeyedArchiver archivedDataWithRootObject:locationDictionary]];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
-    
+  
+    [self sendMessage:message pushText:@"New Location"];
+}
+
+- (void)sendMessage:(LYRMessage *)message pushText:(NSString *)pushText
+{
     id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
-    NSString *pushText = [NSString stringWithFormat:@"%@: %@", [sender fullName], @"New Location"];
-    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: pushText} onObject:message];
+    NSString *text = [NSString stringWithFormat:@"%@: %@", [sender fullName], pushText];
+    
+    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: text} onObject:message];
     
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];
@@ -484,19 +502,7 @@ static CGFloat const LSComposeViewHeight = 40;
     }
 }
 
-- (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapLeftAccessoryButton:(UIButton *)leftAccessoryButton
-{
-    UIActionSheet *actionSheet = [[UIActionSheet alloc]
-                                  initWithTitle:nil
-                                  delegate:self
-                                  cancelButtonTitle:@"Cancel"
-                                  destructiveButtonTitle:nil
-                                  otherButtonTitles:@"Choose Existing", @"Take Photo", nil];
-    [actionSheet showInView:self.view];
-}
-
-#pragma mark
-#pragma mark UIActionSheetDelegate
+#pragma mark UIActionSheetDelegate Methods
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -512,11 +518,13 @@ static CGFloat const LSComposeViewHeight = 40;
     }
 }
 
+#pragma mark UIImagePicker Methods
+
 - (void)displayImagePickerWithSourceType:(UIImagePickerControllerSourceType)sourceType;
 {
-    BOOL camera = [UIImagePickerController isSourceTypeAvailable:sourceType];
+    BOOL pickerSourceTypeAvailable = [UIImagePickerController isSourceTypeAvailable:sourceType];
     
-    if (camera) {
+    if (pickerSourceTypeAvailable) {
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
         picker.sourceType = sourceType;
@@ -525,8 +533,7 @@ static CGFloat const LSComposeViewHeight = 40;
     }
 }
 
-#pragma mark
-#pragma mark Image Picker Controller Delegate
+#pragma mark UIImagePickerController Delegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
@@ -541,14 +548,11 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark Image Maniuplation Methods
-
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark
 #pragma mark Notification Observer Delegate Methods
 
 - (void) observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
@@ -571,6 +575,8 @@ static CGFloat const LSComposeViewHeight = 40;
     [self.collectionView reloadData];
 }
 
+#pragma mark CollectionView Content Inset Methods
+
 - (void)updateInsets
 {
     UIEdgeInsets existing = self.collectionView.contentInset;
@@ -591,6 +597,8 @@ static CGFloat const LSComposeViewHeight = 40;
         });
     }
 }
+
+#pragma mark Default Message Cell Appearance
 
 - (void)configureMessageBubbleAppearance
 {

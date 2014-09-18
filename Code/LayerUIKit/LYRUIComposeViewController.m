@@ -16,29 +16,35 @@
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat textViewContentSizeHeight;
 @property (nonatomic) CGSize defaultSize;
+@property (nonatomic) CGFloat defaultContentHeight;
 
 @end
 
 @implementation LYRUIComposeViewController
 
-// Compose View Margins
+// Compose View Margin Constants
 static CGFloat const LSComposeviewHorizontalMargin = 6;
 static CGFloat const LSComposeviewVerticalMargin = 6;
 
-static CGFloat const LSleftAccessoryButtonWidth = 40;
-static CGFloat const LSrightAccessoryButtonWidth = 50;
+// Compose View Button Constants
+static CGFloat const LSLeftAccessoryButtonWidth = 40;
+static CGFloat const LSRightAccessoryButtonWidth = 50;
 static CGFloat const LSButtonHeight = 28;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    // Setup
+    self.view.backgroundColor =  LSLighGrayColor();
+    self.messageContentParts = [[NSMutableArray alloc] init];
+    
     // Initialize the Camera Button
     self.leftAccessoryButton = [[UIButton alloc] init];
     self.leftAccessoryButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.leftAccessoryButton.accessibilityLabel = @"Camera Button";
-    [self.leftAccessoryButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
     self.leftAccessoryButton.layer.cornerRadius = 2;
+    [self.leftAccessoryButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
     [self.leftAccessoryButton addTarget:self action:@selector(leftAccessoryButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.leftAccessoryButton];
     
@@ -66,10 +72,6 @@ static CGFloat const LSButtonHeight = 28;
     [self.view addSubview:self.rightAccessoryButton];
     
     [self setupLayoutConstraints];
-    
-    self.messageContentParts = [[NSMutableArray alloc] init];
-    // Setup
-    self.view.backgroundColor =  LSLighGrayColor();
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -80,7 +82,19 @@ static CGFloat const LSButtonHeight = 28;
     if (!self.defaultSize.height) {
         self.defaultSize = self.view.frame.size;
     }
+    
+    if (!self.defaultContentHeight) {
+        self.defaultContentHeight = self.textInputView.contentSize.height;
+    }
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.textViewContentSizeHeight = self.textInputView.contentSize.height;
+}
+
+#pragma mark Public Content Insertion Methods
 
 - (void)insertImage:(UIImage *)image
 {
@@ -88,17 +102,24 @@ static CGFloat const LSButtonHeight = 28;
     
     [self.rightAccessoryButton setHighlighted:TRUE];
     
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
     LYRUIMediaAttachment *textAttachment = [[LYRUIMediaAttachment alloc] init];
     textAttachment.image = image;
-
-    NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
-    [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
-    self.textInputView.attributedText = attrStringWithImage;
+    
+    NSRange range;
+    if (self.textInputView.text)  {
+        self.textInputView.text = [self.textInputView.text stringByAppendingString:@"\n "];
+        range = [self.textInputView.text rangeOfString:@" "];
+    } else {
+        range = NSMakeRange(0, 1);
+    }
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.textInputView.text attributes:@{NSFontAttributeName : LSLightFont(16)}];
+    [attributedString replaceCharactersInRange:range withAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
+    self.textInputView.attributedText = attributedString;
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    CGRect rect = LYRUIImageRectForThumb(imageView.frame.size, 100);
-    [self adjustFrameForHeightDifference:rect.size.height];
+    CGRect rect = LYRUIImageRectConstrainedToSize(imageView.frame.size, CGSizeMake(120, 120));
+    [self adjustFrameForTextViewContentSizeHeight:rect.size.height + 4];
 }
 
 - (void)insertVideoAtPath:(NSString *)videoPath
@@ -113,9 +134,112 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)insertLocation:(CLLocationCoordinate2D)location
 {
+    MKMapView *mapView = [[MKMapView alloc] init];
     
+    MKMapSnapshotOptions *options = [[MKMapSnapshotOptions alloc] init];
+    options.region = mapView.region;
+    options.scale = [UIScreen mainScreen].scale;
+    options.size = CGSizeMake(100, 200);
+    
+    MKMapSnapshotter *snapshotter = [[MKMapSnapshotter alloc] initWithOptions:options];
+    [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
+        UIImage *image = snapshot.image;
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
+        LYRUIMediaAttachment *textAttachment = [[LYRUIMediaAttachment alloc] init];
+        textAttachment.image = image;
+        
+        NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+        [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
+        self.textInputView.attributedText = attrStringWithImage;
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+        CGRect rect = LYRUIImageRectConstrainedToSize(imageView.frame.size, CGSizeMake(self.view.frame.size.width, 120));
+        [self adjustFrameForTextViewContentSizeHeight:rect.size.height + 4];
+    }];
 }
 
+
+#pragma mark Compose View Delegate Methods
+
+- (void)leftAccessoryButtonTapped
+{
+    [self.delegate composeViewController:self didTapLeftAccessoryButton:self.leftAccessoryButton];
+}
+
+- (void)rightAccessoryButtonTapped
+{
+    if (self.textInputView.text.length > 0 || self.messageContentParts) {
+        [self.delegate composeViewController:self didTapRightAccessoryButton:self.rightAccessoryButton];
+        [self.rightAccessoryButton setHighlighted:FALSE];
+        [self.textInputView setText:@""];
+        [self.messageContentParts removeAllObjects];
+         self.textInputView.font = LSLightFont(16);
+    }
+    
+    if (self.defaultSize.height != self.view.frame.size.height) {
+        [self setFrameForHeightOffset:(self.defaultSize.height - self.view.frame.size.height)];
+        self.textViewContentSizeHeight = self.defaultContentHeight;
+    }
+}
+
+
+#pragma mark TextViewDelegate Methods
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    self.textViewContentSizeHeight = textView.contentSize.height;
+    return YES;
+}
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView
+{
+    [self.rightAccessoryButton setHighlighted:FALSE];
+    return YES;
+}
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+    NSLog(@"Content Size is %f", textView.contentSize.height);
+    if (self.textViewContentSizeHeight != textView.contentSize.height) {
+        [self adjustFrameForTextViewContentSizeHeight:textView.contentSize.height];
+    }
+
+    if (textView.text.length > 0) {
+        [self.rightAccessoryButton setHighlighted:TRUE];
+    }
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if (textView.attributedText) {
+        //Press return key
+    }
+    return YES;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
+{
+    return YES;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange
+{
+    return YES;
+}
+
+#pragma mark Frame Adjustment Method 
+
+- (void)adjustFrameForTextViewContentSizeHeight:(CGFloat)height
+{
+    CGFloat heightOffset = height - self.textViewContentSizeHeight;
+    self.textViewContentSizeHeight = height;
+    [self setFrameForHeightOffset:heightOffset];
+}
+
+- (void)setFrameForHeightOffset:(CGFloat)heightOffset
+{
+    [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - heightOffset , self.view.frame.size.width, self.view.frame.size.height + heightOffset)];
+}
 
 - (void)setupLayoutConstraints
 {
@@ -127,7 +251,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:nil
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
-                                                      constant:LSleftAccessoryButtonWidth]];
+                                                      constant:LSLeftAccessoryButtonWidth]];
     
     // Left Margin
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
@@ -162,7 +286,7 @@ static CGFloat const LSButtonHeight = 28;
                                                         toItem:nil
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
-                                                      constant:LSrightAccessoryButtonWidth]];
+                                                      constant:LSRightAccessoryButtonWidth]];
     
     // Right Margin
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
@@ -223,75 +347,6 @@ static CGFloat const LSButtonHeight = 28;
                                                      attribute:NSLayoutAttributeBottom
                                                     multiplier:1.0
                                                       constant:-LSComposeviewHorizontalMargin]];
-}
-
-- (void)leftAccessoryButtonTapped
-{
-    [self.delegate composeViewController:self didTapLeftAccessoryButton:self.leftAccessoryButton];
-}
-
-- (void)rightAccessoryButtonTapped
-{
-    if (self.textInputView.text.length > 0 || self.textInputView.attributedText) {
-        [self.delegate composeViewController:self didTapRightAccessoryButton:self.rightAccessoryButton];
-        self.textInputView.text = @"";
-        [self.rightAccessoryButton setHighlighted:FALSE];
-        if (self.defaultSize.height != self.view.frame.size.height) {
-            [self adjustFrameForHeightDifference:self.defaultSize.height - self.view.frame.size.height];
-        }
-    }
-}
-
-#pragma mark
-#pragma mark TextViewDelegate Methods
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
-{
-    self.textViewContentSizeHeight = textView.contentSize.height;
-    return YES;
-}
-
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView
-{
-    [self.rightAccessoryButton setHighlighted:FALSE];
-    return YES;
-}
-
-- (void)textViewDidChange:(UITextView *)textView
-{
-    if (self.textViewContentSizeHeight != textView.contentSize.height) {
-        CGFloat heightDiff = textView.contentSize.height - self.textViewContentSizeHeight;
-        [self adjustFrameForHeightDifference:heightDiff];
-        self.textViewContentSizeHeight = textView.contentSize.height;
-    }
-    if (textView.text.length > 0) {
-        [self.rightAccessoryButton setHighlighted:TRUE];
-    }
-}
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    if (textView.attributedText) {
-        //Press return key
-    }
-    return YES;
-}
-
-- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
-{
-    return YES;
-}
-
-- (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange
-{
-    return YES;
-}
-
-- (void)adjustFrameForHeightDifference:(CGFloat)heightDifference
-{
-    [UIView animateWithDuration:0.1 animations:^{
-        [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - heightDifference , self.view.frame.size.width, self.view.frame.size.height + heightDifference)];
-    }];
-
 }
 
 @end

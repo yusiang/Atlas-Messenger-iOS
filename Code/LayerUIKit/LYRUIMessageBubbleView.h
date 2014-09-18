@@ -19,7 +19,7 @@
 
 - (void)updateBubbleViewWithFont:(UIFont *)font color:(UIColor *)color;
 
-@property (nonatomic, strong) UITextView *bubbleContentView;
+@property (nonatomic, strong) UITextView *bubbleTextView;
 
 @property (nonatomic, strong) UIImageView *bubbleImageView;
 

@@ -20,7 +20,7 @@ CGSize LYRUITextPlainSize(NSString *string, UIFont *font);
 
 CGSize LYRUIImageSize(UIImage *image);
 
-CGRect LYRUIImageRectForThumb(CGSize size, NSUInteger maxConstraint);
+CGRect LYRUIImageRectConstrainedToSize(CGSize imageSize, CGSize maxSize);
 
 UIImage *LYRUIAdjustOrientationForImage(UIImage *originalImage);
 

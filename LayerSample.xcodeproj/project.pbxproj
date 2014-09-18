@@ -297,15 +297,23 @@
 			name = "Component Test";
 			sourceTree = "<group>";
 		};
-		259A57111950EB76000E27B0 /* Code */ = {
+		0AE1B93A19C9E4FD00FB28A7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				259A57121950EB76000E27B0 /* Controllers */,
-				259A572E1950EB76000E27B0 /* LayerSample-Prefix.pch */,
 				0AE1A15519B0DC5100BFB754 /* LSKeychainUtilities.h */,
 				0AE1A15619B0DC5100BFB754 /* LSKeychainUtilities.m */,
 				0AD767701963104200582755 /* LSUtilities.h */,
 				0AD767711963104200582755 /* LSUtilities.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		259A57111950EB76000E27B0 /* Code */ = {
+			isa = PBXGroup;
+			children = (
+				0AE1B93A19C9E4FD00FB28A7 /* Utilities */,
+				259A57121950EB76000E27B0 /* Controllers */,
+				259A572E1950EB76000E27B0 /* LayerSample-Prefix.pch */,
 				259A572F1950EB76000E27B0 /* LSAppDelegate.h */,
 				259A57301950EB76000E27B0 /* LSAppDelegate.m */,
 				259A57311950EB76000E27B0 /* main.m */,

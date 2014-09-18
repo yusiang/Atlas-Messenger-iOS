@@ -65,9 +65,7 @@
 
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
-    LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
-    viewController.persistenceManager = self.applicationController.persistenceManager;
-    [self.navigationController pushViewController:viewController animated:YES];
+    [self presentControllerWithConversation:conversation];
 }
 
 - (void)conversationListViewControllerDidCancel:(LYRUIConversationListViewController *)conversationListViewController
@@ -98,6 +96,36 @@
     return conversationLabel;
 }
 
+#pragma mark - LYRUIParticipantTableViewControllerDelegate methods
+
+- (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
+{
+    [self dismissViewControllerAnimated:TRUE completion:nil];
+}
+
+- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipants:(NSSet *)participants
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (participants.count > 0) {
+            
+            NSSet *participantIdentifiers = [participants valueForKey:@"participantIdentifier"];
+            LYRConversation *conversation = [[self.applicationController.layerClient conversationsForParticipants:participantIdentifiers] anyObject];
+            
+            if (!conversation) {
+                conversation = [LYRConversation conversationWithParticipants:participantIdentifiers];
+            }
+            [self presentControllerWithConversation:conversation];
+        }
+    }];
+}
+
+- (void)presentControllerWithConversation:(LYRConversation *)conversation
+{
+    LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
+    viewController.persistenceManager = self.applicationController.persistenceManager;
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
 #pragma mark - Bar Button Functionality Methods
 
 - (void)meunButtonTapped
@@ -109,7 +137,7 @@
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
                                   otherButtonTitles:[NSString stringWithFormat:@"Logout - %@", user], @"Reload Contacts", nil];
-
+    
     [actionSheet showInView:self.view];
 }
 
@@ -153,30 +181,6 @@
     }];
 }
 
-#pragma mark - LYRUIParticipantTableViewControllerDelegate methods
 
-- (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
-{
-    [self dismissViewControllerAnimated:TRUE completion:nil];
-}
-
-- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipants:(NSSet *)participants
-{
-    [self dismissViewControllerAnimated:YES completion:^{
-        if (participants.count > 0) {
-            
-            NSSet *participantIdentifiers = [participants valueForKey:@"participantIdentifier"];
-            LYRConversation *conversation = [[self.applicationController.layerClient conversationsForParticipants:participantIdentifiers] anyObject];
-            
-            if (!conversation) {
-                conversation = [LYRConversation conversationWithParticipants:participantIdentifiers];
-            }
-            
-            LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
-            viewController.persistenceManager = self.applicationController.persistenceManager;
-            [self.navigationController pushViewController:viewController animated:YES];
-        }
-    }];
-}
 
 @end
