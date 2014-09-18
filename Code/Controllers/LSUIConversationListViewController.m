@@ -48,8 +48,9 @@
     [self.navigationItem setRightBarButtonItem:composeButton];
     
     self.versionView = [[LSVersionView alloc] initWithFrame:CGRectZero];
-    self.versionView.topLabel.text = [LSApplicationController versionString];
-    self.versionView.bottomLabel.text = [LSApplicationController buildInformationString];
+    self.versionView.versionLabel.text = [LSApplicationController versionString];
+    self.versionView.buildLabel.text = [LSApplicationController buildInformationString];
+    self.versionView.hostLabel.text = [LSApplicationController layerServerHostname];
     
     [self.versionView sizeToFit];
     

@@ -10,7 +10,8 @@
 
 @interface LSVersionView : UIView
 
-@property (readonly, nonatomic) UILabel *topLabel;
-@property (readonly, nonatomic) UILabel *bottomLabel;
+@property (readonly, nonatomic) UILabel *versionLabel;
+@property (readonly, nonatomic) UILabel *buildLabel;
+@property (readonly, nonatomic) UILabel *hostLabel;
 
 @end

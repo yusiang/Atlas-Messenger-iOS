@@ -45,4 +45,6 @@
  */
 + (NSString *)buildInformationString;
 
++ (NSString *)layerServerHostname;
+
 @end

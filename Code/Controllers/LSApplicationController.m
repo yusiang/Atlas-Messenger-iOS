@@ -116,7 +116,6 @@
     NSString *bundleVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"];
     
     NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
-    
     NSString *versionString = nil;
     if (buildInformation) {
         NSString *layerKitVersion = buildInformation[@"LYRBuildLayerKitVersion"];
@@ -141,6 +140,14 @@
     NSString *builderEmail = buildInformation[@"LYRBuildBuilderEmail"];
     
     return [NSString stringWithFormat:@"Built by %@ (%@) SHA: %@", builderName, builderEmail, buildSHA];
+}
+
++ (NSString *)layerServerHostname
+{
+    NSString *configURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    NSURL *URL = [NSURL URLWithString:configURLString];
+    NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
+    return URLComponents.host;
 }
 
 @end
