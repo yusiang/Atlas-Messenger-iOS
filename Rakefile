@@ -80,7 +80,9 @@ task :release do
   run "pod install"
   
   # 1) Generate objects with: builder name/email (via git config), short-sha
-  layer_kit_version = `cat Podfile.lock | perl -n -e'/LayerKit \\((.+?)\\)/ && print $1'`.strip
+  require 'yaml'
+  lockfile = YAML.load_file('Podfile.lock')
+  layer_kit_version = lockfile['PODS'].detect { |s| s =~ /^LayerKit/ }.match(/LayerKit \(([\d\.]+)\)/)[1]
   short_sha = `git rev-parse --short HEAD`.strip
   builder_name = `git config --get user.name`.strip
   builder_email = `git config --get user.email`.strip
