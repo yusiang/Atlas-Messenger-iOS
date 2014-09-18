@@ -104,7 +104,14 @@ extern void LYRSetLogLevelFromEnvironment();
 //    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
     // Declaring that I want to recieve push!
-    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                                                                             categories:nil];
+        [application registerUserNotificationSettings:notificationSettings];
+        [application registerForRemoteNotifications];
+    } else {
+        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    }
     
     [self configureGlobalUserInterfaceAttributes];
     
