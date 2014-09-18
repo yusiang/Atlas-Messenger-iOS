@@ -46,30 +46,36 @@
     _conversations = conversations;
 }
 
-- (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
+- (void)didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
-    NSLog(@"Received notification: %@", notification);
-    [self.delegate observerWillChangeContent:self];
-    
-    NSMutableArray *conversationArray = [[NSMutableArray alloc] init];
-    NSMutableArray *messageArray = [[NSMutableArray alloc] init];
-    
-    NSArray *changes = [notification.userInfo objectForKey:LYRClientObjectChangesUserInfoKey];
-    for (NSDictionary *change in changes) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSLog(@"Received notification: %@", notification);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate observerWillChangeContent:self];
+        });
         
-        if ([[change objectForKey:LYRObjectChangeObjectKey] isKindOfClass:[LYRConversation class]]) {
-            [conversationArray addObject:change];
+        NSMutableArray *conversationArray = [[NSMutableArray alloc] init];
+        NSMutableArray *messageArray = [[NSMutableArray alloc] init];
+        
+        NSArray *changes = [notification.userInfo objectForKey:LYRClientObjectChangesUserInfoKey];
+        for (NSDictionary *change in changes) {
+            
+            if ([[change objectForKey:LYRObjectChangeObjectKey] isKindOfClass:[LYRConversation class]]) {
+                [conversationArray addObject:change];
+            }
+            
+            if ([[change objectForKey:LYRObjectChangeObjectKey]isKindOfClass:[LYRMessage class]]) {
+                [messageArray addObject:change];
+            }
         }
         
-        if ([[change objectForKey:LYRObjectChangeObjectKey]isKindOfClass:[LYRMessage class]]) {
-            [messageArray addObject:change];
-        }
-    }
-    
-    [self processConversationChanges:conversationArray];
-    [self processMessageChanges:messageArray];
-    
-    [self.delegate observerDidChangeContent:self];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self processConversationChanges:conversationArray];
+            [self processMessageChanges:messageArray];
+            
+            [self.delegate observerDidChangeContent:self];
+        });
+    });
 }
 
 - (void) processConversationChanges:(NSMutableArray *)conversationChanges
@@ -86,7 +92,7 @@
             LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
             switch (updateKey) {
                 case LYRObjectChangeTypeCreate:
-                    [self handleMessageCreatation:message atIndex:i];
+                    [self handleMessageCreation:message atIndex:i];
                     break;
                 case LYRObjectChangeTypeUpdate:
                     [self handleMessageUpdate:message];
@@ -104,7 +110,7 @@
 #pragma mark
 #pragma mark Conversation Notification Dispatch
 
-- (void)handleConversationCreatation:(LYRConversation *)conversation atIndex:(NSUInteger)index
+- (void)handleConversationCreation:(LYRConversation *)conversation atIndex:(NSUInteger)index
 {
     [self.delegate observer:self didChangeObject:conversation atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
 }
@@ -122,7 +128,7 @@
 #pragma mark
 #pragma mark Message Notification Dispatch
 
-- (void)handleMessageCreatation:(LYRMessage *)message atIndex:(NSUInteger)index
+- (void)handleMessageCreation:(LYRMessage *)message atIndex:(NSUInteger)index
 {
     [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
 }

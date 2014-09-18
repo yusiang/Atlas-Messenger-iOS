@@ -274,20 +274,18 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)updateRecipientStatusForMessage:(LYRMessage *)message
 {
-    NSNumber *recipientStatus = [message.recipientStatusByUserID objectForKey:self.layerClient.authenticatedUserID];
-    if (![recipientStatus isEqualToNumber:[NSNumber numberWithInteger:LYRRecipientStatusRead]] ) {
-        dispatch_queue_t recipientStateQueue = dispatch_queue_create("com.sample.layer", NULL);
-        dispatch_async(recipientStateQueue, ^{
-            NSError *error;
-            BOOL success = [self.layerClient markMessageAsRead:message error:&error];
-            if (success) {
-                NSLog(@"Message successfully marked as read");
-            } else {
-                NSLog(@"Failed to mark message as read with error %@", error);
-            }
-
-        });
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSNumber *recipientStatus = [message.recipientStatusByUserID objectForKey:self.layerClient.authenticatedUserID];
+        if (![recipientStatus isEqualToNumber:[NSNumber numberWithInteger:LYRRecipientStatusRead]] ) {
+                NSError *error;
+                BOOL success = [self.layerClient markMessageAsRead:message error:&error];
+                if (success) {
+                    NSLog(@"Message successfully marked as read");
+                } else {
+                    NSLog(@"Failed to mark message as read with error %@", error);
+                }
+        }
+    });
 }
 
 #pragma mark - UI Configuration Methods
@@ -482,24 +480,28 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)sendMessage:(LYRMessage *)message pushText:(NSString *)pushText
 {
-    id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
-    NSString *text = [NSString stringWithFormat:@"%@: %@", [sender fullName], pushText];
-    
-    [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: text} onObject:message];
-    
-    NSError *error;
-    BOOL success = [self.layerClient sendMessage:message error:&error];
-    if (success) {
-        NSLog(@"Messages Succesfully Sent");
-    } else {
-        NSLog(@"The error is %@", error);
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
+        NSString *text = [NSString stringWithFormat:@"%@: %@", [sender fullName], pushText];
+        
+        [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: text} onObject:message];
+        
+        NSError *error;
+        BOOL success = [self.layerClient sendMessage:message error:&error];
+        if (success) {
+            NSLog(@"Messages Succesfully Sent");
+        } else {
+            NSLog(@"The error is %@", error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
+                                                                    message:[error localizedDescription]
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            });
+        }
+    });
 }
 
 #pragma mark UIActionSheetDelegate Methods
