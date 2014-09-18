@@ -13,5 +13,7 @@
 @property (readonly, nonatomic) UILabel *versionLabel;
 @property (readonly, nonatomic) UILabel *buildLabel;
 @property (readonly, nonatomic) UILabel *hostLabel;
+@property (readonly, nonatomic) UILabel *userLabel;
+@property (readonly, nonatomic) UILabel *deviceLabel;
 
 @end

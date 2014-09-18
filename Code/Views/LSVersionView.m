@@ -14,6 +14,8 @@
 @property (strong, nonatomic) UILabel *versionLabel;
 @property (strong, nonatomic) UILabel *buildLabel;
 @property (strong, nonatomic) UILabel *hostLabel;
+@property (strong, nonatomic) UILabel *userLabel;
+@property (strong, nonatomic) UILabel *deviceLabel;
 
 @end
 
@@ -37,10 +39,22 @@
     self.hostLabel.font = LSMediumFont(10.0);
     self.hostLabel.textColor = [UIColor grayColor];
     self.hostLabel.textAlignment = NSTextAlignmentCenter;
+    
+    self.userLabel = [[UILabel alloc] init];
+    self.userLabel.font = LSMediumFont(10.0);
+    self.userLabel.textColor = [UIColor grayColor];
+    self.userLabel.textAlignment = NSTextAlignmentCenter;
+    
+    self.deviceLabel = [[UILabel alloc] init];
+    self.deviceLabel.font = LSMediumFont(10.0);
+    self.deviceLabel.textColor = [UIColor grayColor];
+    self.deviceLabel.textAlignment = NSTextAlignmentCenter;
 
     [self addSubview:self.versionLabel];
     [self addSubview:self.buildLabel];
     [self addSubview:self.hostLabel];
+    [self addSubview:self.userLabel];
+    [self addSubview:self.deviceLabel];
 }
 
 static const CGFloat LSVersionViewXPadding = 5.0f;
@@ -50,10 +64,12 @@ static const CGFloat LSVersionViewYPadding = 5.0f;
 {
     [super layoutSubviews];
     CGRect insetBounds = CGRectInset(self.bounds, LSVersionViewXPadding, LSVersionViewYPadding);
-    CGFloat height = insetBounds.size.height / 3;
+    CGFloat height = insetBounds.size.height / 4;
     self.versionLabel.frame = CGRectMake(insetBounds.origin.x, insetBounds.origin.y, insetBounds.size.width, height);
     self.buildLabel.frame = CGRectOffset(self.versionLabel.frame, 0, height);
     self.hostLabel.frame = CGRectOffset(self.buildLabel.frame, 0, height);
+    self.userLabel.frame = CGRectOffset(self.hostLabel.frame, 0, height);
+    self.deviceLabel.frame = CGRectOffset(self.userLabel.frame, 0, height);
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -79,8 +95,11 @@ static const CGFloat LSVersionViewYPadding = 5.0f;
     CGSize versionSize = [self.versionLabel sizeThatFits:size];
     CGSize buildSize = [self.buildLabel sizeThatFits:size];
     CGSize hostSize = [self.hostLabel sizeThatFits:size];
+    CGSize userSize = [self.userLabel sizeThatFits:size];
+    CGSize deviceSize = [self.deviceLabel sizeThatFits:size];
 
-    return CGSizeMake(MAX(versionSize.width, MAX(buildSize.width, hostSize.width)) + 2 * LSVersionViewXPadding, versionSize.height + buildSize.height + hostSize.height + 2 * LSVersionViewYPadding);
+    return CGSizeMake(MAX(versionSize.width, MAX(buildSize.width, MAX(hostSize.width, MAX(userSize.width, deviceSize.width)))) + 2 * LSVersionViewXPadding,
+                      versionSize.height + buildSize.height + hostSize.height + userSize.height + + deviceSize.height + 2 * LSVersionViewYPadding);
 }
 
 @end
