@@ -49,9 +49,21 @@
 
 - (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
-    NSLog(@"Received notification: %@", notification);
     [self.delegate observerWillChangeContent:self];
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self processLayerChangeNotification:notification completion:^(NSMutableArray *conversationArray, NSMutableArray *messageArray) {
+            [self processMessageChanges:messageArray completion:^{
+                [self processConversationChanges:conversationArray completion:^{
+                    [self.delegate observerDidChangeContent:self];
+                }];
+            }];
+        }];
+    });
+}
+
+- (void)processLayerChangeNotification:(NSNotification *)notification completion:(void(^)(NSMutableArray *conversationArray, NSMutableArray *messageArray))completion
+{
     NSMutableArray *conversationArray = [[NSMutableArray alloc] init];
     NSMutableArray *messageArray = [[NSMutableArray alloc] init];
     
@@ -66,19 +78,16 @@
             [messageArray addObject:change];
         }
     }
-    
-    [self processConversationChanges:conversationArray];
-    [self processMessageChanges:messageArray];
-    
-    [self.delegate observerDidChangeContent:self];
+    completion(conversationArray, messageArray);
 }
 
-- (void) processConversationChanges:(NSMutableArray *)conversationChanges
+- (void) processConversationChanges:(NSMutableArray *)conversationChanges completion:(void(^)(void))completion
 {
-    [self.delegate observer:self didChangeObject:nil atIndex:0 forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    [self dispatchChangeObject:nil atIndex:0 forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    completion();
 }
 
-- (void)processMessageChanges:(NSMutableArray *)messageChanges
+- (void)processMessageChanges:(NSMutableArray *)messageChanges completion:(void(^)(void))completion
 {
     for (int i = 0; i < messageChanges.count; i++) {
         NSDictionary *messageUpdate = [messageChanges objectAtIndex:i];
@@ -100,6 +109,7 @@
             }
         }
     }
+    completion();
 }
 
 #pragma mark
@@ -107,17 +117,17 @@
 
 - (void)handleConversationCreatation:(LYRConversation *)conversation atIndex:(NSUInteger)index
 {
-    [self.delegate observer:self didChangeObject:conversation atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
+    [self dispatchChangeObject:conversation atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
 }
 
 - (void)handleConversationUpdate:(LYRConversation *)conversation
 {
-    [self.delegate observer:self didChangeObject:conversation atIndex:0 forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+    [self dispatchChangeObject:conversation atIndex:0 forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
 }
 
 - (void)handleConversationDeletion:(LYRConversation *)conversation
 {
-    [self.delegate observer:self didChangeObject:conversation atIndex:0 forChangeType:LYRObjectChangeTypeDelete newIndexPath:0];
+    [self dispatchChangeObject:conversation atIndex:0 forChangeType:LYRObjectChangeTypeDelete newIndexPath:0];
 }
 
 #pragma mark
@@ -125,21 +135,28 @@
 
 - (void)handleMessageCreatation:(LYRMessage *)message atIndex:(NSUInteger)index
 {
-    [self.delegate observer:self didChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
+    [self dispatchChangeObject:message atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:index];
 }
 
 - (void)handleMessageUpdate:(LYRMessage *)message
 {
     if (message.index) {
-        [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+        [self dispatchChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
     }
 }
 
 - (void)handleMessageDeletion:(LYRMessage *)message
 {
     if (message.index) {
-        [self.delegate observer:self didChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
+        [self dispatchChangeObject:message atIndex:message.index forChangeType:LYRObjectChangeTypeUpdate newIndexPath:0];
     }
+}
+
+- (void)dispatchChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndexPath
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate observer:self didChangeObject:object atIndex:index forChangeType:changeType newIndexPath:newIndexPath];
+    });
 }
 
 - (void)dealloc

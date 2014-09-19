@@ -1,20 +1,42 @@
 //
 //  LYRUIMessageInputToolbar.h
-//  
+//  Pods
 //
-//  Created by Kevin Coleman on 8/31/14.
+//  Created by Kevin Coleman on 9/18/14.
 //
 //
 
 #import <UIKit/UIKit.h>
-#import "LYRUIMessageComposeTextView.h"
+#import <MapKit/MapKit.h>
+
+@class LYRUIMessageInputToolbar;
+
+@protocol LYRUIMessageInputToolbarDelegate <NSObject>
+
+- (void)messageInputToolbar:(LYRUIMessageInputToolbar *)messageInputToolbar didTapRightAccessoryButton:(UIButton *)rightAccessoryButton;
+
+- (void)messageInputToolbar:(LYRUIMessageInputToolbar *)messageInputToolbar didTapLeftAccessoryButton:(UIButton *)leftAccessoryButton;
+
+@end
 
 @interface LYRUIMessageInputToolbar : UIToolbar
 
-// auto-resizing message composition field
-@property (nonatomic) LYRUIMessageComposeTextView *textView;
+- (void)insertImage:(UIImage *)image;
 
-// When set, draws to the left of the compose text area. Default to `nil`
-@property (nonatomic) UIButton *accessoryButton;
+- (void)insertVideoAtPath:(NSString *)videoPath;
+
+- (void)insertAudioAtPath:(NSString *)path;
+
+- (void)insertLocation:(CLLocationCoordinate2D)location;
+
+@property (nonatomic, strong) UIButton *leftAccessoryButton;
+
+@property (nonatomic, strong) UIButton *rightAccessoryButton;
+
+@property (nonatomic, strong) UITextView *textInputView;
+
+@property (nonatomic, weak) id<LYRUIMessageInputToolbarDelegate>delegate;
+
+@property (nonatomic) NSMutableArray *messageContentParts;
 
 @end

@@ -22,7 +22,10 @@
 
 #import "LYRUIMessageBubbleView.h"
 
-@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIComposeViewControllerDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
+#import "LYRUIMessageInputToolbar.h"
+
+@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
+
 
 @property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, strong) LYRConversation *conversation;
@@ -33,12 +36,18 @@
 
 @property (nonatomic, strong) LYRUIChangeNotificationObserver *changeNotificationObserver;
 
+@property (nonatomic, strong) LYRUIMessageInputToolbar *messageInputToolbar;
+
+@property (nonatomic, strong) dispatch_queue_t messageSendQueue;
+
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat keyboardHeight;
 
 @end
 
-@implementation LYRUIConversationViewController
+@implementation LYRUIConversationViewController {
+    UIView *inputAccessoryView;
+}
 
 static NSString *const LYRUIIncomingMessageCellIdentifier = @"incomingMessageCellIdentifier";
 static NSString *const LYRUIOutgoingMessageCellIdentifier = @"outgoingMessageCellIdentifier";
@@ -72,6 +81,8 @@ static CGFloat const LSComposeViewHeight = 40;
         self.conversation = conversation;
         self.layerClient = layerClient;
         
+        self.messageSendQueue = dispatch_queue_create("com.layer.messageSend", NULL);
+        
     }
     return self;
 }
@@ -88,18 +99,10 @@ static CGFloat const LSComposeViewHeight = 40;
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.alwaysBounceVertical = TRUE;
     self.collectionView.bounces = TRUE;
-    self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
     self.collectionView.accessibilityLabel = @"Conversation Collection View";
     [self.view addSubview:self.collectionView];
-    
-    // Setup Compose View
-    self.composeViewController = [[LYRUIComposeViewController alloc] init];
-    self.composeViewController.delegate = self;
-    self.composeViewController.view.frame = CGRectMake(0, self.view.bounds.size.height - LSComposeViewHeight, self.view.bounds.size.width, LSComposeViewHeight);
-    [self.view addSubview:self.composeViewController.view];
-    [self addChildViewController:self.composeViewController];
-    [self.composeViewController didMoveToParentViewController:self];
-    
+
     // Register reusable collection view cells, header and footer
     [self.collectionView registerClass:[LYRUIIncomingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier];
     [self.collectionView registerClass:[LYRUIOutgoingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier];
@@ -114,12 +117,30 @@ static CGFloat const LSComposeViewHeight = 40;
     [self configureMessageBubbleAppearance];
 }
 
+- (UIView *)inputAccessoryView
+{
+    self.messageInputToolbar = [[LYRUIMessageInputToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+    self.messageInputToolbar.delegate = self;
+    
+    if (!inputAccessoryView) {
+        inputAccessoryView = self.messageInputToolbar;
+    }
+    return inputAccessoryView;
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self fetchMessages];
-    [self.collectionView reloadData];
-    [self scrollToBottomOfCollectionViewAnimated:NO];
+    [self becomeFirstResponder];
+    [self fetchMessagesWithCompletion:^{
+        [self.collectionView reloadData];
+        [self scrollToBottomOfCollectionViewAnimated:NO];
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -153,9 +174,10 @@ static CGFloat const LSComposeViewHeight = 40;
 
 #pragma mark - Refresh Data Source
 
-- (void)fetchMessages
+- (void)fetchMessagesWithCompletion:(void(^)(void))completion
 {
     self.messages = [self.layerClient messagesForConversation:self.conversation];
+    completion();
 }
 
 # pragma mark - Collection View Data Source
@@ -365,45 +387,33 @@ static CGFloat const LSComposeViewHeight = 40;
 {
     self.keyboardIsOnScreen = TRUE;
     NSDictionary* info = [notification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    self.keyboardHeight = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
     
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
     [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
-    self.keyboardHeight = kbSize.height;
     [self updateInsets];
     
-    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x,
-                                                       self.composeViewController.view.frame.origin.y - kbSize.height,
-                                                       self.composeViewController.view.frame.size.width,
-                                                       self.composeViewController.view.frame.size.height);
-    
-    [self.collectionView setContentOffset:[self bottomOffset]];
-    
     [UIView commitAnimations];
+    
+    [self scrollToBottomOfCollectionViewAnimated:TRUE];
     
     self.keyboardIsOnScreen = TRUE;
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)notification
 {
-    NSDictionary* info = [notification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    self.keyboardHeight = 0;
     
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
     [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
-    self.keyboardHeight = 0;
     [self updateInsets];
     
-    self.composeViewController.view.frame = CGRectMake(self.composeViewController.view.frame.origin.x,
-                                                       self.composeViewController.view.frame.origin.y + kbSize.height,
-                                                       self.composeViewController.view.frame.size.width,
-                                                       self.composeViewController.view.frame.size.height);
     [UIView commitAnimations];
     
     self.keyboardIsOnScreen = FALSE;
@@ -411,17 +421,17 @@ static CGFloat const LSComposeViewHeight = 40;
 
 #pragma mark LYRUIComposeView Delegate Methods
 
-- (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapRightAccessoryButton:(UIButton *)rightAccessoryButton
+- (void)messageInputToolbar:(LYRUIMessageInputToolbar *)messageInputToolbar didTapRightAccessoryButton:(UIButton *)rightAccessoryButton
 {
-    if (composeViewController.messageContentParts) {
-        [self sendMessageWithContentParts:composeViewController.messageContentParts];
+    if (messageInputToolbar.messageContentParts) {
+        [self sendMessageWithContentParts:messageInputToolbar.messageContentParts];
     }
-    if (self.composeViewController.textInputView.text.length > 1) {
-        [self sendMessageWithText:composeViewController.textInputView.text];
+    if (messageInputToolbar.textInputView.text.length > 1) {
+        [self sendMessageWithText:messageInputToolbar.textInputView.text];
     }
 }
 
-- (void)composeViewController:(LYRUIComposeViewController *)composeViewController didTapLeftAccessoryButton:(UIButton *)leftAccessoryButton
+- (void)messageInputToolbar:(LYRUIMessageInputToolbar *)messageInputToolbar didTapLeftAccessoryButton:(UIButton *)leftAccessoryButton
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc]
                                   initWithTitle:nil
@@ -480,10 +490,9 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (void)sendMessage:(LYRMessage *)message pushText:(NSString *)pushText
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(self.messageSendQueue,^{
         id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
         NSString *text = [NSString stringWithFormat:@"%@: %@", [sender fullName], pushText];
-        
         [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: text} onObject:message];
         
         NSError *error;
@@ -565,16 +574,18 @@ static CGFloat const LSComposeViewHeight = 40;
 - (void)observer:(LYRUIChangeNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
     if (changeType == LYRObjectChangeTypeCreate) {
-        [self fetchMessages];
-        [self.collectionView reloadData];
-        [self scrollToBottomOfCollectionViewAnimated:TRUE];
+        [self fetchMessagesWithCompletion:^{
+            [self.collectionView reloadData];
+            [self scrollToBottomOfCollectionViewAnimated:TRUE];
+        }];
     }
 }
 
 - (void) observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
-    [self fetchMessages];
-    [self.collectionView reloadData];
+    [self fetchMessagesWithCompletion:^{
+        [self.collectionView reloadData];
+    }];;
 }
 
 #pragma mark CollectionView Content Inset Methods

@@ -67,7 +67,9 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 {
     [super viewDidLoad];
     
-    [self fetchLayerConversations];
+    [self fetchLayerConversationsWithCompletion:^{
+        [self reloadConversations];
+    }];
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
     self.searchBar.accessibilityLabel = @"Search Bar";
@@ -163,7 +165,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 #pragma mark Data source load and configuration methods
 
-- (void)fetchLayerConversations
+- (void)fetchLayerConversationsWithCompletion:(void (^)(void))completion
 {
     NSSet *conversations = [self.layerClient conversationsForIdentifiers:nil];
     self.conversations = [conversations sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessage.sentAt" ascending:NO]]];
@@ -173,8 +175,6 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     } else {
         //[self filterConversationsForSearchPredicate:self.searchPredicate];
     }
-    
-    [self reloadConversations];
 }
 
 - (void)reloadConversations
@@ -299,7 +299,9 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void) observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
-    [self fetchLayerConversations];
+    [self fetchLayerConversationsWithCompletion:^{
+        [self reloadConversations];
+    }];
 }
 
 #pragma mark - TableView Cell Animations
