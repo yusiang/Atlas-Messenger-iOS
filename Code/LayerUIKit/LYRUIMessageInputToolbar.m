@@ -95,10 +95,6 @@ static CGFloat const LSButtonHeight = 28;
     [self.messageContentParts addObject:image];
     [self.rightAccessoryButton setHighlighted:TRUE];
     [self.textInputView insertImage:image];
-    
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    CGRect rect = LYRUIImageRectConstrainedToSize(imageView.frame.size, CGSizeMake(120, 120));
-    [self adjustFrameForTextViewContentSizeHeight:rect.size.height + 4];
 }
 
 - (void)insertVideoAtPath:(NSString *)videoPath
@@ -133,7 +129,6 @@ static CGFloat const LSButtonHeight = 28;
         
         UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
         CGRect rect = LYRUIImageRectConstrainedToSize(imageView.frame.size, CGSizeMake(self.frame.size.width, 120));
-        [self adjustFrameForTextViewContentSizeHeight:rect.size.height + 4];
     }];
 }
 
@@ -195,20 +190,6 @@ static CGFloat const LSButtonHeight = 28;
 - (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange
 {
     return YES;
-}
-
-#pragma mark Frame Adjustment Method
-
-- (void)adjustFrameForTextViewContentSizeHeight:(CGFloat)height
-{
-    CGFloat heightOffset = height - self.textViewContentSizeHeight;
-    self.textViewContentSizeHeight = height;
-    [self setFrameForHeightOffset:heightOffset];
-}
-
-- (void)setFrameForHeightOffset:(CGFloat)heightOffset
-{
-    //[self setFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y - heightOffset , self.frame.size.width, self.frame.size.height + heightOffset)];
 }
 
 - (void)setupLayoutConstraints
@@ -319,5 +300,9 @@ static CGFloat const LSButtonHeight = 28;
                                                            constant:-LSComposeviewVerticalMargin]];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+}
 
 @end

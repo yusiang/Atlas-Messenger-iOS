@@ -120,10 +120,10 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     if (!inputAccessoryView) {
         self.messageInputToolbar = [[LYRUIMessageInputToolbar alloc] init];
-        CGSize size = [self.messageInputToolbar systemLayoutSizeFittingSize:UILayoutFittingExpandedSize];
-        self.messageInputToolbar.frame = CGRectMake(0, 0, size.width, size.height);
         self.messageInputToolbar.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         self.messageInputToolbar.delegate = self;
+        CGSize size = [self.messageInputToolbar systemLayoutSizeFittingSize:UILayoutFittingExpandedSize];
+        self.messageInputToolbar.frame = CGRectMake(0, 0, size.width, size.height);
         inputAccessoryView = self.messageInputToolbar;
     }
     return inputAccessoryView;

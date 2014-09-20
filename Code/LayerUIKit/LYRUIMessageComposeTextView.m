@@ -49,9 +49,6 @@
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.text attributes:@{NSFontAttributeName : LSLightFont(16)}];
     [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
     self.attributedText = attributedString;
-    
-    [self setContentSize:CGSizeMake(self.contentSize.width, 100)];
-    [self.delegate textViewDidChange:self];
 }
 
 - (void)insertVideoAtPath:(NSString *)videoPath
@@ -70,5 +67,11 @@
         [self invalidateIntrinsicContentSize];
     }
     self.contentHeight = self.contentSize.height;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    [self.delegate textViewDidChange:self];
 }
 @end
