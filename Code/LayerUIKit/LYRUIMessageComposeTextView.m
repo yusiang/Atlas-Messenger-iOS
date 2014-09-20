@@ -7,25 +7,68 @@
 //
 
 #import "LYRUIMessageComposeTextView.h"
+#import "LYRUIMediaAttachment.h"
+#import "LYRUIConstants.h"
+
+@interface LYRUIMessageComposeTextView () <UITextViewDelegate>
+
+@property (nonatomic) CGFloat contentHeight;
+
+@end
 
 @implementation LYRUIMessageComposeTextView
 
-- (id)initWithFrame:(CGRect)frame
+- (id)init
 {
-    self = [super initWithFrame:frame];
+    self = [super init];
     if (self) {
-        // Initialization code
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(textDidChange)
+                                                     name:UITextViewTextDidChangeNotification
+                                                   object:self];
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (CGSize)intrinsicContentSize
 {
-    // Drawing code
+    if (!self.text.length > 0) {
+        return CGSizeMake(0, 24);
+    } else {
+        return self.contentSize;
+    }
+    
 }
-*/
 
+- (void)insertImage:(UIImage *)image
+{
+    LYRUIMediaAttachment *textAttachment = [[LYRUIMediaAttachment alloc] init];
+    textAttachment.image = image;
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.text attributes:@{NSFontAttributeName : LSLightFont(16)}];
+    [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
+    self.attributedText = attributedString;
+    
+    [self setContentSize:CGSizeMake(self.contentSize.width, 100)];
+    [self.delegate textViewDidChange:self];
+}
+
+- (void)insertVideoAtPath:(NSString *)videoPath
+{
+    
+}
+
+- (void)insertLocation:(CLLocationCoordinate2D)location
+{
+    
+}
+
+- (void)textDidChange
+{
+    if (self.contentHeight != self.contentSize.height) {
+        [self invalidateIntrinsicContentSize];
+    }
+    self.contentHeight = self.contentSize.height;
+}
 @end

@@ -32,12 +32,9 @@
 @property (nonatomic, strong) NSOrderedSet *messages;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) UIViewController *inputToolbar;
-
-@property (nonatomic, strong) LYRUIChangeNotificationObserver *changeNotificationObserver;
-
 @property (nonatomic, strong) LYRUIMessageInputToolbar *messageInputToolbar;
 
+@property (nonatomic, strong) LYRUIChangeNotificationObserver *changeNotificationObserver;
 @property (nonatomic, strong) dispatch_queue_t messageSendQueue;
 
 @property (nonatomic) BOOL keyboardIsOnScreen;
@@ -55,7 +52,7 @@ static NSString *const LYRUIOutgoingMessageCellIdentifier = @"outgoingMessageCel
 static NSString *const LYRUIMessageCellHeaderIdentifier = @"messageCellHeaderIdentifier";
 static NSString *const LYRUIMessageCellFooterIdentifier = @"messageCellFooterIdentifier";
 
-static CGFloat const LSComposeViewHeight = 40;
+static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (id)init
 {
@@ -86,14 +83,16 @@ static CGFloat const LSComposeViewHeight = 40;
     }
     return self;
 }
-    
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    [self fetchMessages];
+    
     // Setup Collection View
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
-    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, LSComposeViewHeight, 0);
+    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, LYRUIMessageInputToolbarHeight, 0);
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor whiteColor];
@@ -119,10 +118,12 @@ static CGFloat const LSComposeViewHeight = 40;
 
 - (UIView *)inputAccessoryView
 {
-    self.messageInputToolbar = [[LYRUIMessageInputToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
-    self.messageInputToolbar.delegate = self;
-    
     if (!inputAccessoryView) {
+        self.messageInputToolbar = [[LYRUIMessageInputToolbar alloc] init];
+        CGSize size = [self.messageInputToolbar systemLayoutSizeFittingSize:UILayoutFittingExpandedSize];
+        self.messageInputToolbar.frame = CGRectMake(0, 0, size.width, size.height);
+        self.messageInputToolbar.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        self.messageInputToolbar.delegate = self;
         inputAccessoryView = self.messageInputToolbar;
     }
     return inputAccessoryView;
@@ -131,16 +132,6 @@ static CGFloat const LSComposeViewHeight = 40;
 - (BOOL)canBecomeFirstResponder
 {
     return YES;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self becomeFirstResponder];
-    [self fetchMessagesWithCompletion:^{
-        [self.collectionView reloadData];
-        [self scrollToBottomOfCollectionViewAnimated:NO];
-    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -163,8 +154,13 @@ static CGFloat const LSComposeViewHeight = 40;
 {
     [super viewWillDisappear:animated];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
 }
 
 - (void)dealloc
@@ -174,10 +170,15 @@ static CGFloat const LSComposeViewHeight = 40;
 
 #pragma mark - Refresh Data Source
 
-- (void)fetchMessagesWithCompletion:(void(^)(void))completion
+- (void)fetchMessages
 {
-    self.messages = [self.layerClient messagesForConversation:self.conversation];
-    completion();
+    dispatch_async(self.messageSendQueue, ^{
+        self.messages = [self.layerClient messagesForConversation:self.conversation];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.collectionView reloadData];
+            [self scrollToBottomOfCollectionViewAnimated:NO];
+        });
+    });
 }
 
 # pragma mark - Collection View Data Source
@@ -554,7 +555,7 @@ static CGFloat const LSComposeViewHeight = 40;
         // Get the selected image
         UIImage *selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
         
-        [self.composeViewController insertImage:selectedImage];
+        [self.messageInputToolbar insertImage:selectedImage];
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
@@ -574,18 +575,13 @@ static CGFloat const LSComposeViewHeight = 40;
 - (void)observer:(LYRUIChangeNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
 {
     if (changeType == LYRObjectChangeTypeCreate) {
-        [self fetchMessagesWithCompletion:^{
-            [self.collectionView reloadData];
-            [self scrollToBottomOfCollectionViewAnimated:TRUE];
-        }];
+        [self fetchMessages];
     }
 }
 
 - (void) observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
-    [self fetchMessagesWithCompletion:^{
-        [self.collectionView reloadData];
-    }];;
+    
 }
 
 #pragma mark CollectionView Content Inset Methods
@@ -593,7 +589,7 @@ static CGFloat const LSComposeViewHeight = 40;
 - (void)updateInsets
 {
     UIEdgeInsets existing = self.collectionView.contentInset;
-    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(existing.top, 0, self.keyboardHeight + self.composeViewController.view.frame.size.height, 0);
+    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(existing.top, 0, self.keyboardHeight, 0);
 }
 
 - (CGPoint)bottomOffset

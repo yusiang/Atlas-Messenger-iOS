@@ -18,6 +18,8 @@
 @property (nonatomic) CGSize defaultSize;
 @property (nonatomic) CGFloat defaultContentHeight;
 
+@property (nonatomic, strong) NSLayoutConstraint *textViewHeightConstraint;
+
 @end
 
 @implementation LYRUIMessageInputToolbar
@@ -31,11 +33,11 @@ static CGFloat const LSLeftAccessoryButtonWidth = 40;
 static CGFloat const LSRightAccessoryButtonWidth = 50;
 static CGFloat const LSButtonHeight = 28;
 
-- (id)initWithFrame:(CGRect)frame
+- (id)init
 {
-    self = [super initWithFrame:frame];
+    self = [super init];
     if (self) {
-     
+    
         // Setup
         self.backgroundColor =  LSLighGrayColor();
         self.messageContentParts = [[NSMutableArray alloc] init];
@@ -50,8 +52,9 @@ static CGFloat const LSButtonHeight = 28;
         [self addSubview:self.leftAccessoryButton];
         
         // Initialize the Text Input View
-        self.textInputView = [[UITextView alloc] init];
+        self.textInputView = [[LYRUIMessageComposeTextView alloc] init];
         self.textInputView.delegate = self;
+        self.textInputView.text = @"";
         self.textInputView.translatesAutoresizingMaskIntoConstraints = NO;
         self.textInputView.layer.borderColor = [UIColor lightGrayColor].CGColor;
         self.textInputView.layer.borderWidth = 1;
@@ -74,21 +77,15 @@ static CGFloat const LSButtonHeight = 28;
         
         [self setupLayoutConstraints];
         
-//        self.keyboardIsOnScreen = NO;
-//        
-//        if (!self.defaultSize.height) {
-//            self.defaultSize = self.frame.size;
-//        }
-//        
-//        if (!self.defaultContentHeight) {
-//            self.defaultContentHeight = self.textInputView.contentSize.height;
-//        }
-//        
-//        self.textViewContentSizeHeight = self.textInputView.contentSize.height;
-        
+        self.keyboardIsOnScreen = NO;
     }
     
     return self;
+}
+
+- (CGSize)intrinsicContentSize
+{
+    return CGSizeMake(320, self.textInputView.intrinsicContentSize.height + 16);
 }
 
 #pragma mark Public Content Insertion Methods
@@ -96,23 +93,8 @@ static CGFloat const LSButtonHeight = 28;
 - (void)insertImage:(UIImage *)image
 {
     [self.messageContentParts addObject:image];
-    
     [self.rightAccessoryButton setHighlighted:TRUE];
-    
-    LYRUIMediaAttachment *textAttachment = [[LYRUIMediaAttachment alloc] init];
-    textAttachment.image = image;
-    
-    NSRange range;
-    if (self.textInputView.text)  {
-        self.textInputView.text = [self.textInputView.text stringByAppendingString:@"\n "];
-        range = [self.textInputView.text rangeOfString:@" "];
-    } else {
-        range = NSMakeRange(0, 1);
-    }
-    
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.textInputView.text attributes:@{NSFontAttributeName : LSLightFont(16)}];
-    [attributedString replaceCharactersInRange:range withAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
-    self.textInputView.attributedText = attributedString;
+    [self.textInputView insertImage:image];
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     CGRect rect = LYRUIImageRectConstrainedToSize(imageView.frame.size, CGSizeMake(120, 120));
@@ -172,11 +154,7 @@ static CGFloat const LSButtonHeight = 28;
         [self.messageContentParts removeAllObjects];
         self.textInputView.font = LSLightFont(16);
     }
-    
-//    if (self.defaultSize.height != self.frame.size.height) {
-//        [self setFrameForHeightOffset:(self.defaultSize.height - self.frame.size.height)];
-//        self.textViewContentSizeHeight = self.defaultContentHeight;
-//    }
+    [self setFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.intrinsicContentSize.height)];
 }
 
 
@@ -184,7 +162,6 @@ static CGFloat const LSButtonHeight = 28;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    //self.textViewContentSizeHeight = textView.contentSize.height;
     return YES;
 }
 
@@ -196,10 +173,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-//    if (self.textViewContentSizeHeight != textView.contentSize.height) {
-//        [self adjustFrameForTextViewContentSizeHeight:textView.contentSize.height];
-//    }
-    
+    [self setFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.textInputView.intrinsicContentSize.height + 16)];
     if (textView.text.length > 0) {
         [self.rightAccessoryButton setHighlighted:TRUE];
     }
@@ -227,9 +201,9 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)adjustFrameForTextViewContentSizeHeight:(CGFloat)height
 {
-//    CGFloat heightOffset = height - self.textViewContentSizeHeight;
-//    self.textViewContentSizeHeight = height;
-    //[self setFrameForHeightOffset:heightOffset];
+    CGFloat heightOffset = height - self.textViewContentSizeHeight;
+    self.textViewContentSizeHeight = height;
+    [self setFrameForHeightOffset:heightOffset];
 }
 
 - (void)setFrameForHeightOffset:(CGFloat)heightOffset
@@ -335,14 +309,14 @@ static CGFloat const LSButtonHeight = 28;
                                                           attribute:NSLayoutAttributeTop
                                                          multiplier:1.0
                                                            constant:LSComposeviewHorizontalMargin]];
-    // Bottom Margin
+    // Top Margin
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
                                                           attribute:NSLayoutAttributeBottom
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self
                                                           attribute:NSLayoutAttributeBottom
                                                          multiplier:1.0
-                                                           constant:-LSComposeviewHorizontalMargin]];
+                                                           constant:-LSComposeviewVerticalMargin]];
 }
 
 

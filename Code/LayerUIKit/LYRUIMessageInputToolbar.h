@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "LYRUIMessageComposeTextView.h"
 
 @class LYRUIMessageInputToolbar;
 
@@ -33,7 +34,7 @@
 
 @property (nonatomic, strong) UIButton *rightAccessoryButton;
 
-@property (nonatomic, strong) UITextView *textInputView;
+@property (nonatomic, strong) LYRUIMessageComposeTextView *textInputView;
 
 @property (nonatomic, weak) id<LYRUIMessageInputToolbarDelegate>delegate;
 
