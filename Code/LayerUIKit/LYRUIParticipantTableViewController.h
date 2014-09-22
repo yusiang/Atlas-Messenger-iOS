@@ -37,7 +37,7 @@ typedef enum : NSUInteger {
  *  @param completion                The completion block that should be called when the results are fetched from the search.
  */
 
-- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSDictionary *filteredParticipants))completion;
+- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *filteredParticipants))completion;
 
 /**
  @abstract Informst the delegate that the user tapped the `cancel` button
@@ -85,9 +85,6 @@ typedef enum : NSUInteger {
  */
 @property (nonatomic, assign) BOOL allowsMultipleSelection;
 
-@property (nonatomic, assign) BOOL shouldShowSelectionIndicator;
-@property (nonatomic, assign) BOOL shouldShowSectionHeader;
-@property (nonatomic, assign) BOOL shouldShowSearchBar;
 /**
  @abstract Sets the height for cells within the receiver.
  @default `48.0`

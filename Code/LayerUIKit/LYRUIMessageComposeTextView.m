@@ -23,16 +23,13 @@
     self = [super init];
     if (self) {
         
+        self.textContainerInset = UIEdgeInsetsMake(4, 0, 4, 0);
+        self.font = LSLightFont(16);
         self.text = @"Enter Message";
-        self.contentInset = UIEdgeInsetsMake(-2, 0, 0, 0);
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                 selector:@selector(textDidChange)
-//                                                     name:UITextViewTextDidChangeNotification
-//                                                   object:self];
+        self.textColor = [UIColor lightGrayColor];
+        [self layoutIfNeeded];
     }
-    [self layoutIfNeeded];
-    self.textColor = [UIColor lightGrayColor];
-    self.font = LSLightFont(16);
+    
     return self;
 }
 
@@ -61,5 +58,6 @@
 {
     [self layoutIfNeeded];
 }
+
 
 @end

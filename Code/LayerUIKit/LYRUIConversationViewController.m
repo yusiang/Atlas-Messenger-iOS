@@ -116,13 +116,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [self.collectionView registerClass:[LYRUIConversationCollectionViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYRUIMessageCellHeaderIdentifier];
     [self.collectionView registerClass:[LYRUIConversationCollectionViewFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:LYRUIMessageCellFooterIdentifier];
 
-    // Left bar button item is the text Cancel
-    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
-                                                                         style:UIBarButtonItemStylePlain
-                                                                        target:self
-                                                                        action:@selector(contactsButtonTapped)];
-    contactsButtonItem.accessibilityLabel = @"Contacts";
-    self.navigationItem.rightBarButtonItem = contactsButtonItem;
+    [self addContactsButton];
     
     // Setup Layer Change notification observer
     self.messageNotificationObserver = [[LYRUIMessageNotificationObserver alloc] initWithClient:self.layerClient conversation:self.conversation];
@@ -136,7 +130,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     if (!inputAccessoryView) {
         self.messageInputToolbar = [[LYRUIMessageInputToolbar alloc] init];
-        self.messageInputToolbar.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         self.messageInputToolbar.delegate = self;
     }
     CGSize size = [self.messageInputToolbar systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
@@ -666,19 +659,27 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     
     self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithParticipants:participants sortType:LYRUIParticipantPickerControllerSortTypeFirst];
     self.participantTableViewController.delegate = self;
-    self.participantTableViewController.view.frame = CGRectMake(0, 0, 320, 0);
+    self.participantTableViewController.view.frame = CGRectMake(0, 49, 320, 300);
     self.participantTableViewController.participantCellClass = [LYRUIParticipantTableViewCell class];
-    self.participantTableViewController.shouldShowSelectionIndicator = NO;
-    self.participantTableViewController.shouldShowSearchBar = NO;
-    self.participantTableViewController.shouldShowSectionHeader = NO;
     
     [self.view addSubview:self.participantTableViewController.view];
     [self addChildViewController:self.participantTableViewController];
     [self.participantTableViewController didMoveToParentViewController:self];
     
-    [UIView animateWithDuration:0.5 animations:^{
-        self.participantTableViewController.view.frame = CGRectMake(0, 0, 320, 400);
-    }];
+//    [UIView animateWithDuration:0.5 animations:^{
+//        self.participantTableViewController.view.frame = CGRectMake(0, 49, 320, 300);
+//    }];
+}
+
+- (void)addContactsButton
+{
+    // Left bar button item is the text Cancel
+    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
+                                                                           style:UIBarButtonItemStylePlain
+                                                                          target:self
+                                                                          action:@selector(contactsButtonTapped)];
+    contactsButtonItem.accessibilityLabel = @"Contacts";
+    self.navigationItem.rightBarButtonItem = contactsButtonItem;
 }
 
 - (void)addDoneButton
@@ -699,6 +700,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     }completion:^(BOOL finished) {
         [self.participantTableViewController.view removeFromSuperview];
         [self.participantTableViewController removeFromParentViewController];
+        [self addContactsButton];
     }];
 }
 

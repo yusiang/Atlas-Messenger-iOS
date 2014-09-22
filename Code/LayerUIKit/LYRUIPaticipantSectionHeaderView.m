@@ -24,7 +24,7 @@
         
         self.backgroundColor = [UIColor whiteColor];
         
-        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(10, 30, 300, 1)];
+        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(10, 30, 300, 0.5)];
         self.bottomBar.backgroundColor = LSGrayColor();
         [self addSubview:self.bottomBar];
         

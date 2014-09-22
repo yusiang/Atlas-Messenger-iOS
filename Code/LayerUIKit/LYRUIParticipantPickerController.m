@@ -33,13 +33,12 @@
     self = [super initWithRootViewController:self.participantTableViewController];
     if (self) {
         
-        // Set properties from designated initializer
-        
-
         // Set default configuration for public properties
         [self setAllowsMultipleSelection:YES];
         [self setCellClass:[LYRUIParticipantTableViewCell class]];
         [self setRowHeight:48];
+        
+        self.participantTableViewController.participantCellClass = [LYRUIParticipantTableViewCell class];
         
         // Accessibility
         self.title = @"Participants";
@@ -66,7 +65,6 @@
     [super viewWillAppear:animated];
    
     self.participants = [self.dataSource participants];
-    self.participantTableViewController.participants = self.sortedParticipants;
     
     self.isOnScreen = TRUE;
 }
@@ -135,12 +133,11 @@
     }
 }
 
-- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSDictionary *))completion
+- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
     [self.dataSource searchForParticipantsMatchingText:searchText completion:^(NSSet *participants) {
-        completion ([NSDictionary new]);
+        completion (participants);
     }];
-    //[self sortAndGroupContactListByAlphabet:participants]
 }
 
 - (void)participantTableViewControllerDidSelectCancelButton

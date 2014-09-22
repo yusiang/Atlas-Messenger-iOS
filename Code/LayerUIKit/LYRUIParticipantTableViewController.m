@@ -41,10 +41,6 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
         self.participants = participants;
         self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
         
-        self.shouldShowSectionHeader = YES;
-        self.shouldShowSelectionIndicator = YES;
-        self.shouldShowSearchBar = YES;
-        
         self.title = @"Participants";
         self.accessibilityLabel = @"Participants";
         
@@ -61,28 +57,24 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 {
     [super viewDidLoad];
     
-    if (self.shouldShowSearchBar) {
-        self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-        self.searchBar.accessibilityLabel = @"Search Bar";
-        self.searchBar.delegate = self;
-        
-        self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
-        self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        self.searchController.delegate = self;
-        self.searchController.searchResultsDelegate = self;
-        self.searchController.searchResultsDataSource = self;
-
-        self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        self.tableView.sectionFooterHeight = 0.0;
-        self.tableView.tableHeaderView = self.searchBar;
-    }
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+    self.searchBar.accessibilityLabel = @"Search Bar";
+    self.searchBar.delegate = self;
     
-    if (self.shouldShowSectionHeader) {
-        self.tableView.sectionHeaderHeight = 40.0;
-    } else {
-        self.tableView.sectionHeaderHeight = 0.0;
-    }
+    self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+    self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.searchController.delegate = self;
+    self.searchController.searchResultsDelegate = self;
+    self.searchController.searchResultsDataSource = self;
+    
+    self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.sectionFooterHeight = 0.0;
+    self.tableView.tableHeaderView = self.searchBar;
+    
+    self.tableView.sectionHeaderHeight = 40.0;
+    
+    self.filteredParticipants = self.sortedParticipants;
     
     // Left bar button item is the text Cancel
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
@@ -101,23 +93,21 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
 }
 
-- (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
-{
-    _allowsMultipleSelection = allowsMultipleSelection;
-    self.tableView.allowsMultipleSelection = allowsMultipleSelection;
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    self.filteredParticipants = self.sortedParticipants;
     
     self.tableView.rowHeight = self.rowHeight;
     [self.tableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
     
     self.searchController.searchResultsTableView.rowHeight = self.rowHeight;
     [self.searchController.searchResultsTableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
+}
+
+- (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
+{
+    _allowsMultipleSelection = allowsMultipleSelection;
+    self.tableView.allowsMultipleSelection = allowsMultipleSelection;
 }
 
 - (NSDictionary *)currentDataArray
@@ -179,7 +169,6 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRParticipantCellIdentifier];
     
     [participantCell presentParticipant:participant];
-    [participantCell shouldShowSelectionIndicator:self.shouldShowSelectionIndicator];
     return participantCell;
 }
 
@@ -233,8 +222,8 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (void)filterParticipantsWithSearchText:(NSString *)searchText completion:(void(^)(NSDictionary *participants))completion
 {
-    [self.delegate participantTableViewController:self didSearchWithString:searchText completion:^(NSDictionary *filteredParticipants) {
-        completion(filteredParticipants);
+    [self.delegate participantTableViewController:self didSearchWithString:searchText completion:^(NSSet *filteredParticipants) {
+        completion([self sortAndGroupContactListByAlphabet:filteredParticipants]);
     }];
 }
 

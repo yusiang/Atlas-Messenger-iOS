@@ -29,6 +29,7 @@ static CGFloat const LSComposeviewHorizontalMargin = 6;
 static CGFloat const LSComposeviewVerticalMargin = 6;
 
 // Compose View Button Constants
+static CGFloat const LSLeftAccessoryButtonBottomMargin = 8;
 static CGFloat const LSLeftAccessoryButtonWidth = 40;
 static CGFloat const LSRightAccessoryButtonWidth = 50;
 static CGFloat const LSButtonHeight = 28;
@@ -38,6 +39,8 @@ static CGFloat const LSButtonHeight = 28;
     self = [super init];
     if (self) {
     
+        self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        
         // Setup
         self.backgroundColor =  LSLighGrayColor();
         self.messageContentParts = [[NSMutableArray alloc] init];
@@ -65,7 +68,7 @@ static CGFloat const LSButtonHeight = 28;
         self.rightAccessoryButton = [[UIButton alloc] init];
         self.rightAccessoryButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.rightAccessoryButton.accessibilityLabel = @"Send Button";
-        self.rightAccessoryButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        self.rightAccessoryButton.titleLabel.font = LSLightFont(16);
         [self.rightAccessoryButton setTitle:@"SEND" forState:UIControlStateNormal];
         [self.rightAccessoryButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
         [self.rightAccessoryButton setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
@@ -82,7 +85,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (CGSize)intrinsicContentSize
 {
-    return CGSizeMake(320, self.textInputView.intrinsicContentSize.height + 4);
+    return CGSizeMake(320, self.textInputView.intrinsicContentSize.height + LSComposeviewVerticalMargin * 2);
 }
 
 #pragma mark Public Content Insertion Methods
@@ -194,6 +197,8 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)adjustFrame
 {
+    [self invalidateIntrinsicContentSize];
+    [self.textInputView layoutIfNeeded];
     CGSize size = [self systemLayoutSizeFittingSize:UILayoutFittingExpandedSize];
     self.frame = CGRectMake(0, 0, size.width, size.height);
 }
@@ -217,7 +222,7 @@ static CGFloat const LSButtonHeight = 28;
                                                              toItem:self
                                                           attribute:NSLayoutAttributeLeft
                                                          multiplier:1.0
-                                                           constant:LSComposeviewVerticalMargin]];
+                                                           constant:LSComposeviewHorizontalMargin]];
     // Height
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
                                                           attribute:NSLayoutAttributeHeight
