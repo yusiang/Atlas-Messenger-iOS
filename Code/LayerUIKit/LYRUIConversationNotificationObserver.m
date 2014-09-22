@@ -92,6 +92,7 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.delegate observer:self updateWithChanges:changes];
+        [self.delegate observerdidChangeContent:self];
     });
 }
 

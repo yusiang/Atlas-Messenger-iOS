@@ -102,7 +102,8 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
         [self addEditButton];
     }
     
-    self.conversationsNotificationObserver = [[LYRUIConversationNotificationObserver alloc] initWithLayerClient:self.layerClient conversations:self.conversations];
+    self.conversationsNotificationObserver = [[LYRUIConversationNotificationObserver alloc] initWithLayerClient:self.layerClient
+                                                                                                  conversations:self.conversations];
     self.conversationsNotificationObserver.delegate = self;
     
     self.isOnScreen = TRUE;
@@ -173,7 +174,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     if (!self.searchPredicate) {
         self.filteredConversations = [NSMutableArray arrayWithArray:self.conversations];
     } else {
-        //[self filterConversationsForSearchPredicate:self.searchPredicate];
+        // perform search
     }
     completion();
 }
@@ -295,10 +296,6 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
 {
-    [self fetchLayerConversationsWithCompletion:^{
-        [self reloadConversations];
-    }];
-    
 //    for (LYRUIDataSourceChange *change in changes) {
 //        if (change.type == LYRUIDataSourceChangeTypeUpdate) {
 //            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:change.newIndex inSection:0]]
@@ -316,9 +313,12 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 //    }
 }
 
-- (void) observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
+- (void)observerdidChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
     //[self.tableView endUpdates];
+    [self fetchLayerConversationsWithCompletion:^{
+        [self reloadConversations];
+    }];
 }
 
 - (void)configureTableViewCellAppearance
