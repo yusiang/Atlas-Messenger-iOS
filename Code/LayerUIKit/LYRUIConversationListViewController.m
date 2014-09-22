@@ -7,9 +7,9 @@
 //
 
 #import "LYRUIConversationListViewController.h"
-//#import "LYRDataSourceChange.h"
+#import "LYRUIDataSourceChange.h"
 #import "LYRUIConstants.h"
-#import "LYRUIChangeNotificationObserver.h"
+#import "LYRUIConversationNotificationObserver.h"
 
 @interface LYRUIConversationListViewController () <UISearchBarDelegate, UISearchDisplayDelegate, LYRUIChangeNotificationObserverDelegate>
 
@@ -19,7 +19,7 @@
 @property (nonatomic, strong) NSMutableArray *filteredConversations;
 @property (nonatomic, strong) NSPredicate *searchPredicate;
 @property (nonatomic, strong) LYRClient *layerClient;
-@property (nonatomic, strong) LYRUIChangeNotificationObserver *changeNotificationObserver;
+@property (nonatomic, strong) LYRUIConversationNotificationObserver *conversationsNotificationObserver;
 @property (nonatomic) BOOL isOnScreen;
 
 @end
@@ -98,12 +98,12 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self.searchController.searchResultsTableView.rowHeight = self.rowHeight;
     [self.searchController.searchResultsTableView registerClass:self.cellClass forCellReuseIdentifier:LYRUIConversationCellReuseIdentifier];
     
-    self.changeNotificationObserver = [[LYRUIChangeNotificationObserver alloc] initWithClient:self.layerClient conversations:self.conversations];
-    self.changeNotificationObserver.delegate = self;
-    
     if (self.allowsEditing) {
         [self addEditButton];
     }
+    
+    self.conversationsNotificationObserver = [[LYRUIConversationNotificationObserver alloc] initWithLayerClient:self.layerClient conversations:self.conversations];
+    self.conversationsNotificationObserver.delegate = self;
     
     self.isOnScreen = TRUE;
 }
@@ -175,6 +175,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     } else {
         //[self filterConversationsForSearchPredicate:self.searchPredicate];
     }
+    completion();
 }
 
 - (void)reloadConversations
@@ -289,43 +290,35 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void) observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
-    // Nothing for now
+    //[self.tableView beginUpdates];
 }
 
-- (void)observer:(LYRUIChangeNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
-{
-    // Nothing for now
-}
-
-- (void) observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
+- (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
 {
     [self fetchLayerConversationsWithCompletion:^{
         [self reloadConversations];
     }];
-}
-
-#pragma mark - TableView Cell Animations
-
-- (void)applyConversationChanges:(NSArray *)changes
-{
-//    [self.tableView beginUpdates];
-//    
-//    for (LYRDataSourceChange *change in changes) {
-//        if (change.type == LYRDataSourceChangeTypeUpdate) {
+    
+//    for (LYRUIDataSourceChange *change in changes) {
+//        if (change.type == LYRUIDataSourceChangeTypeUpdate) {
 //            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:change.newIndex inSection:0]]
 //                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-//        } else if (change.type == LYRDataSourceChangeTypeInsert) {
+//        } else if (change.type == LYRUIDataSourceChangeTypeInsert) {
 //            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:change.newIndex inSection:0]]
 //                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-//        } else if (change.type == LYRDataSourceChangeTypeMove) {
+//        } else if (change.type == LYRUIDataSourceChangeTypeMove) {
 //            [self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:change.oldIndex inSection:0]
 //                                   toIndexPath:[NSIndexPath indexPathForRow:change.newIndex inSection:0]];
-//        } else if (change.type == LYRDataSourceChangeTypeDelete) {
+//        } else if (change.type == LYRUIDataSourceChangeTypeDelete) {
 //            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:change.newIndex inSection:0]]
 //                                  withRowAnimation:UITableViewRowAnimationAutomatic];
 //        }
 //    }
-//    [self.tableView endUpdates];
+}
+
+- (void) observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
+{
+    //[self.tableView endUpdates];
 }
 
 - (void)configureTableViewCellAppearance

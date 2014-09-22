@@ -212,7 +212,7 @@ extern void LYRSetLogLevelFromEnvironment();
         LSAlertWithError(error);
     }
     
-    [self.navigationController dismissViewControllerAnimated:YES completion:NO];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)loadContacts

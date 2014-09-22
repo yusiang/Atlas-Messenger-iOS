@@ -13,6 +13,8 @@
 
 @interface LYRUIMessageComposeTextView : UITextView
 
+@property (nonatomic, strong) NSString *placeHolderText;
+
 - (void)insertImage:(UIImage *)image;
 
 - (void)insertVideoAtPath:(NSString *)videoPath;

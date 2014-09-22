@@ -24,6 +24,9 @@
 
 #import "LYRUIMessageInputToolbar.h"
 
+#import "LYRUIDataSourceChange.h"
+#import "LYRUIMessageNotificationObserver.h"
+
 @interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
 
 
@@ -34,7 +37,7 @@
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) LYRUIMessageInputToolbar *messageInputToolbar;
 
-@property (nonatomic, strong) LYRUIChangeNotificationObserver *changeNotificationObserver;
+@property (nonatomic, strong) LYRUIMessageNotificationObserver *messageNotificationObserver;
 @property (nonatomic, strong) dispatch_queue_t messageSendQueue;
 
 @property (nonatomic) BOOL keyboardIsOnScreen;
@@ -109,8 +112,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [self.collectionView registerClass:[LYRUIConversationCollectionViewFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:LYRUIMessageCellFooterIdentifier];
 
     // Setup Layer Change notification observer
-    self.changeNotificationObserver = [[LYRUIChangeNotificationObserver alloc] initWithClient:self.layerClient conversations:@[self.conversation]];
-    self.changeNotificationObserver.delegate = self;
+    self.messageNotificationObserver = [[LYRUIMessageNotificationObserver alloc] initWithClient:self.layerClient conversation:self.conversation];
+    self.messageNotificationObserver.delegate = self;
 
     // Configure defualt cell appearance
     [self configureMessageBubbleAppearance];
@@ -122,10 +125,10 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         self.messageInputToolbar = [[LYRUIMessageInputToolbar alloc] init];
         self.messageInputToolbar.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         self.messageInputToolbar.delegate = self;
-        CGSize size = [self.messageInputToolbar systemLayoutSizeFittingSize:UILayoutFittingExpandedSize];
-        self.messageInputToolbar.frame = CGRectMake(0, 0, size.width, size.height);
-        inputAccessoryView = self.messageInputToolbar;
     }
+    CGSize size = [self.messageInputToolbar systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    self.messageInputToolbar.frame = CGRectMake(0, 0, size.width, size.height);
+    inputAccessoryView = self.messageInputToolbar;
     return inputAccessoryView;
 }
 
@@ -134,10 +137,15 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     return YES;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self scrollToBottomOfCollectionViewAnimated:NO];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
@@ -153,6 +161,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    self.messageNotificationObserver = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
@@ -172,13 +182,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)fetchMessages
 {
-    dispatch_async(self.messageSendQueue, ^{
-        self.messages = [self.layerClient messagesForConversation:self.conversation];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.collectionView reloadData];
-            [self scrollToBottomOfCollectionViewAnimated:NO];
-        });
-    });
+    self.messages = [self.layerClient messagesForConversation:self.conversation];
 }
 
 # pragma mark - Collection View Data Source
@@ -572,16 +576,48 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     //nothing to do for now
 }
 
-- (void)observer:(LYRUIChangeNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex
-{
-    if (changeType == LYRObjectChangeTypeCreate) {
-        [self fetchMessages];
-    }
+- (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
+{   
+    [self fetchMessages];
+    [self.collectionView reloadData];
+
+        for (LYRUIDataSourceChange *change in changes) {
+            switch (change.type) {
+                case LYRUIDataSourceChangeTypeInsert:
+                    [self scrollToBottomOfCollectionViewAnimated:YES];
+                    break;
+                default:
+                    break;
+            }
+        }
+//    [self.collectionView performBatchUpdates:^{
+//        for (LYRUIDataSourceChange *change in changes) {
+//            switch (change.type) {
+//                case LYRUIDataSourceChangeTypeInsert:
+//                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                case LYRUIDataSourceChangeTypeMove:
+////                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
+////                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                case LYRUIDataSourceChangeTypeUpdate:
+//                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                case LYRUIDataSourceChangeTypeDelete:
+//                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    } completion:^(BOOL finished) {
+//        [self scrollToBottomOfCollectionViewAnimated:TRUE];
+//    }];
 }
 
-- (void) observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
+- (void)observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
-    
+    //
 }
 
 #pragma mark CollectionView Content Inset Methods

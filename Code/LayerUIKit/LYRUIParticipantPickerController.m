@@ -133,7 +133,7 @@
 
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    if (!self.allowsMultipleSelection) {
+    if (!self.allowsMultipleSelection || self.participantTableViewController.searchDisplayController.isActive) {
         [self.participantPickerDelegate participantSelectionViewController:self didSelectParticipants:[NSSet setWithObject:participant]];
     }
 }

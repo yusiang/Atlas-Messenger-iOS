@@ -54,13 +54,10 @@ static CGFloat const LSButtonHeight = 28;
         // Initialize the Text Input View
         self.textInputView = [[LYRUIMessageComposeTextView alloc] init];
         self.textInputView.delegate = self;
-        self.textInputView.text = @"";
         self.textInputView.translatesAutoresizingMaskIntoConstraints = NO;
         self.textInputView.layer.borderColor = [UIColor lightGrayColor].CGColor;
         self.textInputView.layer.borderWidth = 1;
         self.textInputView.layer.cornerRadius = 4.0f;
-        self.textInputView.font = LSLightFont(16);
-        self.textInputView.textContainerInset = UIEdgeInsetsMake(4, 0, 0, 0);
         self.textInputView.accessibilityLabel = @"Text Input View";
         [self addSubview:self.textInputView];
         
@@ -85,7 +82,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (CGSize)intrinsicContentSize
 {
-    return CGSizeMake(320, self.textInputView.intrinsicContentSize.height + 16);
+    return CGSizeMake(320, self.textInputView.intrinsicContentSize.height + 4);
 }
 
 #pragma mark Public Content Insertion Methods
@@ -149,7 +146,7 @@ static CGFloat const LSButtonHeight = 28;
         [self.messageContentParts removeAllObjects];
         self.textInputView.font = LSLightFont(16);
     }
-    [self setFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.intrinsicContentSize.height)];
+    [self adjustFrame];
 }
 
 
@@ -157,18 +154,24 @@ static CGFloat const LSButtonHeight = 28;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+    if ([textView.text isEqualToString:@"Enter Message"]) {
+        textView.text = @"";
+    }
+    textView.textColor = [UIColor blackColor];
     return YES;
 }
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
+    textView.text = @"Enter Message";
+    textView.textColor = [UIColor lightGrayColor];
     [self.rightAccessoryButton setHighlighted:FALSE];
     return YES;
 }
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    [self setFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.textInputView.intrinsicContentSize.height + 16)];
+    [self adjustFrame];
     if (textView.text.length > 0) {
         [self.rightAccessoryButton setHighlighted:TRUE];
     }
@@ -176,9 +179,6 @@ static CGFloat const LSButtonHeight = 28;
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    if (textView.attributedText) {
-        //Press return key
-    }
     return YES;
 }
 
@@ -190,6 +190,12 @@ static CGFloat const LSButtonHeight = 28;
 - (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange
 {
     return YES;
+}
+
+- (void)adjustFrame
+{
+    CGSize size = [self systemLayoutSizeFittingSize:UILayoutFittingExpandedSize];
+    self.frame = CGRectMake(0, 0, size.width, size.height);
 }
 
 - (void)setupLayoutConstraints
@@ -227,7 +233,7 @@ static CGFloat const LSButtonHeight = 28;
                                                              toItem:self
                                                           attribute:NSLayoutAttributeBottom
                                                          multiplier:1.0
-                                                           constant:-LSComposeviewHorizontalMargin]];
+                                                           constant:-LSComposeviewVerticalMargin]];
     
     //**********Send Button Constraints**********//
     // Width
@@ -262,7 +268,7 @@ static CGFloat const LSButtonHeight = 28;
                                                              toItem:self
                                                           attribute:NSLayoutAttributeBottom
                                                          multiplier:1.0
-                                                           constant:-LSComposeviewHorizontalMargin]];
+                                                           constant:-LSComposeviewVerticalMargin]];
     
     //**********Text Input View Constraints**********//
     // Left Margin
@@ -289,7 +295,7 @@ static CGFloat const LSButtonHeight = 28;
                                                              toItem:self
                                                           attribute:NSLayoutAttributeTop
                                                          multiplier:1.0
-                                                           constant:LSComposeviewHorizontalMargin]];
+                                                           constant:LSComposeviewVerticalMargin]];
     // Top Margin
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
                                                           attribute:NSLayoutAttributeBottom

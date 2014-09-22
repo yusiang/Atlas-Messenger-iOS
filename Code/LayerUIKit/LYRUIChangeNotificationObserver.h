@@ -17,9 +17,9 @@
 
 - (void)observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer;
 
-- (void)observer:(LYRUIChangeNotificationObserver *)observer didChangeObject:(id)object atIndex:(NSUInteger)index forChangeType:(LYRObjectChangeType)changeType newIndexPath:(NSUInteger)newIndex;
+- (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes;
 
-- (void)observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer;
+- (void)observerdidChangeContent:(LYRUIChangeNotificationObserver *)observer;
 
 @end
 
@@ -27,8 +27,6 @@
 
 @property (nonatomic, weak) id<LYRUIChangeNotificationObserverDelegate>delegate;
 
-- (id) initWithClient:(LYRClient *)layerClient conversations:(NSArray *)conversations;
-
-- (void)setConversations:(NSArray *)conversations;
+@property (nonatomic, strong) LYRClient *layerClient;
 
 @end

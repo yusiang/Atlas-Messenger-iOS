@@ -56,6 +56,7 @@
     
     NSUUID *UUID = self.applicationController.deviceToken ? [[NSUUID alloc] initWithUUIDBytes:[self.applicationController.deviceToken bytes]] : nil;
     self.versionView.deviceLabel.text = [NSString stringWithFormat:@"Device Token: %@", [UUID UUIDString]];
+    NSLog(@"Device Token: %@", self.versionView.deviceLabel.text);
     
     [self.versionView sizeToFit];
     
