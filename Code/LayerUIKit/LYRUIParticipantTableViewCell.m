@@ -49,6 +49,15 @@ static CGFloat const LSSelectionIndicatorRightMargin = -20;
 
 }
 
+- (void)shouldShowSelectionIndicator:(BOOL)shouldShowSelectionIndicator
+{
+    if (shouldShowSelectionIndicator) {
+        self.selectionIndicator.alpha = 0.0;
+    } else {
+        self.selectionIndicator.alpha = 1.0;
+    }
+}
+
 - (void)updateConstraints
 {
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator

@@ -7,7 +7,6 @@
 //
 
 #import "LYRUIParticipantPickerController.h"
-#import "LYRUIParticipantTableViewController.h"
 
 @interface LYRUIParticipantPickerController () <LYRUIParticipantTableViewControllerDelegate>
 
@@ -28,15 +27,14 @@
 
 - (id)initWithDataSource:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
-    self.participantTableViewController = [[LYRUIParticipantTableViewController alloc] init];
+    self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithParticipants:[dataSource participants] sortType:sortType];
     self.participantTableViewController.delegate = self;
     
     self = [super initWithRootViewController:self.participantTableViewController];
     if (self) {
         
         // Set properties from designated initializer
-        self.dataSource = dataSource;
-        self.participantPickerSortType = sortType;
+        
 
         // Set default configuration for public properties
         [self setAllowsMultipleSelection:YES];
@@ -68,7 +66,6 @@
     [super viewWillAppear:animated];
    
     self.participants = [self.dataSource participants];
-    self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
     self.participantTableViewController.participants = self.sortedParticipants;
     
     self.isOnScreen = TRUE;
@@ -141,8 +138,9 @@
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSDictionary *))completion
 {
     [self.dataSource searchForParticipantsMatchingText:searchText completion:^(NSSet *participants) {
-        completion ([self sortAndGroupContactListByAlphabet:participants]);
+        completion ([NSDictionary new]);
     }];
+    //[self sortAndGroupContactListByAlphabet:participants]
 }
 
 - (void)participantTableViewControllerDidSelectCancelButton
@@ -153,46 +151,6 @@
 - (void)participantTableViewControllerDidSelectDoneButtonWithSelectedParticipants:(NSMutableSet *)selectedParticipants
 {
     [self.participantPickerDelegate participantSelectionViewController:self didSelectParticipants:selectedParticipants];
-}
-
-- (NSDictionary *)sortAndGroupContactListByAlphabet:(NSSet *)participants
-{
-    NSArray *sortedParticipants;
-    
-    switch (self.participantPickerSortType) {
-        case LYRUIParticipantPickerControllerSortTypeFirst:
-            sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
-            break;
-        case LYRUIParticipantPickerControllerSortTypeLast:
-            sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES]]];
-            break;
-        default:
-            break;
-    }
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    for (id<LYRUIParticipant>participant in sortedParticipants) {
-        NSString *sortName;
-        switch (self.participantPickerSortType) {
-            case LYRUIParticipantPickerControllerSortTypeFirst:
-                sortName = participant.firstName;
-                break;
-            case LYRUIParticipantPickerControllerSortTypeLast:
-                sortName = participant.lastName;
-                break;
-            default:
-                break;
-        }
-        
-        NSString *firstLetter = [[sortName substringToIndex:1] uppercaseString];
-        NSMutableArray *letterList = [dict objectForKey:firstLetter];
-        if (!letterList) {
-            letterList = [NSMutableArray array];
-        }
-        [letterList addObject:participant];
-        [dict setObject:letterList forKey:firstLetter];
-    }
-    return dict;
 }
 
 @end

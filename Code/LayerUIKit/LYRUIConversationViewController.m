@@ -27,7 +27,10 @@
 #import "LYRUIDataSourceChange.h"
 #import "LYRUIMessageNotificationObserver.h"
 
-@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
+#import "LYRUIParticipantTableViewController.h"
+#import "LYRUIParticipantTableViewCell.h"
+
+@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate, LYRUIParticipantTableViewControllerDelegate>
 
 
 @property (nonatomic, strong) LYRClient *layerClient;
@@ -42,6 +45,8 @@
 
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat keyboardHeight;
+
+@property (nonatomic, strong) LYRUIParticipantTableViewController *participantTableViewController;
 
 @end
 
@@ -104,13 +109,21 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
     self.collectionView.accessibilityLabel = @"Conversation Collection View";
     [self.view addSubview:self.collectionView];
-
+    
     // Register reusable collection view cells, header and footer
     [self.collectionView registerClass:[LYRUIIncomingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier];
     [self.collectionView registerClass:[LYRUIOutgoingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier];
     [self.collectionView registerClass:[LYRUIConversationCollectionViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYRUIMessageCellHeaderIdentifier];
     [self.collectionView registerClass:[LYRUIConversationCollectionViewFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:LYRUIMessageCellFooterIdentifier];
 
+    // Left bar button item is the text Cancel
+    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
+                                                                         style:UIBarButtonItemStylePlain
+                                                                        target:self
+                                                                        action:@selector(contactsButtonTapped)];
+    contactsButtonItem.accessibilityLabel = @"Contacts";
+    self.navigationItem.rightBarButtonItem = contactsButtonItem;
+    
     // Setup Layer Change notification observer
     self.messageNotificationObserver = [[LYRUIMessageNotificationObserver alloc] initWithClient:self.layerClient conversation:self.conversation];
     self.messageNotificationObserver.delegate = self;
@@ -641,6 +654,57 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
             [self.collectionView setContentOffset:[self bottomOffset] animated:animated];
         });
     }
+}
+
+- (void)contactsButtonTapped
+{
+    [self addDoneButton];
+    NSMutableSet *participants = [NSMutableSet new];
+    for (NSString *identifier in self.conversation.participants) {
+        [participants addObject:[self.dataSource conversationViewController:self participantForIdentifier:identifier]];
+    }
+    
+    self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithParticipants:participants sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    self.participantTableViewController.delegate = self;
+    self.participantTableViewController.view.frame = CGRectMake(0, 0, 320, 0);
+    self.participantTableViewController.participantCellClass = [LYRUIParticipantTableViewCell class];
+    self.participantTableViewController.shouldShowSelectionIndicator = NO;
+    self.participantTableViewController.shouldShowSearchBar = NO;
+    self.participantTableViewController.shouldShowSectionHeader = NO;
+    
+    [self.view addSubview:self.participantTableViewController.view];
+    [self addChildViewController:self.participantTableViewController];
+    [self.participantTableViewController didMoveToParentViewController:self];
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        self.participantTableViewController.view.frame = CGRectMake(0, 0, 320, 400);
+    }];
+}
+
+- (void)addDoneButton
+{
+    // Left bar button item is the text Cancel
+    UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                                                           style:UIBarButtonItemStylePlain
+                                                                          target:self
+                                                                          action:@selector(doneButtonTapped)];
+    doneButtonItem.accessibilityLabel = @"Done";
+    self.navigationItem.rightBarButtonItem = doneButtonItem;
+}
+
+- (void)doneButtonTapped
+{
+    [UIView animateWithDuration:0.5 animations:^{
+        self.participantTableViewController.view.frame = CGRectMake(0, 0, 320, 0);
+    }completion:^(BOOL finished) {
+        [self.participantTableViewController.view removeFromSuperview];
+        [self.participantTableViewController removeFromParentViewController];
+    }];
+}
+
+- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
+{
+    //
 }
 
 #pragma mark Default Message Cell Appearance

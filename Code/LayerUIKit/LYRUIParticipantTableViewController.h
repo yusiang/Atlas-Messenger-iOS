@@ -9,6 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "LYRUIParticipantTableViewCell.h"
 
+/**
+ @abstract The `LYRUIParticipantPickerSortType` allows for configuration of sorting order of the participant list
+ */
+typedef enum : NSUInteger {
+    LYRUIParticipantPickerControllerSortTypeFirst,
+    LYRUIParticipantPickerControllerSortTypeLast,
+}LYRUIParticipantPickerSortType;
+
+
 @class LYRUIParticipantTableViewController;
 
 @protocol LYRUIParticipantTableViewControllerDelegate <NSObject>
@@ -44,6 +53,8 @@
 
 @interface LYRUIParticipantTableViewController : UITableViewController
 
++ (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType;
+
 /**
  @abstract The table view cell class for customizing the display of participants.
  @default `[LYRUIParticipantTableViewCell class]`
@@ -59,7 +70,7 @@
 /**
  @abstract A dictionary containing a set of dictionaries each cooresponding to a unique letter in the alphabet
  */
-@property (nonatomic, strong) NSDictionary *participants;
+@property (nonatomic, strong) NSSet *participants;
 
 /**
  @abstract The seclection indicator used to indicate a contact has been selected. Should have views configured for both highlighted and non highlighted state
@@ -74,6 +85,9 @@
  */
 @property (nonatomic, assign) BOOL allowsMultipleSelection;
 
+@property (nonatomic, assign) BOOL shouldShowSelectionIndicator;
+@property (nonatomic, assign) BOOL shouldShowSectionHeader;
+@property (nonatomic, assign) BOOL shouldShowSearchBar;
 /**
  @abstract Sets the height for cells within the receiver.
  @default `48.0`

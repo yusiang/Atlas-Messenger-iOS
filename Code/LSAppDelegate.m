@@ -36,7 +36,7 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LSProductionEnvironment;
+    LSEnvironment environment = LYRUIDEV1Production;
     
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
@@ -168,6 +168,7 @@ extern void LYRSetLogLevelFromEnvironment();
         if (fetchResult == UIBackgroundFetchResultFailed) {
             NSLog(@"Failed processing remote notification: %@", error);
         }
+        //NSSet *message = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:<#(id)#>]]
 
         completionHandler(fetchResult);
     }];

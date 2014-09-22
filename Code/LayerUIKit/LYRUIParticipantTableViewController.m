@@ -10,13 +10,16 @@
 #import "LYRUIPaticipantSectionHeaderView.h"
 #import "LYRUISelectionIndicator.h"
 #import "LYRUIConstants.h"
+#import "LYRUIParticipantPickerController.h"
 
 @interface LYRUIParticipantTableViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
 
+@property (nonatomic, strong) NSDictionary *sortedParticipants;
 @property (nonatomic, strong) NSDictionary *filteredParticipants;
 @property (nonatomic, strong) NSMutableSet *selectedParticipants;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic) LYRUIParticipantPickerSortType sortType;
 
 @end
 
@@ -24,10 +27,23 @@
 
 NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
-- (id)initWithStyle:(UITableViewStyle)style
++ (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType
+{
+    return [[self alloc] initWithParticipants:participants sortType:sortType];
+}
+
+- (id)initWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
+        
+        self.sortType = sortType;
+        self.participants = participants;
+        self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
+        
+        self.shouldShowSectionHeader = YES;
+        self.shouldShowSelectionIndicator = YES;
+        self.shouldShowSearchBar = YES;
         
         self.title = @"Participants";
         self.accessibilityLabel = @"Participants";
@@ -45,21 +61,28 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 {
     [super viewDidLoad];
     
-    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-    self.searchBar.accessibilityLabel = @"Search Bar";
-    self.searchBar.delegate = self;
+    if (self.shouldShowSearchBar) {
+        self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+        self.searchBar.accessibilityLabel = @"Search Bar";
+        self.searchBar.delegate = self;
+        
+        self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+        self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.searchController.delegate = self;
+        self.searchController.searchResultsDelegate = self;
+        self.searchController.searchResultsDataSource = self;
+
+        self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.tableView.sectionFooterHeight = 0.0;
+        self.tableView.tableHeaderView = self.searchBar;
+    }
     
-    self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
-    self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.searchController.delegate = self;
-    self.searchController.searchResultsDelegate = self;
-    self.searchController.searchResultsDataSource = self;
-    
-    self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.sectionFooterHeight = 0.0;
-    self.tableView.tableHeaderView = self.searchBar;
-    
+    if (self.shouldShowSectionHeader) {
+        self.tableView.sectionHeaderHeight = 40.0;
+    } else {
+        self.tableView.sectionHeaderHeight = 0.0;
+    }
     
     // Left bar button item is the text Cancel
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
@@ -88,7 +111,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 {
     [super viewWillAppear:animated];
     
-    self.filteredParticipants = self.participants;
+    self.filteredParticipants = self.sortedParticipants;
     
     self.tableView.rowHeight = self.rowHeight;
     [self.tableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
@@ -102,7 +125,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     if (self.isSearching) {
         return self.filteredParticipants;
     }
-    return self.participants;
+    return self.sortedParticipants;
 }
 
 - (BOOL)isSearching
@@ -137,11 +160,6 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     return self.rowHeight;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 40;
-}
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return [[[self currentDataArray] allKeys] count];
@@ -161,7 +179,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRParticipantCellIdentifier];
     
     [participantCell presentParticipant:participant];
-    
+    [participantCell shouldShowSelectionIndicator:self.shouldShowSelectionIndicator];
     return participantCell;
 }
 
@@ -225,6 +243,46 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[[self currentDataArray] allKeys]];
     [mutableKeys sortUsingSelector:@selector(compare:)];
     return mutableKeys;
+}
+
+- (NSDictionary *)sortAndGroupContactListByAlphabet:(NSSet *)participants
+{
+    NSArray *sortedParticipants;
+    
+    switch (self.sortType) {
+        case LYRUIParticipantPickerControllerSortTypeFirst:
+            sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
+            break;
+        case LYRUIParticipantPickerControllerSortTypeLast:
+            sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES]]];
+            break;
+        default:
+            break;
+    }
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    for (id<LYRUIParticipant>participant in sortedParticipants) {
+        NSString *sortName;
+        switch (self.sortType) {
+            case LYRUIParticipantPickerControllerSortTypeFirst:
+                sortName = participant.firstName;
+                break;
+            case LYRUIParticipantPickerControllerSortTypeLast:
+                sortName = participant.lastName;
+                break;
+            default:
+                break;
+        }
+        
+        NSString *firstLetter = [[sortName substringToIndex:1] uppercaseString];
+        NSMutableArray *letterList = [dict objectForKey:firstLetter];
+        if (!letterList) {
+            letterList = [NSMutableArray array];
+        }
+        [letterList addObject:participant];
+        [dict setObject:letterList forKey:firstLetter];
+    }
+    return dict;
 }
 
 - (void)configureAppearance

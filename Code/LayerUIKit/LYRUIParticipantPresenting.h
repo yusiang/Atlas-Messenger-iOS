@@ -15,6 +15,8 @@
  */
 @protocol LYRUIParticipantPresenting <NSObject>
 
+- (void)shouldShowSelectionIndicator:(BOOL)shouldShowSelectionIndicator;
+
 /**
  @abstract Tells the receiver to present an interface for the given participant.
  @param participant The participant to present.

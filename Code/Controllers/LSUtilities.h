@@ -15,8 +15,10 @@
  */
 
 typedef enum {
-    LSProductionEnvironment,
-    LSDevelopmentEnvironment,
+    LYRUINA3Production,
+    LYRUINA3Development,
+    LYRUIDEV1Production,
+    LYRUIDEV1Development,
     LSTestEnvironment
 } LSEnvironment;
 
