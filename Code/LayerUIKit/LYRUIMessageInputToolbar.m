@@ -85,6 +85,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (CGSize)intrinsicContentSize
 {
+    [self.textInputView layoutIfNeeded];
     return CGSizeMake(320, self.textInputView.intrinsicContentSize.height + LSComposeviewVerticalMargin * 2);
 }
 
@@ -198,7 +199,6 @@ static CGFloat const LSButtonHeight = 28;
 - (void)adjustFrame
 {
     [self invalidateIntrinsicContentSize];
-    [self.textInputView layoutIfNeeded];
     CGSize size = [self systemLayoutSizeFittingSize:UILayoutFittingExpandedSize];
     self.frame = CGRectMake(0, 0, size.width, size.height);
 }

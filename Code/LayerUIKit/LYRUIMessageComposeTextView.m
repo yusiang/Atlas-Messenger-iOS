@@ -27,6 +27,7 @@
         self.font = LSLightFont(16);
         self.text = @"Enter Message";
         self.textColor = [UIColor lightGrayColor];
+   
         [self layoutIfNeeded];
     }
     
@@ -36,6 +37,12 @@
 - (CGSize)intrinsicContentSize
 {
     return self.contentSize;
+}
+
+- (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated
+{
+    // Don'd do anything here to prevent autoscrolling.
+    // Unless you plan on using this method in another fashion.
 }
 
 - (void)insertImage:(UIImage *)image
@@ -58,6 +65,7 @@
 {
     [self layoutIfNeeded];
 }
+
 
 
 @end

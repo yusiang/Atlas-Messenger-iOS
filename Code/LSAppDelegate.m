@@ -36,7 +36,7 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LYRUINA3Production;
+    LSEnvironment environment = LYRUIDEV1Production;
     
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
@@ -161,15 +161,15 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    __block NSURL *conversationID = [NSURL URLWithString:[userInfo valueForKeyPath:@"layer.event_url"]];
+    __block NSURL *messageID = [NSURL URLWithString:[userInfo valueForKeyPath:@"layer.event_url"]];
     __block LYRClient *wClient = self.applicationController.layerClient;
     NSError *error;
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
         if (fetchResult == UIBackgroundFetchResultFailed) {
             NSLog(@"Failed processing remote notification: %@", error);
         }
-        //NSSet *message = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:<#(id)#>]]
-
+        NSSet *message = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:messageID]];
+        NSSet *messages = [wClient messagesForIdentifiers:[NSSet setWithObject:messageID]];
         completionHandler(fetchResult);
     }];
     if (success) {
