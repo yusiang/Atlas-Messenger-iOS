@@ -13,6 +13,8 @@
 
 @property (nonatomic, strong) NSArray *conversations;
 
+@property (nonatomic, strong) NSArray *tempIdentifiers;
+
 @end
 
 @implementation LYRUIConversationNotificationObserver
@@ -24,7 +26,7 @@
         
         self.layerClient = layerClient;
         self.conversations = conversations;
-        
+        self.conversationIdentifiers = [self refreshConversations];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerObjectsDidChangeNotification:)
                                                      name:LYRClientObjectsDidChangeNotification
                                                    object:layerClient];
@@ -38,15 +40,23 @@
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
 
+- (NSArray *)refreshConversations
+{
+    NSSet *conversations = [self.layerClient conversationsForIdentifiers:nil];
+    NSArray *sortedConversations = [conversations sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessage.sentAt" ascending:NO]]];
+    return [sortedConversations valueForKeyPath:@"identifier"];
+}
+
 - (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
     [self.delegate observerWillChangeContent:self];
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [self processLayerChangeNotification:notification completion:^(NSMutableArray *conversationArray) {
-            [self processConversationChanges:conversationArray completion:^(NSArray *conversationChanges) {
-                [self dispatchChanges:conversationChanges];
-            }];
+            if (conversationArray.count > 0) {
+                [self processConversationChanges:conversationArray completion:^(NSArray *conversationChanges) {
+                    [self dispatchChanges:conversationChanges];
+                }];
+            }
         }];
     });
 }
@@ -56,35 +66,46 @@
     NSMutableArray *conversationArray = [[NSMutableArray alloc] init];
     
     NSArray *changes = [notification.userInfo objectForKey:LYRClientObjectChangesUserInfoKey];
+    NSLog(@"%@", changes);
     for (NSDictionary *change in changes) {
         
         if ([[change objectForKey:LYRObjectChangeObjectKey] isKindOfClass:[LYRConversation class]]) {
             [conversationArray addObject:change];
         }
+        
     }
     completion(conversationArray);
 }
 
 - (void) processConversationChanges:(NSMutableArray *)conversationChanges completion:(void(^)(NSArray *conversationChanges))completion
 {
+    self.tempIdentifiers = [self refreshConversations];
     NSMutableArray *changeObjects = [[NSMutableArray alloc] init];
     for (int i = 0; i < conversationChanges.count; i++) {
         NSDictionary *conversationChange = [conversationChanges objectAtIndex:i];
+        LYRConversation *conversation = [conversationChange objectForKey:LYRObjectChangeObjectKey];
+        NSUInteger conversationIndex = [self.conversationIdentifiers indexOfObject:conversation.identifier];
         LYRObjectChangeType changeType = (LYRObjectChangeType)[[conversationChange objectForKey:LYRObjectChangeTypeKey] integerValue];
         switch (changeType) {
             case LYRObjectChangeTypeCreate:
-                [changeObjects addObject:[LYRUIDataSourceChange insertChangeWithIndex:i]];
+                [changeObjects addObject:[LYRUIDataSourceChange insertChangeWithIndex:conversationIndex]];
                 break;
             case LYRObjectChangeTypeUpdate:
-                [changeObjects addObject:[LYRUIDataSourceChange updateChangeWithIndex:i]];
+                if ([[conversationChange objectForKey:LYRObjectChangePropertyKey] isEqualToString:@"lastMessage"]) {
+                    NSUInteger newIndex = [self.tempIdentifiers indexOfObject:conversation.identifier];
+                    [changeObjects addObject:[LYRUIDataSourceChange moveChangeWithOldIndex:conversationIndex newIndex:newIndex]];
+                } else {
+                    [changeObjects addObject:[LYRUIDataSourceChange updateChangeWithIndex:conversationIndex]];
+                }
                 break;
             case LYRObjectChangeTypeDelete:
-                [changeObjects addObject:[LYRUIDataSourceChange deleteChangeWithIndex:i]];
+                [changeObjects addObject:[LYRUIDataSourceChange deleteChangeWithIndex:conversationIndex]];
                 break;
             default:
                 break;
         }
     }
+    self.conversationIdentifiers = self.tempIdentifiers;
     completion(changeObjects);
 }
 

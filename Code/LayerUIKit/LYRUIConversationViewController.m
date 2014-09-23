@@ -130,9 +130,9 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     if (!inputAccessoryView) {
         self.messageInputToolbar = [[LYRUIMessageInputToolbar alloc] init];
-        self.messageInputToolbar.delegate = self;
     }
     CGSize size = [self.messageInputToolbar systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    self.messageInputToolbar.delegate = self;
     self.messageInputToolbar.frame = CGRectMake(0, 0, size.width, size.height);
     inputAccessoryView = self.messageInputToolbar;
     return inputAccessoryView;
@@ -168,8 +168,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     [super viewWillDisappear:animated];
     
-    self.messageNotificationObserver = nil;
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
                                                   object:nil];
@@ -182,6 +180,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)dealloc
 {
     self.collectionView.delegate = nil;
+    self.messageNotificationObserver = nil;
 }
 
 #pragma mark - Refresh Data Source
@@ -225,6 +224,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     // Sets the width of the bubble view
     [cell updateBubbleViewWidth:[self sizeForItemAtIndexPath:indexPath].width];
     [self updateRecipientStatusForMessage:message];
+    NSLog(@"Message sent at %@", message.sentAt);
     return cell;
 }
 
@@ -434,10 +434,10 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)messageInputToolbar:(LYRUIMessageInputToolbar *)messageInputToolbar didTapRightAccessoryButton:(UIButton *)rightAccessoryButton
 {
-    if (messageInputToolbar.messageContentParts) {
+    if (messageInputToolbar.messageContentParts.count > 0) {
         [self sendMessageWithContentParts:messageInputToolbar.messageContentParts];
     }
-    if (messageInputToolbar.textInputView.text.length > 1) {
+    if (messageInputToolbar.textInputView.text.length > 0) {
         [self sendMessageWithText:messageInputToolbar.textInputView.text];
     }
 }
@@ -544,8 +544,10 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)displayImagePickerWithSourceType:(UIImagePickerControllerSourceType)sourceType;
 {
-    BOOL pickerSourceTypeAvailable = [UIImagePickerController isSourceTypeAvailable:sourceType];
+        [self.messageInputToolbar.textInputView resignFirstResponder];
     
+    BOOL pickerSourceTypeAvailable = [UIImagePickerController isSourceTypeAvailable:sourceType];
+
     if (pickerSourceTypeAvailable) {
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
@@ -583,19 +585,18 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 }
 
 - (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
-{   
+{
     [self fetchMessages];
     [self.collectionView reloadData];
-
-        for (LYRUIDataSourceChange *change in changes) {
-            switch (change.type) {
-                case LYRUIDataSourceChangeTypeInsert:
-                    [self scrollToBottomOfCollectionViewAnimated:YES];
-                    break;
-                default:
-                    break;
-            }
+    for (LYRUIDataSourceChange *change in changes) {
+        switch (change.type) {
+            case LYRUIDataSourceChangeTypeInsert:
+                [self scrollToBottomOfCollectionViewAnimated:YES];
+                break;
+            default:
+                break;
         }
+    }
 //    [self.collectionView performBatchUpdates:^{
 //        for (LYRUIDataSourceChange *change in changes) {
 //            switch (change.type) {
@@ -623,7 +624,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
-    //
+    
 }
 
 #pragma mark CollectionView Content Inset Methods
@@ -673,13 +674,13 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)addContactsButton
 {
-    // Left bar button item is the text Cancel
-    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
-                                                                           style:UIBarButtonItemStylePlain
-                                                                          target:self
-                                                                          action:@selector(contactsButtonTapped)];
-    contactsButtonItem.accessibilityLabel = @"Contacts";
-    self.navigationItem.rightBarButtonItem = contactsButtonItem;
+//    // Left bar button item is the text Cancel
+//    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
+//                                                                           style:UIBarButtonItemStylePlain
+//                                                                          target:self
+//                                                                          action:@selector(contactsButtonTapped)];
+//    contactsButtonItem.accessibilityLabel = @"Contacts";
+//    self.navigationItem.rightBarButtonItem = contactsButtonItem;
 }
 
 - (void)addDoneButton

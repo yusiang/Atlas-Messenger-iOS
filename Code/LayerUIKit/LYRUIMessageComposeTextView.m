@@ -66,6 +66,11 @@
     [self layoutIfNeeded];
 }
 
-
+- (void)removeAttachements
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.text attributes:@{NSFontAttributeName : LSLightFont(16)}];
+    self.attributedText = attributedString;
+    [self layoutIfNeeded];
+}
 
 @end

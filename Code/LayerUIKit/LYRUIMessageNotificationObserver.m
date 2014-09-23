@@ -24,7 +24,7 @@
         
         self.layerClient = layerClient;
         self.conversation = conversation;
-        
+        [self refreshIdentifiers];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerObjectsDidChangeNotification:)
                                                      name:LYRClientObjectsDidChangeNotification
                                                    object:layerClient];
@@ -35,6 +35,11 @@
 - (id) init
 {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
+}
+
+- (void)refreshIdentifiers
+{
+    self.messageIdentifiers = [[self.layerClient messagesForConversation:self.conversation] valueForKeyPath:@"identifier"];
 }
 
 - (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
@@ -70,10 +75,11 @@
     for (int i = 0; i < messageChanges.count; i++) {
         NSDictionary *messageUpdate = [messageChanges objectAtIndex:i];
         LYRMessage *message = [messageUpdate objectForKey:LYRObjectChangeObjectKey];
-        if (message.conversation == self.conversation) {
+        if ([message.conversation.identifier.absoluteString isEqualToString:self.conversation.identifier.absoluteString]) {
             LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
             switch (updateKey) {
                 case LYRObjectChangeTypeCreate:
+                     NSLog(@"Message Instert %@", messageUpdate);
                     [changeObjects addObject:[LYRUIDataSourceChange insertChangeWithIndex:message.index]];
                     break;
                 case LYRObjectChangeTypeUpdate:

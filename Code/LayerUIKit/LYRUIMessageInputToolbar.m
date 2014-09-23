@@ -96,6 +96,7 @@ static CGFloat const LSButtonHeight = 28;
     [self.messageContentParts addObject:image];
     [self.rightAccessoryButton setHighlighted:TRUE];
     [self.textInputView insertImage:image];
+    [self adjustFrame];
 }
 
 - (void)insertVideoAtPath:(NSString *)videoPath
@@ -146,6 +147,7 @@ static CGFloat const LSButtonHeight = 28;
     if (self.textInputView.text.length > 0 || self.messageContentParts) {
         [self.delegate messageInputToolbar:self didTapRightAccessoryButton:self.rightAccessoryButton];
         [self.rightAccessoryButton setHighlighted:FALSE];
+        [self.textInputView removeAttachements];
         [self.textInputView setText:@""];
         [self.messageContentParts removeAllObjects];
         self.textInputView.font = LSLightFont(16);

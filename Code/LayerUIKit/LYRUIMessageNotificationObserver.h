@@ -14,4 +14,6 @@
 
 - (id) initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation;
 
+@property (nonatomic, strong) NSArray *messageIdentifiers;
+
 @end

@@ -21,4 +21,6 @@
 
 - (void)insertLocation:(CLLocationCoordinate2D)location;
 
+- (void)removeAttachements;
+
 @end
