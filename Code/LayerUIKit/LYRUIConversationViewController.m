@@ -223,8 +223,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     
     // Sets the width of the bubble view
     [cell updateBubbleViewWidth:[self sizeForItemAtIndexPath:indexPath].width];
-    [self updateRecipientStatusForMessage:message];
-    NSLog(@"Message sent at %@", message.sentAt);
+    //[self updateRecipientStatusForMessage:message];
     return cell;
 }
 

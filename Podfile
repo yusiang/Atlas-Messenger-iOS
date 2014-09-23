@@ -2,7 +2,7 @@ target 'LayerSample' do
   pod 'SVProgressHUD', :head
   pod 'LayerKit'
   #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
-  #pod 'LayerKit', path: '~/Desktop/LayerKit-0.7.17'
+  #pod 'LayerKit', path: '~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.7.21-rc1'
   pod 'HockeySDK', '~> 3.5.6'
   pod 'LayerUIKit', path: '.'
 end
