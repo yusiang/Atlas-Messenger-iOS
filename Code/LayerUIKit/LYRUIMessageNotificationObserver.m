@@ -48,9 +48,11 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [self processLayerChangeNotification:notification completion:^(NSMutableArray *messageArray) {
-            [self processMessageChanges:messageArray completion:^(NSArray *messageChanges) {
-                [self dispatchChanges:messageChanges];
-            }];
+            if (messageArray.count > 0) {
+                [self processMessageChanges:messageArray completion:^(NSArray *messageChanges) {
+                    [self dispatchChanges:messageChanges];
+                }];
+            }
         }];
     });
 }

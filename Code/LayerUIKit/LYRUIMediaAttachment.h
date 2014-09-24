@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ @abstract The `LYRUIMediaAttachment` class configures the appropriate size
+ for an NSTextAttachement to comfortably fit inside of a LYRUIMessageInputToolbar
+ */
 @interface LYRUIMediaAttachment : NSTextAttachment
 
 @end

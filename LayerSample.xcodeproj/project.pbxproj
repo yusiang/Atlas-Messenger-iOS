@@ -272,6 +272,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0A0DA1C719D1F22E0044B56A /* Sample App Test */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Sample App Test";
+			sourceTree = "<group>";
+		};
 		0AD6C4B419BD4CD6005142ED /* Icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -398,6 +405,7 @@
 		259A57781950EB92000E27B0 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				0A0DA1C719D1F22E0044B56A /* Sample App Test */,
 				0ADD757419C8A12A00E133B5 /* Component Test */,
 				259A57791950EB92000E27B0 /* KIFUITestActor+LSAdditions.h */,
 				259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */,

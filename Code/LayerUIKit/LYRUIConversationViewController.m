@@ -28,9 +28,8 @@
 #import "LYRUIMessageNotificationObserver.h"
 
 #import "LYRUIParticipantTableViewController.h"
-#import "LYRUIParticipantTableViewCell.h"
 
-@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate, LYRUIParticipantTableViewControllerDelegate>
+@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
 
 
 @property (nonatomic, strong) LYRClient *layerClient;
@@ -46,7 +45,6 @@
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat keyboardHeight;
 
-@property (nonatomic, strong) LYRUIParticipantTableViewController *participantTableViewController;
 
 @end
 
@@ -97,6 +95,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [super viewDidLoad];
     
     [self fetchMessages];
+    [self addContactsButton];
     
     // Setup Collection View
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
@@ -115,8 +114,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [self.collectionView registerClass:[LYRUIOutgoingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier];
     [self.collectionView registerClass:[LYRUIConversationCollectionViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYRUIMessageCellHeaderIdentifier];
     [self.collectionView registerClass:[LYRUIConversationCollectionViewFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:LYRUIMessageCellFooterIdentifier];
-
-    [self addContactsButton];
     
     // Setup Layer Change notification observer
     self.messageNotificationObserver = [[LYRUIMessageNotificationObserver alloc] initWithClient:self.layerClient conversation:self.conversation];
@@ -219,10 +216,11 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         // If the message was sent by someone other than the currently authenticated user, it is incoming
         cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier forIndexPath:indexPath];
     }
-    [cell presentMessage:messagePart fromParticipant:nil];
+    [cell presentMessagePart:messagePart];
     
     // Sets the width of the bubble view
     [cell updateBubbleViewWidth:[self sizeForItemAtIndexPath:indexPath].width];
+    
     //[self updateRecipientStatusForMessage:message];
     return cell;
 }
@@ -435,8 +433,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     if (messageInputToolbar.messageContentParts.count > 0) {
         [self sendMessageWithContentParts:messageInputToolbar.messageContentParts];
-    }
-    if (messageInputToolbar.textInputView.text.length > 0) {
+    } else if (messageInputToolbar.textInputView.text.length > 0) {
         [self sendMessageWithText:messageInputToolbar.textInputView.text];
     }
 }
@@ -576,6 +573,43 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark CollectionView Content Inset Methods
+
+- (void)updateInsets
+{
+    UIEdgeInsets existing = self.collectionView.contentInset;
+    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(existing.top, 0, self.keyboardHeight, 0);
+}
+
+- (CGPoint)bottomOffset
+{
+    return CGPointMake(0, MAX(-self.collectionView.contentInset.top, self.collectionView.collectionViewLayout.collectionViewContentSize.height - (self.collectionView.frame.size.height - self.collectionView.contentInset.bottom)));
+}
+
+#pragma mark Contact Button
+
+- (void)addContactsButton
+{
+    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(contactsButtonTapped)];
+    contactsButtonItem.accessibilityLabel = @"Contacts";
+    self.navigationItem.rightBarButtonItem = contactsButtonItem;
+
+}
+
+- (void)contactsButtonTapped
+{
+    NSMutableSet *participants = [NSMutableSet new];
+    for (NSString *userID in self.conversation.participants) {
+        [participants addObject:[self.dataSource conversationViewController:self participantForIdentifier:userID]];
+    }
+    LYRUIParticipantTableViewController *controller = [LYRUIParticipantTableViewController participantTableViewControllerWithStyle:UITableViewStylePlain participants:participants];
+    controller.participantCellClass = [LYRUIParticipantTableViewCell class];
+    [self.navigationController pushViewController:controller animated:TRUE];
+}
+
 #pragma mark Notification Observer Delegate Methods
 
 - (void) observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
@@ -590,53 +624,41 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     for (LYRUIDataSourceChange *change in changes) {
         switch (change.type) {
             case LYRUIDataSourceChangeTypeInsert:
-                [self scrollToBottomOfCollectionViewAnimated:YES];
+                if (change.newIndex + 1 == [self.collectionView numberOfSections]) {
+                    [self scrollToBottomOfCollectionViewAnimated:YES];
+                }
                 break;
             default:
                 break;
         }
     }
-//    [self.collectionView performBatchUpdates:^{
-//        for (LYRUIDataSourceChange *change in changes) {
-//            switch (change.type) {
-//                case LYRUIDataSourceChangeTypeInsert:
-//                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-//                    break;
-//                case LYRUIDataSourceChangeTypeMove:
-////                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
-////                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-//                    break;
-//                case LYRUIDataSourceChangeTypeUpdate:
-//                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-//                    break;
-//                case LYRUIDataSourceChangeTypeDelete:
-//                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    } completion:^(BOOL finished) {
-//        [self scrollToBottomOfCollectionViewAnimated:TRUE];
-//    }];
+    //    [self.collectionView performBatchUpdates:^{
+    //        for (LYRUIDataSourceChange *change in changes) {
+    //            switch (change.type) {
+    //                case LYRUIDataSourceChangeTypeInsert:
+    //                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+    //                    break;
+    //                case LYRUIDataSourceChangeTypeMove:
+    ////                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
+    ////                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+    //                    break;
+    //                case LYRUIDataSourceChangeTypeUpdate:
+    //                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+    //                    break;
+    //                case LYRUIDataSourceChangeTypeDelete:
+    //                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+    //                    break;
+    //                default:
+    //                    break;
+    //            }
+    //        }
+    //    } completion:^(BOOL finished) {
+    //        [self scrollToBottomOfCollectionViewAnimated:TRUE];
+    //    }];
 }
 
 - (void)observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
-    
-}
-
-#pragma mark CollectionView Content Inset Methods
-
-- (void)updateInsets
-{
-    UIEdgeInsets existing = self.collectionView.contentInset;
-    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(existing.top, 0, self.keyboardHeight, 0);
-}
-
-- (CGPoint)bottomOffset
-{
-    return CGPointMake(0, MAX(-self.collectionView.contentInset.top, self.collectionView.collectionViewLayout.collectionViewContentSize.height - (self.collectionView.frame.size.height - self.collectionView.contentInset.bottom)));
     
 }
 
@@ -647,66 +669,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
             [self.collectionView setContentOffset:[self bottomOffset] animated:animated];
         });
     }
-}
-
-- (void)contactsButtonTapped
-{
-    [self addDoneButton];
-    NSMutableSet *participants = [NSMutableSet new];
-    for (NSString *identifier in self.conversation.participants) {
-        [participants addObject:[self.dataSource conversationViewController:self participantForIdentifier:identifier]];
-    }
-    
-    self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithParticipants:participants sortType:LYRUIParticipantPickerControllerSortTypeFirst];
-    self.participantTableViewController.delegate = self;
-    self.participantTableViewController.view.frame = CGRectMake(0, 49, 320, 300);
-    self.participantTableViewController.participantCellClass = [LYRUIParticipantTableViewCell class];
-    
-    [self.view addSubview:self.participantTableViewController.view];
-    [self addChildViewController:self.participantTableViewController];
-    [self.participantTableViewController didMoveToParentViewController:self];
-    
-//    [UIView animateWithDuration:0.5 animations:^{
-//        self.participantTableViewController.view.frame = CGRectMake(0, 49, 320, 300);
-//    }];
-}
-
-- (void)addContactsButton
-{
-//    // Left bar button item is the text Cancel
-//    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
-//                                                                           style:UIBarButtonItemStylePlain
-//                                                                          target:self
-//                                                                          action:@selector(contactsButtonTapped)];
-//    contactsButtonItem.accessibilityLabel = @"Contacts";
-//    self.navigationItem.rightBarButtonItem = contactsButtonItem;
-}
-
-- (void)addDoneButton
-{
-    // Left bar button item is the text Cancel
-    UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                                                           style:UIBarButtonItemStylePlain
-                                                                          target:self
-                                                                          action:@selector(doneButtonTapped)];
-    doneButtonItem.accessibilityLabel = @"Done";
-    self.navigationItem.rightBarButtonItem = doneButtonItem;
-}
-
-- (void)doneButtonTapped
-{
-    [UIView animateWithDuration:0.5 animations:^{
-        self.participantTableViewController.view.frame = CGRectMake(0, 0, 320, 0);
-    }completion:^(BOOL finished) {
-        [self.participantTableViewController.view removeFromSuperview];
-        [self.participantTableViewController removeFromParentViewController];
-        [self addContactsButton];
-    }];
-}
-
-- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
-{
-    //
 }
 
 #pragma mark Default Message Cell Appearance

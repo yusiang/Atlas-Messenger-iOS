@@ -10,10 +10,20 @@
 #import "LYRUIParticipant.h"
 #import <LayerKit/LayerKit.h>
 
+/**
+ @abstract The `LYRUIMessagePresenting` protocol must be adopted by objects wishing to preset 
+ layer message parts via a user interface
+ */
 @protocol LYRUIMessagePresenting <NSObject>
 
-- (void)presentMessage:(LYRMessagePart *)message fromParticipant:(id<LYRUIParticipant>)participant;
+/**
+ @abstract Asks the reciever to display a message part
+ */
+- (void)presentMessagePart:(LYRMessagePart *)messagePart;
 
+/**
+ @abstract Tells the reciever how wide it's bubble view should be
+ */
 - (void)updateBubbleViewWidth:(CGFloat)width;
 
 @end

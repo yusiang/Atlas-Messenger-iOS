@@ -53,7 +53,7 @@ typedef enum : NSUInteger {
 
 @interface LYRUIParticipantTableViewController : UITableViewController
 
-+ (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType;
++ (instancetype)participantTableViewControllerWithStyle:(UITableViewStyle)style participants:(NSSet *)participants;
 
 /**
  @abstract The table view cell class for customizing the display of participants.
@@ -72,6 +72,7 @@ typedef enum : NSUInteger {
  */
 @property (nonatomic, strong) NSSet *participants;
 
+@property (nonatomic, assign) LYRUIParticipantPickerSortType sortType;
 /**
  @abstract The seclection indicator used to indicate a contact has been selected. Should have views configured for both highlighted and non highlighted state
  @default `LYRUISelectionIndicator`
@@ -80,16 +81,25 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) UIControl *selectionIndicator;
 
 /**
- @abstract A Boolean value that determines whether multiple participants can be selected at once.
- @discussion The defauly value of this property is `YES`.
- */
-@property (nonatomic, assign) BOOL allowsMultipleSelection;
-
-/**
  @abstract Sets the height for cells within the receiver.
  @default `48.0`
  @raises NSInternalInconsistencyException Raised if the value is mutated after the receiver has been presented.
  */
 @property (nonatomic, assign) CGFloat rowHeight;
+
+/**
+ @abstract A Boolean value that determines whether multiple participants can be selected at once.
+ @defaul Yes
+ @discussion The defauly value of this property is `YES`.
+ */
+@property (nonatomic, assign) BOOL allowsMultipleSelection;
+
+/**
+ @abstract A Boolean value that determines whether selection indicators should be displayed
+ @defaul Yes
+ @discussion The defauly value of this property is `YES`.
+ */
+@property (nonatomic, assign) BOOL displaySelectionIndicator;
+
 
 @end

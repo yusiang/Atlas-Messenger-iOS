@@ -46,7 +46,7 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LYRUIDEV1Production;
+    LSEnvironment environment = LYRUINA3Production;
     
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
@@ -69,6 +69,7 @@ extern void LYRSetLogLevelFromEnvironment();
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
     // Ask LayerKit to connect
+
     __weak LSApplicationController *wController = self.applicationController;
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         if (success) {
@@ -276,5 +277,7 @@ extern void LYRSetLogLevelFromEnvironment();
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LSBlueColor()];
 
 }
+
+
 
 @end

@@ -9,20 +9,43 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
+/**
+ @abstract The `LYRUIMessageBubbleView` class provides a lightweight, customizable view that 
+ handles displaying the actual message content within a collectionViewCell. 
+ @discussionThe view provides support for multiple different content types includin text, 
+ photos, images, and location data. The view will automatically configure sizing and displaying 
+ the supplied content.
+ */
 @interface LYRUIMessageBubbleView : UIView <UIAppearanceContainer>
 
+/**
+ @abstract Tells the bubble view to display a given string
+ */
 - (void)updateWithText:(NSString *)text;
 
+/**
+ @abstract Tells the bubble view to display a given image
+ */
 - (void) updateWithImage:(UIImage *)image;
 
+/**
+ @abstract Tells the bubble view to display a map image for a given location
+ */
 - (void) updateWithLocation:(CLLocationCoordinate2D)location;
 
+/**
+ @abstract Configures the font and text color for the bubble view
+ */
 - (void)updateBubbleViewWithFont:(UIFont *)font color:(UIColor *)color;
 
+/**
+ @abstract The textView object that handles displaying text
+ */
 @property (nonatomic, strong) UITextView *bubbleTextView;
 
+/**
+ @abstract imageView object that handles displaying images
+ */
 @property (nonatomic, strong) UIImageView *bubbleImageView;
-
-
 
 @end

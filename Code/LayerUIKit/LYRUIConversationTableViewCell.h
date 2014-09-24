@@ -15,6 +15,9 @@
  */
 @interface LYRUIConversationTableViewCell : UITableViewCell <LYRUIConversationPresenting>
 
+/**
+ @abstract Customization selectors for configuring cell appearance
+ */
 @property (nonatomic) UIFont *conversationLabelFont UI_APPEARANCE_SELECTOR;
 @property (nonatomic) UIColor *conversationLableColor UI_APPEARANCE_SELECTOR;
 

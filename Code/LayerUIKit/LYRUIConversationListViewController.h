@@ -43,7 +43,7 @@
 // *  @param searchString                   The search string that was just used for search.
 // *  @param completion                     The completion block that should be called when the results are fetched from the search.
 // */
-//- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSearchWithString:(NSString *)searchString completion:(void (^)())completion;
+- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSearchWithString:(NSString *)searchString completion:(void (^)())completion;
 
 @end
 

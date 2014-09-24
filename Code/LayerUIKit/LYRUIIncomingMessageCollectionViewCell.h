@@ -8,6 +8,10 @@
 
 #import "LYRUIMessageCollectionViewCell.h"
 
+/**
+ @abstract The `LYRUIMessageCollectionViewCell` class provides a lightweight, customizable collection
+ view cell for presenting incoming Layer message objects.
+ */
 @interface LYRUIIncomingMessageCollectionViewCell : LYRUIMessageCollectionViewCell
 
 @end

@@ -47,7 +47,7 @@
     return self;
 }
 
-- (void)presentMessage:(LYRMessagePart *)messagePart fromParticipant:(id<LYRUIParticipant>)participant
+- (void)presentMessagePart:(LYRMessagePart *)messagePart
 {
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
     

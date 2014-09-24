@@ -11,16 +11,33 @@
 
 // Auto-resizing. Support insertion of audio and videos?
 
+/**
+ @abstract The LYRUIMessageComposeTextView handles displaying content in an 
+ LYRUIMessageInputToolbar. The class provides support for displaying text, 
+ images, and locations objects represented by a map image via NSTextAttachemts.
+ */
 @interface LYRUIMessageComposeTextView : UITextView
 
+/**
+ @abstract Configures the placeholder text for the textView
+ */
 @property (nonatomic, strong) NSString *placeHolderText;
 
+/**
+ @abstract Displays the provided image in the textView
+ */
 - (void)insertImage:(UIImage *)image;
 
-- (void)insertVideoAtPath:(NSString *)videoPath;
-
+/**
+ @abstract Displays the provided location represented by a map image in the textView
+ */
 - (void)insertLocation:(CLLocationCoordinate2D)location;
 
+/**
+ @abstract Removes all existing attachements from the textView
+ @discussion This method should be called when all content should 
+ be cleared from the textView
+ */
 - (void)removeAttachements;
 
 @end

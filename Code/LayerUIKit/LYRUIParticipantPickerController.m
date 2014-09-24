@@ -27,7 +27,7 @@
 
 - (id)initWithDataSource:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
-    self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithParticipants:[dataSource participants] sortType:sortType];
+    self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithStyle:UITableViewStyleGrouped participants:[dataSource participants]];
     self.participantTableViewController.delegate = self;
     
     self = [super initWithRootViewController:self.participantTableViewController];

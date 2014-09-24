@@ -19,7 +19,6 @@
 @property (nonatomic, strong) NSMutableSet *selectedParticipants;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) UISearchBar *searchBar;
-@property (nonatomic) LYRUIParticipantPickerSortType sortType;
 
 @end
 
@@ -27,17 +26,16 @@
 
 NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
-+ (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType
++ (instancetype)participantTableViewControllerWithStyle:(UITableViewStyle)style participants:(NSSet *)participants
 {
-    return [[self alloc] initWithParticipants:participants sortType:sortType];
+    return [[self alloc] initWithStyle:style participants:participants];
 }
 
-- (id)initWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType
+- (id)initWithStyle:(UITableViewStyle)style participants:(NSSet *)participants
 {
-    self = [super initWithStyle:UITableViewStyleGrouped];
+    self = [super initWithStyle:style];
     if (self) {
         
-        self.sortType = sortType;
         self.participants = participants;
         self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
         
@@ -46,6 +44,8 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
         
         self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
         self.selectedParticipants = [[NSMutableSet alloc] init];
+        
+        self.displaySelectionIndicator = YES;
         
         [self configureAppearance];
         
@@ -57,22 +57,23 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 {
     [super viewDidLoad];
     
-    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-    self.searchBar.accessibilityLabel = @"Search Bar";
-    self.searchBar.delegate = self;
-    
-    self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
-    self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.searchController.delegate = self;
-    self.searchController.searchResultsDelegate = self;
-    self.searchController.searchResultsDataSource = self;
-    
     self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionFooterHeight = 0.0;
-    self.tableView.tableHeaderView = self.searchBar;
     
-    self.tableView.sectionHeaderHeight = 40.0;
+    if (self.tableView.style == UITableViewStyleGrouped) {
+        self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+        self.searchBar.accessibilityLabel = @"Search Bar";
+        self.searchBar.delegate = self;
+        
+        self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+        self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.searchController.delegate = self;
+        self.searchController.searchResultsDelegate = self;
+        self.searchController.searchResultsDataSource = self;
+        
+        self.tableView.tableHeaderView = self.searchBar;
+    }
     
     self.filteredParticipants = self.sortedParticipants;
     
@@ -104,10 +105,16 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     [self.searchController.searchResultsTableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
 }
 
+#pragma mark public Boolean configurations
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
 {
     _allowsMultipleSelection = allowsMultipleSelection;
     self.tableView.allowsMultipleSelection = allowsMultipleSelection;
+}
+
+- (void)setDisplaySelectionIndicator:(BOOL)displaySelectionIndicator
+{
+    _displaySelectionIndicator = displaySelectionIndicator;
 }
 
 - (NSDictionary *)currentDataArray
@@ -152,19 +159,34 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[[self currentDataArray] allKeys] count];
+    if (tableView.style == UITableViewStyleGrouped) {
+        return [[[self currentDataArray] allKeys] count];
+    } else {
+        return 1;
+    }
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
-    return [[[self currentDataArray] objectForKey:key] count];
+    if (tableView.style == UITableViewStyleGrouped) {
+        NSString *key = [[self sortedContactKeys] objectAtIndex:section];
+        return [[[self currentDataArray] objectForKey:key] count];
+    } else {
+        return self.participants.count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
-    id<LYRUIParticipant> participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
+    id<LYRUIParticipant> participant;
+    if (tableView.style == UITableViewStyleGrouped) {
+        NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
+        participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
+    } else {
+        participant = [[self.participants allObjects] objectAtIndex:indexPath.row];
+    }
     
     UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRParticipantCellIdentifier];
     
@@ -174,8 +196,21 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
-    return [[LYRUIPaticipantSectionHeaderView alloc] initWithKey:key];
+    if (self.tableView.style == UITableViewStyleGrouped) {
+        NSString *key = [[self sortedContactKeys] objectAtIndex:section];
+        return [[LYRUIPaticipantSectionHeaderView alloc] initWithKey:key];
+    } else {
+        return nil;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (self.tableView.style == UITableViewStyleGrouped) {
+        return 40;
+    } else {
+        return 0;
+    }
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath

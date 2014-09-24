@@ -31,7 +31,7 @@ static CGFloat const LSComposeviewVerticalMargin = 6;
 // Compose View Button Constants
 static CGFloat const LSLeftAccessoryButtonBottomMargin = 8;
 static CGFloat const LSLeftAccessoryButtonWidth = 40;
-static CGFloat const LSRightAccessoryButtonWidth = 50;
+static CGFloat const LSRightAccessoryButtonWidth = 46;
 static CGFloat const LSButtonHeight = 28;
 
 - (id)init
@@ -85,8 +85,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (CGSize)intrinsicContentSize
 {
-    [self.textInputView layoutIfNeeded];
-    return CGSizeMake(320, self.textInputView.intrinsicContentSize.height + LSComposeviewVerticalMargin * 2);
+    return CGSizeMake(0, self.textInputView.intrinsicContentSize.height + LSComposeviewVerticalMargin * 2);
 }
 
 #pragma mark Public Content Insertion Methods
@@ -208,6 +207,14 @@ static CGFloat const LSButtonHeight = 28;
 - (void)setupLayoutConstraints
 {
     //**********Camera Button Constraints**********//
+    // Left Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
+                                                     attribute:NSLayoutAttributeLeft
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeLeft
+                                                    multiplier:1.0
+                                                      constant:LSComposeviewHorizontalMargin]];
     // Width
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
                                                           attribute:NSLayoutAttributeWidth
@@ -216,15 +223,7 @@ static CGFloat const LSButtonHeight = 28;
                                                           attribute:NSLayoutAttributeNotAnAttribute
                                                          multiplier:1.0
                                                            constant:LSLeftAccessoryButtonWidth]];
-    
-    // Left Margin
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
-                                                          attribute:NSLayoutAttributeLeft
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self
-                                                          attribute:NSLayoutAttributeLeft
-                                                         multiplier:1.0
-                                                           constant:LSComposeviewHorizontalMargin]];
+
     // Height
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
                                                           attribute:NSLayoutAttributeHeight
@@ -235,41 +234,6 @@ static CGFloat const LSButtonHeight = 28;
                                                            constant:LSButtonHeight]];
     // Bottom Margin
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.leftAccessoryButton
-                                                          attribute:NSLayoutAttributeBottom
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self
-                                                          attribute:NSLayoutAttributeBottom
-                                                         multiplier:1.0
-                                                           constant:-LSComposeviewVerticalMargin]];
-    
-    //**********Send Button Constraints**********//
-    // Width
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:nil
-                                                          attribute:NSLayoutAttributeNotAnAttribute
-                                                         multiplier:1.0
-                                                           constant:LSRightAccessoryButtonWidth]];
-    
-    // Right Margin
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
-                                                          attribute:NSLayoutAttributeRight
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self
-                                                          attribute:NSLayoutAttributeRight
-                                                         multiplier:1.0
-                                                           constant:-LSComposeviewVerticalMargin]];
-    // Height
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
-                                                          attribute:NSLayoutAttributeHeight
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:nil
-                                                          attribute:NSLayoutAttributeNotAnAttribute
-                                                         multiplier:1.0
-                                                           constant:LSButtonHeight]];
-    // Bottom Margin
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
                                                           attribute:NSLayoutAttributeBottom
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self
@@ -285,7 +249,7 @@ static CGFloat const LSButtonHeight = 28;
                                                              toItem:self.leftAccessoryButton
                                                           attribute:NSLayoutAttributeRight
                                                          multiplier:1.0
-                                                           constant:LSComposeviewVerticalMargin]];
+                                                           constant:LSComposeviewHorizontalMargin]];
     
     // Right Margin
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
@@ -294,16 +258,8 @@ static CGFloat const LSButtonHeight = 28;
                                                              toItem:self.rightAccessoryButton
                                                           attribute:NSLayoutAttributeLeft
                                                          multiplier:1.0
-                                                           constant:-LSComposeviewVerticalMargin]];
-    // Top Margin
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
-                                                          attribute:NSLayoutAttributeTop
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self
-                                                          attribute:NSLayoutAttributeTop
-                                                         multiplier:1.0
-                                                           constant:LSComposeviewVerticalMargin]];
-    // Top Margin
+                                                           constant:-LSComposeviewHorizontalMargin]];
+    // Bottom Margin
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textInputView
                                                           attribute:NSLayoutAttributeBottom
                                                           relatedBy:NSLayoutRelationEqual
@@ -311,11 +267,47 @@ static CGFloat const LSButtonHeight = 28;
                                                           attribute:NSLayoutAttributeBottom
                                                          multiplier:1.0
                                                            constant:-LSComposeviewVerticalMargin]];
+    
+    //**********Send Button Constraints**********//
+    // Width
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:LSRightAccessoryButtonWidth]];
+    
+    // Right Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
+                                                     attribute:NSLayoutAttributeRight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeRight
+                                                    multiplier:1.0
+                                                      constant:-LSComposeviewVerticalMargin]];
+    // Height
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:LSButtonHeight]];
+    // Bottom Margin
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.rightAccessoryButton
+                                                     attribute:NSLayoutAttributeBottom
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1.0
+                                                      constant:-LSComposeviewVerticalMargin]];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
 }
 
 @end
