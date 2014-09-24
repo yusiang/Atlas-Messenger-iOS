@@ -12,9 +12,8 @@
 /**
  @abstract The `LYRUIMessageBubbleView` class provides a lightweight, customizable view that 
  handles displaying the actual message content within a collectionViewCell. 
- @discussionThe view provides support for multiple different content types includin text, 
- photos, images, and location data. The view will automatically configure sizing and displaying 
- the supplied content.
+ @discussion The view provides support for multiple different content types including text,
+ images, and location data.
  */
 @interface LYRUIMessageBubbleView : UIView <UIAppearanceContainer>
 

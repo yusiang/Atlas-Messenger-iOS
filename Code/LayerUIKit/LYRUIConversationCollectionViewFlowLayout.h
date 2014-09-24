@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 
 
+/*
+ * KFC - This class is not currently in use. It's performance is garbage and needs to be update. 
+ */
+
 /// The default resistance factor that determines the bounce of the collection. Default is 900.0f.
 #define kScrollResistanceFactorDefault 900.0f;
 

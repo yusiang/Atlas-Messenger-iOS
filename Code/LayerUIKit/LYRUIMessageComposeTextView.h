@@ -13,7 +13,7 @@
 
 /**
  @abstract The LYRUIMessageComposeTextView handles displaying content in an 
- LYRUIMessageInputToolbar. The class provides support for displaying text, 
+ `LYRUIMessageInputToolbar`. The class provides support for displaying text, 
  images, and locations objects represented by a map image via NSTextAttachemts.
  */
 @interface LYRUIMessageComposeTextView : UITextView

@@ -53,7 +53,7 @@ typedef enum : NSUInteger {
 
 @interface LYRUIParticipantTableViewController : UITableViewController
 
-+ (instancetype)participantTableViewControllerWithStyle:(UITableViewStyle)style participants:(NSSet *)participants;
++ (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType;
 
 /**
  @abstract The table view cell class for customizing the display of participants.
@@ -72,7 +72,13 @@ typedef enum : NSUInteger {
  */
 @property (nonatomic, strong) NSSet *participants;
 
+/**
+ @abstract Defines the sort ordering of the participant list. If set, the view controller will sort and group
+ participants by the order you specify. If `LYRUIParticipantPickerControllerSortTypeNone`, the view controller 
+ will not perform sorting or grouping.
+ */
 @property (nonatomic, assign) LYRUIParticipantPickerSortType sortType;
+
 /**
  @abstract The seclection indicator used to indicate a contact has been selected. Should have views configured for both highlighted and non highlighted state
  @default `LYRUISelectionIndicator`
@@ -93,13 +99,5 @@ typedef enum : NSUInteger {
  @discussion The defauly value of this property is `YES`.
  */
 @property (nonatomic, assign) BOOL allowsMultipleSelection;
-
-/**
- @abstract A Boolean value that determines whether selection indicators should be displayed
- @defaul Yes
- @discussion The defauly value of this property is `YES`.
- */
-@property (nonatomic, assign) BOOL displaySelectionIndicator;
-
 
 @end

@@ -10,14 +10,15 @@
 #import "LYRUIConstants.h"
 #import "LYRUIMediaAttachment.h"
 #import "LYRUIUtilities.h"
+#import <CoreLocation/CoreLocation.h>
 
-@interface LYRUIMessageInputToolbar () <UITextViewDelegate>
+@interface LYRUIMessageInputToolbar () <UITextViewDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat textViewContentSizeHeight;
 @property (nonatomic) CGSize defaultSize;
 @property (nonatomic) CGFloat defaultContentHeight;
-
+@property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSLayoutConstraint *textViewHeightConstraint;
 
 @end
@@ -78,6 +79,7 @@ static CGFloat const LSButtonHeight = 28;
         [self setupLayoutConstraints];
         
         self.keyboardIsOnScreen = NO;
+        [self fireUpLoacation];
     }
     
     return self;
@@ -108,31 +110,34 @@ static CGFloat const LSButtonHeight = 28;
     
 }
 
-- (void)insertLocation:(CLLocationCoordinate2D)location
+- (void)insertLocation:(CLLocation *)location
 {
-    MKMapView *mapView = [[MKMapView alloc] init];
-    
     MKMapSnapshotOptions *options = [[MKMapSnapshotOptions alloc] init];
-    options.region = mapView.region;
+    MKCoordinateSpan span = MKCoordinateSpanMake(0.005, 0.005);
+    options.region = MKCoordinateRegionMake(location.coordinate, span);
     options.scale = [UIScreen mainScreen].scale;
-    options.size = CGSizeMake(100, 200);
+    options.size = CGSizeMake(200, 200);
     
+    __block CLLocationCoordinate2D coordinate = location.coordinate;
     MKMapSnapshotter *snapshotter = [[MKMapSnapshotter alloc] initWithOptions:options];
     [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
+       
         UIImage *image = snapshot.image;
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.textInputView.attributedText];
-        LYRUIMediaAttachment *textAttachment = [[LYRUIMediaAttachment alloc] init];
-        textAttachment.image = image;
+
+        MKAnnotationView *pin = [[MKPinAnnotationView alloc] initWithAnnotation:nil reuseIdentifier:@""];
+        UIImage *pinImage = pin.image;
         
-        NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
-        [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:attrStringWithImage];
-        self.textInputView.attributedText = attrStringWithImage;
+        CGPoint pinPoint = CGPointMake(image.size.width/2, image.size.height/2);
+        UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
+        [image drawAtPoint:CGPointMake(0, 0)];
+        [pinImage drawAtPoint:pinPoint];
         
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-        CGRect rect = LYRUIImageRectConstrainedToSize(imageView.frame.size, CGSizeMake(self.frame.size.width, 120));
+        UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        [self insertImage:finalImage];
     }];
 }
-
 
 #pragma mark Compose View Delegate Methods
 
@@ -148,8 +153,9 @@ static CGFloat const LSButtonHeight = 28;
         [self.rightAccessoryButton setHighlighted:FALSE];
         [self.textInputView removeAttachements];
         [self.textInputView setText:@""];
+        [self.textInputView setFont:LSLightFont(16)];
+        [self.textInputView layoutSubviews];
         [self.messageContentParts removeAllObjects];
-        self.textInputView.font = LSLightFont(16);
     }
     [self adjustFrame];
 }
@@ -308,6 +314,25 @@ static CGFloat const LSButtonHeight = 28;
 {
     [super layoutSubviews];
     
+}
+
+- (void)fireUpLoacation
+{
+    if ([CLLocationManager locationServicesEnabled]) {
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.delegate = self;
+        self.locationManager.distanceFilter = kCLDistanceFilterNone;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [self.locationManager requestWhenInUseAuthorization];
+        [self.locationManager startUpdatingLocation];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    [self.locationManager stopUpdatingLocation];
+    CLLocation *loaction = [locations lastObject];
+    [self insertLocation:loaction];
 }
 
 @end

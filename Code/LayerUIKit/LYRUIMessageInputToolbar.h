@@ -72,7 +72,7 @@
  comfortably fit the image content. The location object will also be cached and is accessible 
  via the messageContentParts property.
  */
-- (void)insertLocation:(CLLocationCoordinate2D)location;
+- (void)insertLocation:(CLLocation *)location;
 
 /**
  @abstract The left accessory button for the view. 

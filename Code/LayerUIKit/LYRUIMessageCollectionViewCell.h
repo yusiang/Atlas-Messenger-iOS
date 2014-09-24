@@ -16,7 +16,6 @@
  view cell for presenting Layer message objects. The class is subclassed by by the LYRUIIncomingMessageCollectionViewCell`
  and the `LYRUIOutgoingMessageCollectionViewCell
  */
-
 @interface LYRUIMessageCollectionViewCell : UICollectionViewCell <LYRUIMessagePresenting>
 
 /**

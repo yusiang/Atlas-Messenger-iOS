@@ -28,7 +28,7 @@ static CGFloat const LSSelectionIndicatorRightMargin = -20;
     if (self) {
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        
+        self.backgroundColor = [UIColor whiteColor];
         self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:LSSelectionIndicatorSize];
         self.selectionIndicator.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.selectionIndicator];
@@ -46,7 +46,10 @@ static CGFloat const LSSelectionIndicatorRightMargin = -20;
 
 - (void)updateWithSelectionIndicator:(UIControl *)selectionIndicator
 {
-
+    if (!selectionIndicator) {
+        self.selectionIndicator.alpha = 0.0;
+    }
+    self.selectionIndicator = selectionIndicator;
 }
 
 - (void)updateConstraints

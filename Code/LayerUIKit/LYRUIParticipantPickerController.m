@@ -7,6 +7,7 @@
 //
 
 #import "LYRUIParticipantPickerController.h"
+#import "LYRUISelectionIndicator.h"
 
 @interface LYRUIParticipantPickerController () <LYRUIParticipantTableViewControllerDelegate>
 
@@ -27,23 +28,22 @@
 
 - (id)initWithDataSource:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
-    self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithStyle:UITableViewStyleGrouped participants:[dataSource participants]];
+    self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithParticipants:[dataSource participants] sortType:sortType];
     self.participantTableViewController.delegate = self;
     
     self = [super initWithRootViewController:self.participantTableViewController];
     if (self) {
         
-        // Set default configuration for public properties
         [self setAllowsMultipleSelection:YES];
         [self setCellClass:[LYRUIParticipantTableViewCell class]];
         [self setRowHeight:48];
         
         self.participantTableViewController.participantCellClass = [LYRUIParticipantTableViewCell class];
+        self.participantTableViewController.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
         
         // Accessibility
         self.title = @"Participants";
         self.accessibilityLabel = @"Participants";
-    
     }
     return self;
 }

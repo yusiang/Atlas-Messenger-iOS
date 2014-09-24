@@ -18,6 +18,7 @@
 		0A27A9451997FE110070BD4F /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9441997FE110070BD4F /* back@2x.png */; };
 		0A36AABB19B91FCD0070D25A /* LYRUITestConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A36AABA19B91FCD0070D25A /* LYRUITestConversationCell.m */; };
 		0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */; };
+		0A43B1D319D34CDD00AE8FA6 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */; };
 		0A48C92919B7D2D100B536AB /* LYRUILayerContentFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A48C92819B7D2D100B536AB /* LYRUILayerContentFactory.m */; };
 		0A48C92C19B7F49900B536AB /* LYRUITestParticipantCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A48C92B19B7F49900B536AB /* LYRUITestParticipantCell.m */; };
 		0A5150F319B7871A00C6E045 /* LYRUITestInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A916B8719B77CDC00479CBD /* LYRUITestInterface.m */; };
@@ -104,6 +105,7 @@
 		0A36AAB919B91FCD0070D25A /* LYRUITestConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUITestConversationCell.h; sourceTree = "<group>"; };
 		0A36AABA19B91FCD0070D25A /* LYRUITestConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUITestConversationCell.m; sourceTree = "<group>"; };
 		0A41DFC61961D37800E1F7FA /* LSAPIManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAPIManagerTest.m; sourceTree = "<group>"; };
+		0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0A48C92719B7D2D100B536AB /* LYRUILayerContentFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUILayerContentFactory.h; sourceTree = "<group>"; };
 		0A48C92819B7D2D100B536AB /* LYRUILayerContentFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUILayerContentFactory.m; sourceTree = "<group>"; };
 		0A48C92A19B7F49900B536AB /* LYRUITestParticipantCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUITestParticipantCell.h; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 				0AADB5D01947C8800083732B /* Security.framework in Frameworks */,
 				0AADB5CE1947C87C0083732B /* QuartzCore.framework in Frameworks */,
 				0AADB5CC1947C8770083732B /* MobileCoreServices.framework in Frameworks */,
+				0A43B1D319D34CDD00AE8FA6 /* MapKit.framework in Frameworks */,
 				0AADB5CA1947C8710083732B /* libz.dylib in Frameworks */,
 				0AB0501A196E24F00029BC1B /* Crashlytics.framework in Frameworks */,
 				0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */,
@@ -252,6 +255,7 @@
 		0A0C242519477D8F00401B74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */,
 				0AB05019196E24F00029BC1B /* Crashlytics.framework */,
 				0AADB5D31947C88B0083732B /* SystemConfiguration.framework */,
 				0AADB5CF1947C8800083732B /* Security.framework */,
@@ -490,6 +494,9 @@
 							};
 							com.apple.InAppPurchase = {
 								enabled = 0;
+							};
+							com.apple.Maps.iOS = {
+								enabled = 1;
 							};
 						};
 					};

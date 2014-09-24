@@ -601,13 +601,15 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)contactsButtonTapped
 {
-    NSMutableSet *participants = [NSMutableSet new];
+    NSMutableArray *participants = [NSMutableArray new];
     for (NSString *userID in self.conversation.participants) {
-        [participants addObject:[self.dataSource conversationViewController:self participantForIdentifier:userID]];
+        id <LYRUIParticipant>participant = [self.dataSource conversationViewController:self participantForIdentifier:userID];
+        if (participant) [participants addObject:participant];
     }
-    LYRUIParticipantTableViewController *controller = [LYRUIParticipantTableViewController participantTableViewControllerWithStyle:UITableViewStylePlain participants:participants];
-    controller.participantCellClass = [LYRUIParticipantTableViewCell class];
-    [self.navigationController pushViewController:controller animated:TRUE];
+    
+    NSSet *participantSet = [NSSet setWithArray:[participants sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:NO]]]];
+    
+    // Detail View Controller Here
 }
 
 #pragma mark Notification Observer Delegate Methods

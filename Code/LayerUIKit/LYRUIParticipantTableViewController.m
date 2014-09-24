@@ -26,26 +26,28 @@
 
 NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
-+ (instancetype)participantTableViewControllerWithStyle:(UITableViewStyle)style participants:(NSSet *)participants
++ (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType
 {
-    return [[self alloc] initWithStyle:style participants:participants];
+    return [[self alloc] initWithParticipants:participants sortType:sortType];
 }
 
-- (id)initWithStyle:(UITableViewStyle)style participants:(NSSet *)participants
+- (id)initWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType
 {
-    self = [super initWithStyle:style];
+    self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         
+        self.sortType = sortType;
         self.participants = participants;
         self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
+        
+        self.rowHeight = 48;
+        self.allowsMultipleSelection = YES;
+        self.participantCellClass = [LYRUIParticipantTableViewCell class];
         
         self.title = @"Participants";
         self.accessibilityLabel = @"Participants";
         
-        self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
         self.selectedParticipants = [[NSMutableSet alloc] init];
-        
-        self.displaySelectionIndicator = YES;
         
         [self configureAppearance];
         
@@ -61,21 +63,17 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionFooterHeight = 0.0;
     
-    if (self.tableView.style == UITableViewStyleGrouped) {
-        self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-        self.searchBar.accessibilityLabel = @"Search Bar";
-        self.searchBar.delegate = self;
-        
-        self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
-        self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        self.searchController.delegate = self;
-        self.searchController.searchResultsDelegate = self;
-        self.searchController.searchResultsDataSource = self;
-        
-        self.tableView.tableHeaderView = self.searchBar;
-    }
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+    self.searchBar.accessibilityLabel = @"Search Bar";
+    self.searchBar.delegate = self;
     
-    self.filteredParticipants = self.sortedParticipants;
+    self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+    self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.searchController.delegate = self;
+    self.searchController.searchResultsDelegate = self;
+    self.searchController.searchResultsDataSource = self;
+    
+    self.tableView.tableHeaderView = self.searchBar;
     
     // Left bar button item is the text Cancel
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
@@ -89,9 +87,11 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                        style:UIBarButtonItemStyleDone
                                                                       target:self
-                                                                action:@selector(doneButtonTapped)];
+                                                                      action:@selector(doneButtonTapped)];
     doneButtonItem.accessibilityLabel = @"Done";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
+    
+    self.filteredParticipants = self.sortedParticipants;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -112,17 +112,9 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
     self.tableView.allowsMultipleSelection = allowsMultipleSelection;
 }
 
-- (void)setDisplaySelectionIndicator:(BOOL)displaySelectionIndicator
-{
-    _displaySelectionIndicator = displaySelectionIndicator;
-}
-
 - (NSDictionary *)currentDataArray
 {
-    if (self.isSearching) {
-        return self.filteredParticipants;
-    }
-    return self.sortedParticipants;
+    return self.filteredParticipants;
 }
 
 - (BOOL)isSearching
@@ -159,58 +151,34 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (tableView.style == UITableViewStyleGrouped) {
-        return [[[self currentDataArray] allKeys] count];
-    } else {
-        return 1;
-    }
-    return 0;
+    return [[[self currentDataArray] allKeys] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (tableView.style == UITableViewStyleGrouped) {
-        NSString *key = [[self sortedContactKeys] objectAtIndex:section];
-        return [[[self currentDataArray] objectForKey:key] count];
-    } else {
-        return self.participants.count;
-    }
-    return 0;
+    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
+    return [[[self currentDataArray] objectForKey:key] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    id<LYRUIParticipant> participant;
-    if (tableView.style == UITableViewStyleGrouped) {
-        NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
-        participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
-    } else {
-        participant = [[self.participants allObjects] objectAtIndex:indexPath.row];
-    }
-    
+    NSString *key = [[self sortedContactKeys] objectAtIndex:indexPath.section];
+    id<LYRUIParticipant> participant = [[[self currentDataArray] objectForKey:key] objectAtIndex:indexPath.row];
+
     UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRParticipantCellIdentifier];
-    
     [participantCell presentParticipant:participant];
     return participantCell;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if (self.tableView.style == UITableViewStyleGrouped) {
-        NSString *key = [[self sortedContactKeys] objectAtIndex:section];
-        return [[LYRUIPaticipantSectionHeaderView alloc] initWithKey:key];
-    } else {
-        return nil;
-    }
+    NSString *key = [[self sortedContactKeys] objectAtIndex:section];
+    return [[LYRUIPaticipantSectionHeaderView alloc] initWithKey:key];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if (self.tableView.style == UITableViewStyleGrouped) {
-        return 40;
-    } else {
-        return 0;
-    }
+    return 40;
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath

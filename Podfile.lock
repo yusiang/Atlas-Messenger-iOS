@@ -6,11 +6,7 @@ PODS:
   - KIF/XCTest (3.0.8)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-<<<<<<< HEAD
-  - LayerKit (0.7.22-rc1)
-=======
-  - LayerKit (0.7.21-rc1)
->>>>>>> 8a618447e59533431b4a3d63e6bc81a2e75ceac8
+  - LayerKit (0.7.21)
   - LayerUIKit (0.1.0)
   - LYRCountDownLatch (0.9.0)
   - OCMock (3.1.1)
@@ -21,23 +17,13 @@ DEPENDENCIES:
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0)
   - KIFViewControllerActions (~> 1.0)
-<<<<<<< HEAD
-  - LayerKit (from `~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.7.22-rc1`)
-=======
-  - LayerKit (from `~/Dropbox/Layer/Builds/iOS/LayerKit-0.7.21-rc1`)
->>>>>>> 8a618447e59533431b4a3d63e6bc81a2e75ceac8
+  - LayerKit
   - LayerUIKit (from `.`)
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - OCMock (~> 3.1)
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
-  LayerKit:
-<<<<<<< HEAD
-    :path: ~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.7.22-rc1
-=======
-    :path: ~/Dropbox/Layer/Builds/iOS/LayerKit-0.7.21-rc1
->>>>>>> 8a618447e59533431b4a3d63e6bc81a2e75ceac8
   LayerUIKit:
     :path: .
   LYRCountDownLatch:
@@ -48,11 +34,7 @@ SPEC CHECKSUMS:
   HockeySDK: f0e874d1c6833163ee0c4e423606faf33ad04071
   KIF: 2db5e8cf59136dd1267d49cca0d55883389b09d3
   KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
-<<<<<<< HEAD
-  LayerKit: 317cce710465622fc39ad3b5b8a4c213a316add1
-=======
-  LayerKit: 3f7f771ab7a746d2a4cb008704565554fb101564
->>>>>>> 8a618447e59533431b4a3d63e6bc81a2e75ceac8
+  LayerKit: bd567c078156958333e7d7c40ba6601316994016
   LayerUIKit: 12fd8d7156b2f084b695a637c585de42a091b456
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854

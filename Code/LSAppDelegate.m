@@ -41,7 +41,6 @@ extern void LYRSetLogLevelFromEnvironment();
         NSLog(@"app did not recieve notification");
     }
    
-    
     // Set LayerKit log level
     LYRSetLogLevelFromEnvironment();
     
@@ -278,6 +277,14 @@ extern void LYRSetLogLevelFromEnvironment();
 
 }
 
+
+- (void)Auth
+{
+
+
+  
+    
+    }
 
 
 @end
