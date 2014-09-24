@@ -143,7 +143,7 @@
                                   delegate:self
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:[NSString stringWithFormat:@"Logout - %@", user], @"Reload Contacts", nil];
+                                  otherButtonTitles:[NSString stringWithFormat:@"Logout - %@", user], @"Reload Contacts", @"Copy Device Token", nil];
     
     [actionSheet showInView:self.view];
 }
@@ -168,6 +168,16 @@
             break;
         case 1:
             [[NSNotificationCenter defaultCenter] postNotificationName:@"loadContacts" object:nil];
+            break;
+        case 2: {
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            if (self.applicationController.deviceToken) {
+                pasteboard.string = [self.applicationController.deviceToken description];
+                [SVProgressHUD showSuccessWithStatus:@"Copied"];
+            } else {
+                [SVProgressHUD showErrorWithStatus:@"No Device Token Available"];
+            }
+        }
             break;
         default:
             break;
