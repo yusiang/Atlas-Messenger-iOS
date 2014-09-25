@@ -148,6 +148,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         [participants removeObject:self.layerClient.authenticatedUserID];
         id<LYRUIParticipant> participant = [self.dataSource conversationViewController:self participantForIdentifier:[[participants allObjects] lastObject]];
         self.title = participant.firstName;
+    } else {
+        self.title = @"Group";
     }
     [self scrollToBottomOfCollectionViewAnimated:NO];
 }
@@ -390,6 +392,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     } else if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
         UIImage *image = [UIImage imageWithData:part.data];
         size = LYRUIImageSize(image);
+    } else {
+        size = CGSizeMake(320, 10);
     }
     return size;
 }
@@ -473,7 +477,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)sendMessageWithText:(NSString *)text
 {
-    LYRMessagePart *part = [LYRMessagePart messagePartWithText:text];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:@"text/plain" data:[text dataUsingEncoding:NSUTF8StringEncoding]];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self sendMessage:message pushText:text];
 }
@@ -684,10 +688,10 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)configureMessageBubbleAppearance
 {
     [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
-    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(14)];
+    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(16)];
     
     [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
-    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(14)];
+    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(16)];
 }
 
 @end

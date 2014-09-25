@@ -42,7 +42,7 @@ static NSDateFormatter *dateFormatter;
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
     NSArray *recipients = [recipientStatus allKeys];
-    NSInteger status = [[recipientStatus valueForKey:[recipients firstObject]] integerValue];
+    NSInteger status = [[recipientStatus valueForKey:[recipients lastObject]] integerValue];
     switch (status) {
         case LYRRecipientStatusInvalid:
             return @"Message Not Sent";
