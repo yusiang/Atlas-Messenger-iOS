@@ -16,6 +16,7 @@
 #import <HockeySDK/HockeySDK.h>
 #import "LSKeychainUtilities.h"
 #import "LSAuthenticationTableViewController.h"
+#import "LSSplashView.h"
 
 extern void LYRSetLogLevelFromEnvironment();
 
@@ -23,6 +24,7 @@ extern void LYRSetLogLevelFromEnvironment();
 
 @property (nonatomic) UINavigationController *navigationController;
 @property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
+@property (nonatomic) LSSplashView *splashView;
 
 @end
 
@@ -88,6 +90,8 @@ extern void LYRSetLogLevelFromEnvironment();
                 [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
                     NSLog(@"Encountered error while resuming session but Layer client is authenticated. Deauthenticating client...");
                 }];
+            } else {
+                [self removeSplashView];
             }
         }
     }];
@@ -102,6 +106,9 @@ extern void LYRSetLogLevelFromEnvironment();
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
+    
+    self.splashView = [[LSSplashView alloc] initWithFrame:self.window.bounds];
+    [self.window addSubview:self.splashView];
     
     // Update the app ID and configuration URL in the crash metadata.
     [Crashlytics setObjectValue:LSLayerConfigurationURL(environment) forKey:@"ConfigurationURL"];
@@ -262,8 +269,19 @@ extern void LYRSetLogLevelFromEnvironment();
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [self.navigationController presentViewController:conversationController animated:YES completion:^{
         [self.authenticationViewController resetState];
+        [self removeSplashView];
     }];
     
+}
+
+- (void)removeSplashView
+{
+    [UIView animateWithDuration:0.5 animations:^{
+        self.splashView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [self.splashView removeFromSuperview];
+        self.splashView = nil;
+    }];
 }
 
 - (void)configureGlobalUserInterfaceAttributes
@@ -276,15 +294,5 @@ extern void LYRSetLogLevelFromEnvironment();
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LSBlueColor()];
 
 }
-
-
-- (void)Auth
-{
-
-
-  
-    
-    }
-
 
 @end

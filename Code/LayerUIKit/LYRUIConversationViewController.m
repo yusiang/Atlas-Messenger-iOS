@@ -78,7 +78,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         NSAssert(layerClient, @"`Layer Client` cannot be nil");
         NSAssert(conversation, @"`Conversation` cannont be nil");
         
-        self.title = @"Conversation";
         self.accessibilityLabel = @"Conversation";
         
         self.conversation = conversation;
@@ -143,6 +142,13 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if (self.conversation.participants.count == 2) {
+        NSMutableSet *participants = [self.conversation.participants mutableCopy];
+        [participants removeObject:self.layerClient.authenticatedUserID];
+        id<LYRUIParticipant> participant = [self.dataSource conversationViewController:self participantForIdentifier:[[participants allObjects] lastObject]];
+        self.title = participant.firstName;
+    }
     [self scrollToBottomOfCollectionViewAnimated:NO];
 }
 
@@ -634,29 +640,29 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
                 break;
         }
     }
-    //    [self.collectionView performBatchUpdates:^{
-    //        for (LYRUIDataSourceChange *change in changes) {
-    //            switch (change.type) {
-    //                case LYRUIDataSourceChangeTypeInsert:
-    //                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-    //                    break;
-    //                case LYRUIDataSourceChangeTypeMove:
-    ////                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
-    ////                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-    //                    break;
-    //                case LYRUIDataSourceChangeTypeUpdate:
-    //                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-    //                    break;
-    //                case LYRUIDataSourceChangeTypeDelete:
-    //                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-    //                    break;
-    //                default:
-    //                    break;
-    //            }
-    //        }
-    //    } completion:^(BOOL finished) {
-    //        [self scrollToBottomOfCollectionViewAnimated:TRUE];
-    //    }];
+//    [self.collectionView performBatchUpdates:^{
+//        for (LYRUIDataSourceChange *change in changes) {
+//            switch (change.type) {
+//                case LYRUIDataSourceChangeTypeInsert:
+//                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                case LYRUIDataSourceChangeTypeMove:
+////                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
+////                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                case LYRUIDataSourceChangeTypeUpdate:
+//                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                case LYRUIDataSourceChangeTypeDelete:
+//                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    } completion:^(BOOL finished) {
+//        [self scrollToBottomOfCollectionViewAnimated:TRUE];
+//    }];
 }
 
 - (void)observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer

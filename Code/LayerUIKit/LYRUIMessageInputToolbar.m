@@ -79,7 +79,6 @@ static CGFloat const LSButtonHeight = 28;
         [self setupLayoutConstraints];
         
         self.keyboardIsOnScreen = NO;
-        [self fireUpLoacation];
     }
     
     return self;
@@ -118,7 +117,6 @@ static CGFloat const LSButtonHeight = 28;
     options.scale = [UIScreen mainScreen].scale;
     options.size = CGSizeMake(200, 200);
     
-    __block CLLocationCoordinate2D coordinate = location.coordinate;
     MKMapSnapshotter *snapshotter = [[MKMapSnapshotter alloc] initWithOptions:options];
     [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
        

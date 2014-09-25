@@ -80,10 +80,10 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsDataSource = self;
     
-    self.tableView.tableHeaderView = self.searchBar;
+    //self.tableView.tableHeaderView = self.searchBar;
     self.tableView.accessibilityLabel = @"Conversation List";
     
-    [self.tableView setContentOffset:CGPointMake(0, 44)];
+    //[self.tableView setContentOffset:CGPointMake(0, 44)];
     
     [self configureTableViewCellAppearance];
 }
