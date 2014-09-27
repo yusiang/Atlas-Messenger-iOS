@@ -132,10 +132,11 @@
 
 + (NSString *)layerServerHostname
 {
-    NSString *configURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
-    NSURL *URL = [NSURL URLWithString:configURLString];
-    NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
-    return URLComponents.host;
+//    NSString *configURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+//    NSURL *URL = [NSURL URLWithString:configURLString];
+//    NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
+//    return URLComponents.host;
+    return @"NA3";
 }
 
 @end
