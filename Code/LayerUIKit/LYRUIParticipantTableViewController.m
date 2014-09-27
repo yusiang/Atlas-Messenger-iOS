@@ -27,22 +27,15 @@
 
 static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
-+ (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType
+- (id)initWithStyle:(UITableViewStyle)style
 {
-    return [[self alloc] initWithParticipants:participants sortType:sortType];
-}
-
-- (id)initWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType
-{
-    self = [super initWithStyle:UITableViewStyleGrouped];
+    self = [super initWithStyle:style];
     if (self) {
-        _sortType = sortType;
-        _participants = participants;
-        _sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
-         _selectedParticipants = [[NSMutableSet alloc] init];
+        _sortType = LYRUIParticipantPickerControllerSortTypeFirst;
         _rowHeight = 48;
         _allowsMultipleSelection = YES;
         _participantCellClass = [LYRUIParticipantTableViewCell class];
+        _selectedParticipants = [[NSMutableSet alloc] init];
         [self configureAppearance];
     }
     return self;
@@ -65,7 +58,7 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
     self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsDataSource = self;
     self.tableView.tableHeaderView = self.searchBar;
-    
+
     // Left bar button item is the text Cancel
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                          style:UIBarButtonItemStylePlain
@@ -93,6 +86,14 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
     [self.searchController.searchResultsTableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
 }
 
+- (void)setParticipants:(NSSet *)participants
+{
+    if (_participants != participants) {
+        _participants = participants;
+        _sortedParticipants = [self sortAndGroupContactListByAlphabet:participants];
+    }
+}
+
 #pragma mark public Boolean configurations
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
 {
@@ -102,7 +103,11 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
 
 - (NSDictionary *)currentDataArray
 {
-    return self.filteredParticipants;
+    if (self.isSearching) {
+        return self.filteredParticipants;
+    } else {
+        return self.sortedParticipants;
+    }
 }
 
 - (BOOL)isSearching
@@ -221,11 +226,9 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
 
 - (NSArray *)sortedContactKeys
 {
-    if (!_sortedContactKeys) {
-        NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[[self currentDataArray] allKeys]];
-        [mutableKeys sortUsingSelector:@selector(compare:)];
-        _sortedContactKeys = mutableKeys;
-    }
+    NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[[self currentDataArray] allKeys]];
+    [mutableKeys sortUsingSelector:@selector(compare:)];
+    _sortedContactKeys = mutableKeys;
     return _sortedContactKeys;
 }
 
@@ -261,7 +264,6 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
             default:
                 break;
         }
-        
         NSString *firstLetter = [[sortName substringToIndex:1] uppercaseString];
         NSMutableArray *letterList = [dict objectForKey:firstLetter];
         if (!letterList) {

@@ -11,12 +11,10 @@
 
 @interface LYRUIConversationCollectionViewHeader ()
 
-@property (nonatomic, strong) NSLayoutConstraint *dateLabelHeightConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *dateLabelWidthConstraint;
-
-@property (nonatomic, strong) NSLayoutConstraint *participantLabelHeightConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *participantLabelWidthConstraint;
-
+@property (nonatomic) NSLayoutConstraint *dateLabelHeightConstraint;
+@property (nonatomic) NSLayoutConstraint *dateLabelWidthConstraint;
+@property (nonatomic) NSLayoutConstraint *participantLabelHeightConstraint;
+@property (nonatomic) NSLayoutConstraint *participantLabelWidthConstraint;
 @property (nonatomic) UILabel *dateLabel;
 @property (nonatomic) UILabel *participantLabel;
 

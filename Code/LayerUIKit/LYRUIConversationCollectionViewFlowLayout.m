@@ -11,11 +11,11 @@
 @interface LYRUIConversationCollectionViewFlowLayout ()
 
 /// The dynamic animator used to animate the collection's bounce
-@property (nonatomic, strong, readwrite) UIDynamicAnimator *dynamicAnimator;
+@property (nonatomic, readwrite) UIDynamicAnimator *dynamicAnimator;
 
 // Needed for tiling
-@property (nonatomic, strong) NSMutableSet *visibleIndexPathsSet;
-@property (nonatomic, strong) NSMutableSet *visibleHeaderAndFooterSet;
+@property (nonatomic) NSMutableSet *visibleIndexPathsSet;
+@property (nonatomic) NSMutableSet *visibleHeaderAndFooterSet;
 @property (nonatomic, assign) CGFloat latestDelta;
 @property (nonatomic, assign) UIInterfaceOrientation interfaceOrientation;
 

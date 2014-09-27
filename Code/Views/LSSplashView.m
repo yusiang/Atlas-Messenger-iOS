@@ -8,6 +8,12 @@
 
 #import "LSSplashView.h"
 
+@interface LSSplashView ()
+
+@property (nonatomic) UIImageView *logoImageView;
+@property (nonatomic) UIActivityIndicatorView *spinner;
+@end
+
 @implementation LSSplashView
 
 - (id)initWithFrame:(CGRect)frame
@@ -15,17 +21,29 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-        UIImageView *logoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
-        logoImage.center = CGPointMake(self.center.x, 200);
-        logoImage.alpha = 0.10;
-        [self addSubview:logoImage];
-        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] init];
-        spinner.center = self.center;
-        spinner.color = [UIColor blackColor];
-        [spinner startAnimating];
-        [self addSubview:spinner];
+        
+        self.logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
+        self.logoImageView.center = self.center;
+        self.logoImageView.alpha = 0.10;
+        [self addSubview:self.logoImageView];
+       
+        self.spinner = [[UIActivityIndicatorView alloc] init];
+        self.spinner.center = CGPointMake(self.center.x, self.center.y + 60);
+        self.spinner.color = [UIColor blackColor];
+        [self.spinner startAnimating];
+        [self addSubview:self.spinner];
     }
     return self;
+}
+
+- (void)animateLogoWithCompletion:(void(^)(void))completionBlock
+{
+    self.spinner.alpha = 0.0;
+    [UIView animateWithDuration:1.0f delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.logoImageView.center = CGPointMake(self.center.x, self.center.y - 164);
+    } completion:^(BOOL finished) {
+        completionBlock();
+    }];
 }
 
 @end

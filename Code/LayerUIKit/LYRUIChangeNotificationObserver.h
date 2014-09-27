@@ -27,6 +27,6 @@
 
 @property (nonatomic, weak) id<LYRUIChangeNotificationObserverDelegate>delegate;
 
-@property (nonatomic, strong) LYRClient *layerClient;
+@property (nonatomic) LYRClient *layerClient;
 
 @end

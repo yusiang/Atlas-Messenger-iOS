@@ -75,14 +75,20 @@ extern void LYRSetLogLevelFromEnvironment();
                 NSLog(@"Session resumed: %@", session);
                 [self loadContacts];
                 [self presentConversationsListViewController];
-                
+                [self removeSplashView];
                 // If we have an authenticated user ID and no session, we must log out
             } else if (wController.layerClient.authenticatedUserID){
                 [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
                     NSLog(@"Encountered error while resuming session but Layer client is authenticated. Deauthenticating client...");
+                    [self.splashView animateLogoWithCompletion:^{
+                        [self removeSplashView];
+                    }];
+                    
                 }];
             } else {
-                [self removeSplashView];
+                [self.splashView animateLogoWithCompletion:^{
+                    [self removeSplashView];
+                }];
             }
         }
     }];
@@ -275,7 +281,7 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     [[UINavigationBar appearance] setTintColor:LSBlueColor()];
     [[UINavigationBar appearance] setBarTintColor:LSLighGrayColor()];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:14]}];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:16]}];
     
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LSBlueColor()];

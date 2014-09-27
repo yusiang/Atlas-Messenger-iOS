@@ -11,7 +11,7 @@
 
 @interface LYRUIMessageNotificationObserver ()
 
-@property (nonatomic, strong) LYRConversation *conversation;
+@property (nonatomic) LYRConversation *conversation;
 
 @end
 

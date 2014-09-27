@@ -40,6 +40,11 @@
 @interface LYRUIMessageInputToolbar : UIToolbar
 
 /**
+ @abstract Designated initialzer.
+ */
++ (instancetype)inputToolBarWithViewController:(UIViewController<LYRUIMessageInputToolbarDelegate> *)collectionViewController;
+
+/**
  @abstract Displays an image in the textInputView.
  @discussion The view will automatically resize the image and itself to comfortably
  fit the image content. The image will also be cached and is accessible via the messageContentParts
@@ -78,28 +83,28 @@
  @abstract The left accessory button for the view. 
  @discussion By default, the button displays a camera icon
  */
-@property (nonatomic, strong) UIButton *leftAccessoryButton;
+@property (nonatomic) UIButton *leftAccessoryButton;
 
 /**
  @abstract The right accessory button for the view.
  @discussion By default, the button displays the text "SEND"
  */
-@property (nonatomic, strong) UIButton *rightAccessoryButton;
+@property (nonatomic) UIButton *rightAccessoryButton;
 
 /**
  @abstract An automatically resizing message composisiton field
  */
-@property (nonatomic, strong) LYRUIMessageComposeTextView *textInputView;
+@property (nonatomic) LYRUIMessageComposeTextView *textInputView;
 
 /**
  @abstract The delegate object for the view
  */
-@property (nonatomic, weak) id<LYRUIMessageInputToolbarDelegate>delegate;
+@property (nonatomic, weak) id<LYRUIMessageInputToolbarDelegate>inputToolBarDelegate;
 
 /**
  @abstract An array of all content parts displayed in the view. 
  @discussion Any existing objects will be removed when the right accessory button is tapped
  */
-@property (nonatomic) NSMutableArray *messageContentParts;
+@property (nonatomic) NSMutableArray *messageParts;
 
 @end

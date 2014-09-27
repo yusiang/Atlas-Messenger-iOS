@@ -12,7 +12,7 @@
 
 @interface LYRUIParticipantTableViewCell ()
 
-@property (nonatomic, strong) UIControl *selectionIndicator;
+@property (nonatomic) UIControl *selectionIndicator;
 @property (nonatomic) BOOL isSelected;
 
 @end

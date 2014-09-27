@@ -14,13 +14,13 @@
 
 @interface LYRUIConversationListViewController () <UISearchBarDelegate, UISearchDisplayDelegate, LYRUIChangeNotificationObserverDelegate>
 
-@property (nonatomic, strong) UISearchBar *searchBar;
-@property (nonatomic, strong) UISearchDisplayController *searchController;
-@property (nonatomic, strong) NSArray *conversations;
-@property (nonatomic, strong) NSMutableArray *filteredConversations;
-@property (nonatomic, strong) NSPredicate *searchPredicate;
-@property (nonatomic, strong) LYRClient *layerClient;
-@property (nonatomic, strong) LYRUIConversationNotificationObserver *conversationsNotificationObserver;
+@property (nonatomic) UISearchBar *searchBar;
+@property (nonatomic) UISearchDisplayController *searchController;
+@property (nonatomic) NSArray *conversations;
+@property (nonatomic) NSMutableArray *filteredConversations;
+@property (nonatomic) NSPredicate *searchPredicate;
+@property (nonatomic) LYRClient *layerClient;
+@property (nonatomic) LYRUIConversationNotificationObserver *conversationsNotificationObserver;
 @property (nonatomic) BOOL isOnScreen;
 
 @end
@@ -319,7 +319,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void)configureTableViewCellAppearance
 {
-    [[LYRUIConversationTableViewCell appearance] setConversationLabelFont:[UIFont boldSystemFontOfSize:12]];
+    [[LYRUIConversationTableViewCell appearance] setConversationLabelFont:[UIFont boldSystemFontOfSize:14]];
     [[LYRUIConversationTableViewCell appearance] setConversationLableColor:[UIColor blackColor]];
     [[LYRUIConversationTableViewCell appearance] setLastMessageTextFont:[UIFont systemFontOfSize:12]];
     [[LYRUIConversationTableViewCell appearance] setLastMessageTextColor:[UIColor grayColor]];

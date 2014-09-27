@@ -11,9 +11,8 @@
 
 @interface LYRUIConversationNotificationObserver ()
 
-@property (nonatomic, strong) NSArray *conversations;
-
-@property (nonatomic, strong) NSArray *tempIdentifiers;
+@property (nonatomic) NSArray *conversations;
+@property (nonatomic) NSArray *tempIdentifiers;
 
 @end
 

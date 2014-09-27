@@ -11,9 +11,9 @@
 
 @interface LYRUIParticipantPickerController () <LYRUIParticipantTableViewControllerDelegate>
 
-@property (nonatomic, strong) NSSet *participants;
-@property (nonatomic, strong) NSDictionary *sortedParticipants;
-@property (nonatomic, strong) LYRUIParticipantTableViewController *participantTableViewController;
+@property (nonatomic) NSSet *participants;
+@property (nonatomic) NSDictionary *sortedParticipants;
+@property (nonatomic) LYRUIParticipantTableViewController *participantTableViewController;
 @property (nonatomic) BOOL isOnScreen;
 
 @end
@@ -28,13 +28,12 @@
 
 - (id)initWithDataSource:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
-    self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithParticipants:[dataSource participants] sortType:sortType];
-    self.participantTableViewController.delegate = self;
-    self = [super initWithRootViewController:self.participantTableViewController];
+    LYRUIParticipantTableViewController *controller = [[LYRUIParticipantTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    self = [super initWithRootViewController:controller];
     if (self) {
-        self.allowsMultipleSelection = YES;
-        self.cellClass = [LYRUIParticipantTableViewCell class];
-        self.rowHeight = 48;
+        controller.participants = [dataSource participants];
+        controller.delegate = self;
+        _dataSource = dataSource;
     }
     return self;
 }
@@ -49,7 +48,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.participantTableViewController.participantCellClass = [LYRUIParticipantTableViewCell class];
+    self.allowsMultipleSelection = YES;
+    self.cellClass = [LYRUIParticipantTableViewCell class];
+    self.rowHeight = 48;
+    self.participantTableViewController.participantCellClass = self.cellClass;
     self.participantTableViewController.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
     self.title = @"Participants";
     self.accessibilityLabel = @"Participants";

@@ -31,8 +31,8 @@
 
 @interface LYRUIConversationListTest : XCTestCase
 
-@property (nonatomic, strong) LYRUITestInterface *testInterface;
-@property (nonatomic, strong) LYRUILayerContentFactory *layerContentFactory;
+@property (nonatomic) LYRUITestInterface *testInterface;
+@property (nonatomic) LYRUILayerContentFactory *layerContentFactory;
 
 @end
 

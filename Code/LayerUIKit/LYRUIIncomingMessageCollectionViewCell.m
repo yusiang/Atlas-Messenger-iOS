@@ -10,8 +10,8 @@
 
 @interface LYRUIIncomingMessageCollectionViewCell ()
 
-@property (nonatomic, strong) UIFont *font;
-@property (nonatomic, strong) UIColor *color;
+@property (nonatomic) UIFont *font;
+@property (nonatomic) UIColor *color;
 
 @end
 

@@ -51,4 +51,9 @@
     });
 }
 
+- (NSSet *)participants
+{
+    return [self.persistenceManager persistedUsersWithError:nil];
+}
+
 @end

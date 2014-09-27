@@ -23,13 +23,13 @@
 
 @interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
 
-@property (nonatomic, strong) LYRClient *layerClient;
-@property (nonatomic, strong) LYRConversation *conversation;
-@property (nonatomic, strong) NSOrderedSet *messages;
-@property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) LYRUIMessageInputToolbar *messageInputToolbar;
-@property (nonatomic, strong) LYRUIMessageNotificationObserver *messageNotificationObserver;
-@property (nonatomic, strong) dispatch_queue_t messageSendQueue;
+@property (nonatomic) LYRClient *layerClient;
+@property (nonatomic) LYRConversation *conversation;
+@property (nonatomic) NSOrderedSet *messages;
+@property (nonatomic) UICollectionView *collectionView;
+@property (nonatomic) LYRUIMessageInputToolbar *messageInputToolbar;
+@property (nonatomic) LYRUIMessageNotificationObserver *messageNotificationObserver;
+@property (nonatomic) dispatch_queue_t messageSendQueue;
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) UIView *inputAccessoryView;
@@ -96,7 +96,9 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     // Setup Layer Change notification observer
     self.messageNotificationObserver = [[LYRUIMessageNotificationObserver alloc] initWithClient:self.layerClient conversation:self.conversation];
     self.messageNotificationObserver.delegate = self;
-
+    
+    self.messageInputToolbar = [LYRUIMessageInputToolbar inputToolBarWithViewController:self];
+    
     // Configure defualt cell appearance
     [self configureMessageBubbleAppearance];
     
@@ -106,12 +108,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (UIView *)inputAccessoryView
 {
     if (!_inputAccessoryView) {
-        self.messageInputToolbar = [[LYRUIMessageInputToolbar alloc] init];
+        _inputAccessoryView = self.messageInputToolbar;
     }
-    CGSize size = [self.messageInputToolbar systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-    self.messageInputToolbar.delegate = self;
-    self.messageInputToolbar.frame = CGRectMake(0, 0, size.width, size.height);
-    _inputAccessoryView = self.messageInputToolbar;
     return _inputAccessoryView;
 }
 
@@ -348,7 +346,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (BOOL)shouldDisplayReadReceiptForSection:(NSUInteger)section
 {
     LYRMessage *message = [self.messages objectAtIndex:section];
-    if (section == self.messages.count - 1 && message.sentByUserID == self.layerClient.authenticatedUserID) {
+    if ((section == self.messages.count - 1) && [message.sentByUserID isEqualToString:self.layerClient.authenticatedUserID]) {
         return YES;
     }
     return NO;
@@ -406,8 +404,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)messageInputToolbar:(LYRUIMessageInputToolbar *)messageInputToolbar didTapRightAccessoryButton:(UIButton *)rightAccessoryButton
 {
-    if (messageInputToolbar.messageContentParts.count > 0) {
-        [self sendMessageWithContentParts:messageInputToolbar.messageContentParts];
+    if (messageInputToolbar.messageParts.count > 0) {
+        [self sendMessageWithParts:messageInputToolbar.messageParts];
     } else if (messageInputToolbar.textInputView.text.length > 0) {
         [self sendMessageWithText:messageInputToolbar.textInputView.text];
     }
@@ -426,9 +424,9 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 #pragma mark Message Sent Methods
 
-- (void)sendMessageWithContentParts:(NSMutableArray *)messageContentParts
+- (void)sendMessageWithParts:(NSMutableArray *)messageParts
 {
-    for (id object in messageContentParts){
+    for (id object in messageParts){
         if ([object isKindOfClass:[UIImage class]]) {
             [self sendMessageWithImage:object];
         }
@@ -440,7 +438,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)sendMessageWithText:(NSString *)text
 {
-    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:@"text/plain" data:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    NSString *trimmedString = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:@"text/plain" data:[trimmedString dataUsingEncoding:NSUTF8StringEncoding]];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self addObserver:message forKeyPath:@"isSent" options:NSKeyValueObservingOptionNew context:NULL];
     [self sendMessage:message pushText:text];

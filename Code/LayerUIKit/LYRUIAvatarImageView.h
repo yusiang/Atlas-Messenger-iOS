@@ -10,6 +10,6 @@
 
 @interface LYRUIAvatarImageView : UIImageView
 
-@property (nonatomic, strong) NSString *senderName;
+@property (nonatomic) NSString *senderName;
 
 @end

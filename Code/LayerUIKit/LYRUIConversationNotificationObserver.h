@@ -14,6 +14,6 @@
 
 - (instancetype)initWithLayerClient:(LYRClient *)layerClient conversations:(NSArray *)conversations;
 
-@property (nonatomic, strong) NSArray *conversationIdentifiers;
+@property (nonatomic) NSArray *conversationIdentifiers;
 
 @end

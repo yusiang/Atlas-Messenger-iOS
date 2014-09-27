@@ -57,8 +57,6 @@ typedef enum : NSUInteger {
  */
 @interface LYRUIParticipantTableViewController : UITableViewController
 
-+ (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType;
-
 /**
  @abstract The table view cell class for customizing the display of participants.
  @default `[LYRUIParticipantTableViewCell class]`
@@ -74,7 +72,7 @@ typedef enum : NSUInteger {
 /**
  @abstract A dictionary containing a set of dictionaries each cooresponding to a unique letter in the alphabet
  */
-@property (nonatomic, strong) NSSet *participants;
+@property (nonatomic) NSSet *participants;
 
 /**
  @abstract Defines the sort ordering of the participant list. If set, the view controller will sort and group
@@ -88,7 +86,7 @@ typedef enum : NSUInteger {
  @default `LYRUISelectionIndicator`
  @raises NSInternalInconsistencyException Raised if the value is mutated after the receiver has been presented.
  */
-@property (nonatomic, strong) UIControl *selectionIndicator;
+@property (nonatomic) UIControl *selectionIndicator;
 
 /**
  @abstract Sets the height for cells within the receiver.

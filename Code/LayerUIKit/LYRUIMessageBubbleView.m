@@ -35,7 +35,7 @@
         self.bubbleTextView.scrollEnabled = NO;
         self.bubbleTextView.userInteractionEnabled = NO;
         self.bubbleTextView.translatesAutoresizingMaskIntoConstraints = NO;
-        self.bubbleTextView.textContainerInset = UIEdgeInsetsMake(6, 4, 0, 0);
+        self.bubbleTextView.textContainerInset = UIEdgeInsetsMake(8, 4, 0, 0);
         [self addSubview:self.bubbleTextView];
         [self updateConstraintsForContentView:self.bubbleTextView];
         self.bubbleImageView = [[UIImageView alloc] init];
@@ -80,8 +80,12 @@
 
 - (void)updateBubbleViewWithFont:(UIFont *)font color:(UIColor *)color
 {
-    self.font = font;
-    self.color = color;
+    if (self.font != font) {
+       self.font = font;
+    }
+    if (self.color != color) {
+        self.color = color;
+    }
 }
 
 - (void)layoutSubviews

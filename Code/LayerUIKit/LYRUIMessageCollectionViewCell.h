@@ -33,6 +33,6 @@
 /**
  @abstract The optional avatar image view representing a user
  */
-@property (nonatomic, strong) UIImageView *avatarImage;
+@property (nonatomic) UIImageView *avatarImage;
 
 @end

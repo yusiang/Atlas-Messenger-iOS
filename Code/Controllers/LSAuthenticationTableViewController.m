@@ -22,7 +22,7 @@
 @property (nonatomic) UITextField *confirmation;
 
 @property (nonatomic) LSAuthenticationState authenticationState;
-@property (nonatomic, strong) LSAuthenticationTableViewHeader *tableViewHeader;
+@property (nonatomic) LSAuthenticationTableViewHeader *tableViewHeader;
 @property (nonatomic, copy) void (^completionBlock)(NSString *authenticatedUserID);
 @property (nonatomic) BOOL isEditing;
 

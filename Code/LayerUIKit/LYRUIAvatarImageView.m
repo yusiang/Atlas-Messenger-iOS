@@ -11,7 +11,7 @@
 
 @interface LYRUIAvatarImageView ()
 
-@property (nonatomic, strong) UILabel *initialsLabel;
+@property (nonatomic) UILabel *initialsLabel;
 
 @end
 

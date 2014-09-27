@@ -28,8 +28,8 @@
 @property (nonatomic, assign) CGFloat scrollResistanceFactor;
 
 /// The dynamic animator used to animate the collection's bounce
-@property (nonatomic, strong, readonly) UIDynamicAnimator *dynamicAnimator;
+@property (nonatomic, readonly) UIDynamicAnimator *dynamicAnimator;
 
-@property (nonatomic, strong) NSOrderedSet *messages;
+@property (nonatomic) NSOrderedSet *messages;
 
 @end

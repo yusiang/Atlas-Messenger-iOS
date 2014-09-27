@@ -47,6 +47,6 @@
 
 - (NSString *)selectionIndicatorAccessibilityLabelForUser:(LSUser *)testUser;
 
-@property (nonatomic, strong) LSApplicationController *applicationController;
+@property (nonatomic) LSApplicationController *applicationController;
 
 @end

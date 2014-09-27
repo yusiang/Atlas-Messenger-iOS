@@ -14,8 +14,8 @@
 
 @interface LYRUIMessageInputToolbar () <UITextViewDelegate, CLLocationManagerDelegate>
 
-@property (nonatomic, strong) CLLocationManager *locationManager;
-@property (nonatomic, strong) NSLayoutConstraint *textViewHeightConstraint;
+@property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) NSLayoutConstraint *textViewHeightConstraint;
 
 @end
 
@@ -23,21 +23,29 @@
 
 // Compose View Margin Constants
 static CGFloat const LSComposeviewHorizontalMargin = 6;
-static CGFloat const LSComposeviewVerticalMargin = 6;
+static CGFloat const LSComposeviewVerticalMargin = 8;
 
 // Compose View Button Constants
 static CGFloat const LSLeftAccessoryButtonWidth = 40;
 static CGFloat const LSRightAccessoryButtonWidth = 46;
 static CGFloat const LSButtonHeight = 28;
 
-- (id)init
++ (instancetype)inputToolBarWithViewController:(UIViewController<LYRUIMessageInputToolbarDelegate> *)viewController
+{
+    return [[self alloc] initWithViewController:viewController];
+}
+
+- (id)initWithViewController:(UIViewController<LYRUIMessageInputToolbarDelegate>*)viewController
 {
     self = [super init];
     if (self) {
+        
+        self.inputToolBarDelegate = viewController;
+        
         self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         // Setup
         self.backgroundColor =  LSLighGrayColor();
-        self.messageContentParts = [[NSMutableArray alloc] init];
+        self.messageParts = [[NSMutableArray alloc] init];
 
         // Initialize the Camera Button
         self.leftAccessoryButton = [[UIButton alloc] init];
@@ -84,7 +92,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)insertImage:(UIImage *)image
 {
-    [self.messageContentParts addObject:image];
+    [self.messageParts addObject:image];
     [self.rightAccessoryButton setHighlighted:TRUE];
     [self.textInputView insertImage:image];
     [self adjustFrame];
@@ -126,19 +134,19 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)leftAccessoryButtonTapped
 {
-    [self.delegate messageInputToolbar:self didTapLeftAccessoryButton:self.leftAccessoryButton];
+    [self.inputToolBarDelegate messageInputToolbar:self didTapLeftAccessoryButton:self.leftAccessoryButton];
 }
 
 - (void)rightAccessoryButtonTapped
 {
-    if (self.textInputView.text.length > 0 || self.messageContentParts) {
-        [self.delegate messageInputToolbar:self didTapRightAccessoryButton:self.rightAccessoryButton];
+    if (self.textInputView.text.length > 0 || self.messageParts) {
+        [self.inputToolBarDelegate messageInputToolbar:self didTapRightAccessoryButton:self.rightAccessoryButton];
         [self.rightAccessoryButton setHighlighted:FALSE];
         [self.textInputView removeAttachements];
         [self.textInputView setText:@""];
         [self.textInputView setFont:LSLightFont(16)];
         [self.textInputView layoutSubviews];
-        [self.messageContentParts removeAllObjects];
+        [self.messageParts removeAllObjects];
     }
     [self adjustFrame];
 }

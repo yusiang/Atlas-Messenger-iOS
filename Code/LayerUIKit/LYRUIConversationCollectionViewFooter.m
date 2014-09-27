@@ -11,10 +11,10 @@
 
 @interface LYRUIConversationCollectionViewFooter ()
 
-@property (nonatomic, strong) UILabel *recipientStatusLabel;
+@property (nonatomic) UILabel *recipientStatusLabel;
 
-@property (nonatomic, strong) NSLayoutConstraint *recipientStatusLabelWidthConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *recipientStatusLabelHeightConstraint;
+@property (nonatomic) NSLayoutConstraint *recipientStatusLabelWidthConstraint;
+@property (nonatomic) NSLayoutConstraint *recipientStatusLabelHeightConstraint;
 
 @end
 
