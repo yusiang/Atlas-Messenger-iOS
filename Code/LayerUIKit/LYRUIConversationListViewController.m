@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
+#import <objc/runtime.h>
 #import "LYRUIConversationListViewController.h"
 #import "LYRUIDataSourceChange.h"
 #import "LYRUIConstants.h"
@@ -38,27 +39,21 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 {
     self = [super initWithStyle:UITableViewStylePlain];
     if (self)  {
-        
         // Set properties from designated initializer
         self.layerClient = layerClient;
         
         // Set default configuration for public properties
-        [self setCellClass:[LYRUIConversationTableViewCell class]];
-        [self setRowHeight:80];
-        [self setAllowsEditing:TRUE];
-        [self setShowsConversationImage:TRUE];
-        
-        // Accessibility
-        self.title = @"Conversations";
-        self.accessibilityLabel = @"Conversations";
-        
+        self.cellClass = [LYRUIConversationTableViewCell class];
+        self.rowHeight = 72;
+        self.allowsEditing = TRUE;
+        self.showsConversationImage = TRUE;
     }
     return self;
 }
 
 - (id) init
 {
-    [NSException raise:@"Invalid" format:@"Failed to call designated initializer"];
+    [NSException raise:NSInternalInconsistencyException format:@"Failed to call designated initializer"];
     return nil;
 }
 
@@ -66,7 +61,9 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    // Accessibility
+    self.title = @"Messages";
+    self.accessibilityLabel = @"Conversations";
     [self fetchLayerConversationsWithCompletion:^{
         [self reloadConversations];
     }];
@@ -74,7 +71,6 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
     self.searchBar.accessibilityLabel = @"Search Bar";
     self.searchBar.delegate = self;
-    
     self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
     self.searchController.delegate = self;
     self.searchController.searchResultsDelegate = self;
@@ -131,13 +127,13 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     }
 }
 
-- (void) setCellClass:(Class<LYRUIConversationPresenting>)cellClass
+- (void)setCellClass:(Class<LYRUIConversationPresenting>)cellClass
 {
     if (self.isOnScreen) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot set cellClass after the view has been loaded" userInfo:nil];
     }
     
-    if (![cellClass conformsToProtocol:@protocol(LYRUIConversationPresenting)]) {
+    if (!class_conformsToProtocol(cellClass, @protocol(LYRUIConversationPresenting))) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cell class cellClass must conform to LYRUIConversationPresenting Protocol" userInfo:nil];
 
     }
@@ -229,7 +225,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     LYRConversation *conversation = [[self currentDataSet] objectAtIndex:indexPath.row];
-    NSString *conversationLabel = [self.delegate conversationLabelForParticipants:conversation.participants inConversationListViewController:self];
+    NSString *conversationLabel = [self.dataSource conversationLabelForParticipants:conversation.participants inConversationListViewController:self];
     
     UITableViewCell<LYRUIConversationPresenting> *conversationCell = [tableView dequeueReusableCellWithIdentifier:LYRUIConversationCellReuseIdentifier forIndexPath:indexPath];
     [conversationCell presentConversation:conversation withLabel:conversationLabel];
@@ -289,7 +285,7 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 #pragma mark
 #pragma mark Notification Observer Delegate Methods
 
-- (void) observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
+- (void)observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
     //[self.tableView beginUpdates];
 }
@@ -323,9 +319,9 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 
 - (void)configureTableViewCellAppearance
 {
-    [[LYRUIConversationTableViewCell appearance] setConversationLabelFont:LSLightFont(14)];
+    [[LYRUIConversationTableViewCell appearance] setConversationLabelFont:[UIFont boldSystemFontOfSize:12]];
     [[LYRUIConversationTableViewCell appearance] setConversationLableColor:[UIColor blackColor]];
-    [[LYRUIConversationTableViewCell appearance] setLastMessageTextFont:LSLightFont(12)];
+    [[LYRUIConversationTableViewCell appearance] setLastMessageTextFont:[UIFont systemFontOfSize:12]];
     [[LYRUIConversationTableViewCell appearance] setLastMessageTextColor:[UIColor grayColor]];
     [[LYRUIConversationTableViewCell appearance] setDateLabelFont:LSLightFont(12)];
     [[LYRUIConversationTableViewCell appearance] setDateLabelColor:[UIColor darkGrayColor]];

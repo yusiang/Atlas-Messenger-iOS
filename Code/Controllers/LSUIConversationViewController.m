@@ -8,58 +8,71 @@
 
 #import "LSUIConversationViewController.h"
 
+static NSDateFormatter *LYRUIConversationDateFormatter()
+{
+    static NSDateFormatter *dateFormatter;
+    if (!dateFormatter) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"MMM dd, hh:mma";
+    }
+    return dateFormatter;
+}
+
 @interface LSUIConversationViewController () <LYRUIConversationViewControllerDataSource>
 
 @end
 
 @implementation LSUIConversationViewController
 
-static NSDateFormatter *dateFormatter;
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    if (!dateFormatter) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-    }
-    
+
     self.dataSource = self;
 }
 
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
-    NSSet *set = [self.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
+    NSSet *set = [self.applicationContoller.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
     return [[set allObjects] firstObject];
 }
 
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
-    [dateFormatter setDateFormat:@"MMM dd, hh:mma"];
-    return [dateFormatter stringFromDate:date];
+    return [LYRUIConversationDateFormatter() stringFromDate:date];
 }
 
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
-    NSArray *recipients = [recipientStatus allKeys];
+    NSMutableArray *recipients = [[recipientStatus allKeys] mutableCopy];
+    [recipients removeObject:self.applicationContoller.layerClient.authenticatedUserID];
     NSInteger status = [[recipientStatus valueForKey:[recipients lastObject]] integerValue];
     switch (status) {
         case LYRRecipientStatusInvalid:
             return @"Message Not Sent";
             break;
+            
         case LYRRecipientStatusSent:
-            return @"Sent";
+            return @"Message Sent";
             break;
+            
         case LYRRecipientStatusDelivered:
-            return @"Delivered";
+            return @"Message Delivered";
             break;
+            
         case LYRRecipientStatusRead:
             return @"Message Read";
             break;
+            
         default:
             break;
     }
     return nil;
+}
+
+- (BOOL)converationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message
+{
+    return NO;
 }
 
 @end

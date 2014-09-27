@@ -26,10 +26,10 @@
 
 @interface LSMessagingTest : XCTestCase <LSNotificationObserverDelegate>
 
-@property (nonatomic, strong) LSAPIManager *APIManager;
-@property (nonatomic, strong) LSApplicationController *controller;
-@property (nonatomic, strong) LYRUITestInterface *testInterface;
-@property (nonatomic, strong) LYRUILayerContentFactory *layerContentFactory;
+@property (nonatomic) LSAPIManager *APIManager;
+@property (nonatomic) LSApplicationController *controller;
+@property (nonatomic) LYRUITestInterface *testInterface;
+@property (nonatomic) LYRUILayerContentFactory *layerContentFactory;
 
 @end
 

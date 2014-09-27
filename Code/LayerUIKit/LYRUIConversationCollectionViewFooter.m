@@ -24,9 +24,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
         self.recipientStatusLabel = [[UILabel alloc] init];
-        self.recipientStatusLabel.font = LSMediumFont(12);
+        self.recipientStatusLabel.font = [UIFont systemFontOfSize:12];
         self.recipientStatusLabel.textColor = [UIColor grayColor];
         self.recipientStatusLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.recipientStatusLabel];
@@ -44,18 +43,14 @@
 {
     self.recipientStatusLabel.text = recipientStatus;
     [self.recipientStatusLabel sizeToFit];
-    
     if ([self.constraints containsObject:self.recipientStatusLabelWidthConstraint]) {
         [self removeConstraint:self.recipientStatusLabelWidthConstraint];
     }
-    
     if ([self.constraints containsObject:self.recipientStatusLabelHeightConstraint]) {
         [self removeConstraint:self.recipientStatusLabelHeightConstraint];
     }
-    
     self.recipientStatusLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.recipientStatusLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.recipientStatusLabel.frame.size.width];
     self.recipientStatusLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.recipientStatusLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.recipientStatusLabel.frame.size.height];
-    
     [self addConstraint:self.recipientStatusLabelWidthConstraint];
     [self addConstraint:self.recipientStatusLabelHeightConstraint];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.recipientStatusLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:-20]];

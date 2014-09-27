@@ -11,11 +11,11 @@
 
 @interface LSVersionView ()
 
-@property (strong, nonatomic) UILabel *versionLabel;
-@property (strong, nonatomic) UILabel *buildLabel;
-@property (strong, nonatomic) UILabel *hostLabel;
-@property (strong, nonatomic) UILabel *userLabel;
-@property (strong, nonatomic) UILabel *deviceLabel;
+@property (nonatomic) UILabel *versionLabel;
+@property (nonatomic) UILabel *buildLabel;
+@property (nonatomic) UILabel *hostLabel;
+@property (nonatomic) UILabel *userLabel;
+@property (nonatomic) UILabel *deviceLabel;
 
 @end
 

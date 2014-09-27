@@ -12,8 +12,8 @@
 
 @interface LYRUIMessageNotificationObserver : LYRUIChangeNotificationObserver
 
-- (id) initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation;
+- (id)initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation;
 
-@property (nonatomic, strong) NSArray *messageIdentifiers;
+@property (nonatomic)NSArray *messageIdentifiers;
 
 @end

@@ -9,8 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
-// Auto-resizing. Support insertion of audio and videos?
-
 /**
  @abstract The LYRUIMessageComposeTextView handles displaying content in an 
  `LYRUIMessageInputToolbar`. The class provides support for displaying text, 
@@ -21,7 +19,7 @@
 /**
  @abstract Configures the placeholder text for the textView
  */
-@property (nonatomic, strong) NSString *placeHolderText;
+@property (nonatomic) NSString *placeHolderText;
 
 /**
  @abstract Displays the provided image in the textView

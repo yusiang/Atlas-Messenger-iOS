@@ -26,14 +26,12 @@ static CGFloat const LSSelectionIndicatorRightMargin = -20;
 {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     if (self) {
-        
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor whiteColor];
         self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:LSSelectionIndicatorSize];
         self.selectionIndicator.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.selectionIndicator];
     }
-    
     return self;
 }
 
@@ -92,7 +90,6 @@ static CGFloat const LSSelectionIndicatorRightMargin = -20;
 {
     [super setSelected:selected animated:animated];
     [self.selectionIndicator setHighlighted:selected];
-    
     if (self.selectionIndicator.highlighted) {
         self.selectionIndicator.accessibilityLabel = [NSString stringWithFormat:@"%@ selected", self.accessibilityLabel];
     } else {
@@ -103,10 +100,13 @@ static CGFloat const LSSelectionIndicatorRightMargin = -20;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
     // Configure UI Appearance Proxy
-    self.textLabel.font = self.titleFont;
-    self.textLabel.textColor = self.titleColor;
+    if (self.textLabel.font != self.titleFont) {
+        self.textLabel.font = self.titleFont;
+    }
+    if (self.textLabel.textColor != self.titleColor) {
+        self.textLabel.textColor = self.titleColor;
+    }
 }
 
 @end

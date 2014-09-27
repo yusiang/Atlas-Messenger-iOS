@@ -11,23 +11,22 @@
 
 @interface LSAuthenticationTableViewFooter ()
 
-@property (nonatomic, strong) UIButton *primaryActionButton;
-@property (nonatomic, strong) UIButton *secondaryActionButton;
-@property (nonatomic, strong) UIButton *cancelButton;
+@property (nonatomic) UIButton *primaryActionButton;
+@property (nonatomic) UIButton *secondaryActionButton;
+@property (nonatomic) UIButton *cancelButton;
 
 @end
 
 @implementation LSAuthenticationTableViewFooter
 
-static NSString *LSLoginText = @"Login To Layer";
-static NSString *LSRegisterText = @"Create Account";
-static NSString *LSCancelText = @"Or, Cancel";
+static NSString *const LSLoginText = @"Login To Layer";
+static NSString *const LSRegisterText = @"Create Account";
+static NSString *const LSCancelText = @"Or, Cancel";
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
         self.primaryActionButton = [[UIButton alloc] init];
         [self.primaryActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.primaryActionButton setTitleColor:LSLighGrayColor() forState:UIControlStateHighlighted];
@@ -177,6 +176,7 @@ static NSString *LSCancelText = @"Or, Cancel";
             [self.primaryActionButton setTitle:LSRegisterText forState:UIControlStateNormal];
             [self.secondaryActionButton setTitle:LSLoginText forState:UIControlStateNormal];
             break;
+            
         case LSAuthenticationStateLogin:
             [self.primaryActionButton setTitle:LSLoginText forState:UIControlStateNormal];
             [self.secondaryActionButton setTitle:LSRegisterText forState:UIControlStateNormal];
@@ -193,7 +193,6 @@ static NSString *LSCancelText = @"Or, Cancel";
 {
     [self.delegate authenticationTableViewFooter:self primaryActionButtonTappedWithAuthenticationState:self.authenticationState];
 }
-
 
 - (void)secondaryActionButtonTapped
 {

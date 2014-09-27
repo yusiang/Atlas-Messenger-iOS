@@ -7,10 +7,10 @@
 //
 
 #import "LYRUIConversationViewController.h"
-#import "LSPersistenceManager.h"
+#import "LSApplicationController.h"
 
 @interface LSUIConversationViewController : LYRUIConversationViewController
 
-@property (nonatomic, strong) LSPersistenceManager *persistenceManager;
+@property (nonatomic) LSApplicationController *applicationContoller;
 
 @end

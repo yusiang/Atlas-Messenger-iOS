@@ -25,12 +25,12 @@
 /**
  @abstract Tells the bubble view to display a given image
  */
-- (void) updateWithImage:(UIImage *)image;
+- (void)updateWithImage:(UIImage *)image;
 
 /**
  @abstract Tells the bubble view to display a map image for a given location
  */
-- (void) updateWithLocation:(CLLocationCoordinate2D)location;
+- (void)updateWithLocation:(CLLocationCoordinate2D)location;
 
 /**
  @abstract Configures the font and text color for the bubble view
@@ -40,11 +40,11 @@
 /**
  @abstract The textView object that handles displaying text
  */
-@property (nonatomic, strong) UITextView *bubbleTextView;
+@property (nonatomic)UITextView *bubbleTextView;
 
 /**
  @abstract imageView object that handles displaying images
  */
-@property (nonatomic, strong) UIImageView *bubbleImageView;
+@property (nonatomic)UIImageView *bubbleImageView;
 
 @end

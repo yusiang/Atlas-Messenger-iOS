@@ -20,6 +20,9 @@ typedef enum : NSUInteger {
 
 @class LYRUIParticipantTableViewController;
 
+/**
+ @abstract The `LYRUIParticipantViewControllerDelegate` protocol provides a method for notifying the adopting delegate about information changes.
+ */
 @protocol LYRUIParticipantTableViewControllerDelegate <NSObject>
 
 /**
@@ -30,13 +33,11 @@ typedef enum : NSUInteger {
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant;
 
 /**
- *  Informs the delegate that a search has been made with the following search string. After the completion block is called, the `contactListViewController:presenterForContactAtIndex:` method will be called for each search result.
- *
- *  @param contactListViewController An object representing the contact list view controller.
- *  @param searchString              The search string that was just used for search.
- *  @param completion                The completion block that should be called when the results are fetched from the search.
+ @abstract  Informs the delegate that a search has been made with the following search string. After the completion block is called, the `contactListViewController:presenterForContactAtIndex:` method will be called for each search result.
+ @param contactListViewController An object representing the contact list view controller.
+ @param searchString The search string that was just used for search.
+ @param completion The completion block that should be called when the results are fetched from the search.
  */
-
 - (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *filteredParticipants))completion;
 
 /**
@@ -51,6 +52,9 @@ typedef enum : NSUInteger {
 
 @end
 
+/**
+ @abstract The `LYRUIParticipantTableViewController` sorts, groups, and displayes a list of participants. It provides search capability.
+ */
 @interface LYRUIParticipantTableViewController : UITableViewController
 
 + (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType;

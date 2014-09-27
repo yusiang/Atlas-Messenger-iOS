@@ -17,7 +17,7 @@
 
 @implementation LYRUIMessageNotificationObserver
 
-- (id) initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
+- (id)initWithClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
 {
     self = [super init];
     if (self) {
@@ -32,7 +32,7 @@
     return self;
 }
 
-- (id) init
+- (id)init
 {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
@@ -42,7 +42,7 @@
     self.messageIdentifiers = [[self.layerClient messagesForConversation:self.conversation] valueForKeyPath:@"identifier"];
 }
 
-- (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
+- (void)didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
     [self.delegate observerWillChangeContent:self];
     
@@ -60,7 +60,6 @@
 - (void)processLayerChangeNotification:(NSNotification *)notification completion:(void(^)(NSMutableArray *messageArray))completion
 {
     NSMutableArray *messageArray = [[NSMutableArray alloc] init];
-    
     NSArray *changes = [notification.userInfo objectForKey:LYRClientObjectChangesUserInfoKey];
     for (NSDictionary *change in changes) {
         
@@ -84,6 +83,7 @@
                      NSLog(@"Message Instert %@", messageUpdate);
                     [changeObjects addObject:[LYRUIDataSourceChange insertChangeWithIndex:message.index]];
                     break;
+                    
                 case LYRObjectChangeTypeUpdate:
                     if ([[messageUpdate objectForKey:LYRObjectChangePropertyKey] isEqualToString:@"index"]) {
 //                        NSUInteger oldIndex = [[messageUpdate objectForKey:LYRObjectChangeOldValueKey] integerValue];
@@ -93,9 +93,11 @@
                         [changeObjects addObject:[LYRUIDataSourceChange updateChangeWithIndex:message.index]];
                     }
                     break;
+                    
                 case LYRObjectChangeTypeDelete:
                     [changeObjects addObject:[LYRUIDataSourceChange deleteChangeWithIndex:message.index]];
                     break;
+                    
                 default:
                     break;
             }
@@ -117,7 +119,5 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-    
-
 
 @end

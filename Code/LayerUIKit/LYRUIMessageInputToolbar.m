@@ -14,10 +14,6 @@
 
 @interface LYRUIMessageInputToolbar () <UITextViewDelegate, CLLocationManagerDelegate>
 
-@property (nonatomic) BOOL keyboardIsOnScreen;
-@property (nonatomic) CGFloat textViewContentSizeHeight;
-@property (nonatomic) CGSize defaultSize;
-@property (nonatomic) CGFloat defaultContentHeight;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSLayoutConstraint *textViewHeightConstraint;
 
@@ -30,7 +26,6 @@ static CGFloat const LSComposeviewHorizontalMargin = 6;
 static CGFloat const LSComposeviewVerticalMargin = 6;
 
 // Compose View Button Constants
-static CGFloat const LSLeftAccessoryButtonBottomMargin = 8;
 static CGFloat const LSLeftAccessoryButtonWidth = 40;
 static CGFloat const LSRightAccessoryButtonWidth = 46;
 static CGFloat const LSButtonHeight = 28;
@@ -39,13 +34,11 @@ static CGFloat const LSButtonHeight = 28;
 {
     self = [super init];
     if (self) {
-    
         self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-        
         // Setup
         self.backgroundColor =  LSLighGrayColor();
         self.messageContentParts = [[NSMutableArray alloc] init];
-        
+
         // Initialize the Camera Button
         self.leftAccessoryButton = [[UIButton alloc] init];
         self.leftAccessoryButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -77,8 +70,6 @@ static CGFloat const LSButtonHeight = 28;
         [self addSubview:self.rightAccessoryButton];
         
         [self setupLayoutConstraints];
-        
-        self.keyboardIsOnScreen = NO;
     }
     
     return self;
@@ -101,12 +92,12 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)insertVideoAtPath:(NSString *)videoPath
 {
-    
+     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Method not implemented." userInfo:nil];
 }
 
 - (void)insertAudioAtPath:(NSString *)path
 {
-    
+     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Method not implemented." userInfo:nil];
 }
 
 - (void)insertLocation:(CLLocation *)location
@@ -116,23 +107,17 @@ static CGFloat const LSButtonHeight = 28;
     options.region = MKCoordinateRegionMake(location.coordinate, span);
     options.scale = [UIScreen mainScreen].scale;
     options.size = CGSizeMake(200, 200);
-    
     MKMapSnapshotter *snapshotter = [[MKMapSnapshotter alloc] initWithOptions:options];
     [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
-       
         UIImage *image = snapshot.image;
-
         MKAnnotationView *pin = [[MKPinAnnotationView alloc] initWithAnnotation:nil reuseIdentifier:@""];
         UIImage *pinImage = pin.image;
-        
         CGPoint pinPoint = CGPointMake(image.size.width/2, image.size.height/2);
         UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
         [image drawAtPoint:CGPointMake(0, 0)];
         [pinImage drawAtPoint:pinPoint];
-        
         UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        
         [self insertImage:finalImage];
     }];
 }
@@ -306,12 +291,6 @@ static CGFloat const LSButtonHeight = 28;
                                                      attribute:NSLayoutAttributeBottom
                                                     multiplier:1.0
                                                       constant:-LSComposeviewVerticalMargin]];
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
 }
 
 - (void)fireUpLoacation

@@ -11,8 +11,8 @@ Pod::Spec.new do |s|
   s.name             = "LayerUIKit"
   s.version          = "0.1.0"
   s.summary          = "A short description of LayerUIKit."
-  s.license          = 'MIT'
-  s.author           = { "Kevin Coleman" => "kcoleman731@gmail.com" }
+  s.license          = 'Apche'
+  s.author           = { "Kevin Coleman" => "kevin@layer.com" }
   s.source           = { :git => "https://github.com/layerhq/layer-sample-ios.git", :tag => s.version.to_s }
   s.platform         = :ios, '7.0'
   s.requires_arc     = true

@@ -25,15 +25,19 @@ NSString *LSLayerConfigurationURL(LSEnvironment environment)
         case LYRUINA3Production:
             return @"https://na-3.preview.layer.com/client_configuration.json";
             break;
+            
         case LYRUINA3Development:
             return @"https://na-3.preview.layer.com/client_configuration.json";
             break;
+            
         case LYRUIDEV1Production:
             return @"https://dev-1.preview.layer.com/client_configuration.json";
             break;
+            
         case LYRUIDEV1Development:
             return @"https://dev-1.preview.layer.com/client_configuration.json";
             break;
+            
         case LSTestEnvironment:
             return @"172.17.8.101/client_configuration.json";
             break;
@@ -49,18 +53,23 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
         case LYRUINA3Production:
             return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
             break;
+            
         case LYRUINA3Development:
             return [[NSUUID alloc] initWithUUIDString:@"ce2c45a4-3e97-11e4-9d4c-6a9900000431"];
             break;
+            
         case LYRUIDEV1Production:
             return [[NSUUID alloc] initWithUUIDString:@"9ae66b44-1682-11e4-92e4-0b53000001d0"];
             break;
+            
         case LYRUIDEV1Development:
             return [[NSUUID alloc] initWithUUIDString:@"78b0f39a-3e97-11e4-9f88-48e000000212"];
             break;
+            
         case LSTestEnvironment:
             return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
             break;
+            
         default:
             break;
     }
@@ -78,18 +87,23 @@ NSString *LSLayerPersistencePath(LSEnvironment environment)
         case LYRUINA3Production:
             return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
             break;
+            
         case LYRUINA3Development:
             return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
             break;
+            
         case LYRUIDEV1Production:
             return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
             break;
+            
         case LYRUIDEV1Development:
             return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
             break;
+            
         case LSTestEnvironment:
             return nil;
             break;
+            
         default:
             break;
     }

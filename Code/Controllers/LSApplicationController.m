@@ -36,8 +36,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:) name:LYRClientWillBeginSynchronizationNotification object:layerClient];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:) name:LYRClientDidFinishSynchronizationNotification object:layerClient];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:) name:LYRClientWillBeginSynchronizationNotification object:layerClient];
-        
-        [self.layerClient addObserver:self forKeyPath:@"isConnected" options:NSKeyValueObservingOptionNew context:nil];
 
     }
     return self;
@@ -98,16 +96,6 @@
 - (void)didReceiveLayerClientDidFinishSynchronizationNotification:(NSNotification *)notification
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"isConnected"]){
-        BOOL isConnected = [change objectForKey:NSKeyValueChangeNewKey];
-        if (!isConnected) {
-            [self.APIManager deauthenticate];
-        }
-    }
 }
 
 + (NSString *)versionString

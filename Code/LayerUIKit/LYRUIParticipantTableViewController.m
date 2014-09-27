@@ -14,17 +14,18 @@
 
 @interface LYRUIParticipantTableViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
 
-@property (nonatomic, strong) NSDictionary *sortedParticipants;
-@property (nonatomic, strong) NSDictionary *filteredParticipants;
-@property (nonatomic, strong) NSMutableSet *selectedParticipants;
-@property (nonatomic, strong) UISearchDisplayController *searchController;
-@property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic) NSArray *sortedContactKeys;
+@property (nonatomic) NSDictionary *sortedParticipants;
+@property (nonatomic) NSDictionary *filteredParticipants;
+@property (nonatomic) NSMutableSet *selectedParticipants;
+@property (nonatomic) UISearchDisplayController *searchController;
+@property (nonatomic) UISearchBar *searchBar;
 
 @end
 
 @implementation LYRUIParticipantTableViewController
 
-NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
+static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 + (instancetype)participantTableViewControllerWithParticipants:(NSSet *)participants sortType:(LYRUIParticipantPickerSortType)sortType
 {
@@ -35,22 +36,14 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        
-        self.sortType = sortType;
-        self.participants = participants;
-        self.sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
-        
-        self.rowHeight = 48;
-        self.allowsMultipleSelection = YES;
-        self.participantCellClass = [LYRUIParticipantTableViewCell class];
-        
-        self.title = @"Participants";
-        self.accessibilityLabel = @"Participants";
-        
-        self.selectedParticipants = [[NSMutableSet alloc] init];
-        
+        _sortType = sortType;
+        _participants = participants;
+        _sortedParticipants = [self sortAndGroupContactListByAlphabet:self.participants];
+         _selectedParticipants = [[NSMutableSet alloc] init];
+        _rowHeight = 48;
+        _allowsMultipleSelection = YES;
+        _participantCellClass = [LYRUIParticipantTableViewCell class];
         [self configureAppearance];
-        
     }
     return self;
 }
@@ -58,21 +51,19 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.title = @"Participants";
+    self.accessibilityLabel = @"Participants";
     self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionFooterHeight = 0.0;
-    
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
     self.searchBar.accessibilityLabel = @"Search Bar";
     self.searchBar.delegate = self;
-    
     self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
     self.searchController.searchResultsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.searchController.delegate = self;
     self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsDataSource = self;
-    
     self.tableView.tableHeaderView = self.searchBar;
     
     // Left bar button item is the text Cancel
@@ -90,17 +81,14 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
                                                                       action:@selector(doneButtonTapped)];
     doneButtonItem.accessibilityLabel = @"Done";
     self.navigationItem.rightBarButtonItem = doneButtonItem;
-    
     self.filteredParticipants = self.sortedParticipants;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     self.tableView.rowHeight = self.rowHeight;
     [self.tableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
-    
     self.searchController.searchResultsTableView.rowHeight = self.rowHeight;
     [self.searchController.searchResultsTableView registerClass:self.participantCellClass forCellReuseIdentifier:LYRParticipantCellIdentifier];
 }
@@ -199,6 +187,7 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 }
 
 #pragma mark UIBarButtonItem implementation methods
+
 - (void)cancelButtonTapped
 {
     [self.delegate participantTableViewControllerDidSelectCancelButton];
@@ -232,9 +221,12 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
 
 - (NSArray *)sortedContactKeys
 {
-    NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[[self currentDataArray] allKeys]];
-    [mutableKeys sortUsingSelector:@selector(compare:)];
-    return mutableKeys;
+    if (!_sortedContactKeys) {
+        NSMutableArray *mutableKeys = [NSMutableArray arrayWithArray:[[self currentDataArray] allKeys]];
+        [mutableKeys sortUsingSelector:@selector(compare:)];
+        _sortedContactKeys = mutableKeys;
+    }
+    return _sortedContactKeys;
 }
 
 - (NSDictionary *)sortAndGroupContactListByAlphabet:(NSSet *)participants
@@ -245,9 +237,11 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
         case LYRUIParticipantPickerControllerSortTypeFirst:
             sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
             break;
+            
         case LYRUIParticipantPickerControllerSortTypeLast:
             sortedParticipants = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES]]];
             break;
+            
         default:
             break;
     }
@@ -259,9 +253,11 @@ NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifier";
             case LYRUIParticipantPickerControllerSortTypeFirst:
                 sortName = participant.firstName;
                 break;
+                
             case LYRUIParticipantPickerControllerSortTypeLast:
                 sortName = participant.lastName;
                 break;
+                
             default:
                 break;
         }

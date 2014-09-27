@@ -10,7 +10,7 @@
 
 @interface LSInputTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) UITextField *textField;
+@property (nonatomic) UITextField *textField;
 
 - (void)setText:(NSString *)text;
 

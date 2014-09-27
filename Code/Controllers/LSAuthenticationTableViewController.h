@@ -12,7 +12,7 @@
 
 @interface LSAuthenticationTableViewController : UITableViewController
 
-@property (nonatomic, strong) LSApplicationController *applicationController;
+@property (nonatomic) LSApplicationController *applicationController;
 
 - (void)setCompletionBlock:(void (^)(NSString *authenticatedUserID))completion;
 

@@ -9,6 +9,7 @@
 #import "LSAPIManager.h"
 #import "LSUser.h"
 #import "LSHTTPResponseSerializer.h"
+#import "LSErrors.h"
 
 NSString *const LSUserDidAuthenticateNotification = @"LSUserDidAuthenticateNotification";
 NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateNotification";
@@ -104,19 +105,19 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     NSParameterAssert(completion);
     
     if (!email.length) {
-        NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{ NSLocalizedDescriptionKey : @"Please enter your Email address in order to Login"}];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{ NSLocalizedDescriptionKey : @"Please enter your Email address in order to Login"}];
         completion(nil, error);
         return;
     }
     
     if (!password.length) {
-        NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{ NSLocalizedDescriptionKey : @"Please enter your password in order to login"}];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{ NSLocalizedDescriptionKey : @"Please enter your password in order to login"}];
         completion( nil, error);
         return;
     }
     
     if (!nonce.length) {
-        NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{ NSLocalizedDescriptionKey : @"Application must supply authenticate nonce to complete"}];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidAuthenticationNonce userInfo:@{ NSLocalizedDescriptionKey : @"Application must supply authenticate nonce to complete"}];
         completion(nil, error);
         return;
     }
@@ -161,7 +162,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         self.authenticatedSession = session;
         return YES;
     } else {
-        if (error) *error = [NSError errorWithDomain:@"Authentication Error" code:500 userInfo:@{@"error" : @"No authenticated session"}];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSNoAuthenticatedSession userInfo:@{@"error" : @"No authenticated session"}];
         return NO;
     }
 }

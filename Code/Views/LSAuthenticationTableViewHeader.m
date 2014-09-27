@@ -11,8 +11,8 @@
 
 @interface LSAuthenticationTableViewHeader ()
 
-@property (nonatomic, strong) UIImageView *logoView;
-@property (nonatomic, strong) UITextView *textView;
+@property (nonatomic) UIImageView *logoView;
+@property (nonatomic) UITextView *textView;
 
 @end
 
@@ -22,11 +22,9 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
         self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
         self.logoView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.logoView];
-        
         self.textView = [[UITextView alloc] init];
         self.textView.editable = NO;
         self.textView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -35,7 +33,6 @@
         self.textView.text = @"The open communications platform for the internet.";
         self.textView.font = LSLightFont(12);
         [self addSubview:self.textView];
-        
         [self updateConstraints];
     }
     return self;
@@ -100,6 +97,5 @@
                                                       constant:210]];
     [super updateConstraints];
 }
-
 
 @end

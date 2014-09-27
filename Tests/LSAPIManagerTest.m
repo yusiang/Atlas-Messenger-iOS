@@ -26,8 +26,8 @@
 
 @interface LSAPIManagerTest : XCTestCase
 
-@property (nonatomic, strong) LSAPIManager *APIManager;
-@property (nonatomic, strong) LSApplicationController *controller;
+@property (nonatomic) LSAPIManager *APIManager;
+@property (nonatomic) LSApplicationController *controller;
 
 @end
 

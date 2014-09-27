@@ -30,20 +30,11 @@
 {
     self.participantTableViewController = [LYRUIParticipantTableViewController participantTableViewControllerWithParticipants:[dataSource participants] sortType:sortType];
     self.participantTableViewController.delegate = self;
-    
     self = [super initWithRootViewController:self.participantTableViewController];
     if (self) {
-        
-        [self setAllowsMultipleSelection:YES];
-        [self setCellClass:[LYRUIParticipantTableViewCell class]];
-        [self setRowHeight:48];
-        
-        self.participantTableViewController.participantCellClass = [LYRUIParticipantTableViewCell class];
-        self.participantTableViewController.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
-        
-        // Accessibility
-        self.title = @"Participants";
-        self.accessibilityLabel = @"Participants";
+        self.allowsMultipleSelection = YES;
+        self.cellClass = [LYRUIParticipantTableViewCell class];
+        self.rowHeight = 48;
     }
     return self;
 }
@@ -58,6 +49,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.participantTableViewController.participantCellClass = [LYRUIParticipantTableViewCell class];
+    self.participantTableViewController.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
+    self.title = @"Participants";
+    self.accessibilityLabel = @"Participants";
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -25,19 +25,15 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
         self.backgroundColor = [UIColor whiteColor];
-        
         self.bubbleView = [[LYRUIMessageBubbleView alloc] init];
         self.bubbleView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.bubbleView];
-        
         self.avatarImage = [[UIImageView alloc] init];
         self.avatarImage.backgroundColor = LSGrayColor();
         self.avatarImage.layer.cornerRadius = 12;
         self.avatarImage.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.avatarImage];
-        
         if ([self isKindOfClass:[LYRUIIncomingMessageCollectionViewCell class]]) {
             self.imageViewDiameter = 24;
         } else {
@@ -50,17 +46,13 @@
 - (void)presentMessagePart:(LYRMessagePart *)messagePart
 {
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
-    
         NSString *text = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
         [self.bubbleView updateWithText:text];
         self.accessibilityLabel = [NSString stringWithFormat:@"Message: %@", text];
-    
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG]) {
-        
         UIImage *image = [UIImage imageWithData:messagePart.data];
         [self.bubbleView updateWithImage:image];
         self.accessibilityLabel = [NSString stringWithFormat:@"Message: Photo"];
-    
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeLocation]) {
         //
     }
@@ -71,7 +63,6 @@
     if ([[self.contentView constraints] containsObject:self.bubbleViewWidthConstraint]) {
         [self.contentView removeConstraint:self.bubbleViewWidthConstraint];
     }
-    
     self.bubbleViewWidth = width + 20; //Adding 16px bubble view horizontal padding
     self.bubbleViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                   attribute:NSLayoutAttributeWidth
@@ -133,6 +124,5 @@
     [super layoutSubviews];
     [self.bubbleView updateBubbleViewWithFont:self.messageTextFont color:self.messageTextColor];
 }
-
 
 @end

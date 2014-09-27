@@ -20,11 +20,8 @@
 {
     self = [super init];
     if (self) {
-        
         self.userInteractionEnabled = FALSE;
-        
         self.layer.cornerRadius = diameter / 2;
-    
         [self setBackgroundImage:[UIImage imageNamed:@"unselected-indicator"] forState:UIControlStateNormal];
         [self setBackgroundImage:[UIImage imageNamed:@"selection-indicator"] forState:UIControlStateHighlighted];
     }
@@ -36,6 +33,5 @@
 {
     [super setHighlighted:highlighted];
 }
-
 
 @end

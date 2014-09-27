@@ -14,7 +14,6 @@
 #import "LYRUIConstants.h"
 #import <Crashlytics/Crashlytics.h>
 #import <HockeySDK/HockeySDK.h>
-#import "LSKeychainUtilities.h"
 #import "LSAuthenticationTableViewController.h"
 #import "LSSplashView.h"
 
@@ -47,22 +46,14 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LYRUINA3Production;
+    LSEnvironment environment = LYRUIDEV1Production;
     
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
-    // If we are pointing at a new server, we need to clear the keychain
-    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
-    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(environment)]) {
-        LYRTestCleanKeychain();
-        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(environment) forKey:@"LAYER_CONFIGURATION_URL"];
-    }
-    
     // Setup notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadContacts) name:@"loadContacts" object:nil];
     
     // Configure application controllers
     LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID(environment)];
@@ -132,6 +123,7 @@ extern void LYRSetLogLevelFromEnvironment();
     
     [self configureGlobalUserInterfaceAttributes];
     
+    [self getUnreadMessageCount];
     return YES;
     
 }
@@ -171,11 +163,6 @@ extern void LYRSetLogLevelFromEnvironment();
     }
 }
 
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
-{
-    
-}
-
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     __block NSURL *messageID = [NSURL URLWithString:[[userInfo valueForKeyPath:@"layer.event_url"] uppercaseString]];
@@ -187,7 +174,7 @@ extern void LYRSetLogLevelFromEnvironment();
         completionHandler(fetchResult);
     }];
     if (success) {
-        NSLog(@"Application did complete remote notification sycn");
+        NSLog(@"Application did complete remote notification sync");
     } else {
         NSLog(@"Error handling push notification: %@", error);
         completionHandler(UIBackgroundFetchResultNoData);
@@ -198,7 +185,7 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     if ( application.applicationState == UIApplicationStateInactive || application.applicationState == UIApplicationStateBackground  )
     {
-        //opened from a push notification when the app was on background
+        
     }
 }
 
@@ -264,7 +251,7 @@ extern void LYRSetLogLevelFromEnvironment();
     self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
     self.viewController.applicationController = self.applicationController;
     self.viewController.allowsEditing = FALSE;
-    self.viewController.showsConversationImage = TRUE;
+    self.viewController.showsConversationImage = FALSE;
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [self.navigationController presentViewController:conversationController animated:YES completion:^{
@@ -288,11 +275,28 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     [[UINavigationBar appearance] setTintColor:LSBlueColor()];
     [[UINavigationBar appearance] setBarTintColor:LSLighGrayColor()];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: LSLightFont(16)}];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:14]}];
     
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : LSMediumFont(14)} forState:UIControlStateNormal];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LSBlueColor()];
 
+}
+
+- (void)getUnreadMessageCount
+{
+    __block NSUInteger unreadMessage = 0;
+    __block NSString *userID = self.applicationController.layerClient.authenticatedUserID;
+    NSSet *conversations = [self.applicationController.layerClient conversationsForIdentifiers:nil];
+    for (LYRConversation *conversation in conversations) {
+        NSOrderedSet *messages = [self.applicationController.layerClient messagesForConversation:conversation];
+        for (LYRMessage *message in messages) {
+            LYRRecipientStatus status = (LYRRecipientStatus)[message.recipientStatusByUserID objectForKey:userID];
+            if (status == LYRRecipientStatusDelivered) {
+                unreadMessage += 1;
+            }
+        }
+    }
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:unreadMessage];
 }
 
 @end

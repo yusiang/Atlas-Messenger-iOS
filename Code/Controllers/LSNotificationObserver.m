@@ -78,7 +78,7 @@
     });
 }
 
-- (void) processConversationChanges:(NSMutableArray *)conversationChanges
+- (void)processConversationChanges:(NSMutableArray *)conversationChanges
 {
     [self.delegate observer:self didChangeObject:nil atIndex:0 forChangeType:LYRObjectChangeTypeCreate newIndexPath:0];
 }
@@ -94,12 +94,15 @@
                 case LYRObjectChangeTypeCreate:
                     [self handleMessageCreation:message atIndex:i];
                     break;
+                    
                 case LYRObjectChangeTypeUpdate:
                     [self handleMessageUpdate:message];
                     break;
+                    
                 case LYRObjectChangeTypeDelete:
                     [self handleMessageDeletion:message];
                     break;
+                    
                 default:
                     break;
             }

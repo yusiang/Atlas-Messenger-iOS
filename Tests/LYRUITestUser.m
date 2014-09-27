@@ -51,6 +51,7 @@ static NSString *const LSTestUser4Confirmation = @"password4";
             [user setPassword:LSTestUser0Password];
             [user setPasswordConfirmation:LSTestUser0Confirmation];
             break;
+            
         case 1:
             [user setFirstName:LSTestUser1FirstName];
             [user setLastName:LSTestUser1LastName];
@@ -58,6 +59,7 @@ static NSString *const LSTestUser4Confirmation = @"password4";
             [user setPassword:LSTestUser1Password];
             [user setPasswordConfirmation:LSTestUser1Confirmation];
             break;
+            
         case 2:
             [user setFirstName:LSTestUser2FirstName];
             [user setLastName:LSTestUser2LastName];
@@ -65,6 +67,7 @@ static NSString *const LSTestUser4Confirmation = @"password4";
             [user setPassword:LSTestUser2Password];;
             [user setPasswordConfirmation:LSTestUser2Confirmation];
             break;
+            
         case 3:
             [user setFirstName:LSTestUser3FirstName];
             [user setLastName:LSTestUser3LastName];
@@ -72,6 +75,7 @@ static NSString *const LSTestUser4Confirmation = @"password4";
             [user setPassword:LSTestUser3Password];
             [user setPasswordConfirmation:LSTestUser3Confirmation];
             break;
+            
         case 4:
             [user setFirstName:LSTestUser4FirstName];
             [user setLastName:LSTestUser4LastName];
@@ -79,6 +83,7 @@ static NSString *const LSTestUser4Confirmation = @"password4";
             [user setPassword:LSTestUser4Password];
             [user setPasswordConfirmation:LSTestUser4Confirmation];
             break;
+            
         default:
             break;
     }

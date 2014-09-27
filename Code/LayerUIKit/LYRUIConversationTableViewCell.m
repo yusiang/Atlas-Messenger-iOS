@@ -10,20 +10,38 @@
 #import "LYRUIAvatarImageView.h"
 #import "LYRUIConstants.h"
 
+static NSDateFormatter *LYRUIHourDateFormatter()
+{
+    static NSDateFormatter *hourDateFormatter;
+    if (!hourDateFormatter) {
+        hourDateFormatter = [[NSDateFormatter alloc] init];
+        hourDateFormatter.dateFormat = @"hh:mm a";
+    }
+    return hourDateFormatter;
+}
+
+static NSDateFormatter *LYRUIDayDateFormatter()
+{
+    static NSDateFormatter *dayDateFormatter;
+    if (!dayDateFormatter) {
+        dayDateFormatter = [[NSDateFormatter alloc] init];
+        dayDateFormatter.dateFormat = @"MMM dd";
+    }
+    return dayDateFormatter;
+}
+
 @interface LYRUIConversationTableViewCell ()
 
 @property (nonatomic) LYRUIAvatarImageView *avatarImageView;
 @property (nonatomic) UILabel *senderLabel;
 @property (nonatomic) UILabel *dateLabel;
 @property (nonatomic) UITextView *lastMessageTextView;
-@property (nonatomic) BOOL shouldShowAvatarImage;
-
-@property (nonatomic) CGFloat senderLabelHeight;
-@property (nonatomic) CGFloat dateLabelHeight;
-@property (nonatomic) CGFloat dateLabelWidth;
-
-@property (nonatomic) CGFloat cellHorizontalMargin;
-@property (nonatomic) CGFloat avatarImageSizeRatio;
+@property (nonatomic, assign) BOOL shouldShowAvatarImage;
+@property (nonatomic, assign) CGFloat senderLabelHeight;
+@property (nonatomic, assign) CGFloat dateLabelHeight;
+@property (nonatomic, assign) CGFloat dateLabelWidth;
+@property (nonatomic, assign) CGFloat cellHorizontalMargin;
+@property (nonatomic, assign) CGFloat avatarImageSizeRatio;
 
 @end
 
@@ -31,17 +49,12 @@
 
 // Cell Constants
 static CGFloat const LSCellVerticalMargin = 12.0f;
-static CGFloat const LSConversationLabelRightPadding = -6;
+static CGFloat const LSConversationLabelRightPadding = -6.0f;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
-        if (!dateFormatter) {
-            dateFormatter = [[NSDateFormatter alloc] init];
-        }
-        
         // Initialize Avatar Image
         self.avatarImageView = [[LYRUIAvatarImageView alloc] init];
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -90,7 +103,6 @@ static CGFloat const LSConversationLabelRightPadding = -6;
     } else {
         self.lastMessageTextView.text = @"Attachement: Image";
     }
-   
     [self configureLayoutConstraintsForLabels];
 }
 
@@ -100,23 +112,19 @@ static NSDateFormatter *dateFormatter;
 {
     if (!lastMessage) return @"";
     if (!lastMessage.sentAt) return @"";
-    
     NSCalendar* calendar = [NSCalendar currentCalendar];
-    
-    unsigned int conversationDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    unsigned int conversationDateFlags = NSCalendarCalendarUnit;
     NSDateComponents* conversationDateComponents = [calendar components:conversationDateFlags fromDate:lastMessage.sentAt];
     NSDate *conversationDate = [calendar dateFromComponents:conversationDateComponents];
-    
     unsigned int currentDateFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
     NSDateComponents* currentDateComponents = [calendar components:currentDateFlags fromDate:[NSDate date]];
     NSDate *currentDate = [calendar dateFromComponents:currentDateComponents];
-    
+    NSString *dateLabel;
     if ([conversationDate compare:currentDate] == NSOrderedAscending) {
-        [dateFormatter setDateFormat:@"MMM dd"];
+        dateLabel = [LYRUIDayDateFormatter() stringFromDate:lastMessage.sentAt];
     } else {
-        [dateFormatter setDateFormat:@"hh:mm a"];
+        dateLabel = [LYRUIHourDateFormatter() stringFromDate:lastMessage.sentAt];
     }
-    NSString *dateLabel = [dateFormatter stringFromDate:lastMessage.sentAt];
     return dateLabel;
 }
 
@@ -150,7 +158,9 @@ static NSDateFormatter *dateFormatter;
     
     if (shouldShowConversationImage) {
         self.avatarImageSizeRatio = 0.60f;
-        self.avatarImageView.image = [UIImage imageNamed:@"logo-icon-blue"];
+        self.avatarImageView.backgroundColor = LSGrayColor();
+    } else {
+        self.cellHorizontalMargin = 20.0f;
     }
     [self updateConstraintsIfNeeded];
 }
@@ -282,7 +292,7 @@ static NSDateFormatter *dateFormatter;
                                                                     toItem:self.senderLabel
                                                                  attribute:NSLayoutAttributeBottom
                                                                 multiplier:1.0
-                                                                  constant:8]];
+                                                                  constant:4]];
     // Height
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.lastMessageTextView
                                                                  attribute:NSLayoutAttributeHeight
@@ -297,20 +307,13 @@ static NSDateFormatter *dateFormatter;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
     CGFloat seperatorInset;
-    
     if (self.shouldShowAvatarImage) {
         seperatorInset = self.frame.size.height * self.avatarImageSizeRatio + self.cellHorizontalMargin * 2;
     } else {
         seperatorInset = self.cellHorizontalMargin * 2;
     }
     self.separatorInset = UIEdgeInsetsMake(0, seperatorInset, 0, 0);
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:FALSE animated:TRUE];
 }
 
 @end

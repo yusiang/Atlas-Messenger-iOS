@@ -232,28 +232,25 @@
             completion(nil, nil);
         });
     } else {
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchString]];
-        completion([allContacts filteredSetUsingPredicate:searchPredicate], nil);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchString]];
+            completion([allContacts filteredSetUsingPredicate:searchPredicate], nil);
+        });
     }
 }
 
 - (NSSet *)participantsForIdentifiers:(NSSet *)identifiers;
 {
-    NSMutableSet *participants = [[NSMutableSet alloc] init];
+    NSSet *participants = [[NSMutableSet alloc] init];
     NSError *error;
     NSSet *allContacts = [self persistedUsersWithError:&error];
     if (error) {
         return nil;
     } else {
-        for (NSString *participantIdentifier in identifiers) {
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(userID like[cd] %@)", [NSString stringWithFormat:@"*%@*", participantIdentifier]];
-            NSSet * set = [allContacts filteredSetUsingPredicate:searchPredicate];
-            if ([set allObjects].count > 0) {
-                [participants addObject:[[set allObjects] firstObject]];
-            }
-        }
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", identifiers];
+        participants = [allContacts filteredSetUsingPredicate:searchPredicate];
     }
-    return [NSSet setWithSet:participants];
+    return participants;
 }
 
 @end

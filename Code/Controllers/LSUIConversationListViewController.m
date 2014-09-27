@@ -14,10 +14,10 @@
 #import "LSUIConversationViewController.h"
 #import "LSVersionView.h"
 
-@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIParticipantPickerControllerDelegate, UIActionSheetDelegate>
+@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LYRUIParticipantPickerControllerDelegate, UIActionSheetDelegate>
 
-@property (nonatomic, strong) LSUIParticipantPickerDataSource *participantPickerDataSource;
-@property (nonatomic, strong) LSVersionView *versionView;
+@property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
+@property (nonatomic) LSVersionView *versionView;
 
 @end
 
@@ -29,6 +29,7 @@
     [super viewDidLoad];
     
     self.delegate = self;
+    self.dataSource = self;
     
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
@@ -75,11 +76,6 @@
     [self presentControllerWithConversation:conversation];
 }
 
-- (void)conversationListViewControllerDidCancel:(LYRUIConversationListViewController *)conversationListViewController
-{
-    //Dont Care - Not even sure we need this
-}
-
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController
 {
     NSMutableSet *participantIdentifiers = [NSMutableSet setWithSet:participantIDs];
@@ -96,12 +92,12 @@
     
     LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
     NSString *conversationLabel = firstUser.fullName;
-    for (int i = 1; i < [[participants allObjects] count]; i++) {
-        LSUser *user = [[participants allObjects] objectAtIndex:i];
+    for (LSUser *user in participants) {
         conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.fullName];
     }
     return conversationLabel;
 }
+
 
 #pragma mark - LYRUIParticipantTableViewControllerDelegate methods
 
@@ -114,10 +110,8 @@
 {
     [self dismissViewControllerAnimated:YES completion:^{
         if (participants.count > 0) {
-            
             NSSet *participantIdentifiers = [participants valueForKey:@"participantIdentifier"];
             LYRConversation *conversation = [[self.applicationController.layerClient conversationsForParticipants:participantIdentifiers] anyObject];
-            
             if (!conversation) {
                 conversation = [LYRConversation conversationWithParticipants:participantIdentifiers];
             }
@@ -128,8 +122,9 @@
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
-    LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
-    viewController.persistenceManager = self.applicationController.persistenceManager;
+    LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation
+                                                                                                                    layerClient:self.applicationController.layerClient];
+    viewController.applicationContoller = self.applicationController;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -166,9 +161,14 @@
         case 0:
             [self logout];
             break;
+            
         case 1:
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"loadContacts" object:nil];
+            [SVProgressHUD showWithStatus:@"Loading Contacts"];
+            [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
+                [SVProgressHUD showSuccessWithStatus:@"Contacts Loaded"];
+            }];
             break;
+            
         case 2: {
             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
             if (self.applicationController.deviceToken) {
@@ -179,6 +179,7 @@
             }
         }
             break;
+            
         default:
             break;
     }
@@ -197,7 +198,5 @@
         [SVProgressHUD dismiss];
     }];
 }
-
-
 
 @end

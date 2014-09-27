@@ -23,19 +23,17 @@
 {
     self = [super init];
     if (self) {
-        
         self.layerClient = layerClient;
         self.conversations = conversations;
         self.conversationIdentifiers = [self refreshConversations];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerObjectsDidChangeNotification:)
                                                      name:LYRClientObjectsDidChangeNotification
                                                    object:layerClient];
-        
     }
     return self;
 }
 
-- (id) init
+- (id)init
 {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
@@ -47,7 +45,7 @@
     return [sortedConversations valueForKeyPath:@"identifier"];
 }
 
-- (void) didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
+- (void)didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
     [self.delegate observerWillChangeContent:self];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -64,25 +62,21 @@
 - (void)processLayerChangeNotification:(NSNotification *)notification completion:(void(^)(NSMutableArray *conversationArray))completion
 {
     NSMutableArray *conversationArray = [[NSMutableArray alloc] init];
-    
     NSArray *changes = [notification.userInfo objectForKey:LYRClientObjectChangesUserInfoKey];
     NSLog(@"%@", changes);
     for (NSDictionary *change in changes) {
-        
         if ([[change objectForKey:LYRObjectChangeObjectKey] isKindOfClass:[LYRConversation class]]) {
             [conversationArray addObject:change];
         }
-        
     }
     completion(conversationArray);
 }
 
-- (void) processConversationChanges:(NSMutableArray *)conversationChanges completion:(void(^)(NSArray *conversationChanges))completion
+- (void)processConversationChanges:(NSMutableArray *)conversationChanges completion:(void(^)(NSArray *conversationChanges))completion
 {
     self.tempIdentifiers = [self refreshConversations];
     NSMutableArray *changeObjects = [[NSMutableArray alloc] init];
-    for (int i = 0; i < conversationChanges.count; i++) {
-        NSDictionary *conversationChange = [conversationChanges objectAtIndex:i];
+    for (NSDictionary *conversationChange in conversationChanges) {
         LYRConversation *conversation = [conversationChange objectForKey:LYRObjectChangeObjectKey];
         NSUInteger conversationIndex = [self.conversationIdentifiers indexOfObject:conversation.identifier];
         LYRObjectChangeType changeType = (LYRObjectChangeType)[[conversationChange objectForKey:LYRObjectChangeTypeKey] integerValue];
@@ -90,6 +84,7 @@
             case LYRObjectChangeTypeCreate:
                 [changeObjects addObject:[LYRUIDataSourceChange insertChangeWithIndex:conversationIndex]];
                 break;
+                
             case LYRObjectChangeTypeUpdate:
                 if ([[conversationChange objectForKey:LYRObjectChangePropertyKey] isEqualToString:@"lastMessage"]) {
                     NSUInteger newIndex = [self.tempIdentifiers indexOfObject:conversation.identifier];
@@ -98,9 +93,11 @@
                     [changeObjects addObject:[LYRUIDataSourceChange updateChangeWithIndex:conversationIndex]];
                 }
                 break;
+                
             case LYRObjectChangeTypeDelete:
                 [changeObjects addObject:[LYRUIDataSourceChange deleteChangeWithIndex:conversationIndex]];
                 break;
+                
             default:
                 break;
         }
@@ -121,6 +118,5 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 @end

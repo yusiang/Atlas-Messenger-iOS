@@ -8,56 +8,40 @@
 
 #import "LYRUIConversationViewController.h"
 #import "LYRUIConversationCollectionViewFlowLayout.h"
-
 #import "LYRUIOutgoingMessageCollectionViewCell.h"
 #import "LYRUIIncomingMessageCollectionViewCell.h"
-
 #import "LYRUIConversationCollectionViewHeader.h"
 #import "LYRUIConversationCollectionViewFooter.h"
-
 #import "LYRUIConstants.h"
 #import "LYRUIUtilities.h"
-
 #import "LYRUIChangeNotificationObserver.h"
-
 #import "LYRUIMessageBubbleView.h"
-
 #import "LYRUIMessageInputToolbar.h"
-
 #import "LYRUIDataSourceChange.h"
 #import "LYRUIMessageNotificationObserver.h"
-
 #import "LYRUIParticipantTableViewController.h"
 
 @interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
 
-
 @property (nonatomic, strong) LYRClient *layerClient;
 @property (nonatomic, strong) LYRConversation *conversation;
 @property (nonatomic, strong) NSOrderedSet *messages;
-
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) LYRUIMessageInputToolbar *messageInputToolbar;
-
 @property (nonatomic, strong) LYRUIMessageNotificationObserver *messageNotificationObserver;
 @property (nonatomic, strong) dispatch_queue_t messageSendQueue;
-
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat keyboardHeight;
-
+@property (nonatomic) UIView *inputAccessoryView;
 
 @end
 
-@implementation LYRUIConversationViewController {
-    UIView *inputAccessoryView;
-}
+@implementation LYRUIConversationViewController
 
 static NSString *const LYRUIIncomingMessageCellIdentifier = @"incomingMessageCellIdentifier";
 static NSString *const LYRUIOutgoingMessageCellIdentifier = @"outgoingMessageCellIdentifier";
-
 static NSString *const LYRUIMessageCellHeaderIdentifier = @"messageCellHeaderIdentifier";
 static NSString *const LYRUIMessageCellFooterIdentifier = @"messageCellFooterIdentifier";
-
 static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (id)init
@@ -74,17 +58,12 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     self = [super init];
     if (self) {
-        
         NSAssert(layerClient, @"`Layer Client` cannot be nil");
         NSAssert(conversation, @"`Conversation` cannont be nil");
-        
-        self.accessibilityLabel = @"Conversation";
-        
-        self.conversation = conversation;
-        self.layerClient = layerClient;
-        
-        self.messageSendQueue = dispatch_queue_create("com.layer.messageSend", NULL);
-        
+        _conversation = conversation;
+        _layerClient = layerClient;
+        _dateDisplayTimeInterval = 60*60;
+        _messageSendQueue = dispatch_queue_create("com.layer.messageSend", NULL);
     }
     return self;
 }
@@ -120,18 +99,20 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
     // Configure defualt cell appearance
     [self configureMessageBubbleAppearance];
+    
+    self.accessibilityLabel = @"Conversation";
 }
 
 - (UIView *)inputAccessoryView
 {
-    if (!inputAccessoryView) {
+    if (!_inputAccessoryView) {
         self.messageInputToolbar = [[LYRUIMessageInputToolbar alloc] init];
     }
     CGSize size = [self.messageInputToolbar systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
     self.messageInputToolbar.delegate = self;
     self.messageInputToolbar.frame = CGRectMake(0, 0, size.width, size.height);
-    inputAccessoryView = self.messageInputToolbar;
-    return inputAccessoryView;
+    _inputAccessoryView = self.messageInputToolbar;
+    return _inputAccessoryView;
 }
 
 - (BOOL)canBecomeFirstResponder
@@ -176,10 +157,9 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
                                                   object:nil];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
-                                                  object:nil];
+                                                object:nil];
 }
 
 - (void)dealloc
@@ -213,24 +193,25 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
     LYRMessagePart *messagePart = [message.parts objectAtIndex:indexPath.row];
-    
     LYRUIMessageCollectionViewCell <LYRUIMessagePresenting> *cell;
     if ([self.layerClient.authenticatedUserID isEqualToString:message.sentByUserID]) {
-       
         // If the message was sent by the currently authenticated user, it is outgoing
         cell =  [self.collectionView dequeueReusableCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier forIndexPath:indexPath];
     } else {
-        
         // If the message was sent by someone other than the currently authenticated user, it is incoming
         cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier forIndexPath:indexPath];
     }
     [cell presentMessagePart:messagePart];
-    
-    // Sets the width of the bubble view
     [cell updateBubbleViewWidth:[self sizeForItemAtIndexPath:indexPath].width];
-    
-    //[self updateRecipientStatusForMessage:message];
+    if ([self.dataSource converationViewController:self shouldUpdateRecipientStatusForMessage:message]) {
+        [self updateRecipientStatusForMessage:message];
+    }
     return cell;
+}
+
+- (void)configureCell:(UICollectionViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    
 }
 
 #pragma mark
@@ -332,19 +313,16 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     // If it is the first section, show date label
     if (section == 0) return YES;
-    
     LYRMessage *previousMessage;
     LYRMessage *message = [self.messages objectAtIndex:section];
     if (section > 0) {
         previousMessage = [self.messages objectAtIndex:section - 1];
     }
-    double interval = [message.receivedAt timeIntervalSinceDate:previousMessage.receivedAt];
-    
+    NSTimeInterval interval = [message.receivedAt timeIntervalSinceDate:previousMessage.receivedAt];
     // If it has been 60min since last message, show date label
-    if (interval > (60 * 60)) {
+    if (interval > self.dateDisplayTimeInterval) {
         return YES;
     }
-    
     // Otherwise, don't show date label
     return NO;
 }
@@ -355,18 +333,15 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     if ([message.sentByUserID isEqualToString:self.layerClient.authenticatedUserID]) {
         return NO;
     }
-    
     if (!self.conversation.participants.count > 2) {
         return NO;
     }
-    
     if (section > 0) {
         LYRMessage *previousMessage = [self.messages objectAtIndex:section - 1];
         if ([previousMessage.sentByUserID isEqualToString:message.sentByUserID]) {
             return NO;
         }
     }
-
     return YES;
 }
 
@@ -383,7 +358,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     LYRMessage *message = [self.messages objectAtIndex:indexPath.section];
     LYRMessagePart *part = [message.parts objectAtIndex:indexPath.row];
-    
     CGSize size;
     if ([part.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         NSString *text = [[NSString alloc] initWithData:part.data encoding:NSUTF8StringEncoding];
@@ -406,34 +380,25 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     self.keyboardIsOnScreen = TRUE;
     NSDictionary* info = [notification userInfo];
     self.keyboardHeight = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
-    
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
     [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    
     [self updateInsets];
-    
     [UIView commitAnimations];
-    
     [self scrollToBottomOfCollectionViewAnimated:TRUE];
-    
     self.keyboardIsOnScreen = TRUE;
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)notification
 {
     self.keyboardHeight = 0;
-    
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
     [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    
     [self updateInsets];
-    
     [UIView commitAnimations];
-    
     self.keyboardIsOnScreen = FALSE;
 }
 
@@ -464,11 +429,9 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)sendMessageWithContentParts:(NSMutableArray *)messageContentParts
 {
     for (id object in messageContentParts){
-        
         if ([object isKindOfClass:[UIImage class]]) {
             [self sendMessageWithImage:object];
         }
-        
         if ([object isKindOfClass:[CLLocation class]]) {
             [self sendMessageWithLocation:object];
         }
@@ -479,6 +442,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:@"text/plain" data:[text dataUsingEncoding:NSUTF8StringEncoding]];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
+    [self addObserver:message forKeyPath:@"isSent" options:NSKeyValueObservingOptionNew context:NULL];
     [self sendMessage:message pushText:text];
 }
 
@@ -486,7 +450,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     UIImage *adjustedImage = LYRUIAdjustOrientationForImage(image);
     NSData *compressedImageData =  LYRUIJPEGDataForImageWithConstraint(adjustedImage, 300);
-    
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeImageJPEG data:compressedImageData];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self sendMessage:message pushText:@"New Image"];
@@ -496,12 +459,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     NSNumber *lat = [NSNumber numberWithDouble:location.coordinate.latitude];
     NSNumber *lon = [NSNumber numberWithDouble:location.coordinate.longitude];
-    NSDictionary *locationDictionary = @{@"lat" : lat,
-                                         @"lon" : lon};
-    
-    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeLocation data:[NSKeyedArchiver archivedDataWithRootObject:locationDictionary]];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeLocation data:[NSJSONSerialization dataWithJSONObject: @{@"lat" : lat, @"lon" : lon} options:0 error:nil]];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
-  
     [self sendMessage:message pushText:@"New Location"];
 }
 
@@ -511,7 +470,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
         NSString *text = [NSString stringWithFormat:@"%@: %@", [sender fullName], pushText];
         [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: text} onObject:message];
-        
         NSError *error;
         BOOL success = [self.layerClient sendMessage:message error:&error];
         if (success) {
@@ -538,9 +496,11 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         case 0:
             [self displayImagePickerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
             break;
+            
         case 1:
             [self displayImagePickerWithSourceType:UIImagePickerControllerSourceTypeCamera];
             break;
+            
         default:
             break;
     }
@@ -550,10 +510,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)displayImagePickerWithSourceType:(UIImagePickerControllerSourceType)sourceType;
 {
-        [self.messageInputToolbar.textInputView resignFirstResponder];
-    
+    [self.messageInputToolbar.textInputView resignFirstResponder];
     BOOL pickerSourceTypeAvailable = [UIImagePickerController isSourceTypeAvailable:sourceType];
-
     if (pickerSourceTypeAvailable) {
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
@@ -569,10 +527,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     NSString *mediaType = [info objectForKey:@"UIImagePickerControllerMediaType"];
     if ([mediaType isEqualToString:@"public.image"]) {
-        
         // Get the selected image
         UIImage *selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
-        
         [self.messageInputToolbar insertImage:selectedImage];
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
@@ -616,15 +572,14 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         id <LYRUIParticipant>participant = [self.dataSource conversationViewController:self participantForIdentifier:userID];
         if (participant) [participants addObject:participant];
     }
-    
-    NSSet *participantSet = [NSSet setWithArray:[participants sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:NO]]]];
+   // NSSet *participantSet = [NSSet setWithArray:[participants sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:NO]]]];
     
     // Detail View Controller Here
 }
 
 #pragma mark Notification Observer Delegate Methods
 
-- (void) observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
+- (void)observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
 {
     //nothing to do for now
 }
@@ -640,6 +595,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
                     [self scrollToBottomOfCollectionViewAnimated:YES];
                 }
                 break;
+                
             default:
                 break;
         }
@@ -688,10 +644,11 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)configureMessageBubbleAppearance
 {
     [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
-    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(16)];
+    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextFont:[UIFont systemFontOfSize:14]];
     
     [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
-    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:LSMediumFont(16)];
+    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:[UIFont systemFontOfSize:14]];
 }
+
 
 @end

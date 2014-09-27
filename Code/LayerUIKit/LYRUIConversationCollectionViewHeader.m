@@ -28,19 +28,16 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
         self.dateLabel = [[UILabel alloc] init];
         self.dateLabel.font = LSLightFont(12);
         self.dateLabel.textColor = [UIColor grayColor];
         self.dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.dateLabel];
-        
         self.participantLabel = [[UILabel alloc] init];
         self.participantLabel.font = LSLightFont(12);
         self.participantLabel.textColor = [UIColor grayColor];
         self.participantLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.participantLabel];
-        
     }
     return self;
 }
@@ -61,7 +58,7 @@
     [dateString beginEditing];
     
     [dateString addAttribute:NSFontAttributeName
-                       value:LSMediumFont(12)
+                       value:[UIFont systemFontOfSize:12]
                        range:boldedRange];
     
     [dateString endEditing];
@@ -72,14 +69,11 @@
     if ([self.constraints containsObject:self.dateLabelWidthConstraint]) {
         [self removeConstraint:self.dateLabelWidthConstraint];
     }
-    
     if ([self.constraints containsObject:self.dateLabelHeightConstraint]) {
         [self removeConstraint:self.dateLabelHeightConstraint];
     }
-
     self.dateLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.dateLabel.frame.size.width];
     self.dateLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.dateLabel.frame.size.height];
-    
     [self addConstraint:self.dateLabelWidthConstraint];
     [self addConstraint:self.dateLabelHeightConstraint];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
@@ -95,23 +89,18 @@
     }
     
     [self.participantLabel sizeToFit];
-    
     if ([self.constraints containsObject:self.participantLabelWidthConstraint]) {
         [self removeConstraint:self.participantLabelWidthConstraint];
     }
-    
     if ([self.constraints containsObject:self.participantLabelHeightConstraint]) {
         [self removeConstraint:self.participantLabelHeightConstraint];
     }
-  
     self.participantLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.participantLabel.frame.size.width];
     self.participantLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:self.participantLabel.frame.size.height];
-    
     [self addConstraint:self.participantLabelWidthConstraint];
     [self addConstraint:self.participantLabelHeightConstraint];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:44]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.participantLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-4]];
 }
-
 
 @end

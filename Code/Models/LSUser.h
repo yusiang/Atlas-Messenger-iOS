@@ -13,13 +13,13 @@
 
 + (instancetype)userFromDictionaryRepresentation:(NSDictionary *)representation;
 
-@property (nonatomic, strong) NSString *userID;
-@property (nonatomic, strong) NSString *firstName;
-@property (nonatomic, strong) NSString *lastName;
+@property (nonatomic) NSString *userID;
+@property (nonatomic) NSString *firstName;
+@property (nonatomic) NSString *lastName;
 @property (nonatomic, readonly) NSString *fullName;
-@property (nonatomic, strong) NSString *email;
-@property (nonatomic, strong) NSString *password;
-@property (nonatomic, strong) NSString *passwordConfirmation;
+@property (nonatomic) NSString *email;
+@property (nonatomic) NSString *password;
+@property (nonatomic) NSString *passwordConfirmation;
 @property (nonatomic, readonly) NSString *participantIdentifier;
 
 - (BOOL)validate:(NSError **)error;

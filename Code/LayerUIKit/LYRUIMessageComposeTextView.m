@@ -22,15 +22,12 @@
 {
     self = [super init];
     if (self) {
-        
         self.textContainerInset = UIEdgeInsetsMake(4, 0, 4, 0);
-        self.font = LSLightFont(16);
+        self.font = LSLightFont(14);
         self.text = @"Enter Message";
         self.textColor = [UIColor lightGrayColor];
-   
         [self layoutIfNeeded];
     }
-    
     return self;
 }
 
@@ -49,7 +46,6 @@
 {
     LYRUIMediaAttachment *textAttachment = [[LYRUIMediaAttachment alloc] init];
     textAttachment.image = image;
-    
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.text attributes:@{NSFontAttributeName : LSLightFont(16)}];
     [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length) withAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
     self.attributedText = attributedString;

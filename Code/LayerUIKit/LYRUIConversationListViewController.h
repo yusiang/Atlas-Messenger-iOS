@@ -21,12 +21,16 @@
  */
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation;
 
-//TODO Discuss if this is necessary
+@optional
 /**
  @abstract Tells the delegate that the conversation list was dismissed without making a selection.
  @param conversationListViewController The conversation list that was dismissed.
  */
 - (void)conversationListViewControllerDidCancel:(LYRUIConversationListViewController *)conversationListViewController;
+
+@end
+
+@protocol LYRUIConversationListViewControllerDataSource <NSObject>
 
 /**
  @abstract Asks the delegate for the Conversation Label for a given set of participants in a conversation.
@@ -36,13 +40,12 @@
  */
 - (NSString *)conversationLabelForParticipants:(NSSet *)participants inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController;
 
-///**
-// *  Informs the data source that a search has been made with the following search string. After the completion block is called, the `comversationListViewController:presenterForConversationAtIndex:` method will be called for each search result.
-// *
-// *  @param conversationListViewController An object representing the conversation list view controller.
-// *  @param searchString                   The search string that was just used for search.
-// *  @param completion                     The completion block that should be called when the results are fetched from the search.
-// */
+/**
+ @abstract Informs the data source that a search has been made with the following search string. After the completion block is called, the `comversationListViewController:presenterForConversationAtIndex:` method will be called for each search result.  
+ @param conversationListViewController An object representing the conversation list view controller.
+ @param searchString The search string that was just used for search.
+ @param completion The completion block that should be called when the results are fetched from the search.
+ */
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSearchWithString:(NSString *)searchString completion:(void (^)())completion;
 
 @end
@@ -68,6 +71,11 @@
  @abstract The delegate for the receiver.
  */
 @property (nonatomic, weak) id<LYRUIConversationListViewControllerDelegate> delegate;
+
+/**
+ @abstract The delegate for the receiver.
+ */
+@property (nonatomic, weak) id<LYRUIConversationListViewControllerDataSource> dataSource;
 
 ///----------------------------------------
 /// @name Customizing the Conversation List

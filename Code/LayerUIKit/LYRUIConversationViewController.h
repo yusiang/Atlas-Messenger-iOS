@@ -21,6 +21,11 @@
  @abstract Asks the data source for an object conforming to the `LYRUIParticipant` protocol for a given identifier
  @param conversationListViewController The conversation view controller requesting the object
  @param conversation The participant identifier
+ @return an object conforming to the LYRUIParticpant protocol
+ @discussion the returned object will be used to display names in the controller. If there is only one other participant aside from the 
+ currently authenticated user, the controller will display the objects `firstName` as the controller title. If there is more that one 
+ other participant aside from the currenlty authenticated user, names will be displayed above groups of incoming message cells coming from the 
+ same particpant
  */
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier;
 
@@ -28,6 +33,7 @@
  @abstract Asks the data source for a string representation of a given date
  @param conversationListViewController The conversation view controller requesting the string
  @param conversation The `NSDate` object to be displayed as a string
+ @retrun a string representing the given date
  @discussion The date string will be displayed above message cells in section headers. The date represents the `sentAt` date of a message object
  */
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date;
@@ -36,9 +42,19 @@
  @abstract Asks the data source for a string representation of a given `LYRRecipientStatus`
  @param conversationListViewController The conversation view controller requesting the string
  @param conversation The `LYRRecipientStatus` object to be displayed as a string
+ @return a string representing the recipient status
  @discussion The date string will be displayed above message cells in section headers. The date represents the `sentAt` date of a message object
  */
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus;
+
+/**
+ @abstract Asks the data source if the LRYRecipientStatus should be updated
+ @param conversationListViewController The conversation view controller requesting the string
+ @param conversation the LYRMessage object that requires evaluation
+ @return a boolean value indicating if the recipient status should be updated
+ @discussion As LayerKit only allows for setting messages as read, if the method returns true, the controller will mark the message as read
+ */
+- (BOOL)converationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message;
 
 @end
 
@@ -59,10 +75,14 @@
 @property (nonatomic, weak) id<LYRUIConversationViewControllerDataSource> dataSource;
 
 /**
+ @abstract The time interval at which message dates should be displayed in seconds. Default is 60 minutes meaning that
+ dates will appear centered above a message only if the previous message was sent over 60 minutes ago.
+ */
+@property (nonatomic) NSTimeInterval dateDisplayTimeInterval;
+
+/**
  @abstract Boolean value to determine whether or not the conversation view controller permits editing
  */
 @property (nonatomic, assign) BOOL allowsEditing;
 
 @end
-
-

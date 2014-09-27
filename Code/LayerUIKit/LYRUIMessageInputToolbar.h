@@ -87,7 +87,7 @@
 @property (nonatomic, strong) UIButton *rightAccessoryButton;
 
 /**
- @abstract An autom resizing message composisiton field
+ @abstract An automatically resizing message composisiton field
  */
 @property (nonatomic, strong) LYRUIMessageComposeTextView *textInputView;
 
