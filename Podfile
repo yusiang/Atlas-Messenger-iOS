@@ -1,3 +1,6 @@
+source 'https://github.com/CocoaPods/Specs.git'
+source 'git@github.com:layerhq/cocoapods-specs.git'
+    
 target 'LayerSample' do
   pod 'SVProgressHUD', :head
   #pod 'LayerKit'
