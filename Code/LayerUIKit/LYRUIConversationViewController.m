@@ -404,15 +404,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 #pragma mark LYRUIComposeView Delegate Methods
 
-- (void)messageInputToolbar:(LYRUIMessageInputToolbar *)messageInputToolbar didTapRightAccessoryButton:(UIButton *)rightAccessoryButton
-{
-    if (messageInputToolbar.messageParts.count > 0) {
-        [self sendMessageWithParts:messageInputToolbar.messageParts];
-    } else if (messageInputToolbar.textInputView.text.length > 0) {
-        [self sendMessageWithText:messageInputToolbar.textInputView.text];
-    }
-}
-
 - (void)messageInputToolbar:(LYRUIMessageInputToolbar *)messageInputToolbar didTapLeftAccessoryButton:(UIButton *)leftAccessoryButton
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc]
@@ -424,24 +415,26 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [actionSheet showInView:self.view];
 }
 
-#pragma mark Message Sent Methods
-
-- (void)sendMessageWithParts:(NSMutableArray *)messageParts
+- (void)messageInputToolbar:(LYRUIMessageInputToolbar *)messageInputToolbar didTapRightAccessoryButton:(UIButton *)rightAccessoryButton
 {
-    for (id object in messageParts){
-        if ([object isKindOfClass:[UIImage class]]) {
-            [self sendMessageWithImage:object];
+    for (id part in messageInputToolbar.messageParts){
+        if ([part isKindOfClass:[NSString class]]) {
+            [self sendMessageWithText:part];
         }
-        if ([object isKindOfClass:[CLLocation class]]) {
-            [self sendMessageWithLocation:object];
+        if ([part isKindOfClass:[UIImage class]]) {
+            [self sendMessageWithImage:part];
+        }
+        if ([part isKindOfClass:[CLLocation class]]) {
+            [self sendMessageWithLocation:part];
         }
     }
 }
 
+#pragma mark Message Sent Methods
+
 - (void)sendMessageWithText:(NSString *)text
 {
-    NSString *trimmedString = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:@"text/plain" data:[trimmedString dataUsingEncoding:NSUTF8StringEncoding]];
+    LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:@"text/plain" data:[text dataUsingEncoding:NSUTF8StringEncoding]];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self addObserver:message forKeyPath:@"isSent" options:NSKeyValueObservingOptionNew context:NULL];
     [self sendMessage:message pushText:text];
@@ -698,14 +691,14 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)handlePanGesture:(UIPanGestureRecognizer *)sender
 {
     CGFloat inset = [sender translationInView:self.collectionView].x * 0.5;
-     LYRUIConversationCollectionViewFlowLayout *layout = (LYRUIConversationCollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    LYRUIConversationCollectionViewFlowLayout *layout = (LYRUIConversationCollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     if(sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled) {
         [self.collectionView performBatchUpdates:^{
             layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
             [layout invalidateLayout];
         } completion:nil];
     } else {
-        if (inset > -60) {
+        if (inset > -60 && inset < 0) {
             layout.sectionInset = UIEdgeInsetsMake(0, inset, 0, -inset);
             [layout invalidateLayout];
         }

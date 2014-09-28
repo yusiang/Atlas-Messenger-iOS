@@ -1,4 +1,4 @@
-//
+ //
 //  UIMessageComposeTextView.m
 //  LayerSample
 //
@@ -18,6 +18,8 @@
 
 @implementation LYRUIMessageComposeTextView
 
+static NSString *const LYRUIPlaceHolderText = @"Enter Message";
+
 - (id)init
 {
     self = [super init];
@@ -31,6 +33,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(textViewBeganEditing)
                                                      name:UITextViewTextDidBeginEditingNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(textViewDidChange)
+                                                     name:UITextViewTextDidChangeNotification
                                                    object:nil];
     }
     return self;
@@ -51,24 +57,21 @@
 
 - (void)insertImage:(UIImage *)image
 {
+    // Check for place holder text and remove if present
+    [self displayPlaceHolderText:NO];
+    // Create a text attachement with the image
     LYRUIMediaAttachment *textAttachment = [[LYRUIMediaAttachment alloc] init];
     textAttachment.image = image;
-    
-    if (self.text.length > 0) {
-        [self insertLineBreak];
-    }
-    
+    // Make an Mutable attributed copy of the current attributed string
     NSMutableAttributedString *attributedString = [self.attributedText mutableCopy];
-    if (attributedString.length > 1) {
-        [attributedString replaceCharactersInRange:NSMakeRange(attributedString.length, 0)
-                              withAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
-    } else {
-        [attributedString replaceCharactersInRange:NSMakeRange(0, attributedString.length)
-                              withAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, self.attributedText.length)];
+    // If we have text, add a line break
+    if (attributedString.length > 0) {
+        [self insertLineBreak:attributedString];
     }
-
-    NSAttributedString *space = [[NSAttributedString alloc] initWithString:@" "];
-    [attributedString insertAttributedString:space atIndex:attributedString.length];
+    // Add the attachemtn as an attribtued string
+    [attributedString replaceCharactersInRange:NSMakeRange(attributedString.length, 0)
+                          withAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
     self.attributedText = attributedString;
     [self layoutIfNeeded];
 }
@@ -90,39 +93,50 @@
     [self layoutIfNeeded];
 }
 
-- (void)textViewBeganEditing
+- (void)insertLineBreak:(NSMutableAttributedString *)mutableAttributedString
 {
-    if (self.font != [UIFont systemFontOfSize:14]) {
-        self.font = [UIFont systemFontOfSize:14];
-    }
-    if ([self.text isEqualToString:@"Enter Message"]) {
-        self.text = @"";
-    }
-    
-    if ([self attributedTextContainsAttachment]) {
-        [self insertLineBreak];
-    }
-}
-
-- (void)insertLineBreak
-{
-    NSMutableAttributedString *mutableAttributedString = [self.attributedText mutableCopy];
-    NSMutableAttributedString *lineBreak = [[NSMutableAttributedString alloc] initWithString:@" \n"];
-    [mutableAttributedString insertAttributedString:lineBreak atIndex:self.attributedText.length];
+    [mutableAttributedString insertAttributedString:[[NSMutableAttributedString alloc] initWithString:@" \n "] atIndex:mutableAttributedString.length];
+    [mutableAttributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(0, mutableAttributedString.length)];
     self.attributedText = mutableAttributedString;
 }
 
-- (BOOL)attributedTextContainsAttachment
+- (BOOL)previousIndexIsAttachement
 {
-    NSRange theStringRange = NSMakeRange(0, self.attributedText.length);
-    for (int i = 0; i < self.attributedText.length; i++) {
-        NSDictionary *theAttributes = [self.attributedText attributesAtIndex:i longestEffectiveRange:nil inRange:theStringRange];
-        NSTextAttachment *theAttachment = [theAttributes objectForKey:NSAttachmentAttributeName];
-        if (theAttachment != NULL) {
-            return TRUE;
-        }
+    if (!self.attributedText.length > 0) return FALSE;
+    NSDictionary *theAttributes = [self.attributedText attributesAtIndex:self.attributedText.length - 1
+                                                   longestEffectiveRange:nil
+                                                                 inRange:NSMakeRange(0, self.attributedText.length)];
+    NSTextAttachment *theAttachment = [theAttributes objectForKey:NSAttachmentAttributeName];
+    if (theAttachment != NULL) {
+        return TRUE;
+    } else {
+        return FALSE;
     }
-    return FALSE;
 }
 
+- (void)displayPlaceHolderText:(BOOL)displayPlaceHolderText
+{
+    if ([self.text isEqualToString:LYRUIPlaceHolderText]) {
+        if (displayPlaceHolderText) {
+            self.text = @"Enter Message";
+        } else {
+            self.text = @"";
+        }
+    }
+}
+
+- (void)textViewBeganEditing
+{
+    [self displayPlaceHolderText:NO];
+    if ([self previousIndexIsAttachement]) {
+        [self insertLineBreak:[self.attributedText mutableCopy]];
+    }
+    self.textColor = [UIColor blackColor];
+    [self layoutIfNeeded];
+}
+
+- (void)textViewDidChange
+{
+    [self layoutIfNeeded];
+}
 @end

@@ -69,7 +69,7 @@ static CGFloat const LSButtonHeight = 28;
         self.rightAccessoryButton = [[UIButton alloc] init];
         self.rightAccessoryButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.rightAccessoryButton.accessibilityLabel = @"Send Button";
-        self.rightAccessoryButton.titleLabel.font = LSLightFont(16);
+        self.rightAccessoryButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [self.rightAccessoryButton setTitle:@"SEND" forState:UIControlStateNormal];
         [self.rightAccessoryButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
         [self.rightAccessoryButton setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
@@ -91,7 +91,6 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)insertImage:(UIImage *)image
 {
-    [self.messageParts addObject:image];
     [self.rightAccessoryButton setHighlighted:TRUE];
     [self.textInputView insertImage:image];
     [self adjustFrame];
@@ -138,6 +137,7 @@ static CGFloat const LSButtonHeight = 28;
 
 - (void)rightAccessoryButtonTapped
 {
+    [self filterMessageParts];
     if (self.textInputView.text.length > 0 || self.messageParts) {
         [self.inputToolBarDelegate messageInputToolbar:self didTapRightAccessoryButton:self.rightAccessoryButton];
         [self.rightAccessoryButton setHighlighted:FALSE];
@@ -150,18 +150,41 @@ static CGFloat const LSButtonHeight = 28;
     [self adjustFrame];
 }
 
+- (NSArray *)filterMessageParts
+{
+    NSMutableArray *attachments = [[NSMutableArray alloc] init];
+    [self.textInputView.attributedText enumerateAttribute:NSAttachmentAttributeName
+                                                   inRange:NSMakeRange(0, self.textInputView.attributedText.length)
+                                                   options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
+                                                usingBlock:^(id value, NSRange range, BOOL *stop) {
+                                                    if ([value isKindOfClass:[LYRUIMediaAttachment class]]) {
+                                                        [attachments addObject:[(LYRUIMediaAttachment *)value image]];
+                                                    }
+    }];
+     
+    NSArray *contentParts = [[self.textInputView.attributedText string] componentsSeparatedByString:@"\n"];
+    for (NSString *part in contentParts) {
+         NSString *trimmedString = [part stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if ([trimmedString isEqualToString:@"\U0000fffc"]) {
+            [self.messageParts addObject:[attachments firstObject]];
+            [attachments removeObjectAtIndex:0];
+        } else {
+            [self.messageParts addObject:trimmedString];
+        }
+    }
+    return self.messageParts;
+}
+
 
 #pragma mark TextViewDelegate Methods
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    textView.textColor = [UIColor blackColor];
     return YES;
 }
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
-    textView.textColor = [UIColor lightGrayColor];
     [self.rightAccessoryButton setHighlighted:FALSE];
     return YES;
 }
