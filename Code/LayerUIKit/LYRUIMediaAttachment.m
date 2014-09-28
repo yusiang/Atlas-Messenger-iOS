@@ -14,7 +14,7 @@
 - (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex
 {
     CGRect systemImageRect = [super attachmentBoundsForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
-    return LYRUIImageRectConstrainedToSize(systemImageRect.size, CGSizeMake(120, 120));
+    return LYRUIImageRectConstrainedToSize(systemImageRect.size, CGSizeMake(150, 150));
 }
 
 @end

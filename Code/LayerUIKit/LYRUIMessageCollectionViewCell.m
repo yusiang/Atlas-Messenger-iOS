@@ -13,6 +13,7 @@
 
 @interface LYRUIMessageCollectionViewCell ()
 
+@property (nonatomic) UILabel *dateLabel;
 @property (nonatomic) CGFloat bubbleViewWidth;
 @property (nonatomic) CGFloat imageViewDiameter;
 @property (nonatomic) NSLayoutConstraint *bubbleViewWidthConstraint;
@@ -29,11 +30,21 @@
         self.bubbleView = [[LYRUIMessageBubbleView alloc] init];
         self.bubbleView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.bubbleView];
+        
         self.avatarImage = [[UIImageView alloc] init];
         self.avatarImage.backgroundColor = LSGrayColor();
-        self.avatarImage.layer.cornerRadius = 12;
+        self.avatarImage.layer.cornerRadius = 10;
         self.avatarImage.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.avatarImage];
+       
+        self.dateLabel  = [[UILabel alloc] init];
+        self.dateLabel.font = [UIFont systemFontOfSize:10];
+        self.dateLabel.textColor = [UIColor lightGrayColor];
+        self.dateLabel.text = @"10:36AM";
+        self.dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.dateLabel sizeToFit];
+        [self.contentView addSubview:self.dateLabel];
+        
         if ([self isKindOfClass:[LYRUIIncomingMessageCollectionViewCell class]]) {
             self.imageViewDiameter = 24;
         } else {
@@ -113,6 +124,22 @@
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeTop
+                                                                multiplier:1.0
+                                                                  constant:0]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:2]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
                                                                 multiplier:1.0
                                                                   constant:0]];
     

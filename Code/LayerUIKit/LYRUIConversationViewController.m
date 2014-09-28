@@ -21,7 +21,7 @@
 #import "LYRUIMessageNotificationObserver.h"
 #import "LYRUIParticipantTableViewController.h"
 
-@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate>
+@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate, UIGestureRecognizerDelegate >
 
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LYRConversation *conversation;
@@ -33,6 +33,7 @@
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) UIView *inputAccessoryView;
+@property (nonatomic) CGFloat collectionViewSectionInset;
 
 @end
 
@@ -76,7 +77,9 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [self addContactsButton];
     
     // Setup Collection View
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero
+                                             collectionViewLayout:[[LYRUIConversationCollectionViewFlowLayout alloc] init]];
+    self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
     self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, LYRUIMessageInputToolbarHeight, 0);
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -86,6 +89,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
     self.collectionView.accessibilityLabel = @"Conversation Collection View";
     [self.view addSubview:self.collectionView];
+    [self updateCollectionViewConstraints];
     
     // Register reusable collection view cells, header and footer
     [self.collectionView registerClass:[LYRUIIncomingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIIncomingMessageCellIdentifier];
@@ -102,26 +106,18 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     // Configure defualt cell appearance
     [self configureMessageBubbleAppearance];
     
+    UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    [panGestureRecognizer setMinimumNumberOfTouches:1];
+    [panGestureRecognizer setMaximumNumberOfTouches:1];
+    panGestureRecognizer.delegate = self;
+    [self.collectionView  addGestureRecognizer:panGestureRecognizer];
+    
     self.accessibilityLabel = @"Conversation";
-}
-
-- (UIView *)inputAccessoryView
-{
-    if (!_inputAccessoryView) {
-        _inputAccessoryView = self.messageInputToolbar;
-    }
-    return _inputAccessoryView;
-}
-
-- (BOOL)canBecomeFirstResponder
-{
-    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     if (self.conversation.participants.count == 2) {
         NSMutableSet *participants = [self.conversation.participants mutableCopy];
         [participants removeObject:self.layerClient.authenticatedUserID];
@@ -136,6 +132,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    self.collectionViewSectionInset = 0;
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
@@ -164,6 +161,20 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     self.collectionView.delegate = nil;
     self.messageNotificationObserver = nil;
+}
+
+
+- (UIView *)inputAccessoryView
+{
+    if (!_inputAccessoryView) {
+        _inputAccessoryView = self.messageInputToolbar;
+    }
+    return _inputAccessoryView;
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
 }
 
 #pragma mark - Refresh Data Source
@@ -207,11 +218,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     return cell;
 }
 
-- (void)configureCell:(UICollectionViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
-
 #pragma mark
 #pragma mark Collection View Delegate
 
@@ -224,14 +230,9 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGRect rect = [[UIScreen mainScreen] bounds];
-    CGSize size = [self sizeForItemAtIndexPath:indexPath];
-    return CGSizeMake(rect.size.width, size.height);
-}
-
-- (UIEdgeInsets)collectionView: (UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
-    return UIEdgeInsetsZero;
+    CGFloat width = self.collectionView.frame.size.width;
+    CGFloat height = [self sizeForItemAtIndexPath:indexPath].height;
+    return CGSizeMake(width, height);
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
@@ -259,10 +260,11 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
+    CGRect rect = [[UIScreen mainScreen] bounds];
     if ([self shouldDisplayReadReceiptForSection:section]) {
-        return CGSizeMake(320, 20);
+        return CGSizeMake(rect.size.width, 20);
     }
-    return CGSizeMake(320, 4);
+    return CGSizeMake(rect.size.width, 4);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
@@ -571,9 +573,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         id <LYRUIParticipant>participant = [self.dataSource conversationViewController:self participantForIdentifier:userID];
         if (participant) [participants addObject:participant];
     }
-   // NSSet *participantSet = [NSSet setWithArray:[participants sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:NO]]]];
-    
-    // Detail View Controller Here
 }
 
 #pragma mark Notification Observer Delegate Methods
@@ -649,5 +648,73 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:[UIFont systemFontOfSize:14]];
 }
 
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                               duration:(NSTimeInterval)duration
+{
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    NSLog(@"Content Inset left %f", self.collectionView.contentInset.left);
+    NSLog(@"Content Inset rigth %f", self.collectionView.contentInset.right);
+}
+
+- (void)updateCollectionViewConstraints
+{
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
+                                                          attribute:NSLayoutAttributeLeft
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeLeft
+                                                         multiplier:1.0
+                                                           constant:0]];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
+                                                          attribute:NSLayoutAttributeRight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeRight
+                                                         multiplier:1.0
+                                                           constant:0]];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTop
+                                                         multiplier:1.0
+                                                           constant:0]];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
+                                                          attribute:NSLayoutAttributeBottom
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1.0
+                                                           constant:0]];
+}
+
+- (void)handlePanGesture:(UIPanGestureRecognizer *)sender
+{
+    CGFloat inset = [sender translationInView:self.collectionView].x * 0.5;
+     LYRUIConversationCollectionViewFlowLayout *layout = (LYRUIConversationCollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    if(sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled) {
+        [self.collectionView performBatchUpdates:^{
+            layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
+            [layout invalidateLayout];
+        } completion:nil];
+    } else {
+        if (inset > -60) {
+            layout.sectionInset = UIEdgeInsetsMake(0, inset, 0, -inset);
+            [layout invalidateLayout];
+        }
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
 
 @end

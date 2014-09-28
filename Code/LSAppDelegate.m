@@ -64,18 +64,22 @@ extern void LYRSetLogLevelFromEnvironment();
 
     __weak LSApplicationController *wController = self.applicationController;
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            LSAlertWithError(error);
+            [self.splashView animateLogoWithCompletion:^{
+                [self removeSplashView];
+            }];
+        }
         if (success) {
             NSLog(@"Layer Client is connected");
             LSSession *session = [wController.persistenceManager persistedSessionWithError:nil];
             [self updateCrashlyticsWithUser:session.user];
             NSError *error;
-            
             // If we have a session, resume
             if ([wController.APIManager resumeSession:session error:&error]) {
                 NSLog(@"Session resumed: %@", session);
                 [self loadContacts];
                 [self presentConversationsListViewController];
-                [self removeSplashView];
                 // If we have an authenticated user ID and no session, we must log out
             } else if (wController.layerClient.authenticatedUserID){
                 [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
@@ -83,7 +87,6 @@ extern void LYRSetLogLevelFromEnvironment();
                     [self.splashView animateLogoWithCompletion:^{
                         [self removeSplashView];
                     }];
-                    
                 }];
             } else {
                 [self.splashView animateLogoWithCompletion:^{
@@ -281,9 +284,9 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     [[UINavigationBar appearance] setTintColor:LSBlueColor()];
     [[UINavigationBar appearance] setBarTintColor:LSLighGrayColor()];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:16]}];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:18]}];
     
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]} forState:UIControlStateNormal];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:16]} forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LSBlueColor()];
 
 }

@@ -25,7 +25,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.recipientStatusLabel = [[UILabel alloc] init];
-        self.recipientStatusLabel.font = [UIFont systemFontOfSize:12];
+        self.recipientStatusLabel.font = [UIFont boldSystemFontOfSize:12];
         self.recipientStatusLabel.textColor = [UIColor grayColor];
         self.recipientStatusLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.recipientStatusLabel];

@@ -23,7 +23,7 @@
 
 // Compose View Margin Constants
 static CGFloat const LSComposeviewHorizontalMargin = 6;
-static CGFloat const LSComposeviewVerticalMargin = 8;
+static CGFloat const LSComposeviewVerticalMargin = 6;
 
 // Compose View Button Constants
 static CGFloat const LSLeftAccessoryButtonWidth = 40;
@@ -39,7 +39,6 @@ static CGFloat const LSButtonHeight = 28;
 {
     self = [super init];
     if (self) {
-        
         self.inputToolBarDelegate = viewController;
         
         self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
@@ -156,16 +155,12 @@ static CGFloat const LSButtonHeight = 28;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    if ([textView.text isEqualToString:@"Enter Message"]) {
-        textView.text = @"";
-    }
     textView.textColor = [UIColor blackColor];
     return YES;
 }
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
-    textView.text = @"Enter Message";
     textView.textColor = [UIColor lightGrayColor];
     [self.rightAccessoryButton setHighlighted:FALSE];
     return YES;

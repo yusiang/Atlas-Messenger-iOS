@@ -177,7 +177,7 @@
          <EnvironmentVariable
             key = "LAYER_LOG_LEVEL"
             value = "VERBOSE"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>

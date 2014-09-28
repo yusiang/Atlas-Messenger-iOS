@@ -27,12 +27,13 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.dateLabel = [[UILabel alloc] init];
-        self.dateLabel.font = LSLightFont(12);
+        self.dateLabel.font = [UIFont systemFontOfSize:12];
         self.dateLabel.textColor = [UIColor grayColor];
         self.dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.dateLabel];
+        
         self.participantLabel = [[UILabel alloc] init];
-        self.participantLabel.font = LSLightFont(12);
+        self.participantLabel.font = [UIFont systemFontOfSize:12];
         self.participantLabel.textColor = [UIColor grayColor];
         self.participantLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.participantLabel];
@@ -56,7 +57,7 @@
     [dateString beginEditing];
     
     [dateString addAttribute:NSFontAttributeName
-                       value:[UIFont systemFontOfSize:12]
+                       value:[UIFont boldSystemFontOfSize:12]
                        range:boldedRange];
     
     [dateString endEditing];
