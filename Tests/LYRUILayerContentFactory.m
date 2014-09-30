@@ -34,10 +34,8 @@
 
 - (void)conversationsWithParticipants:(NSSet *)participants number:(NSUInteger)number
 {
-    for (int i = 0; i < number; i++) {
-        LYRConversation *conversation = [LYRConversation conversationWithParticipants:participants];
-        [self sendMessagesToConversation:conversation number:10];
-    }
+    LYRConversation *conversation = [LYRConversation conversationWithParticipants:participants];
+    [self sendMessagesToConversation:conversation number:10];
 }
 
 - (void)sendMessagesToConversation:(LYRConversation *)conversation number:(NSUInteger)number

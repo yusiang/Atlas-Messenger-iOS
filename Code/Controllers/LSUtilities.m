@@ -39,7 +39,7 @@ NSString *LSLayerConfigurationURL(LSEnvironment environment)
             break;
             
         case LSTestEnvironment:
-            return @"172.17.8.101/client_configuration.json";
+            return @"https://dev-1.preview.layer.com/client_configuration.json";
             break;
             
         default:
@@ -67,7 +67,7 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
             break;
             
         case LSTestEnvironment:
-            return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
+            return [[NSUUID alloc] initWithUUIDString:@"5da52b72-481d-11e4-a5f5-e73f00000629"];
             break;
             
         default:

@@ -72,7 +72,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (BOOL)converationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message
 {
-    return NO;
+    return YES;
 }
 
 @end

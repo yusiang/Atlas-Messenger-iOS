@@ -126,10 +126,10 @@
                   Identifier = "LSUITest/testToVerifyUIAnimimationsForSendingAMessage">
                </Test>
                <Test
-                  Identifier = "LYRUIConversationListTest">
+                  Identifier = "LYRUIConversationViewTest">
                </Test>
                <Test
-                  Identifier = "LYRUIConversationViewTest">
+                  Identifier = "LYRUIParticipantPickerTest">
                </Test>
                <Test
                   Identifier = "LYRUIParticipantPickerTest/testToVerifyCustomCellImplementationFunctionality">

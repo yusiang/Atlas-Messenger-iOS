@@ -110,7 +110,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [panGestureRecognizer setMinimumNumberOfTouches:1];
     [panGestureRecognizer setMaximumNumberOfTouches:1];
     panGestureRecognizer.delegate = self;
-    [self.collectionView  addGestureRecognizer:panGestureRecognizer];
+    //[self.collectionView  addGestureRecognizer:panGestureRecognizer];
     
     self.accessibilityLabel = @"Conversation";
 }
@@ -436,7 +436,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:@"text/plain" data:[text dataUsingEncoding:NSUTF8StringEncoding]];
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
-    [self addObserver:message forKeyPath:@"isSent" options:NSKeyValueObservingOptionNew context:NULL];
     [self sendMessage:message pushText:text];
 }
 
@@ -570,27 +569,10 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 #pragma mark Notification Observer Delegate Methods
 
-- (void)observerWillChangeContent:(LYRUIChangeNotificationObserver *)observer
-{
-    //nothing to do for now
-}
-
 - (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
 {
     [self fetchMessages];
     [self.collectionView reloadData];
-    for (LYRUIDataSourceChange *change in changes) {
-        switch (change.type) {
-            case LYRUIDataSourceChangeTypeInsert:
-                if (change.newIndex + 1 == [self.collectionView numberOfSections]) {
-                    [self scrollToBottomOfCollectionViewAnimated:YES];
-                }
-                break;
-                
-            default:
-                break;
-        }
-    }
 //    [self.collectionView performBatchUpdates:^{
 //        for (LYRUIDataSourceChange *change in changes) {
 //            switch (change.type) {
@@ -598,8 +580,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 //                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
 //                    break;
 //                case LYRUIDataSourceChangeTypeMove:
-////                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
-////                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
+//                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
 //                    break;
 //                case LYRUIDataSourceChangeTypeUpdate:
 //                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
@@ -612,13 +594,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 //            }
 //        }
 //    } completion:^(BOOL finished) {
-//        [self scrollToBottomOfCollectionViewAnimated:TRUE];
+//        //[self scrollToBottomOfCollectionViewAnimated:TRUE];
 //    }];
-}
-
-- (void)observerDidChangeContent:(LYRUIChangeNotificationObserver *)observer
-{
-    
 }
 
 - (void)scrollToBottomOfCollectionViewAnimated:(BOOL)animated

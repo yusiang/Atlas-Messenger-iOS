@@ -1,97 +1,47 @@
 PODS:
-  - AFNetworking/Security (2.4.1)
-  - CocoaLumberjack (1.8.1):
-    - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (1.8.1)
-  - CocoaLumberjack/Extensions (1.8.1):
-    - CocoaLumberjack/Core
-  - CocoaSPDY-Layer (20140924173129681)
   - Expecta (0.3.1)
-  - FMDB/common (2.4)
-  - FMDB/standalone (2.4):
-    - FMDB/common
-    - FMDB/standalone/default
-  - FMDB/standalone/default (2.4):
-    - FMDB/common
-    - sqlite3
-  - FMDBMigrationManager (1.3.1):
-    - FMDB/common (~> 2.3)
   - HockeySDK (3.5.7)
   - KIF (3.0.8):
     - KIF/XCTest
   - KIF/XCTest (3.0.8)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - layer-client-messaging-schema (20140923112506902)
-  - layer-thrift (0.60.1):
-    - thrift (~> 0.9.1)
-  - LayerKit (0.7.22-rc4):
-    - AFNetworking/Security (~> 2.4.1)
-    - CocoaLumberjack (~> 1.8.1)
-    - CocoaSPDY-Layer (~> 20140924173129681)
-    - FMDB/standalone (~> 2.3)
-    - FMDBMigrationManager (~> 1.3.0)
-    - layer-client-messaging-schema (= 20140923112506902)
-    - layer-thrift (~> 0.60.1)
-    - LayerKit/Public
-    - TransitionKit (~> 2.1.0)
-  - LayerKit/Public (0.7.22-rc4):
-    - AFNetworking/Security (~> 2.4.1)
-    - CocoaLumberjack (~> 1.8.1)
-    - CocoaSPDY-Layer (~> 20140924173129681)
-    - FMDB/standalone (~> 2.3)
-    - FMDBMigrationManager (~> 1.3.0)
-    - layer-client-messaging-schema (= 20140923112506902)
-    - layer-thrift (~> 0.60.1)
-    - TransitionKit (~> 2.1.0)
+  - LayerKit (0.7.22-rc4)
   - LayerUIKit (0.1.0)
   - LYRCountDownLatch (0.9.0)
   - OCMock (3.1.1)
-  - sqlite3 (3.8.6):
-    - sqlite3/common
-  - sqlite3/common (3.8.6)
   - SVProgressHUD (HEAD based on 1.0)
-  - thrift (0.9.1)
-  - TransitionKit (2.1.0)
 
 DEPENDENCIES:
   - Expecta (~> 0.3.0)
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0)
-  - KIFViewControllerActions (~> 1.0)
-  - LayerKit (from `git@github.com:layerhq/LayerKit.git`)
+  - KIFViewControllerActions (from `git@github.com:blakewatters/KIFViewControllerActions.git`)
+  - LayerKit (from `~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.7.22-rc4`)
   - LayerUIKit (from `.`)
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - OCMock (~> 3.1)
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
+  KIFViewControllerActions:
+    :git: git@github.com:blakewatters/KIFViewControllerActions.git
   LayerKit:
-    :git: git@github.com:layerhq/LayerKit.git
+    :path: ~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.7.22-rc4
   LayerUIKit:
     :path: .
   LYRCountDownLatch:
     :git: git@github.com:layerhq/LYRCountDownLatch.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
-  CocoaLumberjack: 9d198d6e19909b3b113a38c5f06f7bb8eedd0427
-  CocoaSPDY-Layer: 0e8d9568293c40561eb1d4f858d8585e4da3a4a5
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
-  FMDB: 0b2fa25e5264ef177973c0cb8c02c711107979aa
-  FMDBMigrationManager: 2bd36969dfce47955436945569c0d65ac8319678
   HockeySDK: f0e874d1c6833163ee0c4e423606faf33ad04071
   KIF: 2db5e8cf59136dd1267d49cca0d55883389b09d3
-  KIFViewControllerActions: 27325472cb83771ffc314935680515528c96d80e
-  layer-client-messaging-schema: 98a81de8e01fe96389e6cbd7045f6bbfc926a129
-  layer-thrift: 0df5c3b58ed9b0528418ea380b318e86657e2c45
-  LayerKit: f46463f3ff3ec48c8a5fcca29304f2708e9b443e
+  KIFViewControllerActions: 6d680038a329864d62526928dd89556c0177bc55
+  LayerKit: 6b77f98ee73f382adf01fdf9f1e48a31dbe2cc09
   LayerUIKit: 4fb0692d4405f455308ad309ce91d2a6af0c9e52
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
-  sqlite3: 170bf094e597765aaa5d3d312a7b222a6f8ab6f0
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
-  thrift: b69f9820045ffa76eabe35674cdcc8daa5b1f75c
-  TransitionKit: 6a6f3ddda38ae758778aa889dcb930e4f8d64edc
 
 COCOAPODS: 0.34.1

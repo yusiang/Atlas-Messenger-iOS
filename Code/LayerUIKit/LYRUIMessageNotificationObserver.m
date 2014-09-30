@@ -44,8 +44,6 @@
 
 - (void)didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
-    [self.delegate observerWillChangeContent:self];
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [self processLayerChangeNotification:notification completion:^(NSMutableArray *messageArray) {
             if (messageArray.count > 0) {
@@ -86,9 +84,9 @@
                     
                 case LYRObjectChangeTypeUpdate:
                     if ([[messageUpdate objectForKey:LYRObjectChangePropertyKey] isEqualToString:@"index"]) {
-//                        NSUInteger oldIndex = [[messageUpdate objectForKey:LYRObjectChangeOldValueKey] integerValue];
-//                        NSUInteger newIndex = [[messageUpdate objectForKey:LYRObjectChangeNewValueKey] integerValue];
-//                        [changeObjects addObject:[LYRUIDataSourceChange moveChangeWithOldIndex:oldIndex newIndex:newIndex]];
+                        NSUInteger oldIndex = [[messageUpdate objectForKey:LYRObjectChangeOldValueKey] integerValue];
+                        NSUInteger newIndex = [[messageUpdate objectForKey:LYRObjectChangeNewValueKey] integerValue];
+                        [changeObjects addObject:[LYRUIDataSourceChange moveChangeWithOldIndex:oldIndex newIndex:newIndex]];
                     } else {
                         [changeObjects addObject:[LYRUIDataSourceChange updateChangeWithIndex:message.index]];
                     }
