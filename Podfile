@@ -1,11 +1,11 @@
-source 'https://github.com/CocoaPods/Specs.git'
 source 'git@github.com:layerhq/cocoapods-specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
 
 target 'LayerSample' do
   pod 'SVProgressHUD', :head
   #pod 'LayerKit'
-  #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
-  pod 'LayerKit', path: '~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.7.22-rc4'
+  pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
+  #pod 'LayerKit', path: '~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.7.22-rc4'
   pod 'HockeySDK', '~> 3.5.6'
   pod 'LayerUIKit', path: '.'
 end

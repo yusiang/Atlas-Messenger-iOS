@@ -46,8 +46,13 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LSTestEnvironment;
+    LSEnvironment environment = LYRUINA3Production;
     
+    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(environment)]) {
+        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(environment) forKey:@"LAYER_CONFIGURATION_URL"];
+    }
+
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
@@ -121,18 +126,18 @@ extern void LYRSetLogLevelFromEnvironment();
 //    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
     // Declaring that I want to recieve push!
-//    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
-//        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
-//                                                                                             categories:nil];
-//        [application registerUserNotificationSettings:notificationSettings];
-//        [application registerForRemoteNotifications];
-//    } else {
-//        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
-//    }
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                                                                             categories:nil];
+        [application registerUserNotificationSettings:notificationSettings];
+        [application registerForRemoteNotifications];
+    } else {
+        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    }
     
     [self configureGlobalUserInterfaceAttributes];
     
-    [self getUnreadMessageCount];
+//    [self getUnreadMessageCount];
     return YES;
     
 }
