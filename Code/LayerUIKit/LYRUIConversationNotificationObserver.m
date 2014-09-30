@@ -62,7 +62,7 @@
 {
     NSMutableArray *conversationArray = [[NSMutableArray alloc] init];
     NSArray *changes = [notification.userInfo objectForKey:LYRClientObjectChangesUserInfoKey];
-    NSLog(@"%@", changes);
+    //NSLog(@"%@", changes);
     for (NSDictionary *change in changes) {
         if ([[change objectForKey:LYRObjectChangeObjectKey] isKindOfClass:[LYRConversation class]]) {
             [conversationArray addObject:change];
