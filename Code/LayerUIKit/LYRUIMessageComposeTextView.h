@@ -27,11 +27,6 @@
 - (void)insertImage:(UIImage *)image;
 
 /**
- @abstract Displays the provided location represented by a map image in the textView
- */
-- (void)insertLocation:(CLLocationCoordinate2D)location;
-
-/**
  @abstract Removes all existing attachements from the textView
  @discussion This method should be called when all content should 
  be cleared from the textView

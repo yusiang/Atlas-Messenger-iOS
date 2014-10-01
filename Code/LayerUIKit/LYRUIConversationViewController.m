@@ -80,7 +80,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero
                                              collectionViewLayout:[[LYRUIConversationCollectionViewFlowLayout alloc] init]];
     self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.collectionView.contentInset = self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, LYRUIMessageInputToolbarHeight, 0);
+    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, LYRUIMessageInputToolbarHeight, 0);
+    self.collectionView.scrollIndicatorInsets = self.collectionView.contentInset;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor whiteColor];
@@ -96,10 +97,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [self.collectionView registerClass:[LYRUIOutgoingMessageCollectionViewCell class] forCellWithReuseIdentifier:LYRUIOutgoingMessageCellIdentifier];
     [self.collectionView registerClass:[LYRUIConversationCollectionViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYRUIMessageCellHeaderIdentifier];
     [self.collectionView registerClass:[LYRUIConversationCollectionViewFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:LYRUIMessageCellFooterIdentifier];
-    
-    // Setup Layer Change notification observer
-    self.messageNotificationObserver = [[LYRUIMessageNotificationObserver alloc] initWithClient:self.layerClient conversation:self.conversation];
-    self.messageNotificationObserver.delegate = self;
     
     self.messageInputToolbar = [LYRUIMessageInputToolbar inputToolBarWithViewController:self];
     
@@ -137,6 +134,10 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     [super viewDidAppear:animated];
     self.collectionViewSectionInset = 0;
+    // Setup Layer Change notification observer
+    self.messageNotificationObserver = [[LYRUIMessageNotificationObserver alloc] initWithClient:self.layerClient
+                                                                                   conversation:self.conversation];
+    self.messageNotificationObserver.delegate = self;
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
@@ -167,7 +168,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)dealloc
 {
     self.collectionView.delegate = nil;
-    self.messageNotificationObserver = nil;
 }
 
 
@@ -442,7 +442,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)sendMessageWithText:(NSString *)text
 {
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:@"text/plain" data:[text dataUsingEncoding:NSUTF8StringEncoding]];
-    NSAssert(part.data == (NSData *)[NSNull null], @"Can't send a null message part");
+    NSAssert(part.data != (NSData *)[NSNull null], @"Can't send a null message part");
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self sendMessage:message pushText:text];
 }
@@ -452,7 +452,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     UIImage *adjustedImage = LYRUIAdjustOrientationForImage(image);
     NSData *compressedImageData =  LYRUIJPEGDataForImageWithConstraint(adjustedImage, 300);
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeImageJPEG data:compressedImageData];
-    NSAssert(part.data == (NSData *)[NSNull null], @"Can't send a null message part");
+    NSAssert(part.data != (NSData *)[NSNull null], @"Can't send a null message part");
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self sendMessage:message pushText:@"New Image"];
 }
@@ -462,7 +462,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     NSNumber *lat = [NSNumber numberWithDouble:location.coordinate.latitude];
     NSNumber *lon = [NSNumber numberWithDouble:location.coordinate.longitude];
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeLocation data:[NSJSONSerialization dataWithJSONObject: @{@"lat" : lat, @"lon" : lon} options:0 error:nil]];
-    NSAssert(part.data == (NSData *)[NSNull null], @"Can't send a null message part");
+    NSAssert(part.data != (NSData *)[NSNull null], @"Can't send a null message part");
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self sendMessage:message pushText:@"New Location"];
 }
@@ -581,14 +581,17 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
 {
-    __block BOOL shouldScrollToBottom = NO;
+    __block NSUInteger messageInsert;
     [self fetchMessages];
     [self.collectionView reloadData];
 //    [self.collectionView performBatchUpdates:^{
 //        for (LYRUIDataSourceChange *change in changes) {
 //            switch (change.type) {
 //                case LYRUIDataSourceChangeTypeInsert:
-//                    shouldScrollToBottom = YES;
+//                    messageInsert = change.newIndex;
+//                    if (change.newIndex > 0) {
+//                        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex - 1]];
+//                    }
 //                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
 //                    break;
 //                case LYRUIDataSourceChangeTypeMove:
@@ -606,7 +609,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 //            }
 //        }
 //    } completion:^(BOOL finished) {
-//        if (shouldScrollToBottom) {
+//        if (messageInsert == self.messages.count - 1) {
 //            [self scrollToBottomOfCollectionViewAnimated:TRUE];
 //        }
 //    }];

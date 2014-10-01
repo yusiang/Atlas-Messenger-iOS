@@ -279,7 +279,7 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
 - (void)configureAppearance
 {
     [[LYRUIParticipantTableViewCell appearance] setTitleColor:[UIColor blackColor]];
-    [[LYRUIParticipantTableViewCell appearance] setTitleFont:LSLightFont(14)];
+    [[LYRUIParticipantTableViewCell appearance] setTitleFont:[UIFont systemFontOfSize:14]];
 }
 
 @end
