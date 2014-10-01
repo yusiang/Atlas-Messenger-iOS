@@ -683,7 +683,7 @@
 				<key>PRODUCT_NAME</key>
 				<string>$(TARGET_NAME)</string>
 				<key>PROVISIONING_PROFILE</key>
-				<string>7386a6d4-a872-411d-ade6-c184b2ca1e89</string>
+				<string></string>
 				<key>WRAPPER_EXTENSION</key>
 				<string>app</string>
 			</dict>
@@ -731,7 +731,7 @@
 				<key>PRODUCT_NAME</key>
 				<string>$(TARGET_NAME)</string>
 				<key>PROVISIONING_PROFILE</key>
-				<string>4E3EE0A6-E531-4C93-B1FF-85FE682FC936</string>
+				<string></string>
 				<key>WRAPPER_EXTENSION</key>
 				<string>app</string>
 			</dict>
