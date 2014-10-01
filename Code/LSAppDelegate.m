@@ -53,7 +53,6 @@ extern void LYRSetLogLevelFromEnvironment();
     // Configure application for push 
     UILocalNotification *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
     if (notification) {
-        LSAlertWithError([NSError new]);
         NSLog(@"app recieved notification from remote%@",notification);
         [self application:application didReceiveRemoteNotification:(NSDictionary*)notification];
     }else{
@@ -72,7 +71,7 @@ extern void LYRSetLogLevelFromEnvironment();
     __weak LSApplicationController *wController = self.applicationController;
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
-            LSAlertWithError(error);
+            //LSAlertWithError(error);
             [self.splashView animateLogoWithCompletion:^{
                 [self removeSplashView];
             }];
