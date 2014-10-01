@@ -92,12 +92,12 @@
     
     LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
     NSString *conversationLabel = firstUser.fullName;
-    for (LSUser *user in participants) {
+    for (int i = 1; i < [[participants allObjects] count]; i++) {
+        LSUser *user = [[participants allObjects] objectAtIndex:i];
         conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.fullName];
     }
     return conversationLabel;
 }
-
 
 #pragma mark - LYRUIParticipantTableViewControllerDelegate methods
 

@@ -571,31 +571,34 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
 {
+    __block BOOL shouldScrollToBottom = NO;
     [self fetchMessages];
-    [self.collectionView reloadData];
-//    [self.collectionView performBatchUpdates:^{
-//        for (LYRUIDataSourceChange *change in changes) {
-//            switch (change.type) {
-//                case LYRUIDataSourceChangeTypeInsert:
-//                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-//                    break;
-//                case LYRUIDataSourceChangeTypeMove:
-//                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
-//                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-//                    break;
-//                case LYRUIDataSourceChangeTypeUpdate:
-//                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-//                    break;
-//                case LYRUIDataSourceChangeTypeDelete:
-//                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    } completion:^(BOOL finished) {
-//        //[self scrollToBottomOfCollectionViewAnimated:TRUE];
-//    }];
+    [self.collectionView performBatchUpdates:^{
+        for (LYRUIDataSourceChange *change in changes) {
+            switch (change.type) {
+                case LYRUIDataSourceChangeTypeInsert:
+                    shouldScrollToBottom = YES;
+                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+                    break;
+                case LYRUIDataSourceChangeTypeMove:
+                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
+                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+                    break;
+                case LYRUIDataSourceChangeTypeUpdate:
+                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+                    break;
+                case LYRUIDataSourceChangeTypeDelete:
+                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+                    break;
+                default:
+                    break;
+            }
+        }
+    } completion:^(BOOL finished) {
+        if (shouldScrollToBottom) {
+            [self scrollToBottomOfCollectionViewAnimated:TRUE];
+        }
+    }];
 }
 
 - (void)scrollToBottomOfCollectionViewAnimated:(BOOL)animated

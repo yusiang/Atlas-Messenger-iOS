@@ -24,6 +24,7 @@
 
 - (void)setText:(NSString *)text
 {
+    self.textField.accessibilityLabel = text;
     self.textField.placeholder = text;
     self.textField.font = LSMediumFont(16);
     self.textField.textColor = [UIColor darkGrayColor];

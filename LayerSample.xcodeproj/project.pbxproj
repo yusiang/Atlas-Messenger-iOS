@@ -63,6 +63,8 @@
 					</dict>
 					<key>0A0C244319477D8F00401B74</key>
 					<dict>
+						<key>DevelopmentTeam</key>
+						<string>U46UP347QQ</string>
 						<key>TestTargetID</key>
 						<string>0A0C242219477D8F00401B74</string>
 					</dict>
@@ -357,13 +359,11 @@
 			<array>
 				<string>0A5150F419B7872300C6E045</string>
 				<string>0A5150F319B7871A00C6E045</string>
-				<string>0A51BD1F19B686BD004105DC</string>
 				<string>252531601960CE2700C87647</string>
 				<string>0ADD757619C8A15800E133B5</string>
 				<string>0A51BD2119B686F6004105DC</string>
 				<string>0A41DFC71961D37800E1F7FA</string>
 				<string>259A57801950EB92000E27B0</string>
-				<string>0AF3D8E0197462A900FED313</string>
 				<string>259A577E1950EB92000E27B0</string>
 				<string>0A51BD1A19B66570004105DC</string>
 			</array>
@@ -763,7 +763,9 @@
 				<key>BUNDLE_LOADER</key>
 				<string>$(BUILT_PRODUCTS_DIR)/LayerSample.app/LayerSample</string>
 				<key>CODE_SIGN_IDENTITY</key>
-				<string></string>
+				<string>iPhone Developer</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
 				<key>FRAMEWORK_SEARCH_PATHS</key>
 				<array>
 					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
@@ -784,7 +786,7 @@
 				<key>PRODUCT_NAME</key>
 				<string>$(TARGET_NAME)</string>
 				<key>PROVISIONING_PROFILE</key>
-				<string>4E3EE0A6-E531-4C93-B1FF-85FE682FC936</string>
+				<string></string>
 				<key>TEST_HOST</key>
 				<string>$(BUNDLE_LOADER)</string>
 				<key>WRAPPER_EXTENSION</key>
@@ -804,7 +806,9 @@
 				<key>BUNDLE_LOADER</key>
 				<string>$(BUILT_PRODUCTS_DIR)/LayerSample.app/LayerSample</string>
 				<key>CODE_SIGN_IDENTITY</key>
-				<string></string>
+				<string>iPhone Developer</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
 				<key>FRAMEWORK_SEARCH_PATHS</key>
 				<array>
 					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
@@ -820,7 +824,7 @@
 				<key>PRODUCT_NAME</key>
 				<string>$(TARGET_NAME)</string>
 				<key>PROVISIONING_PROFILE</key>
-				<string>4E3EE0A6-E531-4C93-B1FF-85FE682FC936</string>
+				<string></string>
 				<key>TEST_HOST</key>
 				<string>$(BUNDLE_LOADER)</string>
 				<key>WRAPPER_EXTENSION</key>
@@ -834,11 +838,37 @@
 		<key>0A0DA1C719D1F22E0044B56A</key>
 		<dict>
 			<key>children</key>
-			<array/>
+			<array>
+				<string>259A577D1950EB92000E27B0</string>
+				<string>0A41DFC61961D37800E1F7FA</string>
+				<string>2525315F1960CE2700C87647</string>
+			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
 			<key>name</key>
 			<string>Sample App Test</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>0A0E1BA619DB25A4000E7408</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>0A48C92719B7D2D100B536AB</string>
+				<string>0A48C92819B7D2D100B536AB</string>
+				<string>0A36AAB919B91FCD0070D25A</string>
+				<string>0A36AABA19B91FCD0070D25A</string>
+				<string>0A48C92A19B7F49900B536AB</string>
+				<string>0A48C92B19B7F49900B536AB</string>
+				<string>0A916B8619B77CDC00479CBD</string>
+				<string>0A916B8719B77CDC00479CBD</string>
+				<string>0A51BD1B19B66A98004105DC</string>
+				<string>0A51BD1C19B66A98004105DC</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Test Utilities</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -1180,26 +1210,6 @@
 		<dict>
 			<key>fileRef</key>
 			<string>0A51BD1C19B66A98004105DC</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>0A51BD1E19B686BD004105DC</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>LYUIAuthenticationTest.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>0A51BD1F19B686BD004105DC</key>
-		<dict>
-			<key>fileRef</key>
-			<string>0A51BD1E19B686BD004105DC</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
@@ -2103,26 +2113,6 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>0AF3D8DF197462A900FED313</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>LSMessagingTest.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>0AF3D8E0197462A900FED313</key>
-		<dict>
-			<key>fileRef</key>
-			<string>0AF3D8DF197462A900FED313</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
 		<key>0AFE3FE419B0E19C00FCA264</key>
 		<dict>
 			<key>fileRef</key>
@@ -2293,7 +2283,6 @@
 				<string>0AA09B351970BCEF007CD475</string>
 				<string>0A52D5FC1961FD0D0030A34A</string>
 				<string>0A52D5FD1961FD0D0030A34A</string>
-				<string>259A57321950EB76000E27B0</string>
 				<string>259A57151950EB76000E27B0</string>
 				<string>259A57161950EB76000E27B0</string>
 				<string>0AB2687E19C7B0F50041BD62</string>
@@ -2306,6 +2295,7 @@
 				<string>0AE1A14D19B0DA8700BFB754</string>
 				<string>0A28CD8919D5DF6700B5A7A8</string>
 				<string>0A28CD8A19D5DF6700B5A7A8</string>
+				<string>259A57321950EB76000E27B0</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
@@ -2576,26 +2566,12 @@
 		<dict>
 			<key>children</key>
 			<array>
+				<string>0A0E1BA619DB25A4000E7408</string>
 				<string>0A0DA1C719D1F22E0044B56A</string>
 				<string>0ADD757419C8A12A00E133B5</string>
 				<string>259A57791950EB92000E27B0</string>
 				<string>259A577A1950EB92000E27B0</string>
 				<string>259A577B1950EB92000E27B0</string>
-				<string>0A36AAB919B91FCD0070D25A</string>
-				<string>0A36AABA19B91FCD0070D25A</string>
-				<string>0A48C92A19B7F49900B536AB</string>
-				<string>0A48C92B19B7F49900B536AB</string>
-				<string>0A916B8619B77CDC00479CBD</string>
-				<string>0A916B8719B77CDC00479CBD</string>
-				<string>0A51BD1B19B66A98004105DC</string>
-				<string>0A51BD1C19B66A98004105DC</string>
-				<string>259A577D1950EB92000E27B0</string>
-				<string>0A41DFC61961D37800E1F7FA</string>
-				<string>2525315F1960CE2700C87647</string>
-				<string>0AF3D8DF197462A900FED313</string>
-				<string>0A51BD1E19B686BD004105DC</string>
-				<string>0A48C92719B7D2D100B536AB</string>
-				<string>0A48C92819B7D2D100B536AB</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>

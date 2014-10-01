@@ -60,7 +60,6 @@
     NSMutableArray *messageArray = [[NSMutableArray alloc] init];
     NSArray *changes = [notification.userInfo objectForKey:LYRClientObjectChangesUserInfoKey];
     for (NSDictionary *change in changes) {
-        
         if ([[change objectForKey:LYRObjectChangeObjectKey]isKindOfClass:[LYRMessage class]]) {
             [messageArray addObject:change];
         }
@@ -71,29 +70,28 @@
 - (void)processMessageChanges:(NSMutableArray *)messageChanges completion:(void(^)(NSArray *messageChanges))completion
 {
     NSMutableArray *changeObjects = [[NSMutableArray alloc] init];
-    for (int i = 0; i < messageChanges.count; i++) {
-        NSDictionary *messageUpdate = [messageChanges objectAtIndex:i];
-        LYRMessage *message = [messageUpdate objectForKey:LYRObjectChangeObjectKey];
+    for (NSDictionary *messageChange in messageChanges) {
+        LYRMessage *message = [messageChange objectForKey:LYRObjectChangeObjectKey];
         if ([message.conversation.identifier.absoluteString isEqualToString:self.conversation.identifier.absoluteString]) {
-            LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageUpdate objectForKey:LYRObjectChangeTypeKey] integerValue];
+            LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageChange objectForKey:LYRObjectChangeTypeKey] integerValue];
             switch (updateKey) {
                 case LYRObjectChangeTypeCreate:
-                     NSLog(@"Message Instert %@", messageUpdate);
-                    [changeObjects addObject:[LYRUIDataSourceChange insertChangeWithIndex:message.index]];
+                    [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeInsert newIndex:message.index oldIndex:0]];
                     break;
                     
-                case LYRObjectChangeTypeUpdate:
-                    if ([[messageUpdate objectForKey:LYRObjectChangePropertyKey] isEqualToString:@"index"]) {
-                        NSUInteger oldIndex = [[messageUpdate objectForKey:LYRObjectChangeOldValueKey] integerValue];
-                        NSUInteger newIndex = [[messageUpdate objectForKey:LYRObjectChangeNewValueKey] integerValue];
-                        [changeObjects addObject:[LYRUIDataSourceChange moveChangeWithOldIndex:oldIndex newIndex:newIndex]];
+                case LYRObjectChangeTypeUpdate: {
+                    if ([[messageChange objectForKey:LYRObjectChangePropertyKey] isEqualToString:@"index"]) {
+                        NSUInteger oldIndex = [[messageChange objectForKey:LYRObjectChangeOldValueKey] integerValue];
+                        NSUInteger newIndex = [[messageChange objectForKey:LYRObjectChangeNewValueKey] integerValue];
+                        [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeUpdate newIndex:newIndex oldIndex:oldIndex]];
                     } else {
-                        [changeObjects addObject:[LYRUIDataSourceChange updateChangeWithIndex:message.index]];
+                        [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeUpdate newIndex:message.index oldIndex:0]];
                     }
                     break;
+                }
                     
                 case LYRObjectChangeTypeDelete:
-                    [changeObjects addObject:[LYRUIDataSourceChange deleteChangeWithIndex:message.index]];
+                   [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeInsert newIndex:message.index oldIndex:0]];
                     break;
                     
                 default:

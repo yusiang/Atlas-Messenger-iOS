@@ -14,47 +14,22 @@
 
 @implementation LYRUIDataSourceChange
 
-+ (instancetype)changeWithType:(LYRUIDataSourceChangeType)type newIndex:(NSInteger)newIndex oldIndex:(NSInteger)oldIndex
++ (instancetype)changeObjectWithType:(LYRUIDataSourceChangeType)type newIndex:(NSUInteger)newIndex oldIndex:(NSUInteger)oldIndex;
 {
-    return [[self alloc] initWithChangeType:type newIndex:newIndex oldIndex:oldIndex];
+    return [[self alloc] initWithType:type newIndex:newIndex oldIndex:oldIndex];
 }
-
-- (id)initWithChangeType:(LYRUIDataSourceChangeType)type newIndex:(NSUInteger)newIndex oldIndex:(NSUInteger)oldIndex
+            
+- (id)initWithType:(LYRUIDataSourceChangeType)type newIndex:(NSUInteger)newIndex oldIndex:(NSUInteger)oldIndex
 {
     self = [super init];
     if (self) {
         
         _type = type;
         _newIndex = newIndex;
-        oldIndex = oldIndex;
+        _oldIndex = oldIndex;
         
     }
     return self;
-}
-
-+ (instancetype)insertChangeWithIndex:(NSInteger)index
-{
-    return [LYRUIDataSourceChange changeWithType:LYRUIDataSourceChangeTypeInsert newIndex:index oldIndex:0];
-}
-
-+ (instancetype)updateChangeWithIndex:(NSInteger)index
-{
-    return [LYRUIDataSourceChange changeWithType:LYRUIDataSourceChangeTypeUpdate newIndex:index oldIndex:0];
-}
-
-+ (instancetype)moveChangeWithOldIndex:(NSInteger)oldIndex newIndex:(NSInteger)newIndex
-{
-    return [LYRUIDataSourceChange changeWithType:LYRUIDataSourceChangeTypeMove newIndex:newIndex oldIndex:oldIndex];
-}
-
-+ (instancetype)deleteChangeWithIndex:(NSInteger)index
-{
-    return [LYRUIDataSourceChange changeWithType:LYRUIDataSourceChangeTypeDelete newIndex:index oldIndex:0];
-}
-
-+ (instancetype)deleteAllChange
-{
-    return [LYRUIDataSourceChange changeWithType:LYRUIDataSourceChangeTypeDeleteAll newIndex:0 oldIndex:0];
 }
 
 - (NSString *)description

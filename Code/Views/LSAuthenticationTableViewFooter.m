@@ -50,17 +50,6 @@ static NSString *const LSCancelText = @"Or, Cancel";
         [self.secondaryActionButton addTarget:self action:@selector(secondaryActionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.secondaryActionButton];
         
-//        self.cancelButton = [[UIButton alloc] init];
-//        self.cancelButton.backgroundColor = [UIColor redColor];
-//        [self.cancelButton setTitleColor:LSBlueColor() forState:UIControlStateNormal];
-//        [self.cancelButton setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
-//        self.cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
-//        self.cancelButton.titleLabel.font = LSMediumFont(12);
-//        self.cancelButton.titleLabel.textColor = LSBlueColor();
-//        self.cancelButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-//        [self.cancelButton addTarget:self action:@selector(cancelButtonWasTapped) forControlEvents:UIControlEventTouchUpInside];
-//        [self addSubview:self.cancelButton];
-        
         [self updateConstraints];
     }
     return self;
@@ -133,38 +122,6 @@ static NSString *const LSCancelText = @"Or, Cancel";
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
                                                       constant:40]];
-    
-//    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cancelButton
-//                                                     attribute:NSLayoutAttributeCenterX
-//                                                     relatedBy:NSLayoutRelationEqual
-//                                                        toItem:self
-//                                                     attribute:NSLayoutAttributeCenterX
-//                                                    multiplier:1.0
-//                                                      constant:0]];
-//    
-//    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cancelButton
-//                                                     attribute:NSLayoutAttributeTop
-//                                                     relatedBy:NSLayoutRelationEqual
-//                                                        toItem:self.secondaryActionButton
-//                                                     attribute:NSLayoutAttributeBottom
-//                                                    multiplier:1.0
-//                                                      constant:40]];
-//    
-//    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cancelButton
-//                                                     attribute:NSLayoutAttributeWidth
-//                                                     relatedBy:NSLayoutRelationEqual
-//                                                        toItem:nil
-//                                                     attribute:NSLayoutAttributeNotAnAttribute
-//                                                    multiplier:1.0
-//                                                      constant:200]];
-//    
-//    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cancelButton
-//                                                     attribute:NSLayoutAttributeHeight
-//                                                     relatedBy:NSLayoutRelationEqual
-//                                                        toItem:nil
-//                                                     attribute:NSLayoutAttributeNotAnAttribute
-//                                                    multiplier:1.0
-//                                                      constant:40]];
     
     [super updateConstraints];
 }

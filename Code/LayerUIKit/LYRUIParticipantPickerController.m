@@ -20,6 +20,8 @@
 
 @implementation LYRUIParticipantPickerController
 
+@synthesize allowsMultipleSelection = _allowsMultipleSelection;
+
 + (instancetype)participantPickerWithParticipants:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
     NSAssert(dataSource, @"Data Source cannot be nil");
@@ -33,6 +35,8 @@
     if (self) {
         controller.participants = [dataSource participants];
         controller.delegate = self;
+        
+        _participantTableViewController = controller;
         _dataSource = dataSource;
     }
     return self;
@@ -45,14 +49,15 @@
 }
 
 #pragma mark - VC Lifecycle Methods
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Configure default picker configuration
     self.allowsMultipleSelection = YES;
     self.cellClass = [LYRUIParticipantTableViewCell class];
     self.rowHeight = 48;
-    self.participantTableViewController.participantCellClass = self.cellClass;
-    self.participantTableViewController.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
+    self.sortType = LYRUIParticipantPickerControllerSortTypeFirst;
     self.title = @"Participants";
     self.accessibilityLabel = @"Participants";
 }
@@ -60,31 +65,29 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-   
-    self.participants = [self.dataSource participants];
-    
+    // Configure ParticipantTableViewController Appearance
+    self.participantTableViewController.allowsMultipleSelection = self.allowsMultipleSelection;
+    self.participantTableViewController.participantCellClass = self.cellClass;
+    self.participantTableViewController.rowHeight = self.rowHeight;
+    self.participantTableViewController.sortType = self.sortType;
+    self.participantTableViewController.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:30];
     self.isOnScreen = TRUE;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
     self.isOnScreen = FALSE;
 }
 
-#pragma mark Public property setters and getters
+#pragma mark Public Picker Configuration Options
+
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
 {
     if (self.isOnScreen) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot change multiple selection mode after view has been loaded" userInfo:nil];
     }
-    self.participantTableViewController.allowsMultipleSelection = allowsMultipleSelection;
-}
-
-- (BOOL)allowsMultipleSelection
-{
-    return self.participantTableViewController.allowsMultipleSelection;
+    _allowsMultipleSelection = allowsMultipleSelection;
 }
 
 - (void)setCellClass:(Class<LYRUIParticipantPresenting>)cellClass
@@ -92,12 +95,7 @@
     if (self.isOnScreen) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot change cell class after view has been loaded" userInfo:nil];
     }
-    self.participantTableViewController.participantCellClass = cellClass;
-}
-
-- (Class<LYRUIParticipantPresenting>)cellClass
-{
-    return self.participantTableViewController.participantCellClass;
+    _cellClass = cellClass;
 }
 
 - (void)setRowHeight:(CGFloat)rowHeight
@@ -105,12 +103,7 @@
     if (self.isOnScreen) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot change row height after view has been loaded" userInfo:nil];
     }
-    self.participantTableViewController.rowHeight = rowHeight;
-}
-
-- (CGFloat)rowHeight
-{
-    return self.participantTableViewController.rowHeight;
+    _rowHeight = rowHeight;
 }
 
 - (void)setParticipantPickerSortType:(LYRUIParticipantPickerSortType)participantPickerSortType

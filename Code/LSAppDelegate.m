@@ -159,8 +159,6 @@ extern void LYRSetLogLevelFromEnvironment();
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
     NSLog(@"Application failed to register for remote notifications with error %@", error);
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Registering for Push Failed" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alertView show];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken

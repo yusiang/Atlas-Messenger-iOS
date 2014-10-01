@@ -23,9 +23,11 @@
 /// Authentication Methods
 ///******************************
 
-- (NSString *)registerUser:(LSUser *)user;
+- (NSString *)registerUser:(LSUser *)newUser;
 
 - (NSString *)authenticateWithEmail:(NSString *)email password:(NSString *)password;
+
+- (NSString *)registerAndAuthenticateUser:(LSUser *)user;
 
 - (void)logout;
 
@@ -41,12 +43,15 @@
 
 - (LSUser *)randomUser;
 
-- (NSString *)registerAndAuthenticateUser:(LSUser *)user;
+///********************************
+/// Accessibility Lable Methods
+///********************************
 
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs;
 
 - (NSString *)selectionIndicatorAccessibilityLabelForUser:(LSUser *)testUser;
 
 @property (nonatomic) LSApplicationController *applicationController;
+
 
 @end

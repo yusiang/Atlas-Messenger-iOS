@@ -37,14 +37,12 @@ typedef NS_ENUM(NSInteger, LYRUIDataSourceChangeType) {
 
 @interface LYRUIDataSourceChange : NSObject
 
-@property (nonatomic) LYRUIDataSourceChangeType type;
-@property (nonatomic) NSInteger newIndex;
-@property (nonatomic) NSInteger oldIndex;
++ (instancetype)changeObjectWithType:(LYRUIDataSourceChangeType)type newIndex:(NSUInteger)newIndex oldIndex:(NSUInteger)oldIndex;
 
-+ (instancetype)insertChangeWithIndex:(NSInteger)index;
-+ (instancetype)updateChangeWithIndex:(NSInteger)index;
-+ (instancetype)moveChangeWithOldIndex:(NSInteger)oldIndex newIndex:(NSInteger)newIndex;
-+ (instancetype)deleteChangeWithIndex:(NSInteger)index;
-+ (instancetype)deleteAllChange;
+@property (nonatomic) LYRUIDataSourceChangeType type;
+
+@property (nonatomic) NSInteger newIndex;
+
+@property (nonatomic) NSInteger oldIndex;
 
 @end

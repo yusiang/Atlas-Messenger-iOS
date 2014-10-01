@@ -39,7 +39,7 @@ NSString *LSLayerConfigurationURL(LSEnvironment environment)
             break;
             
         case LSTestEnvironment:
-            return @"https://dev-1.preview.layer.com/client_configuration.json";
+            return @"https://na-3.preview.layer.com/client_configuration.json";
             break;
             
         default:

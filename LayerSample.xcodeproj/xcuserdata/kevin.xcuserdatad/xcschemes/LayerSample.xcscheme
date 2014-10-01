@@ -57,9 +57,6 @@
                   Identifier = "LSPersistenceManagerTest">
                </Test>
                <Test
-                  Identifier = "LSSampleAppUITest">
-               </Test>
-               <Test
                   Identifier = "LSUITest">
                </Test>
                <Test
@@ -124,6 +121,9 @@
                </Test>
                <Test
                   Identifier = "LSUITest/testToVerifyUIAnimimationsForSendingAMessage">
+               </Test>
+               <Test
+                  Identifier = "LYRUIConversationListTest">
                </Test>
                <Test
                   Identifier = "LYRUIConversationViewTest">

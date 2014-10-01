@@ -31,10 +31,6 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
 {
     self = [super initWithStyle:style];
     if (self) {
-        _sortType = LYRUIParticipantPickerControllerSortTypeFirst;
-        _rowHeight = 48;
-        _allowsMultipleSelection = YES;
-        _participantCellClass = [LYRUIParticipantTableViewCell class];
         _selectedParticipants = [[NSMutableSet alloc] init];
         [self configureAppearance];
     }
@@ -44,11 +40,12 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"Participants";
-    self.accessibilityLabel = @"Participants";
+    // Configure TableView
     self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.sectionFooterHeight = 0.0;
+    
+    // Configure Search Bar
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
     self.searchBar.accessibilityLabel = @"Search Bar";
     self.searchBar.delegate = self;
@@ -59,6 +56,10 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
     self.searchController.searchResultsDataSource = self;
     self.tableView.tableHeaderView = self.searchBar;
 
+    //Configure title
+    self.title = @"Participants";
+    self.accessibilityLabel = @"Participants";
+    
     // Left bar button item is the text Cancel
     UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                          style:UIBarButtonItemStylePlain

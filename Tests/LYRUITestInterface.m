@@ -26,11 +26,11 @@
     return self;
 }
 
-- (NSString *)registerUser:(LSUser *)user
+- (NSString *)registerUser:(LSUser *)newUser
 {
     __block NSString *userID;
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    [self.applicationController.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
+    [self.applicationController.APIManager registerUser:newUser completion:^(LSUser *user, NSError *error) {
         expect(user).toNot.beNil;
         expect(error).to.beNil;
         userID = user.userID;
@@ -149,11 +149,11 @@
         [participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
     }
     
-    if (!participantIdentifiers.count > 0) return @"";
+    if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
     NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers];
     
-    if (!participants.count > 0) return @"";
+    if (!participants.count > 0) return @"No Matching Participants";
     
     LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
     NSString *conversationLabel = firstUser.fullName;
@@ -164,9 +164,9 @@
     return conversationLabel;
 }
 
-- (NSString *)selectionIndicatorAccessibilityLabelForFullName:(NSString *)fullName
+- (NSString *)selectionIndicatorAccessibilityLabelForUser:(LSUser *)testUser;
 {
-    return [NSString stringWithFormat:@"%@ selected", fullName];
+    return [NSString stringWithFormat:@"%@ selected", testUser.fullName];
 }
 
 

@@ -1,18 +1,18 @@
+////
+////  KIFUITestActor+LSAdditions.h
+////  LayerSample
+////
+////  Created by Kevin Coleman on 6/11/14.
+////  Copyright (c) 2014 Layer, Inc. All rights reserved.
+////
 //
-//  KIFUITestActor+LSAdditions.h
-//  LayerSample
+//#import "KIFUITestActor.h"
+//#import <KIF/KIF.h>
 //
-//  Created by Kevin Coleman on 6/11/14.
-//  Copyright (c) 2014 Layer, Inc. All rights reserved.
+//@interface KIFUITestActor (LSAdditions)
 //
-
-#import "KIFUITestActor.h"
-#import <KIF/KIF.h>
-
-@interface KIFUITestActor (LSAdditions)
-
-- (void)navigateToLoginPage;
-
-- (void)returnToLoggedOutHomeScreen;
-
-@end
+//- (void)navigateToLoginPage;
+//
+//- (void)returnToLoggedOutHomeScreen;
+//
+//@end

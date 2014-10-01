@@ -53,6 +53,10 @@
                 [self processConversationChanges:conversationArray completion:^(NSArray *conversationChanges) {
                     [self dispatchChanges:conversationChanges];
                 }];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate observerdidChangeContent:self];
+                });
             }
         }];
     });
@@ -62,7 +66,6 @@
 {
     NSMutableArray *conversationArray = [[NSMutableArray alloc] init];
     NSArray *changes = [notification.userInfo objectForKey:LYRClientObjectChangesUserInfoKey];
-    //NSLog(@"%@", changes);
     for (NSDictionary *change in changes) {
         if ([[change objectForKey:LYRObjectChangeObjectKey] isKindOfClass:[LYRConversation class]]) {
             [conversationArray addObject:change];
@@ -77,24 +80,25 @@
     NSMutableArray *changeObjects = [[NSMutableArray alloc] init];
     for (NSDictionary *conversationChange in conversationChanges) {
         LYRConversation *conversation = [conversationChange objectForKey:LYRObjectChangeObjectKey];
-        NSUInteger conversationIndex = [self.conversationIdentifiers indexOfObject:conversation.identifier];
+        NSUInteger newIndex = [self.tempIdentifiers indexOfObject:conversation.identifier];
         LYRObjectChangeType changeType = (LYRObjectChangeType)[[conversationChange objectForKey:LYRObjectChangeTypeKey] integerValue];
         switch (changeType) {
             case LYRObjectChangeTypeCreate:
-                [changeObjects addObject:[LYRUIDataSourceChange insertChangeWithIndex:conversationIndex]];
+                [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeInsert newIndex:newIndex oldIndex:0]];
                 break;
                 
             case LYRObjectChangeTypeUpdate:
                 if ([[conversationChange objectForKey:LYRObjectChangePropertyKey] isEqualToString:@"lastMessage"]) {
-                    NSUInteger newIndex = [self.tempIdentifiers indexOfObject:conversation.identifier];
-                    [changeObjects addObject:[LYRUIDataSourceChange moveChangeWithOldIndex:conversationIndex newIndex:newIndex]];
+                    NSUInteger oldIndex = [self.conversationIdentifiers indexOfObject:conversation.identifier];
+                    [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeMove newIndex:newIndex oldIndex:oldIndex]];
+            
                 } else {
-                    [changeObjects addObject:[LYRUIDataSourceChange updateChangeWithIndex:conversationIndex]];
+                    [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeUpdate newIndex:newIndex oldIndex:0]];
                 }
                 break;
                 
             case LYRObjectChangeTypeDelete:
-                [changeObjects addObject:[LYRUIDataSourceChange deleteChangeWithIndex:conversationIndex]];
+                [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeDelete newIndex:newIndex oldIndex:0]];
                 break;
                 
             default:

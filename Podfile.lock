@@ -22,7 +22,7 @@ PODS:
   - layer-client-messaging-schema (20140923112506902)
   - layer-thrift (0.61.0):
     - thrift (~> 0.9.1)
-  - LayerKit (0.7.22-rc4):
+  - LayerKit (0.7.22-rc6):
     - AFNetworking/Security (~> 2.4.1)
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20140924173129681)
@@ -32,7 +32,7 @@ PODS:
     - layer-thrift (~> 0.61.0)
     - LayerKit/Public
     - TransitionKit (~> 2.1.0)
-  - LayerKit/Public (0.7.22-rc4):
+  - LayerKit/Public (0.7.22-rc6):
     - AFNetworking/Security (~> 2.4.1)
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20140924173129681)
@@ -57,7 +57,7 @@ PODS:
 DEPENDENCIES:
   - Expecta (~> 0.3.0)
   - HockeySDK (~> 3.5.6)
-  - KIF (~> 3.0)
+  - KIF (~> 3.0.8)
   - KIFViewControllerActions (from `git@github.com:blakewatters/KIFViewControllerActions.git`)
   - LayerKit (from `git@github.com:layerhq/LayerKit.git`)
   - LayerUIKit (from `.`)
@@ -87,7 +87,7 @@ SPEC CHECKSUMS:
   KIFViewControllerActions: 6d680038a329864d62526928dd89556c0177bc55
   layer-client-messaging-schema: 98a81de8e01fe96389e6cbd7045f6bbfc926a129
   layer-thrift: e8ed5ceab7e7576aae5177d988c67cb29c53e50b
-  LayerKit: 85fbff68b502c9b06485a35087e47afac1269a91
+  LayerKit: c6833f96700e0ebaae4f37e6099bdf341a080428
   LayerUIKit: 4fb0692d4405f455308ad309ce91d2a6af0c9e52
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854

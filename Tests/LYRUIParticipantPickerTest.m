@@ -102,16 +102,15 @@
 //Configure the picker in single selection mode and verify that it only permits a single selection to be made.
 - (void)testToVerifySingleSelectionModeAllowsOnlyOneSelectionAtATime
 {
-     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
-    
-    LSUser *user1 = [self.testInterface randomUser];
-    LSUser *user2 = [self.testInterface randomUser];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
     
     LSUIParticipantPickerDataSource *dataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.testInterface.applicationController.persistenceManager];
     LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:dataSource sortType:LYRUIParticipantPickerControllerSortTypeFirst];
     controller.allowsMultipleSelection = NO;
     [tester waitForTimeInterval:2];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
+        LSUser *user1 = [self.testInterface randomUser];
+        LSUser *user2 = [self.testInterface randomUser];
         [tester tapViewWithAccessibilityLabel:user1.fullName];
         [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
         [tester tapViewWithAccessibilityLabel:user2.fullName];
@@ -145,13 +144,11 @@
 - (void)testToVerifyTappingOnParticipantDisplaysACheckmark
 {
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
-    
-    LSUser *user1 = [self.testInterface randomUser];
-    
     LSUIParticipantPickerDataSource *dataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.testInterface.applicationController.persistenceManager];
     LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:dataSource sortType:LYRUIParticipantPickerControllerSortTypeFirst];
     [tester waitForTimeInterval:2];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
+        LSUser *user1 = [self.testInterface randomUser];
         [tester tapViewWithAccessibilityLabel:user1.fullName];
         [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
     }];
