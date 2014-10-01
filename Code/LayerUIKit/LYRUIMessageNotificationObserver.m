@@ -83,7 +83,7 @@
                     if ([[messageChange objectForKey:LYRObjectChangePropertyKey] isEqualToString:@"index"]) {
                         NSUInteger oldIndex = [[messageChange objectForKey:LYRObjectChangeOldValueKey] integerValue];
                         NSUInteger newIndex = [[messageChange objectForKey:LYRObjectChangeNewValueKey] integerValue];
-                        [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeUpdate newIndex:newIndex oldIndex:oldIndex]];
+                        [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeMove newIndex:newIndex oldIndex:oldIndex]];
                     } else {
                         [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeUpdate newIndex:message.index oldIndex:0]];
                     }

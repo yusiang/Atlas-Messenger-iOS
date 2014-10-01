@@ -122,7 +122,11 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         NSMutableSet *participants = [self.conversation.participants mutableCopy];
         [participants removeObject:self.layerClient.authenticatedUserID];
         id<LYRUIParticipant> participant = [self.dataSource conversationViewController:self participantForIdentifier:[[participants allObjects] lastObject]];
-        self.title = participant.firstName;
+        if (participant) {
+            self.title = participant.firstName;
+        } else {
+            self.title = @"Unknown";
+        }
     } else {
         self.title = @"Group";
     }
@@ -148,6 +152,9 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    self.messageNotificationObserver.delegate = nil;
+    self.messageNotificationObserver = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
@@ -435,6 +442,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)sendMessageWithText:(NSString *)text
 {
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:@"text/plain" data:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    NSAssert(part.data == (NSData *)[NSNull null], @"Can't send a null message part");
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self sendMessage:message pushText:text];
 }
@@ -444,6 +452,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     UIImage *adjustedImage = LYRUIAdjustOrientationForImage(image);
     NSData *compressedImageData =  LYRUIJPEGDataForImageWithConstraint(adjustedImage, 300);
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeImageJPEG data:compressedImageData];
+    NSAssert(part.data == (NSData *)[NSNull null], @"Can't send a null message part");
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self sendMessage:message pushText:@"New Image"];
 }
@@ -453,6 +462,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     NSNumber *lat = [NSNumber numberWithDouble:location.coordinate.latitude];
     NSNumber *lon = [NSNumber numberWithDouble:location.coordinate.longitude];
     LYRMessagePart *part = [LYRMessagePart messagePartWithMIMEType:LYRUIMIMETypeLocation data:[NSJSONSerialization dataWithJSONObject: @{@"lat" : lat, @"lon" : lon} options:0 error:nil]];
+    NSAssert(part.data == (NSData *)[NSNull null], @"Can't send a null message part");
     LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[ part ]];
     [self sendMessage:message pushText:@"New Location"];
 }
@@ -573,32 +583,33 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     __block BOOL shouldScrollToBottom = NO;
     [self fetchMessages];
-    [self.collectionView performBatchUpdates:^{
-        for (LYRUIDataSourceChange *change in changes) {
-            switch (change.type) {
-                case LYRUIDataSourceChangeTypeInsert:
-                    shouldScrollToBottom = YES;
-                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-                    break;
-                case LYRUIDataSourceChangeTypeMove:
-                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
-                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-                    break;
-                case LYRUIDataSourceChangeTypeUpdate:
-                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-                    break;
-                case LYRUIDataSourceChangeTypeDelete:
-                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
-                    break;
-                default:
-                    break;
-            }
-        }
-    } completion:^(BOOL finished) {
-        if (shouldScrollToBottom) {
-            [self scrollToBottomOfCollectionViewAnimated:TRUE];
-        }
-    }];
+    [self.collectionView reloadData];
+//    [self.collectionView performBatchUpdates:^{
+//        for (LYRUIDataSourceChange *change in changes) {
+//            switch (change.type) {
+//                case LYRUIDataSourceChangeTypeInsert:
+//                    shouldScrollToBottom = YES;
+//                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                case LYRUIDataSourceChangeTypeMove:
+//                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.oldIndex]];
+//                    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                case LYRUIDataSourceChangeTypeUpdate:
+//                    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                case LYRUIDataSourceChangeTypeDelete:
+//                    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:change.newIndex]];
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    } completion:^(BOOL finished) {
+//        if (shouldScrollToBottom) {
+//            [self scrollToBottomOfCollectionViewAnimated:TRUE];
+//        }
+//    }];
 }
 
 - (void)scrollToBottomOfCollectionViewAnimated:(BOOL)animated

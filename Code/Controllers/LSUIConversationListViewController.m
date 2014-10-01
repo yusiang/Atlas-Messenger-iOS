@@ -52,15 +52,11 @@
     self.versionView.versionLabel.text = [LSApplicationController versionString];
     self.versionView.buildLabel.text = [LSApplicationController buildInformationString];
     self.versionView.hostLabel.text = [LSApplicationController layerServerHostname];
-    self.versionView.userLabel.text = [NSString stringWithFormat:@"User ID: %@",
-                                           self.applicationController.layerClient.authenticatedUserID];
+    self.versionView.userLabel.text = [NSString stringWithFormat:@"User ID: %@", self.applicationController.layerClient.authenticatedUserID];
     
     NSUUID *UUID = self.applicationController.deviceToken ? [[NSUUID alloc] initWithUUIDBytes:[self.applicationController.deviceToken bytes]] : nil;
     self.versionView.deviceLabel.text = [NSString stringWithFormat:@"Device Token: %@", [UUID UUIDString]];
-    NSLog(@"Device Token: %@", self.versionView.deviceLabel.text);
-    
     [self.versionView sizeToFit];
-    
     [self.tableView addSubview:self.versionView];
     
     self.versionView.frame = CGRectMake((int)(self.tableView.frame.size.width / 2.0 - self.versionView.frame.size.width / 2.0),

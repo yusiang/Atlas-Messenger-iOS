@@ -46,7 +46,7 @@ extern void LYRSetLogLevelFromEnvironment();
     LYRSetLogLevelFromEnvironment();
     
     // Setup environment configuration
-    LSEnvironment environment = LYRUIDEV1Production;
+    LSEnvironment environment = LYRUINA3Production;
     
     NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
     if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(environment)]) {

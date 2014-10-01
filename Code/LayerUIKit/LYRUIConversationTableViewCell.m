@@ -91,8 +91,7 @@ static CGFloat const LSConversationLabelRightPadding = -6.0f;
     self.dateLabel.text = [self dateLabelForLastMessage:conversation.lastMessage];
     
     LYRMessage *message = conversation.lastMessage;
-    if (!message.parts.count > 0) return;
-    LYRMessagePart *messagePart = [message.parts objectAtIndex:0];
+    LYRMessagePart *messagePart = [message.parts firstObject];
     if ([messagePart.MIMEType isEqualToString:@"text/plain"]) {
         self.lastMessageTextView.text = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
     } else if (messagePart.MIMEType == LYRUIMIMETypeImageJPEG) {
