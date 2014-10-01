@@ -8,6 +8,9 @@ GEM
     aws-sdk (1.49.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
+    byebug (3.1.2)
+      columnize (~> 0.8)
+      debugger-linecache (~> 1.2)
     claide (0.7.0)
     cocoapods (0.34.1)
       activesupport (>= 3.2.15, < 4)
@@ -37,8 +40,10 @@ GEM
       netrc
     cocoapods-try (0.4.1)
     colored (1.2)
+    columnize (0.8.9)
     commander (4.2.0)
       highline (~> 1.6.11)
+    debugger-linecache (1.2.0)
     dotenv (0.11.1)
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
@@ -92,6 +97,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.7.3)
+  byebug
   cocoapods (~> 0.34.1)
   plist (~> 3.1.0)
   rake (~> 10.3.2)
