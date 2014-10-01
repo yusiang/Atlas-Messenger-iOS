@@ -293,9 +293,10 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
 - (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
 {
     [self fetchLayerConversationsWithCompletion:^{
-        [self.tableView reloadData];
+         [self.tableView reloadData];
     }];
-    
+   
+//    NSLog(@"Changes %@", changes);
 //    for (LYRUIDataSourceChange *change in changes) {
 //        if (change.type == LYRUIDataSourceChangeTypeUpdate) {
 //            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:change.newIndex inSection:0]]

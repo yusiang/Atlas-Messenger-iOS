@@ -169,7 +169,9 @@ static CGFloat const LSButtonHeight = 28;
             [self.messageParts addObject:[attachments firstObject]];
             [attachments removeObjectAtIndex:0];
         } else {
-            [self.messageParts addObject:trimmedString];
+            if (trimmedString.length > 0) {
+                [self.messageParts addObject:trimmedString];
+            }
         }
     }
     return self.messageParts;

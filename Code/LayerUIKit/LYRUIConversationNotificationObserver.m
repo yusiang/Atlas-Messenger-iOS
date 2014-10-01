@@ -76,6 +76,7 @@
 
 - (void)processConversationChanges:(NSMutableArray *)conversationChanges completion:(void(^)(NSArray *conversationChanges))completion
 {
+    NSLog(@"The Changes %@", conversationChanges);
     self.tempIdentifiers = [self refreshConversations];
     NSMutableArray *changeObjects = [[NSMutableArray alloc] init];
     for (NSDictionary *conversationChange in conversationChanges) {
@@ -87,14 +88,14 @@
                 [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeInsert newIndex:newIndex oldIndex:0]];
                 break;
                 
-            case LYRObjectChangeTypeUpdate:
-                if ([[conversationChange objectForKey:LYRObjectChangePropertyKey] isEqualToString:@"lastMessage"]) {
-                    NSUInteger oldIndex = [self.conversationIdentifiers indexOfObject:conversation.identifier];
+            case LYRObjectChangeTypeUpdate: {
+                 NSUInteger oldIndex = [self.conversationIdentifiers indexOfObject:conversation.identifier];
+                if (oldIndex != newIndex) {
                     [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeMove newIndex:newIndex oldIndex:oldIndex]];
-            
                 } else {
                     [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeUpdate newIndex:newIndex oldIndex:0]];
                 }
+            }
                 break;
                 
             case LYRObjectChangeTypeDelete:
