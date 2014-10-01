@@ -170,6 +170,11 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = ""
+            value = ""
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "LAYER_TEST_HOST"
             value = "172.17.8.101"
             isEnabled = "YES">
@@ -177,7 +182,7 @@
          <EnvironmentVariable
             key = "LAYER_LOG_LEVEL"
             value = "VERBOSE"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>

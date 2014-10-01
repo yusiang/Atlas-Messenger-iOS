@@ -33,6 +33,24 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Setup environment configuration
+    LSEnvironment environment = LYRUIProduction;
+    
+    // Configure Layer Base URL
+    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(environment)]) {
+        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(environment) forKey:@"LAYER_CONFIGURATION_URL"];
+    }
+    
+    // Set LayerKit log level
+    LYRSetLogLevelFromEnvironment();
+    
+    // Configure application controllers
+    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID(environment)];
+    LSPersistenceManager *persistenceManager = LSPersitenceManager();
+    self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
+    
+    // Configure application for push 
     UILocalNotification *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
     if (notification) {
         LSAlertWithError([NSError new]);
@@ -42,28 +60,12 @@ extern void LYRSetLogLevelFromEnvironment();
         NSLog(@"app did not recieve notification");
     }
    
-    // Set LayerKit log level
-    LYRSetLogLevelFromEnvironment();
-    
-    // Setup environment configuration
-    LSEnvironment environment = LYRUIProduction;
-    
-    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
-    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(environment)]) {
-        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(environment) forKey:@"LAYER_CONFIGURATION_URL"];
-    }
-
     // Kicking off Crashlytics
     [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
     
     // Setup notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
-    
-    // Configure application controllers
-    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID(environment)];
-    LSPersistenceManager *persistenceManager = LSPersitenceManager();
-    self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
     // Ask LayerKit to connect
 
