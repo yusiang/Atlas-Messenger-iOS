@@ -76,13 +76,22 @@ task :release do
   end
   
   # Clear Pods out
-  run "rm -rf Pods"
-  run "pod install"
+  # run "rm -rf Pods"
+  # run "pod install"
   
   # 1) Generate objects with: builder name/email (via git config), short-sha
   require 'yaml'
+  require 'byebug'
   lockfile = YAML.load_file('Podfile.lock')
-  layer_kit_version = lockfile['PODS'].detect { |s| s =~ /^LayerKit/ }.match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+  layer_kit_version = nil
+  lockfile['PODS'].detect do |entry|
+    if entry.kind_of?(String) && entry =~ /^LayerKit/
+      layer_kit_version = entry.match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+    elsif entry.kind_of?(Hash) && entry.keys[0] =~ /^LayerKit/
+      layer_kit_version = entry.keys[0].match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+    end
+  end
+  
   short_sha = `git rev-parse --short HEAD`.strip
   builder_name = `git config --get user.name`.strip
   builder_email = `git config --get user.email`.strip
