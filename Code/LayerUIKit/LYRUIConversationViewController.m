@@ -176,6 +176,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     if (!_inputAccessoryView) {
         _inputAccessoryView = self.messageInputToolbar;
     }
+    [_inputAccessoryView sizeToFit];
     return _inputAccessoryView;
 }
 
@@ -582,8 +583,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
 {
     __block NSUInteger messageInsert;
-    [self fetchMessages];
-    [self.collectionView reloadData];
 //    [self.collectionView performBatchUpdates:^{
 //        for (LYRUIDataSourceChange *change in changes) {
 //            switch (change.type) {
@@ -613,6 +612,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 //            [self scrollToBottomOfCollectionViewAnimated:TRUE];
 //        }
 //    }];
+    [self fetchMessages];
+    [self.collectionView reloadData];
 }
 
 - (void)scrollToBottomOfCollectionViewAnimated:(BOOL)animated

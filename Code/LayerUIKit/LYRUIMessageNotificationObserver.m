@@ -76,6 +76,7 @@
             LYRObjectChangeType updateKey = (LYRObjectChangeType)[[messageChange objectForKey:LYRObjectChangeTypeKey] integerValue];
             switch (updateKey) {
                 case LYRObjectChangeTypeCreate:
+                    NSLog(@"Insert Conversation");
                     [changeObjects addObject:[LYRUIDataSourceChange changeObjectWithType:LYRUIDataSourceChangeTypeInsert newIndex:message.index oldIndex:0]];
                     break;
                     

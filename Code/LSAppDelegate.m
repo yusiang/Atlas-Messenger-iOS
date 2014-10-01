@@ -71,7 +71,7 @@ extern void LYRSetLogLevelFromEnvironment();
     __weak LSApplicationController *wController = self.applicationController;
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
-            //LSAlertWithError(error);
+            NSLog(@"Error :%@", error);
             [self.splashView animateLogoWithCompletion:^{
                 [self removeSplashView];
             }];

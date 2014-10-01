@@ -76,7 +76,6 @@
 
 - (void)processConversationChanges:(NSMutableArray *)conversationChanges completion:(void(^)(NSArray *conversationChanges))completion
 {
-    NSLog(@"The Changes %@", conversationChanges);
     self.tempIdentifiers = [self refreshConversations];
     NSMutableArray *changeObjects = [[NSMutableArray alloc] init];
     for (NSDictionary *conversationChange in conversationChanges) {
