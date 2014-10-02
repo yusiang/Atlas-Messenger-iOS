@@ -33,14 +33,9 @@
 - (void)updateWithLocation:(CLLocationCoordinate2D)location;
 
 /**
- @abstract Configures the font and text color for the bubble view
- */
-- (void)updateBubbleViewWithFont:(UIFont *)font color:(UIColor *)color;
-
-/**
  @abstract The textView object that handles displaying text
  */
-@property (nonatomic)UITextView *bubbleTextView;
+@property (nonatomic)UILabel *bubbleTextView;
 
 /**
  @abstract imageView object that handles displaying images

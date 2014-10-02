@@ -30,22 +30,22 @@
     if (self) {
         self.layer.cornerRadius = 12;
         self.clipsToBounds = TRUE;
-        self.bubbleTextView = [[UITextView alloc] init];
+        
+        self.bubbleTextView = [[UILabel alloc] init];
         self.bubbleTextView.backgroundColor = [UIColor clearColor];
-        self.bubbleTextView.scrollEnabled = NO;
+        self.bubbleTextView.numberOfLines = 0;
         self.bubbleTextView.userInteractionEnabled = NO;
         self.bubbleTextView.translatesAutoresizingMaskIntoConstraints = NO;
-        self.bubbleTextView.textContainerInset = UIEdgeInsetsMake(8, 4, 0, 0);
         [self addSubview:self.bubbleTextView];
-        [self updateConstraintsForContentView:self.bubbleTextView];
+        [self updateConstraintsForTextView];
+        
         self.bubbleImageView = [[UIImageView alloc] init];
         self.bubbleImageView.translatesAutoresizingMaskIntoConstraints = NO;
         self.bubbleImageView.contentMode = UIViewContentModeScaleAspectFill;
         self.bubbleImageView.layer.cornerRadius = 12;
         self.bubbleImageView.clipsToBounds = TRUE;
-        self.bubbleImageView.backgroundColor = [UIColor redColor];
         [self addSubview:self.bubbleImageView];
-        [self updateConstraintsForContentView:self.bubbleImageView];
+        [self updateConstraintsForImageView];
     }
     return self;
 }
@@ -69,30 +69,23 @@
     //[self removeSubviews];
 }
 
-- (void)updateConstraintsForContentView:(UIView *)contentView
+- (void)updateConstraintsForTextView
 {
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleTextView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-12]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleTextView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:6]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleTextView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:-6]];
     [self updateConstraints];
 }
 
-- (void)updateBubbleViewWithFont:(UIFont *)font color:(UIColor *)color
+- (void)updateConstraintsForImageView
 {
-    if (self.font != font) {
-       self.font = font;
-    }
-    if (self.color != color) {
-        self.color = color;
-    }
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleImageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleImageView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self updateConstraints];
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    self.bubbleTextView.textColor = self.color;
-    self.bubbleTextView.font = self.font;
-}
 
 @end

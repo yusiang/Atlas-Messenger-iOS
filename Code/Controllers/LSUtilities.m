@@ -21,18 +21,7 @@ NSURL *LSRailsBaseURL(void)
 
 NSString *LSLayerConfigurationURL(LSEnvironment environment)
 {
-    switch (environment) {
-        case LYRUIProduction:
-            return @"https://conf.lyr8.net/conf";
-            break;
-            
-        case LSTestEnvironment:
-            return @"https://na-3.preview.layer.com/client_configuration.json";
-            break;
-            
-        default:
-            break;
-    }
+    return @"https://conf.lyr8.net/conf";
 }
 
 NSUUID *LSLayerAppID(LSEnvironment environment)
@@ -41,7 +30,9 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
         case LYRUIProduction:
             return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
             break;
-            
+        case LYRUIDevelopment:
+            return [[NSUUID alloc] initWithUUIDString:@"5da52b72-481d-11e4-a5f5-e73f00000629"];
+            break;
         case LSTestEnvironment:
             return [[NSUUID alloc] initWithUUIDString:@"5da52b72-481d-11e4-a5f5-e73f00000629"];
             break;
@@ -59,18 +50,7 @@ NSString *LSApplicationDataDirectory(void)
 
 NSString *LSLayerPersistencePath(LSEnvironment environment)
 {
-    switch (environment) {
-        case LYRUIProduction:
-            return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
-            break;
-            
-        case LSTestEnvironment:
-            return nil;
-            break;
-            
-        default:
-            break;
-    }
+    return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
 }
 
 LSPersistenceManager *LSPersitenceManager(void)

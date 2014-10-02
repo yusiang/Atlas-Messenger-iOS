@@ -29,7 +29,7 @@
 @property (nonatomic) UICollectionView *collectionView;
 @property (nonatomic) LYRUIMessageInputToolbar *messageInputToolbar;
 @property (nonatomic) LYRUIMessageNotificationObserver *messageNotificationObserver;
-@property (nonatomic) dispatch_queue_t messageSendQueue;
+@property (nonatomic) dispatch_queue_t layerOperationQueue;
 @property (nonatomic) BOOL keyboardIsOnScreen;
 @property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) UIView *inputAccessoryView;
@@ -64,7 +64,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         _conversation = conversation;
         _layerClient = layerClient;
         _dateDisplayTimeInterval = 60*60;
-        _messageSendQueue = dispatch_queue_create("com.layer.messageSend", NULL);
+        _layerOperationQueue = dispatch_queue_create("com.layer.messageSend", NULL);
     }
     return self;
 }
@@ -170,13 +170,11 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     self.collectionView.delegate = nil;
 }
 
-
 - (UIView *)inputAccessoryView
 {
     if (!_inputAccessoryView) {
         _inputAccessoryView = self.messageInputToolbar;
     }
-    [_inputAccessoryView sizeToFit];
     return _inputAccessoryView;
 }
 
@@ -270,9 +268,9 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 {
     CGRect rect = [[UIScreen mainScreen] bounds];
     if ([self shouldDisplayReadReceiptForSection:section]) {
-        return CGSizeMake(rect.size.width, 20);
+        return CGSizeMake(rect.size.width, 28);
     }
-    return CGSizeMake(rect.size.width, 4);
+    return CGSizeMake(rect.size.width, 10);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
@@ -301,7 +299,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)updateRecipientStatusForMessage:(LYRMessage *)message
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    dispatch_async(self.layerOperationQueue, ^{
         NSNumber *recipientStatus = [message.recipientStatusByUserID objectForKey:self.layerClient.authenticatedUserID];
         if (![recipientStatus isEqualToNumber:[NSNumber numberWithInteger:LYRRecipientStatusRead]] ) {
                 NSError *error;
@@ -470,10 +468,11 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)sendMessage:(LYRMessage *)message pushText:(NSString *)pushText
 {
-    dispatch_async(self.messageSendQueue,^{
+    dispatch_async(self.layerOperationQueue,^{
         id<LYRUIParticipant>sender = [self.dataSource conversationViewController:self participantForIdentifier:self.layerClient.authenticatedUserID];
         NSString *text = [NSString stringWithFormat:@"%@: %@", [sender fullName], pushText];
-        [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: text} onObject:message];
+        [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: text,
+                                        LYRMessagePushNotificationSoundNameKey : @"default"} onObject:message];
         NSError *error;
         BOOL success = [self.layerClient sendMessage:message error:&error];
         if (success) {
@@ -553,7 +552,11 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (CGPoint)bottomOffset
 {
-    return CGPointMake(0, MAX(-self.collectionView.contentInset.top, self.collectionView.collectionViewLayout.collectionViewContentSize.height - (self.collectionView.frame.size.height - self.collectionView.contentInset.bottom)));
+    CGFloat contentSizeHeight = self.collectionView.collectionViewLayout.collectionViewContentSize.height;
+    CGFloat collectionViewFrameHeight = self.collectionView.frame.size.height;
+    CGFloat collectionViewBottomInset = self.collectionView.contentInset.bottom;
+    CGFloat collectionViewTopInset = self.collectionView.contentInset.top;
+    return CGPointMake(0, MAX(-collectionViewTopInset, contentSizeHeight - (collectionViewFrameHeight - collectionViewBottomInset)));
 }
 
 #pragma mark Contact Button

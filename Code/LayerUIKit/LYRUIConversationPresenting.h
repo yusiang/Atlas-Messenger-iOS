@@ -31,4 +31,10 @@ NSString *LYRUIMIMETypeLocation;  /// location
  */
 - (void)shouldShowConversationImage:(BOOL)shouldShowConversationImage;
 
+/**
+ @abstract The image to be displayed with the conversation. If `shouldShowConversationImage:` is set to `NO`
+ no, image will be displayed
+ */
+@property (nonatomic) UIImage *conversationImage;
+
 @end

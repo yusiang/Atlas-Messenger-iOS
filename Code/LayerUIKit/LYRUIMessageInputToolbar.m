@@ -75,7 +75,7 @@ static CGFloat const LSButtonHeight = 28;
         [self.rightAccessoryButton setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
         [self.rightAccessoryButton addTarget:self action:@selector(rightAccessoryButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.rightAccessoryButton];
-        
+        NSLog(@"Right accessory button state %lu", self.rightAccessoryButton.state);
         [self setupLayoutConstraints];
     }
     
@@ -143,7 +143,6 @@ static CGFloat const LSButtonHeight = 28;
         [self.rightAccessoryButton setHighlighted:FALSE];
         [self.textInputView removeAttachements];
         [self.textInputView setText:@""];
-        [self.textInputView setFont:LSLightFont(16)];
         [self.textInputView layoutSubviews];
         [self.messageParts removeAllObjects];
     }

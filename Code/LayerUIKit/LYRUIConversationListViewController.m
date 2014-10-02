@@ -228,8 +228,8 @@ static NSString *const LYRUIConversationCellReuseIdentifier = @"conversationCell
     NSString *conversationLabel = [self.dataSource conversationLabelForParticipants:conversation.participants inConversationListViewController:self];
     
     UITableViewCell<LYRUIConversationPresenting> *conversationCell = [tableView dequeueReusableCellWithIdentifier:LYRUIConversationCellReuseIdentifier forIndexPath:indexPath];
-    [conversationCell presentConversation:conversation withLabel:conversationLabel];
     [conversationCell shouldShowConversationImage:self.showsConversationImage];
+    [conversationCell presentConversation:conversation withLabel:conversationLabel];
     return conversationCell;
 }
 

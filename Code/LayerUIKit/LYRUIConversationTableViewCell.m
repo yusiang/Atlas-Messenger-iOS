@@ -47,6 +47,8 @@ static NSDateFormatter *LYRUIDayDateFormatter()
 
 @implementation LYRUIConversationTableViewCell
 
+@synthesize conversationImage = _conversationImage;
+
 // Cell Constants
 static CGFloat const LSCellVerticalMargin = 12.0f;
 static CGFloat const LSConversationLabelRightPadding = -6.0f;
@@ -82,6 +84,18 @@ static CGFloat const LSConversationLabelRightPadding = -6.0f;
         self.avatarImageSizeRatio = 0.0f;
     }
     return self;
+}
+
+- (void)shouldShowConversationImage:(BOOL)shouldShowConversationImage
+{
+    _shouldShowAvatarImage = shouldShowConversationImage;
+    
+    if (shouldShowConversationImage) {
+        self.avatarImageSizeRatio = 0.60f;
+        self.avatarImageView.backgroundColor = LSGrayColor();
+    } else {
+        self.cellHorizontalMargin = 20.0f;
+    }
 }
 
 - (void)presentConversation:(LYRConversation *)conversation withLabel:(NSString *)conversationLabel
@@ -150,19 +164,12 @@ static NSDateFormatter *dateFormatter;
     CGSize dateLabelSize = [self.dateLabel.text sizeWithAttributes:dateLabelAttributes];
     self.dateLabelHeight = dateLabelSize.height;
     self.dateLabelWidth = dateLabelSize.width + 4;
+    [self updateConstraintsIfNeeded];
 }
 
-- (void)shouldShowConversationImage:(BOOL)shouldShowConversationImage
+- (void)setConversationImage:(UIImage *)conversationImage
 {
-    _shouldShowAvatarImage = shouldShowConversationImage;
-    
-    if (shouldShowConversationImage) {
-        self.avatarImageSizeRatio = 0.60f;
-        self.avatarImageView.backgroundColor = LSGrayColor();
-    } else {
-        self.cellHorizontalMargin = 20.0f;
-    }
-    [self updateConstraintsIfNeeded];
+    self.avatarImageView.image = conversationImage;
 }
 
 - (void)updateConstraints

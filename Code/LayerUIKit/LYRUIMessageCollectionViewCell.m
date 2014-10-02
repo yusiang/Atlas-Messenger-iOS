@@ -16,7 +16,17 @@
 @property (nonatomic) UILabel *dateLabel;
 @property (nonatomic) CGFloat bubbleViewWidth;
 @property (nonatomic) CGFloat imageViewDiameter;
+
+@property (nonatomic) NSLayoutConstraint *avatarImageWidthConstraint;
+@property (nonatomic) NSLayoutConstraint *avatarImageHeightConstraint;
+@property (nonatomic) NSLayoutConstraint *avatarImageBottomConstraint;
+
+@property (nonatomic) NSLayoutConstraint *bubbleViewHeightConstraint;
+@property (nonatomic) NSLayoutConstraint *bubbleViewTopConstraint;
 @property (nonatomic) NSLayoutConstraint *bubbleViewWidthConstraint;
+
+@property (nonatomic) NSLayoutConstraint *dateLabelLeftConstraint;
+@property (nonatomic) NSLayoutConstraint *dateLabelCenterYConstraint;
 
 @end
 
@@ -27,6 +37,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
+        
         self.bubbleView = [[LYRUIMessageBubbleView alloc] init];
         self.bubbleView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.bubbleView];
@@ -51,7 +62,23 @@
             self.imageViewDiameter = 0;
         }
     }
+    [self updateMessageCellConstraints];
     return self;
+}
+
+- (void)setMessageTextColor:(UIColor *)messageTextColor
+{
+    self.bubbleView.bubbleTextView.textColor = messageTextColor;
+}
+
+- (void)setMessageTextFont:(UIFont *)messageTextFont
+{
+    self.bubbleView.bubbleTextView.font = messageTextFont;
+}
+
+- (void)setBubbleViewColor:(UIColor *)bubbleViewColor
+{
+    self.bubbleView.backgroundColor = bubbleViewColor;
 }
 
 - (void)presentMessagePart:(LYRMessagePart *)messagePart
@@ -74,7 +101,7 @@
     if ([[self.contentView constraints] containsObject:self.bubbleViewWidthConstraint]) {
         [self.contentView removeConstraint:self.bubbleViewWidthConstraint];
     }
-    self.bubbleViewWidth = width + 20; //Adding 20px bubble view horizontal padding
+    self.bubbleViewWidth = width + 16; //Adding 16px bubble view horizontal padding
     self.bubbleViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                   attribute:NSLayoutAttributeWidth
                                                                   relatedBy:NSLayoutRelationEqual
@@ -82,74 +109,90 @@
                                                                   attribute:NSLayoutAttributeNotAnAttribute
                                                                  multiplier:1.0
                                                                    constant:self.bubbleViewWidth];
-    [self.contentView addConstraint:self.bubbleViewWidthConstraint];
+     [self.contentView addConstraint:self.bubbleViewWidthConstraint];
+}
+
+- (void)updateMessageCellConstraints
+{
+    //***************Avatar Image Constraints***************//
+    self.avatarImageBottomConstraint = [NSLayoutConstraint constraintWithItem:self.avatarImage
+                                                                    attribute:NSLayoutAttributeWidth
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:nil
+                                                                    attribute:NSLayoutAttributeNotAnAttribute
+                                                                   multiplier:1.0
+                                                                     constant:self.imageViewDiameter];
+    
+    self.avatarImageHeightConstraint = [NSLayoutConstraint constraintWithItem:self.avatarImage
+                                                                    attribute:NSLayoutAttributeHeight
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:nil
+                                                                    attribute:NSLayoutAttributeNotAnAttribute
+                                                                   multiplier:1.0
+                                                                     constant:self.imageViewDiameter];
+    
+    self.avatarImageWidthConstraint = [NSLayoutConstraint constraintWithItem:self.avatarImage
+                                                                   attribute:NSLayoutAttributeBottom
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self.contentView
+                                                                   attribute:NSLayoutAttributeBottom
+                                                                  multiplier:1.0
+                                                                    constant:0];
+    //***************Bubble View Constraints***************//
+    self.bubbleViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bubbleView
+                                                                    attribute:NSLayoutAttributeHeight
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.contentView
+                                                                    attribute:NSLayoutAttributeHeight
+                                                                   multiplier:1.0
+                                                                     constant:0];
+    
+    self.bubbleViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.bubbleView
+                                                                attribute:NSLayoutAttributeTop
+                                                                relatedBy:NSLayoutRelationEqual
+                                                                   toItem:self.contentView
+                                                                attribute:NSLayoutAttributeTop
+                                                               multiplier:1.0
+                                                                 constant:0];
+    //***************Date Label Constraints***************//
+    self.dateLabelLeftConstraint = [NSLayoutConstraint constraintWithItem:self.dateLabel
+                                                                attribute:NSLayoutAttributeLeft
+                                                                relatedBy:NSLayoutRelationEqual
+                                                                   toItem:self.contentView
+                                                                attribute:NSLayoutAttributeRight
+                                                               multiplier:1.0
+                                                                 constant:2];
+    
+    self.dateLabelCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.dateLabel
+                                                                   attribute:NSLayoutAttributeCenterY
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self.contentView
+                                                                   attribute:NSLayoutAttributeCenterY
+                                                                  multiplier:1.0
+                                                                    constant:0];
+    
+    [self.contentView addConstraint:self.avatarImageHeightConstraint];
+    [self.contentView addConstraint:self.avatarImageBottomConstraint];
+    [self.contentView addConstraint:self.avatarImageWidthConstraint];
+    
+    [self.contentView addConstraint:self.bubbleViewHeightConstraint];
+    [self.contentView addConstraint:self.bubbleViewTopConstraint];
+    
+    [self.contentView addConstraint:self.dateLabelLeftConstraint];
+    [self.contentView addConstraint:self.dateLabelCenterYConstraint];
+    NSLog(@"Initial update called");
 }
 
 - (void)updateConstraints
 {
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImage
-                                                                 attribute:NSLayoutAttributeWidth
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:nil
-                                                                 attribute:NSLayoutAttributeNotAnAttribute
-                                                                multiplier:1.0
-                                                                  constant:self.imageViewDiameter]];
-    
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImage
-                                                                 attribute:NSLayoutAttributeHeight
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:nil
-                                                                 attribute:NSLayoutAttributeNotAnAttribute
-                                                                multiplier:1.0
-                                                                  constant:self.imageViewDiameter]];
-    
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImage
-                                                                 attribute:NSLayoutAttributeBottom
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeBottom
-                                                                multiplier:1.0
-                                                                  constant:0]];
-    
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
-                                                                 attribute:NSLayoutAttributeHeight
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeHeight
-                                                                multiplier:1.0
-                                                                  constant:0]];
-    
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.bubbleView
-                                                                 attribute:NSLayoutAttributeTop
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeTop
-                                                                multiplier:1.0
-                                                                  constant:0]];
-    
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
-                                                                 attribute:NSLayoutAttributeLeft
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeRight
-                                                                multiplier:1.0
-                                                                  constant:2]];
-    
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.dateLabel
-                                                                 attribute:NSLayoutAttributeCenterY
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeCenterY
-                                                                multiplier:1.0
-                                                                  constant:0]];
-    
+    NSLog(@"Update constraints called");
     [super updateConstraints];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    [self.bubbleView updateBubbleViewWithFont:self.messageTextFont color:self.messageTextColor];
+    //[self.bubbleView updateBubbleViewWithFont:self.messageTextFont color:self.messageTextColor];
 }
 
 @end
