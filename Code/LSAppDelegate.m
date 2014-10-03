@@ -178,7 +178,6 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    __block NSURL *messageID = [NSURL URLWithString:[[userInfo valueForKeyPath:@"layer.event_url"] uppercaseString]];
     NSError *error;
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
         if (fetchResult == UIBackgroundFetchResultFailed) {

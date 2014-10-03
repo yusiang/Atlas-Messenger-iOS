@@ -100,6 +100,8 @@ While the LayerUIKit does provide highly customizable TableView and CollectionVi
 
 The presenters are `LYRUIParticipantPresenting`, `LYRUIConversationPresenting`, and `LYRUIMessagePresenting`.
 
+##Contributing
+
 ##Contact
 LayerKit was developed in San Francisco by the Layer team. If you have any technical questions or concerns about this project feel free to reach out to engineers responsible for the development:
 * [Kevin Coleman](mailto:kevin@layer.com)
