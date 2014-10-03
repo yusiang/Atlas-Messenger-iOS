@@ -22,7 +22,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-       self.bubbleView.backgroundColor = LSLighGrayColor();
+       
         
     }
     return self;

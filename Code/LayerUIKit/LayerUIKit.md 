@@ -1,0 +1,65 @@
+#Layer UIKit
+The LayerUIKit provides lightweight, customizable user interface components that allow you to quickly build dynamic and responsive user interfaces on top of the Layer SDK. 
+
+##Installation
+LayerUIKit can be easily installed via Cocoapods. Include the following in your Podfile.
+```
+pod LayerUIKit
+```
+
+##Whats Included
+The LayerUIKit provides the following ViewController components that must be used in conjunction with LayerKit.
+1. `LYRUIConversationViewController` - Displays an individual Layer conversation.
+2. `LYRUIConversationListViewController` - Displays a list Layer conversation.
+
+Additionally, the UIKit provides the following components that can be used independently of LayerKit.
+1. `LYRUIParticipantPicker` - Diplays a list of participants conforming to the `LYRUIParticipant` protocol. Provides support for sorting and ordering participants based on either first or last name.
+2. `LYRUIMessageInputToolBar` - A message input toolbar similar to the toolbar used in iMessage. Provides support for text, images, and location objects. Handles auto re-sizing.
+
+## QuickStart
+1. Subclass - Subclass the `LYRUIConversationViewController` or `LYRUIConversationListViewController`
+2. Implement - Both controllers declare delegate and datasource protocols. Your subclasses must implement these protocols.
+3. Customize - The LayerUIKit leverages the UIAppearance protocol to allow for effortless customization of of the components.
+4. Communicate - Use the LayerKit SDK and the LayerUIKit to build compelling messaging applciations.
+
+##LYRUIConversationListViewController
+The `LYRUIConversationListViewController` provides support for displaying a list of Layer conversations. Conversation are represent by a Conversation Label, the latest message content, and the latest message date. The controller handles ordering conversation based on the latest message date.
+
+###Initializer
+```
+LYRUIConversationListViewController *viewController = [LYRUIConversationListViewController conversationListViewControllerWithLayerClient:self.layerClient];
+```
+
+###Customization
+The `LYRUIConverationListViewController` displays `LYRUIConversationTableViewCells`. The cells themselves provide for customization via UIAppearanceSelectors.
+ ```
+[[LYRUIConversationTableViewCell appearance] setConversationLabelFont:[UIFont boldSystemFontOfSize:14]];
+[[LYRUIConversationTableViewCell appearance] setConversationLableColor:[UIColor blackColor]];
+ ```
+
+##LYRUIConversationViewController
+The `LYRUIConversationListViewController` provides a customizable UITableViewController for displaying Layer conversations. The controller is initilaized with a LayerClient object and handles fetching, sorting, and displaying conversation objects. Conversations are ordered based on the `sentAt` property of the `lastMessage` property on conversation objects.
+
+###Initializer
+```
+LYRUIConversationViewController *viewController = [LYRUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.layerClient];
+```
+
+###Customization
+The `LYRUIConverationViewController` displays both incoming and outgoing flavors of `LYRUIMessageCollectionViewCell`s. The cells themselves provide for customization via UIAppearanceSelectors.
+```
+[[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
+[[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextFont:[UIFont systemFontOfSize:14]];
+[[LYRUIOutgoingMessageCollectionViewCell appearance] setBubbleViewColor:[UIColor blueColor]];
+```
+
+##LYRUIParticipantPicker
+
+###Initializer
+
+##LYRUIMessageInputToolBar
+
+###Initializer
+
+###Advanced Customization
+While the LayerUIKit does provide highly customizable Table and CollectionView cells, some developers will want to replace the cells entirely. To allow for this level of customization, the LayerUIKit leverages a `Presenter` pattern. Developer wishing to implement their own custom cells only need to implement these presenter in order to do so.

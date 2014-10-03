@@ -7,6 +7,7 @@
 //
 
 #import "LSUIConversationViewController.h"
+#import "LSConversationDetailViewController.h"
 
 static NSDateFormatter *LYRUIConversationDateFormatter()
 {
@@ -18,7 +19,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return dateFormatter;
 }
 
-@interface LSUIConversationViewController () <LYRUIConversationViewControllerDataSource>
+@interface LSUIConversationViewController () <LYRUIConversationViewControllerDataSource, LSConversationDetailViewControllerDelegate>
 
 @end
 
@@ -27,7 +28,8 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    [self addContactsButton];
     self.dataSource = self;
 }
 
@@ -73,6 +75,30 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 - (BOOL)converationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message
 {
     return YES;
+}
+
+#pragma mark Contact Button
+
+- (void)addContactsButton
+{
+    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
+                                                                           style:UIBarButtonItemStylePlain
+                                                                          target:self
+                                                                          action:@selector(contactsButtonTapped)];
+    contactsButtonItem.accessibilityLabel = @"Contacts";
+    self.navigationItem.rightBarButtonItem = contactsButtonItem;
+}
+
+- (void)contactsButtonTapped
+{
+    LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
+    detailViewController.detailDelegate = self;
+    [self.navigationController pushViewController:detailViewController animated:TRUE];
+}
+
+- (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
+{
+    return [self.dataSource conversationViewController:self participantForIdentifier:participantIdentifier];
 }
 
 @end

@@ -15,6 +15,17 @@
 
 @class LYRUIConversationViewController;
 
+@protocol LYRUIConversationViewControllerDelegate <NSObject>
+
+/**
+ @abstract Tells the delegate that a user sent the supplied message parts.
+ @param conversationViewController The conversation view controller in which the selection occurred.
+ @param message The message object that was sent via Layer.
+ */
+- (void)conversationViewController:(LYRUIConversationViewController *)viewController didSendMMessage:(LYRMessage *)message;
+
+@end
+
 @protocol LYRUIConversationViewControllerDataSource <NSObject>
 
 /**
@@ -58,8 +69,14 @@
 
 @end
 
+/**
+@abstract The `LYRUIConversationViewController` class displays a Layer conversation and provides ability to send messages.
+*/
 @interface LYRUIConversationViewController : UIViewController
 
+///---------------------------------------
+/// @name Initializing a Conversation View
+///---------------------------------------
 /**
  @abstract Creates and returns a new conversation view controller initialized with the given conversation and Layer client.
  @param conversation The conversation object whose messages are to be displayed in the conversation view controller
@@ -67,6 +84,11 @@
  @return A new conversation view controller.
  */
 + (instancetype)conversationViewControllerWithConversation:(LYRConversation *)conversation layerClient:(LYRClient *)layerClient;
+
+/**
+ @abstract The `LYRUIConversationViewControllerDelegate` class informs the reciever to specific events that occured within the controller.
+ */
+@property (nonatomic, weak) id<LYRUIConversationViewControllerDelegate> delegateSource;
 
 /**
  @abstract The `LYRUIConversationViewControllerDataSource` class presents an interface allowing
@@ -84,5 +106,9 @@
  @abstract Boolean value to determine whether or not the conversation view controller permits editing
  */
 @property (nonatomic, assign) BOOL allowsEditing;
+
+@property (nonatomic) LYRClient *layerClient;
+
+@property (nonatomic) LYRConversation *conversation;
 
 @end

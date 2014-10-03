@@ -21,10 +21,8 @@
 #import "LYRUIMessageNotificationObserver.h"
 #import "LYRUIParticipantTableViewController.h"
 
-@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate, UIGestureRecognizerDelegate >
+@interface LYRUIConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, LYRUIMessageInputToolbarDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LYRUIChangeNotificationObserverDelegate, UIGestureRecognizerDelegate>
 
-@property (nonatomic) LYRClient *layerClient;
-@property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) NSOrderedSet *messages;
 @property (nonatomic) UICollectionView *collectionView;
 @property (nonatomic) LYRUIMessageInputToolbar *messageInputToolbar;
@@ -74,7 +72,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [super viewDidLoad];
     
     [self fetchMessages];
-    [self addContactsButton];
     
     // Setup Collection View
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero
@@ -107,7 +104,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [panGestureRecognizer setMinimumNumberOfTouches:1];
     [panGestureRecognizer setMaximumNumberOfTouches:1];
     panGestureRecognizer.delegate = self;
-    //[self.collectionView  addGestureRecognizer:panGestureRecognizer];
+    [self.collectionView  addGestureRecognizer:panGestureRecognizer];
     
     self.accessibilityLabel = @"Conversation";
 }
@@ -559,28 +556,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     return CGPointMake(0, MAX(-collectionViewTopInset, contentSizeHeight - (collectionViewFrameHeight - collectionViewBottomInset)));
 }
 
-#pragma mark Contact Button
-
-- (void)addContactsButton
-{
-    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
-                                                                       style:UIBarButtonItemStylePlain
-                                                                      target:self
-                                                                      action:@selector(contactsButtonTapped)];
-    contactsButtonItem.accessibilityLabel = @"Contacts";
-    self.navigationItem.rightBarButtonItem = contactsButtonItem;
-
-}
-
-- (void)contactsButtonTapped
-{
-    NSMutableArray *participants = [NSMutableArray new];
-    for (NSString *userID in self.conversation.participants) {
-        id <LYRUIParticipant>participant = [self.dataSource conversationViewController:self participantForIdentifier:userID];
-        if (participant) [participants addObject:participant];
-    }
-}
-
 #pragma mark Notification Observer Delegate Methods
 
 - (void)observer:(LYRUIChangeNotificationObserver *)observer updateWithChanges:(NSArray *)changes
@@ -628,16 +603,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     }
 }
 
-#pragma mark Default Message Cell Appearance
-
-- (void)configureMessageBubbleAppearance
-{
-    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
-    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextFont:[UIFont systemFontOfSize:14]];
-    
-    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
-    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:[UIFont systemFontOfSize:14]];
-}
+#pragma mark Hnalde Device Rotation
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                duration:(NSTimeInterval)duration
@@ -706,6 +672,19 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+}
+
+#pragma mark Default Message Cell Appearance
+
+- (void)configureMessageBubbleAppearance
+{
+    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
+    [[LYRUIOutgoingMessageCollectionViewCell appearance] setMessageTextFont:[UIFont systemFontOfSize:14]];
+    [[LYRUIOutgoingMessageCollectionViewCell appearance] setBubbleViewColor:LSBlueColor()];
+    
+    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
+    [[LYRUIIncomingMessageCollectionViewCell appearance] setMessageTextFont:[UIFont systemFontOfSize:14]];
+    [[LYRUIIncomingMessageCollectionViewCell appearance] setBubbleViewColor:LSLighGrayColor()];
 }
 
 @end

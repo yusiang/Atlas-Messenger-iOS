@@ -31,6 +31,7 @@ static CGFloat const LSSelectionIndicatorRightMargin = -20;
         self.selectionIndicator = [LYRUISelectionIndicator initWithDiameter:LSSelectionIndicatorSize];
         self.selectionIndicator.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.selectionIndicator];
+        [self updateSelectionIndicatorConstraints];
     }
     return self;
 }
@@ -42,15 +43,16 @@ static CGFloat const LSSelectionIndicatorRightMargin = -20;
     [self updateConstraints];
 }
 
-- (void)updateWithSelectionIndicator:(UIControl *)selectionIndicator
+- (void)shouldDisplaySelectionIndicator:(BOOL)shouldDisplaySelectionIndicator
 {
-    if (!selectionIndicator) {
+    if (shouldDisplaySelectionIndicator) {
+        self.selectionIndicator.alpha = 1.0;
+    } else {
         self.selectionIndicator.alpha = 0.0;
     }
-    self.selectionIndicator = selectionIndicator;
 }
 
-- (void)updateConstraints
+- (void)updateSelectionIndicatorConstraints
 {
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.selectionIndicator
                                                                  attribute:NSLayoutAttributeWidth

@@ -161,6 +161,7 @@ static NSString *const LYRParticipantCellIdentifier = @"participantCellIdentifie
 
     UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRParticipantCellIdentifier];
     [participantCell presentParticipant:participant];
+    [participantCell shouldDisplaySelectionIndicator:TRUE];
     return participantCell;
 }
 

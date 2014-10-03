@@ -19,7 +19,6 @@
 @property (nonatomic) NSArray *conversations;
 @property (nonatomic) NSMutableArray *filteredConversations;
 @property (nonatomic) NSPredicate *searchPredicate;
-@property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LYRUIConversationNotificationObserver *conversationsNotificationObserver;
 @property (nonatomic) BOOL isOnScreen;
 

@@ -121,5 +121,4 @@
  */
 @property (nonatomic, assign) LYRUIParticipantPickerSortType participantPickerSortType;
 
-
 @end

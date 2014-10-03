@@ -21,13 +21,6 @@
  */
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation;
 
-@optional
-/**
- @abstract Tells the delegate that the conversation list was dismissed without making a selection.
- @param conversationListViewController The conversation list that was dismissed.
- */
-- (void)conversationListViewControllerDidCancel:(LYRUIConversationListViewController *)conversationListViewController;
-
 @end
 
 @protocol LYRUIConversationListViewControllerDataSource <NSObject>
@@ -68,12 +61,13 @@
 + (instancetype)conversationListViewControllerWithLayerClient:(LYRClient *)layerClient;
 
 /**
- @abstract The delegate for the receiver.
+ @abstract The `LYRUIConversationViewControllerDelegate` class informs the reciever to specific events that occured within the controller.
  */
 @property (nonatomic, weak) id<LYRUIConversationListViewControllerDelegate> delegate;
 
 /**
- @abstract The delegate for the receiver.
+ @abstract The `LYRUIConversationListViewControllerDataSource` class presents an interface allowing
+ for the display of information pertaining to specific converations in the view controller
  */
 @property (nonatomic, weak) id<LYRUIConversationListViewControllerDataSource> dataSource;
 
@@ -111,5 +105,8 @@
  @raises NSInternalInconsistencyException Raised if the value is mutated after the receiver has been presented.
  */
 @property (nonatomic, assign) BOOL showsConversationImage;
+
+
+@property (nonatomic) LYRClient *layerClient;
 
 @end

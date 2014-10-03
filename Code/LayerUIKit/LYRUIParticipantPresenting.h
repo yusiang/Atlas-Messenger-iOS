@@ -15,19 +15,12 @@
  */
 @protocol LYRUIParticipantPresenting <NSObject>
 
-- (void)shouldShowSelectionIndicator:(BOOL)shouldShowSelectionIndicator;
-
 /**
  @abstract Tells the receiver to present an interface for the given participant.
  @param participant The participant to present.
  */
 - (void)presentParticipant:(id<LYRUIParticipant>)participant;
 
-/**
- @abstract Tells the receiver to present a selection indicator
- @param selection indicator to present. 
- @discussion should have display a different interface for both `Highlighted` and `Normal` states
- */
-- (void)updateWithSelectionIndicator:(UIControl *)selectionIndicator;
+- (void)shouldDisplaySelectionIndicator:(BOOL)shouldDisplaySelectionIndicator;
 
 @end

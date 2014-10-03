@@ -101,7 +101,7 @@
     if ([[self.contentView constraints] containsObject:self.bubbleViewWidthConstraint]) {
         [self.contentView removeConstraint:self.bubbleViewWidthConstraint];
     }
-    self.bubbleViewWidth = width + 16; //Adding 16px bubble view horizontal padding
+    self.bubbleViewWidth = width + 25; //Adding 24px for bubble view horizontal padding + 1px
     self.bubbleViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                   attribute:NSLayoutAttributeWidth
                                                                   relatedBy:NSLayoutRelationEqual
