@@ -19,7 +19,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return dateFormatter;
 }
 
-@interface LSUIConversationViewController () <LYRUIConversationViewControllerDataSource, LSConversationDetailViewControllerDelegate>
+@interface LSUIConversationViewController () <LYRUIConversationViewControllerDataSource, LYRUIConversationViewControllerDelegate, LSConversationDetailViewControllerDelegate>
 
 @end
 
@@ -28,9 +28,9 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self addContactsButton];
     self.dataSource = self;
+    self.delegate = self;
 }
 
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
@@ -77,6 +77,24 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return YES;
 }
 
+#pragma mark - LYRUIConversationViewController Delegate
+
+- (void)conversationViewController:(LYRUIConversationViewController *)viewController didSendMessage:(LYRMessage *)message
+{
+    NSLog(@"Message Sent: %@", message);
+}
+
+- (void)conversationViewController:(LYRUIConversationViewController *)viewController didFailSendingMessageWithError:(NSError *)error
+{
+    NSLog(@"Message Send Failed with Error: %@", error);
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
+                                                        message:[error localizedDescription]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
+}
+
 #pragma mark Contact Button
 
 - (void)addContactsButton
@@ -100,5 +118,6 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 {
     return [self.dataSource conversationViewController:self participantForIdentifier:participantIdentifier];
 }
+
 
 @end

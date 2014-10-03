@@ -22,7 +22,7 @@
 
 @synthesize allowsMultipleSelection = _allowsMultipleSelection;
 
-+ (instancetype)participantPickerWithParticipants:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
++ (instancetype)participantPickerWithDataSource:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType
 {
     NSAssert(dataSource, @"Data Source cannot be nil");
     return [[self alloc] initWithDataSource:dataSource sortType:sortType];

@@ -22,7 +22,9 @@
  @param conversationViewController The conversation view controller in which the selection occurred.
  @param message The message object that was sent via Layer.
  */
-- (void)conversationViewController:(LYRUIConversationViewController *)viewController didSendMMessage:(LYRMessage *)message;
+- (void)conversationViewController:(LYRUIConversationViewController *)viewController didSendMessage:(LYRMessage *)message;
+
+- (void)conversationViewController:(LYRUIConversationViewController *)viewController didFailSendingMessageWithError:(NSError *)error;
 
 @end
 
@@ -88,7 +90,7 @@
 /**
  @abstract The `LYRUIConversationViewControllerDelegate` class informs the reciever to specific events that occured within the controller.
  */
-@property (nonatomic, weak) id<LYRUIConversationViewControllerDelegate> delegateSource;
+@property (nonatomic, weak) id<LYRUIConversationViewControllerDelegate> delegate;
 
 /**
  @abstract The `LYRUIConversationViewControllerDataSource` class presents an interface allowing

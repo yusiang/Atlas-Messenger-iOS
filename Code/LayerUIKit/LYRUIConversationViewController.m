@@ -25,7 +25,6 @@
 
 @property (nonatomic) NSOrderedSet *messages;
 @property (nonatomic) UICollectionView *collectionView;
-@property (nonatomic) LYRUIMessageInputToolbar *messageInputToolbar;
 @property (nonatomic) LYRUIMessageNotificationObserver *messageNotificationObserver;
 @property (nonatomic) dispatch_queue_t layerOperationQueue;
 @property (nonatomic) BOOL keyboardIsOnScreen;
@@ -95,7 +94,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     [self.collectionView registerClass:[LYRUIConversationCollectionViewHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:LYRUIMessageCellHeaderIdentifier];
     [self.collectionView registerClass:[LYRUIConversationCollectionViewFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:LYRUIMessageCellFooterIdentifier];
     
-    self.messageInputToolbar = [LYRUIMessageInputToolbar inputToolBarWithViewController:self];
+    // Set the accessoryView to be a Message Input Toolbar
+    self.inputAccessoryView = [LYRUIMessageInputToolbar inputToolBarWithViewController:self];
     
     // Configure defualt cell appearance
     [self configureMessageBubbleAppearance];
@@ -165,14 +165,6 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 - (void)dealloc
 {
     self.collectionView.delegate = nil;
-}
-
-- (UIView *)inputAccessoryView
-{
-    if (!_inputAccessoryView) {
-        _inputAccessoryView = self.messageInputToolbar;
-    }
-    return _inputAccessoryView;
 }
 
 - (BOOL)canBecomeFirstResponder
@@ -473,16 +465,12 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
         NSError *error;
         BOOL success = [self.layerClient sendMessage:message error:&error];
         if (success) {
-            NSLog(@"Messages Succesfully Sent");
-        } else {
-            NSLog(@"The error is %@", error);
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
-                                                                    message:[error localizedDescription]
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil];
-                [alertView show];
+                [self.delegate conversationViewController:self didSendMessage:message];
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate conversationViewController:self didFailSendingMessageWithError:error];
             });
         }
     });
@@ -510,7 +498,7 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
 
 - (void)displayImagePickerWithSourceType:(UIImagePickerControllerSourceType)sourceType;
 {
-    [self.messageInputToolbar.textInputView resignFirstResponder];
+    [[(LYRUIMessageInputToolbar *)self.inputAccessoryView textInputView] resignFirstResponder];
     BOOL pickerSourceTypeAvailable = [UIImagePickerController isSourceTypeAvailable:sourceType];
     if (pickerSourceTypeAvailable) {
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -529,7 +517,8 @@ static CGFloat const LYRUIMessageInputToolbarHeight = 40;
     if ([mediaType isEqualToString:@"public.image"]) {
         // Get the selected image
         UIImage *selectedImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
-        [self.messageInputToolbar insertImage:selectedImage];
+        
+        [(LYRUIMessageInputToolbar *)self.inputAccessoryView insertImage:selectedImage];
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }

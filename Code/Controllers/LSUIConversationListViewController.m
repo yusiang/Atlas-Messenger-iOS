@@ -141,7 +141,7 @@
 
 - (void)composeButtonTapped
 {
-    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithParticipants:self.participantPickerDataSource
+    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
                                                                                                               sortType:LYRUIParticipantPickerControllerSortTypeFirst];
     controller.participantPickerDelegate = self;
     controller.allowsMultipleSelection = YES;

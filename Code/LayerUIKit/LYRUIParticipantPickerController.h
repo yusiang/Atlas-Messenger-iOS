@@ -70,7 +70,7 @@
  @returns A new participant picker initialized with the given set of participants.
  @raises NSInvalidArgumentException Raised if any object in the given set of participants does not conform to the `LYRUIParticipant` protocol.
  */
-+ (instancetype)participantPickerWithParticipants:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType;
++ (instancetype)participantPickerWithDataSource:(id<LYRUIParticipantPickerDataSource>)dataSource sortType:(LYRUIParticipantPickerSortType)sortType;
 
 ///----------------------------------------
 /// @name Accessing the Set of Participants
