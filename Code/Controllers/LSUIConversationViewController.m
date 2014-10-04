@@ -111,6 +111,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 {
     LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
     detailViewController.detailDelegate = self;
+    detailViewController.applicationController = self.applicationContoller;
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }
 

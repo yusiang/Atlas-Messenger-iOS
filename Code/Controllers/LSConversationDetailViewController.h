@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
 #import "LYRUIParticipant.h"
+#import "LSApplicationController.h"
 
 @class LSConversationDetailViewController;
 
@@ -24,5 +25,6 @@
 +(instancetype)conversationDetailViewControllerLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation;
 
 @property (nonatomic) id<LSConversationDetailViewControllerDelegate>detailDelegate;
+@property (nonatomic) LSApplicationController *applicationController;
 
 @end

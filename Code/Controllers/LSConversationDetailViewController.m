@@ -14,7 +14,7 @@
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUtilities.h"
 
-@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource>
+@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) LYRClient *layerClient;
@@ -45,7 +45,7 @@ static NSString *const LYRUIParticipantInviteCellIdentifier = @"participantInvit
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationContoller.persistenceManager];
+    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LYRUIParticipantCellIdentifier];
@@ -96,12 +96,28 @@ static NSString *const LYRUIParticipantInviteCellIdentifier = @"participantInvit
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == self.conversation.participants.count) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Feature Not Implemented"
-                                                            message:@"Tell Kevin To Fix It"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView show];
+        LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
+                                                                                                                sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+        controller.participantPickerDelegate = self;
+        controller.allowsMultipleSelection = YES;
+        [self presentViewController:controller animated:YES completion:nil];
     }
+}
+
+- (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
+{
+    [self dismissViewControllerAnimated:TRUE completion:^{
+        //
+    }];
+}
+
+- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipants:(NSSet *)participants
+{
+    [self dismissViewControllerAnimated:TRUE completion:^{
+        NSSet *participantIdentifiers = [participants valueForKey:@"userID"];
+        NSError *error;
+        [self.layerClient addParticipants:participantIdentifiers toConversation:self.conversation error:&error];
+    }];
 }
 
 - (void)configureAppearance
