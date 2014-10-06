@@ -181,6 +181,11 @@
     }
 }
 
+- (void)selectConversation:(LYRConversation *)conversation
+{
+    [self presentControllerWithConversation:conversation];
+}
+
 - (void)logout
 {
     [SVProgressHUD show];

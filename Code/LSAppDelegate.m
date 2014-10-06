@@ -24,6 +24,7 @@ extern void LYRSetLogLevelFromEnvironment();
 @property (nonatomic) UINavigationController *navigationController;
 @property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
 @property (nonatomic) LSSplashView *splashView;
+@property (nonatomic) LSEnvironment environment;
 
 @end
 
@@ -34,74 +35,95 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    LSEnvironment environment = LYRUIProduction;
+    self.environment = LYRUIDevelopment;
+    LYRSetLogLevelFromEnvironment();
     
     // Configure Layer Base URL
     NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
-    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(environment)]) {
-        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(environment) forKey:@"LAYER_CONFIGURATION_URL"];
+    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(self.environment)]) {
+        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:@"LAYER_CONFIGURATION_URL"];
     }
     
-    // Set LayerKit log level
-    LYRSetLogLevelFromEnvironment();
-    
     // Configure application controllers
-    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID(environment)];
+    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID(self.environment)];
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
-    // Configure application for push 
-    UILocalNotification *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-    if (notification) {
-        NSLog(@"app recieved notification from remote%@",notification);
-        [self application:application didReceiveRemoteNotification:(NSDictionary*)notification];
-    }else{
-        NSLog(@"app did not recieve notification");
-    }
-   
-    // Kicking off Crashlytics
-    [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
+    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+        NSLog(@"Layer Client is connected");
+        if (error) {
+            NSLog(@"Error :%@", error);
+        } else {
+            [self checkForAuthenticatedSession];
+        }
+    }];
     
     // Setup notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
     
-    // Ask LayerKit to connect
+    // Setup application
+    [self setRootViewController];
+    [self registerForRemoteNotifications:application];
+    [self configureGlobalUserInterfaceAttributes];
+    [self getUnreadMessageCount];
+    
+    // Setup SDKs
+    [self initializeCrashlytics];
+    [self initializeHockeyApp];
+    
+    return YES;
+}
 
-    __weak LSApplicationController *wController = self.applicationController;
-    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            NSLog(@"Error :%@", error);
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    // Coming back to the foreground so we refresh the contact list
+    [self addSplashView];
+    [self checkForAuthenticatedSession];
+    [self loadContacts];
+}
+
+- (void)checkForAuthenticatedSession
+{
+    LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
+    [self updateCrashlyticsWithUser:session.user];
+    NSError *error;
+    // If we have a session, resume
+    if ([self.applicationController.APIManager resumeSession:session error:&error]) {
+        NSLog(@"Session resumed: %@", session);
+        [self loadContacts];
+        [self presentConversationsListViewController];
+        // If we have an authenticated user ID and no session, we must log out
+    } else if (self.applicationController.layerClient.authenticatedUserID){
+        [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+            NSLog(@"Encountered error while resuming session but Layer client is authenticated. Deauthenticating client...");
             [self.splashView animateLogoWithCompletion:^{
                 [self removeSplashView];
             }];
-        }
-        if (success) {
-            NSLog(@"Layer Client is connected");
-            LSSession *session = [wController.persistenceManager persistedSessionWithError:nil];
-            [self updateCrashlyticsWithUser:session.user];
-            NSError *error;
-            // If we have a session, resume
-            if ([wController.APIManager resumeSession:session error:&error]) {
-                NSLog(@"Session resumed: %@", session);
-                [self loadContacts];
-                [self presentConversationsListViewController];
-                // If we have an authenticated user ID and no session, we must log out
-            } else if (wController.layerClient.authenticatedUserID){
-                [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-                    NSLog(@"Encountered error while resuming session but Layer client is authenticated. Deauthenticating client...");
-                    [self.splashView animateLogoWithCompletion:^{
-                        [self removeSplashView];
-                    }];
-                }];
-            } else {
-                [self.splashView animateLogoWithCompletion:^{
-                    [self removeSplashView];
-                }];
-            }
-        }
-    }];
-    
+        }];
+    } else {
+        [self.splashView animateLogoWithCompletion:^{
+            [self removeSplashView];
+        }];
+    }
+
+}
+
+- (void)registerForRemoteNotifications:(UIApplication *)application
+{
+    // Declaring that I want to recieve push!
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                                                                             categories:nil];
+        [application registerUserNotificationSettings:notificationSettings];
+        [application registerForRemoteNotifications];
+    } else {
+        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    }
+}
+
+- (void)setRootViewController
+{
     self.authenticationViewController = [LSAuthenticationTableViewController new];
     self.authenticationViewController.applicationController = self.applicationController;
     
@@ -112,35 +134,23 @@ extern void LYRSetLogLevelFromEnvironment();
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
-    
-    self.splashView = [[LSSplashView alloc] initWithFrame:self.window.bounds];
-    [self.window addSubview:self.splashView];
-    
-    // Update the app ID and configuration URL in the crash metadata.
-    [Crashlytics setObjectValue:LSLayerConfigurationURL(environment) forKey:@"ConfigurationURL"];
-    [Crashlytics setObjectValue:LSLayerAppID(environment) forKey:@"AppID"];
-    
-//    // Start HockeyApp
-//    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
-//    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
-//    [[BITHockeyManager sharedHockeyManager] startManager];
-//    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-    
-    // Declaring that I want to recieve push!
-    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
-        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
-                                                                                             categories:nil];
-        [application registerUserNotificationSettings:notificationSettings];
-        [application registerForRemoteNotifications];
-    } else {
-        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
-    }
-    
-    [self configureGlobalUserInterfaceAttributes];
-    
-//    [self getUnreadMessageCount];
-    return YES;
-    
+
+    [self addSplashView];
+}
+
+- (void)initializeCrashlytics
+{
+    [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
+    [Crashlytics setObjectValue:LSLayerConfigurationURL(self.environment) forKey:@"ConfigurationURL"];
+    [Crashlytics setObjectValue:LSLayerAppID(self.environment) forKey:@"AppID"];
+}
+
+- (void)initializeHockeyApp
+{
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
+    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 }
 
 - (void)updateCrashlyticsWithUser:(LSUser *)authenticatedUser
@@ -149,12 +159,6 @@ extern void LYRSetLogLevelFromEnvironment();
     [Crashlytics setUserName:authenticatedUser.fullName];
     [Crashlytics setUserEmail:authenticatedUser.email];
     [Crashlytics setUserIdentifier:authenticatedUser.userID];
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    // Coming back to the foreground so we refresh the contact list
-    [self loadContacts];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -178,6 +182,16 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
+    if (application.applicationState == UIApplicationStateInactive) {
+        NSURL *messageURL = [NSURL URLWithString:[userInfo valueForKeyPath:@"layer.event_url"]];
+        NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:messageURL]];
+        LYRMessage *message = [[messages allObjects] firstObject];
+        
+        UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
+        LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
+        [conversationListViewController selectConversation:message.conversation];
+    }
+    
     NSError *error;
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
         if (fetchResult == UIBackgroundFetchResultFailed) {
@@ -190,14 +204,6 @@ extern void LYRSetLogLevelFromEnvironment();
     } else {
         NSLog(@"Error handling push notification: %@", error);
         completionHandler(UIBackgroundFetchResultNoData);
-    }
-}
-
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-{
-    if ( application.applicationState == UIApplicationStateInactive || application.applicationState == UIApplicationStateBackground  )
-    {
-        
     }
 }
 
@@ -260,6 +266,10 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)presentConversationsListViewController
 {
+    if (self.window.rootViewController.presentedViewController) {
+        [self removeSplashView];
+        return;
+    }
     self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
     self.viewController.applicationController = self.applicationController;
     self.viewController.allowsEditing = FALSE;
@@ -271,6 +281,13 @@ extern void LYRSetLogLevelFromEnvironment();
         [self removeSplashView];
     }];
     
+}
+- (void)addSplashView
+{
+    if (!self.splashView) {
+        self.splashView = [[LSSplashView alloc] initWithFrame:self.window.bounds];
+    }
+    [self.window addSubview:self.splashView];
 }
 
 - (void)removeSplashView

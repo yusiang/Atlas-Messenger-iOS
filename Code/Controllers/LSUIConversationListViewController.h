@@ -16,6 +16,8 @@
  */
 @interface LSUIConversationListViewController : LYRUIConversationListViewController
 
+- (void)selectConversation:(LYRConversation *)conversation;
+
 /**
  @abstract The controller object for the application.
  */

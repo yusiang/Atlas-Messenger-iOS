@@ -31,10 +31,10 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
             return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
             break;
         case LYRUIDevelopment:
-            return [[NSUUID alloc] initWithUUIDString:@"5da52b72-481d-11e4-a5f5-e73f00000629"];
+            return [[NSUUID alloc] initWithUUIDString:@"ce2c45a4-3e97-11e4-9d4c-6a9900000431"];
             break;
         case LSTestEnvironment:
-            return [[NSUUID alloc] initWithUUIDString:@"5da52b72-481d-11e4-a5f5-e73f00000629"];
+            return [[NSUUID alloc] initWithUUIDString:@"ce2c45a4-3e97-11e4-9d4c-6a9900000431"];
             break;
             
         default:
