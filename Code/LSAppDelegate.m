@@ -276,7 +276,7 @@ extern void LYRSetLogLevelFromEnvironment();
     self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
     self.viewController.applicationController = self.applicationController;
     self.viewController.allowsEditing = FALSE;
-    self.viewController.showsConversationImage = NO;
+    self.viewController.displaysConversationImage = FALSE;
     
     UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [self.navigationController presentViewController:conversationController animated:YES completion:^{

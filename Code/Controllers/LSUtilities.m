@@ -31,6 +31,9 @@ NSString *LSLayerConfigurationURL(LSEnvironment environment)
         case LYRUIStage1:
              return @"https://conf.stage1.lyr8.net/conf";
             break;
+        case LYRUIDev1:
+            return @"https://dev-1.preview.layer.com:444/conf";
+            break;
         case LSTestEnvironment:
             return @"https://conf.lyr8.net/conf";
     
@@ -50,6 +53,9 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
             break;
         case LYRUIStage1:
             return [[NSUUID alloc] initWithUUIDString:@"24f43c32-4d95-11e4-b3a2-0fd00000020d"];
+            break;
+        case LYRUIDev1:
+            return [[NSUUID alloc] initWithUUIDString:@"9ae66b44-1682-11e4-92e4-0b53000001d0"];
             break;
         case LSTestEnvironment:
             return [[NSUUID alloc] initWithUUIDString:@"ce2c45a4-3e97-11e4-9d4c-6a9900000431"];

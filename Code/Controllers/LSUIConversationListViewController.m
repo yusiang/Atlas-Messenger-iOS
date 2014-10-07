@@ -95,6 +95,11 @@
     return conversationLabel;
 }
 
+- (UIImage *)conversationImageForParticipants:(NSSet *)participants inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController
+{
+    return [UIImage new];
+}
+
 #pragma mark - LYRUIParticipantTableViewControllerDelegate methods
 
 - (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController

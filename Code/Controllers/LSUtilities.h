@@ -18,6 +18,7 @@ typedef enum {
     LYRUIProduction,
     LYRUIDevelopment,
     LYRUIStage1,
+    LYRUIDev1,
     LSTestEnvironment
 } LSEnvironment;
 

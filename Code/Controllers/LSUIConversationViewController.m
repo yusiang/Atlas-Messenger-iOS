@@ -35,8 +35,11 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
-    NSSet *set = [self.applicationContoller.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
-    return [[set allObjects] firstObject];
+    if (participantIdentifier) {
+        NSSet *set = [self.applicationContoller.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
+        return [[set allObjects] firstObject];
+    }
+    return nil;
 }
 
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
