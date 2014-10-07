@@ -35,7 +35,7 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    self.environment = LYRUIDevelopment;
+    self.environment = LYRUIStage1;
     LYRSetLogLevelFromEnvironment();
     
     // Configure Layer Base URL
@@ -53,6 +53,7 @@ extern void LYRSetLogLevelFromEnvironment();
         NSLog(@"Layer Client is connected");
         if (error) {
             NSLog(@"Error :%@", error);
+            [self removeSplashView];
         } else {
             [self checkForAuthenticatedSession];
         }
@@ -240,7 +241,9 @@ extern void LYRSetLogLevelFromEnvironment();
         LSAlertWithError(error);
     }
     
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController dismissViewControllerAnimated:YES completion:^{
+        self.viewController = nil;
+    }];
 }
 
 - (void)loadContacts
