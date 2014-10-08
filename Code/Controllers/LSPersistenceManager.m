@@ -80,6 +80,11 @@
     LSMustBeImplementedBySubclass();
 }
 
+- (NSSet *)participantsForIdentifiers:(NSSet *)identifiers
+{
+    LSMustBeImplementedBySubclass();
+}
+
 @end
 
 @implementation LSInMemoryPersistenceManager

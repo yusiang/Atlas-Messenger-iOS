@@ -35,7 +35,7 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    self.environment = LYRUIProduction;
+    self.environment = LYRUIDev1;
     LYRSetLogLevelFromEnvironment();
     
     // Configure Layer Base URL
