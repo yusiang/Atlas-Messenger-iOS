@@ -9,12 +9,6 @@ This is the repository for the internal iOS sample messaging app
 1. Go to AppStore.
 2. Download XCode.
 
-### Get dependencies
-
-```
-rake init
-```
-
 ### Clone this repo
 
 Clone this repo to your machine and don't forget to init and update the submodules currently included in the project.
@@ -24,6 +18,12 @@ git clone git@github.com:layerhq/layer-sample-ios.git
 # checkout the branch you'll be working on if needed
 # git checkout coleman-component-build
 git pull && git submodule init && git submodule update && git submodule status
+```
+
+### Get dependencies
+
+```
+rake init
 ```
 
 ## Releasing
