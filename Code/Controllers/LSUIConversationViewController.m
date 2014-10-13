@@ -42,37 +42,51 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return nil;
 }
 
-- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
+- (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
-    return [LYRUIConversationDateFormatter() stringFromDate:date];
+    NSString *dateString = [LYRUIConversationDateFormatter() stringFromDate:date];
+    NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:dateString];
+    NSRange range = [dateString rangeOfString:@","];
+    NSRange boldedRange = NSMakeRange(0, range.location);
+    [dateAttributedString beginEditing];
+    
+    [dateAttributedString addAttribute:NSFontAttributeName
+                       value:[UIFont boldSystemFontOfSize:12]
+                       range:boldedRange];
+    
+    [dateAttributedString endEditing];
+    return dateAttributedString;
 }
 
-- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
+- (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
     NSMutableArray *recipients = [[recipientStatus allKeys] mutableCopy];
     [recipients removeObject:self.applicationContoller.layerClient.authenticatedUserID];
+    
+    NSAttributedString *attributedString;
+    
     NSInteger status = [[recipientStatus valueForKey:[recipients lastObject]] integerValue];
     switch (status) {
         case LYRRecipientStatusInvalid:
-            return @"Message Not Sent";
+            attributedString = [[NSAttributedString alloc] initWithString:@"Message Not Sent"];
             break;
             
         case LYRRecipientStatusSent:
-            return @"Message Sent";
+            attributedString = [[NSAttributedString alloc] initWithString:@"Message Not Sent"];
             break;
             
         case LYRRecipientStatusDelivered:
-            return @"Message Delivered";
+            attributedString = [[NSAttributedString alloc] initWithString:@"Message Not Sent"];
             break;
             
         case LYRRecipientStatusRead:
-            return @"Message Read";
+            attributedString = [[NSAttributedString alloc] initWithString:@"Message Not Sent"];
             break;
             
         default:
             break;
     }
-    return nil;
+    return attributedString;
 }
 
 - (BOOL)converationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message

@@ -49,29 +49,22 @@ extern void LYRSetLogLevelFromEnvironment();
     LSPersistenceManager *persistenceManager = LSPersitenceManager();
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
     
-    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-        NSLog(@"Layer Client is connected");
-        if (error) {
-            NSLog(@"Error :%@", error);
-            [self removeSplashView];
-        } else {
-            [self checkForAuthenticatedSession];
-        }
-    }];
-    
     // Setup notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUnreadMessageCount) name:LYRClientDidFinishSynchronizationNotification object:nil];
     
     // Setup application
+    [self connectLayer];
     [self setRootViewController];
     [self registerForRemoteNotifications:application];
-    [self configureGlobalUserInterfaceAttributes];
-    [self getUnreadMessageCount];
     
     // Setup SDKs
     [self initializeCrashlytics];
     [self initializeHockeyApp];
+    
+    // UI
+    [self configureGlobalUserInterfaceAttributes];
     
     return YES;
 }
@@ -82,6 +75,50 @@ extern void LYRSetLogLevelFromEnvironment();
     [self addSplashView];
     [self checkForAuthenticatedSession];
     [self loadContacts];
+}
+
+- (void)connectLayer
+{
+    if (!self.applicationController.layerClient.isConnected && !self.applicationController.layerClient.isConnecting) {
+        [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+            NSLog(@"Layer Client is connected");
+            if (error) {
+                NSLog(@"Error :%@", error);
+                [self removeSplashView];
+            } else {
+                [self checkForAuthenticatedSession];
+            }
+        }];
+    }
+}
+
+- (void)setRootViewController
+{
+    self.authenticationViewController = [LSAuthenticationTableViewController new];
+    self.authenticationViewController.applicationController = self.applicationController;
+    
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
+    self.navigationController.navigationBarHidden = TRUE;
+    self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
+    self.navigationController.navigationBar.tintColor = LSBlueColor();
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.rootViewController = self.navigationController;
+    [self.window makeKeyAndVisible];
+    
+    [self addSplashView];
+}
+
+- (void)registerForRemoteNotifications:(UIApplication *)application
+{
+    // Declaring that I want to recieve push!
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                                                                             categories:nil];
+        [application registerUserNotificationSettings:notificationSettings];
+        [application registerForRemoteNotifications];
+    } else {
+        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    }
 }
 
 - (void)checkForAuthenticatedSession
@@ -107,36 +144,6 @@ extern void LYRSetLogLevelFromEnvironment();
             [self removeSplashView];
         }];
     }
-
-}
-
-- (void)registerForRemoteNotifications:(UIApplication *)application
-{
-    // Declaring that I want to recieve push!
-    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
-        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
-                                                                                             categories:nil];
-        [application registerUserNotificationSettings:notificationSettings];
-        [application registerForRemoteNotifications];
-    } else {
-        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
-    }
-}
-
-- (void)setRootViewController
-{
-    self.authenticationViewController = [LSAuthenticationTableViewController new];
-    self.authenticationViewController.applicationController = self.applicationController;
-    
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
-    self.navigationController.navigationBarHidden = TRUE;
-    self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
-    self.navigationController.navigationBar.tintColor = LSBlueColor();
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = self.navigationController;
-    [self.window makeKeyAndVisible];
-
-    [self addSplashView];
 }
 
 - (void)initializeCrashlytics
@@ -248,20 +255,20 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)loadContacts
 {
-    NSLog(@"Loading contacts...");
+    //NSLog(@"Loading contacts...");
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
         if (contacts) {
             NSError *persistenceError = nil;
             BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
             if (success) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"contactsPersited" object:nil];
-                NSLog(@"Persisted contacts successfully: %@", contacts);
+                //NSLog(@"Persisted contacts successfully: %@", contacts);
             } else {
-                NSLog(@"Failed persisting contacts: %@. Error: %@", contacts, persistenceError);
+                //NSLog(@"Failed persisting contacts: %@. Error: %@", contacts, persistenceError);
                 LSAlertWithError(persistenceError);
             }
         } else {
-            NSLog(@"Failed loading contacts: %@", error);
+            //NSLog(@"Failed loading contacts: %@", error);
             LSAlertWithError(error);
         }
     }];
@@ -283,7 +290,6 @@ extern void LYRSetLogLevelFromEnvironment();
         [self.authenticationViewController resetState];
         [self removeSplashView];
     }];
-    
 }
 - (void)addSplashView
 {
@@ -316,19 +322,25 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)getUnreadMessageCount
 {
-    __block NSUInteger unreadMessage = 0;
+    __block NSUInteger unreadMessageCount = 0;
     __block NSString *userID = self.applicationController.layerClient.authenticatedUserID;
     NSSet *conversations = [self.applicationController.layerClient conversationsForIdentifiers:nil];
     for (LYRConversation *conversation in conversations) {
         NSOrderedSet *messages = [self.applicationController.layerClient messagesForConversation:conversation];
         for (LYRMessage *message in messages) {
-            LYRRecipientStatus status = (LYRRecipientStatus)[message.recipientStatusByUserID objectForKey:userID];
-            if (status == LYRRecipientStatusDelivered) {
-                unreadMessage += 1;
+            LYRRecipientStatus status = [[message.recipientStatusByUserID objectForKey:userID] integerValue];
+            //NSLog(@"Status: %ld", status);
+            switch (status) {
+                case LYRRecipientStatusDelivered:
+                    unreadMessageCount += 1;
+                    break;
+                    
+                default:
+                    break;
             }
         }
     }
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:unreadMessage];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:unreadMessageCount];
 }
 
 @end
