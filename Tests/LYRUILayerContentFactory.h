@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 
+extern NSString *const LYRUITestMessageText;
+
 @interface LYRUILayerContentFactory : NSObject
 
 + (instancetype)layerContentFactoryWithLayerClient:(LYRClient *)layerClient;

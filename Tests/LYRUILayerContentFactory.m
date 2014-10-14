@@ -18,6 +18,8 @@
 
 @implementation LYRUILayerContentFactory
 
+NSString *const LYRUITestMessageText = @"Hi, this is a test!";
+
 + (instancetype)layerContentFactoryWithLayerClient:(LYRClient *)layerClient;
 {
     return [[self alloc] initWithLayerClient:layerClient];
@@ -41,7 +43,7 @@
 - (void)sendMessagesToConversation:(LYRConversation *)conversation number:(NSUInteger)number
 {
     for (int i = 0; i < number; i++) {
-        LYRMessagePart *part = [LYRMessagePart messagePartWithText:@"Let's go DOUG!"];
+        LYRMessagePart *part = [LYRMessagePart messagePartWithText:LYRUITestMessageText];
         
         NSError *error;
         LYRMessage *message = [LYRMessage messageWithConversation:conversation parts:@[part]];

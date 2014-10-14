@@ -44,7 +44,13 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
-    NSString *dateString = [LYRUIConversationDateFormatter() stringFromDate:date];
+    NSString *dateString;
+    if (date) {
+        dateString = [LYRUIConversationDateFormatter() stringFromDate:date];
+    } else {
+        dateString = [LYRUIConversationDateFormatter() stringFromDate:[NSDate date]];
+    }
+    
     NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:dateString];
     NSRange range = [dateString rangeOfString:@","];
     NSRange boldedRange = NSMakeRange(0, range.location);
@@ -98,7 +104,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSendMessage:(LYRMessage *)message
 {
-    NSLog(@"Message Sent: %@", message);
+
 }
 
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didFailSendingMessageWithError:(NSError *)error

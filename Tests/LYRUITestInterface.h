@@ -19,9 +19,9 @@
 
 + (instancetype)testInterfaceWithApplicationController:(LSApplicationController *)applicationController;
 
-///******************************
-/// Authentication Methods
-///******************************
+//-------------------------------
+// Authentication Methods
+//-------------------------------
 
 - (NSString *)registerUser:(LSUser *)newUser;
 
@@ -31,9 +31,9 @@
 
 - (void)logout;
 
-///********************************
-/// Participant Management Methods
-///********************************
+//-------------------------------
+// Participant Management Methods
+//-------------------------------
 
 - (void)loadContacts;
 
@@ -43,9 +43,9 @@
 
 - (LSUser *)randomUser;
 
-///********************************
-/// Accessibility Lable Methods
-///********************************
+//-------------------------------
+// Accessibility Label Methods
+//-------------------------------
 
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs;
 

@@ -22,6 +22,7 @@ extern void LYRSetLogLevelFromEnvironment();
 @interface LSAppDelegate ()
 
 @property (nonatomic) UINavigationController *navigationController;
+@property (nonatomic) UINavigationController *authenticatedNavigationController;
 @property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
@@ -61,10 +62,16 @@ extern void LYRSetLogLevelFromEnvironment();
     
     // Setup SDKs
     [self initializeCrashlytics];
-    [self initializeHockeyApp];
+    //[self initializeHockeyApp];
     
-    // UI
+    // Configure Sample App UI Appearance 
     [self configureGlobalUserInterfaceAttributes];
+    
+    // ConversationListViewController Config
+    _cellClass = [LYRUIConversationTableViewCell class];
+    _rowHeight = 72;
+    _allowsEditing = FALSE;
+    _displaysConversationImage = FALSE;
     
     return YES;
 }
@@ -250,6 +257,7 @@ extern void LYRSetLogLevelFromEnvironment();
     
     [self.navigationController dismissViewControllerAnimated:YES completion:^{
         self.viewController = nil;
+        self.authenticatedNavigationController = nil;
     }];
 }
 
@@ -282,11 +290,13 @@ extern void LYRSetLogLevelFromEnvironment();
     }
     self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
     self.viewController.applicationController = self.applicationController;
-    self.viewController.allowsEditing = FALSE;
-    self.viewController.displaysConversationImage = FALSE;
+    self.viewController.displaysConversationImage = self.displaysConversationImage;
+    self.viewController.cellClass = self.cellClass;
+    self.viewController.rowHeight = self.rowHeight;
+    self.viewController.allowsEditing = self.allowsEditing;
     
-    UINavigationController *conversationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-    [self.navigationController presentViewController:conversationController animated:YES completion:^{
+    self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+    [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
         [self.authenticationViewController resetState];
         [self removeSplashView];
     }];

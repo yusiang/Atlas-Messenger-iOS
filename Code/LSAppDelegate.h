@@ -16,4 +16,16 @@
 
 @property (nonatomic) LSUIConversationListViewController *viewController;
 
+//------------------------------------
+// Conversation List VC Test Config
+//------------------------------------
+
+@property (nonatomic) BOOL allowsEditing;
+
+@property (nonatomic) BOOL displaysConversationImage;
+
+@property (nonatomic) Class<LYRUIConversationPresenting> cellClass;
+
+@property (nonatomic, assign) CGFloat rowHeight;
+
 @end

@@ -43,26 +43,22 @@
     [super tearDown];
 }
 
-
 //Send a new message a verify it appears in the view.
 - (void)testToVerifySentMessageAppearsInConversationView
 {
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
-  
     LSUser *user1 = [self.testInterface randomUser];
 
-    LYRConversation *conversation = [LYRConversation conversationWithParticipants:[NSSet setWithArray:@[user1.userID]]];
-    LYRUIConversationViewController *controller = [LYRUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.testInterface.applicationController.layerClient];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-    [system presentModalViewController:navigationController configurationBlock:^(id viewController) {
-        [self sendMessageWithText:@"This is a test"];
-    }];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithArray:@[user1.userID]] number:1];
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:[NSSet setWithArray:@[user1.userID]]]];
+    [self sendMessageWithText:@"This is a test"];
+    [tester tapViewWithAccessibilityLabel:@"Messages"];
 }
 
 //Synchronize a new message and verify it appears in the view.
 - (void)testToVerifyRecievedMessageAppearsInConversationView
 {
-
+    
 }
 
 //Receive a transport push for a new message and verify that it appears in the view.
@@ -74,12 +70,6 @@
 //Add an image to a message and verify that it sends.
 - (void)testToVerifySentImageAppearsInConversationView
 {
-    
-}
-
-//Add a video to a message and verify that it sends.
-- (void)testToVerifySentVideoAppearsInConversationView
-{
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
     
     LSUser *user1 = [self.testInterface randomUser];
@@ -90,6 +80,12 @@
     [system presentModalViewController:navigationController configurationBlock:^(id viewController) {
         [self sendPhotoMessage];
     }];
+}
+
+//Add a video to a message and verify that it sends.
+- (void)testToVerifySentVideoAppearsInConversationView
+{
+
 }
 
 //Verify that the "Send" button is not enabled until there is content (text, audio, or video) in the message composition field.

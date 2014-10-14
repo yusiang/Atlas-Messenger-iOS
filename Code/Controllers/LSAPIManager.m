@@ -211,7 +211,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             return;
         }
         
-        NSLog(@"Loaded user representations: %@", userRepresentations);
+        //NSLog(@"Loaded user representations: %@", userRepresentations);
         NSMutableSet *contacts = [NSMutableSet new];
         for (NSDictionary *representation in userRepresentations) {
             LSUser *user = [LSUser userFromDictionaryRepresentation:representation];

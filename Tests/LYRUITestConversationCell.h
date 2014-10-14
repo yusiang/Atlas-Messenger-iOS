@@ -8,6 +8,6 @@
 
 #import "LYRUIConversationTableViewCell.h"
 
-@interface LYRUITestConversationCell : LYRUIConversationTableViewCell
+@interface LYRUITestConversationCell : LYRUIConversationTableViewCell <LYRUIConversationPresenting>
 
 @end

@@ -61,7 +61,6 @@
             }];
         }];
     }];
-
     [latch waitTilCount:0];
     return userID;
 }
@@ -121,12 +120,13 @@
     expect(users).toNot.beNil;
     expect(error).to.beNil;
     
+    NSMutableSet *mutableUsers = [users mutableCopy];
+    [mutableUsers removeObject:self.applicationController.APIManager.authenticatedSession.user];
+    
     int randomNumber = arc4random_uniform((int)users.count);
     LSUser *user = [[users allObjects] objectAtIndex:randomNumber];
-    while ([user.userID isEqual:self.applicationController.layerClient.authenticatedUserID]) {
-        user = [self randomUser];
-    }
-    while (!user) {
+    
+    if (!user) {
         user = [self randomUser];
     }
     
