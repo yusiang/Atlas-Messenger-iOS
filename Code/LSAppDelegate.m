@@ -26,6 +26,7 @@ extern void LYRSetLogLevelFromEnvironment();
 @property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
+@property (nonatomic) LYRConversation *pushConversation;
 
 @end
 
@@ -36,7 +37,7 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    self.environment = LYRUIProduction;
+    self.environment = LYRUIDevelopment;
     LYRSetLogLevelFromEnvironment();
     
     // Configure Layer Base URL
@@ -93,11 +94,12 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     if (!self.applicationController.layerClient.isConnected && !self.applicationController.layerClient.isConnecting) {
         [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-            NSLog(@"Layer Client is connected");
             if (error) {
+                [self checkForAuthenticatedSession];
                 NSLog(@"Error :%@", error);
                 [self removeSplashView];
             } else {
+                NSLog(@"Layer Client is connected");
                 [self checkForAuthenticatedSession];
             }
         }];
@@ -203,13 +205,16 @@ extern void LYRSetLogLevelFromEnvironment();
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     if (application.applicationState == UIApplicationStateInactive) {
+        // Fetch message object from LayerKit
         NSURL *messageURL = [NSURL URLWithString:[userInfo valueForKeyPath:@"layer.event_url"]];
         NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:messageURL]];
         LYRMessage *message = [[messages allObjects] firstObject];
         
+        // Extract conversation object from LayerKit and present
         UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
         LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
         [conversationListViewController selectConversation:message.conversation];
+        
     } else {
         BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
             if (fetchResult == UIBackgroundFetchResultFailed) {
@@ -300,6 +305,7 @@ extern void LYRSetLogLevelFromEnvironment();
     
     self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
+        if (self.pushConversation) [self.viewController selectConversation:self.pushConversation];
         [self.authenticationViewController resetState];
         [self removeSplashView];
     }];

@@ -188,6 +188,7 @@
 
 - (void)selectConversation:(LYRConversation *)conversation
 {
+    [self.navigationController popToRootViewControllerAnimated:TRUE];
     [self presentControllerWithConversation:conversation];
 }
 
