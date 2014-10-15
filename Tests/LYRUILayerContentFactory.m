@@ -36,8 +36,11 @@ NSString *const LYRUITestMessageText = @"Hi, this is a test!";
 
 - (void)conversationsWithParticipants:(NSSet *)participants number:(NSUInteger)number
 {
-    LYRConversation *conversation = [LYRConversation conversationWithParticipants:participants];
-    [self sendMessagesToConversation:conversation number:10];
+    while (number > 0) {
+        LYRConversation *conversation = [LYRConversation conversationWithParticipants:participants];
+        [self sendMessagesToConversation:conversation number:10];
+        number -= 1;
+    }
 }
 
 - (void)sendMessagesToConversation:(LYRConversation *)conversation number:(NSUInteger)number

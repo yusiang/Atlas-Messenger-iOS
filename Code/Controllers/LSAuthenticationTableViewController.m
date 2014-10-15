@@ -187,9 +187,9 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     self.tableViewHeader = [LSAuthenticationTableViewHeader new];
     if (self.isEditing) {
-        self.tableViewHeader.showsContent = FALSE;
+        self.tableViewHeader.showsContent = NO;
     } else {
-        self.tableViewHeader.showsContent = TRUE;
+        self.tableViewHeader.showsContent = YES;
     }
     return self.tableViewHeader;
 }
@@ -209,7 +209,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             if (self.isEditing) {
                 [self loginTapped];
             } else {
-                [self setEditing:TRUE];
+                [self setEditing:YES];
                 [self.email becomeFirstResponder];
             }
             break;
@@ -218,7 +218,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             if (self.isEditing) {
                 [self registerTapped];
             } else {
-                [self setEditing:TRUE];
+                [self setEditing:YES];
                 [self.firstName becomeFirstResponder];
             }
             break;
@@ -236,23 +236,23 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (void)cancelButtonTappedForAuthenticationTableViewFooter:(LSAuthenticationTableViewFooter *)tableViewFooter
 {
-    [self setEditing:FALSE];
+    [self setEditing:NO];
 }
 
 - (void)setEditing:(BOOL)editing
 {
     if (!self.isEditing && editing) {
-        self.isEditing = TRUE;
+        self.isEditing = YES;
         [self.tableView beginUpdates];
-        [self.tableViewHeader setShowsContent:FALSE];
+        [self.tableViewHeader setShowsContent:NO];
         [UIView animateWithDuration:0.3 animations:^{
             [self.tableView endUpdates];
         }];
     }
     if (self.editing && !editing) {
-        self.isEditing = FALSE;
+        self.isEditing = NO;
         [self.tableView beginUpdates];
-        [self.tableViewHeader setShowsContent:TRUE];
+        [self.tableViewHeader setShowsContent:YES];
         [UIView animateWithDuration:0.3 animations:^{
             [self.tableView endUpdates];
         }];
@@ -313,8 +313,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    [self setEditing:TRUE];
-    return TRUE;
+    [self setEditing:YES];
+    return YES;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

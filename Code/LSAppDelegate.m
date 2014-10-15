@@ -70,8 +70,8 @@ extern void LYRSetLogLevelFromEnvironment();
     // ConversationListViewController Config
     _cellClass = [LYRUIConversationTableViewCell class];
     _rowHeight = 72;
-    _allowsEditing = FALSE;
-    _displaysConversationImage = FALSE;
+    _allowsEditing = NO;
+    _displaysConversationImage = NO;
     
     return YES;
 }
@@ -82,6 +82,11 @@ extern void LYRSetLogLevelFromEnvironment();
     [self addSplashView];
     [self checkForAuthenticatedSession];
     [self loadContacts];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    [self getUnreadMessageCount];
 }
 
 - (void)connectLayer
@@ -205,20 +210,18 @@ extern void LYRSetLogLevelFromEnvironment();
         UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
         LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
         [conversationListViewController selectConversation:message.conversation];
-    }
-    
-    NSError *error;
-    BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
-        if (fetchResult == UIBackgroundFetchResultFailed) {
-            NSLog(@"Failed processing remote notification: %@", error);
-        }
-        completionHandler(fetchResult);
-    }];
-    if (success) {
-        NSLog(@"Application did complete remote notification sync");
     } else {
-        NSLog(@"Error handling push notification: %@", error);
-        completionHandler(UIBackgroundFetchResultNoData);
+        BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
+            if (fetchResult == UIBackgroundFetchResultFailed) {
+                NSLog(@"Failed processing remote notification: %@", error);
+            }
+            completionHandler(fetchResult);
+        }];
+        if (success) {
+            NSLog(@"Application did complete remote notification sync");
+        } else {
+            NSLog(@"Push notification does not belong to Layer");
+        }
     }
 }
 

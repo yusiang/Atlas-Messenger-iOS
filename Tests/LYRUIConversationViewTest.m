@@ -94,6 +94,71 @@
     
 }
 
+- (void)testToStart10ConversationsWith10MessagesFromEachParticipant
+{
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    
+    NSString *user1ID = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface loadContacts];
+    NSMutableSet *participantSet = [NSMutableSet setWithArray:@[user1ID]];
+    [self.layerContentFactory conversationsWithParticipants:participantSet number:1];
+    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participantSet]];
+    
+    NSString *user2ID = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:2]];
+    [self.testInterface loadContacts];
+    [participantSet addObject:user2ID];
+    [self.layerContentFactory conversationsWithParticipants:participantSet number:1];
+    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participantSet]];
+    
+    NSString *user3ID = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:3]];
+    [self.testInterface loadContacts];
+    [participantSet addObject:user3ID];
+    [self.layerContentFactory conversationsWithParticipants:participantSet number:1];
+    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participantSet]];
+    
+    NSString *user4ID = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:4]];
+    [self.testInterface loadContacts];
+    [participantSet addObject:user4ID];
+    [self.layerContentFactory conversationsWithParticipants:participantSet number:1];
+    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participantSet]];
+    
+    participantSet = [NSMutableSet setWithArray:@[user1ID]];
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participantSet]];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [tester tapViewWithAccessibilityLabel:@"Messages"];
+    
+    [participantSet addObject:user2ID];
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participantSet]];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [tester tapViewWithAccessibilityLabel:@"Messages"];
+    
+    [participantSet addObject:user3ID];
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participantSet]];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [tester tapViewWithAccessibilityLabel:@"Messages"];
+    
+    [participantSet addObject:user4ID];
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participantSet]];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [self sendMessageWithText:@"Testing"];
+    [tester tapViewWithAccessibilityLabel:@"Messages"];
+}
+
 - (void)sendMessageWithText:(NSString *)messageText
 {
     [tester enterText:messageText intoViewWithAccessibilityLabel:@"Text Input View"];

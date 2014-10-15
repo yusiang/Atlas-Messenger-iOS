@@ -118,7 +118,7 @@
 - (void)testToVerifyDisablingEditModeDoesNotAllowUserToDeleteConversations
 {
     LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate setAllowsEditing:FALSE];
+    [appDelegate setAllowsEditing:NO];
     
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
     

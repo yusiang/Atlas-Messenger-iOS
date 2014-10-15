@@ -8,6 +8,7 @@
 
 #import "LSUIConversationViewController.h"
 #import "LSConversationDetailViewController.h"
+#import "LYRUIUtilities.h"
 
 static NSDateFormatter *LYRUIConversationDateFormatter()
 {
@@ -74,19 +75,19 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     NSInteger status = [[recipientStatus valueForKey:[recipients lastObject]] integerValue];
     switch (status) {
         case LYRRecipientStatusInvalid:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Message Not Sent"];
+            attributedString = [[NSAttributedString alloc] initWithString:@"Not Sent"];
             break;
             
         case LYRRecipientStatusSent:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Message Not Sent"];
+            attributedString = [[NSAttributedString alloc] initWithString:@"Sent"];
             break;
             
         case LYRRecipientStatusDelivered:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Message Not Sent"];
+            attributedString = [[NSAttributedString alloc] initWithString:@"Delivered"];
             break;
             
         case LYRRecipientStatusRead:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Message Not Sent"];
+            attributedString = [[NSAttributedString alloc] initWithString:@"Read"];
             break;
             
         default:
@@ -95,7 +96,21 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return attributedString;
 }
 
-- (BOOL)converationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message
+- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessage:(LYRMessage *)message
+{
+    LYRMessagePart *messagePart = [message.parts objectAtIndex:0];
+    NSString *pushText = [NSString new];
+    if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
+        pushText = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
+    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG]) {
+        pushText = @"Image Attachement";
+    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeLocation]) {
+        pushText = @"Location Attachement";
+    }
+    return pushText;
+}
+
+- (BOOL)conversationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message
 {
     return YES;
 }
