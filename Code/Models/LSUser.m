@@ -7,6 +7,7 @@
 //
 
 #import "LSUser.h"
+#import "LSErrors.h"
 
 @implementation LSUser
 
@@ -54,25 +55,30 @@
     return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
 }
 
+- (NSString *)participantIdentifier
+{
+    return self.userID;
+}
+
 - (BOOL)validate:(NSError *__autoreleasing *)error
 {
     if (!self.email) {
-        if (error) *error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
         return NO;
     }
     
     if (!self.firstName) {
-        if (error) *error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidFirstName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
         return NO;
     }
     
     if (!self.lastName) {
-        if (error) *error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidLastName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
         return NO;
     }
     
     if (!self.password || !self.passwordConfirmation || ![self.password isEqualToString:self.passwordConfirmation]) {
-        if (error) *error = [NSError errorWithDomain:@"Registration Error" code:101 userInfo:@{ NSLocalizedDescriptionKey: @"Please enter matching passwords in order to register" }];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{ NSLocalizedDescriptionKey: @"Please enter matching passwords in order to register" }];
         return NO;
     }
     

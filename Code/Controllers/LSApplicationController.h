@@ -27,9 +27,10 @@
  @abstract The following properties service mission critical operations for the Layer Sample App and are managed by the Controller
  */
 
-@property (nonatomic, strong) LYRClient *layerClient;
-@property (nonatomic, strong) LSAPIManager *APIManager;
-@property (nonatomic, strong) LSPersistenceManager *persistenceManager;
+@property (nonatomic) LYRClient *layerClient;
+@property (nonatomic) LSAPIManager *APIManager;
+@property (nonatomic) LSPersistenceManager *persistenceManager;
+@property (nonatomic) NSData *deviceToken;
 
 /**
  *  Constructs and returns a version string describing the current version of the application.
@@ -44,5 +45,7 @@
  *  @return The build string suitable for display in the app.
  */
 + (NSString *)buildInformationString;
+
++ (NSString *)layerServerHostname;
 
 @end

@@ -57,6 +57,12 @@
                   Identifier = "LSPersistenceManagerTest">
                </Test>
                <Test
+                  Identifier = "LSSampleAppUITest">
+               </Test>
+               <Test
+                  Identifier = "LSUITest">
+               </Test>
+               <Test
                   Identifier = "LSUITest/testCreating2Users10ConversationsBetweenThemAndSending10MessagesEach">
                </Test>
                <Test
@@ -119,6 +125,15 @@
                <Test
                   Identifier = "LSUITest/testToVerifyUIAnimimationsForSendingAMessage">
                </Test>
+               <Test
+                  Identifier = "LYRUIConversationViewTest">
+               </Test>
+               <Test
+                  Identifier = "LYRUIParticipantPickerTest/testToVerifyCustomCellImplementationFunctionality">
+               </Test>
+               <Test
+                  Identifier = "LYUIAuthenticationTest">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>
@@ -152,9 +167,19 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = ""
+            value = ""
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "LAYER_TEST_HOST"
             value = "172.17.8.101"
             isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "LAYER_LOG_LEVEL"
+            value = "VERBOSE"
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>

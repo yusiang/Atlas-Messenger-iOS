@@ -7,7 +7,6 @@
 //
 
 #import "LSApplicationController.h"
-#import "LSConversationListViewController.h"
 #import "LSUtilities.h"
 
 @interface LSApplicationController () <LYRClientDelegate>
@@ -36,6 +35,7 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:) name:LYRClientWillBeginSynchronizationNotification object:layerClient];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:) name:LYRClientDidFinishSynchronizationNotification object:layerClient];
+
     }
     return self;
 }
@@ -47,19 +47,23 @@
 
 - (void)layerClient:(LYRClient *)client didReceiveAuthenticationChallengeWithNonce:(NSString *)nonce
 {
-//     NSLog(@"Layer Client did recieve authentication challenge with nonce: %@", nonce);
-//    LSUser *user = self.APIManager.authenticatedSession.user;
-//    if (user) {
-//        [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
-//            if (user && !error) {
-//                NSLog(@"silent auth successful");
-//            } else {
-//                [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-//                    NSLog(@"Silent auth failed, deauthenticating");
-//                }];
-//            }
-//        }];
-//    }
+    NSLog(@"Layer Client did recieve authentication challenge with nonce: %@", nonce);
+    LSUser *user = self.APIManager.authenticatedSession.user;
+    if (user) {
+        [self.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+            if (identityToken) {
+                [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                    if (authenticatedUserID) {
+                        NSLog(@"Silent auth in response to auth challenge successfull");
+                    } else {
+                        LSAlertWithError(error);
+                    }
+                }];
+            } else {
+                LSAlertWithError(error);
+            }
+        }];
+    }
 }
 
 - (void)layerClient:(LYRClient *)client didAuthenticateAsUserID:(NSString *)userID
@@ -69,6 +73,7 @@
 
 - (void)layerClientDidDeauthenticate:(LYRClient *)client
 {
+    [self.APIManager deauthenticate];
     NSLog(@"Layer Client did deauthenticate");
 }
 
@@ -96,9 +101,8 @@
 {
     NSString *marketingVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
     NSString *bundleVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"];
-
+    
     NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
-
     NSString *versionString = nil;
     if (buildInformation) {
         NSString *layerKitVersion = buildInformation[@"LYRBuildLayerKitVersion"];
@@ -106,23 +110,31 @@
     } else {
         versionString = [NSString stringWithFormat:@"LayerSample v%@ (%@)", marketingVersion, bundleVersion];
     }
-
+    
     return versionString;
 }
 
 + (NSString *)buildInformationString
 {
     NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
-
+    
     if (!buildInformation) {
         return [NSString stringWithFormat:@"Non-Release Build"];
     }
-
+    
     NSString *buildSHA = buildInformation[@"LYRBuildShortSha"];
     NSString *builderName = buildInformation[@"LYRBuildBuilderName"];
     NSString *builderEmail = buildInformation[@"LYRBuildBuilderEmail"];
-
+    
     return [NSString stringWithFormat:@"Built by %@ (%@) SHA: %@", builderName, builderEmail, buildSHA];
+}
+
++ (NSString *)layerServerHostname
+{
+    NSString *configURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    NSURL *URL = [NSURL URLWithString:configURLString];
+    NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
+    return URLComponents.host;
 }
 
 @end

@@ -1,0 +1,3 @@
+[submodule "LayerUIKit"]
+	path = LayerUIKit
+	url = git@github.com:layerhq/LayerUIKit.git

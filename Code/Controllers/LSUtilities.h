@@ -15,8 +15,10 @@
  */
 
 typedef enum {
-    LSProductionEnvironment,
-    LSDevelopmentEnvironment,
+    LYRUIProduction,
+    LYRUIDevelopment,
+    LYRUIStage1,
+    LYRUIDev1,
     LSTestEnvironment
 } LSEnvironment;
 
@@ -43,3 +45,7 @@ NSString *MIMETypeTextPlain();
 NSString *MIMETypeImagePNG();
 
 NSString *MIMETypeImageJPEG();
+
+CGSize LYRUITextPlainSize(NSString *string);
+
+CGSize LYRUIImageSize(UIImage *image);

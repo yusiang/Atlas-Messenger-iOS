@@ -1,7 +1,7 @@
 require 'rubygems'
 begin
   require 'bundler'
-  require 'date' 
+  require 'date'
   begin
     Bundler.setup
     require 'plist'
@@ -70,25 +70,36 @@ desc "Builds and pushes a new release to Hockey App"
 task :release do
   # 0) Check for bad directory state.
   dirty_git = `git diff --name-only | grep -v Podfile | grep -v Rakefile | wc -l |  awk '{print $1}'`.chomp != "0"
-  
+
   if dirty_git
     abort("Unable to build: The release process must be done with a clean directory. Perhaps you could `git stash`?")
   end
-  
+
   # Clear Pods out
-  run "rm -rf Pods"
-  run "pod install"
-  
+  # run "rm -rf Pods"
+  # run "pod install"
+
   # 1) Generate objects with: builder name/email (via git config), short-sha
-  layer_kit_version = `cat Podfile.lock | perl -n -e'/LayerKit \\((.+?)\\)/ && print $1'`.strip
+  require 'yaml'
+  require 'byebug'
+  lockfile = YAML.load_file('Podfile.lock')
+  layer_kit_version = nil
+  lockfile['PODS'].detect do |entry|
+    if entry.kind_of?(String) && entry =~ /^LayerKit/
+      layer_kit_version = entry.match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+    elsif entry.kind_of?(Hash) && entry.keys[0] =~ /^LayerKit/
+      layer_kit_version = entry.keys[0].match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+    end
+  end
+
   short_sha = `git rev-parse --short HEAD`.strip
   builder_name = `git config --get user.name`.strip
   builder_email = `git config --get user.email`.strip
-  
+
   # 2) Insert generated object into Info.plist.
-  
+
   plist_path = 'Resources/LayerSample-Info.plist'
-  
+
   info_plist = Plist::parse_xml(plist_path)
   info_plist['LYRBuildInformation'] = {
     'LYRBuildLayerKitVersion' => layer_kit_version,
@@ -96,30 +107,31 @@ task :release do
     'LYRBuildBuilderName' => builder_name,
     'LYRBuildBuilderEmail' => builder_email
   }
-  
+
   # 3) Set the bundle version to the current timestamp.
   info_plist['CFBundleVersion'] = Time.now.to_i.to_s
-  
+
   # Write the plist.
   File.open(plist_path, 'w') { |file| file.write(info_plist.to_plist) }
-  
+
   archive_path = 'LayerSample.xcarchive'
-  
+
   xcpretty_params = (ENV['LAYER_XCPRETTY_PARAMS'] || '')
-  
+
   # 3.5) Move the shared scheme into the workspace directory.
   FileUtils::Verbose.mkdir_p "LayerSample.xcworkspace/xcshareddata/xcschemes"
   FileUtils::Verbose.cp Dir.glob("Schemes/*.xcscheme"), "LayerSample.xcworkspace/xcshareddata/xcschemes"
-  
+
   # 4) Archive project with shenzhen, but pipe to xcpretty.
   run("ipa build --workspace LayerSample.xcworkspace --scheme LayerSample --configuration Release --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
-  
+
   # 5) Upload to HockeyApp.net via shenzhen.
-  run("ipa distribute:hockeyapp --token 4293de2a6ba5492c9d77b6faaf8d5343 --tags dev -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
-  
+  run("ipa distribute:hockeyapp --token 4293de2a6ba5492c9d77b6faaf8d5343 -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
+  #run("ipa distribute:hockeyapp --token 4293de2a6ba5492c9d77b6faaf8d5343 --tags dev -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
+
   # 6) Reset Info.plist.
   run("git checkout -- Resources/LayerSample-Info.plist")
-  
+
   # 7) Clean up build data.
   FileUtils::Verbose.rm "LayerSample.ipa"
   FileUtils::Verbose.rm "LayerSample.app.dSYM.zip"

@@ -10,13 +10,14 @@
 #import "LSAPIManager.h"
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
-#import "LSTestUser.h"
 #import "LSUtilities.h"
 #import "LSPersistenceManager.h"
-#import "LSTestUser.h"
 #import "LYRCountdownLatch.h"
 #import "LSApplicationController.h"
 #import "LSAppDelegate.h"
+#import "LYRUITestUser.h"
+#import "LYRUITestInterface.h"
+
 
 @interface LYRClient ()
 
@@ -26,8 +27,7 @@
 
 @interface LSAPIManagerTest : XCTestCase
 
-@property (nonatomic, strong) LSAPIManager *APIManager;
-@property (nonatomic, strong) LSApplicationController *controller;
+@property (nonatomic) LYRUITestInterface *testInterface;
 
 @end
 
@@ -37,28 +37,20 @@
 {
     [super setUp];
     
-    _controller = [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
-    _APIManager = self.controller.APIManager;
-    
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
-    [self.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
-        [latch decrementCount];
-    }];
-    
+    LSApplicationController *applicationController =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    self.testInterface = [LYRUITestInterface testInterfaceWithApplicationController:applicationController];
 }
 
 - (void)tearDown
 {
     [super tearDown];
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
-    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        expect(success).to.beTruthy;
-        expect(error).to.beNil;
-        [latch decrementCount];
+    [self.testInterface.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+        [self.testInterface.applicationController.APIManager deauthenticate];
     }];
     [latch waitTilCount:0];
-    self.APIManager = nil;
-    [self.controller.layerClient disconnect];
+    self.testInterface.applicationController.APIManager = nil;
+    [self.testInterface.applicationController.layerClient disconnect];
 }
 
 - (void)testRaisesOnAttempToInit
@@ -68,22 +60,23 @@
 
 - (void)testInitializingAPIManager
 {
-    expect(self.APIManager).notTo.beNil();
+    LSAPIManager *manager = [LSAPIManager managerWithBaseURL:[NSURL URLWithString:@"http://baseURLstring"] layerClient:self.testInterface.applicationController.layerClient];
+    expect(manager).toNot.beNil();
 }
 
 - (void)testPublicPropertiesOnInitialization
 {
-    expect(self.APIManager.authenticatedURLSessionConfiguration).to.beNil();
-    expect(self.APIManager.authenticatedSession).to.beNil();
+    expect(self.testInterface.applicationController.APIManager.authenticatedURLSessionConfiguration).to.beNil();
+    expect(self.testInterface.applicationController.APIManager.authenticatedSession).to.beNil();
 }
 
 - (void)testRegistrationsWithNilEmail
 {
-    LSUser *user = [LSTestUser testUserWithNumber:1];
+    LSUser *user = [LYRUITestUser testUserWithNumber:1];
     user.email = nil;
     
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    [self.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
+    [self.testInterface.applicationController.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
         expect(user).to.beNil;
         expect(error).toNot.beNil;
         [latch decrementCount];
@@ -93,14 +86,11 @@
 
 - (void)testRegistrationWithExistingEmail
 {
-    LSUser *user1 = [LSTestUser testUserWithNumber:1];
-    [self registerUser:user1];
-   
-    LSUser *user2 = [LSTestUser testUserWithNumber:2];
-    user2.email = user1.email;
+    LSUser *user1 = [LYRUITestUser testUserWithNumber:1];
+    [self.testInterface registerUser:user1];
     
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    [self.APIManager registerUser:user2 completion:^(LSUser *user, NSError *error) {
+    [self.testInterface.applicationController.APIManager registerUser:user1 completion:^(LSUser *user, NSError *error) {
         expect(user).to.beNil;
         expect(error).toNot.beNil;
         [latch decrementCount];
@@ -111,118 +101,84 @@
 
 - (void)testRegistrationWithValidCredentials
 {
-    [self registerUser:[LSTestUser testUserWithNumber:1]];
+    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
 }
 
 - (void)testLoginWithInvalidCredentials
 {
-    LSUser *user = [LSTestUser testUserWithNumber:1];
-    [self registerUser:user];
+    LSUser *user = [LYRUITestUser testUserWithNumber:1];
+    [self.testInterface registerUser:user];
     
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    [self.APIManager authenticateWithEmail:user.email password:@"fakePassword" completion:^(LSUser *user, NSError *error) {
-        expect(user).to.beNil;
-        expect(error).toNot.beNil;
-        [latch decrementCount];
+    [self.testInterface.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+        expect(nonce).toNot.beNil;
+        expect(error).to.beNil;
+        [self.testInterface.applicationController.APIManager authenticateWithEmail:user.email password:@"fakePassword" nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+            expect(identityToken).to.beNil;
+            expect(error).toNot.beNil;
+            [latch decrementCount];
+        }];
     }];
     [latch waitTilCount:0];
 }
 
 - (void)testLoginWithValidCredentials
 {
-    LSUser *user = [LSTestUser testUserWithNumber:1];
-    [self registerUser:user];
+    LSUser *user = [LYRUITestUser testUserWithNumber:1];
+    [self.testInterface registerUser:user];
     
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:2 timeoutInterval:10];
-    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        expect(success).to.beTruthy;
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:3 timeoutInterval:10];
+    [self.testInterface.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+        expect(nonce).toNot.beNil;
         expect(error).to.beNil;
         [latch decrementCount];
-    }];
-    
-    [latch waitTilCount:1];
-
-    [self.APIManager authenticateWithEmail:user.email password:user.password completion:^(LSUser *user, NSError *error) {
-        expect(user).toNot.beNil;
-        expect(error).to.beNil;
-        [latch decrementCount];
+        [self.testInterface.applicationController.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+            expect(identityToken).toNot.beNil;
+            expect(error).to.beNil;
+            [latch decrementCount];
+            [self.testInterface.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                expect(authenticatedUserID).toNot.beNil;
+                expect(error).to.beNil;
+                [latch decrementCount];
+            }];
+        }];
     }];
     [latch waitTilCount:0];
 }
 
 - (void)testLoadingAllContactsForAuthenticatedUser
 {
-    [self registerUser:[LSTestUser testUserWithNumber:1]];
-    
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:2 timeoutInterval:10];
-    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        expect(success).to.beTruthy;
-        expect(error).to.beNil;
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:1];
-    
-    [self registerUser:[LSTestUser testUserWithNumber:2]];
-
-    [self.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
-        expect(contacts).toNot.beNil;
-        expect(contacts.count).to.equal(2);
-        expect(error).to.beNil;
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
-    
+    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface loadContacts];
 }
 
 - (void)testDeletingAllContactsForAuthenticatedUser
 {
-    [self registerUser:[LSTestUser testUserWithNumber:1]];
-    
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    [self.APIManager deleteAllContactsWithCompletion:^(BOOL completion, NSError *error) {
-        expect(completion).to.beTruthy;
-        expect(error).to.beNil;
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
+    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface deleteContacts];
 }
 
 - (void)testToVerifyResumingSession
 {
-    [self registerUser:[LSTestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
+   
+    [tester waitForTimeInterval:2];
+    [self.testInterface.applicationController.layerClient disconnect];
     
-    [self.controller.layerClient disconnect];
-    
-    LSSession *session = self.APIManager.authenticatedSession;
+    LSSession *session = self.testInterface.applicationController.APIManager.authenticatedSession;
     expect(session).toNot.beNil;
+    expect(session.user.email).to.equal([LYRUITestUser testUserWithNumber:1].email);
     NSError *error;
-    [self.APIManager resumeSession:session error:&error];
-    expect(session.user.email).to.equal([LSTestUser testUserWithNumber:1].email);
+    [self.testInterface.applicationController.APIManager resumeSession:session error:&error];
     expect(error).to.beNil;
 }
 
 - (void)testToVerifyLogout
 {
-    [self registerUser:[LSTestUser testUserWithNumber:1]];
-    
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    [self.APIManager deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        expect(success).to.beTruthy;
-        expect(error).to.beNil;
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface logout];
 }
 
-- (void)registerUser:(LSUser *)user
-{
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    [self.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
-        expect(user).toNot.beNil;
-        expect(error).to.beNil;
-        [latch decrementCount];
-    }];
-    [latch waitTilCount:0];
-}
+
 
 @end

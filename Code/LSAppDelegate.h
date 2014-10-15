@@ -7,11 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSAuthenticationViewController.h"
 #import "LSApplicationController.h"
+#import "LSUIConversationListViewController.h"
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic) LSApplicationController *applicationController;
+
+@property (nonatomic) LSUIConversationListViewController *viewController;
+
+//------------------------------------
+// Conversation List VC Test Config
+//------------------------------------
+
+@property (nonatomic) BOOL allowsEditing;
+
+@property (nonatomic) BOOL displaysConversationImage;
+
+@property (nonatomic) Class<LYRUIConversationPresenting> cellClass;
+
+@property (nonatomic, assign) CGFloat rowHeight;
 
 @end

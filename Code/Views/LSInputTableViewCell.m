@@ -7,7 +7,7 @@
 //
 
 #import "LSInputTableViewCell.h"
-#import "LSUIConstants.h"
+#import "LYRUIConstants.h"
 
 @implementation LSInputTableViewCell
 
@@ -17,14 +17,16 @@
     if (self) {
         _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 5, 300, 45)];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.alpha = 0.5;
     }
     return self;
 }
 
 - (void)setText:(NSString *)text
 {
+    self.textField.accessibilityLabel = text;
     self.textField.placeholder = text;
-    self.textField.font = LSMediumFont(18);
+    self.textField.font = LSMediumFont(16);
     self.textField.textColor = [UIColor darkGrayColor];
     [self.textField sizeToFit];
     self.textField.frame = CGRectMake(20, 14, self.frame.size.width - 20, self.textField.frame.size.height);

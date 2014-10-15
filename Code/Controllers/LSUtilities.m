@@ -22,16 +22,21 @@ NSURL *LSRailsBaseURL(void)
 NSString *LSLayerConfigurationURL(LSEnvironment environment)
 {
     switch (environment) {
-        case LSProductionEnvironment:
-            return @"https://na-3.preview.layer.com/client_configuration.json";
+        case LYRUIProduction:
+            return @"https://conf.lyr8.net/conf";
             break;
-        case LSDevelopmentEnvironment:
-            return @"https://dev-1.preview.layer.com/client_configuration.json";
+        case LYRUIDevelopment:
+            return @"https://conf.lyr8.net/conf";
+            break;
+        case LYRUIStage1:
+             return @"https://conf.stage1.lyr8.net/conf";
+            break;
+        case LYRUIDev1:
+            return @"https://dev-1.preview.layer.com:444/conf";
             break;
         case LSTestEnvironment:
-            return @"172.17.8.101/client_configuration.json";
-            break;
-            
+            return @"https://conf.lyr8.net/conf";
+    
         default:
             break;
     }
@@ -40,15 +45,22 @@ NSString *LSLayerConfigurationURL(LSEnvironment environment)
 NSUUID *LSLayerAppID(LSEnvironment environment)
 {
     switch (environment) {
-        case LSProductionEnvironment:
+        case LYRUIProduction:
             return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
             break;
-        case LSDevelopmentEnvironment:
+        case LYRUIDevelopment:
+            return [[NSUUID alloc] initWithUUIDString:@"ce2c45a4-3e97-11e4-9d4c-6a9900000431"];
+            break;
+        case LYRUIStage1:
+            return [[NSUUID alloc] initWithUUIDString:@"24f43c32-4d95-11e4-b3a2-0fd00000020d"];
+            break;
+        case LYRUIDev1:
             return [[NSUUID alloc] initWithUUIDString:@"9ae66b44-1682-11e4-92e4-0b53000001d0"];
             break;
         case LSTestEnvironment:
-            return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-1000-8000-000000000000"];
+            return [[NSUUID alloc] initWithUUIDString:@"ce2c45a4-3e97-11e4-9d4c-6a9900000431"];
             break;
+            
         default:
             break;
     }
@@ -62,19 +74,7 @@ NSString *LSApplicationDataDirectory(void)
 
 NSString *LSLayerPersistencePath(LSEnvironment environment)
 {
-    switch (environment) {
-        case LSProductionEnvironment:
-            return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
-            break;
-        case LSDevelopmentEnvironment:
-            return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
-            break;
-        case LSTestEnvironment:
-            return nil;
-            break;
-        default:
-            break;
-    }
+    return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
 }
 
 LSPersistenceManager *LSPersitenceManager(void)
@@ -123,5 +123,4 @@ NSString *MIMETypeImageJPEG()
 {
     return @"image/jpeg";
 }
-
 

@@ -9,6 +9,7 @@
 #import "LSAPIManager.h"
 #import "LSUser.h"
 #import "LSHTTPResponseSerializer.h"
+#import "LSErrors.h"
 
 NSString *const LSUserDidAuthenticateNotification = @"LSUserDidAuthenticateNotification";
 NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateNotification";
@@ -87,6 +88,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         BOOL success = [LSHTTPResponseSerializer responseObject:&userDetails withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (success) {
             NSLog(@"Loaded User Response: %@", userDetails);
+            user.userID = [userDetails objectForKey:@"id"];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(user, serializationError);
             });
@@ -103,23 +105,23 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     NSParameterAssert(completion);
     
     if (!email.length) {
-        NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{ NSLocalizedDescriptionKey : @"Please enter your Email address in order to Login"}];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{ NSLocalizedDescriptionKey : @"Please enter your Email address in order to Login"}];
         completion(nil, error);
         return;
     }
     
     if (!password.length) {
-        NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{ NSLocalizedDescriptionKey : @"Please enter your password in order to login"}];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{ NSLocalizedDescriptionKey : @"Please enter your password in order to login"}];
         completion( nil, error);
         return;
     }
     
     if (!nonce.length) {
-        NSError *error = [NSError errorWithDomain:@"Login Error" code:101 userInfo:@{ NSLocalizedDescriptionKey : @"Application must supply authenticate nonce to complete"}];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidAuthenticationNonce userInfo:@{ NSLocalizedDescriptionKey : @"Application must supply authenticate nonce to complete"}];
         completion(nil, error);
         return;
     }
-        
+    
     NSURL *URL = [NSURL URLWithString:@"users/sign_in.json" relativeToURL:self.baseURL];
     NSDictionary *parameters = @{ @"user": @{ @"email": email, @"password": password }, @"nonce": nonce };
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
@@ -160,7 +162,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         self.authenticatedSession = session;
         return YES;
     } else {
-        if (error) *error = [NSError errorWithDomain:@"Authentication Error" code:500 userInfo:@{@"error" : @"No authenticated session"}];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSNoAuthenticatedSession userInfo:@{@"error" : @"No authenticated session"}];
         return NO;
     }
 }
@@ -209,7 +211,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             return;
         }
         
-        NSLog(@"Loaded user representations: %@", userRepresentations);
+        //NSLog(@"Loaded user representations: %@", userRepresentations);
         NSMutableSet *contacts = [NSMutableSet new];
         for (NSDictionary *representation in userRepresentations) {
             LSUser *user = [LSUser userFromDictionaryRepresentation:representation];
@@ -285,4 +287,5 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         });
     }
 }
+
 @end
