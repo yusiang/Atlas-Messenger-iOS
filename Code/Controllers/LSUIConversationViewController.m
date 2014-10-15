@@ -103,9 +103,9 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         pushText = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG]) {
-        pushText = @"Image Attachement";
+        pushText = @"Has sent a new image";
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeLocation]) {
-        pushText = @"Location Attachement";
+        pushText = @"Has sent a new location";
     }
     return pushText;
 }
