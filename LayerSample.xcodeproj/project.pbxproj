@@ -583,14 +583,14 @@
 /* Begin PBXShellScriptBuildPhase section */
 		0AB05018196E249E0029BC1B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "./Crashlytics.framework/run 0a0f48084316c34c98d99db32b6d9f9a93416892 9ae567b35b4bfc3f68296d25122038a6de4752faa8a5a2790506fbc165726882";
 		};
@@ -822,7 +822,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "469F2BCF-7585-45C9-BB82-067E189B999E";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

@@ -184,12 +184,6 @@ extern void LYRSetLogLevelFromEnvironment();
     [Crashlytics setUserIdentifier:authenticatedUser.userID];
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    // Coming back to the foreground so we refresh the contact list
-    [self loadContacts];
-}
-
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
     NSLog(@"Application failed to register for remote notifications with error %@", error);
