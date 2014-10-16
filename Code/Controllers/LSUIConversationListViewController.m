@@ -72,7 +72,7 @@
     [self presentControllerWithConversation:conversation];
 }
 
-- (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController
+- (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController conversationLabelForParticipants:(NSSet *)participantIDs
 {
     NSMutableSet *participantIdentifiers = [NSMutableSet setWithSet:participantIDs];
     
@@ -95,7 +95,7 @@
     return conversationLabel;
 }
 
-- (UIImage *)conversationImageForParticipants:(NSSet *)participants inConversationListViewController:(LYRUIConversationListViewController *)conversationListViewController
+- (UIImage *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController conversationImageForParticipants:(NSSet *)participants
 {
     return [UIImage new];
 }
@@ -189,21 +189,26 @@
 - (void)selectConversation:(LYRConversation *)conversation
 {
     [self.navigationController popToRootViewControllerAnimated:TRUE];
-    [self presentControllerWithConversation:conversation];
+    if (conversation) {
+        [self presentControllerWithConversation:conversation];
+    }
 }
 
 - (void)logout
 {
     [SVProgressHUD show];
-    [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        if (success) {
-            [self.applicationController.APIManager deauthenticate];
-            NSLog(@"Deauthenticated...");
-        } else {
-            LSAlertWithError(error);
-        }
+    if (self.applicationController.layerClient.isConnected) {
+        [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+            if (success) {
+                [self.applicationController.APIManager deauthenticate];
+            }
+            [SVProgressHUD dismiss];
+        }];
+    } else {
+        [self.applicationController.APIManager deauthenticate];
         [SVProgressHUD dismiss];
-    }];
+    }
+
 }
 
 

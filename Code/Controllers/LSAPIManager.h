@@ -29,6 +29,7 @@ extern NSString *const LSUserDidDeauthenticateNotification;
  @abstract The current authenticated session or `nil` if not yet authenticated.
  */
 @property (nonatomic, readonly) LSSession *authenticatedSession;
+
 @property (nonatomic, readonly) NSURLSessionConfiguration *authenticatedURLSessionConfiguration;
 
 ///------------------------------------

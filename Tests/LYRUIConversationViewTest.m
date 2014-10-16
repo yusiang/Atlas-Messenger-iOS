@@ -13,6 +13,8 @@
 #import "LSAppDelegate.h"
 #import "LYRUITestUser.h"
 #import "LYRUIConversationViewController.h"
+#import "LYRUIMessageInputToolbar.h"
+#import "LYRUIMessageComposeTextView.h"
 
 @interface LYRUIConversationViewTest : XCTestCase
 
@@ -85,7 +87,23 @@
 //Add a video to a message and verify that it sends.
 - (void)testToVerifySentVideoAppearsInConversationView
 {
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
+    
+    LSUser *user1 = [self.testInterface randomUser];
+    
+    LYRConversation *conversation = [LYRConversation conversationWithParticipants:[NSSet setWithArray:@[user1.userID]]];
+    LYRUIConversationViewController *controller = [LYRUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.testInterface.applicationController.layerClient];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [system presentModalViewController:navigationController configurationBlock:^(id viewController) {
+        LYRUIMessageInputToolbar *toolBar = (LYRUIMessageInputToolbar *)[tester waitForViewWithAccessibilityLabel:@"Message Input Toolbar"];
+        expect(toolBar.rightAccessoryButton.highlighted).to.beFalsy;
 
+        UICollectionView *conversationCollectionView = (UICollectionView *)[tester waitForViewWithAccessibilityLabel:@"Conversation Collection View"];
+        NSInteger numberOfMessagesPriorToSend = conversationCollectionView.numberOfSections;
+        [tester tapViewWithAccessibilityLabel:@"Send Button"];
+        NSInteger numberOfMessagesAfterSend = conversationCollectionView.numberOfSections;
+        expect(numberOfMessagesPriorToSend).to.equal(numberOfMessagesAfterSend);
+    }];
 }
 
 //Verify that the "Send" button is not enabled until there is content (text, audio, or video) in the message composition field.

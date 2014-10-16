@@ -135,6 +135,11 @@ task :release do
   # 7) Clean up build data.
   FileUtils::Verbose.rm "LayerSample.ipa"
   FileUtils::Verbose.rm "LayerSample.app.dSYM.zip"
+
+  # 8) Let everyone know that Layer Sample is Available
+  require 'slack-notifier'
+  notifier = Slack::Notifier.new "layer", "IBYcWAHe4H4CEKLKUUJkzkAf"
+  notifier.ping "Good news everyone! A new version of the Layer iOS Sample App is available on Hockey App", channel: '#dev', username: 'LayerBot', icon_emoji: ":goodnewseveryone:"
 end
 
 # Safe to run when Bundler is not available
