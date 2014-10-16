@@ -877,7 +877,7 @@
 				);
 				INFOPLIST_FILE = "Tests/LayerSampleTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7386a6d4-a872-411d-ade6-c184b2ca1e89";
+				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -888,8 +888,8 @@
 			baseConfigurationReference = 7E757B6023455BCDEFB7E734 /* Pods-LayerSampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LayerSample.app/LayerSample";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Phone.ly, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Phone.ly, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -899,7 +899,7 @@
 				GCC_PREFIX_HEADER = "Code/LayerSample-Prefix.pch";
 				INFOPLIST_FILE = "Tests/LayerSampleTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4E3EE0A6-E531-4C93-B1FF-85FE682FC936";
+				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};

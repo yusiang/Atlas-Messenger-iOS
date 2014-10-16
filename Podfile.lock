@@ -18,24 +18,24 @@ PODS:
   - KIF/XCTest (3.0.8)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - layer-client-messaging-schema (0.8.2-LayerKit)
+  - layer-client-messaging-schema (20141007110138268.7)
   - layer-thrift (0.62.0):
     - thrift (~> 0.9.1)
-  - LayerKit (0.8.2-rc2):
+  - LayerKit (0.8.3-b2):
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20140924173129681)
     - FMDB/standalone/FTS (= 2.4-20140928173217764)
     - FMDBMigrationManager (~> 1.3.0)
-    - layer-client-messaging-schema (= 0.8.2-LayerKit)
+    - layer-client-messaging-schema (~> 20141007110138268.7)
     - layer-thrift (~> 0.62.0)
     - LayerKit/Public
     - TransitionKit (~> 2.1.0)
-  - LayerKit/Public (0.8.2-rc2):
+  - LayerKit/Public (0.8.3-b2):
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20140924173129681)
     - FMDB/standalone/FTS (= 2.4-20140928173217764)
     - FMDBMigrationManager (~> 1.3.0)
-    - layer-client-messaging-schema (= 0.8.2-LayerKit)
+    - layer-client-messaging-schema (~> 20141007110138268.7)
     - layer-thrift (~> 0.62.0)
     - TransitionKit (~> 2.1.0)
   - LayerUIKit (0.1.0)
@@ -81,9 +81,9 @@ SPEC CHECKSUMS:
   HockeySDK: f0e874d1c6833163ee0c4e423606faf33ad04071
   KIF: 2db5e8cf59136dd1267d49cca0d55883389b09d3
   KIFViewControllerActions: 6d680038a329864d62526928dd89556c0177bc55
-  layer-client-messaging-schema: 31a13471249df1a7d63f8c4201b0eafa64945f38
+  layer-client-messaging-schema: 2a3ff524cd4b8b91842be4f97357e24dfb1505b8
   layer-thrift: 20d9c4ee34f96a59edf286f4ed45af83d30ed880
-  LayerKit: 00774364a52f67de640b22a436b8767eff772421
+  LayerKit: 6f15e55be2569132e2a68ece004c5347d24c81f5
   LayerUIKit: 8cc6634b6021b3dd7b981ab0d0caff9acdd510ec
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
