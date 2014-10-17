@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1413505884</string>
+	<string>1413583958</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
@@ -31,13 +31,13 @@
 	<key>LYRBuildInformation</key>
 	<dict>
 		<key>LYRBuildBuilderEmail</key>
-		<string>kcoleman731@gmail.com</string>
+		<string>klemen.verdnik@gmail.com</string>
 		<key>LYRBuildBuilderName</key>
-		<string>Kevin Coleman</string>
+		<string>Klemen Verdnik</string>
 		<key>LYRBuildLayerKitVersion</key>
-		<string>0.8.3-b3</string>
+		<string>0.8.3-b4</string>
 		<key>LYRBuildShortSha</key>
-		<string>408f7b2</string>
+		<string>f9b91fa</string>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Boom</string>
