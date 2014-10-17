@@ -72,7 +72,7 @@ extern void LYRSetLogLevelFromEnvironment();
     // ConversationListViewController Config
     _cellClass = [LYRUIConversationTableViewCell class];
     _rowHeight = 72;
-    _allowsEditing = NO;
+    _allowsEditing = TRUE;
     _displaysConversationImage = NO;
     
     return YES;
