@@ -46,7 +46,7 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
 {
     switch (environment) {
         case LYRUIProduction:
-            return [[NSUUID alloc] initWithUUIDString:@"4ecc1f16-0c5e-11e4-ac3e-276b00000a10"];
+            return [[NSUUID alloc] initWithUUIDString:@"9ec30af8-5591-11e4-af9e-f7a201004a3b"];
             break;
         case LYRUIDevelopment:
             return [[NSUUID alloc] initWithUUIDString:@"ce2c45a4-3e97-11e4-9d4c-6a9900000431"];

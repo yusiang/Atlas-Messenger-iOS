@@ -32,6 +32,26 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     [self addContactsButton];
     self.dataSource = self;
     self.delegate = self;
+    [self markAllMessagesAsRead];
+}
+
+- (void)markAllMessagesAsRead
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSOrderedSet *messages = [self.layerClient messagesForConversation:self.conversation];
+        for (LYRMessage *message in messages) {
+            LYRRecipientStatus status = [[message.recipientStatusByUserID objectForKey:self.layerClient.authenticatedUserID] integerValue];
+            switch (status) {
+                case LYRRecipientStatusDelivered:
+                    [self.layerClient markMessageAsRead:message error:nil];
+                    NSLog(@"Message marked as read");
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+    });
 }
 
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
@@ -112,7 +132,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (BOOL)conversationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message
 {
-    return YES;
+    return NO;
 }
 
 #pragma mark - LYRUIConversationViewController Delegate
