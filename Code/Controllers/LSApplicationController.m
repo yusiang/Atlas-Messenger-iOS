@@ -93,7 +93,7 @@
     if (attemptNumber == 1) {
         [SVProgressHUD showWithStatus:@"Connecting to Layer"];
     } else {
-        [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"Connecting to Layer in %lus (%lu of %lu)", (NSUInteger)delayInterval, (unsigned long)attemptNumber, (unsigned long)attemptLimit]];
+        [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"Connecting to Layer in %lus (%lu of %lu)", (NSUInteger)ceil(delayInterval), (unsigned long)attemptNumber, (unsigned long)attemptLimit]];
     }
 }
 
