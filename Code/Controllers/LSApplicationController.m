@@ -8,6 +8,7 @@
 
 #import "LSApplicationController.h"
 #import "LSUtilities.h"
+#import <SVProgressHUD/SVProgressHUD.h>
 
 @interface LSApplicationController () <LYRClientDelegate>
 
@@ -85,6 +86,30 @@
 - (void)layerClient:(LYRClient *)client didFailSynchronizationWithError:(NSError *)error
 {
     NSLog(@"Layer Client did fail synchronization with error: %@", error);
+}
+
+- (void)layerClient:(LYRClient *)client willAttemptToConnect:(NSUInteger)attemptNumber afterDelay:(NSTimeInterval)delayInterval maximumNumberOfAttempts:(NSUInteger)attemptLimit
+{
+    if (attemptNumber == 1) {
+        [SVProgressHUD showWithStatus:@"Connecting to Layer"];
+    } else {
+        [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"Connecting to Layer in %lus (%lu of %lu)", (NSUInteger)delayInterval, (unsigned long)attemptNumber, (unsigned long)attemptLimit]];
+    }
+}
+
+- (void)layerClientDidConnect:(LYRClient *)client
+{
+    [SVProgressHUD showSuccessWithStatus:@"Connected to Layer"];
+}
+
+- (void)layerClient:(LYRClient *)client didLoseConnectionWithError:(NSError *)error
+{
+    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Lost Connection: %@", [error localizedDescription]]];
+}
+
+- (void)layerClientDidDisconnect:(LYRClient *)client
+{
+    [SVProgressHUD showSuccessWithStatus:@"Disconnected from Layer"];
 }
 
 - (void)didReceiveLayerClientWillBeginSynchronizationNotification:(NSNotification *)notification
