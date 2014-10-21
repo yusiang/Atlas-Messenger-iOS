@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1413933268</string>
+	<string>1413933426</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
@@ -37,7 +37,7 @@
 		<key>LYRBuildLayerKitVersion</key>
 		<string>0.8.2</string>
 		<key>LYRBuildShortSha</key>
-		<string>dcdb8cb</string>
+		<string>dd5fd5f</string>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Boom</string>
