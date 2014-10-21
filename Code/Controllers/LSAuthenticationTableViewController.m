@@ -207,7 +207,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     switch (authenticationState) {
         case LSAuthenticationStateLogin:
             if (self.isEditing) {
-                [self loginTapped];
+                [self loginTappedWithEmail:self.email.text password:self.password.text];
             } else {
                 [self setEditing:YES];
                 [self.email becomeFirstResponder];
@@ -287,7 +287,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             if (textField == self.email) {
                 [self.password becomeFirstResponder];
             } else if (textField == self.password) {
-                [self loginTapped];
+                [self loginTappedWithEmail:self.email.text password:self.password.text];
             }
             break;
             
@@ -322,14 +322,14 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     return YES;
 }
 
-- (void)loginTapped
+- (void)loginTappedWithEmail:(NSString *)email password:(NSString *)password
 {
     [SVProgressHUD showWithStatus:@"Requesting Nonce"];
     [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
         if (nonce) {
             NSLog(@"Nonce Created");
             [SVProgressHUD showWithStatus:@"Requesting Identity Token"];
-            [self.applicationController.APIManager authenticateWithEmail:self.email.text password:self.password.text nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+            [self.applicationController.APIManager authenticateWithEmail:email password:password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
                 if (identityToken) {
                     NSLog(@"Identity Token Created");
                     [SVProgressHUD showWithStatus:@"Authenticating With Layer"];

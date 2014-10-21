@@ -18,6 +18,14 @@
 
 @implementation LSApplicationController
 
+static NSString *const LSShouldSendPushText = @"shouldSendPushText";
+static NSString *const LSShouldSendPushSound = @"shouldSendPushSould";
+static NSString *const LSDebugModeEnabled = @"debugModeEnabled";
+
+@synthesize shouldSendPushText = _shouldSendPushText;
+@synthesize shouldSendPushSound = _shouldSendPushSound;
+@synthesize debugModeEnabled = _debugModeEnabled;
+
 + (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     NSParameterAssert(baseURL);
@@ -33,6 +41,8 @@
         _layerClient.delegate = self;
         _persistenceManager = persistenceManager;
         _APIManager = [LSAPIManager managerWithBaseURL:baseURL layerClient:layerClient];
+        _shouldSendPushSound = YES;
+        _shouldSendPushText = YES;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:) name:LYRClientWillBeginSynchronizationNotification object:layerClient];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:) name:LYRClientDidFinishSynchronizationNotification object:layerClient];
@@ -162,4 +172,36 @@
     return URLComponents.host;
 }
 
+- (void)setShouldSendPushText:(BOOL)shouldSendPushText
+{
+    [[NSUserDefaults standardUserDefaults] setBool:shouldSendPushText forKey:LSShouldSendPushText];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (BOOL)shouldSendPushText
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushText];
+}
+
+- (void)setShouldSendPushSound:(BOOL)shouldSendPushSound
+{
+    [[NSUserDefaults standardUserDefaults] setBool:shouldSendPushSound forKey:LSShouldSendPushSound];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (BOOL)shouldSendPushSound
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushSound];
+}
+
+- (void)setDebugModeEnabled:(BOOL)debugModeEnabled
+{
+    [[NSUserDefaults standardUserDefaults] setBool:debugModeEnabled forKey:LSDebugModeEnabled];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (BOOL)debugModeEnabled
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSDebugModeEnabled];
+}
 @end

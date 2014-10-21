@@ -32,6 +32,10 @@
 @property (nonatomic) LSPersistenceManager *persistenceManager;
 @property (nonatomic) NSData *deviceToken;
 
+@property (nonatomic) BOOL shouldSendPushText;
+@property (nonatomic) BOOL shouldSendPushSound;
+@property (nonatomic) BOOL debugModeEnabled;
+
 /**
  *  Constructs and returns a version string describing the current version of the application.
  *
@@ -47,5 +51,7 @@
 + (NSString *)buildInformationString;
 
 + (NSString *)layerServerHostname;
+
++ (NSString *)connectedStateString;
 
 @end

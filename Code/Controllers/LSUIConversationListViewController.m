@@ -13,6 +13,7 @@
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUIConversationViewController.h"
 #import "LSVersionView.h"
+#import "LSSettingsTableViewController.h"
 
 @interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LYRUIParticipantPickerControllerDelegate, UIActionSheetDelegate>
 
@@ -60,9 +61,19 @@
     [self.tableView addSubview:self.versionView];
     
     self.versionView.frame = CGRectMake((int)(self.tableView.frame.size.width / 2.0 - self.versionView.frame.size.width / 2.0),
-                                        -(self.versionView.frame.size.height + 15),
+                                        -(self.versionView.frame.size.height + 30),
                                         self.versionView.frame.size.width,
                                         self.versionView.frame.size.height);
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (self.layerClient.isConnected){
+        self.versionView.connectedLabel.text = @"Layer Connection State: Connected";
+    } else {
+        self.versionView.connectedLabel.text = @"Layer Connection State: Disconnected";
+    }
 }
 
 #pragma mark LYRUIConversationListViewControllerDelegate methods
@@ -125,6 +136,7 @@
 {
     LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation
                                                                                                                     layerClient:self.applicationController.layerClient];
+    viewController.debugModeEnabled = self.applicationController.debugModeEnabled;
     viewController.applicationContoller = self.applicationController;
     [self.navigationController pushViewController:viewController animated:YES];
 }
@@ -139,7 +151,7 @@
                                   delegate:self
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:[NSString stringWithFormat:@"Logout - %@", user], @"Reload Contacts", @"Copy Device Token", nil];
+                                  otherButtonTitles:[NSString stringWithFormat:@"Logout - %@", user], @"Reload Contacts", @"Copy Device Token", @"App Settings", nil];
     
     [actionSheet showInView:self.view];
 }
@@ -179,6 +191,16 @@
                 [SVProgressHUD showErrorWithStatus:@"No Device Token Available"];
             }
         }
+            break;
+         
+        case 3: {
+            LSSettingsTableViewController *settingsTableViewController = [[LSSettingsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+            settingsTableViewController.applicationController = self.applicationController;
+            
+            UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:settingsTableViewController];
+            [self.navigationController presentViewController:controller animated:YES completion:nil];
+        }
+            
             break;
             
         default:

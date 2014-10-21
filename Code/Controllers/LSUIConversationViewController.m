@@ -29,6 +29,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     [self addContactsButton];
     self.dataSource = self;
     self.delegate = self;

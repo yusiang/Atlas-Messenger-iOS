@@ -15,5 +15,6 @@
 @property (readonly, nonatomic) UILabel *hostLabel;
 @property (readonly, nonatomic) UILabel *userLabel;
 @property (readonly, nonatomic) UILabel *deviceLabel;
+@property (readonly, nonatomic) UILabel *connectedLabel;
 
 @end

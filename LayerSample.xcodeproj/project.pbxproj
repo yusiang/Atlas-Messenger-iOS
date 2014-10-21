@@ -77,6 +77,8 @@
 		259A57801950EB92000E27B0 /* LSSampleAppUITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577D1950EB92000E27B0 /* LSSampleAppUITest.m */; };
 		9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */; };
 		B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */; };
+		D6044C8F19F6EA2D00F6E4DC /* LSSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = D6044C8E19F6EA2D00F6E4DC /* LSSwitch.m */; };
+		D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -191,6 +193,10 @@
 		931E36A3415C497CA3681E7F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF9EB0255130554DFDAF0741 /* Pods-LayerSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.debug.xcconfig"; sourceTree = "<group>"; };
+		D6044C8D19F6EA2D00F6E4DC /* LSSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSSwitch.h; path = ../Controllers/LSSwitch.h; sourceTree = "<group>"; };
+		D6044C8E19F6EA2D00F6E4DC /* LSSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSSwitch.m; path = ../Controllers/LSSwitch.m; sourceTree = "<group>"; };
+		D613BD2D19F5D4D900ABC996 /* LSSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingsTableViewController.h; sourceTree = "<group>"; };
+		D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSettingsTableViewController.m; sourceTree = "<group>"; };
 		F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.release.xcconfig"; sourceTree = "<group>"; };
 		FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -387,6 +393,8 @@
 				0A28CD8A19D5DF6700B5A7A8 /* LSErrors.m */,
 				0A8258CA19DE00D200ACCC8E /* LSConversationDetailViewController.h */,
 				0A8258CB19DE00D200ACCC8E /* LSConversationDetailViewController.m */,
+				D613BD2D19F5D4D900ABC996 /* LSSettingsTableViewController.h */,
+				D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */,
 				259A57321950EB76000E27B0 /* Models */,
 			);
 			path = Controllers;
@@ -407,6 +415,8 @@
 		259A573B1950EB76000E27B0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D6044C8D19F6EA2D00F6E4DC /* LSSwitch.h */,
+				D6044C8E19F6EA2D00F6E4DC /* LSSwitch.m */,
 				0A36117019D399F10089D210 /* LSSplashView.h */,
 				0A36117119D399F10089D210 /* LSSplashView.m */,
 				0AE1A14F19B0DAE900BFB754 /* LSAuthenticationTableViewFooter.h */,
@@ -664,6 +674,7 @@
 				0A6B47CA19B3975A00D485D1 /* LSAuthenticationTableViewController.m in Sources */,
 				0A6B47C619B3967A00D485D1 /* LSPersistenceManager.m in Sources */,
 				0A6B47C919B3968200D485D1 /* LSSession.m in Sources */,
+				D6044C8F19F6EA2D00F6E4DC /* LSSwitch.m in Sources */,
 				0AB2688019C7B0F50041BD62 /* LSUIConversationListViewController.m in Sources */,
 				0A23C96119C10D97004789EC /* LSUIConversationViewController.m in Sources */,
 				0A51BD1D19B66A98004105DC /* LYRUITestUser.m in Sources */,
@@ -675,6 +686,7 @@
 				0A48C92C19B7F49900B536AB /* LYRUITestParticipantCell.m in Sources */,
 				0AFE400219B0E1BD00FCA264 /* LSAppDelegate.m in Sources */,
 				0AFE400419B0E1BD00FCA264 /* LSUser.m in Sources */,
+				D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */,
 				0A6B47C319B3966D00D485D1 /* LSHTTPResponseSerializer.m in Sources */,
 				0AFE400819B0E1BD00FCA264 /* LSAuthenticationTableViewFooter.m in Sources */,
 				0AFE400919B0E1BD00FCA264 /* LSAuthenticationTableViewHeader.m in Sources */,
@@ -822,7 +834,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4E3EE0A6-E531-4C93-B1FF-85FE682FC936";
+				PROVISIONING_PROFILE = "7f3a4a45-5ef5-42aa-b32d-fe9248049b29";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -833,8 +845,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Phone.ly, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Phone.ly, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -852,7 +864,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4E3EE0A6-E531-4C93-B1FF-85FE682FC936";
+				PROVISIONING_PROFILE = "7f3a4a45-5ef5-42aa-b32d-fe9248049b29";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

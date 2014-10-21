@@ -14,6 +14,8 @@
 
 @property (nonatomic) LSApplicationController *applicationController;
 
+- (void)loginTappedWithEmail:(NSString *)email password:(NSString *)password;
+
 - (void)setCompletionBlock:(void (^)(NSString *authenticatedUserID))completion;
 
 - (void)resetState;

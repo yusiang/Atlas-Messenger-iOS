@@ -55,10 +55,19 @@ extern void LYRSetLogLevelFromEnvironment();
     // Setup notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUnreadMessageCount) name:LYRClientDidFinishSynchronizationNotification object:nil];
+    
+    // Connect Layer SDK
+    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            NSLog(@"Error connecting Layer: %@", error);
+            [self removeSplashView];
+        } else {
+            NSLog(@"Layer Client is connected");
+            [self checkForAuthenticatedSession];
+        }
+    }];
     
     // Setup application
-    [self connectLayer];
     [self setRootViewController];
     [self registerForRemoteNotifications:application];
     
@@ -86,25 +95,9 @@ extern void LYRSetLogLevelFromEnvironment();
     [self loadContacts];
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
+- (void)applicationWillResignActive:(UIApplication *)application
 {
     [self getUnreadMessageCount];
-}
-
-- (void)connectLayer
-{
-    if (!self.applicationController.layerClient.isConnected && !self.applicationController.layerClient.isConnecting) {
-        [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-            if (error) {
-                [self checkForAuthenticatedSession];
-                NSLog(@"Error :%@", error);
-                [self removeSplashView];
-            } else {
-                NSLog(@"Layer Client is connected");
-                [self checkForAuthenticatedSession];
-            }
-        }];
-    }
 }
 
 - (void)setRootViewController
@@ -140,25 +133,18 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
     [self updateCrashlyticsWithUser:session.user];
-    NSError *error;
-    // If we have a session, resume
-    if ([self.applicationController.APIManager resumeSession:session error:&error]) {
-        NSLog(@"Session resumed: %@", session);
-        [self loadContacts];
-        [self presentConversationsListViewController];
-        // If we have an authenticated user ID and no session, we must log out
-    } else if (self.applicationController.layerClient.authenticatedUserID){
-        [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-            NSLog(@"Encountered error while resuming session but Layer client is authenticated. Deauthenticating client...");
-            [self.splashView animateLogoWithCompletion:^{
-                [self removeSplashView];
-            }];
-        }];
+    
+    if (self.applicationController.layerClient.authenticatedUserID) {
+        if ([self.applicationController.APIManager resumeSession:session error:nil]) {
+            [self loadContacts];
+            [self presentConversationsListViewController];
+        }
     } else {
-        [self.splashView animateLogoWithCompletion:^{
-            [self removeSplashView];
-        }];
+        if ([self.applicationController.APIManager resumeSession:session error:nil]) {
+            [self.authenticationViewController loginTappedWithEmail:session.user.email password:session.user.password];
+        }
     }
+    [self removeSplashView];
 }
 
 - (void)initializeCrashlytics
@@ -205,29 +191,50 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    if (application.applicationState == UIApplicationStateInactive) {
-        // Fetch message object from LayerKit
-        NSURL *messageURL = [NSURL URLWithString:[userInfo valueForKeyPath:@"layer.event_url"]];
-        NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:messageURL]];
-        LYRMessage *message = [[messages allObjects] firstObject];
-        
-        // Extract conversation object from LayerKit and present
-        UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
-        LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
-        [conversationListViewController selectConversation:message.conversation];
-    } else {
-        BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
-            if (fetchResult == UIBackgroundFetchResultFailed) {
-                NSLog(@"Failed processing remote notification: %@", error);
-            }
-            completionHandler(fetchResult);
-        }];
-        if (success) {
-            NSLog(@"Application did complete remote notification sync");
-        } else {
-            NSLog(@"Push notification does not belong to Layer");
-        }
+    // Increment badge count if a message
+    if ([[userInfo valueForKeyPath:@"aps.content-available"] integerValue] == 0) {
+        NSInteger badgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber];
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badgeNumber + 1];
     }
+    
+    __block LYRMessage *message = [self messageFromRemoteNotification:userInfo];
+    if (application.applicationState == UIApplicationStateInactive && message) {
+        [self navigateToConversationViewForMessage:message];
+    }
+    
+    BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
+        if (fetchResult == UIBackgroundFetchResultFailed) {
+            NSLog(@"Failed processing remote notification: %@", error);
+        }
+        
+        // Try navigating once the synchronization completed
+        if (application.applicationState == UIApplicationStateInactive && !message) {
+            message = [self messageFromRemoteNotification:userInfo];
+            [self navigateToConversationViewForMessage:message];
+        }
+        
+        completionHandler(fetchResult);
+    }];
+    if (success) {
+        NSLog(@"Application did complete remote notification sync");
+    } else {
+        NSLog(@"Push notification does not belong to Layer");
+    }
+}
+
+- (LYRMessage *)messageFromRemoteNotification:(NSDictionary *)remoteNotification
+{
+    // Fetch message object from LayerKit
+    NSURL *messageURL = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.event_url"]];
+    NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:messageURL]];
+    return [[messages allObjects] firstObject];
+}
+
+- (void)navigateToConversationViewForMessage:(LYRMessage *)message
+{
+    UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
+    LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
+    [conversationListViewController selectConversation:message.conversation];
 }
 
 - (void)userDidAuthenticateNotification:(NSNotification *)notification
@@ -271,20 +278,16 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)loadContacts
 {
-    //NSLog(@"Loading contacts...");
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
         if (contacts) {
             NSError *persistenceError = nil;
             BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
             if (success) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"contactsPersited" object:nil];
-                //NSLog(@"Persisted contacts successfully: %@", contacts);
             } else {
-                //NSLog(@"Failed persisting contacts: %@. Error: %@", contacts, persistenceError);
                 LSAlertWithError(persistenceError);
             }
         } else {
-            //NSLog(@"Failed loading contacts: %@", error);
             LSAlertWithError(error);
         }
     }];

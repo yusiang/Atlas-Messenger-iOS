@@ -8,7 +8,6 @@
 
 #import "KIFTestCase.h"
 #import <KIF/KIF.h>
-#import <OCMock/OCMock.h>
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
 #import <LayerKit/LayerKit.h>

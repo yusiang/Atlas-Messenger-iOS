@@ -13,13 +13,14 @@
 #import "LYRUIParticipantPickerController.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUtilities.h"
+#import "LYRUIConversationDataSource.h";
 
-@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate>
+@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
-
+@property (nonatomic) LYRUIConversationDataSource *conversationDataSource;
 @end
 
 @implementation LSConversationDetailViewController
@@ -38,6 +39,8 @@ static NSString *const LYRUIParticipantInviteCellIdentifier = @"participantInvit
     if (self) {
         _layerClient = layerClient;
         _conversation = conversation;
+        _conversationDataSource = [[LYRUIConversationDataSource alloc] initWithLayerClient:self.layerClient];
+        _conversationDataSource.delegate = self;
     }
     return self;
 }
@@ -45,12 +48,19 @@ static NSString *const LYRUIParticipantInviteCellIdentifier = @"participantInvit
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LYRUIParticipantCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LYRUIParticipantInviteCellIdentifier];
     [self configureAppearance];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.tableView.delegate = nil;
 }
 
 #pragma mark - Table view data source
@@ -104,6 +114,25 @@ static NSString *const LYRUIParticipantInviteCellIdentifier = @"participantInvit
     }
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        NSString *particpantID = [[self.conversation.participants allObjects] objectAtIndex:indexPath.row];
+        [self.applicationController.layerClient removeParticipants:[NSSet setWithObject:particpantID] fromConversation:self.conversation error:nil];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.tableView reloadData];
+}
+
+
 - (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
 {
     [self dismissViewControllerAnimated:TRUE completion:^{
@@ -118,6 +147,16 @@ static NSString *const LYRUIParticipantInviteCellIdentifier = @"participantInvit
         NSError *error;
         [self.layerClient addParticipants:participantIdentifiers toConversation:self.conversation error:&error];
     }];
+}
+
+- (void)observer:(LYRUIConversationDataSource *)observer updateWithChanges:(NSArray *)changes
+{
+    [self.tableView reloadData];
+}
+
+- (void)observer:(LYRUIConversationDataSource *)observer didChangeContent:(BOOL)didChangeContent
+{
+    //
 }
 
 - (void)configureAppearance

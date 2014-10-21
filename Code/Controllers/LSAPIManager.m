@@ -158,7 +158,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 - (BOOL)resumeSession:(LSSession *)session error:(NSError **)error
 {
-    if (self.layerClient.authenticatedUserID && session) {
+    if (session) {
         self.authenticatedSession = session;
         return YES;
     } else {

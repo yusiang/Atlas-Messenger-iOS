@@ -9,7 +9,6 @@
 #import <XCTest/XCTest.h>
 #import "KIFTestCase.h"
 #import <KIF/KIF.h>
-#import <OCMock/OCMock.h>
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
 #import "KIFSystemTestActor+ViewControllerActions.h"
@@ -56,7 +55,7 @@
 - (void)testToVerifyListOfContactsDisplaysAppropriately
 {
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
-    [tester waitForTimeInterval:1];
+    [tester waitForTimeInterval:2];
     
     NSSet *participants = [self.testInterface fetchContacts];
 

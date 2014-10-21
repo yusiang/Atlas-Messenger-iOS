@@ -126,10 +126,6 @@
     int randomNumber = arc4random_uniform((int)users.count);
     LSUser *user = [[users allObjects] objectAtIndex:randomNumber];
     
-    if (!user) {
-        user = [self randomUser];
-    }
-    
     return user;
 }
 

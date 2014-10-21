@@ -16,6 +16,7 @@
 @property (nonatomic) UILabel *hostLabel;
 @property (nonatomic) UILabel *userLabel;
 @property (nonatomic) UILabel *deviceLabel;
+@property (nonatomic) UILabel *connectedLabel;
 
 @end
 
@@ -49,12 +50,18 @@
     self.deviceLabel.font = LSMediumFont(10.0);
     self.deviceLabel.textColor = [UIColor grayColor];
     self.deviceLabel.textAlignment = NSTextAlignmentCenter;
+    
+    self.connectedLabel = [[UILabel alloc] init];
+    self.connectedLabel.font = LSMediumFont(10.0);
+    self.connectedLabel.textColor = [UIColor grayColor];
+    self.connectedLabel.textAlignment = NSTextAlignmentCenter;
 
     [self addSubview:self.versionLabel];
     [self addSubview:self.buildLabel];
     [self addSubview:self.hostLabel];
     [self addSubview:self.userLabel];
     [self addSubview:self.deviceLabel];
+    [self addSubview:self.connectedLabel];
 }
 
 static const CGFloat LSVersionViewXPadding = 5.0f;
@@ -70,6 +77,7 @@ static const CGFloat LSVersionViewYPadding = 5.0f;
     self.hostLabel.frame = CGRectOffset(self.buildLabel.frame, 0, height);
     self.userLabel.frame = CGRectOffset(self.hostLabel.frame, 0, height);
     self.deviceLabel.frame = CGRectOffset(self.userLabel.frame, 0, height);
+    self.connectedLabel.frame = CGRectOffset(self.deviceLabel.frame, 0, height);
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -97,9 +105,9 @@ static const CGFloat LSVersionViewYPadding = 5.0f;
     CGSize hostSize = [self.hostLabel sizeThatFits:size];
     CGSize userSize = [self.userLabel sizeThatFits:size];
     CGSize deviceSize = [self.deviceLabel sizeThatFits:size];
-
+    CGSize connectedSize = [self.connectedLabel sizeThatFits:size];
     return CGSizeMake(MAX(versionSize.width, MAX(buildSize.width, MAX(hostSize.width, MAX(userSize.width, deviceSize.width)))) + 2 * LSVersionViewXPadding,
-                      versionSize.height + buildSize.height + hostSize.height + userSize.height + + deviceSize.height + 2 * LSVersionViewYPadding);
+                      versionSize.height + buildSize.height + hostSize.height + userSize.height + deviceSize.height + connectedSize.height + 2 * LSVersionViewYPadding);
 }
 
 @end
