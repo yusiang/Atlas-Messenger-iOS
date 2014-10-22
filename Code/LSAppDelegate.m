@@ -60,11 +60,14 @@ extern void LYRSetLogLevelFromEnvironment();
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
             NSLog(@"Error connecting Layer: %@", error);
-            [self removeSplashView];
         } else {
             NSLog(@"Layer Client is connected");
-            [self checkForAuthenticatedSession];
+            if (self.applicationController.layerClient.authenticatedUserID) {
+                [self resumeSession];
+                [self presentConversationsListViewController];
+            }
         }
+        [self removeSplashView];
     }];
     
     // Setup application
@@ -89,9 +92,7 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    // Coming back to the foreground so we refresh the contact list
-    [self addSplashView];
-    [self checkForAuthenticatedSession];
+    [self resumeSession];
     [self loadContacts];
 }
 
@@ -99,6 +100,20 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     [self getUnreadMessageCount];
 }
+
+- (void)registerForRemoteNotifications:(UIApplication *)application
+{
+    // Declaring that I want to recieve push!
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                                                                             categories:nil];
+        [application registerUserNotificationSettings:notificationSettings];
+        [application registerForRemoteNotifications];
+    } else {
+        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    }
+}
+
 
 - (void)setRootViewController
 {
@@ -116,35 +131,10 @@ extern void LYRSetLogLevelFromEnvironment();
     [self addSplashView];
 }
 
-- (void)registerForRemoteNotifications:(UIApplication *)application
-{
-    // Declaring that I want to recieve push!
-    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
-        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
-                                                                                             categories:nil];
-        [application registerUserNotificationSettings:notificationSettings];
-        [application registerForRemoteNotifications];
-    } else {
-        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
-    }
-}
-
-- (void)checkForAuthenticatedSession
+- (void)resumeSession
 {
     LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
-    [self updateCrashlyticsWithUser:session.user];
-    
-    if (self.applicationController.layerClient.authenticatedUserID) {
-        if ([self.applicationController.APIManager resumeSession:session error:nil]) {
-            [self loadContacts];
-            [self presentConversationsListViewController];
-        }
-    } else {
-        if ([self.applicationController.APIManager resumeSession:session error:nil]) {
-            [self.authenticationViewController loginTappedWithEmail:session.user.email password:session.user.password];
-        }
-    }
-    [self removeSplashView];
+    [self.applicationController.APIManager resumeSession:session error:nil];
 }
 
 - (void)initializeCrashlytics
@@ -336,9 +326,9 @@ extern void LYRSetLogLevelFromEnvironment();
 {
     [[UINavigationBar appearance] setTintColor:LSBlueColor()];
     [[UINavigationBar appearance] setBarTintColor:LSLighGrayColor()];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:18]}];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: LSBoldFont(18)}];
     
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:16]} forState:UIControlStateNormal];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : LSMediumFont(16)} forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LSBlueColor()];
 
 }

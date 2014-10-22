@@ -87,7 +87,7 @@ static NSString *const LYRUIParticipantInviteCellIdentifier = @"participantInvit
         cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIParticipantInviteCellIdentifier forIndexPath:indexPath];
         cell.textLabel.text = @"+ Add Participant";
         cell.textLabel.textColor = LSBlueColor();
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
+        cell.textLabel.font = LSMediumFont(14);
     } else {
         NSString *participantIdentifier = [[self.conversation.participants allObjects] objectAtIndex:indexPath.row];
         id<LYRUIParticipant>participant = [self.detailDelegate conversationDetailViewController:self participantForIdentifier:participantIdentifier];
@@ -162,7 +162,7 @@ static NSString *const LYRUIParticipantInviteCellIdentifier = @"participantInvit
 - (void)configureAppearance
 {
     [[LYRUIParticipantTableViewCell appearance] setTitleColor:[UIColor blackColor]];
-    [[LYRUIParticipantTableViewCell appearance] setTitleFont:[UIFont systemFontOfSize:14]];
+    [[LYRUIParticipantTableViewCell appearance] setTitleFont:LSMediumFont(14)];
 }
 
 

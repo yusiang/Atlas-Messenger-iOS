@@ -136,7 +136,6 @@
 {
     LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation
                                                                                                                     layerClient:self.applicationController.layerClient];
-    viewController.debugModeEnabled = self.applicationController.debugModeEnabled;
     viewController.applicationContoller = self.applicationController;
     [self.navigationController pushViewController:viewController animated:YES];
 }

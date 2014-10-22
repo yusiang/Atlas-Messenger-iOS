@@ -175,11 +175,10 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         
         [self.URLSession invalidateAndCancel];
         self.URLSession = [self defaultURLSession];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:self.authenticatedSession.user];
-        });
     }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:self.authenticatedSession.user];
+    });
 }
 
 - (void)loadContactsWithCompletion:(void(^)(NSSet *contacts, NSError *error))completion

@@ -96,30 +96,41 @@ static NSString *const LSDebugModeEnabled = @"debugModeEnabled";
 - (void)layerClient:(LYRClient *)client didFailSynchronizationWithError:(NSError *)error
 {
     NSLog(@"Layer Client did fail synchronization with error: %@", error);
+    if (self.debugModeEnabled) {
+        LSAlertWithError(error);
+    }
 }
 
 - (void)layerClient:(LYRClient *)client willAttemptToConnect:(NSUInteger)attemptNumber afterDelay:(NSTimeInterval)delayInterval maximumNumberOfAttempts:(NSUInteger)attemptLimit
 {
-    if (attemptNumber == 1) {
-        [SVProgressHUD showWithStatus:@"Connecting to Layer"];
-    } else {
-        [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"Connecting to Layer in %lus (%lu of %lu)", (NSUInteger)ceil(delayInterval), (unsigned long)attemptNumber, (unsigned long)attemptLimit]];
+    if (self.debugModeEnabled) {
+        if (attemptNumber == 1) {
+            [SVProgressHUD showWithStatus:@"Connecting to Layer"];
+        } else {
+            [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"Connecting to Layer in %lus (%lu of %lu)", (NSUInteger)ceil(delayInterval), (unsigned long)attemptNumber, (unsigned long)attemptLimit]];
+        }
     }
 }
 
 - (void)layerClientDidConnect:(LYRClient *)client
 {
-    [SVProgressHUD showSuccessWithStatus:@"Connected to Layer"];
+    if (self.debugModeEnabled) {
+        [SVProgressHUD showSuccessWithStatus:@"Connected to Layer"];
+    }
 }
 
 - (void)layerClient:(LYRClient *)client didLoseConnectionWithError:(NSError *)error
 {
-    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Lost Connection: %@", [error localizedDescription]]];
+    if (self.debugModeEnabled) {
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Lost Connection: %@", [error localizedDescription]]];
+    }
 }
 
 - (void)layerClientDidDisconnect:(LYRClient *)client
 {
-    [SVProgressHUD showSuccessWithStatus:@"Disconnected from Layer"];
+    if (self.debugModeEnabled) {
+        [SVProgressHUD showSuccessWithStatus:@"Disconnected from Layer"];
+    }
 }
 
 - (void)didReceiveLayerClientWillBeginSynchronizationNotification:(NSNotification *)notification
