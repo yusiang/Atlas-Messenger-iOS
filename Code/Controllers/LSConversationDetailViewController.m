@@ -13,7 +13,8 @@
 #import "LYRUIParticipantPickerController.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUtilities.h"
-#import "LYRUIConversationDataSource.h";
+#import "LYRUIConversationDataSource.h"
+#import "LSDetailHeaderView.h"
 
 @interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate>
 
@@ -101,8 +102,14 @@ static NSString *const LYRUIParticipantInviteCellIdentifier = @"participantInvit
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 20;
+    return 40;
 }
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return [LSDetailHeaderView initWithTitle:@"Details"];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == self.conversation.participants.count) {

@@ -8,6 +8,8 @@
 
 #import "LSSettingsTableViewController.h"
 #import "LSSwitch.h"
+#import "LSDetailHeaderView.h"
+#import "LYRUIConstants.h"
 
 @interface LSSettingsTableViewController ()
 
@@ -21,6 +23,15 @@ NSString *const LSConversationCount = @"LSConversationCount";
 NSString *const LSMessageCount = @"LSMessageCount";
 NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
 
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super initWithStyle:style];
+    if (self) {
+        self.title = @"Settings";
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
@@ -29,13 +40,15 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelTapped:)];
     menuButton.accessibilityLabel = @"logout";
     [self.navigationItem setLeftBarButtonItem:menuButton];
+    
+    self.tableView.sectionFooterHeight = 0.0f;
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -48,6 +61,9 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
             return 3;
             break;
         case 2:
+            return 1;
+            break;
+        case 3:
             return 1;
             break;
         default:
@@ -126,12 +142,40 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
             }
         }
             break;
-            
+        
+        case 3:
+            cell.textLabel.text = @"Log Out";
         default:
             break;
     }
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    cell.textLabel.textColor = LSBlueColor();
     return cell;
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 40;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    switch (section) {
+        case 0:
+            return [LSDetailHeaderView initWithTitle:@"NOTIFICATIONS"];
+            break;
+        case 1:
+            return [LSDetailHeaderView initWithTitle:@"STATISTICS"];
+            break;
+        case 2:
+            return [LSDetailHeaderView initWithTitle:@"DEBUG"];
+            break;
+        default:
+            break;
+    }
+    return nil;
+}
+
 
 - (NSDictionary *)conversationStatistics
 {

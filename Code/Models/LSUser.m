@@ -60,6 +60,11 @@
     return self.userID;
 }
 
+- (UIImage *)avatarImage
+{
+    return nil;
+}
+
 - (BOOL)validate:(NSError *__autoreleasing *)error
 {
     if (!self.email) {
