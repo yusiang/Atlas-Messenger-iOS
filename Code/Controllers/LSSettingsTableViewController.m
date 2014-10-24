@@ -11,10 +11,12 @@
 #import "LSDetailHeaderView.h"
 #import "LYRUIConstants.h"
 #import "SVProgressHUD.h"
+#import "LSSettingsHeaderView.h"
 
 @interface LSSettingsTableViewController ()
 
 @property (nonatomic, strong) NSDictionary *conversationStatistics;
+@property (nonatomic) LSSettingsHeaderView *headerView;
 
 @end
 
@@ -23,6 +25,11 @@
 NSString *const LSConversationCount = @"LSConversationCount";
 NSString *const LSMessageCount = @"LSMessageCount";
 NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
+
+static NSString *const LSConnected = @"Connected";
+static NSString *const LSDisconnected = @"Disconnected";
+static NSString *const LSLostConnection = @"Lost Connection";
+static NSString *const LSConnecting = @"Connecting";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -42,7 +49,23 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
     doneButton.accessibilityLabel = @"Done";
     [self.navigationItem setRightBarButtonItem:doneButton];
     
+    self.headerView = [LSSettingsHeaderView headerViewWithUser:self.applicationController.APIManager.authenticatedSession.user];
+    self.headerView.frame = CGRectMake(0, 0, 320, 148);
+    self.headerView.backgroundColor = [UIColor whiteColor];
+    [self.headerView updateConnectedStateWithString:@"Connected"];
+    self.tableView.tableHeaderView = self.headerView;
+    
     self.tableView.sectionFooterHeight = 0.0f;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if (self.applicationController.layerClient.isConnected){
+        [self.headerView updateConnectedStateWithString:LSConnected];
+    } else {
+        [self.headerView updateConnectedStateWithString:LSDisconnected];
+    }
+    [self addConnectionObservers];
 }
 
 #pragma mark - Table view data source
@@ -296,6 +319,41 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
     [self dismissViewControllerAnimated:TRUE completion:^{
         [self.settingsDelegate logoutTappedInSettingsTableViewController:self];
     }];
+}
+
+# pragma mark - Layer Connection State Monitoring
+
+- (void)addConnectionObservers
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidConnect) name:LYRClientDidConnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidDisconnect) name:LYRClientDidDisconnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerIsConnecting) name:LYRClientWillAttemptToConnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidLoseConnection) name:LYRClientDidLoseConnectionNotification object:nil];
+}
+
+- (void)layerDidConnect
+{
+    [self.headerView updateConnectedStateWithString:LSConnected];
+}
+
+- (void)layerDidDisconnect
+{
+    [self.headerView updateConnectedStateWithString:LSDisconnected];
+}
+
+- (void)layerIsConnecting
+{
+    [self.headerView updateConnectedStateWithString:LSConnecting];
+}
+
+- (void)layerDidLoseConnection
+{
+    [self.headerView updateConnectedStateWithString:LSLostConnection];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

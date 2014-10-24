@@ -24,12 +24,6 @@
 
 @implementation LSUIConversationListViewController
 
-static NSString *const LSConnected = @"Connected";
-static NSString *const LSDisconnected = @"Disconnected";
-static NSString *const LSLostConnection = @"Lost Connection";
-static NSString *const LSConnecting = @"Connecting";
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -70,17 +64,6 @@ static NSString *const LSConnecting = @"Connecting";
                                         -(self.versionView.frame.size.height + 30),
                                         self.versionView.frame.size.width,
                                         self.versionView.frame.size.height);
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    if (self.layerClient.isConnected){
-        self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSConnected];
-    } else {
-        self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSConnecting];
-    }
-    [self addConnectionObservers];
 }
 
 #pragma mark LYRUIConversationListViewControllerDelegate methods
@@ -196,46 +179,5 @@ static NSString *const LSConnecting = @"Connecting";
     }
 
 }
-
-# pragma mark - Layer Connection State Monitoring
-
-- (void)addConnectionObservers
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidConnect) name:LYRClientDidConnectNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidDisconnect) name:LYRClientDidDisconnectNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerIsConnecting) name:LYRClientWillAttemptToConnectNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidLoseConnection) name:LYRClientDidLoseConnectionNotification object:nil];
-}
-
-- (void)layerDidConnect
-{
-    self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSConnected];
-}
-
-- (void)layerDidDisconnect
-{
-    self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSDisconnected];
-}
-
-- (void)layerIsConnecting
-{
-    self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSConnecting];
-}
-
-- (void)layerDidLoseConnection
-{
-    self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSLostConnection];
-}
-
-- (NSString *)layerConnectionStateWithString:(NSString *)string
-{
-    return [NSString stringWithFormat:@"Layer Connection State: %@", string];
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 
 @end
