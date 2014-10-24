@@ -8,7 +8,7 @@ target 'LayerSample' do
   pod 'SVProgressHUD', :head
   #pod 'LayerKit'
   #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
-  pod 'LayerKit', path: "#{dropbox_path}/Layer/Builds/iOS/LayerKit-0.8.3-rc3"
+  pod 'LayerKit', path: "#{dropbox_path}/Layer/Builds/iOS/LayerKit-0.8.3"
   #pod 'LayerKit', path: '/Users/blake/Projects/Layer/LayerKit-again'
   pod 'HockeySDK', '~> 3.5.6'
   pod 'LayerUIKit', path: 'LayerUIKit'
