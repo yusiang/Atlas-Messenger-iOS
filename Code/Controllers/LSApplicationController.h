@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 #import "LSAPIManager.h"
-#import "LSNotificationObserver.h"
 
 /**
  @abstract The `LSAppController` class manages mission critical classes to the Layer Sample App
@@ -51,7 +50,5 @@
 + (NSString *)buildInformationString;
 
 + (NSString *)layerServerHostname;
-
-+ (NSString *)connectedStateString;
 
 @end

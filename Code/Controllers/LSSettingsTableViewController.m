@@ -10,6 +10,7 @@
 #import "LSSwitch.h"
 #import "LSDetailHeaderView.h"
 #import "LYRUIConstants.h"
+#import "SVProgressHUD.h"
 
 @interface LSSettingsTableViewController ()
 
@@ -37,9 +38,9 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     
     // Left navigation item
-    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelTapped:)];
-    menuButton.accessibilityLabel = @"logout";
-    [self.navigationItem setLeftBarButtonItem:menuButton];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneTapped:)];
+    doneButton.accessibilityLabel = @"Done";
+    [self.navigationItem setRightBarButtonItem:doneButton];
     
     self.tableView.sectionFooterHeight = 0.0f;
 }
@@ -61,7 +62,7 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
             return 3;
             break;
         case 2:
-            return 1;
+            return 3;
             break;
         case 3:
             return 1;
@@ -76,6 +77,8 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"];
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    cell.textLabel.textColor = LSBlueColor();
     
     LSSwitch *radioSwitch = [[LSSwitch alloc] init];
     radioSwitch.indexPath = indexPath;
@@ -137,6 +140,10 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
                     radioSwitch.on = self.applicationController.debugModeEnabled;
                     cell.accessoryView = radioSwitch;
                     break;
+                case 1:
+                    cell.textLabel.text = @"Copy Device Token";
+                case 2:
+                    cell.textLabel.text = @"Reload Contacts";
                 default:
                     break;
             }
@@ -145,17 +152,40 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
         
         case 3:
             cell.textLabel.text = @"Log Out";
+            cell.textLabel.textColor = LSRedColor();
+    
         default:
             break;
     }
-    cell.textLabel.font = [UIFont systemFontOfSize:14];
-    cell.textLabel.textColor = LSBlueColor();
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch (indexPath.section) {
+        case 2:
+            switch (indexPath.row) {
+                case 1:
+                    [self copyDeviceToken];
+                    break;
+                case 2:
+                    [self reloadContacts];
+                    break;
+                default:
+                    break;
+            }
+            break;
+        
+        case 3:
+            [self logOut];
+        default:
+            break;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 40;
+    return 48;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -236,9 +266,36 @@ NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
     }
 }
 
-- (void)cancelTapped:(UIControl *)sender
+- (void)doneTapped:(UIControl *)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)copyDeviceToken
+{
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    if (self.applicationController.deviceToken) {
+        pasteboard.string = [self.applicationController.deviceToken description];
+        [SVProgressHUD showSuccessWithStatus:@"Copied"];
+    } else {
+        [SVProgressHUD showErrorWithStatus:@"No Device Token Available"];
+    }
+}
+
+- (void)reloadContacts
+{
+    [SVProgressHUD showWithStatus:@"Loading Contacts"];
+    [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
+        [SVProgressHUD showSuccessWithStatus:@"Contacts Loaded"];
+    }];
+
+}
+
+- (void)logOut
+{
+    [self dismissViewControllerAnimated:TRUE completion:^{
+        [self.settingsDelegate logoutTappedInSettingsTableViewController:self];
+    }];
 }
 
 @end

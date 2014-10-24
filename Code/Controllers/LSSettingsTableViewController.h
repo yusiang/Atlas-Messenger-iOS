@@ -10,8 +10,18 @@
 #import <LayerKit/LayerKit.h>
 #import "LSApplicationController.h"
 
+@class LSSettingsTableViewController;
+
+@protocol LSSettingsTableViewControllerDelegate <NSObject>
+
+- (void)logoutTappedInSettingsTableViewController:(LSSettingsTableViewController *)settingsTableViewController;
+
+@end
+
 @interface LSSettingsTableViewController : UITableViewController
 
 @property (nonatomic) LSApplicationController *applicationController;
+
+@property (nonatomic) id<LSSettingsTableViewControllerDelegate>settingsDelegate;
 
 @end

@@ -41,8 +41,7 @@ static NSString *const LSDebugModeEnabled = @"debugModeEnabled";
         _layerClient.delegate = self;
         _persistenceManager = persistenceManager;
         _APIManager = [LSAPIManager managerWithBaseURL:baseURL layerClient:layerClient];
-        _shouldSendPushSound = YES;
-        _shouldSendPushText = YES;
+        [self configureApplicationSettings];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:) name:LYRClientWillBeginSynchronizationNotification object:layerClient];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:) name:LYRClientDidFinishSynchronizationNotification object:layerClient];
@@ -181,6 +180,22 @@ static NSString *const LSDebugModeEnabled = @"debugModeEnabled";
     NSURL *URL = [NSURL URLWithString:configURLString];
     NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
     return URLComponents.host;
+}
+
+#pragma mark - Application Settings Configuration
+
+- (void)configureApplicationSettings
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![defaults valueForKey:LSShouldSendPushText]) {
+        [self setShouldSendPushText:YES];
+    }
+    if (![defaults valueForKey:LSShouldSendPushSound]) {
+        [self setShouldSendPushSound:YES];
+    }
+    if (![defaults valueForKey:LSDebugModeEnabled]) {
+        [self setDebugModeEnabled:NO];
+    }
 }
 
 - (void)setShouldSendPushText:(BOOL)shouldSendPushText

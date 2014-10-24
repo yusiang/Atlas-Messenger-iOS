@@ -119,6 +119,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessage:(LYRMessage *)message
 {
+    if (!self.applicationContoller.shouldSendPushText) return nil;
     LYRMessagePart *messagePart = [message.parts objectAtIndex:0];
     NSString *pushText = [NSString new];
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {

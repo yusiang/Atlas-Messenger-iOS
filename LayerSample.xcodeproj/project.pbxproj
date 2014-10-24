@@ -63,10 +63,8 @@
 		0AFE3FF419B0E1BD00FCA264 /* LSAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57161950EB76000E27B0 /* LSAPIManager.m */; };
 		0AFE3FFE19B0E1BD00FCA264 /* LSApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */; };
 		0AFE3FFF19B0E1BD00FCA264 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD767711963104200582755 /* LSUtilities.m */; };
-		0AFE400019B0E1BD00FCA264 /* LSNotificationObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */; };
 		0AFE400219B0E1BD00FCA264 /* LSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57301950EB76000E27B0 /* LSAppDelegate.m */; };
 		0AFE400419B0E1BD00FCA264 /* LSUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A573A1950EB76000E27B0 /* LSUser.m */; };
-		0AFE400819B0E1BD00FCA264 /* LSAuthenticationTableViewFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE1A15019B0DAE900BFB754 /* LSAuthenticationTableViewFooter.m */; };
 		0AFE400919B0E1BD00FCA264 /* LSAuthenticationTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE1A15219B0DAE900BFB754 /* LSAuthenticationTableViewHeader.m */; };
 		0AFE400E19B0E1BD00FCA264 /* LSInputTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57471950EB76000E27B0 /* LSInputTableViewCell.m */; };
 		0AFE401319B0E1BD00FCA264 /* LSVersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 116357E5198AD1DB00C89F77 /* LSVersionView.m */; };
@@ -81,6 +79,8 @@
 		D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */; };
 		D69C422019F97EE600F64FAD /* LSDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D69C421F19F97EE600F64FAD /* LSDetailHeaderView.m */; };
 		D69C422619F984E800F64FAD /* LSSettingHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D69C422519F984E800F64FAD /* LSSettingHeaderView.m */; };
+		D6F6EDE819F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = D6F6EDE719F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m */; };
+		D6F6EDEB19F9D1D2005DDB26 /* LSJiraManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6F6EDEA19F9D1D2005DDB26 /* LSJiraManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,8 +142,6 @@
 		0A8258CB19DE00D200ACCC8E /* LSConversationDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSConversationDetailViewController.m; sourceTree = "<group>"; };
 		0A916B8619B77CDC00479CBD /* LYRUITestInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUITestInterface.h; sourceTree = "<group>"; };
 		0A916B8719B77CDC00479CBD /* LYRUITestInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUITestInterface.m; sourceTree = "<group>"; };
-		0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNotificationObserver.h; sourceTree = "<group>"; };
-		0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNotificationObserver.m; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0AADB5C51947C8600083732B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		0AADB5C71947C86B0083732B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -167,7 +165,6 @@
 		0AE1A14C19B0DA8700BFB754 /* LSAuthenticationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationTableViewController.h; sourceTree = "<group>"; };
 		0AE1A14D19B0DA8700BFB754 /* LSAuthenticationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAuthenticationTableViewController.m; sourceTree = "<group>"; };
 		0AE1A14F19B0DAE900BFB754 /* LSAuthenticationTableViewFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationTableViewFooter.h; sourceTree = "<group>"; };
-		0AE1A15019B0DAE900BFB754 /* LSAuthenticationTableViewFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAuthenticationTableViewFooter.m; sourceTree = "<group>"; };
 		0AE1A15119B0DAE900BFB754 /* LSAuthenticationTableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationTableViewHeader.h; sourceTree = "<group>"; };
 		0AE1A15219B0DAE900BFB754 /* LSAuthenticationTableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAuthenticationTableViewHeader.m; sourceTree = "<group>"; };
 		116357E4198AD1DB00C89F77 /* LSVersionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSVersionView.h; sourceTree = "<group>"; };
@@ -203,6 +200,9 @@
 		D69C421F19F97EE600F64FAD /* LSDetailHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSDetailHeaderView.m; sourceTree = "<group>"; };
 		D69C422419F984E800F64FAD /* LSSettingHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingHeaderView.h; sourceTree = "<group>"; };
 		D69C422519F984E800F64FAD /* LSSettingHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSettingHeaderView.m; sourceTree = "<group>"; };
+		D6F6EDE719F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAuthenticationTableViewFooter.m; sourceTree = "<group>"; };
+		D6F6EDE919F9D1D2005DDB26 /* LSJiraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSJiraManager.h; sourceTree = "<group>"; };
+		D6F6EDEA19F9D1D2005DDB26 /* LSJiraManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSJiraManager.m; sourceTree = "<group>"; };
 		F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.release.xcconfig"; sourceTree = "<group>"; };
 		FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -345,6 +345,8 @@
 			children = (
 				0AD767701963104200582755 /* LSUtilities.h */,
 				0AD767711963104200582755 /* LSUtilities.m */,
+				D6F6EDE919F9D1D2005DDB26 /* LSJiraManager.h */,
+				D6F6EDEA19F9D1D2005DDB26 /* LSJiraManager.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -381,8 +383,6 @@
 				0A6B47C519B3967A00D485D1 /* LSPersistenceManager.m */,
 				0A6B47C119B3966D00D485D1 /* LSHTTPResponseSerializer.h */,
 				0A6B47C219B3966D00D485D1 /* LSHTTPResponseSerializer.m */,
-				0AA09B341970BCEF007CD475 /* LSNotificationObserver.h */,
-				0AA09B351970BCEF007CD475 /* LSNotificationObserver.m */,
 				0A52D5FC1961FD0D0030A34A /* LSApplicationController.h */,
 				0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */,
 				259A57151950EB76000E27B0 /* LSAPIManager.h */,
@@ -430,7 +430,7 @@
 				0A36117019D399F10089D210 /* LSSplashView.h */,
 				0A36117119D399F10089D210 /* LSSplashView.m */,
 				0AE1A14F19B0DAE900BFB754 /* LSAuthenticationTableViewFooter.h */,
-				0AE1A15019B0DAE900BFB754 /* LSAuthenticationTableViewFooter.m */,
+				D6F6EDE719F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m */,
 				0AE1A15119B0DAE900BFB754 /* LSAuthenticationTableViewHeader.h */,
 				0AE1A15219B0DAE900BFB754 /* LSAuthenticationTableViewHeader.m */,
 				259A57461950EB76000E27B0 /* LSInputTableViewCell.h */,
@@ -668,6 +668,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A6B47CA19B3975A00D485D1 /* LSAuthenticationTableViewController.m in Sources */,
+				D6F6EDEB19F9D1D2005DDB26 /* LSJiraManager.m in Sources */,
 				0A6B47C619B3967A00D485D1 /* LSPersistenceManager.m in Sources */,
 				0A6B47C919B3968200D485D1 /* LSSession.m in Sources */,
 				D69C422619F984E800F64FAD /* LSSettingHeaderView.m in Sources */,
@@ -676,17 +677,16 @@
 				0A23C96119C10D97004789EC /* LSUIConversationViewController.m in Sources */,
 				0A51BD1D19B66A98004105DC /* LYRUITestUser.m in Sources */,
 				0A48C92919B7D2D100B536AB /* LYRUILayerContentFactory.m in Sources */,
+				D6F6EDE819F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m in Sources */,
 				0AFE3FF419B0E1BD00FCA264 /* LSAPIManager.m in Sources */,
 				D69C422019F97EE600F64FAD /* LSDetailHeaderView.m in Sources */,
 				0AFE3FFE19B0E1BD00FCA264 /* LSApplicationController.m in Sources */,
 				0AFE3FFF19B0E1BD00FCA264 /* LSUtilities.m in Sources */,
-				0AFE400019B0E1BD00FCA264 /* LSNotificationObserver.m in Sources */,
 				0A48C92C19B7F49900B536AB /* LYRUITestParticipantCell.m in Sources */,
 				0AFE400219B0E1BD00FCA264 /* LSAppDelegate.m in Sources */,
 				0AFE400419B0E1BD00FCA264 /* LSUser.m in Sources */,
 				D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */,
 				0A6B47C319B3966D00D485D1 /* LSHTTPResponseSerializer.m in Sources */,
-				0AFE400819B0E1BD00FCA264 /* LSAuthenticationTableViewFooter.m in Sources */,
 				0AFE400919B0E1BD00FCA264 /* LSAuthenticationTableViewHeader.m in Sources */,
 				0A36AABB19B91FCD0070D25A /* LYRUITestConversationCell.m in Sources */,
 				0A36117219D399F10089D210 /* LSSplashView.m in Sources */,

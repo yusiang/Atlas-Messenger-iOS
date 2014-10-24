@@ -15,7 +15,7 @@
 #import "LSVersionView.h"
 #import "LSSettingsTableViewController.h"
 
-@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LYRUIParticipantPickerControllerDelegate, UIActionSheetDelegate>
+@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LYRUIParticipantPickerControllerDelegate, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
 @property (nonatomic) LSVersionView *versionView;
@@ -23,6 +23,11 @@
 @end
 
 @implementation LSUIConversationListViewController
+
+static NSString *const LSConnected = @"Connected";
+static NSString *const LSDisconnected = @"Disconnected";
+static NSString *const LSLostConnection = @"Lost Connection";
+static NSString *const LSConnecting = @"Connecting";
 
 
 - (void)viewDidLoad
@@ -35,12 +40,13 @@
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
     // Left navigation item
-    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"]
-                                                                     style:UIBarButtonItemStylePlain
-                                                                    target:self
-                                                                    action:@selector(meunButtonTapped)];
-    menuButton.accessibilityLabel = @"logout";
-    [self.navigationItem setLeftBarButtonItem:menuButton];
+    // Left navigation item
+    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(settingsButtonTapped)];
+    settingsButton.accessibilityLabel = @"Settings";
+    [self.navigationItem setLeftBarButtonItem:settingsButton];
     
     // Right navigation item
     UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
@@ -70,10 +76,11 @@
 {
     [super viewWillAppear:animated];
     if (self.layerClient.isConnected){
-        self.versionView.connectedLabel.text = @"Layer Connection State: Connected";
+        self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSConnected];
     } else {
-        self.versionView.connectedLabel.text = @"Layer Connection State: Disconnected";
+        self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSConnecting];
     }
+    [self addConnectionObservers];
 }
 
 #pragma mark LYRUIConversationListViewControllerDelegate methods
@@ -142,17 +149,14 @@
 
 #pragma mark - Bar Button Functionality Methods
 
-- (void)meunButtonTapped
+- (void)settingsButtonTapped
 {
-    NSString *user = self.applicationController.APIManager.authenticatedSession.user.fullName;
-    UIActionSheet *actionSheet = [[UIActionSheet alloc]
-                                  initWithTitle:nil
-                                  delegate:self
-                                  cancelButtonTitle:@"Cancel"
-                                  destructiveButtonTitle:nil
-                                  otherButtonTitles:[NSString stringWithFormat:@"Logout - %@", user], @"Reload Contacts", @"Copy Device Token", @"App Settings", nil];
+    LSSettingsTableViewController *settingsTableViewController = [[LSSettingsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    settingsTableViewController.applicationController = self.applicationController;
+    settingsTableViewController.settingsDelegate = self;
     
-    [actionSheet showInView:self.view];
+    UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:settingsTableViewController];
+    [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)composeButtonTapped
@@ -164,48 +168,7 @@
     [self presentViewController:controller animated:YES completion:nil];
 }
 
-#pragma mark
-#pragma mark UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    switch (buttonIndex) {
-        case 0:
-            [self logout];
-            break;
-            
-        case 1:
-            [SVProgressHUD showWithStatus:@"Loading Contacts"];
-            [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
-                [SVProgressHUD showSuccessWithStatus:@"Contacts Loaded"];
-            }];
-            break;
-            
-        case 2: {
-            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-            if (self.applicationController.deviceToken) {
-                pasteboard.string = [self.applicationController.deviceToken description];
-                [SVProgressHUD showSuccessWithStatus:@"Copied"];
-            } else {
-                [SVProgressHUD showErrorWithStatus:@"No Device Token Available"];
-            }
-        }
-            break;
-         
-        case 3: {
-            LSSettingsTableViewController *settingsTableViewController = [[LSSettingsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
-            settingsTableViewController.applicationController = self.applicationController;
-            
-            UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:settingsTableViewController];
-            [self.navigationController presentViewController:controller animated:YES completion:nil];
-        }
-            
-            break;
-            
-        default:
-            break;
-    }
-}
+#pragma mark - Push Notification Reaction Method
 
 - (void)selectConversation:(LYRConversation *)conversation
 {
@@ -215,7 +178,9 @@
     }
 }
 
-- (void)logout
+#pragma mark - Settings View Controller Delegate
+
+- (void)logoutTappedInSettingsTableViewController:(LSSettingsTableViewController *)settingsTableViewController
 {
     [SVProgressHUD show];
     if (self.applicationController.layerClient.isConnected) {
@@ -230,6 +195,46 @@
         [SVProgressHUD dismiss];
     }
 
+}
+
+# pragma mark - Layer Connection State Monitoring
+
+- (void)addConnectionObservers
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidConnect) name:LYRClientDidConnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidDisconnect) name:LYRClientDidDisconnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerIsConnecting) name:LYRClientWillAttemptToConnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidLoseConnection) name:LYRClientDidLoseConnectionNotification object:nil];
+}
+
+- (void)layerDidConnect
+{
+    self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSConnected];
+}
+
+- (void)layerDidDisconnect
+{
+    self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSDisconnected];
+}
+
+- (void)layerIsConnecting
+{
+    self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSConnecting];
+}
+
+- (void)layerDidLoseConnection
+{
+    self.versionView.connectedLabel.text = [self layerConnectionStateWithString:LSLostConnection];
+}
+
+- (NSString *)layerConnectionStateWithString:(NSString *)string
+{
+    return [NSString stringWithFormat:@"Layer Connection State: %@", string];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 

@@ -8,6 +8,7 @@
 
 #import "LSVersionView.h"
 #import "LYRUIConstants.h"
+#import <LayerKit/LayerKit.h>
 
 @interface LSVersionView ()
 
@@ -110,4 +111,6 @@ static const CGFloat LSVersionViewYPadding = 5.0f;
                       versionSize.height + buildSize.height + hostSize.height + userSize.height + deviceSize.height + connectedSize.height + 2 * LSVersionViewYPadding);
 }
 
+
 @end
+
