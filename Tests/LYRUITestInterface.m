@@ -7,6 +7,12 @@
 //
 
 #import "LYRUITestInterface.h"
+#import "LYRUITestUser.h"
+
+@interface LYRUITestInterface ();
+
+@end
+
 
 @implementation LYRUITestInterface
 
@@ -21,23 +27,24 @@
     if (self) {
         
         _applicationController = applicationController;
-        
+    
     }
     return self;
 }
 
-- (NSString *)registerUser:(LSUser *)newUser
+- (LSUser *)registerUser:(LSUser *)newUser
 {
-    __block NSString *userID;
+    __block LSUser *registeredUser;
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     [self.applicationController.APIManager registerUser:newUser completion:^(LSUser *user, NSError *error) {
         expect(user).toNot.beNil;
         expect(error).to.beNil;
-        userID = user.userID;
+        registeredUser = user;
+        NSLog(@"User Registered %@", user.fullName);
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
-    return userID;
+    return registeredUser;
 }
 
 - (NSString *)authenticateWithEmail:(NSString *)email password:(NSString *)password
@@ -75,6 +82,15 @@
         [latch decrementCount];
     }];
     [latch waitTilCount:0];
+}
+
+- (void)registerTestUsers
+{
+    self.testUser0 = [self registerUser:[LYRUITestUser testUserWithNumber:0]];
+    self.testUser1 = [self registerUser:[LYRUITestUser testUserWithNumber:1]];
+    self.testUser2 = [self registerUser:[LYRUITestUser testUserWithNumber:2]];
+    self.testUser3 = [self registerUser:[LYRUITestUser testUserWithNumber:3]];
+    self.testUser4 = [self registerUser:[LYRUITestUser testUserWithNumber:4]];
 }
 
 - (void)loadContacts

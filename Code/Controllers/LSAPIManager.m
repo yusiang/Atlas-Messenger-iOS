@@ -62,7 +62,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     NSParameterAssert(completion);
     
     NSError *error = nil;
-    if (! [user validate:&error]) {
+    if (![user validate:&error]) {
         completion(nil, error);
         return;
     }

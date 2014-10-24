@@ -23,4 +23,6 @@
  */
 @property (nonatomic) LSApplicationController *applicationController;
 
+@property (nonatomic) BOOL shouldDisplaySettingsItem;
+
 @end

@@ -34,14 +34,15 @@
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
     // Left navigation item
-    // Left navigation item
-    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings"
-                                                                   style:UIBarButtonItemStylePlain
-                                                                  target:self
-                                                                  action:@selector(settingsButtonTapped)];
-    settingsButton.accessibilityLabel = @"Settings";
-    [self.navigationItem setLeftBarButtonItem:settingsButton];
-    
+    if (self.shouldDisplaySettingsItem) {
+        UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings"
+                                                                           style:UIBarButtonItemStylePlain
+                                                                          target:self
+                                                                          action:@selector(settingsButtonTapped)];
+        settingsButton.accessibilityLabel = @"Settings";
+        [self.navigationItem setLeftBarButtonItem:settingsButton];
+    }
+
     // Right navigation item
     UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
                                                                                    target:self

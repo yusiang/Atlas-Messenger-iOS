@@ -78,6 +78,7 @@
 		D6044C8F19F6EA2D00F6E4DC /* LSSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = D6044C8E19F6EA2D00F6E4DC /* LSSwitch.m */; };
 		D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */; };
 		D673C23B19F9DB7800579249 /* LSSettingsHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D673C23A19F9DB7800579249 /* LSSettingsHeaderView.m */; };
+		D673C23D19FAAE5D00579249 /* LYRUIMessageInputBarTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D673C23C19FAAE5D00579249 /* LYRUIMessageInputBarTest.m */; };
 		D69C422019F97EE600F64FAD /* LSDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D69C421F19F97EE600F64FAD /* LSDetailHeaderView.m */; };
 		D69C422619F984E800F64FAD /* LSSettingHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D69C422519F984E800F64FAD /* LSSettingHeaderView.m */; };
 		D6F6EDE819F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = D6F6EDE719F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m */; };
@@ -199,6 +200,7 @@
 		D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSettingsTableViewController.m; sourceTree = "<group>"; };
 		D673C23919F9DB7800579249 /* LSSettingsHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSSettingsHeaderView.h; path = ../LSSettingsHeaderView.h; sourceTree = "<group>"; };
 		D673C23A19F9DB7800579249 /* LSSettingsHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSSettingsHeaderView.m; path = ../LSSettingsHeaderView.m; sourceTree = "<group>"; };
+		D673C23C19FAAE5D00579249 /* LYRUIMessageInputBarTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIMessageInputBarTest.m; sourceTree = "<group>"; };
 		D69C421E19F97EE600F64FAD /* LSDetailHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSDetailHeaderView.h; sourceTree = "<group>"; };
 		D69C421F19F97EE600F64FAD /* LSDetailHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSDetailHeaderView.m; sourceTree = "<group>"; };
 		D69C422419F984E800F64FAD /* LSSettingHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingHeaderView.h; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 				0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */,
 				0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */,
 				0ADD757519C8A15800E133B5 /* LYRUIConversationViewTest.m */,
+				D673C23C19FAAE5D00579249 /* LYRUIMessageInputBarTest.m */,
 			);
 			name = "Component Test";
 			sourceTree = "<group>";
@@ -709,6 +712,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D673C23D19FAAE5D00579249 /* LYRUIMessageInputBarTest.m in Sources */,
 				0A5150F419B7872300C6E045 /* LYRUITestUser.m in Sources */,
 				0A5150F319B7871A00C6E045 /* LYRUITestInterface.m in Sources */,
 				252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */,

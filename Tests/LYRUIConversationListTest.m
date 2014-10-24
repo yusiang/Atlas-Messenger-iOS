@@ -60,12 +60,17 @@
 //Load the list and verify that all conversations returned by conversationForIdentifiers: is presented in the list.
 - (void)testToVerifyConversationListDisplaysAllConversationsInLayer
 {
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    LSUser *user2 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:2]];
+    LSUser *user3 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:3]];
+    LSUser *user4 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:4]];
     
-    LSUser *testUser = [self.testInterface randomUser];
-    
-    NSSet *participantIdentifiers = [NSSet setWithObjects:testUser.userID, nil];
-    [self.layerContentFactory conversationsWithParticipants:participantIdentifiers number:1];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user2.userID] number:2];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user3.userID] number:3];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user4.userID] number:4];
+    [tester waitForTimeInterval:5];
     
     NSSet *conversations = [self.testInterface.applicationController.layerClient conversationsForIdentifiers:nil];
     for (LYRConversation *conversation in conversations) {
@@ -73,44 +78,113 @@
     }
 }
 
-////Test swipe to delete for deleting a conversation. Verify the conversation is deleted from the table and from the Layer client.
-//- (void)testToVerifyDeletionOfConversationFunctionality
-//{
-//    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
-//    [appDelegate setAllowsEditing:TRUE];
-//    
-//    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
-//    
-//    LSUser *testUser = [self.testInterface randomUser];
-//    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
-//    
-//    
-//    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
-//    [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
-//    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@ ", testUser.fullName]];
-//    [tester waitForAbsenceOfViewWithAccessibilityLabel:conversationLabel];
-//}
+//Test swipe to delete for deleting a conversation. Verify the conversation is deleted from the table and from the Layer client.
+- (void)testToVerifyGlobalDeletionButtonFunctionality
+{
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate setAllowsEditing:YES];
+    
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
+    
+    [tester waitForViewWithAccessibilityLabel:conversationLabel];
+    [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
+    [self deleteConversationWithUserIDs:[NSSet setWithObject:user1.userID] deletionMode:LYRDeletionModeAllParticipants];
+}
+
+//Test swipe to delete for deleting a conversation. Verify the conversation is deleted from the table and from the Layer client.
+- (void)testToVerifyLocalDeletionButtonFunctionality
+{
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate setAllowsEditing:YES];
+    
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
+    
+    [tester waitForViewWithAccessibilityLabel:conversationLabel];
+    [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
+    [self deleteConversationWithUserIDs:[NSSet setWithObject:user1.userID] deletionMode:LYRDeletionModeLocal];
+}
+
+//Test swipe to delete for deleting a conversation. Verify the conversation is deleted from the table and from the Layer client.
+- (void)testToVerifyConversationDoesNotPersistAcrossSessionsAfterGlobalDelete
+{
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate setAllowsEditing:YES];
+    
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
+    
+    [tester waitForViewWithAccessibilityLabel:conversationLabel];
+    [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
+    [self deleteConversationWithUserIDs:[NSSet setWithObject:user1.userID] deletionMode:LYRDeletionModeAllParticipants];
+    
+    [self.testInterface logout];
+    
+    [self.testInterface authenticateWithEmail:[LYRUITestUser testUserWithNumber:0].email password:[LYRUITestUser testUserWithNumber:0].password];
+    [tester waitForTimeInterval:5];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:conversationLabel];
+}
+
+//Test swipe to delete for deleting a conversation. Verify the conversation is deleted from the table and from the Layer client.
+- (void)testToVerifyConversationDoesPersistAcrossSecssionsAfterLocalDelete
+{
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate setAllowsEditing:YES];
+    
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
+    
+    [tester waitForViewWithAccessibilityLabel:conversationLabel];
+    [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
+    [self deleteConversationWithUserIDs:[NSSet setWithObject:user1.userID] deletionMode:LYRDeletionModeLocal];
+    
+    [self.testInterface logout];
+    
+    [self.testInterface authenticateWithEmail:[LYRUITestUser testUserWithNumber:0].email password:[LYRUITestUser testUserWithNumber:0].password];
+    [tester waitForViewWithAccessibilityLabel:conversationLabel];
+}
 
 //Test engaging editing mode and deleting several conversations at once. Verify that all conversations selected are deleted from the table and from the Layer client.
 - (void)testToVerifyEditingModeAndMultipleConversationDeletionFunctionality
 {
     LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate setAllowsEditing:TRUE];
+    [appDelegate setAllowsEditing:YES];
+    [appDelegate setDisplaysSettingsButton:NO];
     
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    LSUser *user2 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:2]];
+    LSUser *user3 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:3]];
     
-    LSUser *testUser1 = [self.testInterface randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser1.userID] number:1];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
     
-    LSUser *testUser2 = [self.testInterface randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser2.userID] number:1];
-    
-    LSUser *testUser3 = [self.testInterface randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser3.userID] number:1];
-    
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user2.userID] number:1];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user3.userID] number:1];
     [tester waitForTimeInterval:5];
+    
     [tester tapViewWithAccessibilityLabel:@"Edit"];
-    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@", testUser1.fullName]];
+    
+    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@", user1.fullName]];
+    [self deleteConversationWithUserIDs:[NSSet setWithObject:user1.userID] deletionMode:LYRDeletionModeLocal];
+    
+    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@", user2.fullName]];
+    [self deleteConversationWithUserIDs:[NSSet setWithObject:user2.userID] deletionMode:LYRDeletionModeLocal];
+    
+    [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete %@", user3.fullName]];
+    [self deleteConversationWithUserIDs:[NSSet setWithObject:user3.userID] deletionMode:LYRDeletionModeLocal];
 }
 
 //Disable editing and verify that the controller does not permit the user to attempt to edit or engage swipe to delete.
@@ -119,23 +193,22 @@
     LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate setAllowsEditing:NO];
     
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
-    
-    LSUser *testUser = [self.testInterface randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
-    
-    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
-    
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Edit"];
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
     [tester swipeViewWithAccessibilityLabel:conversationLabel inDirection:KIFSwipeDirectionLeft];
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:[NSString stringWithFormat:@"Delete, %@", conversationLabel]];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:[NSString stringWithFormat:@"Global"]];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:[NSString stringWithFormat:@"Local"]];
 }
 
 //Customize the fonts and colors using UIAppearance and verify that the configuration is respected.
 - (void)testToVerifyColorAndFontChangeFunctionality
 {
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
     
     UIFont *testFont = [UIFont systemFontOfSize:20];
     UIColor *testColor = [UIColor redColor];
@@ -143,10 +216,9 @@
     [[LYRUIConversationTableViewCell appearance] setConversationLabelFont:testFont];
     [[LYRUIConversationTableViewCell appearance] setConversationLableColor:testColor];
     
-    LSUser *testUser = [self.testInterface randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
-    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
     LYRUIConversationTableViewCell *cell = (LYRUIConversationTableViewCell *)[tester waitForViewWithAccessibilityLabel:conversationLabel];
     expect(cell.conversationLabelFont).to.equal(testFont);
@@ -159,16 +231,17 @@
     LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate setRowHeight:100];
     
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
     
-    LSUser *testUser = [self.testInterface randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
-    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
     LYRUIConversationTableViewCell *cell = (LYRUIConversationTableViewCell *)[tester waitForViewWithAccessibilityLabel:conversationLabel];
     
     expect(cell.frame.size.height).to.equal(100);
+    [appDelegate setRowHeight:72];
 }
 
 //Customize the cell class and ensure that the correct cell is used to render the table.
@@ -177,12 +250,12 @@
     LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate setCellClass:[LYRUITestConversationCell class]];
     
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
     
-    LSUser *testUser = [self.testInterface randomUser];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:testUser.userID] number:1];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
-    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:testUser.userID]];
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     LYRUIConversationTableViewCell *cell = (LYRUIConversationTableViewCell *)[tester waitForViewWithAccessibilityLabel:conversationLabel];
     
     expect([cell class]).to.equal([LYRUITestConversationCell class]);
@@ -192,72 +265,71 @@
 //Verify that attempting to provide a cell class that does not conform to LYRUIConversationPresenting results in a runtime exception.
 - (void)testToVerifyCustomCellClassNotConformingToProtocolRaisesException
 {
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
-    UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    LSUIConversationListViewController *controller = [self conversationListViewController];
     expect(^{ [controller setCellClass:[UITableViewCell class]]; }).to.raise(NSInternalInconsistencyException);
 }
 
 //Verify that attempting to change the cell class after the table is loaded results in a runtime error.
 - (void)testToVerifyChangingCellClassAfterViewLoadRaiseException
 {
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
-    UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    LSUIConversationListViewController *controller = [self conversationListViewController];
     expect(^{ [controller setCellClass:[LYRUITestConversationCell class]]; }).to.raise(NSInternalInconsistencyException);
 }
 
 //Verify that attempting to change the cell class after the table is loaded results in a runtime error.
 - (void)testToVerifyChangingCellHeighAfterViewLoadRaiseException
 {
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
-    UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    LSUIConversationListViewController *controller = [self conversationListViewController];
     expect(^{ [controller setRowHeight:40]; }).to.raise(NSInternalInconsistencyException);
 }
 
 //Verify that attempting to change the cell class after the table is loaded results in a runtime error.
 - (void)testToVerifyChangingEditingSettingAfterViewLoadRaiseException
 {
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
-    UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
-    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
-    expect(^{ [controller setAllowsEditing:TRUE]; }).to.raise(NSInternalInconsistencyException);
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    LSUIConversationListViewController *controller = [self conversationListViewController];
+    expect(^{ [controller setAllowsEditing:YES]; }).to.raise(NSInternalInconsistencyException);
 }
 
 //Synchronize a new conversation and verify that it live updates into the conversation list.
 - (void)testToVerifyCreatingANewConversationLiveUpdatesConversationList
 {
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:3]];
-    
-    NSString *userID = self.testInterface.applicationController.layerClient.authenticatedUserID;
-    [self.testInterface logout];
-    
-    LSUser *user2 = [LYRUITestUser testUserWithNumber:2];
-    [self.testInterface registerUser:user2];
-    [self.testInterface authenticateWithEmail:user2.email password:user2.password];
-    [self.testInterface loadContacts];
-    [tester waitForTimeInterval:1];
+    LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
 
-    LYRConversation *conversation = [LYRConversation conversationWithParticipants:[NSSet setWithObject:userID]];
-    LYRMessagePart *messagePart = [LYRMessagePart messagePartWithText:@"This is a test message"];
-    LYRMessage *message = [LYRMessage messageWithConversation:conversation parts:@[messagePart]];
-    
-    NSError *error;
-    BOOL success = [self.testInterface.applicationController.layerClient sendMessage:message error:&error];
-    expect(success).to.beTruthy;
-    expect(error).to.beNil;
-    
-    [tester waitForViewWithAccessibilityLabel:[self conversationLabelForParticipants:conversation.participants]];
+    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
+    [tester waitForViewWithAccessibilityLabel:conversationLabel];
 }
 
 #pragma mark - Factory Methods
 
-- (void)registerTestUsers
+//- (void)registerTestUsers
+//{
+//    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:0]];
+//    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+//    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:2]];
+//}
+
+- (void)deleteConversationWithUserIDs:(NSSet *)userIDs deletionMode:(LYRDeletionMode)deletionMode
 {
-    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:0]];
-    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
-    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:2]];
+    switch (deletionMode) {
+        case LYRDeletionModeAllParticipants:
+            [tester waitForViewWithAccessibilityLabel:@"Global"];
+            [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Global"]];
+            [tester waitForAbsenceOfViewWithAccessibilityLabel:[self conversationLabelForParticipants:userIDs]];
+            break;
+        case LYRDeletionModeLocal:
+            [tester waitForViewWithAccessibilityLabel:@"Local"];
+            [tester tapViewWithAccessibilityLabel:[NSString stringWithFormat:@"Local"]];
+            [tester waitForAbsenceOfViewWithAccessibilityLabel:[self conversationLabelForParticipants:userIDs]];
+            break;
+        default:
+            break;
+    }
 }
 
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs
@@ -282,6 +354,15 @@
     }
     return conversationLabel;
 }
+
+- (LSUIConversationListViewController *)conversationListViewController
+{
+    UINavigationController *navigationController = (UINavigationController *)[[[UIApplication sharedApplication] delegate] window].rootViewController.presentedViewController;
+    LSUIConversationListViewController *controller = (LSUIConversationListViewController *)navigationController.topViewController;
+    return controller;
+}
+
+
 
 
 @end

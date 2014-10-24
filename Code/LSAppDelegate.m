@@ -38,7 +38,7 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    self.environment = LYRUIProduction;
+    self.environment = LYRUIDevelopment;
     LYRSetLogLevelFromEnvironment();
     
     // Configure Layer Base URL
@@ -84,8 +84,9 @@ extern void LYRSetLogLevelFromEnvironment();
     // ConversationListViewController Config
     _cellClass = [LYRUIConversationTableViewCell class];
     _rowHeight = 72;
-    _allowsEditing = TRUE;
+    _allowsEditing = YES;
     _displaysConversationImage = NO;
+    _displaysSettingsButton = YES;
     
     return YES;
 }

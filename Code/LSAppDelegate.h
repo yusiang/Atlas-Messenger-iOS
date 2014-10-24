@@ -24,6 +24,8 @@
 
 @property (nonatomic) BOOL displaysConversationImage;
 
+@property (nonatomic) BOOL displaysSettingsButton;
+
 @property (nonatomic) Class<LYRUIConversationPresenting> cellClass;
 
 @property (nonatomic, assign) CGFloat rowHeight;

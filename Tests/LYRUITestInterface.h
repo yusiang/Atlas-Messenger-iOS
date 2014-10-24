@@ -23,7 +23,7 @@
 // Authentication Methods
 //-------------------------------
 
-- (NSString *)registerUser:(LSUser *)newUser;
+- (LSUser *)registerUser:(LSUser *)newUser;
 
 - (NSString *)authenticateWithEmail:(NSString *)email password:(NSString *)password;
 
@@ -35,11 +35,19 @@
 // Participant Management Methods
 //-------------------------------
 
+- (void)registerTestUsers;
+
 - (void)loadContacts;
 
 - (NSSet *)fetchContacts;
 
 - (void)deleteContacts;
+
+@property (nonatomic) LSUser *testUser0;
+@property (nonatomic) LSUser *testUser1;
+@property (nonatomic) LSUser *testUser2;
+@property (nonatomic) LSUser *testUser3;
+@property (nonatomic) LSUser *testUser4;
 
 - (LSUser *)randomUser;
 
@@ -52,6 +60,5 @@
 - (NSString *)selectionIndicatorAccessibilityLabelForUser:(LSUser *)testUser;
 
 @property (nonatomic) LSApplicationController *applicationController;
-
 
 @end
