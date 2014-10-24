@@ -84,7 +84,7 @@ extern void LYRSetLogLevelFromEnvironment();
     // ConversationListViewController Config
     _cellClass = [LYRUIConversationTableViewCell class];
     _rowHeight = 72;
-    _allowsEditing = YES;
+    _allowsEditing = NO;
     _displaysConversationImage = NO;
     _displaysSettingsButton = YES;
     
@@ -297,6 +297,7 @@ extern void LYRSetLogLevelFromEnvironment();
     self.viewController.cellClass = self.cellClass;
     self.viewController.rowHeight = self.rowHeight;
     self.viewController.allowsEditing = self.allowsEditing;
+    self.viewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
     
     self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{

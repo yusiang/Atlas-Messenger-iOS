@@ -17,7 +17,7 @@ DEPENDENCIES:
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0.8)
   - KIFViewControllerActions (from `git@github.com:blakewatters/KIFViewControllerActions.git`)
-  - LayerKit (from `/Users/blake/Dropbox/Layer/Builds/iOS/LayerKit-0.8.3`)
+  - LayerKit (from `~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.8.3`)
   - LayerUIKit (from `LayerUIKit`)
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - SVProgressHUD (HEAD)
@@ -27,7 +27,7 @@ EXTERNAL SOURCES:
   KIFViewControllerActions:
     :git: git@github.com:blakewatters/KIFViewControllerActions.git
   LayerKit:
-    :path: /Users/blake/Dropbox/Layer/Builds/iOS/LayerKit-0.8.3
+    :path: ~/Dropbox (Layer)/Layer/Builds/iOS/LayerKit-0.8.3
   LayerUIKit:
     :path: LayerUIKit
   LYRCountDownLatch:
