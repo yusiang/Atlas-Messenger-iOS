@@ -175,10 +175,17 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }
 
+#pragma mark Converation View Controler Delegate
 - (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     return [self.dataSource conversationViewController:self participantForIdentifier:participantIdentifier];
 }
+
+- (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
+{
+    [self.messageInputToolbar insertLocation:location];
+}
+
 
 
 @end

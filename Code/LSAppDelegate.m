@@ -77,6 +77,9 @@ extern void LYRSetLogLevelFromEnvironment();
     // Setup SDKs
     [self initializeCrashlytics];
     //[self initializeHockeyApp];
+    
+    // Setup Screenshot Listener for Bugs
+    [self listenForScreenShots];
 
     // Configure Sample App UI Appearance
     [self configureGlobalUserInterfaceAttributes];
@@ -159,6 +162,14 @@ extern void LYRSetLogLevelFromEnvironment();
     [Crashlytics setUserName:authenticatedUser.fullName];
     [Crashlytics setUserEmail:authenticatedUser.email];
     [Crashlytics setUserIdentifier:authenticatedUser.userID];
+}
+
+- (void)listenForScreenShots
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(screenshotTaken:)
+                                                 name:UIApplicationUserDidTakeScreenshotNotification
+                                               object:nil];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -333,6 +344,11 @@ extern void LYRSetLogLevelFromEnvironment();
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : LSMediumFont(16)} forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LSBlueColor()];
 
+}
+
+- (void)screenshotTaken:(NSNotification *)notification
+{
+    
 }
 
 - (void)getUnreadMessageCount

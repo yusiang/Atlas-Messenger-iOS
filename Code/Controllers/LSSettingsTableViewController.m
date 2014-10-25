@@ -12,6 +12,7 @@
 #import "LYRUIConstants.h"
 #import "SVProgressHUD.h"
 #import "LSSettingsHeaderView.h"
+#import "LSCenterTextTableViewCell.h"
 
 @interface LSSettingsTableViewController ()
 
@@ -21,6 +22,9 @@
 @end
 
 @implementation LSSettingsTableViewController
+
+NSString *const LSDefaultCell = @"defaultTableViewCell";
+NSString *const LSCenterTextCell = @"centerContentTableViewCell";
 
 NSString *const LSConversationCount = @"LSConversationCount";
 NSString *const LSMessageCount = @"LSMessageCount";
@@ -40,12 +44,20 @@ static NSString *const LSConnecting = @"Connecting";
     return self;
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
+    
+    self.conversationStatistics = [self fetchConversationStatistics];
+    
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCell];
+    [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterTextCell];
     
     // Left navigation item
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneTapped:)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(doneTapped:)];
     doneButton.accessibilityLabel = @"Done";
     [self.navigationItem setRightBarButtonItem:doneButton];
     
@@ -53,8 +65,8 @@ static NSString *const LSConnecting = @"Connecting";
     self.headerView.frame = CGRectMake(0, 0, 320, 148);
     self.headerView.backgroundColor = [UIColor whiteColor];
     [self.headerView updateConnectedStateWithString:@"Connected"];
-    self.tableView.tableHeaderView = self.headerView;
     
+    self.tableView.tableHeaderView = self.headerView;
     self.tableView.sectionFooterHeight = 0.0f;
 }
 
@@ -99,9 +111,9 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"];
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCell];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
-    cell.textLabel.textColor = LSBlueColor();
+    cell.textLabel.textColor = [UIColor blackColor];
     
     LSSwitch *radioSwitch = [[LSSwitch alloc] init];
     radioSwitch.indexPath = indexPath;
@@ -133,20 +145,30 @@ static NSString *const LSConnecting = @"Connecting";
              // Layer Stats Stats
             switch (indexPath.row) {
                 case 0: {
-                    NSNumber *conversations = [self.conversationStatistics objectForKey:LSConversationCount];
-                    cell.textLabel.text = [NSString stringWithFormat:@"Conversations: %@", conversations];
+                    cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
+                    UILabel *conversationsLabel = [[UILabel alloc] init];
+                    conversationsLabel.text = [[self.conversationStatistics objectForKey:LSConversationCount]stringValue];
+                    conversationsLabel.font = cell.textLabel.font;
+                    [conversationsLabel sizeToFit];
+                    cell.accessoryView = conversationsLabel;
                 }
                     break;
-                case 1:
-                {
-                    NSNumber *messages = [self.conversationStatistics objectForKey:LSMessageCount];
-                    cell.textLabel.text = [NSString stringWithFormat:@"Messages: %@", messages];
+                case 1: {
+                    cell.textLabel.text = [NSString stringWithFormat:@"Messages:"];
+                    UILabel *messagesLabel = [[UILabel alloc] init];
+                    messagesLabel.text = [[self.conversationStatistics objectForKey:LSMessageCount]stringValue];
+                    messagesLabel.font = cell.textLabel.font;
+                    [messagesLabel sizeToFit];
+                    cell.accessoryView = messagesLabel;
                 }
                     break;
-                case 2:
-                {
-                    NSNumber *unreadMessages = [self.conversationStatistics objectForKey:LSUnreadMessageCount];
-                    cell.textLabel.text = [NSString stringWithFormat:@"Unread Messages: %@", unreadMessages];
+                case 2: {
+                    cell.textLabel.text = [NSString stringWithFormat:@"Unread Messages:"];
+                    UILabel *unreadMessagesLabel = [[UILabel alloc] init];
+                    unreadMessagesLabel.text = [[self.conversationStatistics objectForKey:LSUnreadMessageCount]stringValue];
+                    unreadMessagesLabel.font = cell.textLabel.font;
+                    [unreadMessagesLabel sizeToFit];
+                    cell.accessoryView = unreadMessagesLabel;
                 }
                     break;
                 default:
@@ -165,18 +187,24 @@ static NSString *const LSConnecting = @"Connecting";
                     break;
                 case 1:
                     cell.textLabel.text = @"Copy Device Token";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
                 case 2:
                     cell.textLabel.text = @"Reload Contacts";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 default:
                     break;
             }
         }
             break;
         
-        case 3:
-            cell.textLabel.text = @"Log Out";
-            cell.textLabel.textColor = LSRedColor();
-    
+        case 3: {
+            LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCell];
+            [centerCell setCenterText:@"Log Out"];
+            centerCell.centerTextLabel.textColor = [UIColor whiteColor];
+            centerCell.backgroundColor = LSRedColor();
+            return centerCell;
+        }
         default:
             break;
     }
@@ -230,7 +258,7 @@ static NSString *const LSConnecting = @"Connecting";
 }
 
 
-- (NSDictionary *)conversationStatistics
+- (NSDictionary *)fetchConversationStatistics
 {
     NSUInteger conversationCount = 0;
     NSUInteger messageCount = 0;

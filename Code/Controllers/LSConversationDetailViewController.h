@@ -10,13 +10,15 @@
 #import <LayerKit/LayerKit.h>
 #import "LYRUIParticipant.h"
 #import "LSApplicationController.h"
+#import <CoreLocation/CoreLocation.h>
 
 @class LSConversationDetailViewController;
 
 @protocol LSConversationDetailViewControllerDelegate <NSObject>
 
-
 - (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier;
+
+- (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location;
 
 @end
 

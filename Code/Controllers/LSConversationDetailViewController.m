@@ -16,12 +16,14 @@
 #import "LYRUIConversationDataSource.h"
 #import "LSDetailHeaderView.h"
 #import "LYRUIAvatarImageView.h"
+#import "LSCenterTextTableViewCell.h"
 
-@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate>
+@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) NSMutableArray *participantIdentifiers;
+@property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
 @property (nonatomic) LYRUIConversationDataSource *conversationDataSource;
 @end
@@ -30,6 +32,7 @@
 
 static NSString *const LYRUIParticipantCellIdentifier = @"participantCell";
 static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
+static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIdentifier";
 
 + (instancetype)conversationDetailViewControllerLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
 {
@@ -54,8 +57,12 @@ static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
     [super viewDidLoad];
     
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.sectionFooterHeight = 0.0f;
+    
+    [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LYRUICenterContentCellIdentifier];
     [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LYRUIParticipantCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LYRUIDefaultCellIdentifier];
     [self configureAppearance];
@@ -71,12 +78,12 @@ static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 40;
+    return 48;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -86,6 +93,9 @@ static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
             return self.participantIdentifiers.count + 1;
             break;
         case 1:
+            return 1;
+            break;
+        case 2:
             return 1;
             break;
         default:
@@ -110,14 +120,23 @@ static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
                 UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIParticipantCellIdentifier forIndexPath:indexPath];
                 [participantCell presentParticipant:participant];
                 [participantCell shouldDisplaySelectionIndicator:NO];
+                [participantCell shouldShowAvatarImage:YES];
                 cell = participantCell;
             }
             break;
-        case 1:
+        case 1: {
             cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
-            cell.textLabel.text = @"Delete Conversation";
-            cell.textLabel.textColor = [UIColor whiteColor];
-            cell.backgroundColor = LSRedColor();
+            cell.textLabel.text = @"Share Location";
+            cell.textLabel.textColor = LSBlueColor();
+            cell.textLabel.font = LSMediumFont(14);
+        }
+        case 2: {
+            LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUICenterContentCellIdentifier];
+            [centerCell setCenterText:@"Global Delete Conversation"];
+            centerCell.centerTextLabel.textColor = [UIColor whiteColor];
+            centerCell.backgroundColor = LSRedColor();
+            return centerCell;
+        }
         default:
             break;
     }
@@ -134,13 +153,15 @@ static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
 {
     switch (section) {
         case 0:
-            return [LSDetailHeaderView initWithTitle:@"Details"];
+            return [LSDetailHeaderView initWithTitle:@"PARTICIPANTS"];
             break;
-            
+        case 1:
+            return [LSDetailHeaderView initWithTitle:@"LOCATION"];
+            break;
         default:
             break;
     }
-    return [LSDetailHeaderView initWithTitle:@"Details"];
+    return nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -156,8 +177,12 @@ static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
             }
             break;
         case 1:
+            [self startLocationManager];
+            break;
+        case 2:
             [self.applicationController.layerClient deleteConversation:self.conversation mode:LYRDeletionModeAllParticipants error:nil];
             [self.navigationController popToRootViewControllerAnimated:YES];
+            break;
         default:
             break;
     }
@@ -176,6 +201,26 @@ static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
         [self.applicationController.layerClient removeParticipants:[NSSet setWithObject:particpantID] fromConversation:self.conversation error:nil];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
+}
+
+#pragma mark - Location Methods
+
+- (void)startLocationManager
+{
+    if ([CLLocationManager locationServicesEnabled]) {
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.delegate = self;
+        self.locationManager.distanceFilter = kCLDistanceFilterNone;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [self.locationManager requestWhenInUseAuthorization];
+        [self.locationManager startUpdatingLocation];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    [self.locationManager stopUpdatingLocation];
+    [self.detailDelegate conversationDetailViewController:self didShareLocation:[locations lastObject]];
 }
 
 - (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
