@@ -18,9 +18,10 @@
 
 @implementation LSApplicationController
 
-static NSString *const LSShouldSendPushText = @"shouldSendPushText";
-static NSString *const LSShouldSendPushSound = @"shouldSendPushSould";
-static NSString *const LSDebugModeEnabled = @"debugModeEnabled";
+static NSString *const LSShouldSendPushTextKey = @"shouldSendPushText";
+static NSString *const LSShouldSendPushSoundKey = @"shouldSendPushSould";
+static NSString *const LSShouldDisplayLocalNotificationKey = @"shouldDisplayLocalNotifications";
+static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 @synthesize shouldSendPushText = _shouldSendPushText;
 @synthesize shouldSendPushSound = _shouldSendPushSound;
@@ -187,47 +188,62 @@ static NSString *const LSDebugModeEnabled = @"debugModeEnabled";
 - (void)configureApplicationSettings
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if (![defaults valueForKey:LSShouldSendPushText]) {
+    if (![defaults valueForKey:LSShouldSendPushTextKey]) {
         [self setShouldSendPushText:YES];
     }
-    if (![defaults valueForKey:LSShouldSendPushSound]) {
+    if (![defaults valueForKey:LSShouldSendPushSoundKey]) {
         [self setShouldSendPushSound:YES];
     }
-    if (![defaults valueForKey:LSDebugModeEnabled]) {
+    if (![defaults valueForKey:LSShouldDisplayLocalNotificationKey]) {
+        [self setShouldDisplayLocalNotifications:NO];
+    }
+    if (![defaults valueForKey:LSDebugModeEnabledKey]) {
         [self setDebugModeEnabled:NO];
     }
 }
 
 - (void)setShouldSendPushText:(BOOL)shouldSendPushText
 {
-    [[NSUserDefaults standardUserDefaults] setBool:shouldSendPushText forKey:LSShouldSendPushText];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (BOOL)shouldSendPushText
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushText];
+    [self setApplicationSetting:shouldSendPushText forKey:LSShouldSendPushTextKey];
 }
 
 - (void)setShouldSendPushSound:(BOOL)shouldSendPushSound
 {
-    [[NSUserDefaults standardUserDefaults] setBool:shouldSendPushSound forKey:LSShouldSendPushSound];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self setApplicationSetting:shouldSendPushSound forKey:LSShouldSendPushSoundKey];
 }
 
-- (BOOL)shouldSendPushSound
+- (void)setShouldDisplayLocalNotifications:(BOOL)shouldDisplayLocalNotifications
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushSound];
+    [self setApplicationSetting:shouldDisplayLocalNotifications forKey:LSShouldDisplayLocalNotificationKey];
 }
 
 - (void)setDebugModeEnabled:(BOOL)debugModeEnabled
 {
-    [[NSUserDefaults standardUserDefaults] setBool:debugModeEnabled forKey:LSDebugModeEnabled];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+     [self setApplicationSetting:debugModeEnabled forKey:LSDebugModeEnabledKey];
+}
+
+- (BOOL)shouldSendPushText
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushTextKey];
+}
+- (BOOL)shouldSendPushSound
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushSoundKey];
+}
+
+- (BOOL)shouldDisplayLocalNotifications
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldDisplayLocalNotificationKey];
 }
 
 - (BOOL)debugModeEnabled
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LSDebugModeEnabled];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSDebugModeEnabledKey];
+}
+
+- (void)setApplicationSetting:(BOOL)setting forKey:(NSString *)key
+{
+    [[NSUserDefaults standardUserDefaults] setBool:setting forKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 @end

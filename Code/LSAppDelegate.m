@@ -16,6 +16,7 @@
 #import <HockeySDK/HockeySDK.h>
 #import "LSAuthenticationTableViewController.h"
 #import "LSSplashView.h"
+#import "LSLocalNotificationUtilities.h"
 
 extern void LYRSetLogLevelFromEnvironment();
 
@@ -26,7 +27,7 @@ extern void LYRSetLogLevelFromEnvironment();
 @property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
-@property (nonatomic) LYRConversation *pushConversation;
+@property (nonatomic) LSLocalNotificationUtilities *localNotificationUtilities;
 
 @end
 
@@ -48,13 +49,22 @@ extern void LYRSetLogLevelFromEnvironment();
     }
     
     // Configure application controllers
-    LYRClient *layerClient = [LYRClient clientWithAppID:LSLayerAppID(self.environment)];
-    LSPersistenceManager *persistenceManager = LSPersitenceManager();
-    self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL() layerClient:layerClient persistenceManager:persistenceManager];
+    self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL()
+                                                                    layerClient:[LYRClient clientWithAppID:LSLayerAppID(self.environment)]
+                                                             persistenceManager:LSPersitenceManager()];
+    
+    self.localNotificationUtilities = [LSLocalNotificationUtilities initWithLayerClient:self.applicationController.layerClient];
     
     // Setup notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticateNotification:) name:LSUserDidAuthenticateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticateNotification:) name:LSUserDidDeauthenticateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userDidAuthenticateNotification:)
+                                                 name:LSUserDidAuthenticateNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userDidDeauthenticateNotification:)
+                                                 name:LSUserDidDeauthenticateNotification
+                                               object:nil];
     
     // Connect Layer SDK
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
@@ -87,7 +97,7 @@ extern void LYRSetLogLevelFromEnvironment();
     // ConversationListViewController Config
     _cellClass = [LYRUIConversationTableViewCell class];
     _rowHeight = 72;
-    _allowsEditing = NO;
+    _allowsEditing = YES;
     _displaysConversationImage = NO;
     _displaysSettingsButton = YES;
     
@@ -96,6 +106,7 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    [self.localNotificationUtilities setShouldListenForChanges:NO];
     [self resumeSession];
     [self loadContacts];
 }
@@ -103,6 +114,9 @@ extern void LYRSetLogLevelFromEnvironment();
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     [self getUnreadMessageCount];
+    if (self.applicationController.shouldDisplayLocalNotifications) {
+        [self.localNotificationUtilities setShouldListenForChanges:YES];
+    }
 }
 
 - (void)registerForRemoteNotifications:(UIApplication *)application
@@ -214,13 +228,11 @@ extern void LYRSetLogLevelFromEnvironment();
             message = [self messageFromRemoteNotification:userInfo];
             [self navigateToConversationViewForMessage:message];
         }
-        
         completionHandler(fetchResult);
     }];
-    if (success) {
-        NSLog(@"Application did complete remote notification sync");
-    } else {
-        NSLog(@"Push notification does not belong to Layer");
+    
+    if (!success) {
+        completionHandler(UIBackgroundFetchResultNoData);
     }
 }
 
@@ -312,7 +324,6 @@ extern void LYRSetLogLevelFromEnvironment();
     
     self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
-        if (self.pushConversation) [self.viewController selectConversation:self.pushConversation];
         [self.authenticationViewController resetState];
         [self removeSplashView];
     }];

@@ -33,6 +33,7 @@
 
 @property (nonatomic) BOOL shouldSendPushText;
 @property (nonatomic) BOOL shouldSendPushSound;
+@property (nonatomic) BOOL shouldDisplayLocalNotifications;
 @property (nonatomic) BOOL debugModeEnabled;
 
 /**

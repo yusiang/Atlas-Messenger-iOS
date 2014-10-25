@@ -91,7 +91,7 @@ static NSString *const LSConnecting = @"Connecting";
 {
     switch (section) {
         case 0:
-            return 2;
+            return 3;
             break;
         case 1:
             return 3;
@@ -114,6 +114,7 @@ static NSString *const LSConnecting = @"Connecting";
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCell];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     cell.textLabel.textColor = [UIColor blackColor];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     LSSwitch *radioSwitch = [[LSSwitch alloc] init];
     radioSwitch.indexPath = indexPath;
@@ -125,13 +126,18 @@ static NSString *const LSConnecting = @"Connecting";
             // Push Configuration
             switch (indexPath.row) {
                 case 0:
-                    cell.textLabel.text = @"Silent Notifications";
+                    cell.textLabel.text = @"Send Silent Notifications";
                     radioSwitch.on = self.applicationController.shouldSendPushText;
                     cell.accessoryView = radioSwitch;
                     break;
                 case 1:
-                    cell.textLabel.text = @"Push Notification Sound";
+                    cell.textLabel.text = @"Send Push Notification Sound";
                     radioSwitch.on = self.applicationController.shouldSendPushSound;
+                    cell.accessoryView = radioSwitch;
+                    break;
+                case 2:
+                    cell.textLabel.text = @"Display Local Notifications";
+                    radioSwitch.on = self.applicationController.shouldDisplayLocalNotifications;
                     cell.accessoryView = radioSwitch;
                     break;
                     
@@ -201,8 +207,7 @@ static NSString *const LSConnecting = @"Connecting";
         case 3: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCell];
             [centerCell setCenterText:@"Log Out"];
-            centerCell.centerTextLabel.textColor = [UIColor whiteColor];
-            centerCell.backgroundColor = LSRedColor();
+            centerCell.centerTextLabel.textColor = LSRedColor();
             return centerCell;
         }
         default:
@@ -295,7 +300,9 @@ static NSString *const LSConnecting = @"Connecting";
                 case 1:
                     self.applicationController.shouldSendPushSound = radioButton.on;
                     break;
-                    
+                case 2:
+                    self.applicationController.shouldDisplayLocalNotifications = radioButton.on;
+                    break;
                 default:
                     break;
             }

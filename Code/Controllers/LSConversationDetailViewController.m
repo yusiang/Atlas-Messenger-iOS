@@ -25,10 +25,12 @@
 @property (nonatomic) NSMutableArray *participantIdentifiers;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
-@property (nonatomic) LYRUIConversationDataSource *conversationDataSource;
+
 @end
 
 @implementation LSConversationDetailViewController
+
+@synthesize participants = _participants;
 
 static NSString *const LYRUIParticipantCellIdentifier = @"participantCell";
 static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
@@ -43,11 +45,11 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
+        
         _layerClient = layerClient;
         _conversation = conversation;
         _participantIdentifiers = [[conversation.participants allObjects] mutableCopy];
-        _conversationDataSource = [[LYRUIConversationDataSource alloc] initWithLayerClient:self.layerClient];
-        _conversationDataSource.delegate = self;
+        
     }
     return self;
 }
@@ -130,17 +132,17 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             cell.textLabel.textColor = LSBlueColor();
             cell.textLabel.font = LSMediumFont(14);
         }
+            break;
         case 2: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUICenterContentCellIdentifier];
             [centerCell setCenterText:@"Global Delete Conversation"];
-            centerCell.centerTextLabel.textColor = [UIColor whiteColor];
-            centerCell.backgroundColor = LSRedColor();
+            centerCell.centerTextLabel.textColor = LSRedColor();
             return centerCell;
         }
         default:
             break;
     }
-
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
@@ -176,9 +178,12 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
                 [self presentViewController:controller animated:YES completion:nil];
             }
             break;
-        case 1:
-            [self startLocationManager];
+        case 1: {
+            NSError *error = [NSError errorWithDomain:@"Domain" code:100 userInfo:@{ NSLocalizedDescriptionKey : @"Feature Not Implemented"}];
+            LSAlertWithError(error);
+            //[self startLocationManager];
             break;
+        }
         case 2:
             [self.applicationController.layerClient deleteConversation:self.conversation mode:LYRDeletionModeAllParticipants error:nil];
             [self.navigationController popToRootViewControllerAnimated:YES];
@@ -203,7 +208,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     }
 }
 
-#pragma mark - Location Methods
+#pragma mark - Location Manager Methods
 
 - (void)startLocationManager
 {
@@ -221,7 +226,10 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     [self.locationManager stopUpdatingLocation];
     [self.detailDelegate conversationDetailViewController:self didShareLocation:[locations lastObject]];
+    [self.navigationController popViewControllerAnimated:YES];
 }
+
+#pragma Participant Picker Delegate Methods
 
 - (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
 {
@@ -237,15 +245,12 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     }];
 }
 
-- (void)observer:(LYRUIConversationDataSource *)observer updateWithChanges:(NSArray *)changes
+- (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
-    [self.tableView reloadData];
+    completion(nil);
 }
 
-- (void)observer:(LYRUIConversationDataSource *)observer didChangeContent:(BOOL)didChangeContent
-{
-    //
-}
+#pragma Cell Appearance Configuration
 
 - (void)configureAppearance
 {
