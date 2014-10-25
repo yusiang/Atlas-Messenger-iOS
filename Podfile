@@ -17,6 +17,7 @@ end
 
 target 'LayerSampleTests' do
   pod 'KIF', '~> 3.0.8'
+  pod 'OCMock', '~> 3.1'
   pod 'KIFViewControllerActions', git: 'git@github.com:blakewatters/KIFViewControllerActions.git'
   #pod 'KIFViewControllerActions', '~> 1.0'
   pod 'Expecta', '~> 0.3.0'

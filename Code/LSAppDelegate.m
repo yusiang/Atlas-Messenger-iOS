@@ -76,9 +76,9 @@ extern void LYRSetLogLevelFromEnvironment();
     
     // Setup SDKs
     [self initializeCrashlytics];
-    [self initializeHockeyApp];
-    
-    // Configure Sample App UI Appearance 
+    //[self initializeHockeyApp];
+
+    // Configure Sample App UI Appearance
     [self configureGlobalUserInterfaceAttributes];
     
     // ConversationListViewController Config

@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
+#import "KIFTestCase.h"
+#import <KIF/KIF.h>
 #import "LSApplicationController.h"
 #import "LYRUITestInterface.h"
 #import "LYRUILayerContentFactory.h"

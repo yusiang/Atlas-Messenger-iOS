@@ -51,7 +51,6 @@
 {
     [self.testInterface deleteContacts];
     [self.testInterface logout];
-    
     self.testInterface = nil;
     
     [super tearDown];
