@@ -126,6 +126,8 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             if (indexPath.row > self.conversation.participants.count - 1 ) {
                 cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
                 cell.textLabel.text = @"+ Add Participant";
+//                UIButton *button = [UIButton buttonWithType:UIButtonTypeContactAdd];
+//                [cell addSubview:button];
                 cell.textLabel.textColor = LSBlueColor();
                 cell.textLabel.font = LSMediumFont(14);
             } else {
