@@ -39,7 +39,7 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    self.environment = LYRUIDevelopment;
+    self.environment = LYRUIProduction;
     LYRSetLogLevelFromEnvironment();
     
     // Configure Layer Base URL
@@ -235,6 +235,17 @@ extern void LYRSetLogLevelFromEnvironment();
         completionHandler(UIBackgroundFetchResultNoData);
     }
 }
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    NSURL *messageURL =[NSURL URLWithString:[notification.userInfo objectForKey:@"identifier"]];
+    NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:messageURL]];
+    __block LYRMessage *message = [[messages allObjects] firstObject];
+    if (application.applicationState == UIApplicationStateInactive && message) {
+        [self navigateToConversationViewForMessage:message];
+    }
+}
+
 
 - (LYRMessage *)messageFromRemoteNotification:(NSDictionary *)remoteNotification
 {

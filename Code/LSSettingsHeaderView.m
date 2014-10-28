@@ -56,12 +56,8 @@ static CGFloat const LSAvatarDiameter  = 72;
         _connectionStateLabel.font = LSLightFont(14);
         _connectionStateLabel.textColor = LSBlueColor();
         _connectionStateLabel.textAlignment = NSTextAlignmentCenter;
-        
-        self.layer.shadowColor = [UIColor grayColor].CGColor;
-        self.layer.shadowOffset = CGSizeMake(0, 0);
-        self.layer.shadowOpacity = 0.5f;
-        
         [self addSubview:_connectionStateLabel];
+    
     }
     [self updateConstraints];
     return self;
@@ -93,6 +89,15 @@ static CGFloat const LSAvatarDiameter  = 72;
 - (void)updateConnectedStateWithString:(NSString *)string
 {
     self.connectionStateLabel.text = string;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    UIView *blackLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 0.5, self.frame.size.width, 0.5)];
+    blackLine.backgroundColor = LSGrayColor();
+    [self addSubview:blackLine];
 }
 
 @end

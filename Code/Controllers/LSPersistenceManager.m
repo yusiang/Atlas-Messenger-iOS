@@ -246,7 +246,7 @@
 
 - (NSSet *)participantsForIdentifiers:(NSSet *)identifiers;
 {
-    NSSet *participants = [[NSMutableSet alloc] init];
+    NSSet *participants;
     NSError *error;
     NSSet *allContacts = [self persistedUsersWithError:&error];
     if (error) {

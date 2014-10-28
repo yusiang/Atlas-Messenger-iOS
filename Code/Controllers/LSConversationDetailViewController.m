@@ -25,6 +25,7 @@
 @property (nonatomic) NSMutableArray *participantIdentifiers;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
+@property (nonatomic) BOOL locationShared;
 
 @end
 
@@ -58,22 +59,33 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     [super viewDidLoad];
     
-    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    //VC Title
+    self.title = @"Details";
+    self.accessibilityLabel = @"Details";
     
+    // Table View Setup
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.sectionFooterHeight = 0.0f;
-    
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LYRUICenterContentCellIdentifier];
     [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LYRUIParticipantCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LYRUIDefaultCellIdentifier];
+    
+    // Setup UI
     [self configureAppearance];
+    
+    self.locationShared = NO;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    self.tableView.delegate = nil;
 }
 
 #pragma mark - Table view data source
@@ -128,7 +140,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             break;
         case 1: {
             cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
-            cell.textLabel.text = @"Share Location";
+            cell.textLabel.text = @"Share My Location";
             cell.textLabel.textColor = LSBlueColor();
             cell.textLabel.font = LSMediumFont(14);
         }
@@ -148,7 +160,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 40;
+    return 48;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -171,6 +183,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     switch (indexPath.section) {
         case 0:
             if (indexPath.row == self.participantIdentifiers.count) {
+                self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
                 LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
                                                                                                                         sortType:LYRUIParticipantPickerControllerSortTypeFirst];
                 controller.participantPickerDelegate = self;
@@ -179,9 +192,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             }
             break;
         case 1: {
-            NSError *error = [NSError errorWithDomain:@"Domain" code:100 userInfo:@{ NSLocalizedDescriptionKey : @"Feature Not Implemented"}];
-            LSAlertWithError(error);
-            //[self startLocationManager];
+            [self startLocationManager];
             break;
         }
         case 2:
@@ -215,18 +226,31 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     if ([CLLocationManager locationServicesEnabled]) {
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
-        self.locationManager.distanceFilter = kCLDistanceFilterNone;
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         [self.locationManager requestWhenInUseAuthorization];
-        [self.locationManager startUpdatingLocation];
     }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     [self.locationManager stopUpdatingLocation];
-    [self.detailDelegate conversationDetailViewController:self didShareLocation:[locations lastObject]];
-    [self.navigationController popViewControllerAnimated:YES];
+    if (!self.locationShared) {
+        self.locationShared = YES;
+        [self.detailDelegate conversationDetailViewController:self didShareLocation:[locations lastObject]];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+    switch (status) {
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            [self.locationManager startUpdatingLocation];
+            break;
+            
+        default:
+            break;
+    }
 }
 
 #pragma Participant Picker Delegate Methods
@@ -242,6 +266,8 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
         NSSet *participantIdentifiers = [participants valueForKey:@"userID"];
         NSError *error;
         [self.layerClient addParticipants:participantIdentifiers toConversation:self.conversation error:&error];
+        [self.participantIdentifiers addObjectsFromArray:[participantIdentifiers allObjects]];
+        [self.tableView reloadData];
     }];
 }
 

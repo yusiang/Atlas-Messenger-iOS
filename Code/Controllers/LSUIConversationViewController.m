@@ -8,7 +8,7 @@
 
 #import "LSUIConversationViewController.h"
 #import "LSConversationDetailViewController.h"
-#import "LYRUIUtilities.h"
+#import "LYRUIMessagingUtilities.h"
 
 static NSDateFormatter *LYRUIConversationDateFormatter()
 {
@@ -159,7 +159,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (void)addContactsButton
 {
-    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Contacts"
+    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Details"
                                                                            style:UIBarButtonItemStylePlain
                                                                           target:self
                                                                           action:@selector(contactsButtonTapped)];
@@ -176,6 +176,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 }
 
 #pragma mark Converation View Controler Delegate
+
 - (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     return [self.dataSource conversationViewController:self participantForIdentifier:participantIdentifier];
@@ -183,7 +184,14 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
 {
-    [self.messageInputToolbar insertLocation:location];
+    LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[LYRUIMessagePartWithLocation(location)]];
+    NSError *error;
+    BOOL success = [self.layerClient sendMessage:message error:&error];
+    if (success) {
+        NSLog(@"Message sent!");
+    } else {
+        NSLog(@"Message send failed with error: %@", error);
+    }
 }
 
 

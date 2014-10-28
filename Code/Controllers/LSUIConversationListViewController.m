@@ -12,13 +12,11 @@
 #import "LSUser.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUIConversationViewController.h"
-#import "LSVersionView.h"
 #import "LSSettingsTableViewController.h"
 
 @interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LYRUIParticipantPickerControllerDelegate, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
-@property (nonatomic) LSVersionView *versionView;
 
 @end
 
@@ -49,22 +47,6 @@
                                                                                    action:@selector(composeButtonTapped)];
     composeButton.accessibilityLabel = @"New";
     [self.navigationItem setRightBarButtonItem:composeButton];
-    
-    self.versionView = [[LSVersionView alloc] initWithFrame:CGRectZero];
-    self.versionView.versionLabel.text = [LSApplicationController versionString];
-    self.versionView.buildLabel.text = [LSApplicationController buildInformationString];
-    self.versionView.hostLabel.text = [LSApplicationController layerServerHostname];
-    self.versionView.userLabel.text = [NSString stringWithFormat:@"User ID: %@", self.applicationController.layerClient.authenticatedUserID];
-    
-    NSUUID *UUID = self.applicationController.deviceToken ? [[NSUUID alloc] initWithUUIDBytes:[self.applicationController.deviceToken bytes]] : nil;
-    self.versionView.deviceLabel.text = [NSString stringWithFormat:@"Device Token: %@", [UUID UUIDString]];
-    [self.versionView sizeToFit];
-    [self.tableView addSubview:self.versionView];
-    
-    self.versionView.frame = CGRectMake((int)(self.tableView.frame.size.width / 2.0 - self.versionView.frame.size.width / 2.0),
-                                        -(self.versionView.frame.size.height + 30),
-                                        self.versionView.frame.size.width,
-                                        self.versionView.frame.size.height);
 }
 
 #pragma mark LYRUIConversationListViewControllerDelegate methods
@@ -74,9 +56,9 @@
     [self presentControllerWithConversation:conversation];
 }
 
-- (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController conversationLabelForParticipants:(NSSet *)participantIDs
+- (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController labelForConversation:(LYRConversation *)conversation
 {
-    NSMutableSet *participantIdentifiers = [NSMutableSet setWithSet:participantIDs];
+    NSMutableSet *participantIdentifiers = [NSMutableSet setWithSet:conversation.participants];
     
     if ([participantIdentifiers containsObject:self.applicationController.layerClient.authenticatedUserID]) {
         [participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
@@ -84,11 +66,22 @@
     
     if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
-    NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers];
+    NSMutableSet *participants = [[self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers] mutableCopy];
     
     if (!participants.count > 0) return @"No Matching Participants";
     
-    LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
+    LSUser *firstUser;
+    if (![conversation.lastMessage.sentByUserID isEqualToString:self.layerClient.authenticatedUserID]){
+        if (conversation.lastMessage) {
+            NSSet *lastMessageSender = [self.applicationController.persistenceManager participantsForIdentifiers:[NSSet setWithObject:conversation.lastMessage.sentByUserID]];
+            if ([lastMessageSender allObjects].count > 0) {
+                firstUser = [[lastMessageSender allObjects] firstObject];
+                [participants removeObject:firstUser];
+            }
+        }
+    } else {
+        firstUser = [[participants allObjects] objectAtIndex:0];
+    }
     NSString *conversationLabel = firstUser.fullName;
     for (int i = 1; i < [[participants allObjects] count]; i++) {
         LSUser *user = [[participants allObjects] objectAtIndex:i];
@@ -97,9 +90,9 @@
     return conversationLabel;
 }
 
-- (UIImage *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController conversationImageForParticipants:(NSSet *)participants
+- (UIImage *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController imageForConversation:(LYRConversation *)conversation
 {
-    return [UIImage new];
+    return [UIImage imageNamed:@"testImage"];
 }
 
 #pragma mark - LYRUIParticipantTableViewControllerDelegate methods
@@ -122,6 +115,8 @@
         }
     }];
 }
+
+#pragma mark Selected Conversation Methods
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
@@ -152,7 +147,7 @@
     [self presentViewController:controller animated:YES completion:nil];
 }
 
-#pragma mark - Push Notification Reaction Method
+#pragma mark - Push Notification Selection Method
 
 - (void)selectConversation:(LYRConversation *)conversation
 {
@@ -178,7 +173,6 @@
         [self.applicationController.APIManager deauthenticate];
         [SVProgressHUD dismiss];
     }
-
 }
 
 @end
