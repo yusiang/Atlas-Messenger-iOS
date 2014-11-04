@@ -7,16 +7,13 @@
 //
 
 #import "LSUIConversationListViewController.h"
-#import "LYRUIParticipantPickerController.h"
 #import "SVProgressHUD.h"
 #import "LSUser.h"
-#import "LSUIParticipantPickerDataSource.h"
 #import "LSUIConversationViewController.h"
 #import "LSSettingsTableViewController.h"
 
-@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LYRUIParticipantPickerControllerDelegate, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
+@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
-@property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
 
 @end
 
@@ -28,8 +25,6 @@
 
     self.delegate = self;
     self.dataSource = self;
-    
-    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
     // Left navigation item
     if (self.shouldDisplaySettingsItem) {
@@ -49,12 +44,24 @@
     [self.navigationItem setRightBarButtonItem:composeButton];
 }
 
-#pragma mark LYRUIConversationListViewControllerDelegate methods
+#pragma mark Conversation List View Controller Delegate Methods
 
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
     [self presentControllerWithConversation:conversation];
 }
+
+- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didDeleteConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode
+{
+    NSLog(@"Conversation Successsfully Deleted");
+}
+
+- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didFailDeletingConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode error:(NSError *)error
+{
+    NSLog(@"Conversation Deletion Failed with Error: %@", error);
+}
+
+#pragma mark Conversation List View Controller Data Source Methods
 
 - (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController labelForConversation:(LYRConversation *)conversation
 {
@@ -95,27 +102,6 @@
     return [UIImage imageNamed:@"testImage"];
 }
 
-#pragma mark - LYRUIParticipantTableViewControllerDelegate methods
-
-- (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
-{
-    [self dismissViewControllerAnimated:TRUE completion:nil];
-}
-
-- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipants:(NSSet *)participants
-{
-    [self dismissViewControllerAnimated:YES completion:^{
-        if (participants.count > 0) {
-            NSSet *participantIdentifiers = [participants valueForKey:@"participantIdentifier"];
-            LYRConversation *conversation = [[self.applicationController.layerClient conversationsForParticipants:participantIdentifiers] anyObject];
-            if (!conversation) {
-                conversation = [LYRConversation conversationWithParticipants:participantIdentifiers];
-            }
-            [self presentControllerWithConversation:conversation];
-        }
-    }];
-}
-
 #pragma mark Selected Conversation Methods
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
@@ -123,6 +109,7 @@
     LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation
                                                                                                                     layerClient:self.applicationController.layerClient];
     viewController.applicationContoller = self.applicationController;
+    viewController.showsAddressBar = YES;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -140,11 +127,7 @@
 
 - (void)composeButtonTapped
 {
-    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
-                                                                                                              sortType:LYRUIParticipantPickerControllerSortTypeFirst];
-    controller.participantPickerDelegate = self;
-    controller.allowsMultipleSelection = YES;
-    [self presentViewController:controller animated:YES completion:nil];
+    [self presentControllerWithConversation:nil];
 }
 
 #pragma mark - Push Notification Selection Method
@@ -164,9 +147,7 @@
     [SVProgressHUD show];
     if (self.applicationController.layerClient.isConnected) {
         [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-            if (success) {
-                [self.applicationController.APIManager deauthenticate];
-            }
+            [self.applicationController.APIManager deauthenticate];
             [SVProgressHUD dismiss];
         }];
     } else {

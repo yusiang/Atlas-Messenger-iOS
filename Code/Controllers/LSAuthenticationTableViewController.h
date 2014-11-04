@@ -9,10 +9,21 @@
 #import <UIKit/UIKit.h>
 #import "LSAuthenticationTableViewFooter.h"
 #import "LSApplicationController.h"
+#import "LSUtilities.h"
+
+@class LSAuthenticationTableViewController;
+
+@protocol LSAuthenticationTableViewControllerDelegate <NSObject>
+
+- (void)authenticationTableViewController:(LSAuthenticationTableViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment;
+
+@end
 
 @interface LSAuthenticationTableViewController : UITableViewController
 
 @property (nonatomic) LSApplicationController *applicationController;
+
+@property (nonatomic) id<LSAuthenticationTableViewControllerDelegate>delegate;
 
 - (void)loginTappedWithEmail:(NSString *)email password:(NSString *)password;
 

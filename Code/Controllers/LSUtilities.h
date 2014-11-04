@@ -19,7 +19,8 @@ typedef enum {
     LYRUIDevelopment,
     LYRUIStage1,
     LYRUIDev1,
-    LSTestEnvironment
+    LSTestEnvironment,
+    LSAddhock
 } LSEnvironment;
 
 BOOL LSIsRunningTests();

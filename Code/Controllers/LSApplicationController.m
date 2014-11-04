@@ -48,6 +48,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:) name:LYRClientDidFinishSynchronizationNotification object:layerClient];
 
     }
+    
     return self;
 }
 
@@ -107,7 +108,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
         if (attemptNumber == 1) {
             [SVProgressHUD showWithStatus:@"Connecting to Layer"];
         } else {
-            [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"Connecting to Layer in %lus (%lu of %lu)", (NSUInteger)ceil(delayInterval), (unsigned long)attemptNumber, (unsigned long)attemptLimit]];
+            [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"Connecting to Layer in %lus (%lu of %lu)", (unsigned long)ceil(delayInterval), (unsigned long)attemptNumber, (unsigned long)attemptLimit]];
         }
     }
 }
@@ -245,5 +246,10 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 {
     [[NSUserDefaults standardUserDefaults] setBool:setting forKey:key];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)setAPIManager:(LSAPIManager *)APIManager
+{
+    NSLog(@"Setting API Manager");
 }
 @end

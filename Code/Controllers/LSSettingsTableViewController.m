@@ -8,7 +8,6 @@
 
 #import "LSSettingsTableViewController.h"
 #import "LSSwitch.h"
-#import "LSDetailHeaderView.h"
 #import "LYRUIConstants.h"
 #import "SVProgressHUD.h"
 #import "LSSettingsHeaderView.h"
@@ -18,6 +17,7 @@
 
 @property (nonatomic, strong) NSDictionary *conversationStatistics;
 @property (nonatomic) LSSettingsHeaderView *headerView;
+@property (nonatomic) NSUInteger averageSend;
 
 @end
 
@@ -265,24 +265,23 @@ static NSString *const LSConnecting = @"Connecting";
     return 48;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     switch (section) {
         case 0:
-            return [LSDetailHeaderView initWithTitle:@"NOTIFICATIONS"];
+            return @"NOTIFICATIONS";
             break;
         case 1:
-            return [LSDetailHeaderView initWithTitle:@"STATISTICS"];
+            return  @"STATISTICS";
             break;
         case 2:
-            return [LSDetailHeaderView initWithTitle:@"DEBUG"];
+            return @"DEBUG";
             break;
         default:
             break;
     }
     return nil;
 }
-
 
 - (NSDictionary *)fetchConversationStatistics
 {

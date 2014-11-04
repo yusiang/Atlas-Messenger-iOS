@@ -36,7 +36,8 @@ NSString *LSLayerConfigurationURL(LSEnvironment environment)
             break;
         case LSTestEnvironment:
             return @"https://conf.lyr8.net/conf";
-    
+        case LSAddhock:
+            return @"https://130.211.117.22:444/conf";
         default:
             break;
     }
@@ -60,7 +61,9 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
         case LSTestEnvironment:
             return [[NSUUID alloc] initWithUUIDString:@"ce2c45a4-3e97-11e4-9d4c-6a9900000431"];
             break;
-            
+        case LSAddhock:
+            return [[NSUUID alloc] initWithUUIDString:@"d354316c-63be-11e4-841a-364a00000bce"];
+            break;
         default:
             break;
     }

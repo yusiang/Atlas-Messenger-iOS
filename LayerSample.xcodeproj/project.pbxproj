@@ -80,10 +80,10 @@
 		D673C23B19F9DB7800579249 /* LSSettingsHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D673C23A19F9DB7800579249 /* LSSettingsHeaderView.m */; };
 		D673C23D19FAAE5D00579249 /* LYRUIMessageInputBarTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D673C23C19FAAE5D00579249 /* LYRUIMessageInputBarTest.m */; };
 		D673C24019FADBA700579249 /* LYRUIMessageInputToolBarTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D673C23F19FADBA700579249 /* LYRUIMessageInputToolBarTestViewController.m */; };
-		D69C422019F97EE600F64FAD /* LSDetailHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D69C421F19F97EE600F64FAD /* LSDetailHeaderView.m */; };
 		D6C6195A19FC059300768D84 /* LSLocalNotificationUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C6195919FC059300768D84 /* LSLocalNotificationUtilities.m */; };
+		D6CD98711A085161009ADE36 /* LSMessageDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6CD98701A085161009ADE36 /* LSMessageDetailTableViewController.m */; };
 		D6F6EDE819F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = D6F6EDE719F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m */; };
-		D6F6EDEB19F9D1D2005DDB26 /* LSJiraManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6F6EDEA19F9D1D2005DDB26 /* LSJiraManager.m */; };
+		D6F6EDEB19F9D1D2005DDB26 /* LSPartnerAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6F6EDEA19F9D1D2005DDB26 /* LSPartnerAPIManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -204,13 +204,13 @@
 		D673C23C19FAAE5D00579249 /* LYRUIMessageInputBarTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIMessageInputBarTest.m; sourceTree = "<group>"; };
 		D673C23E19FADBA700579249 /* LYRUIMessageInputToolBarTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIMessageInputToolBarTestViewController.h; sourceTree = "<group>"; };
 		D673C23F19FADBA700579249 /* LYRUIMessageInputToolBarTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIMessageInputToolBarTestViewController.m; sourceTree = "<group>"; };
-		D69C421E19F97EE600F64FAD /* LSDetailHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSDetailHeaderView.h; sourceTree = "<group>"; };
-		D69C421F19F97EE600F64FAD /* LSDetailHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSDetailHeaderView.m; sourceTree = "<group>"; };
 		D6C6195819FC059300768D84 /* LSLocalNotificationUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSLocalNotificationUtilities.h; path = Controllers/LSLocalNotificationUtilities.h; sourceTree = "<group>"; };
 		D6C6195919FC059300768D84 /* LSLocalNotificationUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSLocalNotificationUtilities.m; path = Controllers/LSLocalNotificationUtilities.m; sourceTree = "<group>"; };
+		D6CD986F1A085161009ADE36 /* LSMessageDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSMessageDetailTableViewController.h; sourceTree = "<group>"; };
+		D6CD98701A085161009ADE36 /* LSMessageDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMessageDetailTableViewController.m; sourceTree = "<group>"; };
 		D6F6EDE719F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAuthenticationTableViewFooter.m; sourceTree = "<group>"; };
-		D6F6EDE919F9D1D2005DDB26 /* LSJiraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSJiraManager.h; sourceTree = "<group>"; };
-		D6F6EDEA19F9D1D2005DDB26 /* LSJiraManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSJiraManager.m; sourceTree = "<group>"; };
+		D6F6EDE919F9D1D2005DDB26 /* LSPartnerAPIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSPartnerAPIManager.h; sourceTree = "<group>"; };
+		D6F6EDEA19F9D1D2005DDB26 /* LSPartnerAPIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSPartnerAPIManager.m; sourceTree = "<group>"; };
 		F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.release.xcconfig"; sourceTree = "<group>"; };
 		FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -357,8 +357,8 @@
 				D6C6195919FC059300768D84 /* LSLocalNotificationUtilities.m */,
 				0AD767701963104200582755 /* LSUtilities.h */,
 				0AD767711963104200582755 /* LSUtilities.m */,
-				D6F6EDE919F9D1D2005DDB26 /* LSJiraManager.h */,
-				D6F6EDEA19F9D1D2005DDB26 /* LSJiraManager.m */,
+				D6F6EDE919F9D1D2005DDB26 /* LSPartnerAPIManager.h */,
+				D6F6EDEA19F9D1D2005DDB26 /* LSPartnerAPIManager.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -413,6 +413,8 @@
 				0A8258CB19DE00D200ACCC8E /* LSConversationDetailViewController.m */,
 				D613BD2D19F5D4D900ABC996 /* LSSettingsTableViewController.h */,
 				D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */,
+				D6CD986F1A085161009ADE36 /* LSMessageDetailTableViewController.h */,
+				D6CD98701A085161009ADE36 /* LSMessageDetailTableViewController.m */,
 				259A57321950EB76000E27B0 /* Models */,
 			);
 			path = Controllers;
@@ -437,8 +439,6 @@
 				D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */,
 				D673C23919F9DB7800579249 /* LSSettingsHeaderView.h */,
 				D673C23A19F9DB7800579249 /* LSSettingsHeaderView.m */,
-				D69C421E19F97EE600F64FAD /* LSDetailHeaderView.h */,
-				D69C421F19F97EE600F64FAD /* LSDetailHeaderView.m */,
 				D6044C8D19F6EA2D00F6E4DC /* LSSwitch.h */,
 				D6044C8E19F6EA2D00F6E4DC /* LSSwitch.m */,
 				0A36117019D399F10089D210 /* LSSplashView.h */,
@@ -681,7 +681,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A6B47CA19B3975A00D485D1 /* LSAuthenticationTableViewController.m in Sources */,
-				D6F6EDEB19F9D1D2005DDB26 /* LSJiraManager.m in Sources */,
+				D6F6EDEB19F9D1D2005DDB26 /* LSPartnerAPIManager.m in Sources */,
 				0A6B47C619B3967A00D485D1 /* LSPersistenceManager.m in Sources */,
 				0A6B47C919B3968200D485D1 /* LSSession.m in Sources */,
 				D6044C8F19F6EA2D00F6E4DC /* LSSwitch.m in Sources */,
@@ -691,8 +691,8 @@
 				0A48C92919B7D2D100B536AB /* LYRUILayerContentFactory.m in Sources */,
 				D6F6EDE819F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m in Sources */,
 				0AFE3FF419B0E1BD00FCA264 /* LSAPIManager.m in Sources */,
-				D69C422019F97EE600F64FAD /* LSDetailHeaderView.m in Sources */,
 				0AFE3FFE19B0E1BD00FCA264 /* LSApplicationController.m in Sources */,
+				D6CD98711A085161009ADE36 /* LSMessageDetailTableViewController.m in Sources */,
 				0AFE3FFF19B0E1BD00FCA264 /* LSUtilities.m in Sources */,
 				0A48C92C19B7F49900B536AB /* LYRUITestParticipantCell.m in Sources */,
 				0AFE400219B0E1BD00FCA264 /* LSAppDelegate.m in Sources */,
@@ -829,8 +829,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -848,7 +848,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7f3a4a45-5ef5-42aa-b32d-fe9248049b29";
+				PROVISIONING_PROFILE = "1bdbae55-62e8-4d96-94f4-1cf2f5a5264e";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
