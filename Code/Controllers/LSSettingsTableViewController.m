@@ -95,10 +95,10 @@ static NSString *const LSConnecting = @"Connecting";
             return 2;
             break;
         case 1:
-            return 3;
+            return 6;
             break;
         case 2:
-            return 6;
+            return 3;
             break;
         case 3:
             return 1;
@@ -144,7 +144,41 @@ static NSString *const LSConnecting = @"Connecting";
             break;
             
         case 1: {
-             // Layer Stats Stats
+            // // Debug Mode
+            switch (indexPath.row) {
+                case 0:
+                    cell.textLabel.text = @"Debug Mode ";
+                    radioSwitch.on = self.applicationController.debugModeEnabled;
+                    cell.accessoryView = radioSwitch;
+                    break;
+                case 1:
+                    cell.textLabel.text = [NSString stringWithFormat:@"Version: %@", [LSApplicationController versionString]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                case 2:
+                    cell.textLabel.text = [NSString stringWithFormat:@"Build: %@", [LSApplicationController buildInformationString]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                case 3:
+                    cell.textLabel.text = [NSString stringWithFormat:@"Host: %@", [LSApplicationController layerServerHostname]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                case 4:
+                    cell.textLabel.text = [NSString stringWithFormat:@"UserID: %@", self.applicationController.layerClient.authenticatedUserID];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                case 5:
+                    cell.textLabel.text = [NSString stringWithFormat:@"Device Token: %@", [self.applicationController.deviceToken description]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                default:
+                    break;
+            }
+        }
+            break;
+            
+        case 2: {
+            // Layer Stats Stats
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
@@ -178,40 +212,6 @@ static NSString *const LSConnecting = @"Connecting";
             }
         }
             break;
-            
-        case 2: {
-            // // Debug Mode
-            switch (indexPath.row) {
-                case 0:
-                    cell.textLabel.text = @"Debug Mode ";
-                    radioSwitch.on = self.applicationController.debugModeEnabled;
-                    cell.accessoryView = radioSwitch;
-                    break;
-                case 1:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Version: %@", [LSApplicationController versionString]];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                case 2:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Build: %@", [LSApplicationController buildInformationString]];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                case 3:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Host: %@", [LSApplicationController layerServerHostname]];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                case 4:
-                    cell.textLabel.text = [NSString stringWithFormat:@"UserID: %@", self.applicationController.layerClient.authenticatedUserID];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                case 5:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Device Token: %@", [self.applicationController.deviceToken description]];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                default:
-                    break;
-            }
-        }
-            break;
         
         case 3: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCell];
@@ -228,7 +228,7 @@ static NSString *const LSConnecting = @"Connecting";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch (indexPath.section) {
-        case 2:
+        case 1:
             switch (indexPath.row) {
                 case 1:
                      [self settingsAlertWithString:[LSApplicationController versionString]];
@@ -272,10 +272,10 @@ static NSString *const LSConnecting = @"Connecting";
             return @"NOTIFICATIONS";
             break;
         case 1:
-            return  @"STATISTICS";
+            return  @"DEBUG";
             break;
         case 2:
-            return @"DEBUG";
+            return @"STATISTICS";
             break;
         default:
             break;
@@ -325,7 +325,7 @@ static NSString *const LSConnecting = @"Connecting";
             }
             break;
             
-        case 2:
+        case 1:
             // // Debug Mode
             switch (indexPath.row) {
                 case 0:

@@ -20,6 +20,8 @@
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location;
 
+- (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation;
+
 @end
 
 @interface LSConversationDetailViewController : UITableViewController
@@ -27,6 +29,7 @@
 +(instancetype)conversationDetailViewControllerLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation;
 
 @property (nonatomic) id<LSConversationDetailViewControllerDelegate>detailDelegate;
+
 @property (nonatomic) LSApplicationController *applicationController;
 
 @end

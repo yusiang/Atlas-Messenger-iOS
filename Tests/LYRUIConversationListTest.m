@@ -6,32 +6,20 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "KIFTestCase.h"
-#import <KIF/KIF.h>
-#define EXP_SHORTHAND
-#import <Expecta/Expecta.h>
-#import <LayerKit/LayerKit.h>
-#import "KIFSystemTestActor+ViewControllerActions.h"
-#import "KIFUITestActor+LSAdditions.h"
-#import "LYRCountdownLatch.h"
-#import "LSApplicationController.h"
-#import "LSAppDelegate.h"
-#import "LYRUIConversationListViewController.h"
-#import "LYRUITestUser.h"
-#import "LYRCountDownLatch.h"
+#import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
 #import "LYRUITestInterface.h"
-#import "LYRUILayerContentFactory.h"
+
+// Test Case Required Imports
+#import "LYRUIConversationListViewController.h"
 #import "LSUIConversationListViewController.h"
 #import "LYRUIConversationTableViewCell.h"
 #import "LYRUITestConversationCell.h"
-#include <stdlib.h>
 
-#define EXP_SHORTHAND
 
 @interface LYRUIConversationListTest : XCTestCase
 
 @property (nonatomic) LYRUITestInterface *testInterface;
-@property (nonatomic) LYRUILayerContentFactory *layerContentFactory;
 
 @end
 
@@ -40,20 +28,56 @@
 - (void)setUp
 {
     [super setUp];
-    
     LSApplicationController *applicationController =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [LYRUITestInterface testInterfaceWithApplicationController:applicationController];
-    self.layerContentFactory = [LYRUILayerContentFactory layerContentFactoryWithLayerClient:applicationController.layerClient];
-    [self.testInterface deleteContacts];
 }
 
 - (void)tearDown
 {
     [self.testInterface deleteContacts];
     [self.testInterface logout];
-    self.testInterface = nil;
-    
     [super tearDown];
+}
+
+- (void)testToVerifyConversationListBaseUI
+{
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate setAllowsEditing:YES];
+    [appDelegate setDisplaysSettingsButton:NO];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    [tester waitForViewWithAccessibilityLabel:@"Messages"];
+    [tester waitForViewWithAccessibilityLabel:@"Edit Button"];
+    [tester waitForViewWithAccessibilityLabel:@"Compose Button"];
+    
+    [self.testInterface logout];
+    
+    [appDelegate setAllowsEditing:NO];
+    [appDelegate setDisplaysSettingsButton:YES];
+    
+    [self.testInterface authenticateWithEmail:[LYRUITestUser testUserWithNumber:0].email password:[LYRUITestUser testUserWithNumber:0].password];
+    [tester waitForViewWithAccessibilityLabel:@"Messages"];
+    [tester waitForViewWithAccessibilityLabel:@"Settings Button"];
+    [tester waitForViewWithAccessibilityLabel:@"Compose Button"];
+}
+
+- (void)testToVerifySettingsButtonFunctionality
+{
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate setAllowsEditing:NO];
+    [appDelegate setDisplaysSettingsButton:YES];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    [tester tapViewWithAccessibilityLabel:@"Settings Button"];
+    [tester waitForViewWithAccessibilityLabel:@"Settings"];
+}
+
+- (void)testToVerifyComposeButtonFunctionality
+{
+    LSAppDelegate *appDelegate = (LSAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate setAllowsEditing:NO];
+    [appDelegate setDisplaysSettingsButton:YES];
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
+    [tester tapViewWithAccessibilityLabel:@"Compose Button"];
+    [tester waitForViewWithAccessibilityLabel:@"New Message"];
 }
 
 //Load the list and verify that all conversations returned by conversationForIdentifiers: is presented in the list.
@@ -65,10 +89,10 @@
     LSUser *user4 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:4]];
     
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user2.userID] number:2];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user3.userID] number:3];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user4.userID] number:4];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user2.userID] number:2];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user3.userID] number:3];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user4.userID] number:4];
     [tester waitForTimeInterval:5];
     
     NSSet *conversations = [self.testInterface.applicationController.layerClient conversationsForIdentifiers:nil];
@@ -85,7 +109,7 @@
     
     LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
@@ -102,7 +126,7 @@
     
     LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
@@ -119,7 +143,7 @@
     
     LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
@@ -142,7 +166,7 @@
     
     LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
@@ -169,9 +193,9 @@
     
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
     
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user2.userID] number:1];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user3.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user2.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user3.userID] number:1];
     [tester waitForTimeInterval:5];
     
     [tester tapViewWithAccessibilityLabel:@"Edit"];
@@ -194,7 +218,7 @@
     
     LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
 
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
@@ -215,7 +239,7 @@
     [[LYRUIConversationTableViewCell appearance] setConversationLabelFont:testFont];
     [[LYRUIConversationTableViewCell appearance] setConversationLableColor:testColor];
     
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
@@ -233,7 +257,7 @@
     LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
     
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     
@@ -252,7 +276,7 @@
     LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
     
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     LYRUIConversationTableViewCell *cell = (LYRUIConversationTableViewCell *)[tester waitForViewWithAccessibilityLabel:conversationLabel];
@@ -299,7 +323,7 @@
     LSUser *user1 = [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:0]];
 
-    [self.layerContentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
+    [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     NSString *conversationLabel = [self conversationLabelForParticipants:[NSSet setWithObject:user1.userID]];
     [tester waitForViewWithAccessibilityLabel:conversationLabel];
 }

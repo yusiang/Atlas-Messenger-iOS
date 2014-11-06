@@ -154,7 +154,16 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     [alertView show];
 }
 
-#pragma mark - Converation View Controler Delegate
+- (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
+{
+    if (self.applicationContoller.debugModeEnabled) {
+        LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController initWithMessage:message applicationController:self.applicationContoller];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
+    }
+}
+
+#pragma mark - Converation Detail View Controler Delegate
 
 - (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
 {
@@ -173,13 +182,9 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     }
 }
 
-- (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
+- (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
 {
-    if (self.applicationContoller.debugModeEnabled) {
-        LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController initWithMessage:message applicationController:self.applicationContoller];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-        [self.navigationController presentViewController:navController animated:YES completion:nil];
-    }
+    self.conversation = conversation;
 }
 
 #pragma mark - Adress Bar View Controller Data Source
@@ -232,10 +237,10 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipants:(NSSet *)participants
+- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    if (participants.count) {
-        [self.addressBarController selectParticipant:[[participants allObjects] lastObject]];
+    if (participant) {
+        [self.addressBarController selectParticipant:participant];
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }

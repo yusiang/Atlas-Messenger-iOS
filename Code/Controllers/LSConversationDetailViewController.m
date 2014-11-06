@@ -9,7 +9,6 @@
 #import "LSConversationDetailViewController.h"
 #import "LYRUIParticipantTableViewCell.h"
 #import "LYRUIConstants.h"
-#import "LYRUISelectionIndicator.h"
 #import "LYRUIParticipantPickerController.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUtilities.h"
@@ -59,6 +58,8 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     [super viewDidLoad];
     
+    self.conversation = _conversation;
+    
     //VC Title
     self.title = @"Details";
     self.accessibilityLabel = @"Details";
@@ -70,18 +71,23 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LYRUICenterContentCellIdentifier];
     [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LYRUIParticipantCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LYRUIDefaultCellIdentifier];
+   
+    // Setup UI
+    [self configureAppearance];
     
+    self.locationShared = NO;
+}
+
+- (void)setConversation:(LYRConversation *)conversation
+{
+    _conversation = conversation;
+    self.participantIdentifiers = [[conversation.participants allObjects] mutableCopy];
     if ([self.participantIdentifiers containsObject:self.layerClient.authenticatedUserID]) {
         self.authenticatedUserIsConversationMember = YES;
     } else {
         [self.participantIdentifiers addObject:self.layerClient.authenticatedUserID];
         self.authenticatedUserIsConversationMember = NO;
     }
-   
-    // Setup UI
-    [self configureAppearance];
-    
-    self.locationShared = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -226,10 +232,8 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSString *particpantID = [self.participantIdentifiers objectAtIndex:indexPath.row];
         [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
-        [self.applicationController.layerClient removeParticipants:[NSSet setWithObject:particpantID] fromConversation:self.conversation error:nil];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self setConversationForParticipants:[NSSet setWithArray:self.participantIdentifiers]];
     }
 }
 
@@ -274,15 +278,24 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     [self dismissViewControllerAnimated:TRUE completion:nil];
 }
 
-- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipants:(NSSet *)participants
+- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
     [self dismissViewControllerAnimated:TRUE completion:^{
-        NSSet *participantIdentifiers = [participants valueForKey:@"userID"];
-        NSError *error;
-        [self.layerClient addParticipants:participantIdentifiers toConversation:self.conversation error:&error];
-        [self.participantIdentifiers addObjectsFromArray:[participantIdentifiers allObjects]];
-        [self.tableView reloadData];
-    }];
+        NSMutableSet *participants = [self.conversation.participants mutableCopy];
+        [participants addObject:participant.participantIdentifier];
+        [self setConversationForParticipants:participants];
+        }];
+}
+
+- (void)setConversationForParticipants:(NSSet *)participants
+{
+    LYRConversation *conversation = [[[self.layerClient conversationsForParticipants:[NSSet setWithSet:participants]] allObjects] firstObject];
+    if (!conversation) {
+        conversation = [LYRConversation conversationWithParticipants:[NSSet setWithSet:participants]];
+    }
+    [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
+    self.conversation = conversation;
+    [self.tableView reloadData];
 }
 
 - (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion

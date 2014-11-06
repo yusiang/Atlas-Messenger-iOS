@@ -75,6 +75,9 @@
 		B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */; };
 		D6044C8F19F6EA2D00F6E4DC /* LSSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = D6044C8E19F6EA2D00F6E4DC /* LSSwitch.m */; };
 		D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */; };
+		D643A5001A0AC4B400ED613D /* LYRUISettingsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */; };
+		D643A5021A0AC4C200ED613D /* LYRUIAddressBarTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A5011A0AC4C200ED613D /* LYRUIAddressBarTest.m */; };
+		D643A5041A0AC4D300ED613D /* LYRUIConversationDetailsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A5031A0AC4D300ED613D /* LYRUIConversationDetailsTest.m */; };
 		D648ECFC19FEC9D800ED17F0 /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D648ECFB19FEC9D800ED17F0 /* testImage.png */; };
 		D66F086519FB524E0047F1C6 /* LSCenterTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */; };
 		D673C23B19F9DB7800579249 /* LSSettingsHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D673C23A19F9DB7800579249 /* LSSettingsHeaderView.m */; };
@@ -196,6 +199,9 @@
 		D6044C8E19F6EA2D00F6E4DC /* LSSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSSwitch.m; path = ../Controllers/LSSwitch.m; sourceTree = "<group>"; };
 		D613BD2D19F5D4D900ABC996 /* LSSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingsTableViewController.h; sourceTree = "<group>"; };
 		D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSettingsTableViewController.m; sourceTree = "<group>"; };
+		D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUISettingsTest.m; sourceTree = "<group>"; };
+		D643A5011A0AC4C200ED613D /* LYRUIAddressBarTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIAddressBarTest.m; sourceTree = "<group>"; };
+		D643A5031A0AC4D300ED613D /* LYRUIConversationDetailsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIConversationDetailsTest.m; sourceTree = "<group>"; };
 		D648ECFB19FEC9D800ED17F0 /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
 		D66F086319FB524E0047F1C6 /* LSCenterTextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSCenterTextTableViewCell.h; sourceTree = "<group>"; };
 		D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSCenterTextTableViewCell.m; sourceTree = "<group>"; };
@@ -342,10 +348,11 @@
 		0ADD757419C8A12A00E133B5 /* Component Test */ = {
 			isa = PBXGroup;
 			children = (
-				0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */,
-				0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */,
-				0ADD757519C8A15800E133B5 /* LYRUIConversationViewTest.m */,
 				D673C23C19FAAE5D00579249 /* LYRUIMessageInputBarTest.m */,
+				0ADD757519C8A15800E133B5 /* LYRUIConversationViewTest.m */,
+				0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */,
+				0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */,
+				D643A5051A0AD08700ED613D /* TODO */,
 			);
 			name = "Component Test";
 			sourceTree = "<group>";
@@ -484,6 +491,16 @@
 				259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		D643A5051A0AD08700ED613D /* TODO */ = {
+			isa = PBXGroup;
+			children = (
+				D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */,
+				D643A5011A0AC4C200ED613D /* LYRUIAddressBarTest.m */,
+				D643A5031A0AC4D300ED613D /* LYRUIConversationDetailsTest.m */,
+			);
+			name = TODO;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -722,10 +739,13 @@
 				0A5150F419B7872300C6E045 /* LYRUITestUser.m in Sources */,
 				0A5150F319B7871A00C6E045 /* LYRUITestInterface.m in Sources */,
 				252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */,
+				D643A5041A0AC4D300ED613D /* LYRUIConversationDetailsTest.m in Sources */,
 				0ADD757619C8A15800E133B5 /* LYRUIConversationViewTest.m in Sources */,
 				0A51BD2119B686F6004105DC /* LYRUIConversationListTest.m in Sources */,
 				0A41DFC71961D37800E1F7FA /* LSAPIManagerTest.m in Sources */,
 				259A57801950EB92000E27B0 /* LSSampleAppUITest.m in Sources */,
+				D643A5021A0AC4C200ED613D /* LYRUIAddressBarTest.m in Sources */,
+				D643A5001A0AC4B400ED613D /* LYRUISettingsTest.m in Sources */,
 				259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */,
 				0A51BD1A19B66570004105DC /* LYRUIParticipantPickerTest.m in Sources */,
 			);

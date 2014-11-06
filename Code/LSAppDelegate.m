@@ -40,7 +40,7 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    [self configureApplication:application forEnvironment:LYRUIProduction];
+    [self configureApplication:application forEnvironment:LSTestEnvironment];
     LYRSetLogLevelFromEnvironment();
     
     // Setup notifications

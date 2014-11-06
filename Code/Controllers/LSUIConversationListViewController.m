@@ -27,12 +27,12 @@
     self.dataSource = self;
     
     // Left navigation item
-    if (self.shouldDisplaySettingsItem) {
+    if (self.shouldDisplaySettingsItem && !self.allowsEditing) {
         UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings"
                                                                            style:UIBarButtonItemStylePlain
                                                                           target:self
                                                                           action:@selector(settingsButtonTapped)];
-        settingsButton.accessibilityLabel = @"Settings";
+        settingsButton.accessibilityLabel = @"Settings Button";
         [self.navigationItem setLeftBarButtonItem:settingsButton];
     }
 
@@ -40,7 +40,7 @@
     UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
                                                                                    target:self
                                                                                    action:@selector(composeButtonTapped)];
-    composeButton.accessibilityLabel = @"New";
+    composeButton.accessibilityLabel = @"Compose Button";
     [self.navigationItem setRightBarButtonItem:composeButton];
 }
 
