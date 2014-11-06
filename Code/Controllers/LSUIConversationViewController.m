@@ -191,7 +191,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *participants))completion
 {
-    [self.applicationContoller.persistenceManager performContactSearchWithString:searchText completion:^(NSSet *contacts, NSError *error) {
+    [self.applicationContoller.persistenceManager performParticipantSearchWithString:searchText completion:^(NSSet *contacts, NSError *error) {
         if (!error) {
             completion(contacts);
         }
