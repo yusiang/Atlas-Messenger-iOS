@@ -94,15 +94,19 @@ static NSString *const LSConnecting = @"Connecting";
         case 0:
             return 2;
             break;
+            
         case 1:
             return 6;
             break;
+            
         case 2:
             return 3;
             break;
+            
         case 3:
             return 1;
             break;
+            
         default:
             break;
     }
@@ -131,6 +135,7 @@ static NSString *const LSConnecting = @"Connecting";
                     radioSwitch.on = self.applicationController.shouldSendPushText;
                     cell.accessoryView = radioSwitch;
                     break;
+                    
                 case 1:
                     cell.textLabel.text = @"Display Local Notifications";
                     radioSwitch.on = self.applicationController.shouldDisplayLocalNotifications;
@@ -151,26 +156,32 @@ static NSString *const LSConnecting = @"Connecting";
                     radioSwitch.on = self.applicationController.debugModeEnabled;
                     cell.accessoryView = radioSwitch;
                     break;
+                    
                 case 1:
                     cell.textLabel.text = [NSString stringWithFormat:@"Version: %@", [LSApplicationController versionString]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
+                    
                 case 2:
                     cell.textLabel.text = [NSString stringWithFormat:@"Build: %@", [LSApplicationController buildInformationString]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
+                    
                 case 3:
                     cell.textLabel.text = [NSString stringWithFormat:@"Host: %@", [LSApplicationController layerServerHostname]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
+                    
                 case 4:
                     cell.textLabel.text = [NSString stringWithFormat:@"UserID: %@", self.applicationController.layerClient.authenticatedUserID];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
+                    
                 case 5:
                     cell.textLabel.text = [NSString stringWithFormat:@"Device Token: %@", [self.applicationController.deviceToken description]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
+                    
                 default:
                     break;
             }
@@ -189,6 +200,7 @@ static NSString *const LSConnecting = @"Connecting";
                     cell.accessoryView = conversationsLabel;
                 }
                     break;
+                    
                 case 1: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Messages:"];
                     UILabel *messagesLabel = [[UILabel alloc] init];
@@ -198,6 +210,7 @@ static NSString *const LSConnecting = @"Connecting";
                     cell.accessoryView = messagesLabel;
                 }
                     break;
+                    
                 case 2: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Unread Messages:"];
                     UILabel *unreadMessagesLabel = [[UILabel alloc] init];
@@ -207,8 +220,10 @@ static NSString *const LSConnecting = @"Connecting";
                     cell.accessoryView = unreadMessagesLabel;
                 }
                     break;
+                    
                 default:
                     break;
+                    
             }
         }
             break;
@@ -219,6 +234,8 @@ static NSString *const LSConnecting = @"Connecting";
             centerCell.centerTextLabel.textColor = LSRedColor();
             return centerCell;
         }
+            break;
+            
         default:
             break;
     }
@@ -233,15 +250,19 @@ static NSString *const LSConnecting = @"Connecting";
                 case 1:
                      [self settingsAlertWithString:[LSApplicationController versionString]];
                     break;
+                    
                 case 2:
                      [self settingsAlertWithString:[LSApplicationController buildInformationString]];
                     break;
+                    
                 case 3:
                      [self settingsAlertWithString:[LSApplicationController layerServerHostname]];
                     break;
+                    
                 case 4:
                      [self settingsAlertWithString:self.applicationController.layerClient.authenticatedUserID];
                     break;
+                    
                 case 5:
                      [self settingsAlertWithString:[self.applicationController.deviceToken description]];
                     break;
@@ -271,12 +292,15 @@ static NSString *const LSConnecting = @"Connecting";
         case 0:
             return @"NOTIFICATIONS";
             break;
+            
         case 1:
             return  @"DEBUG";
             break;
+            
         case 2:
             return @"STATISTICS";
             break;
+            
         default:
             break;
     }
@@ -317,9 +341,11 @@ static NSString *const LSConnecting = @"Connecting";
                 case 0:
                     self.applicationController.shouldSendPushText = radioButton.on;
                     break;
+                    
                 case 1:
                     self.applicationController.shouldDisplayLocalNotifications = radioButton.on;
                     break;
+                    
                 default:
                     break;
             }
@@ -331,6 +357,7 @@ static NSString *const LSConnecting = @"Connecting";
                 case 0:
                     self.applicationController.debugModeEnabled = radioButton.on;
                     break;
+                    
                 default:
                     break;
             }

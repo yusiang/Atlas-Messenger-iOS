@@ -269,7 +269,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     }
 }
 
-
 - (void)setEditing:(BOOL)editing
 {
     if (!self.isEditing && editing) {

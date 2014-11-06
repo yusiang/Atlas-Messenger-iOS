@@ -45,11 +45,9 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        
         _layerClient = layerClient;
         _conversation = conversation;
         _participantIdentifiers = [[conversation.participants allObjects] mutableCopy];
-        
     }
     return self;
 }
@@ -127,14 +125,18 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
                 return self.participantIdentifiers.count;
             }
             break;
+            
         case 1:
             return 1;
             break;
+            
         case 2:
             return 1;
             break;
+            
         default:
             break;
+            
     }
     return 0;
 }
@@ -158,6 +160,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
                 cell = participantCell;
             }
             break;
+            
         case 1: {
             cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
             cell.textLabel.text = @"Share My Location";
@@ -165,6 +168,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             cell.textLabel.font = LSMediumFont(14);
         }
             break;
+            
         case 2: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUICenterContentCellIdentifier];
             [centerCell setCenterText:@"Global Delete Conversation"];
@@ -189,9 +193,11 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
         case 0:
             return @"PARTICIPANTS";
             break;
+            
         case 1:
             return @"LOCATION";
             break;
+            
         default:
             break;
     }
@@ -211,14 +217,16 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
                 [self presentViewController:controller animated:YES completion:nil];
             }
             break;
-        case 1: {
+            
+        case 1:
             [self startLocationManager];
             break;
-        }
+        
         case 2:
             [self.applicationController.layerClient deleteConversation:self.conversation mode:LYRDeletionModeAllParticipants error:nil];
             [self.navigationController popToRootViewControllerAnimated:YES];
             break;
+            
         default:
             break;
     }
@@ -284,7 +292,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
         NSMutableSet *participants = [self.conversation.participants mutableCopy];
         [participants addObject:participant.participantIdentifier];
         [self setConversationForParticipants:participants];
-        }];
+    }];
 }
 
 - (void)setConversationForParticipants:(NSSet *)participants
@@ -296,11 +304,6 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;
     [self.tableView reloadData];
-}
-
-- (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion
-{
-    completion(nil);
 }
 
 #pragma Cell Appearance Configuration

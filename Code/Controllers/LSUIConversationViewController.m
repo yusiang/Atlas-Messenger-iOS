@@ -39,7 +39,6 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     self.delegate = self;
     
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationContoller.persistenceManager];
-    
     if (self.conversation) {
         [self addDetailsButton];
     }
@@ -91,7 +90,6 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     [recipients removeObject:self.applicationContoller.layerClient.authenticatedUserID];
     
     NSAttributedString *attributedString;
-    
     NSInteger status = [[recipientStatus valueForKey:[recipients lastObject]] integerValue];
     switch (status) {
         case LYRRecipientStatusInvalid:
@@ -200,28 +198,6 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     }];
 }
 
-
-#pragma mark - Contact Button Actions
-
-- (void)addDetailsButton
-{
-    UIBarButtonItem *contactsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Details"
-                                                                           style:UIBarButtonItemStylePlain
-                                                                          target:self
-                                                                          action:@selector(contactsButtonTapped)];
-    contactsButtonItem.accessibilityLabel = @"Contacts";
-    self.navigationItem.rightBarButtonItem = contactsButtonItem;
-}
-
-- (void)contactsButtonTapped
-{
-    LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
-    detailViewController.detailDelegate = self;
-    detailViewController.detailsDataSource = self;
-    detailViewController.applicationController = self.applicationContoller;
-    [self.navigationController pushViewController:detailViewController animated:TRUE];
-}
-
 #pragma mark - Address Bar View Controller Delegate
 
 - (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
@@ -246,6 +222,27 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
         [self.addressBarController selectParticipant:participant];
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Details Button Actions
+
+- (void)addDetailsButton
+{
+    UIBarButtonItem *detailsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Details"
+                                                                          style:UIBarButtonItemStylePlain
+                                                                         target:self
+                                                                         action:@selector(detailsButtonTapped)];
+    detailsButtonItem.accessibilityLabel = @"Contacts";
+    self.navigationItem.rightBarButtonItem = detailsButtonItem;
+}
+
+- (void)detailsButtonTapped
+{
+    LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
+    detailViewController.detailDelegate = self;
+    detailViewController.detailsDataSource = self;
+    detailViewController.applicationController = self.applicationContoller;
+    [self.navigationController pushViewController:detailViewController animated:TRUE];
 }
 
 #pragma mark - Mark All Messages Read Method

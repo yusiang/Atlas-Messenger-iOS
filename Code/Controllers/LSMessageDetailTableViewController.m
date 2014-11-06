@@ -44,7 +44,6 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSMessageDetailCell];
     
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
@@ -66,6 +65,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
         case 0:
             return 6;
             break;
+            
         case 1:
             return self.message.recipientStatusByUserID.count;
             break;
@@ -166,15 +166,19 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
         case LYRRecipientStatusSent:
             return @"Sent";
             break;
+            
         case LYRRecipientStatusDelivered:
             return @"Delivered";
             break;
+            
         case LYRRecipientStatusRead:
             return @"Read";
             break;
+            
         case LYRRecipientStatusInvalid:
             return @"Invalid";
             break;
+            
         default:
             break;
     }
