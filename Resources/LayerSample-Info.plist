@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1414536909</string>
+	<string>1415239436</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
@@ -35,9 +35,9 @@
 		<key>LYRBuildBuilderName</key>
 		<string>Kevin Coleman</string>
 		<key>LYRBuildLayerKitVersion</key>
-		<string>0.8.4</string>
+		<string>0.8.5</string>
 		<key>LYRBuildShortSha</key>
-		<string>6509781</string>
+		<string>bd15e9d</string>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Boom</string>
