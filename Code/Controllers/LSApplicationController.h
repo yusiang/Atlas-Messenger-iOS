@@ -11,45 +11,86 @@
 #import "LSAPIManager.h"
 
 /**
- @abstract The `LSAppController` class manages mission critical classes to the Layer Sample App
+ @abstract The `LSAppController` manages global resources needed by multiple View Controller classes in the Layer Sample App. 
+ It also implement the `LYRClientDelegate` protocol. Only one instance should be instantiated and it should be passed to 
+ controllers that require it.
  */
-
-@interface LSApplicationController : NSObject
+@interface LSApplicationController : NSObject <LYRClientDelegate>
 
 ///--------------------------------
-/// @name Initializing a Controller
+/// @name Designated Initializer
 ///--------------------------------
 
 + (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager;
 
+///--------------------------------
+/// @name Global Resources
+///--------------------------------
+
 /**
- @abstract The following properties service mission critical operations for the Layer Sample App and are managed by the Controller
+ @abstract The `LYRCLient` object for the application.
  */
-
 @property (nonatomic) LYRClient *layerClient;
-@property (nonatomic) LSAPIManager *APIManager;
-@property (nonatomic) LSPersistenceManager *persistenceManager;
-@property (nonatomic) NSData *deviceToken;
 
+/**
+ @abstract The `LSAPIManager` object for the application.
+ */
+@property (nonatomic) LSAPIManager *APIManager;
+
+/**
+ @abstract The `LSPersistenceManager` object for the application.
+ */
+@property (nonatomic) LSPersistenceManager *persistenceManager;
+
+
+///--------------------------------
+/// @name Global Settings
+///--------------------------------
+
+/**
+ @abstract Boolean value that determine whether or not Layer should send a push notification payload.
+ */
 @property (nonatomic) BOOL shouldSendPushText;
+
+/**
+ @abstract Boolean value that determine whether or not Layer should send a push notification sound.
+ */
 @property (nonatomic) BOOL shouldSendPushSound;
+
+/**
+ @abstract Boolean value that determine whether or not Layer should display local notifications.
+ */
 @property (nonatomic) BOOL shouldDisplayLocalNotifications;
+
+/**
+ @abstract Boolean value that determine whether or not the application is in debug mode.
+ */
 @property (nonatomic) BOOL debugModeEnabled;
 
+///--------------------------------
+/// @name Global Info
+///--------------------------------
 /**
- *  Constructs and returns a version string describing the current version of the application.
- *
- *  @return The version string suitable for display in the app.
+ @abstract The device token object used for push notifications.
+ */
+@property (nonatomic) NSData *deviceToken;
+
+/**
+ @abstranct Constructs and returns a version string describing the current version of the application.
+ @return The version string suitable for display in the app.
  */
 + (NSString *)versionString;
 
 /**
- *  Constructs and returns a build string describing the context in which the app was built.
- *
- *  @return The build string suitable for display in the app.
+ @abstract Constructs and returns a build string describing the context in which the app was built.
+ @return The build string suitable for display in the app.
  */
 + (NSString *)buildInformationString;
 
+/**
+ @abstract Constructs and returns a string describing the current Layer server environment.
+ @return The current Layer server environment string suitable for display in the app.
+ */
 + (NSString *)layerServerHostname;
 
 @end

@@ -151,7 +151,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
                 cell.textLabel.font = LSMediumFont(14);
             } else {
                 NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
-                id<LYRUIParticipant>participant = [self.detailDelegate conversationDetailViewController:self participantForIdentifier:participantIdentifier];
+                id<LYRUIParticipant>participant = [self.detailsDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
                 UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIParticipantCellIdentifier forIndexPath:indexPath];
                 [participantCell presentParticipant:participant];
                 [participantCell shouldShowAvatarImage:YES];

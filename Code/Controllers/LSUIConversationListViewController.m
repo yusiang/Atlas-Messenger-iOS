@@ -65,8 +65,9 @@
 
 - (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController labelForConversation:(LYRConversation *)conversation
 {
-    NSMutableSet *participantIdentifiers = [NSMutableSet setWithSet:conversation.participants];
+    NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
     
+    // Remove currently authenticated user
     if ([participantIdentifiers containsObject:self.applicationController.layerClient.authenticatedUserID]) {
         [participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
     }
@@ -74,9 +75,9 @@
     if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
     NSMutableSet *participants = [[self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers] mutableCopy];
-    
     if (!participants.count > 0) return @"No Matching Participants";
     
+    // Put the latest message sender's name first
     LSUser *firstUser;
     if (![conversation.lastMessage.sentByUserID isEqualToString:self.layerClient.authenticatedUserID]){
         if (conversation.lastMessage) {
@@ -89,6 +90,7 @@
     } else {
         firstUser = [[participants allObjects] objectAtIndex:0];
     }
+    
     NSString *conversationLabel = firstUser.fullName;
     for (int i = 1; i < [[participants allObjects] count]; i++) {
         LSUser *user = [[participants allObjects] objectAtIndex:i];
@@ -99,7 +101,7 @@
 
 - (UIImage *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController imageForConversation:(LYRConversation *)conversation
 {
-    return [UIImage imageNamed:@"testImage"];
+    return nil;
 }
 
 #pragma mark Selected Conversation Methods

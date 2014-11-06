@@ -40,7 +40,6 @@
 
 - (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
-    // KC TODO - Cache this predicate but not sure how?
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchText]];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [self.persistenceManager persistedUsersWithError:nil];

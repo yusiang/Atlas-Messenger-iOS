@@ -10,7 +10,15 @@
 #import <LayerKit/LayerKit.h>
 #import "LSApplicationController.h"
 
+/**
+ @abstract The `LSMessageDetailTableViewController` presents a user interface for displaying 
+ information regarding a single Layer `LYRMessage` object.
+ */
 @interface LSMessageDetailTableViewController : UITableViewController
+
+///--------------------------------
+/// @name Designated Initializer
+///--------------------------------
 
 + (instancetype)initWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController;
 

@@ -23,7 +23,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return dateFormatter;
 }
 
-@interface LSUIConversationViewController () <LYRUIConversationViewControllerDataSource, LYRUIConversationViewControllerDelegate, LSConversationDetailViewControllerDelegate, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
+@interface LSUIConversationViewController () <LYRUIConversationViewControllerDataSource, LYRUIConversationViewControllerDelegate, LSConversationDetailViewControllerDelegate,  LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
 
@@ -163,12 +163,14 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     }
 }
 
-#pragma mark - Converation Detail View Controler Delegate
+#pragma mark - Converation Detail View Controler Data Source
 
 - (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     return [self.dataSource conversationViewController:self participantForIdentifier:participantIdentifier];
 }
+
+#pragma mark - Converation Detail View Controler Delegate
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
 {
@@ -215,6 +217,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 {
     LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
     detailViewController.detailDelegate = self;
+    detailViewController.detailsDataSource = self;
     detailViewController.applicationController = self.applicationContoller;
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }

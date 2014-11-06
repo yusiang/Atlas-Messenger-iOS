@@ -10,7 +10,7 @@
 #import "LSUtilities.h"
 #import <SVProgressHUD/SVProgressHUD.h>
 
-@interface LSApplicationController () <LYRClientDelegate>
+@interface LSApplicationController ()
 
 @property (nonatomic) NSURL *baseURL;
 
@@ -44,9 +44,13 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
         _APIManager = [LSAPIManager managerWithBaseURL:baseURL layerClient:layerClient];
         [self configureApplicationSettings];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:) name:LYRClientWillBeginSynchronizationNotification object:layerClient];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:) name:LYRClientDidFinishSynchronizationNotification object:layerClient];
-
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:)
+                                                     name:LYRClientWillBeginSynchronizationNotification object:layerClient];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:)
+                                                     name:LYRClientDidFinishSynchronizationNotification object:layerClient];
     }
     
     return self;

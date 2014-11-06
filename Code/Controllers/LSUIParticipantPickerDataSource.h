@@ -11,7 +11,8 @@
 #import "LSPersistenceManager.h"
 
 /**
- @abstract Data source for the `LYRUIParticipantPicker. Supplies a list of participants to the picker
+ @abstract Data source for the `LYRUIParticipantPicker. Supplies a list of object conforming to the `LYRUIParticipant`
+ protocol to the to the picker.
  */
 @interface LSUIParticipantPickerDataSource : NSObject <LYRUIParticipantPickerDataSource>
 
