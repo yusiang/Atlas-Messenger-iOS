@@ -1,5 +1,16 @@
 # Layer Sample CHANGELOG
 
+## 0.8.7
+
+###New Features 
+1. iMessage style address bar with type ahead results
+2. iMessage style pariticipant picker
+3. Adding or removing a participant from a conversation now switches conversations or creates a new one. 
+
+###Deprecated Features
+1. Layer particpant picker with selection indicator
+2. Ability to add a user to an existing conversation. 
+
 ## 0.8.5
 
 ###New Features 
