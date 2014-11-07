@@ -6,21 +6,12 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "KIFTestCase.h"
-#import <KIF/KIF.h>
-#define EXP_SHORTHAND
-#import <Expecta/Expecta.h>
-#import "KIFSystemTestActor+ViewControllerActions.h"
-#import "KIFUITestActor+LSAdditions.h"
-#import "LYRCountdownLatch.h"
-#import "LSApplicationController.h"
-#import "LSAppDelegate.h"
+#import "LYRUITestInterface.h"
+
 #import "LYRUIParticipantPickerController.h"
 #import "LSUIParticipantPickerDataSource.h"
-#import "LYRUITestUser.h"
-#import "LYRCountDownLatch.h"
-#import "LYRUITestInterface.h"
 #import "LYRUIParticipantTableViewCell.h"
 #import "LYRUITestParticipantCell.h"
 #import "LYRUIPaticipantSectionHeaderView.h"
@@ -36,18 +27,16 @@
 
 - (void)setUp
 {
-    [super setUp];
-    
     LSApplicationController *applicationController =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [LYRUITestInterface testInterfaceWithApplicationController:applicationController];
+    [super setUp];
+    
 }
 
 - (void)tearDown
 {
     [self.testInterface deleteContacts];
     [self.testInterface logout];
-    self.testInterface = nil;
-    [tester waitForTimeInterval:1];
     [super tearDown];
 }
 
@@ -97,80 +86,6 @@
         [tester tapViewWithAccessibilityLabel:@"Search Bar"];
         [tester enterText:searchText intoViewWithAccessibilityLabel:@"Search Bar"];
         [tester waitForAbsenceOfViewWithAccessibilityLabel:searchText];
-        [self dismissModalViewController:controller];
-    }];
-}
-
-//Configure the picker in single selection mode and verify that it only permits a single selection to be made.
-- (void)testToVerifySingleSelectionModeAllowsOnlyOneSelectionAtATime
-{
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
-    [tester waitForTimeInterval:1];
-    
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
-    controller.allowsMultipleSelection = NO;
-    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
-        LSUser *user1 = [self.testInterface randomUser];
-        LSUser *user2 = [self.testInterface randomUser];
-        [tester tapViewWithAccessibilityLabel:user1.fullName];
-        [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
-        [tester tapViewWithAccessibilityLabel:user2.fullName];
-        [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user2]];
-        [tester waitForAbsenceOfViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
-        [self dismissModalViewController:controller];
-    }];
-}
-
-//Configure the picker in multi-selection mode and verify that it allows multiple selections to be made.
-- (void)testToVerifyThatMutltiSelectionModeAllowsMultipleParticipantsToBeSelected
-{
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
-    [tester waitForTimeInterval:1];
-    
-    LSUser *user1 = [self.testInterface randomUser];
-    LSUser *user2 = [self.testInterface randomUser];
-    
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];    controller.allowsMultipleSelection = YES;
-    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
-        [tester tapViewWithAccessibilityLabel:user1.fullName];
-        [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
-        [tester tapViewWithAccessibilityLabel:user2.fullName];
-        [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user2]];
-        [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
-        [self dismissModalViewController:controller];
-    }];
-}
-
-//Verify that tapping a participant once adds a check mark.
-- (void)testToVerifyTappingOnParticipantDisplaysACheckmark
-{
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
-    [tester waitForTimeInterval:1];
-    
-   LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
-    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
-        LSUser *user1 = [self.testInterface randomUser];
-        [tester tapViewWithAccessibilityLabel:user1.fullName];
-        [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
-        [self dismissModalViewController:controller];
-    }];
-}
-
-//Verify that tapping a participant a second time remove the existing check mark.
-
-- (void)testToVerifyTappingOnAParticipantTwiceRemovesCheckmark
-{
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
-    [tester waitForTimeInterval:1];
-    
-    LSUser *user1 = [self.testInterface randomUser];
-    
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
-    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
-        [tester tapViewWithAccessibilityLabel:user1.fullName];
-        [tester waitForViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
-        [tester tapViewWithAccessibilityLabel:user1.fullName];
-        [tester waitForAbsenceOfViewWithAccessibilityLabel:[self selectionIndicatoraccessibilityLabelForUser:user1]];
         [self dismissModalViewController:controller];
     }];
 }
@@ -286,6 +201,59 @@
         [tester waitForTimeInterval:2];
         expect(^{ [modalViewController setRowHeight:80]; }).to.raise(NSInternalInconsistencyException);
         [self dismissModalViewController:controller];
+    }];
+}
+
+- (void)testtoVerifyParticipantPickerDelegateFunctionalityForCancelButton
+{
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
+    [tester waitForTimeInterval:1];
+    
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    id delegateMock = OCMProtocolMock(@protocol(LYRUIParticipantPickerControllerDelegate));
+    controller.participantPickerDelegate = delegateMock;
+    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
+        [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
+            //
+        }] participantSelectionViewControllerDidCancel:[OCMArg any]];
+        
+        [tester tapViewWithAccessibilityLabel:@"Cancel"];
+        [delegateMock verify];
+    }];
+}
+
+- (void)testtoVerifyParticipantPickerDelegateFunctionalityForParticipantSelection
+{
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
+    [tester waitForTimeInterval:1];
+    
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    id delegateMock = OCMProtocolMock(@protocol(LYRUIParticipantPickerControllerDelegate));
+    controller.participantPickerDelegate = delegateMock;
+    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
+        [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
+            
+            id<LYRUIParticipant> participant;
+            [invocation getArgument:&participant atIndex:3];
+            expect([participant class]).to.equal([LSUser class]);
+            [controller dismissViewControllerAnimated:true completion:nil];
+            
+        }] participantSelectionViewController:[OCMArg any] didSelectParticipant:[OCMArg any]];
+        
+        [tester tapRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] inTableViewWithAccessibilityIdentifier:@"Participant TableView Controller"];
+        [delegateMock verify];
+    }];
+}
+
+- (void)testToVerifyParticipantPickerDataSourceFunctionality
+{
+    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
+    [tester waitForTimeInterval:1];
+    
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
+
+        
     }];
 }
 

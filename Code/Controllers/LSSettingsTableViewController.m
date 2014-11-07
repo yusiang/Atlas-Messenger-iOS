@@ -8,7 +8,6 @@
 
 #import "LSSettingsTableViewController.h"
 #import "LSSwitch.h"
-#import "LSDetailHeaderView.h"
 #import "LYRUIConstants.h"
 #import "SVProgressHUD.h"
 #import "LSSettingsHeaderView.h"
@@ -18,6 +17,7 @@
 
 @property (nonatomic, strong) NSDictionary *conversationStatistics;
 @property (nonatomic) LSSettingsHeaderView *headerView;
+@property (nonatomic) NSUInteger averageSend;
 
 @end
 
@@ -72,6 +72,7 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (self.applicationController.layerClient.isConnected){
         [self.headerView updateConnectedStateWithString:LSConnected];
     } else {
@@ -91,17 +92,21 @@ static NSString *const LSConnecting = @"Connecting";
 {
     switch (section) {
         case 0:
-            return 3;
+            return 2;
             break;
+            
         case 1:
-            return 3;
+            return 6;
             break;
+            
         case 2:
             return 3;
             break;
+            
         case 3:
             return 1;
             break;
+            
         default:
             break;
     }
@@ -126,16 +131,12 @@ static NSString *const LSConnecting = @"Connecting";
             // Push Configuration
             switch (indexPath.row) {
                 case 0:
-                    cell.textLabel.text = @"Send Silent Notifications";
+                    cell.textLabel.text = @"Send Push Notifications";
                     radioSwitch.on = self.applicationController.shouldSendPushText;
                     cell.accessoryView = radioSwitch;
                     break;
+                    
                 case 1:
-                    cell.textLabel.text = @"Send Push Notification Sound";
-                    radioSwitch.on = self.applicationController.shouldSendPushSound;
-                    cell.accessoryView = radioSwitch;
-                    break;
-                case 2:
                     cell.textLabel.text = @"Display Local Notifications";
                     radioSwitch.on = self.applicationController.shouldDisplayLocalNotifications;
                     cell.accessoryView = radioSwitch;
@@ -148,7 +149,47 @@ static NSString *const LSConnecting = @"Connecting";
             break;
             
         case 1: {
-             // Layer Stats Stats
+            // // Debug Mode
+            switch (indexPath.row) {
+                case 0:
+                    cell.textLabel.text = @"Debug Mode ";
+                    radioSwitch.on = self.applicationController.debugModeEnabled;
+                    cell.accessoryView = radioSwitch;
+                    break;
+                    
+                case 1:
+                    cell.textLabel.text = [NSString stringWithFormat:@"Version: %@", [LSApplicationController versionString]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                    
+                case 2:
+                    cell.textLabel.text = [NSString stringWithFormat:@"Build: %@", [LSApplicationController buildInformationString]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                    
+                case 3:
+                    cell.textLabel.text = [NSString stringWithFormat:@"Host: %@", [LSApplicationController layerServerHostname]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                    
+                case 4:
+                    cell.textLabel.text = [NSString stringWithFormat:@"UserID: %@", self.applicationController.layerClient.authenticatedUserID];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                    
+                case 5:
+                    cell.textLabel.text = [NSString stringWithFormat:@"Device Token: %@", [self.applicationController.deviceToken description]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+            break;
+            
+        case 2: {
+            // Layer Stats Stats
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
@@ -159,6 +200,7 @@ static NSString *const LSConnecting = @"Connecting";
                     cell.accessoryView = conversationsLabel;
                 }
                     break;
+                    
                 case 1: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Messages:"];
                     UILabel *messagesLabel = [[UILabel alloc] init];
@@ -168,6 +210,7 @@ static NSString *const LSConnecting = @"Connecting";
                     cell.accessoryView = messagesLabel;
                 }
                     break;
+                    
                 case 2: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Unread Messages:"];
                     UILabel *unreadMessagesLabel = [[UILabel alloc] init];
@@ -177,29 +220,10 @@ static NSString *const LSConnecting = @"Connecting";
                     cell.accessoryView = unreadMessagesLabel;
                 }
                     break;
+                    
                 default:
                     break;
-            }
-        }
-            break;
-            
-        case 2: {
-            // // Debug Mode
-            switch (indexPath.row) {
-                case 0:
-                    cell.textLabel.text = @"Debug Mode ";
-                    radioSwitch.on = self.applicationController.debugModeEnabled;
-                    cell.accessoryView = radioSwitch;
-                    break;
-                case 1:
-                    cell.textLabel.text = @"Copy Device Token";
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                case 2:
-                    cell.textLabel.text = @"Reload Contacts";
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                default:
-                    break;
+                    
             }
         }
             break;
@@ -210,6 +234,8 @@ static NSString *const LSConnecting = @"Connecting";
             centerCell.centerTextLabel.textColor = LSRedColor();
             return centerCell;
         }
+            break;
+            
         default:
             break;
     }
@@ -219,14 +245,28 @@ static NSString *const LSConnecting = @"Connecting";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch (indexPath.section) {
-        case 2:
+        case 1:
             switch (indexPath.row) {
                 case 1:
-                    [self copyDeviceToken];
+                     [self settingsAlertWithString:[LSApplicationController versionString]];
                     break;
+                    
                 case 2:
-                    [self reloadContacts];
+                     [self settingsAlertWithString:[LSApplicationController buildInformationString]];
                     break;
+                    
+                case 3:
+                     [self settingsAlertWithString:[LSApplicationController layerServerHostname]];
+                    break;
+                    
+                case 4:
+                     [self settingsAlertWithString:self.applicationController.layerClient.authenticatedUserID];
+                    break;
+                    
+                case 5:
+                     [self settingsAlertWithString:[self.applicationController.deviceToken description]];
+                    break;
+                    
                 default:
                     break;
             }
@@ -234,6 +274,8 @@ static NSString *const LSConnecting = @"Connecting";
         
         case 3:
             [self logOut];
+            break;
+            
         default:
             break;
     }
@@ -244,24 +286,26 @@ static NSString *const LSConnecting = @"Connecting";
     return 48;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     switch (section) {
         case 0:
-            return [LSDetailHeaderView initWithTitle:@"NOTIFICATIONS"];
+            return @"NOTIFICATIONS";
             break;
+            
         case 1:
-            return [LSDetailHeaderView initWithTitle:@"STATISTICS"];
+            return  @"DEBUG";
             break;
+            
         case 2:
-            return [LSDetailHeaderView initWithTitle:@"DEBUG"];
+            return @"STATISTICS";
             break;
+            
         default:
             break;
     }
     return nil;
 }
-
 
 - (NSDictionary *)fetchConversationStatistics
 {
@@ -297,23 +341,23 @@ static NSString *const LSConnecting = @"Connecting";
                 case 0:
                     self.applicationController.shouldSendPushText = radioButton.on;
                     break;
+                    
                 case 1:
-                    self.applicationController.shouldSendPushSound = radioButton.on;
-                    break;
-                case 2:
                     self.applicationController.shouldDisplayLocalNotifications = radioButton.on;
                     break;
+                    
                 default:
                     break;
             }
             break;
             
-        case 2:
+        case 1:
             // // Debug Mode
             switch (indexPath.row) {
                 case 0:
                     self.applicationController.debugModeEnabled = radioButton.on;
                     break;
+                    
                 default:
                     break;
             }
@@ -329,14 +373,32 @@ static NSString *const LSConnecting = @"Connecting";
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)copyDeviceToken
+- (void)settingsAlertWithString:(NSString *)string
 {
-    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    if (self.applicationController.deviceToken) {
-        pasteboard.string = [self.applicationController.deviceToken description];
-        [SVProgressHUD showSuccessWithStatus:@"Copied"];
-    } else {
-        [SVProgressHUD showErrorWithStatus:@"No Device Token Available"];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Layer Talk Settings"
+                                                        message:string
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Copy" otherButtonTitles:@"OK", nil];
+    alertView.delegate = self;
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0: {
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            if (self.applicationController.deviceToken) {
+                pasteboard.string = alertView.message;
+                [SVProgressHUD showSuccessWithStatus:@"Copied"];
+            } else {
+                [SVProgressHUD showErrorWithStatus:@"No Device Token Available"];
+            }
+        }
+            break;
+            
+        default:
+            break;
     }
 }
 
@@ -346,7 +408,6 @@ static NSString *const LSConnecting = @"Connecting";
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
         [SVProgressHUD showSuccessWithStatus:@"Contacts Loaded"];
     }];
-
 }
 
 - (void)logOut

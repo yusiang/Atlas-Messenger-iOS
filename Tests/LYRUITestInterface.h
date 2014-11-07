@@ -7,17 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LSUser.h"
+#import <LayerKit/LayerKit.h>
 #import "LSApplicationController.h"
-#import "LYRCountDownLatch.h"
+#import "LYRUILayerContentFactory.h"
+#import "LSAppDelegate.h"
+#import "LYRUITestUser.h"
+
+// Testing Imports
+#import <OCMock/OCMock.h>
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
+#import "LYRCountDownLatch.h"
+#import "KIFTestCase.h"
 #import <KIF/KIF.h>
 #import "KIFSystemTestActor+ViewControllerActions.h"
 
 @interface LYRUITestInterface : NSObject
 
 + (instancetype)testInterfaceWithApplicationController:(LSApplicationController *)applicationController;
+
+@property LYRUILayerContentFactory *contentFactory;
 
 //-------------------------------
 // Authentication Methods

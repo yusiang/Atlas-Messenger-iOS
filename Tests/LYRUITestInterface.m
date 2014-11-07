@@ -27,7 +27,8 @@
     if (self) {
         
         _applicationController = applicationController;
-    
+        _contentFactory = [LYRUILayerContentFactory layerContentFactoryWithLayerClient:applicationController.layerClient];
+        [self deleteContacts];
     }
     return self;
 }

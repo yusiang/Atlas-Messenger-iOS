@@ -17,10 +17,25 @@
 #import "LSAuthenticationTableViewController.h"
 #import "LSSplashView.h"
 #import "LSLocalNotificationUtilities.h"
+#import "LSPartnerAPIManager.h"
 
 extern void LYRSetLogLevelFromEnvironment();
+extern NSString *LYRApplicationDataDirectory(void);
+extern dispatch_once_t LYRConfigurationURLOnceToken;
 
-@interface LSAppDelegate ()
+void LYRTestResetConfiguration(void)
+{
+    extern dispatch_once_t LYRDefaultConfigurationDispatchOnceToken;
+    
+    NSString *archivePath = [LYRApplicationDataDirectory() stringByAppendingPathComponent:@"LayerConfiguration.plist"];
+    [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
+    
+    // Ensure the next call through `LYRDefaultConfiguration` will reload
+    LYRDefaultConfigurationDispatchOnceToken = 0;
+    LYRConfigurationURLOnceToken = 0;
+}
+
+@interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate>
 
 @property (nonatomic) UINavigationController *navigationController;
 @property (nonatomic) UINavigationController *authenticatedNavigationController;
@@ -28,6 +43,13 @@ extern void LYRSetLogLevelFromEnvironment();
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
 @property (nonatomic) LSLocalNotificationUtilities *localNotificationUtilities;
+
+@end
+
+@interface LYRClient ()
+
+@property (nonatomic) NSURL *configurationURL;
+- (void)refreshConfiguration;
 
 @end
 
@@ -39,21 +61,8 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    self.environment = LYRUIDevelopment;
+    [self configureApplication:application forEnvironment:LYRUIProduction];
     LYRSetLogLevelFromEnvironment();
-    
-    // Configure Layer Base URL
-    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
-    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(self.environment)]) {
-        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:@"LAYER_CONFIGURATION_URL"];
-    }
-    
-    // Configure application controllers
-    self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL()
-                                                                    layerClient:[LYRClient clientWithAppID:LSLayerAppID(self.environment)]
-                                                             persistenceManager:LSPersitenceManager()];
-    
-    self.localNotificationUtilities = [LSLocalNotificationUtilities initWithLayerClient:self.applicationController.layerClient];
     
     // Setup notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -65,31 +74,15 @@ extern void LYRSetLogLevelFromEnvironment();
                                              selector:@selector(userDidDeauthenticateNotification:)
                                                  name:LSUserDidDeauthenticateNotification
                                                object:nil];
-    
-    // Connect Layer SDK
-    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            NSLog(@"Error connecting Layer: %@", error);
-        } else {
-            NSLog(@"Layer Client is connected");
-            if (self.applicationController.layerClient.authenticatedUserID) {
-                [self resumeSession];
-                [self presentConversationsListViewController];
-            }
-        }
-        [self removeSplashView];
-    }];
-    
     // Setup application
     [self setRootViewController];
-    [self registerForRemoteNotifications:application];
     
     // Setup SDKs
     [self initializeCrashlytics];
-    //[self initializeHockeyApp];
+    [self initializeHockeyApp];
     
     // Setup Screenshot Listener for Bugs
-    [self listenForScreenShots];
+    [self setupScreenShotListener];
 
     // Configure Sample App UI Appearance
     [self configureGlobalUserInterfaceAttributes];
@@ -97,7 +90,7 @@ extern void LYRSetLogLevelFromEnvironment();
     // ConversationListViewController Config
     _cellClass = [LYRUIConversationTableViewCell class];
     _rowHeight = 72;
-    _allowsEditing = YES;
+    _allowsEditing = NO;
     _displaysConversationImage = NO;
     _displaysSettingsButton = YES;
     
@@ -113,30 +106,20 @@ extern void LYRSetLogLevelFromEnvironment();
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    [self getUnreadMessageCount];
+    NSUInteger unreadMessageCount = [self.applicationController.layerClient countOfUnreadMessagesInConversation:nil];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:unreadMessageCount];
     if (self.applicationController.shouldDisplayLocalNotifications) {
         [self.localNotificationUtilities setShouldListenForChanges:YES];
     }
 }
 
-- (void)registerForRemoteNotifications:(UIApplication *)application
-{
-    // Declaring that I want to recieve push!
-    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
-        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
-                                                                                             categories:nil];
-        [application registerUserNotificationSettings:notificationSettings];
-        [application registerForRemoteNotifications];
-    } else {
-        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
-    }
-}
-
+#pragma mark - Setup Methods
 
 - (void)setRootViewController
 {
     self.authenticationViewController = [LSAuthenticationTableViewController new];
     self.authenticationViewController.applicationController = self.applicationController;
+    self.authenticationViewController.delegate = self;
     
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
     self.navigationController.navigationBarHidden = TRUE;
@@ -149,41 +132,70 @@ extern void LYRSetLogLevelFromEnvironment();
     [self addSplashView];
 }
 
-- (void)resumeSession
+- (void)configureApplication:(UIApplication *)application forEnvironment:(LSEnvironment)environment
+{
+    self.environment = environment;
+    
+    // Configure Layer Base URL
+    NSString *configURLString = LSLayerConfigurationURL(self.environment);
+    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    if (![currentConfigURL isEqualToString:configURLString]) {
+        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:@"LAYER_CONFIGURATION_URL"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    LYRTestResetConfiguration();
+    
+    // Configure application controllers
+    LYRClient *client = [LYRClient clientWithAppID:LSLayerAppID(self.environment)];
+    self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL()
+                                                                    layerClient:client
+                                                             persistenceManager:LSPersitenceManager()];
+    
+    self.localNotificationUtilities = [LSLocalNotificationUtilities initWithLayerClient:self.applicationController.layerClient];
+    self.authenticationViewController.applicationController = self.applicationController;
+    
+    // Connect Layer SDK
+    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            NSLog(@"Error connecting Layer: %@", error);
+        } else {
+            NSLog(@"Layer Client is connected");
+            if (self.applicationController.layerClient.authenticatedUserID) {
+                if ([self resumeSession]) {
+                    [self presentConversationsListViewController];
+                } else {
+                    [self.applicationController.layerClient deauthenticateWithCompletion:nil];
+                }
+            }
+        }
+        [self removeSplashView];
+    }];
+    
+    [self registerForRemoteNotifications:application];
+}
+
+- (BOOL)resumeSession
 {
     LSSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
-    [self.applicationController.APIManager resumeSession:session error:nil];
+    if ([self.applicationController.APIManager resumeSession:session error:nil]) {
+        return YES;
+    }
+    return NO;
 }
 
-- (void)initializeCrashlytics
-{
-    [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
-    [Crashlytics setObjectValue:LSLayerConfigurationURL(self.environment) forKey:@"ConfigurationURL"];
-    [Crashlytics setObjectValue:LSLayerAppID(self.environment) forKey:@"AppID"];
-}
+#pragma mark - Push Notification Setup and Handlers
 
-- (void)initializeHockeyApp
+- (void)registerForRemoteNotifications:(UIApplication *)application
 {
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
-    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-}
-
-- (void)updateCrashlyticsWithUser:(LSUser *)authenticatedUser
-{
-    // Note: If authenticatedUser is nil, this will nil out everything which is what we want.
-    [Crashlytics setUserName:authenticatedUser.fullName];
-    [Crashlytics setUserEmail:authenticatedUser.email];
-    [Crashlytics setUserIdentifier:authenticatedUser.userID];
-}
-
-- (void)listenForScreenShots
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(screenshotTaken:)
-                                                 name:UIApplicationUserDidTakeScreenshotNotification
-                                               object:nil];
+    // Declaring that I want to recieve push!
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                                                                             categories:nil];
+        [application registerUserNotificationSettings:notificationSettings];
+        [application registerForRemoteNotifications];
+    } else {
+        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+    }
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -215,7 +227,7 @@ extern void LYRSetLogLevelFromEnvironment();
     
     __block LYRMessage *message = [self messageFromRemoteNotification:userInfo];
     if (application.applicationState == UIApplicationStateInactive && message) {
-        [self navigateToConversationViewForMessage:message];
+        [self navigateToConversationViewForMessage:message.conversation];
     }
     
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
@@ -226,7 +238,7 @@ extern void LYRSetLogLevelFromEnvironment();
         // Try navigating once the synchronization completed
         if (application.applicationState == UIApplicationStateInactive && !message) {
             message = [self messageFromRemoteNotification:userInfo];
-            [self navigateToConversationViewForMessage:message];
+            [self navigateToConversationViewForMessage:message.conversation];
         }
         completionHandler(fetchResult);
     }];
@@ -244,12 +256,67 @@ extern void LYRSetLogLevelFromEnvironment();
     return [[messages allObjects] firstObject];
 }
 
-- (void)navigateToConversationViewForMessage:(LYRMessage *)message
+- (void)navigateToConversationViewForMessage:(LYRConversation *)conversation
 {
     UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
     LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
-    [conversationListViewController selectConversation:message.conversation];
+    [conversationListViewController selectConversation:conversation];
 }
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    LYRConversation *conversation;
+    NSURL *objectURL = [NSURL URLWithString:[notification.userInfo objectForKey:LSNotificationIdentifierKey]];
+    NSString *objectTypeString = [notification.userInfo valueForKey:LSNotificationClassTypeKey];
+    
+    if ([objectTypeString isEqualToString:LSNotificationClassTypeConversation]) {
+        conversation = [self.applicationController.layerClient conversationForIdentifier:objectURL];
+    } else {
+        NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:objectURL]];
+        LYRMessage *message = [[messages allObjects] firstObject];
+        conversation = message.conversation;
+    }
+    if (application.applicationState == UIApplicationStateInactive && conversation) {
+        [self navigateToConversationViewForMessage:conversation];
+    }
+}
+
+#pragma mark - SDK Initializers
+
+- (void)initializeCrashlytics
+{
+    [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
+    [Crashlytics setObjectValue:LSLayerConfigurationURL(self.environment) forKey:@"ConfigurationURL"];
+    [Crashlytics setObjectValue:LSLayerAppID(self.environment) forKey:@"AppID"];
+}
+
+- (void)initializeHockeyApp
+{
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1681559bb4230a669d8b057adf8e4ae3"];
+    [BITHockeyManager sharedHockeyManager].disableCrashManager = YES;
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+}
+
+- (void)updateCrashlyticsWithUser:(LSUser *)authenticatedUser
+{
+    // Note: If authenticatedUser is nil, this will nil out everything which is what we want.
+    [Crashlytics setUserName:authenticatedUser.fullName];
+    [Crashlytics setUserEmail:authenticatedUser.email];
+    [Crashlytics setUserIdentifier:authenticatedUser.userID];
+}
+
+#pragma mark - Screen Shot Listener
+
+- (void)setupScreenShotListener
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(screenshotTaken:)
+                                                 name:UIApplicationUserDidTakeScreenshotNotification
+                                               object:nil];
+}
+
+#pragma mark - Authentication Methods
 
 - (void)userDidAuthenticateNotification:(NSNotification *)notification
 {
@@ -328,6 +395,9 @@ extern void LYRSetLogLevelFromEnvironment();
         [self removeSplashView];
     }];
 }
+
+#pragma mark - Splash View Config
+
 - (void)addSplashView
 {
     if (!self.splashView) {
@@ -346,6 +416,8 @@ extern void LYRSetLogLevelFromEnvironment();
     }];
 }
 
+#pragma mark - UI Config
+
 - (void)configureGlobalUserInterfaceAttributes
 {
     [[UINavigationBar appearance] setTintColor:LSBlueColor()];
@@ -357,32 +429,40 @@ extern void LYRSetLogLevelFromEnvironment();
 
 }
 
+#pragma mark - Screen Shot Handler
 - (void)screenshotTaken:(NSNotification *)notification
 {
-    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Report Issue?"
+                                                        message:@"Would you like to report a bug with the sample app?"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Not Now" otherButtonTitles:@"Yes", nil];
+    [alertView show];
 }
 
-- (void)getUnreadMessageCount
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    __block NSUInteger unreadMessageCount = 0;
-    __block NSString *userID = self.applicationController.layerClient.authenticatedUserID;
-    NSSet *conversations = [self.applicationController.layerClient conversationsForIdentifiers:nil];
-    for (LYRConversation *conversation in conversations) {
-        NSOrderedSet *messages = [self.applicationController.layerClient messagesForConversation:conversation];
-        for (LYRMessage *message in messages) {
-            LYRRecipientStatus status = [[message.recipientStatusByUserID objectForKey:userID] integerValue];
-            //NSLog(@"Status: %ld", status);
-            switch (status) {
-                case LYRRecipientStatusDelivered:
-                    unreadMessageCount += 1;
-                    break;
-                    
-                default:
-                    break;
-            }
+    switch (buttonIndex) {
+        case 0: {
+//            LSPartnerAPIManager *manager = [LSPartnerAPIManager managerWithBaseURL:[NSURL URLWithString:@"https://layerhq.atlassian.net"]];
+//            [manager attachImage:[UIImage imageNamed:@"testImage"] toIssue:nil];
         }
+            break;
+        case 1:
+            //
+            break;
+        default:
+            break;
     }
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:unreadMessageCount];
+}
+
+#pragma mark - Authentaction Controller Delegate Methods
+
+- (void)authenticationTableViewController:(LSAuthenticationTableViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment
+{
+    if (self.applicationController.layerClient.isConnected) {
+        [self.applicationController.layerClient disconnect];
+    }
+    [self configureApplication:[UIApplication sharedApplication] forEnvironment:environment];
 }
 
 @end

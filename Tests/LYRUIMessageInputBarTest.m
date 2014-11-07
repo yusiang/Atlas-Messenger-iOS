@@ -8,23 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import <OCMock/OCMock.h>
-#define EXP_SHORTHAND
-#import <Expecta/Expecta.h>
-#import "LSApplicationController.h"
 #import "LYRUITestInterface.h"
-#import "LYRUILayerContentFactory.h"
-#import "LSAppDelegate.h"
-#import "LYRUITestUser.h"
+
 #import "LYRUIConversationViewController.h"
 #import "LYRUIMessageInputToolbar.h"
 #import "LYRUIMessageComposeTextView.h"
 #import "LYRUIMessageInputToolBarTestViewController.h"
 
-@interface LYRUIMessageInputBarTest : XCTestCase
+@interface LYRUIMessageInputBarTest :XCTestCase
 
 @property (nonatomic) LYRUITestInterface *testInterface;
-@property (nonatomic) LYRUILayerContentFactory *layerContentFactory;
 @property (nonatomic) LYRUIMessageInputToolBarTestViewController *viewController;
 
 @end
@@ -38,6 +31,9 @@ static NSString *const LSCameraButtonLabel = @"Camera Button";
 - (void)setUp
 {
     [super setUp];
+
+    LSApplicationController *applicationController =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    self.testInterface = [LYRUITestInterface testInterfaceWithApplicationController:applicationController];
     
     self.viewController = [[LYRUIMessageInputToolBarTestViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
@@ -60,7 +56,7 @@ static NSString *const LSCameraButtonLabel = @"Camera Button";
         NSArray *parts = self.viewController.toolBar.messageParts;
         expect(parts.count).to.equal(1);
         expect([parts objectAtIndex:0]).to.equal(testText);
-    }] messageInputToolbar:self.viewController.toolBar didTapRightAccessoryButton:[OCMArg any]];
+    }] messageInputToolbar:[OCMArg any] didTapRightAccessoryButton:[OCMArg any]];
     
     [tester enterText:testText intoViewWithAccessibilityLabel:LSTextInputViewLabel];
     [tester tapViewWithAccessibilityLabel:LSSendButtonLabel];
@@ -69,16 +65,25 @@ static NSString *const LSCameraButtonLabel = @"Camera Button";
 
 - (void)testToVerifyEmptyStringEnteredDoesNotInvokeDelegate
 {
-    //////////////NOT YET WORKING////////////////////
-    
     id protocolMock = OCMProtocolMock(@protocol(LYRUIMessageInputToolbarDelegate));
     self.viewController.toolBar.delegate = protocolMock;
 
-    [[protocolMock reject] messageInputToolbar:self.viewController.toolBar didTapRightAccessoryButton:[OCMArg any]];
+    [[protocolMock reject] messageInputToolbar:[OCMArg any] didTapRightAccessoryButton:[OCMArg any]];
     [protocolMock verify];
-    __block NSString *testText = @"This is a test";
-    [tester enterText:testText intoViewWithAccessibilityLabel:LSTextInputViewLabel];
-    [tester tapViewWithAccessibilityLabel:@"Camera Button"];
+    [tester tapViewWithAccessibilityLabel:@"Send Button"];
+}
+
+- (void)testToVerifyLeftAccessoryButtonFunctionality
+{
+    id delegateMock = OCMProtocolMock(@protocol(LYRUIMessageInputToolbarDelegate));
+    self.viewController.toolBar.inputToolBarDelegate = delegateMock;
+    
+    [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
+
+    }] messageInputToolbar:[OCMArg any] didTapLeftAccessoryButton:[OCMArg any]];
+    
+    [tester tapViewWithAccessibilityLabel:LSCameraButtonLabel];
+    [delegateMock verify];
 }
 
 - (void)testToVerifySendingMessageWithPhoto
@@ -101,50 +106,25 @@ static NSString *const LSCameraButtonLabel = @"Camera Button";
     [delegateMock verify];
 }
 
-- (void)testToVerifySendingMessageWithPhotoWithMessage
+- (void)testToVerifySending1LineOfTextWith2Photos
 {
     id delegateMock = OCMProtocolMock(@protocol(LYRUIMessageInputToolbarDelegate));
     self.viewController.toolBar.inputToolBarDelegate = delegateMock;
     
     __block NSString *testText = @"This is a test";
-    __block NSString *giftText = @"This is a Gift";
     __block UIImage *testImage = [UIImage imageNamed:@"testImage"];
     [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
         NSArray *parts = self.viewController.toolBar.messageParts;
         expect(parts.count).to.equal(3);
         expect([parts objectAtIndex:0]).to.equal(testText);
         expect([parts objectAtIndex:1]).to.equal(testImage);
-        expect([parts objectAtIndex:2]).to.equal(giftText);
-    }] messageInputToolbar:self.viewController.toolBar didTapRightAccessoryButton:[OCMArg any]];
-    
-    [tester enterText:testText intoViewWithAccessibilityLabel:LSTextInputViewLabel];
-    [self.viewController.toolBar insertImage:testImage];
-    [tester enterText:giftText intoViewWithAccessibilityLabel:LSTextInputViewLabel];
-    [tester tapViewWithAccessibilityLabel:LSSendButtonLabel];
-    [delegateMock verify];
-}
-
-- (void)testToVerifySending2LinesOfTextWith2Photos
-{
-    id delegateMock = OCMProtocolMock(@protocol(LYRUIMessageInputToolbarDelegate));
-    self.viewController.toolBar.inputToolBarDelegate = delegateMock;
-    
-    __block NSString *testText = @"This is a test";
-    __block NSString *giftText = @"This is a Gift";
-    __block UIImage *testImage = [UIImage imageNamed:@"testImage"];
-    [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
-        NSArray *parts = self.viewController.toolBar.messageParts;
-        expect(parts.count).to.equal(3);
-        expect([parts objectAtIndex:0]).to.equal(testText);
-        expect([parts objectAtIndex:1]).to.equal(testImage);
-        expect([parts objectAtIndex:2]).to.equal(giftText);
         expect([parts objectAtIndex:1]).to.equal(testImage);
     }] messageInputToolbar:self.viewController.toolBar didTapRightAccessoryButton:[OCMArg any]];
     
     [tester enterText:testText intoViewWithAccessibilityLabel:LSTextInputViewLabel];
     [self.viewController.toolBar insertImage:testImage];
-    [tester enterText:giftText intoViewWithAccessibilityLabel:LSTextInputViewLabel];
     [self.viewController.toolBar insertImage:testImage];
+    
     [tester tapViewWithAccessibilityLabel:LSSendButtonLabel];
     [delegateMock verify];
 }
@@ -203,19 +183,10 @@ static NSString *const LSCameraButtonLabel = @"Camera Button";
 
 - (void)testToVerifySelectingAndRemovingAnImageKeepsFontConsistent
 {
-    
+    UIFont *font = self.viewController.toolBar.textInputView.font;
+    [self.viewController.toolBar insertImage:[UIImage imageNamed:@"testImage"]];
+    [tester clearTextFromViewWithAccessibilityLabel:LSTextInputViewLabel];
+    expect(font).to.equal(self.viewController.toolBar.textInputView.font);
 }
-
-- (void)testToVerifyFontIsConsistentAfterEnteringAnImage
-{
-    
-}
-
-
-- (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
-}
-
 
 @end

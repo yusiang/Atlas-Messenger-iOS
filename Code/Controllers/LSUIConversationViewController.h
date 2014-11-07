@@ -9,8 +9,14 @@
 #import "LYRUIConversationViewController.h"
 #import "LSApplicationController.h"
 
+/**
+ @abstract Subclass of the `LYRUIConversationViewController. Presents a user interface for a conversation.
+ */
 @interface LSUIConversationViewController : LYRUIConversationViewController
 
+/**
+ @abstract The controller object for the application.
+ */
 @property (nonatomic) LSApplicationController *applicationContoller;
 
 @end

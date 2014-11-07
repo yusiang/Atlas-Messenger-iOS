@@ -13,7 +13,7 @@
 
 @property (nonatomic) UIButton *primaryActionButton;
 @property (nonatomic) UIButton *secondaryActionButton;
-@property (nonatomic) UIButton *cancelButton;
+@property (nonatomic) UIButton *environmentButton;
 
 @end
 
@@ -26,6 +26,7 @@ static NSString *const LSCancelText = @"Or, Cancel";
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
+    
     if (self) {
         self.primaryActionButton = [[UIButton alloc] init];
         [self.primaryActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -50,6 +51,19 @@ static NSString *const LSCancelText = @"Or, Cancel";
         [self.secondaryActionButton addTarget:self action:@selector(secondaryActionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.secondaryActionButton];
         
+        self.environmentButton = [[UIButton alloc] init];
+        [self.environmentButton setTitleColor:LSBlueColor() forState:UIControlStateNormal];
+        [self.environmentButton setTitleColor:LSBlueColor() forState:UIControlStateHighlighted];
+        self.environmentButton.translatesAutoresizingMaskIntoConstraints = NO;
+        self.environmentButton.backgroundColor = [UIColor clearColor];
+        self.environmentButton.titleLabel.font = LSMediumFont(16);
+        self.environmentButton.titleLabel.textColor = LSBlueColor();
+        self.environmentButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        self.environmentButton.layer.borderColor = LSBlueColor().CGColor;
+        self.environmentButton.layer.cornerRadius = 1.0;
+        [self.environmentButton addTarget:self action:@selector(environmentButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.environmentButton];
+        
         [self updateConstraints];
     }
     return self;
@@ -57,7 +71,7 @@ static NSString *const LSCancelText = @"Or, Cancel";
 
 - (void)updateConstraints
 {
-    
+    //********** Primary Button **********//
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.primaryActionButton
                                                      attribute:NSLayoutAttributeCenterX
                                                      relatedBy:NSLayoutRelationEqual
@@ -90,7 +104,7 @@ static NSString *const LSCancelText = @"Or, Cancel";
                                                     multiplier:1.0
                                                       constant:40]];
     
-    
+    //********** Secondary Button **********//
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.secondaryActionButton
                                                      attribute:NSLayoutAttributeCenterX
                                                      relatedBy:NSLayoutRelationEqual
@@ -123,6 +137,39 @@ static NSString *const LSCancelText = @"Or, Cancel";
                                                     multiplier:1.0
                                                       constant:40]];
     
+    //********** Environment Button **********//
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.environmentButton
+                                                     attribute:NSLayoutAttributeCenterX
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterX
+                                                    multiplier:1.0
+                                                      constant:0]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.environmentButton
+                                                     attribute:NSLayoutAttributeTop
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self.secondaryActionButton
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1.0
+                                                      constant:20]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.environmentButton
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:200]];
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.environmentButton
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:40]];
+    
     [super updateConstraints];
 }
 
@@ -142,7 +189,7 @@ static NSString *const LSCancelText = @"Or, Cancel";
         default:
             break;
     }
-    [self.cancelButton setTitle:LSCancelText forState:UIControlStateNormal];
+    [self.environmentButton setTitle:@"Change Environment" forState:UIControlStateNormal];
     _authenticationState = authenticationState;
 }
 
@@ -170,9 +217,9 @@ static NSString *const LSCancelText = @"Or, Cancel";
     }];
 }
 
-- (void)cancelButtonWasTapped
+- (void)environmentButtonTapped
 {
-    [self.delegate cancelButtonTappedForAuthenticationTableViewFooter:self];
+    [self.delegate environmentButtonTappedForAuthenticationTableViewFooter:self];
 }
 
 @end

@@ -15,13 +15,14 @@ extern NSString *const LSUserDidAuthenticateNotification;
 extern NSString *const LSUserDidDeauthenticateNotification;
 
 /**
- @abstract The `LSAPIManager` class provides authentication with the backend and Layer and an interface for interacting with the JSON API.
+ @abstract The `LSAPIManager` class provides an interface for interacting with the Layer Identity Provider JSON API and managing 
+ the Layer sample app authentication state.
  */
 @interface LSAPIManager : NSObject
 
-///-----------------------------
+///--------------------------------
 /// @name Initializing a Manager
-///-----------------------------
+///--------------------------------
 
 + (instancetype)managerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient;
 
@@ -30,66 +31,62 @@ extern NSString *const LSUserDidDeauthenticateNotification;
  */
 @property (nonatomic, readonly) LSSession *authenticatedSession;
 
+/**
+ @abstract The current authenticated URL Session configuration or `nil` if not yet authenticated.
+ */
 @property (nonatomic, readonly) NSURLSessionConfiguration *authenticatedURLSessionConfiguration;
 
+
 ///------------------------------------
-/// @name Managing Authentication State
+/// @name JSON API Interface
 ///------------------------------------
 
 /**
- *  Registers a new user with the Layer sample backend rails applicaiton
- *
- *  @param user       The model object representing the user attempting to authenticate
- *  @param completion The completion block that will be called upon completion of the registration operation. Completion block cannot be `nil`
+ @abstract Registers a new user with the Layer sample backend rails applicaiton
+ @param user The model object representing the user attempting to authenticate
+ @param completion The completion block that will be called upon completion of the registration operation. Completion block cannot be `nil`
  */
 - (void)registerUser:(LSUser *)user completion:(void(^)(LSUser *user, NSError *error))completion;
 
 /**
- *  Autheticates an existing users with the Layer sample backend rails applicaiton. This method takes a nonce value that must be obtained from LayerKit. It returns an identity token in the completion block that can be used to authenticate LayerKit
- *
- *  @param email      The email address for the user attempting to authenticate
- *  @param password   The password for the user attempting to authenticate
- *  @param nonce      The nonce obtained from LayerKit
- *  @param completion The completion block that is called upon completion of the authentication operation. Upon succesful authentication, an identityToken will be returned. Completion block cannot be `nil`
+ @abstract Autheticates an existing users with the Layer sample backend rails applicaiton. This method takes a nonce value that must be 
+ obtained from LayerKit. It returns an identity token in the completion block that can be used to authenticate LayerKit
+ @param email The email address for the user attempting to authenticate
+ @param password The password for the user attempting to authenticate
+ @param nonce The nonce obtained from LayerKit
+ @param completion The completion block that is called upon completion of the authentication operation. Upon succesful authentication, 
+ an identityToken will be returned. Completion block cannot be `nil`
  */
 - (void)authenticateWithEmail:(NSString *)email password:(NSString *)password nonce:(NSString *)nonce completion:(void(^)(NSString *identityToken, NSError *error))completion;
 
 /**
- *  Resumes a Layer sample app session
- *
- *  @param session The model object for the current session
- *  @param error   A reference to an `NSError` object that will contain error information in case the action was not successful.
- *
- *  @return A Boolean value that indicates if the application has a valid session
+ @abstract Loads all contacts from the Layer sample backend rails application
+ @param completion The completion block that is called upon succesfull load of contacts. Completion block cannot be `nil`
+ */
+- (void)loadContactsWithCompletion:(void(^)(NSSet *contacts, NSError *error))completion;
+
+/**
+ @abstract Deletes all contacts from the Layer sample backend rails application
+ @param completion The completion block that is call upon succesfull deletion of all contacts. Completion block cannot be `nil`
+ */
+- (void)deleteAllContactsWithCompletion:(void(^)(BOOL completion, NSError *error))completion;
+
+///------------------------------
+/// @name Authentication State
+///------------------------------
+
+/**
+ @abstract Resumes a Layer sample app session
+ @param session The model object for the current session
+ @param error   A reference to an `NSError` object that will contain error information in case the action was not successful.
+ @return A Boolean value that indicates if the application has a valid session
  */
 - (BOOL)resumeSession:(LSSession *)session error:(NSError **)error;
 
 /**
- *  Deauthenticates the Layer Sample app session
+ @abstract Deauthenticates the Layer Sample app by discarding it's `LSSession` object.
  */
 - (void)deauthenticate;
-
-///-------------------------
-/// @name Accessing Contacts
-///-------------------------
-
-/**
- *  Loads all contacts from the Layer sample backend rails application
- *
- *  @param completion The completion block that is called upon succesfull load of contacts. Completion block cannot be `nil`
- */
-- (void)loadContactsWithCompletion:(void(^)(NSSet *contacts, NSError *error))completion;
-
-///--------------------------
-/// @name Delete All Contacts
-///--------------------------
-
-/**
- *  Deletes all contacts from the Layer sample backend rails application
- *
- *  @param completion The completion block that is call upon succesfull deletion of all contacts. Completion block cannot be `nil`
- */
-- (void)deleteAllContactsWithCompletion:(void(^)(BOOL completion, NSError *error))completion;
 
 @end
 

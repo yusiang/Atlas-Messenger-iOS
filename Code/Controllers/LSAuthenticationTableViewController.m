@@ -13,7 +13,7 @@
 #import "SVPRogressHUD.h"
 #import "LSUtilities.h"
 
-@interface LSAuthenticationTableViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIScrollViewDelegate>
+@interface LSAuthenticationTableViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) UITextField *firstName;
 @property (nonatomic) UITextField *lastName;
@@ -23,7 +23,7 @@
 
 @property (nonatomic) LSAuthenticationState authenticationState;
 @property (nonatomic) LSAuthenticationTableViewHeader *tableViewHeader;
-@property (nonatomic, copy) void (^completionBlock)(NSString *authenticatedUserID);
+@property (nonatomic, copy) void (^completionBlock)(NSString *authenticatedUserID, NSError *error);
 @property (nonatomic) BOOL isEditing;
 
 @end
@@ -180,7 +180,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 200;
+    return 240;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -234,9 +234,39 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [self configureTableViewForAuthenticationState:authenticationState];
 }
 
-- (void)cancelButtonTappedForAuthenticationTableViewFooter:(LSAuthenticationTableViewFooter *)tableViewFooter
+- (void)environmentButtonTappedForAuthenticationTableViewFooter:(LSAuthenticationTableViewFooter *)tableViewFooter
 {
-    [self setEditing:NO];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:nil
+                                  delegate:self
+                                  cancelButtonTitle:@"Cancel"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:@"Production - Prod", @"Production - Sandbox", @"Staging", @"Dev-1", nil];
+    [actionSheet showInView:self.view];
+}
+
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:
+            [self.delegate authenticationTableViewController:self didSelectEnvironment:LYRUIProduction];
+            break;
+            
+        case 1:
+            [self.delegate authenticationTableViewController:self didSelectEnvironment:LYRUIDevelopment];
+            break;
+            
+        case 2:
+            [self.delegate authenticationTableViewController:self didSelectEnvironment:LYRUIStage1];
+            break;
+        
+        case 3:
+            [self.delegate authenticationTableViewController:self didSelectEnvironment:LYRUIDev1];
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)setEditing:(BOOL)editing
@@ -336,7 +366,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
                         if (authenticatedUserID) {
                             NSLog(@"User Authenticated");
-                            if (self.completionBlock) self.completionBlock(authenticatedUserID);
+                            if (self.completionBlock) self.completionBlock(authenticatedUserID, error);
                             [SVProgressHUD dismiss];
                         } else {
                             LSAlertWithError(error);
@@ -373,7 +403,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                         if (identityToken) {
                             [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
                                 if (authenticatedUserID) {
-                                    if (self.completionBlock) self.completionBlock(authenticatedUserID);
+                                    if (self.completionBlock) self.completionBlock(authenticatedUserID, error);
                                     [SVProgressHUD dismiss];
                                 } else {
                                     LSAlertWithError(error);

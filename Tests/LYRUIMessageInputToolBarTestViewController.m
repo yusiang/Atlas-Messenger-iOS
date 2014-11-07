@@ -20,8 +20,8 @@
 {
     self = [super init];
     if (self) {
-        
-        _toolBar = [LYRUIMessageInputToolbar new];
+        _toolBar =  [LYRUIMessageInputToolbar new];
+        [_toolBar sizeToFit];
         _inputAccessoryView = _toolBar;
         
     }
@@ -31,6 +31,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    
+    
     self.view.backgroundColor = [UIColor whiteColor];
 }
 
