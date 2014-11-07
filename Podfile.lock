@@ -22,7 +22,7 @@ PODS:
   - layer-client-messaging-schema (20141027152445461.1)
   - layer-thrift (0.63.0):
     - thrift (~> 0.9.1)
-  - LayerKit (0.8.7-rc2):
+  - LayerKit (0.8.8-b1):
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20141008172234177)
     - FMDB/standalone/FTS (= 2.4-20140928173217764)
@@ -32,7 +32,7 @@ PODS:
     - layer-thrift (~> 0.63.0)
     - LayerKit/Public
     - TransitionKit (~> 2.1.0)
-  - LayerKit/Public (0.8.7-rc2):
+  - LayerKit/Public (0.8.8-b1):
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20141008172234177)
     - FMDB/standalone/FTS (= 2.4-20140928173217764)
@@ -87,7 +87,7 @@ SPEC CHECKSUMS:
   KIFViewControllerActions: 6d680038a329864d62526928dd89556c0177bc55
   layer-client-messaging-schema: bdd45340611628a3b5e50b414e84f3d0e30f619a
   layer-thrift: 0b871359cbb7d14183428702c6f1c566001b1e48
-  LayerKit: 88b968668b1cc667801858f7c1686cde8466dd25
+  LayerKit: 5106d06c8bc4c4c09882ebe451058c615dd7eb70
   LayerUIKit: 2b3fc474b4f20c52a57272a8159a960fd7d0244e
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
