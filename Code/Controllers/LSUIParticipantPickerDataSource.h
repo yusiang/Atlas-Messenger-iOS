@@ -21,4 +21,10 @@
  */
 + (instancetype)participantPickerDataSourceWithPersistenceManager:(LSPersistenceManager *)persistenceManager;
 
+/**
+ @abstract The `NSSet` of user identifiers to be excluded from the pariticipant picker. 
+ @discussion Typically this will be the set of identifiers for a given conversation.
+ */
+@property (nonatomic) NSSet *excludedIdentifiers;
+
 @end

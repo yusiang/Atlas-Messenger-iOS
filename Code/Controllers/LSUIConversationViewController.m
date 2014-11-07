@@ -39,6 +39,8 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     self.delegate = self;
     
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationContoller.persistenceManager];
+    self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
+    
     if (self.conversation) {
         [self addDetailsButton];
     }

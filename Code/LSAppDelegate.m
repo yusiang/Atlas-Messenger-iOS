@@ -20,6 +20,20 @@
 #import "LSPartnerAPIManager.h"
 
 extern void LYRSetLogLevelFromEnvironment();
+extern NSString *LYRApplicationDataDirectory(void);
+extern dispatch_once_t LYRConfigurationURLOnceToken;
+
+void LYRTestResetConfiguration(void)
+{
+    extern dispatch_once_t LYRDefaultConfigurationDispatchOnceToken;
+    
+    NSString *archivePath = [LYRApplicationDataDirectory() stringByAppendingPathComponent:@"LayerConfiguration.plist"];
+    [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
+    
+    // Ensure the next call through `LYRDefaultConfiguration` will reload
+    LYRDefaultConfigurationDispatchOnceToken = 0;
+    LYRConfigurationURLOnceToken = 0;
+}
 
 @interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate>
 
@@ -32,6 +46,13 @@ extern void LYRSetLogLevelFromEnvironment();
 
 @end
 
+@interface LYRClient ()
+
+@property (nonatomic) NSURL *configurationURL;
+- (void)refreshConfiguration;
+
+@end
+
 @implementation LSAppDelegate
 
 @synthesize window;
@@ -40,7 +61,7 @@ extern void LYRSetLogLevelFromEnvironment();
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    [self configureApplication:application forEnvironment:LYRUIDevelopment];
+    [self configureApplication:application forEnvironment:LYRUIProduction];
     LYRSetLogLevelFromEnvironment();
     
     // Setup notifications
@@ -116,15 +137,18 @@ extern void LYRSetLogLevelFromEnvironment();
     self.environment = environment;
     
     // Configure Layer Base URL
+    NSString *configURLString = LSLayerConfigurationURL(self.environment);
     NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
-    if (![currentConfigURL isEqualToString:LSLayerConfigurationURL(self.environment)]) {
+    if (![currentConfigURL isEqualToString:configURLString]) {
         [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:@"LAYER_CONFIGURATION_URL"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    LYRTestResetConfiguration();
     
     // Configure application controllers
+    LYRClient *client = [LYRClient clientWithAppID:LSLayerAppID(self.environment)];
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL()
-                                                                    layerClient:[LYRClient clientWithAppID:LSLayerAppID(self.environment)]
+                                                                    layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
     
     self.localNotificationUtilities = [LSLocalNotificationUtilities initWithLayerClient:self.applicationController.layerClient];
@@ -203,7 +227,7 @@ extern void LYRSetLogLevelFromEnvironment();
     
     __block LYRMessage *message = [self messageFromRemoteNotification:userInfo];
     if (application.applicationState == UIApplicationStateInactive && message) {
-        [self navigateToConversationViewForMessage:message];
+        [self navigateToConversationViewForMessage:message.conversation];
     }
     
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
@@ -214,7 +238,7 @@ extern void LYRSetLogLevelFromEnvironment();
         // Try navigating once the synchronization completed
         if (application.applicationState == UIApplicationStateInactive && !message) {
             message = [self messageFromRemoteNotification:userInfo];
-            [self navigateToConversationViewForMessage:message];
+            [self navigateToConversationViewForMessage:message.conversation];
         }
         completionHandler(fetchResult);
     }];
@@ -232,20 +256,28 @@ extern void LYRSetLogLevelFromEnvironment();
     return [[messages allObjects] firstObject];
 }
 
-- (void)navigateToConversationViewForMessage:(LYRMessage *)message
+- (void)navigateToConversationViewForMessage:(LYRConversation *)conversation
 {
     UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
     LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
-    [conversationListViewController selectConversation:message.conversation];
+    [conversationListViewController selectConversation:conversation];
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
-    NSURL *messageURL =[NSURL URLWithString:[notification.userInfo objectForKey:@"identifier"]];
-    NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:messageURL]];
-    __block LYRMessage *message = [[messages allObjects] firstObject];
-    if (application.applicationState == UIApplicationStateInactive && message) {
-        [self navigateToConversationViewForMessage:message];
+    LYRConversation *conversation;
+    NSURL *objectURL = [NSURL URLWithString:[notification.userInfo objectForKey:LSNotificationIdentifierKey]];
+    NSString *objectTypeString = [notification.userInfo valueForKey:LSNotificationClassTypeKey];
+    
+    if ([objectTypeString isEqualToString:LSNotificationClassTypeConversation]) {
+        conversation = [self.applicationController.layerClient conversationForIdentifier:objectURL];
+    } else {
+        NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:objectURL]];
+        LYRMessage *message = [[messages allObjects] firstObject];
+        conversation = message.conversation;
+    }
+    if (application.applicationState == UIApplicationStateInactive && conversation) {
+        [self navigateToConversationViewForMessage:conversation];
     }
 }
 

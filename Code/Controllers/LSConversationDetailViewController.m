@@ -210,6 +210,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
         case 0:
             if (indexPath.row == self.participantIdentifiers.count) {
                 self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+                self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
                 LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
                                                                                                                         sortType:LYRUIParticipantPickerControllerSortTypeFirst];
                 controller.participantPickerDelegate = self;

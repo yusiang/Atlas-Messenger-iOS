@@ -9,6 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 
+
+extern NSString *const LSNotificationClassTypeKey;
+extern NSString *const LSNotificationClassTypeConversation;
+extern NSString *const LSNotificationClassTypeMessage;
+extern NSString *const LSNotificationIdentifierKey;
+
 @interface LSLocalNotificationUtilities : NSObject
 
 + (instancetype)initWithLayerClient:(LYRClient *)layerClient;
