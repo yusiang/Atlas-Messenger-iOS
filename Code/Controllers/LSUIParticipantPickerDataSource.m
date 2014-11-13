@@ -53,9 +53,7 @@
 {
     NSMutableSet *participants = [[self.persistenceManager persistedUsersWithError:nil] mutableCopy];
     NSSet *participantsToExclude = [self.persistenceManager participantsForIdentifiers:self.excludedIdentifiers];
-    for (LSUser *user in participantsToExclude) {
-        [participants removeObject:user];
-    }
+    [participants minusSet:participantsToExclude];
     return participants;
 }
 

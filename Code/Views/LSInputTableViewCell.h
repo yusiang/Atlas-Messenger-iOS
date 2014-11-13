@@ -12,6 +12,8 @@
 
 @property (nonatomic) UITextField *textField;
 
-- (void)setText:(NSString *)text;
+- (void)setGuideText:(NSString *)guideText;
+
+- (void)setPlaceHolderText:(NSString *)placeHolderText;
 
 @end

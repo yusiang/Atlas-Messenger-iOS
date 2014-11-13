@@ -46,16 +46,33 @@
 
 #pragma mark Conversation List View Controller Delegate Methods
 
+/**
+ 
+ LAYER UI KIT - Allows your application to react to a conversation selection. This application pushses a subclass of 
+ the `LYRUIConversationViewController` component.
+ 
+ */
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
     [self presentControllerWithConversation:conversation];
 }
 
+/**
+ 
+ LAYER UI KIT - Allows your application react to a conversations deletion if necessary. This application does not 
+ need to react because the superclass component will handle removing the conversation in response to a deletion.
+ 
+ */
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didDeleteConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode
 {
     NSLog(@"Conversation Successsfully Deleted");
 }
 
+/**
+ 
+ LAYER UI KIT - Allows your application react to a failed conversation deletion if necessary.
+ 
+ */
 - (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didFailDeletingConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode error:(NSError *)error
 {
     NSLog(@"Conversation Deletion Failed with Error: %@", error);
@@ -63,14 +80,16 @@
 
 #pragma mark Conversation List View Controller Data Source Methods
 
+/**
+ 
+ LAYER UI KIT - Returns a label that is used to represent the conversation. This application puts the 
+ name representing the `lastMessage.sentByUserID` property first in the string.
+ 
+ */
 - (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController labelForConversation:(LYRConversation *)conversation
 {
     NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
-    
-    // Remove currently authenticated user
-    if ([participantIdentifiers containsObject:self.applicationController.layerClient.authenticatedUserID]) {
-        [participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
-    }
+    [participantIdentifiers minusSet:[NSSet setWithObject:self.layerClient.authenticatedUserID]];
     
     if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
@@ -81,10 +100,11 @@
     LSUser *firstUser;
     if (![conversation.lastMessage.sentByUserID isEqualToString:self.layerClient.authenticatedUserID]){
         if (conversation.lastMessage) {
-            NSSet *lastMessageSender = [self.applicationController.persistenceManager participantsForIdentifiers:[NSSet setWithObject:conversation.lastMessage.sentByUserID]];
-            if ([lastMessageSender allObjects].count > 0) {
-                firstUser = [[lastMessageSender allObjects] firstObject];
-                [participants removeObject:firstUser];
+            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", conversation.lastMessage.sentByUserID];
+            LSUser *lastMessageSender = [[[participants filteredSetUsingPredicate:searchPredicate] allObjects] lastObject];
+            if (lastMessageSender) {
+                firstUser = lastMessageSender;
+                [participants removeObject:lastMessageSender];
             }
         }
     } else {
@@ -99,6 +119,12 @@
     return conversationLabel;
 }
 
+/**
+ 
+ LAYER UI KIT - If needed, your application can display an avatar image that represnts a conversation. If no image 
+ is returned, no image will be displayed.
+ 
+ */
 - (UIImage *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController imageForConversation:(LYRConversation *)conversation
 {
     return nil;

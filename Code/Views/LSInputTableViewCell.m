@@ -9,28 +9,61 @@
 #import "LSInputTableViewCell.h"
 #import "LYRUIConstants.h"
 
+@interface LSInputTableViewCell ()
+
+@property (nonatomic) UILabel *guideLabel;
+
+@end
+
 @implementation LSInputTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 5, 300, 45)];
+        
+        
+        _textField = [[UITextField alloc] init];
+        _textField.translatesAutoresizingMaskIntoConstraints = NO;
+        _textField.font = LSMediumFont(16);
+        _textField.textColor = [UIColor darkGrayColor];
+        [self.contentView addSubview:_textField];
+        
+        _guideLabel = [[UILabel alloc] init];
+        _guideLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _guideLabel.font = LSMediumFont(14);
+        _guideLabel.textColor = [UIColor darkGrayColor];
+        [self.contentView addSubview:_guideLabel];
+        
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.alpha = 0.5;
     }
+    
+    [self updateConstraints];
     return self;
 }
-
-- (void)setText:(NSString *)text
+- (void)updateConstraints
 {
-    self.textField.accessibilityLabel = text;
-    self.textField.placeholder = text;
-    self.textField.font = LSMediumFont(16);
-    self.textField.textColor = [UIColor darkGrayColor];
-    [self.textField sizeToFit];
-    self.textField.frame = CGRectMake(20, 14, self.frame.size.width - 20, self.textField.frame.size.height);
-    [self.contentView addSubview:self.textField];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.guideLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:10]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.guideLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.guideLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:10]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    
+    [super updateConstraints];
+}
+
+- (void)setGuideText:(NSString *)guideText
+{
+    self.guideLabel.text = guideText;
+    self.guideLabel.accessibilityLabel = guideText;
+    [self.guideLabel sizeToFit];
+}
+
+- (void)setPlaceHolderText:(NSString *)placeHolderText
+{
+    self.textField.accessibilityLabel = placeHolderText;
+    self.textField.placeholder = placeHolderText;
 }
 
 @end

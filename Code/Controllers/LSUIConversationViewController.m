@@ -23,7 +23,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return dateFormatter;
 }
 
-@interface LSUIConversationViewController () <LYRUIConversationViewControllerDataSource, LYRUIConversationViewControllerDelegate, LSConversationDetailViewControllerDelegate,  LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
+@interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
 
@@ -55,6 +55,11 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 #pragma mark - Conversation View Controller Data Source
 
+/**
+ 
+ LAYER UI KIT - Returns an object conforming to the `LYRUIParticipant` protocol.
+ 
+ */
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     if (participantIdentifier) {
@@ -64,6 +69,12 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return nil;
 }
 
+/**
+ 
+ LAYER UI KIT - Returns an `NSAttributedString` object for given date. The format of this string can be configured to
+ whatever format your application wishes to display.
+ 
+ */
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
     NSString *dateString;
@@ -86,6 +97,12 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return dateAttributedString;
 }
 
+/**
+ 
+ LAYER UI KIT - Returns an `NSAttributedString` object for given recipient state. The state string will only be displayed
+ below the latest message that was sent by the currently authenticated user.
+ 
+ */
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
     NSMutableArray *recipients = [[recipientStatus allKeys] mutableCopy];
@@ -116,6 +133,12 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return attributedString;
 }
 
+/**
+ 
+ LAYER UI KIT - Returns an `NSString` object that will be displayed as the push notification test for the given message.
+ If no string is returned, Layer will not deliver a text based push notification.
+ 
+ */
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessage:(LYRMessage *)message
 {
     if (!self.applicationContoller.shouldSendPushText) return nil;
@@ -131,6 +154,11 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     return pushText;
 }
 
+/**
+ 
+ LAYER UI KIT - If your application would like to mark messages as read, return YES.
+ 
+ */
 - (BOOL)conversationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message
 {
     return YES;
@@ -138,12 +166,22 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 #pragma mark - Conversation View Controller Delegate
 
+/**
+ 
+ LAYER UI KIT - Handle succesful message send if needed.
+ 
+ */
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSendMessage:(LYRMessage *)message
 {
     NSLog(@"Successful Message Send");
 }
 
-- (void)conversationViewController:(LYRUIConversationViewController *)viewController didFailSendingMessageWithError:(NSError *)error
+/**
+ 
+ LAYER UI KIT - React to unsuccesful message send if needed.
+ 
+ */
+- (void)conversationViewController:(LYRUIConversationViewController *)viewController didFailSendingMessage:(LYRMessage *)message error:(NSError *)error;
 {
     NSLog(@"Message Send Failed with Error: %@", error);
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
@@ -154,6 +192,11 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
     [alertView show];
 }
 
+/**
+ 
+ LAYER UI KIT - React to a tap on a message object.
+ 
+ */
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
     if (self.applicationContoller.debugModeEnabled) {
@@ -161,6 +204,65 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     }
+}
+
+#pragma mark - Address Bar View Controller Delegate
+
+/**
+ 
+ LAYER UI KIT - Allows your applicaiton to react to a tap on the `addContacts` button of the `LYRUIAddressBarViewController`. 
+ In this case, we present an `LYRUIParticipantPickerController` component.
+ 
+ */
+- (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
+{
+    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
+                                                                                                            sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    controller.participantPickerDelegate = self;
+    controller.allowsMultipleSelection = NO;
+    [self.navigationController presentViewController:controller animated:YES completion:nil];
+}
+
+#pragma mark - Adress Bar View Controller Data Source
+
+/**
+ 
+ LAYER UI KIT - Searches for a participant given and search string.
+ 
+ */
+- (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *participants))completion
+{
+    [self.applicationContoller.persistenceManager performParticipantSearchWithString:searchText completion:^(NSSet *contacts, NSError *error) {
+        if (!error) {
+            completion(contacts);
+        }
+    }];
+}
+
+#pragma mark - Participant Picker Delegate Methods
+
+/**
+ 
+ LAYER UI KIT - Handles a `Cancel` selection from the `LYRUIParticipantPickerController` component and dismisses the component.
+ 
+ */
+- (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
+{
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+/**
+ 
+ LAYER UI KIT - Handles a participant selection in the `LYRUIParticipantController`. In response, the application informs the 
+ `addressBarController` property of the selection and then dismissess the picker.
+ 
+ */
+- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipant:(id<LYRUIParticipant>)participant
+{
+    if (participant) {
+        [self.addressBarController selectParticipant:participant];
+    }
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Converation Detail View Controler Data Source
@@ -187,43 +289,6 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
 {
     self.conversation = conversation;
-}
-
-#pragma mark - Adress Bar View Controller Data Source
-
-- (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *participants))completion
-{
-    [self.applicationContoller.persistenceManager performParticipantSearchWithString:searchText completion:^(NSSet *contacts, NSError *error) {
-        if (!error) {
-            completion(contacts);
-        }
-    }];
-}
-
-#pragma mark - Address Bar View Controller Delegate
-
-- (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
-{
-    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
-                                                                                                            sortType:LYRUIParticipantPickerControllerSortTypeFirst];
-    controller.participantPickerDelegate = self;
-    controller.allowsMultipleSelection = NO;
-    [self.navigationController presentViewController:controller animated:YES completion:nil];
-}
-
-#pragma mark - Participant Picker Delegate Methods
-
-- (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
-{
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipant:(id<LYRUIParticipant>)participant
-{
-    if (participant) {
-        [self.addressBarController selectParticipant:participant];
-    }
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Details Button Actions

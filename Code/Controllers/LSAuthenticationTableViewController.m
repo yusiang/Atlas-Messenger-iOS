@@ -91,7 +91,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         case LSAuthenticationStateLogin:
             switch (path.row) {
                 case 0:
-                    [cell setText:@"Email"];
+                    [cell setGuideText:@"Email:"];
+                    [cell setPlaceHolderText:@"Enter Your Email"];
                     cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
                     cell.textField.enablesReturnKeyAutomatically = YES;
                     cell.textField.returnKeyType = UIReturnKeyNext;
@@ -102,7 +103,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     break;
                     
                 case 1:
-                    [cell setText:@"Password"];
+                    [cell setGuideText:@"Password:"];
+                    [cell setPlaceHolderText:@"Enter Your Password"];
                     cell.textField.secureTextEntry = YES;
                     cell.textField.returnKeyType = UIReturnKeySend;
                     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -118,7 +120,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         case LSAuthenticationStateRegister:
             switch (path.row) {
                 case 0:
-                    [cell setText:@"First Name"];
+                    [cell setGuideText:@"First Name:"];
+                    [cell setPlaceHolderText:@"Enter Your First Name"];
                     cell.textField.secureTextEntry = NO;
                     cell.textField.enablesReturnKeyAutomatically = YES;
                     cell.textField.returnKeyType = UIReturnKeyNext;
@@ -129,7 +132,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     break;
                     
                 case 1:
-                    [cell setText:@"Last Name"];
+                    [cell setGuideText:@"Last Name:"];
+                    [cell setPlaceHolderText:@"Enter Your Last Name"];
                     cell.textField.secureTextEntry = NO;
                     cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
                     cell.textField.enablesReturnKeyAutomatically = YES;
@@ -141,7 +145,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     break;
                     
                 case 4:
-                    [cell setText:@"Confirmation"];
+                    [cell setGuideText:@"Confirmation:"];
+                    [cell setPlaceHolderText:@"Confirm It Please"];
                     cell.textField.secureTextEntry = YES;
                     cell.textField.returnKeyType = UIReturnKeySend;
                     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;

@@ -21,7 +21,7 @@
 
 extern void LYRSetLogLevelFromEnvironment();
 extern NSString *LYRApplicationDataDirectory(void);
-extern dispatch_once_t LYRConfigurationURLOnceToken;
+//extern dispatch_once_t LYRConfigurationURLOnceToken;
 
 void LYRTestResetConfiguration(void)
 {
@@ -32,7 +32,7 @@ void LYRTestResetConfiguration(void)
     
     // Ensure the next call through `LYRDefaultConfiguration` will reload
     LYRDefaultConfigurationDispatchOnceToken = 0;
-    LYRConfigurationURLOnceToken = 0;
+//LYRConfigurationURLOnceToken = 0;
 }
 
 @interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate>
@@ -184,7 +184,12 @@ void LYRTestResetConfiguration(void)
 }
 
 #pragma mark - Push Notification Setup and Handlers
-
+/**
+ 
+ LAYER - In order to register for push notifications, your application must first declare the types of
+ notifications it wishes to receive. This method handles doing so for both iOS7 and iOS8.
+ 
+ */
 - (void)registerForRemoteNotifications:(UIApplication *)application
 {
     // Declaring that I want to recieve push!
@@ -203,6 +208,13 @@ void LYRTestResetConfiguration(void)
     NSLog(@"Application failed to register for remote notifications with error %@", error);
 }
 
+/**
+ 
+ LAYER - When a user succesfully grants your application permission to receive push, the OS will call
+ the following method. In your implementation of this method, your applicaiton should pass the 
+ `Device Token` property to the `LYRClient` object.
+ 
+ */
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     self.applicationController.deviceToken = deviceToken;
@@ -217,6 +229,18 @@ void LYRTestResetConfiguration(void)
     }
 }
 
+/**
+ 
+ LAYER - The following method gets called at 2 different times that interest a Layer powered application. 
+ 
+ 1. When your application receives a push notification from Layer. Upon receiving a push, your application should 
+ pass the `userInfo` dictionary to the `sychronizeWithRemoteNotification:completion: method. 
+ 
+ 2. When your application comes out of the background in response to a user opening the app from a push notification. 
+ Your application can tell if it is coming our of the backroung by evaluating `application.applicationState`. If the 
+ state is `UIApplicationSateInactive`, your application is coming out of the background and into the foreground.
+ 
+ */
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     // Increment badge count if a message

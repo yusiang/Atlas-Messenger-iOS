@@ -15,6 +15,7 @@
 #import "LYRUIConversationDataSource.h"
 #import "LYRUIAvatarImageView.h"
 #import "LSCenterTextTableViewCell.h"
+#import "LSInputTableViewCell.h"
 
 @interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate, CLLocationManagerDelegate>
 
@@ -34,6 +35,7 @@
 
 static NSString *const LYRUIParticipantCellIdentifier = @"participantCell";
 static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
+static NSString *const LYRUIInputCellIdentifier = @"inputCell";
 static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIdentifier";
 
 + (instancetype)conversationDetailViewControllerLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
@@ -66,8 +68,10 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.sectionFooterHeight = 0.0f;
+    
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LYRUICenterContentCellIdentifier];
     [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LYRUIParticipantCellIdentifier];
+    [self.tableView registerClass:[LSInputTableViewCell  class] forCellReuseIdentifier:LYRUIInputCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LYRUIDefaultCellIdentifier];
    
     // Setup UI
@@ -119,6 +123,9 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     switch (section) {
         case 0:
+            return 1;
+            break;
+        case 1:
             if (self.authenticatedUserIsConversationMember){
                 return self.participantIdentifiers.count + 1;
             } else {
@@ -126,11 +133,11 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             }
             break;
             
-        case 1:
+        case 2:
             return 1;
             break;
             
-        case 2:
+        case 3:
             return 1;
             break;
             
@@ -145,7 +152,18 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     UITableViewCell *cell;
     switch (indexPath.section) {
-        case 0:
+        case 0: {
+            cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIInputCellIdentifier];
+            if (/*metadta exists*/NO) {
+                // set title from metadata
+            } else {
+                [(LSInputTableViewCell *)cell setPlaceHolderText:@"Enter Conversation Name"];
+            }
+            [(LSInputTableViewCell *)cell setGuideText:@"Name:"];
+            
+        }
+            break;
+        case 1:
             if (indexPath.row > self.participantIdentifiers.count - 1 ) {
                 cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
                 cell.textLabel.text = @"+ Add Participant";
@@ -161,7 +179,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             }
             break;
             
-        case 1: {
+        case 2: {
             cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
             cell.textLabel.text = @"Share My Location";
             cell.textLabel.textColor = LSBlueColor();
@@ -169,7 +187,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
         }
             break;
             
-        case 2: {
+        case 3: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUICenterContentCellIdentifier];
             [centerCell setCenterText:@"Global Delete Conversation"];
             centerCell.centerTextLabel.textColor = LSRedColor();
@@ -191,10 +209,14 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     switch (section) {
         case 0:
+            return @"Conversation Name";
+            break;
+
+        case 1:
             return @"PARTICIPANTS";
             break;
             
-        case 1:
+        case 2:
             return @"LOCATION";
             break;
             
@@ -207,7 +229,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch (indexPath.section) {
-        case 0:
+        case 1:
             if (indexPath.row == self.participantIdentifiers.count) {
                 self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
                 self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
@@ -219,11 +241,11 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             }
             break;
             
-        case 1:
+        case 2:
             [self startLocationManager];
             break;
         
-        case 2:
+        case 3:
             [self.applicationController.layerClient deleteConversation:self.conversation mode:LYRDeletionModeAllParticipants error:nil];
             [self.navigationController popToRootViewControllerAnimated:YES];
             break;

@@ -357,18 +357,15 @@
 
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs
 {
-    NSMutableSet *participantIdentifiers = [NSMutableSet setWithSet:participantIDs];
-    
-    if ([participantIdentifiers containsObject:self.testInterface.applicationController.layerClient.authenticatedUserID]) {
-        [participantIdentifiers removeObject:self.testInterface.applicationController.layerClient.authenticatedUserID];
-    }
+    NSMutableSet *participantIdentifiers = [participantIDs mutableCopy];
+    [participantIdentifiers minusSet:[NSSet setWithObject:self.testInterface.applicationController.layerClient.authenticatedUserID]];
     
     if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
-    NSSet *participants = [self.testInterface.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers];
-    
+    NSMutableSet *participants = [[self.testInterface.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers] mutableCopy];
     if (!participants.count > 0) return @"No Matching Participants";
     
+    // Put the latest message sender's name first
     LSUser *firstUser = [[participants allObjects] objectAtIndex:0];
     NSString *conversationLabel = firstUser.fullName;
     for (int i = 1; i < [[participants allObjects] count]; i++) {
