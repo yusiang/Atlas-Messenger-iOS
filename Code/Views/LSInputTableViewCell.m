@@ -22,9 +22,9 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        
         _textField = [[UITextField alloc] init];
         _textField.translatesAutoresizingMaskIntoConstraints = NO;
+        _textField.returnKeyType = UIReturnKeyDone;
         _textField.font = LSMediumFont(16);
         _textField.textColor = [UIColor darkGrayColor];
         [self.contentView addSubview:_textField];

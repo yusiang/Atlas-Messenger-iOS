@@ -17,7 +17,7 @@
 #import "LSCenterTextTableViewCell.h"
 #import "LSInputTableViewCell.h"
 
-@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate, CLLocationManagerDelegate>
+@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) LYRClient *layerClient;
@@ -159,6 +159,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             } else {
                 [(LSInputTableViewCell *)cell setPlaceHolderText:@"Enter Conversation Name"];
             }
+            [(LSInputTableViewCell *)cell textField].delegate = self;
             [(LSInputTableViewCell *)cell setGuideText:@"Name:"];
             
         }
@@ -327,6 +328,22 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;
     [self.tableView reloadData];
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    //Setup metadata here
 }
 
 #pragma Cell Appearance Configuration
