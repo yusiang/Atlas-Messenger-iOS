@@ -92,8 +92,6 @@
     NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
     [participantIdentifiers minusSet:[NSSet setWithObject:self.layerClient.authenticatedUserID]];
     
-    NSString *conversationTitle = conversation.metadata[@"title"];
-    
     if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
     NSMutableSet *participants = [[self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers] mutableCopy];
@@ -119,7 +117,7 @@
         LSUser *user = [[participants allObjects] objectAtIndex:i];
         conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.fullName];
     }
-    return conversationTitle ?: conversationLabel;
+    return conversationLabel;
 }
 
 /**

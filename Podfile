@@ -6,9 +6,9 @@ dropbox_path = ENV['LAYER_DROPBOX_PATH'] || '~/Dropbox (Layer)'
 target 'LayerSample' do
   pod 'SVProgressHUD', :head
   #pod 'LayerKit'
-  pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git', branch: 'feature/MSG-122-metadata'
+  #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git', branch: 'feature/MSG-122-metadata'
   #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
-  #pod 'LayerKit', path: "#{dropbox_path}/Layer/Builds/iOS/LayerKit-0.8.8-b3"
+  pod 'LayerKit', path: "#{dropbox_path}/Layer/Builds/iOS/LayerKit-0.8.8-b3"
   #pod 'LayerKit', path: '/Users/blake/Projects/Layer/LayerKit-again'
   pod 'HockeySDK', '~> 3.5.6'
   pod 'LayerUIKit', path: 'LayerUIKit'

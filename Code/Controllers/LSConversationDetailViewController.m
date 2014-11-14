@@ -155,12 +155,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     switch (indexPath.section) {
         case 0: {
             cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIInputCellIdentifier];
-            NSString *conversationTitle = self.conversation.metadata[@"title"];
-            if (conversationTitle) {
-                [[(LSInputTableViewCell *)cell textField] setText:conversationTitle];
-            } else {
-                [(LSInputTableViewCell *)cell setPlaceHolderText:@"Enter Conversation Name"];
-            }
+            [(LSInputTableViewCell *)cell setPlaceHolderText:@"Enter Conversation Name"];
             [(LSInputTableViewCell *)cell textField].delegate = self;
             [(LSInputTableViewCell *)cell setGuideText:@"Name:"];
             
@@ -325,7 +320,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     LYRConversation *conversation = [[[self.layerClient conversationsForParticipants:[NSSet setWithSet:participants]] allObjects] firstObject];
     if (!conversation) {
-        conversation = [self.layerClient newConversationWithParticipants:participants options:nil error:nil];
+        conversation = [LYRConversation conversationWithParticipants:participants];
     }
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;
@@ -339,8 +334,6 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    NSString *conversationTite = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    [self.conversation setValue:conversationTite forMetadataAtKeyPath:@"title"];
     [textField resignFirstResponder];
     return YES;
 }
