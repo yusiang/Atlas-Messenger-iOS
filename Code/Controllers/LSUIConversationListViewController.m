@@ -11,6 +11,7 @@
 #import "LSUser.h"
 #import "LSUIConversationViewController.h"
 #import "LSSettingsTableViewController.h"
+#import <LYRUIconversationDatasource.h>
 
 @interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
@@ -91,6 +92,8 @@
     NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
     [participantIdentifiers minusSet:[NSSet setWithObject:self.layerClient.authenticatedUserID]];
     
+    NSString *conversationTitle = conversation.metadata[@"title"];
+    
     if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
     NSMutableSet *participants = [[self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers] mutableCopy];
@@ -116,7 +119,7 @@
         LSUser *user = [[participants allObjects] objectAtIndex:i];
         conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.fullName];
     }
-    return conversationLabel;
+    return conversationTitle ?: conversationLabel;
 }
 
 /**
@@ -182,6 +185,19 @@
         [self.applicationController.APIManager deauthenticate];
         [SVProgressHUD dismiss];
     }
+}
+
+#pragma mark
+#pragma mark Notification Observer Delegate Methods
+
+- (void)observerWillChangeContent:(LYRUIConversationDataSource *)observer
+{
+    
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    NSLog(@"change of keypath:%@ object:%@ change:%@", keyPath, object, change);
 }
 
 @end

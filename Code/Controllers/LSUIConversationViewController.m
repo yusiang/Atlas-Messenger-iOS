@@ -51,6 +51,37 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 {
     [super viewWillAppear:animated];
     self.addressBarController.dataSource = self;
+
+    // Update the UI with the current conversation title.
+    self.conversationTitle = self.conversation.metadata[@"title"];
+    
+    // Register the KVO
+    [self.conversation addObserver:self forKeyPath:@"metadata" options:0 context:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    @try {
+        [self.conversation removeObserver:self forKeyPath:@"metadata"];
+    }
+    @catch (NSException * exception) {
+        NSLog(@"failed to unsubscribe the object observer with %@", exception);
+    }
+}
+
+#pragma mark - Conversation observer
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    // exit if object is not the conversation
+    if (object != self.conversation) return;
+
+    // Since setter will cause UI update, we have to do it on the main thread.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.conversationTitle = self.conversation.metadata[@"title"];
+    });
 }
 
 #pragma mark - Conversation View Controller Data Source
@@ -276,7 +307,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
 {
-    LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[LYRUIMessagePartWithLocation(location)]];
+    LYRMessage *message = [self.layerClient newMessageWithConversation:self.conversation parts:@[LYRUIMessagePartWithLocation(location)] options:nil error:nil];
     NSError *error;
     BOOL success = [self.layerClient sendMessage:message error:&error];
     if (success) {

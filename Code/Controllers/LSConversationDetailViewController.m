@@ -324,7 +324,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     LYRConversation *conversation = [[[self.layerClient conversationsForParticipants:[NSSet setWithSet:participants]] allObjects] firstObject];
     if (!conversation) {
-        conversation = [LYRConversation conversationWithParticipants:[NSSet setWithSet:participants]];
+        conversation = [self.layerClient newConversationWithParticipants:participants options:nil error:nil];
     }
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;
