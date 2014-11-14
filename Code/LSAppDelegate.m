@@ -21,7 +21,7 @@
 
 extern void LYRSetLogLevelFromEnvironment();
 extern NSString *LYRApplicationDataDirectory(void);
-//extern dispatch_once_t LYRConfigurationURLOnceToken;
+extern dispatch_once_t LYRConfigurationURLOnceToken;
 
 void LYRTestResetConfiguration(void)
 {
@@ -32,7 +32,7 @@ void LYRTestResetConfiguration(void)
     
     // Ensure the next call through `LYRDefaultConfiguration` will reload
     LYRDefaultConfigurationDispatchOnceToken = 0;
-//LYRConfigurationURLOnceToken = 0;
+    LYRConfigurationURLOnceToken = 0;
 }
 
 @interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate>
