@@ -11,9 +11,9 @@
 #import "LSUser.h"
 #import "LSUIConversationViewController.h"
 #import "LSSettingsTableViewController.h"
-#import <LYRUIconversationDatasource.h>
+#import <LYRUIConversationDataSource.h>
 
-@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
+@interface LSUIConversationListViewController () <LYRUIConversationDataSourceDelegate, LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
 
 @end
@@ -191,6 +191,11 @@
 - (void)observerWillChangeContent:(LYRUIConversationDataSource *)observer
 {
     
+}
+
+- (void)observer:(LYRUIConversationDataSource *)observer updateWithChanges:(NSArray *)changes;
+{
+
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
