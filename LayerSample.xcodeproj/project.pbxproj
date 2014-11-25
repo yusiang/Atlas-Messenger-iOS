@@ -72,6 +72,7 @@
 		259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */; };
 		259A57801950EB92000E27B0 /* LSSampleAppUITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577D1950EB92000E27B0 /* LSSampleAppUITest.m */; };
 		9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */; };
+		B53937841A24F6AF00DE60F9 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B53937831A24F6AF00DE60F9 /* Fabric.framework */; };
 		B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */; };
 		D6044C8F19F6EA2D00F6E4DC /* LSSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = D6044C8E19F6EA2D00F6E4DC /* LSSwitch.m */; };
 		D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */; };
@@ -195,6 +196,7 @@
 		931E36A3415C497CA3681E7F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF9EB0255130554DFDAF0741 /* Pods-LayerSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.debug.xcconfig"; sourceTree = "<group>"; };
+		B53937831A24F6AF00DE60F9 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		D6044C8D19F6EA2D00F6E4DC /* LSSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSSwitch.h; path = ../Controllers/LSSwitch.h; sourceTree = "<group>"; };
 		D6044C8E19F6EA2D00F6E4DC /* LSSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSSwitch.m; path = ../Controllers/LSSwitch.m; sourceTree = "<group>"; };
 		D613BD2D19F5D4D900ABC996 /* LSSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingsTableViewController.h; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				0A0C242919477D8F00401B74 /* CoreGraphics.framework in Frameworks */,
 				0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */,
 				0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */,
+				B53937841A24F6AF00DE60F9 /* Fabric.framework in Frameworks */,
 				0A0C242B19477D8F00401B74 /* UIKit.framework in Frameworks */,
 				0A0C242719477D8F00401B74 /* Foundation.framework in Frameworks */,
 				B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */,
@@ -283,6 +286,7 @@
 			children = (
 				0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */,
 				0AB05019196E24F00029BC1B /* Crashlytics.framework */,
+				B53937831A24F6AF00DE60F9 /* Fabric.framework */,
 				0AADB5D31947C88B0083732B /* SystemConfiguration.framework */,
 				0AADB5CF1947C8800083732B /* Security.framework */,
 				0AADB5CD1947C87B0083732B /* QuartzCore.framework */,
@@ -515,6 +519,7 @@
 				0A0C242019477D8F00401B74 /* Frameworks */,
 				0A0C242119477D8F00401B74 /* Resources */,
 				A487A0EE4CB44DA78C108935 /* Copy Pods Resources */,
+				0A4D352619F0A48E00CC1984 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -630,6 +635,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0A4D352619F0A48E00CC1984 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 0a0f48084316c34c98d99db32b6d9f9a93416892 9ae567b35b4bfc3f68296d25122038a6de4752faa8a5a2790506fbc165726882";
+		};
 		6D1B6C4F72A14767A34B248A /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

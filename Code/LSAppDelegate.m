@@ -12,6 +12,7 @@
 #import "LSAPIManager.h"
 #import "LSUtilities.h"
 #import "LYRUIConstants.h"
+#import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <HockeySDK/HockeySDK.h>
 #import "LSAuthenticationTableViewController.h"
@@ -309,7 +310,7 @@ void LYRTestResetConfiguration(void)
 
 - (void)initializeCrashlytics
 {
-    [Crashlytics startWithAPIKey:@"0a0f48084316c34c98d99db32b6d9f9a93416892"];
+    [Fabric with:@[CrashlyticsKit]];
     [Crashlytics setObjectValue:LSLayerConfigurationURL(self.environment) forKey:@"ConfigurationURL"];
     [Crashlytics setObjectValue:LSLayerAppID(self.environment) forKey:@"AppID"];
 }
