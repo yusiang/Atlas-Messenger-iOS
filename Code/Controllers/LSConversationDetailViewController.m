@@ -17,7 +17,7 @@
 #import "LSCenterTextTableViewCell.h"
 #import "LSInputTableViewCell.h"
 
-@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
+@interface LSConversationDetailViewController () <LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) LYRClient *layerClient;
@@ -30,8 +30,6 @@
 @end
 
 @implementation LSConversationDetailViewController
-
-@synthesize participants = _participants;
 
 static NSString *const LYRUIConversationNameTag = @"conversationName";
 static NSString *const LYRUIParticipantCellIdentifier = @"participantCell";
