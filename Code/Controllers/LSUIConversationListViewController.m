@@ -188,11 +188,6 @@
 #pragma mark
 #pragma mark Notification Observer Delegate Methods
 
-- (void)observerWillChangeContent:(LYRUIConversationDataSource *)observer
-{
-    
-}
-
 - (void)observer:(LYRUIConversationDataSource *)observer updateWithChanges:(NSArray *)changes;
 {
 
