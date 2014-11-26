@@ -11,9 +11,8 @@
 #import "LSUser.h"
 #import "LSUIConversationViewController.h"
 #import "LSSettingsTableViewController.h"
-#import <LYRUIConversationDataSource.h>
 
-@interface LSUIConversationListViewController () <LYRUIConversationDataSourceDelegate, LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
+@interface LSUIConversationListViewController () < LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
 
 @end
@@ -89,6 +88,7 @@
  */
 - (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController labelForConversation:(LYRConversation *)conversation
 {
+    if (!self.layerClient.authenticatedUserID) return @"Not auth'd";
     NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
     [participantIdentifiers minusSet:[NSSet setWithObject:self.layerClient.authenticatedUserID]];
     
@@ -183,19 +183,6 @@
         [self.applicationController.APIManager deauthenticate];
         [SVProgressHUD dismiss];
     }
-}
-
-#pragma mark
-#pragma mark Notification Observer Delegate Methods
-
-- (void)observer:(LYRUIConversationDataSource *)observer updateWithChanges:(NSArray *)changes;
-{
-
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    NSLog(@"change of keypath:%@ object:%@ change:%@", keyPath, object, change);
 }
 
 @end

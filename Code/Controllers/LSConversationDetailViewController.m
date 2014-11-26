@@ -12,12 +12,11 @@
 #import "LYRUIParticipantPickerController.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUtilities.h"
-#import "LYRUIConversationDataSource.h"
 #import "LYRUIAvatarImageView.h"
 #import "LSCenterTextTableViewCell.h"
 #import "LSInputTableViewCell.h"
 
-@interface LSConversationDetailViewController () <LYRUIParticipantPickerControllerDelegate, LYRUIConversationDataSourceDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
+@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) LYRClient *layerClient;
@@ -242,7 +241,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             break;
         
         case 3:
-            [self.applicationController.layerClient deleteConversation:self.conversation mode:LYRDeletionModeAllParticipants error:nil];
+            [self.conversation delete:LYRDeletionModeAllParticipants error:nil];
             [self.navigationController popToRootViewControllerAnimated:YES];
             break;
             
@@ -316,9 +315,9 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 
 - (void)setConversationForParticipants:(NSSet *)participants
 {
-    LYRConversation *conversation = [[[self.layerClient conversationsForParticipants:[NSSet setWithSet:participants]] allObjects] firstObject];
+    LYRConversation *conversation = [self.applicationController.layerInterface conversationForParticipants:participants];
     if (!conversation) {
-        conversation = [LYRConversation conversationWithParticipants:participants];
+        conversation = [self.applicationController.layerClient newConversationWithParticipants:participants options:nil error:nil];
     }
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;

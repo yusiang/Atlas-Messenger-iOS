@@ -107,8 +107,10 @@ void LYRTestResetConfiguration(void)
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    NSUInteger unreadMessageCount = [self.applicationController.layerClient countOfUnreadMessagesInConversation:nil];
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:unreadMessageCount];
+
+    NSUInteger countOfUnreadMessages = [self.applicationController.layerInterface countOfUnreadMessages];
+    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
     if (self.applicationController.shouldDisplayLocalNotifications) {
         [self.localNotificationUtilities setShouldListenForChanges:YES];
     }
@@ -277,8 +279,7 @@ void LYRTestResetConfiguration(void)
 {
     // Fetch message object from LayerKit
     NSURL *messageURL = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.event_url"]];
-    NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:messageURL]];
-    return [[messages allObjects] firstObject];
+    return [self.applicationController.layerInterface messageForIdentifier:messageURL];
 }
 
 - (void)navigateToConversationViewForMessage:(LYRConversation *)conversation
@@ -295,10 +296,9 @@ void LYRTestResetConfiguration(void)
     NSString *objectTypeString = [notification.userInfo valueForKey:LSNotificationClassTypeKey];
     
     if ([objectTypeString isEqualToString:LSNotificationClassTypeConversation]) {
-        conversation = [self.applicationController.layerClient conversationForIdentifier:objectURL];
+        conversation = [self.applicationController.layerInterface conversationForIdentifier:objectURL];
     } else {
-        NSSet *messages = [self.applicationController.layerClient messagesForIdentifiers:[NSSet setWithObject:objectURL]];
-        LYRMessage *message = [[messages allObjects] firstObject];
+        LYRMessage *message = [self.applicationController.layerInterface messageForIdentifier:objectURL];
         conversation = message.conversation;
     }
     if (application.applicationState == UIApplicationStateInactive && conversation) {

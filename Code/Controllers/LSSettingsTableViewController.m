@@ -13,7 +13,7 @@
 #import "LSSettingsHeaderView.h"
 #import "LSCenterTextTableViewCell.h"
 
-@interface LSSettingsTableViewController ()
+@interface LSSettingsTableViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) NSDictionary *conversationStatistics;
 @property (nonatomic) LSSettingsHeaderView *headerView;
@@ -157,27 +157,37 @@ static NSString *const LSConnecting = @"Connecting";
                     cell.accessoryView = radioSwitch;
                     break;
                     
-                case 1:
+                case 1: {
+                    cell.textLabel.text = @"Synchronization Interval";
+                    UITextField *syncIntervalLabel = [[UITextField alloc] init];
+                    syncIntervalLabel.delegate = self;
+                    syncIntervalLabel.text = [NSString stringWithFormat:@"%@", [self.applicationController.layerClient valueForKeyPath:@"synchronizationManager.syncInterval"]];
+                    [syncIntervalLabel sizeToFit];
+                    cell.accessoryView = syncIntervalLabel;
+                    break;
+                }
+                    
+                case 2:
                     cell.textLabel.text = [NSString stringWithFormat:@"Version: %@", [LSApplicationController versionString]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
-                case 2:
+                case 3:
                     cell.textLabel.text = [NSString stringWithFormat:@"Build: %@", [LSApplicationController buildInformationString]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
-                case 3:
+                case 4:
                     cell.textLabel.text = [NSString stringWithFormat:@"Host: %@", [LSApplicationController layerServerHostname]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
-                case 4:
+                case 5:
                     cell.textLabel.text = [NSString stringWithFormat:@"UserID: %@", self.applicationController.layerClient.authenticatedUserID];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
-                case 5:
+                case 6:
                     cell.textLabel.text = [NSString stringWithFormat:@"Device Token: %@", [self.applicationController.deviceToken description]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
@@ -248,22 +258,26 @@ static NSString *const LSConnecting = @"Connecting";
         case 1:
             switch (indexPath.row) {
                 case 1:
-                     [self settingsAlertWithString:[LSApplicationController versionString]];
+                    
                     break;
                     
                 case 2:
-                     [self settingsAlertWithString:[LSApplicationController buildInformationString]];
+                     [self settingsAlertWithString:[LSApplicationController versionString]];
                     break;
                     
                 case 3:
-                     [self settingsAlertWithString:[LSApplicationController layerServerHostname]];
+                     [self settingsAlertWithString:[LSApplicationController buildInformationString]];
                     break;
                     
                 case 4:
-                     [self settingsAlertWithString:self.applicationController.layerClient.authenticatedUserID];
+                     [self settingsAlertWithString:[LSApplicationController layerServerHostname]];
                     break;
                     
                 case 5:
+                     [self settingsAlertWithString:self.applicationController.layerClient.authenticatedUserID];
+                    break;
+                    
+                case 6:
                      [self settingsAlertWithString:[self.applicationController.deviceToken description]];
                     break;
                     
@@ -309,21 +323,9 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (NSDictionary *)fetchConversationStatistics
 {
-    NSUInteger conversationCount = 0;
-    NSUInteger messageCount = 0;
-    NSUInteger unreadMessageCount = 0;
-    
-    NSArray *conversations = [[self.applicationController.layerClient conversationsForIdentifiers:nil] allObjects];
-    for (LYRConversation *conversation in conversations) {
-        conversationCount++;
-        NSArray *messages = [[self.applicationController.layerClient  messagesForConversation:conversation] array];
-        for (LYRMessage *message in messages) {
-            messageCount++;
-            if ([[message.recipientStatusByUserID objectForKey:self.applicationController.layerClient.authenticatedUserID] integerValue] == 1){
-                unreadMessageCount++;
-            }
-        }
-    }
+    NSUInteger conversationCount = [self.applicationController.layerInterface countOfConversations];
+    NSUInteger messageCount = [self.applicationController.layerInterface countOfMessages];
+    NSUInteger unreadMessageCount = [self.applicationController.layerInterface countOfUnreadMessages];
     NSDictionary *conversationStatistics = @{LSConversationCount : [NSNumber numberWithInteger:conversationCount],
                                              LSMessageCount : [NSNumber numberWithInteger:messageCount],
                                              LSUnreadMessageCount : [NSNumber numberWithInteger:unreadMessageCount]};
@@ -452,4 +454,12 @@ static NSString *const LSConnecting = @"Connecting";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#pragma mark - UITextFieldDelegate Methods
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    [self.applicationController.layerClient setValue:@([textField.text intValue]) forKeyPath:@"synchronizationManager.syncInterval"];
+    return YES;
+}
 @end
