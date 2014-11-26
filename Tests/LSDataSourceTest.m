@@ -12,7 +12,6 @@
 #import "LYRUIConversationViewController.h"
 #import "LYRUIMessageInputToolbar.h"
 #import "LYRUIMessageComposeTextView.h"
-#import "LYRUIConversationDataSource.h"
 #import "LSTestObserver.h"
 
 @interface LSDataSourceTest : XCTestCase
