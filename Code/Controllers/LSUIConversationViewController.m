@@ -281,9 +281,9 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
 {
-    LYRMessage *message = [LYRMessage messageWithConversation:self.conversation parts:@[LYRUIMessagePartWithLocation(location)]];
+    LYRMessage *message = [self.layerClient newMessageWithParts:@[LYRUIMessagePartWithLocation(location)] options:nil error:nil];
     NSError *error;
-    BOOL success = [self.layerClient sendMessage:message error:&error];
+    BOOL success = [self.conversation sendMessage:message error:&error];
     if (success) {
         NSLog(@"Message sent!");
     } else {
@@ -321,21 +321,7 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
 
 - (void)markAllMessagesAsRead
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        NSOrderedSet *messages = [self.layerClient messagesForConversation:self.conversation];
-        for (LYRMessage *message in messages) {
-            LYRRecipientStatus status = [[message.recipientStatusByUserID objectForKey:self.layerClient.authenticatedUserID] integerValue];
-            switch (status) {
-                case LYRRecipientStatusDelivered:
-                    [self.layerClient markMessageAsRead:message error:nil];
-                    NSLog(@"Message marked as read");
-                    break;
-                    
-                default:
-                    break;
-            }
-        }
-    });
+    [self.conversation markAllMessagesAsRead:nil];
 }
 
 @end

@@ -50,7 +50,7 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
             return [[NSUUID alloc] initWithUUIDString:@"9ec30af8-5591-11e4-af9e-f7a201004a3b"];
             break;
         case LYRUIDevelopment:
-            return [[NSUUID alloc] initWithUUIDString:@"ce2c45a4-3e97-11e4-9d4c-6a9900000431"];
+            return [[NSUUID alloc] initWithUUIDString:@"361ff3ca-70e0-11e4-a4ef-1dec000000e6"];
             break;
         case LYRUIStage1:
             return [[NSUUID alloc] initWithUUIDString:@"24f43c32-4d95-11e4-b3a2-0fd00000020d"];

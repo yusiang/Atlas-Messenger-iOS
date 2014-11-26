@@ -37,8 +37,8 @@ NSString *const LYRUITestMessageText = @"Hi, this is a test!";
 - (void)conversationsWithParticipants:(NSSet *)participants number:(NSUInteger)number
 {
     while (number > 0) {
-        LYRConversation *conversation = [LYRConversation conversationWithParticipants:participants];
-        [self sendMessagesToConversation:conversation number:1];
+        LYRConversation *conversation = [self.layerClient newConversationWithParticipants:participants options:nil error:nil];
+        [self sendMessagesToConversation:conversation number:100];
         number -= 1;
     }
 }
@@ -49,9 +49,8 @@ NSString *const LYRUITestMessageText = @"Hi, this is a test!";
         LYRMessagePart *part = [LYRMessagePart messagePartWithText:LYRUITestMessageText];
         
         NSError *error;
-        LYRMessage *message = [LYRMessage messageWithConversation:conversation parts:@[part]];
-        [self.layerClient setMetadata:@{LYRMessagePushNotificationAlertMessageKey: @"Test Push"} onObject:message];
-        [self.layerClient sendMessage:message error:&error];
+        LYRMessage *message = [self.layerClient newMessageWithParts:@[part] options:@{LYRMessagePushNotificationAlertMessageKey: @"Test Push"} error:nil];
+        [conversation sendMessage:message error:&error];
     }
 }
 

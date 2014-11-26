@@ -323,21 +323,9 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (NSDictionary *)fetchConversationStatistics
 {
-    NSUInteger conversationCount = 0;
-    NSUInteger messageCount = 0;
-    NSUInteger unreadMessageCount = 0;
-    
-    NSArray *conversations = [[self.applicationController.layerClient conversationsForIdentifiers:nil] allObjects];
-    for (LYRConversation *conversation in conversations) {
-        conversationCount++;
-        NSArray *messages = [[self.applicationController.layerClient  messagesForConversation:conversation] array];
-        for (LYRMessage *message in messages) {
-            messageCount++;
-            if ([[message.recipientStatusByUserID objectForKey:self.applicationController.layerClient.authenticatedUserID] integerValue] == 1){
-                unreadMessageCount++;
-            }
-        }
-    }
+    NSUInteger conversationCount = [self.applicationController.layerInterface countOfConversations];
+    NSUInteger messageCount = [self.applicationController.layerInterface countOfMessages];
+    NSUInteger unreadMessageCount = [self.applicationController.layerInterface countOfUnreadMessages];
     NSDictionary *conversationStatistics = @{LSConversationCount : [NSNumber numberWithInteger:conversationCount],
                                              LSMessageCount : [NSNumber numberWithInteger:messageCount],
                                              LSUnreadMessageCount : [NSNumber numberWithInteger:unreadMessageCount]};
