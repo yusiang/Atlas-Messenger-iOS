@@ -16,7 +16,7 @@
 #import "LSCenterTextTableViewCell.h"
 #import "LSInputTableViewCell.h"
 
-@interface LSConversationDetailViewController () <LYRUIParticipantPickerDataSource, LYRUIParticipantPickerControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
+@interface LSConversationDetailViewController () <LYRUIParticipantPickerControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) LYRClient *layerClient;
