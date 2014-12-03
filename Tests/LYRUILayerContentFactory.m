@@ -49,7 +49,7 @@ NSString *const LYRUITestMessageText = @"Hi, this is a test!";
         LYRMessagePart *part = [LYRMessagePart messagePartWithText:LYRUITestMessageText];
         
         NSError *error;
-        LYRMessage *message = [self.layerClient newMessageWithParts:@[part] options:@{LYRMessagePushNotificationAlertMessageKey: @"Test Push"} error:nil];
+        LYRMessage *message = [self.layerClient newMessageWithParts:@[part] options:@{LYRMessageOptionsPushNotificationAlertKey: @"Test Push"} error:nil];
         [conversation sendMessage:message error:&error];
     }
 }
