@@ -82,7 +82,7 @@
  @param searchString The string object for which the search is performed.
  @param completion   The completion block called when search completes.
  */
-- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSSet *contacts, NSError *error))completion;
+- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *contacts, NSError *error))completion;
 
 
 ///---------------------------------------
