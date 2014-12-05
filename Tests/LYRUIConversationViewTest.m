@@ -82,7 +82,7 @@
     
     LSUser *user1 = [self.testInterface randomUser];
     
-    LYRConversation *conversation = [LYRConversation conversationWithParticipants:[NSSet setWithArray:@[user1.userID]]];
+    LYRConversation *conversation = [self.testInterface.applicationController.layerClient newConversationWithParticipants:[NSSet setWithArray:@[user1.userID]] options:nil error:nil];
     LYRUIConversationViewController *controller = [LYRUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.testInterface.applicationController.layerClient];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
     [system presentModalViewController:navigationController configurationBlock:^(id viewController) {
