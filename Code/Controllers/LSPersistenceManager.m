@@ -75,7 +75,7 @@
     LSMustBeImplementedBySubclass();
 }
 
-- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSSet *contacts, NSError *error))completion
+- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *contacts, NSError *error))completion
 {
     LSMustBeImplementedBySubclass();
 }
@@ -119,10 +119,10 @@
     return YES;
 }
 
-- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSSet *contacts, NSError *error))completion
+- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *contacts, NSError *error))completion
 {
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchString]];
-    completion([self.users filteredSetUsingPredicate:searchPredicate], nil);
+    completion([self.users filteredSetUsingPredicate:searchPredicate].allObjects, nil);
 }
 
 - (NSSet *)participantsForIdentifiers:(NSSet *)identifiers
@@ -228,7 +228,7 @@
     return session;
 }
 
-- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void (^)(NSSet *contacts, NSError *error))completion
+- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void (^)(NSArray *contacts, NSError *error))completion
 {
     NSError *error;
     NSSet *allContacts = [self persistedUsersWithError:&error];
@@ -239,7 +239,7 @@
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchString]];
-            completion([allContacts filteredSetUsingPredicate:searchPredicate], nil);
+            completion([allContacts filteredSetUsingPredicate:searchPredicate].allObjects, nil);
         });
     }
 }

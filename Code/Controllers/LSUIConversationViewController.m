@@ -235,9 +235,9 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
  LAYER UI KIT - Searches for a participant given and search string.
  
  */
-- (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *participants))completion
+- (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
 {
-    [self.applicationContoller.persistenceManager performParticipantSearchWithString:searchText completion:^(NSSet *contacts, NSError *error) {
+    [self.applicationContoller.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
         if (!error) {
             completion(contacts);
         }
