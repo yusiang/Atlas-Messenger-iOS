@@ -22,7 +22,7 @@ PODS:
   - layer-client-messaging-schema (20141110114425514.13)
   - layer-thrift (0.65.0):
     - thrift (~> 0.9.1)
-  - LayerKit (0.9.1-rc1):
+  - LayerKit (0.9.1-rc2):
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20141008172234177)
     - FMDB/standalone/FTS (= 2.4-20140928173217764)
@@ -30,9 +30,9 @@ PODS:
     - GCNetworkReachability (~> 1.3.2)
     - layer-client-messaging-schema (= 20141110114425514.13)
     - layer-thrift (= 0.65.0)
-    - LayerKit/Public (= 0.9.1-rc1)
+    - LayerKit/Public (= 0.9.1-rc2)
     - TransitionKit (~> 2.1.0)
-  - LayerKit/Public (0.9.1-rc1):
+  - LayerKit/Public (0.9.1-rc2):
     - CocoaLumberjack (~> 1.8.1)
     - CocoaSPDY-Layer (~> 20141008172234177)
     - FMDB/standalone/FTS (= 2.4-20140928173217764)
@@ -45,10 +45,10 @@ PODS:
     - LayerKit (~> 0.9.0)
   - LYRCountDownLatch (0.9.0)
   - OCMock (3.1.1)
-  - sqlite3/common (3.8.7.3)
-  - sqlite3/fts (3.8.7.3):
+  - sqlite3/common (3.8.7.4)
+  - sqlite3/fts (3.8.7.4):
     - sqlite3/common
-  - sqlite3/unicode61 (3.8.7.3):
+  - sqlite3/unicode61 (3.8.7.4):
     - sqlite3/common
     - sqlite3/fts
   - SVProgressHUD (HEAD based on 1.1.1)
@@ -60,7 +60,7 @@ DEPENDENCIES:
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0.8)
   - KIFViewControllerActions (from `git@github.com:blakewatters/KIFViewControllerActions.git`)
-  - LayerKit (from `git@github.com:layerhq/LayerKit.git`, tag `v0.9.1-rc1`)
+  - LayerKit (from `git@github.com:layerhq/LayerKit.git`, tag `v0.9.1-rc2`)
   - LayerUIKit (from `LayerUIKit`)
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - OCMock (~> 3.1)
@@ -71,7 +71,7 @@ EXTERNAL SOURCES:
     :git: git@github.com:blakewatters/KIFViewControllerActions.git
   LayerKit:
     :git: git@github.com:layerhq/LayerKit.git
-    :tag: v0.9.1-rc1
+    :tag: v0.9.1-rc2
   LayerUIKit:
     :path: LayerUIKit
   LYRCountDownLatch:
@@ -83,7 +83,7 @@ CHECKOUT OPTIONS:
     :git: git@github.com:blakewatters/KIFViewControllerActions.git
   LayerKit:
     :git: git@github.com:layerhq/LayerKit.git
-    :tag: v0.9.1-rc1
+    :tag: v0.9.1-rc2
   LYRCountDownLatch:
     :commit: 02119f855ad14e7fc0dae32bbbf17c735a281cfe
     :git: git@github.com:layerhq/LYRCountDownLatch.git
@@ -100,11 +100,11 @@ SPEC CHECKSUMS:
   KIFViewControllerActions: 6d680038a329864d62526928dd89556c0177bc55
   layer-client-messaging-schema: 169bfb77739332eb46e5b24890c659f3287a0d77
   layer-thrift: b0b8175d22555d04564e539e80f8c9070ce230f1
-  LayerKit: 160d082aa48d5472c12857fd26630011189c05d5
+  LayerKit: 1a0d4fd3695f50d2aa3542724e4ee7a33618f2de
   LayerUIKit: b1cbbe5901ae8a599d0881533c93ebb7e42044ca
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
-  sqlite3: ce741195c369c3bda97e4e432bcc71d3657503eb
+  sqlite3: 1c279dfc3ce9351fd86002f7bf455cab92330aa4
   SVProgressHUD: 11ef69ab2582c097479e76905ea916470371fc58
   thrift: b31bac6c80965a986810a4fc015890b6426ee078
   TransitionKit: 9ce324caba25cb0a4c9f3334302d89685595455c
