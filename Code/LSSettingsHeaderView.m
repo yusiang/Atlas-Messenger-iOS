@@ -36,8 +36,8 @@ static CGFloat const LSAvatarDiameter  = 72;
         
         _imageView = [[LYRUIAvatarImageView alloc] init];
         _imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        _imageView.initialFont = LSLightFont(22);
-        _imageView.initialColor = LSGrayColor();
+        _imageView.initialsFont = LSLightFont(22);
+        _imageView.initialsColor = LSGrayColor();
         _imageView.backgroundColor = LSLighGrayColor();
         _imageView.layer.cornerRadius = LSAvatarDiameter / 2;
         [_imageView setInitialsForName:user.fullName];
