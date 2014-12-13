@@ -144,10 +144,10 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
  If no string is returned, Layer will not deliver a text based push notification.
  
  */
-- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessage:(LYRMessage *)message
+- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessageParts:(NSArray *)messageParts
 {
     if (!self.applicationContoller.shouldSendPushText) return nil;
-    LYRMessagePart *messagePart = [message.parts objectAtIndex:0];
+    LYRMessagePart *messagePart = [messageParts objectAtIndex:0];
     NSString *pushText = [NSString new];
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         pushText = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
