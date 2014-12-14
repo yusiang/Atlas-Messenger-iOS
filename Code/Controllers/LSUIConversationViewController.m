@@ -13,14 +13,108 @@
 #import "LYRUIParticipantPickerController.h"
 #import "LSMessageDetailTableViewController.h"
 
-static NSDateFormatter *LYRUIConversationDateFormatter()
+static NSDateFormatter *LYRUIShortRelativeDateFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
         dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"MMM dd, hh:mma";
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+        dateFormatter.doesRelativeDateFormatting = YES;
     }
     return dateFormatter;
+}
+
+static NSDateFormatter *LYRUIShortTimeFormatter()
+{
+    static NSDateFormatter *dateFormatter;
+    if (!dateFormatter) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    }
+    return dateFormatter;
+}
+
+static NSDateFormatter *LYRUIDayOfWeekDateFormatter()
+{
+    static NSDateFormatter *dateFormatter;
+    if (!dateFormatter) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"EEEE"; // Tuesday
+    }
+    return dateFormatter;
+}
+
+static NSDateFormatter *LYRUIRelativeDateFormatter()
+{
+    static NSDateFormatter *dateFormatter;
+    if (!dateFormatter) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+        dateFormatter.doesRelativeDateFormatting = YES;
+    }
+    return dateFormatter;
+}
+
+static NSDateFormatter *LYRUIThisYearDateFormatter()
+{
+    static NSDateFormatter *dateFormatter;
+    if (!dateFormatter) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"E, MMM dd,"; // Sat, Nov 29,
+    }
+    return dateFormatter;
+}
+
+static NSDateFormatter *LYRUIDefaultDateFormatter()
+{
+    static NSDateFormatter *dateFormatter;
+    if (!dateFormatter) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"MMM dd, YYYY,"; // Nov 29, 2013,
+    }
+    return dateFormatter;
+}
+
+static BOOL LYRUIIsDateInToday(NSDate *date)
+{
+    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
+    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
+    return ([dateComponents day] == [todayComponents day] &&
+            [dateComponents month] == [todayComponents month] &&
+            [dateComponents year] == [todayComponents year] &&
+            [dateComponents era] == [todayComponents era]);
+}
+
+static BOOL LYRUIIsDateInYesterday(NSDate *date)
+{
+    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
+    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
+    return ([dateComponents day] == ([todayComponents day] - 1) &&
+            [dateComponents month] == [todayComponents month] &&
+            [dateComponents year] == [todayComponents year] &&
+            [dateComponents era] == [todayComponents era]);
+}
+
+static BOOL LYRUIIsDateInWeek(NSDate *date)
+{
+    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSWeekOfMonthCalendarUnit;
+    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
+    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
+    return ([dateComponents weekOfMonth] == [todayComponents weekOfMonth] &&
+            [dateComponents month] == [todayComponents month] &&
+            [dateComponents year] == [todayComponents year] &&
+            [dateComponents era] == [todayComponents era]);
+}
+
+static BOOL LYRUIIsDateInYear(NSDate *date)
+{
+    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit;
+    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
+    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
+    return ([dateComponents year] == [todayComponents year] &&
+            [dateComponents era] == [todayComponents era]);
 }
 
 @interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
@@ -82,16 +176,20 @@ static NSDateFormatter *LYRUIConversationDateFormatter()
  */
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
-    NSString *dateString;
-    if (date) {
-        dateString = [LYRUIConversationDateFormatter() stringFromDate:date];
+    NSString *dateString = nil;
+    if (LYRUIIsDateInToday(date) || LYRUIIsDateInYesterday(date)) {
+        dateString = [LYRUIRelativeDateFormatter() stringFromDate:date];
+    } else if (LYRUIIsDateInWeek(date)) {
+        dateString = [LYRUIDayOfWeekDateFormatter() stringFromDate:date];
+    } else if (LYRUIIsDateInYear(date)) {
+        dateString = [LYRUIThisYearDateFormatter() stringFromDate:date];
     } else {
-        dateString = [LYRUIConversationDateFormatter() stringFromDate:[NSDate date]];
+        dateString = [LYRUIDefaultDateFormatter() stringFromDate:date];
     }
+    NSString *timeString = [LYRUIShortTimeFormatter() stringFromDate:date];
     
-    NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:dateString];
-    NSRange range = [dateString rangeOfString:@","];
-    NSRange boldedRange = NSMakeRange(0, range.location);
+    NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
+    NSRange boldedRange = NSMakeRange(0, [dateString length]);
     [dateAttributedString beginEditing];
     
     [dateAttributedString addAttribute:NSFontAttributeName

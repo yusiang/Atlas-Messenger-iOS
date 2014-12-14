@@ -32,7 +32,9 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
         _applicationController = applicationController;
         _message = message;
         _dateFormatter = [[NSDateFormatter alloc] init];
-        _dateFormatter.dateFormat = @"MMM dd, hh:mm:ss";
+        _dateFormatter.dateStyle = NSDateFormatterShortStyle;
+        _dateFormatter.timeStyle = NSDateFormatterMediumStyle;
+        _dateFormatter.doesRelativeDateFormatting = YES;
     }
     return self;
 }
