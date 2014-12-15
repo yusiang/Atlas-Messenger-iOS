@@ -19,6 +19,7 @@
 #import "LSSplashView.h"
 #import "LSLocalNotificationUtilities.h"
 #import "LSPartnerAPIManager.h"
+#import <LayerUIKit/LayerUIKit.h>
 
 extern void LYRSetLogLevelFromEnvironment();
 extern NSString *LYRApplicationDataDirectory(void);
@@ -126,8 +127,8 @@ void LYRTestResetConfiguration(void)
     
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
     self.navigationController.navigationBarHidden = TRUE;
-    self.navigationController.navigationBar.barTintColor = LSLighGrayColor();
-    self.navigationController.navigationBar.tintColor = LSBlueColor();
+    self.navigationController.navigationBar.barTintColor = LYRUILighGrayColor();
+    self.navigationController.navigationBar.tintColor = LYRUIBlueColor();
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
@@ -445,13 +446,12 @@ void LYRTestResetConfiguration(void)
 
 - (void)configureGlobalUserInterfaceAttributes
 {
-    [[UINavigationBar appearance] setTintColor:LSBlueColor()];
-    [[UINavigationBar appearance] setBarTintColor:LSLighGrayColor()];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: LSBoldFont(18)}];
+    [[UINavigationBar appearance] setTintColor:LYRUIBlueColor()];
+    [[UINavigationBar appearance] setBarTintColor:LYRUILighGrayColor()];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: LYRUIBoldFont(18)}];
     
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : LSMediumFont(16)} forState:UIControlStateNormal];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LSBlueColor()];
-
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : LYRUIMediumFont(16)} forState:UIControlStateNormal];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LYRUIBlueColor()];
 }
 
 #pragma mark - Screen Shot Handler
