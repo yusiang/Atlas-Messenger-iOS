@@ -242,10 +242,9 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  If no string is returned, Layer will not deliver a text based push notification.
  
  */
-- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessageParts:(NSArray *)messageParts
+- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessagePart:(LYRMessagePart *)messagePart
 {
     if (!self.applicationContoller.shouldSendPushText) return nil;
-    LYRMessagePart *messagePart = [messageParts objectAtIndex:0];
     NSString *pushText = [NSString new];
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         pushText = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
