@@ -12,7 +12,7 @@ target 'LayerSample' do
   #pod 'LayerKit', path: '/Users/blake/Projects/Layer/LayerKit-again'
   pod 'HockeySDK', '~> 3.5.6'
   pod 'LayerUIKit', path: 'LayerUIKit'
-  #pod 'LayerUIKit', git: 'git@github.com:layerhq/LayerUIKit'
+  #pod 'LayerUIKit', git: 'git@github.com:layerhq/LayerUIKit', branch: 'coleman-radius-customization'
 end
 
 target 'LayerSampleTests' do
