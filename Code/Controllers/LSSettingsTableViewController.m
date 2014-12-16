@@ -241,7 +241,7 @@ static NSString *const LSConnecting = @"Connecting";
         case 3: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCell];
             [centerCell setCenterText:@"Log Out"];
-            centerCell.centerTextLabel.textColor = LSRedColor();
+            centerCell.centerTextLabel.textColor = LYRUIRedColor();
             return centerCell;
         }
             break;

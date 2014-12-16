@@ -36,9 +36,9 @@ static CGFloat const LSAvatarDiameter  = 72;
         
         _imageView = [[LYRUIAvatarImageView alloc] init];
         _imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        _imageView.initialsFont = LSLightFont(22);
-        _imageView.initialsColor = LSGrayColor();
-        _imageView.backgroundColor = LSLighGrayColor();
+        _imageView.initialsFont = LYRUILightFont(22);
+        _imageView.initialsColor = LYRUIGrayColor();
+        _imageView.backgroundColor = LYRUILightGrayColor();
         _imageView.layer.cornerRadius = LSAvatarDiameter / 2;
         [_imageView setInitialsForName:user.fullName];
         [self addSubview:_imageView];
@@ -46,15 +46,15 @@ static CGFloat const LSAvatarDiameter  = 72;
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _nameLabel.text = user.fullName;
-        _nameLabel.font = LSLightFont(16);
-        _nameLabel.textColor = LSGrayColor();
+        _nameLabel.font = LYRUILightFont(16);
+        _nameLabel.textColor = LYRUIGrayColor();
         _nameLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_nameLabel];
         
         _connectionStateLabel = [[UILabel alloc] init];
         _connectionStateLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        _connectionStateLabel.font = LSLightFont(14);
-        _connectionStateLabel.textColor = LSBlueColor();
+        _connectionStateLabel.font = LYRUILightFont(14);
+        _connectionStateLabel.textColor = LYRUIBlueColor();
         _connectionStateLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_connectionStateLabel];
     
@@ -96,7 +96,7 @@ static CGFloat const LSAvatarDiameter  = 72;
     [super layoutSubviews];
     
     UIView *blackLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 0.5, self.frame.size.width, 0.5)];
-    blackLine.backgroundColor = LSGrayColor();
+    blackLine.backgroundColor = LYRUIGrayColor();
     [self addSubview:blackLine];
 }
 

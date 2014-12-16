@@ -31,7 +31,7 @@
         self.textView.textAlignment = NSTextAlignmentCenter;
         self.textView.backgroundColor = [UIColor clearColor];
         self.textView.text = @"The open communications platform for the internet.";
-        self.textView.font = LSMediumFont(12);
+        self.textView.font = LYRUIMediumFont(12);
         [self addSubview:self.textView];
         [self updateConstraints];
     }

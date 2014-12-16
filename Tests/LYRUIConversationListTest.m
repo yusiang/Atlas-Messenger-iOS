@@ -237,7 +237,7 @@
     UIColor *testColor = [UIColor redColor];
     
     [[LYRUIConversationTableViewCell appearance] setConversationLabelFont:testFont];
-    [[LYRUIConversationTableViewCell appearance] setConversationLableColor:testColor];
+    [[LYRUIConversationTableViewCell appearance] setConversationLabelColor:testColor];
     
     [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user1.userID] number:1];
     
@@ -245,7 +245,7 @@
     
     LYRUIConversationTableViewCell *cell = (LYRUIConversationTableViewCell *)[tester waitForViewWithAccessibilityLabel:conversationLabel];
     expect(cell.conversationLabelFont).to.equal(testFont);
-    expect(cell.conversationLableColor).to.equal(testColor);
+    expect(cell.conversationLabelColor).to.equal(testColor);
 }
 
 //Customize the row height and ensure that it is respected.
