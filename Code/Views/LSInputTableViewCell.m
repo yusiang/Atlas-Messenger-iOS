@@ -25,13 +25,13 @@
         _textField = [[UITextField alloc] init];
         _textField.translatesAutoresizingMaskIntoConstraints = NO;
         _textField.returnKeyType = UIReturnKeyDone;
-        _textField.font = LSMediumFont(16);
+        _textField.font = LYRUIMediumFont(16);
         _textField.textColor = [UIColor darkGrayColor];
         [self.contentView addSubview:_textField];
         
         _guideLabel = [[UILabel alloc] init];
         _guideLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        _guideLabel.font = LSMediumFont(14);
+        _guideLabel.font = LYRUIMediumFont(14);
         _guideLabel.textColor = [UIColor darkGrayColor];
         [self.contentView addSubview:_guideLabel];
         

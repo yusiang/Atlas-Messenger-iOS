@@ -162,8 +162,8 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             if (indexPath.row > self.participantIdentifiers.count - 1 ) {
                 cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
                 cell.textLabel.text = @"+ Add Participant";
-                cell.textLabel.textColor = LSBlueColor();
-                cell.textLabel.font = LSMediumFont(14);
+                cell.textLabel.textColor = LYRUIBlueColor();
+                cell.textLabel.font = LYRUIMediumFont(14);
             } else {
                 NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
                 id<LYRUIParticipant>participant = [self.detailsDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
@@ -177,15 +177,15 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
         case 2: {
             cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
             cell.textLabel.text = @"Share My Location";
-            cell.textLabel.textColor = LSBlueColor();
-            cell.textLabel.font = LSMediumFont(14);
+            cell.textLabel.textColor = LYRUIBlueColor();
+            cell.textLabel.font = LYRUIMediumFont(14);
         }
             break;
             
         case 3: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUICenterContentCellIdentifier];
             [centerCell setCenterText:@"Global Delete Conversation"];
-            centerCell.centerTextLabel.textColor = LSRedColor();
+            centerCell.centerTextLabel.textColor = LYRUIRedColor();
             return centerCell;
         }
         default:
@@ -345,7 +345,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 - (void)configureAppearance
 {
     [[LYRUIParticipantTableViewCell appearance] setTitleColor:[UIColor blackColor]];
-    [[LYRUIParticipantTableViewCell appearance] setTitleFont:LSMediumFont(14)];
+    [[LYRUIParticipantTableViewCell appearance] setTitleFont:LYRUIMediumFont(14)];
     [[LYRUIParticipantTableViewCell appearance] setBoldTitleFont:[UIFont systemFontOfSize:14]];
 }
 
