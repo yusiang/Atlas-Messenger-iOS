@@ -7,7 +7,6 @@
 //
 
 #import "LSUIConversationViewController.h"
-#import "LSConversationDetailViewController.h"
 #import "LYRUIMessagingUtilities.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LYRUIParticipantPickerController.h"
@@ -25,7 +24,7 @@ NSURL *LYRTestGenerateTempFileFromInputStream(NSInputStream *inputStream)
     [datafileOutputStream open];
     
     // Create a temp buffer
-    const NSUInteger bufferSize = 1024;
+    const NSUInteger bufferSize = 1024 * 512;
     uint8_t *buffer = malloc(bufferSize);
     
     // Read and write random data in 1024 byte chunks
@@ -159,7 +158,6 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.dataSource = self;
     self.delegate = self;
     
@@ -175,6 +173,11 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if ([self.conversation.metadata valueForKey:LYRUIConversationNameTag]) {
+        self.conversationTitle = [self.conversation.metadata valueForKey:LYRUIConversationNameTag];
+    }
+    
     self.addressBarController.dataSource = self;
 }
 

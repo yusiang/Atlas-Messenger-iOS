@@ -62,7 +62,7 @@ void LYRTestResetConfiguration(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    [self configureApplication:application forEnvironment:LYRUIProduction];
+    [self configureApplication:application forEnvironment:LYRUIStage1];
     LYRSetLogLevelFromEnvironment();
     
     // Setup notifications
