@@ -30,7 +30,7 @@ static NSString *const LSCancelText = @"Or, Cancel";
     if (self) {
         self.primaryActionButton = [[UIButton alloc] init];
         [self.primaryActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.primaryActionButton setTitleColor:LYRUILighGrayColor() forState:UIControlStateHighlighted];
+        [self.primaryActionButton setTitleColor:LYRUILightGrayColor() forState:UIControlStateHighlighted];
         self.primaryActionButton.titleLabel.font = LYRUIMediumFont(16);
         self.primaryActionButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.primaryActionButton.translatesAutoresizingMaskIntoConstraints = NO;

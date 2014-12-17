@@ -38,7 +38,7 @@ static CGFloat const LSAvatarDiameter  = 72;
         _imageView.translatesAutoresizingMaskIntoConstraints = NO;
         _imageView.initialsFont = LYRUILightFont(22);
         _imageView.initialsColor = LYRUIGrayColor();
-        _imageView.backgroundColor = LYRUILighGrayColor();
+        _imageView.backgroundColor = LYRUILightGrayColor();
         _imageView.layer.cornerRadius = LSAvatarDiameter / 2;
         [_imageView setInitialsForName:user.fullName];
         [self addSubview:_imageView];
