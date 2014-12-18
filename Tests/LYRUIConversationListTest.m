@@ -95,7 +95,8 @@
     [self.testInterface.contentFactory conversationsWithParticipants:[NSSet setWithObject:user4.userID] number:4];
     [tester waitForTimeInterval:5];
     
-    NSSet *conversations = [self.testInterface.applicationController.layerClient conversationsForIdentifiers:nil];
+    LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
+    NSOrderedSet *conversations = [self.testInterface.applicationController.layerClient executeQuery:query error:nil];
     for (LYRConversation *conversation in conversations) {
         [tester waitForViewWithAccessibilityLabel:[self conversationLabelForParticipants:conversation.participants]];
     }
