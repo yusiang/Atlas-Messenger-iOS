@@ -643,8 +643,8 @@ static NSString *const LSRegisterText = @"Create Account";
         LYRConversation *conversation = [self.layerClient newConversationWithParticipants:participantIDs options:nil error:nil];
         for (int m = 0; m < messages; m++) {
             LYRMessagePart *part = [LYRMessagePart messagePartWithText:@"This is a test"];
-            LYRMessage *message = [LYRMessage messageWithConversation:conversation parts:@[part]];
-            [self.layerClient sendMessage:message error:nil];
+            LYRMessage *message = [self.layerClient newMessageWithParts:@[part] options:nil error:nil];
+            [conversation sendMessage:message error:nil];
         }
     }
 }
