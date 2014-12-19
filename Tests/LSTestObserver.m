@@ -76,7 +76,7 @@
     BOOL class = [self.changeClass isSubclassOfClass:[LYRMessage class]];
     BOOL property = [[messageChange objectForKey:LYRObjectChangePropertyKey] isEqualToString:self.property];
     BOOL changeType =  ([[messageChange objectForKey:LYRObjectChangeTypeKey] integerValue] == self.changeType);
-    if (changeType && property) {
+    if (changeType && property && class) {
         [self.delegate testObserver:self objectDidChange:messageChange];
     }
 }

@@ -13,17 +13,6 @@
 #import "LYRUIParticipantPickerController.h"
 #import "LSMessageDetailTableViewController.h"
 
-static NSDateFormatter *LYRUIShortRelativeDateFormatter()
-{
-    static NSDateFormatter *dateFormatter;
-    if (!dateFormatter) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateStyle = NSDateFormatterShortStyle;
-        dateFormatter.doesRelativeDateFormatting = YES;
-    }
-    return dateFormatter;
-}
-
 static NSDateFormatter *LYRUIShortTimeFormatter()
 {
     static NSDateFormatter *dateFormatter;
