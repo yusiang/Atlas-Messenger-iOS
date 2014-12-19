@@ -168,8 +168,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
                 NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
                 id<LYRUIParticipant>participant = [self.detailsDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
                 UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIParticipantCellIdentifier forIndexPath:indexPath];
-                [participantCell presentParticipant:participant];
-                [participantCell shouldShowAvatarImage:YES];
+                [participantCell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarImage:YES];
                 cell = participantCell;
             }
             break;
@@ -229,7 +228,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
                 self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
                 self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
                 LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
-                                                                                                                        sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+                                                                                                                        sortType:LYRUIParticipantPickerSortTypeFirstName];
                 controller.participantPickerDelegate = self;
                 controller.allowsMultipleSelection = YES;
                 [self presentViewController:controller animated:YES completion:nil];
@@ -299,12 +298,12 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 
 #pragma Participant Picker Delegate Methods
 
-- (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
+- (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
 {
     [self dismissViewControllerAnimated:TRUE completion:nil];
 }
 
-- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipant:(id<LYRUIParticipant>)participant
+- (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
     [self dismissViewControllerAnimated:TRUE completion:^{
         NSMutableSet *participants = [self.conversation.participants mutableCopy];

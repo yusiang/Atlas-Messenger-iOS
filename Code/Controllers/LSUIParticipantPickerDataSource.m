@@ -17,8 +17,6 @@
 
 @implementation LSUIParticipantPickerDataSource
 
-@synthesize participants = _participants;
-
 + (instancetype)participantPickerDataSourceWithPersistenceManager:(LSPersistenceManager *)persistenceManager
 {
     return [[self alloc] initWithPersistenceManager:persistenceManager];
@@ -38,18 +36,16 @@
      @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
 
-- (void)searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion
+- (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
-    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchText]];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        NSSet *filteredParticipants = [[self participants] filteredSetUsingPredicate:searchPredicate];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(filteredParticipants);
-        });
-    });
+    [self.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
+        NSPredicate *exclusionPredicate = [NSPredicate predicateWithFormat:@"NOT participantIdentifier IN %@", self.excludedIdentifiers];
+        NSArray *availableParticipants = [contacts filteredArrayUsingPredicate:exclusionPredicate];
+        completion([NSSet setWithArray:availableParticipants]);
+    }];
 }
 
-- (NSSet *)participants
+- (NSSet *)participantsForParticipantPickerController:(LYRUIParticipantPickerController *)participantPickerController
 {
     NSMutableSet *participants = [[self.persistenceManager persistedUsersWithError:nil] mutableCopy];
     NSSet *participantsToExclude = [self.persistenceManager participantsForIdentifiers:self.excludedIdentifiers];

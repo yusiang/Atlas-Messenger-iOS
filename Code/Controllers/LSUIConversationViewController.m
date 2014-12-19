@@ -308,7 +308,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
 {
     LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
-                                                                                                            sortType:LYRUIParticipantPickerControllerSortTypeFirst];
+                                                                                                            sortType:LYRUIParticipantPickerSortTypeFirstName];
     controller.participantPickerDelegate = self;
     controller.allowsMultipleSelection = NO;
     [self.navigationController presentViewController:controller animated:YES completion:nil];
@@ -337,7 +337,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  LAYER UI KIT - Handles a `Cancel` selection from the `LYRUIParticipantPickerController` component and dismisses the component.
  
  */
-- (void)participantSelectionViewControllerDidCancel:(LYRUIParticipantPickerController *)participantSelectionViewController
+- (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
@@ -348,7 +348,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  `addressBarController` property of the selection and then dismissess the picker.
  
  */
-- (void)participantSelectionViewController:(LYRUIParticipantPickerController *)participantSelectionViewController didSelectParticipant:(id<LYRUIParticipant>)participant
+- (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
     if (participant) {
         [self.addressBarController selectParticipant:participant];

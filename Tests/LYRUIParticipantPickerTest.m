@@ -14,7 +14,7 @@
 #import "LSUIParticipantPickerDataSource.h"
 #import "LYRUIParticipantTableViewCell.h"
 #import "LYRUITestParticipantCell.h"
-#import "LYRUIPaticipantSectionHeaderView.h"
+#import "LYRUIParticipantSectionHeaderView.h"
 #import "LYRUIParticipant.h"
 
 @interface LYRUIParticipantPickerTest : XCTestCase
@@ -48,7 +48,7 @@
     
     NSSet *participants = [self.testInterface fetchContacts];
 
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
         for (LSUser *user in participants) {
             [tester waitForViewWithAccessibilityLabel:[NSString stringWithFormat:@"%@", user.fullName]];
@@ -63,7 +63,7 @@
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
     [tester waitForTimeInterval:1];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
         NSString *searchText = @"Kevin Coleman";
         [tester tapViewWithAccessibilityLabel:@"Search Bar"];
@@ -79,7 +79,7 @@
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
     [tester waitForTimeInterval:1];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     [tester waitForTimeInterval:2];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
         NSString *searchText = @"Fake Name";
@@ -101,7 +101,7 @@
     
     LSUser *user1 = [self.testInterface randomUser];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
         [[LYRUIParticipantTableViewCell appearance] setTitleFont:testFont];
         [[LYRUIParticipantTableViewCell appearance] setTitleColor:testColor];
@@ -120,7 +120,7 @@
     [tester waitForTimeInterval:1];
     LSUser *user1 = [self.testInterface randomUser];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     controller.cellClass = [LYRUITestParticipantCell class];
     [tester waitForTimeInterval:2];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
@@ -137,7 +137,7 @@
     [tester waitForTimeInterval:1];
     LSUser *user1 =[self.testInterface randomUser];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     controller.rowHeight = 80;
     [tester waitForTimeInterval:2];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
@@ -154,7 +154,7 @@
     NSSet *participants = [self.testInterface fetchContacts];
     
     NSArray *sortedParticipantsFirst = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]];
-    LYRUIParticipantPickerController *controllerFirst = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controllerFirst = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     [system presentModalViewController:controllerFirst configurationBlock:^(id modalViewController) {
         LSUser *participantFirst = (LSUser *)[sortedParticipantsFirst firstObject];
@@ -167,7 +167,7 @@
     [latch waitTilCount:0];
     
     NSArray *sortedParticipantsLast = [[participants allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES]]];
-    LYRUIParticipantPickerController *controllerLast = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeLast];
+    LYRUIParticipantPickerController *controllerLast = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeLastName];
     [system presentModalViewController:controllerLast configurationBlock:^(id modalViewController) {
         LSUser *participantLast = (LSUser *)[sortedParticipantsLast firstObject];
         LYRUIParticipantTableViewCell *cell = (LYRUIParticipantTableViewCell *)[tester waitForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] inTableViewWithAccessibilityIdentifier:@"Participant TableView Controller"];
@@ -182,7 +182,7 @@
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
     [tester waitForTimeInterval:1];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
         [tester waitForTimeInterval:2];
         expect(^{ [modalViewController setCellClass:[UITableView class]]; }).to.raise(NSInternalInconsistencyException);
@@ -196,7 +196,7 @@
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
     [tester waitForTimeInterval:1];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
         [tester waitForTimeInterval:2];
         expect(^{ [modalViewController setRowHeight:80]; }).to.raise(NSInternalInconsistencyException);
@@ -209,13 +209,13 @@
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
     [tester waitForTimeInterval:1];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     id delegateMock = OCMProtocolMock(@protocol(LYRUIParticipantPickerControllerDelegate));
     controller.participantPickerDelegate = delegateMock;
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
         [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
             //
-        }] participantSelectionViewControllerDidCancel:[OCMArg any]];
+        }] participantPickerControllerDidCancel:[OCMArg any]];
         
         [tester tapViewWithAccessibilityLabel:@"Cancel"];
         [delegateMock verify];
@@ -227,7 +227,7 @@
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
     [tester waitForTimeInterval:1];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     id delegateMock = OCMProtocolMock(@protocol(LYRUIParticipantPickerControllerDelegate));
     controller.participantPickerDelegate = delegateMock;
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
@@ -238,7 +238,7 @@
             expect([participant class]).to.equal([LSUser class]);
             [controller dismissViewControllerAnimated:true completion:nil];
             
-        }] participantSelectionViewController:[OCMArg any] didSelectParticipant:[OCMArg any]];
+        }] participantPickerController:[OCMArg any] didSelectParticipant:[OCMArg any]];
         
         [tester tapRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] inTableViewWithAccessibilityIdentifier:@"Participant TableView Controller"];
         [delegateMock verify];
@@ -250,7 +250,7 @@
     [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
     [tester waitForTimeInterval:1];
     
-    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerControllerSortTypeFirst];
+    LYRUIParticipantPickerController *controller = [self participantPickerControllerWithSortType:LYRUIParticipantPickerSortTypeFirstName];
     [system presentModalViewController:controller configurationBlock:^(id modalViewController) {
 
         
