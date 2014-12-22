@@ -314,7 +314,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 
 - (void)setConversationForParticipants:(NSSet *)participants
 {
-    LYRConversation *conversation = [self.applicationController.layerInterface conversationForParticipants:participants];
+    LYRConversation *conversation = [self.applicationController.layerClient conversationForParticipants:participants];
     if (!conversation) {
         conversation = [self.applicationController.layerClient newConversationWithParticipants:participants options:nil error:nil];
     }

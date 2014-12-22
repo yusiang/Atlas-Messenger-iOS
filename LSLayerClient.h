@@ -1,5 +1,5 @@
 //
-//  LSLayerInterface.h
+//  LSLayerClient.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 11/25/14.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 
-@interface LSLayerInterface : NSObject
+@interface LSLayerClient : LYRClient
 
 - (NSUInteger)countOfUnreadMessages;
 

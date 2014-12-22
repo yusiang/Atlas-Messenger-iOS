@@ -323,9 +323,9 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (NSDictionary *)fetchConversationStatistics
 {
-    NSUInteger conversationCount = [self.applicationController.layerInterface countOfConversations];
-    NSUInteger messageCount = [self.applicationController.layerInterface countOfMessages];
-    NSUInteger unreadMessageCount = [self.applicationController.layerInterface countOfUnreadMessages];
+    NSUInteger conversationCount = [self.applicationController.layerClient countOfConversations];
+    NSUInteger messageCount = [self.applicationController.layerClient countOfMessages];
+    NSUInteger unreadMessageCount = [self.applicationController.layerClient countOfUnreadMessages];
     NSDictionary *conversationStatistics = @{LSConversationCount : [NSNumber numberWithInteger:conversationCount],
                                              LSMessageCount : [NSNumber numberWithInteger:messageCount],
                                              LSUnreadMessageCount : [NSNumber numberWithInteger:unreadMessageCount]};
