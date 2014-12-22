@@ -27,14 +27,14 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 @synthesize shouldSendPushSound = _shouldSendPushSound;
 @synthesize debugModeEnabled = _debugModeEnabled;
 
-+ (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager
++ (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LSLayerClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     NSParameterAssert(baseURL);
     NSParameterAssert(layerClient);
     return [[self alloc] initWithBaseURL:baseURL layerClient:layerClient persistenceManager:persistenceManager];
 }
 
-- (id)initWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager
+- (id)initWithBaseURL:(NSURL *)baseURL layerClient:(LSLayerClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     self = [super init];
     if (self) {

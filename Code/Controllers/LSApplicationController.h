@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 #import "LSAPIManager.h"
-#import "LSLayerInterface.h"
+#import "LSLayerClient.h"
 
 /**
  @abstract The `LSAppController` manages global resources needed by multiple View Controller classes in the Layer Sample App. 
@@ -31,12 +31,7 @@
 /**
  @abstract The `LYRCLient` object for the application.
  */
-@property (nonatomic) LYRClient *layerClient;
-
-/**
- @abstract Interface for LayerKit Query convenience methods
- */
-@property (nonatomic) LSLayerInterface *layerInterface;
+@property (nonatomic) LSLayerClient *layerClient;
 
 /**
  @abstract The `LSAPIManager` object for the application.

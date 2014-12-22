@@ -95,6 +95,20 @@ void LYRTestResetConfiguration(void)
     _displaysConversationImage = NO;
     _displaysSettingsButton = YES;
     
+    // Handle launching in response to push notification
+    NSDictionary *remoteNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotification) {
+        [self.applicationController.layerClient synchronizeWithRemoteNotification:remoteNotification completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
+            if (fetchResult == UIBackgroundFetchResultFailed) {
+                NSLog(@"Failed processing remote notification: %@", error);
+            }
+            
+            // Try navigating once the synchronization completed
+            LYRConversation *conversation = [self conversationFromRemoteNotification:remoteNotification];
+            [self navigateToViewForConversation:conversation];
+        }];
+    }
+    
     return YES;
 }
 
@@ -107,8 +121,7 @@ void LYRTestResetConfiguration(void)
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-
-    NSUInteger countOfUnreadMessages = [self.applicationController.layerInterface countOfUnreadMessages];
+    NSUInteger countOfUnreadMessages = [self.applicationController.layerClient countOfUnreadMessages];
     
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
     if (self.applicationController.shouldDisplayLocalNotifications) {
@@ -149,7 +162,10 @@ void LYRTestResetConfiguration(void)
     LYRTestResetConfiguration();
     
     // Configure application controllers
-    LYRClient *client = [LYRClient clientWithAppID:LSLayerAppID(self.environment)];
+    LSLayerClient *client = [LSLayerClient clientWithAppID:LSLayerAppID(self.environment)];
+    
+    // TODO: Change with subclass instead of interface class...
+    
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL()
                                                                     layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
@@ -252,9 +268,9 @@ void LYRTestResetConfiguration(void)
         [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badgeNumber + 1];
     }
     
-    __block LYRMessage *message = [self messageFromRemoteNotification:userInfo];
-    if (application.applicationState == UIApplicationStateInactive && message) {
-        [self navigateToConversationViewForMessage:message.conversation];
+    __block LYRConversation *conversation = [self conversationFromRemoteNotification:userInfo];
+    if (application.applicationState != UIApplicationStateActive && conversation) {
+        [self navigateToViewForConversation:conversation];
     }
     
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
@@ -263,9 +279,9 @@ void LYRTestResetConfiguration(void)
         }
         
         // Try navigating once the synchronization completed
-        if (application.applicationState == UIApplicationStateInactive && !message) {
-            message = [self messageFromRemoteNotification:userInfo];
-            [self navigateToConversationViewForMessage:message.conversation];
+        if (application.applicationState != UIApplicationStateActive && !conversation) {
+            conversation = [self conversationFromRemoteNotification:userInfo];
+            [self navigateToViewForConversation:conversation];
         }
         completionHandler(fetchResult);
     }];
@@ -275,14 +291,14 @@ void LYRTestResetConfiguration(void)
     }
 }
 
-- (LYRMessage *)messageFromRemoteNotification:(NSDictionary *)remoteNotification
+- (LYRConversation *)conversationFromRemoteNotification:(NSDictionary *)remoteNotification
 {
     // Fetch message object from LayerKit
-    NSURL *messageURL = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.event_url"]];
-    return [self.applicationController.layerInterface messageForIdentifier:messageURL];
+    NSURL *conversationIdentifier = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.conversation_identifier"]];
+    return [self.applicationController.layerClient conversationForIdentifier:conversationIdentifier];
 }
 
-- (void)navigateToConversationViewForMessage:(LYRConversation *)conversation
+- (void)navigateToViewForConversation:(LYRConversation *)conversation
 {
     UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
     LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
@@ -296,13 +312,13 @@ void LYRTestResetConfiguration(void)
     NSString *objectTypeString = [notification.userInfo valueForKey:LSNotificationClassTypeKey];
     
     if ([objectTypeString isEqualToString:LSNotificationClassTypeConversation]) {
-        conversation = [self.applicationController.layerInterface conversationForIdentifier:objectURL];
+        conversation = [self.applicationController.layerClient conversationForIdentifier:objectURL];
     } else {
-        LYRMessage *message = [self.applicationController.layerInterface messageForIdentifier:objectURL];
+        LYRMessage *message = [self.applicationController.layerClient messageForIdentifier:objectURL];
         conversation = message.conversation;
     }
     if (application.applicationState == UIApplicationStateInactive && conversation) {
-        [self navigateToConversationViewForMessage:conversation];
+        [self navigateToViewForConversation:conversation];
     }
 }
 
