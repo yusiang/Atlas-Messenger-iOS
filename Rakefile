@@ -1,10 +1,10 @@
 require 'rubygems'
 begin
   require 'bundler'
-  require 'date'
+  require 'bundler/setup'
+  require 'date' 
   begin
     Bundler.setup
-    require 'plist'
     require 'xctasks/test_task'
   rescue Bundler::GemNotFound => gemException
     raise LoadError, gemException.to_s
@@ -22,17 +22,7 @@ if ENV['JENKINS_HOME']
   STDERR.sync = true
 end
 
-if defined?(XCTasks)
-  XCTasks::TestTask.new do |t|
-    t.workspace = 'LayerSample.xcworkspace'
-    t.schemes_dir = 'Tests/Schemes'
-    t.runner = :xcpretty
-    t.output_log = 'xcodebuild.log'
-    t.settings["LAYER_TEST_HOST"] = (ENV['LAYER_TEST_HOST'] || 'localhost')
-    t.subtasks = { app: 'LayerSampleTests' }
-  end
-end
-
+desc "Initialize the project for development and testing"
 task :init do
   puts green("Update submodules...")
   run("git submodule update --init --recursive")
@@ -66,22 +56,25 @@ task :init do
   puts grey("$ `eval \"$(rbenv init - --no-rehash)\"`")
 end
 
+if defined?(XCTasks)
+  XCTasks::TestTask.new do |t|
+    t.workspace = 'LayerSample.xcworkspace'
+    t.schemes_dir = 'Tests/Schemes'
+    t.runner = :xcpretty
+    t.output_log = 'xcodebuild.log'
+    t.settings["LAYER_TEST_HOST"] = (ENV['LAYER_TEST_HOST'] || 'localhost')
+    t.subtasks = { app: 'LayerSampleTests' }
+  end
+end
+
+
 desc "Builds and pushes a new release to Hockey App"
 task :release do
-  # 0) Check for bad directory state.
-  dirty_git = `git diff --name-only | grep -v Podfile | grep -v Rakefile | wc -l |  awk '{print $1}'`.chomp != "0"
-
-  if dirty_git
-    abort("Unable to build: The release process must be done with a clean directory. Perhaps you could `git stash`?")
-  end
-
-  # Clear Pods out
-  # run "rm -rf Pods"
-  # run "pod install"
 
   # 1) Generate objects with: builder name/email (via git config), short-sha
   require 'yaml'
   require 'byebug'
+  require 'plist'
   lockfile = YAML.load_file('Podfile.lock')
   layer_kit_version = nil
   lockfile['PODS'].detect do |entry|
