@@ -468,10 +468,6 @@ void LYRTestResetConfiguration(void)
     
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : LYRUIMediumFont(16)} forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LYRUIBlueColor()];
-<<<<<<< HEAD
-
-=======
->>>>>>> d9d7cb34f3fd7430fd27d17b7ab3168065f0f114
 }
 
 #pragma mark - Screen Shot Handler
