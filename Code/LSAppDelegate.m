@@ -301,6 +301,9 @@ void LYRTestResetConfiguration(void)
 
 - (void)navigateToViewForConversation:(LYRConversation *)conversation
 {
+    if (![NSThread isMainThread]) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Attempted to navigate UI from non-main thread" userInfo:nil];
+    }
     UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
     LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
     [conversationListViewController selectConversation:conversation];
