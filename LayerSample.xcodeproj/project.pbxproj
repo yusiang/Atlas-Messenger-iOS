@@ -86,7 +86,9 @@
 		D673C24019FADBA700579249 /* LYRUIMessageInputToolBarTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D673C23F19FADBA700579249 /* LYRUIMessageInputToolBarTestViewController.m */; };
 		D68E1C361A17EED400A32EA9 /* LSDataSourceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68E1C351A17EED400A32EA9 /* LSDataSourceTest.m */; };
 		D68E1C391A18337C00A32EA9 /* LSTestObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = D68E1C381A18337C00A32EA9 /* LSTestObserver.m */; };
-		D6B03CAD1A254A3A00C7517F /* LSLayerClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B03CAC1A254A3A00C7517F /* LSLayerClient.m */; };
+		D68F11C51A3FCADB00003EE1 /* shot.png in Resources */ = {isa = PBXBuildFile; fileRef = D68F11C41A3FCADB00003EE1 /* shot.png */; };
+		D68F11C81A3FCC7A00003EE1 /* LYRUIImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68F11C71A3FCC7A00003EE1 /* LYRUIImageViewController.m */; };
+		D6B03CAD1A254A3A00C7517F /* LSLayerInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B03CAC1A254A3A00C7517F /* LSLayerInterface.m */; };
 		D6C6195A19FC059300768D84 /* LSLocalNotificationUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C6195919FC059300768D84 /* LSLocalNotificationUtilities.m */; };
 		D6CD98711A085161009ADE36 /* LSMessageDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6CD98701A085161009ADE36 /* LSMessageDetailTableViewController.m */; };
 		D6F6EDE819F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = D6F6EDE719F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m */; };
@@ -218,8 +220,11 @@
 		D68E1C351A17EED400A32EA9 /* LSDataSourceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSDataSourceTest.m; sourceTree = "<group>"; };
 		D68E1C371A18337C00A32EA9 /* LSTestObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSTestObserver.h; sourceTree = "<group>"; };
 		D68E1C381A18337C00A32EA9 /* LSTestObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSTestObserver.m; sourceTree = "<group>"; };
-		D6B03CAB1A254A3A00C7517F /* LSLayerClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSLayerClient.h; path = ../../LSLayerClient.h; sourceTree = "<group>"; };
-		D6B03CAC1A254A3A00C7517F /* LSLayerClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSLayerClient.m; path = ../../LSLayerClient.m; sourceTree = "<group>"; };
+		D68F11C41A3FCADB00003EE1 /* shot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shot.png; sourceTree = "<group>"; };
+		D68F11C61A3FCC7A00003EE1 /* LYRUIImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUIImageViewController.h; sourceTree = "<group>"; };
+		D68F11C71A3FCC7A00003EE1 /* LYRUIImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIImageViewController.m; sourceTree = "<group>"; };
+		D6B03CAB1A254A3A00C7517F /* LSLayerInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSLayerInterface.h; path = ../../LSLayerInterface.h; sourceTree = "<group>"; };
+		D6B03CAC1A254A3A00C7517F /* LSLayerInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSLayerInterface.m; path = ../../LSLayerInterface.m; sourceTree = "<group>"; };
 		D6C6195819FC059300768D84 /* LSLocalNotificationUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSLocalNotificationUtilities.h; path = Controllers/LSLocalNotificationUtilities.h; sourceTree = "<group>"; };
 		D6C6195919FC059300768D84 /* LSLocalNotificationUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSLocalNotificationUtilities.m; path = Controllers/LSLocalNotificationUtilities.m; sourceTree = "<group>"; };
 		D6CD986F1A085161009ADE36 /* LSMessageDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSMessageDetailTableViewController.h; sourceTree = "<group>"; };
@@ -405,6 +410,7 @@
 				259A572E1950EB76000E27B0 /* LayerSample-Prefix.pch */,
 				259A572F1950EB76000E27B0 /* LSAppDelegate.h */,
 				259A57301950EB76000E27B0 /* LSAppDelegate.m */,
+				D68F11C41A3FCADB00003EE1 /* shot.png */,
 				259A57311950EB76000E27B0 /* main.m */,
 				0A0C242519477D8F00401B74 /* Frameworks */,
 			);
@@ -430,6 +436,8 @@
 				0A51BD2319B68B9C004105DC /* LSUIParticipantPickerDataSource.m */,
 				0A23C95F19C10D97004789EC /* LSUIConversationViewController.h */,
 				0A23C96019C10D97004789EC /* LSUIConversationViewController.m */,
+				D68F11C61A3FCC7A00003EE1 /* LYRUIImageViewController.h */,
+				D68F11C71A3FCC7A00003EE1 /* LYRUIImageViewController.m */,
 				0AE1A14C19B0DA8700BFB754 /* LSAuthenticationTableViewController.h */,
 				0AE1A14D19B0DA8700BFB754 /* LSAuthenticationTableViewController.m */,
 				0A28CD8919D5DF6700B5A7A8 /* LSErrors.h */,
@@ -630,6 +638,7 @@
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
 				0A27A9431997FD210070BD4F /* logout@2x.png in Resources */,
 				0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */,
+				D68F11C51A3FCADB00003EE1 /* shot.png in Resources */,
 				0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */,
 				0A27A9451997FE110070BD4F /* back@2x.png in Resources */,
 				0AD6C4C219BD4D3C005142ED /* background@2x.png in Resources */,
@@ -749,6 +758,7 @@
 				D6C6195A19FC059300768D84 /* LSLocalNotificationUtilities.m in Sources */,
 				D673C23B19F9DB7800579249 /* LSSettingsHeaderView.m in Sources */,
 				D68E1C391A18337C00A32EA9 /* LSTestObserver.m in Sources */,
+				D68F11C81A3FCC7A00003EE1 /* LYRUIImageViewController.m in Sources */,
 				0AFE400419B0E1BD00FCA264 /* LSUser.m in Sources */,
 				D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */,
 				D673C24019FADBA700579249 /* LYRUIMessageInputToolBarTestViewController.m in Sources */,
