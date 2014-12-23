@@ -6,6 +6,7 @@ dropbox_path = ENV['LAYER_DROPBOX_PATH'] || '~/Dropbox (Layer)'
 target 'LayerSample' do
   pod 'SVProgressHUD', :head
   #pod 'LayerKit'
+<<<<<<< HEAD
   #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git', branch: 'feature/APPS-560-Refactor-API'
   pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git', tag: 'v0.9.2-pre3'
   #pod 'LayerKit', path: "#{dropbox_path}/Layer/Builds/iOS/LayerKit-0.8.8-b3"
