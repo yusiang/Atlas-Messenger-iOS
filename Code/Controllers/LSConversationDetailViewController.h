@@ -12,6 +12,8 @@
 #import "LSApplicationController.h"
 #import <CoreLocation/CoreLocation.h>
 
+extern NSString *const LYRUIConversationNameTag;
+
 @class LSConversationDetailViewController;
 
 /**

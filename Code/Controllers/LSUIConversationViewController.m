@@ -7,11 +7,51 @@
 //
 
 #import "LSUIConversationViewController.h"
-#import "LSConversationDetailViewController.h"
 #import "LYRUIMessagingUtilities.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LYRUIParticipantPickerController.h"
 #import "LSMessageDetailTableViewController.h"
+
+@import QuickLook;
+
+NSURL *LYRTestGenerateTempFileFromInputStream(NSInputStream *inputStream)
+{
+    NSString *tempFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"Layer-Sample-App-Temp-Image.jpeg"];
+    NSOutputStream *datafileOutputStream = [NSOutputStream outputStreamToFileAtPath:tempFilePath append:NO];
+    
+    // Open streams
+    [inputStream open];
+    [datafileOutputStream open];
+    
+    // Create a temp buffer
+    const NSUInteger bufferSize = 1024 * 512;
+    uint8_t *buffer = malloc(bufferSize);
+    
+    // Read and write random data in 1024 byte chunks
+    NSUInteger totalBytesWritten = 0;
+    BOOL endOfStream = NO;
+    while (!endOfStream) {
+        NSInteger bytesRead = [inputStream read:buffer maxLength:bufferSize];
+        if (bytesRead == 0) {
+            endOfStream = YES;
+        } else if (bytesRead < 0) {
+            break;
+        }
+        NSInteger bytesWritten = [datafileOutputStream write:buffer maxLength:bytesRead];
+        if (bytesWritten <= 0) break;
+        totalBytesWritten += bytesWritten;
+    }
+    
+    // Close streams
+    [inputStream close];
+    [datafileOutputStream close];
+    
+    // Free memory
+    free(buffer);
+    
+    if (!endOfStream) return nil;
+    return [NSURL fileURLWithPath:tempFilePath];
+}
 
 static NSDateFormatter *LYRUIShortTimeFormatter()
 {
@@ -106,9 +146,10 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
             [dateComponents era] == [todayComponents era]);
 }
 
-@interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
+@interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
+@property (nonatomic) NSURL *previewFileURL;
 
 @end
 
@@ -117,7 +158,6 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.dataSource = self;
     self.delegate = self;
     
@@ -133,6 +173,11 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if ([self.conversation.metadata valueForKey:LYRUIConversationNameTag]) {
+        self.conversationTitle = [self.conversation.metadata valueForKey:LYRUIConversationNameTag];
+    }
+    
     self.addressBarController.dataSource = self;
 }
 
@@ -294,7 +339,28 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
         LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController initWithMessage:message applicationController:self.applicationContoller];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
+    } else {
+        
+        LYRMessagePart *part = message.parts[0];
+        if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
+            self.previewFileURL =  LYRTestGenerateTempFileFromInputStream(part.inputStream);
+            if (!self.previewFileURL) return;
+            QLPreviewController *previewController = [[QLPreviewController alloc] init];
+            previewController.dataSource = self;
+            previewController.currentPreviewItemIndex = 0;
+            [[self navigationController] pushViewController:previewController animated:YES];
+        }
     }
+}
+
+- (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller
+{
+    return self.previewFileURL != nil;
+}
+
+- (id <QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
+{
+    return self.previewFileURL;
 }
 
 #pragma mark - Address Bar View Controller Delegate
