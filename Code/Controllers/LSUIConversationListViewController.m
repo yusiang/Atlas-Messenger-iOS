@@ -27,7 +27,7 @@
     self.dataSource = self;
     
     // Left navigation item
-    if (self.shouldDisplaySettingsItem && !self.allowsEditing) {
+    if (self.shouldDisplaySettingsItem) {
         UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings"
                                                                            style:UIBarButtonItemStylePlain
                                                                           target:self
