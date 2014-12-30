@@ -269,8 +269,9 @@ void LYRTestResetConfiguration(void)
         [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badgeNumber + 1];
     }
     
+    BOOL userTappedRemoteNotification = application.applicationState == UIApplicationStateInactive;
     __block LYRConversation *conversation = [self conversationFromRemoteNotification:userInfo];
-    if (application.applicationState != UIApplicationStateActive && conversation) {
+    if (userTappedRemoteNotification && conversation) {
         [self navigateToViewForConversation:conversation];
     }
     
@@ -280,7 +281,7 @@ void LYRTestResetConfiguration(void)
         }
         
         // Try navigating once the synchronization completed
-        if (application.applicationState != UIApplicationStateActive && !conversation) {
+        if (userTappedRemoteNotification && !conversation) {
             conversation = [self conversationFromRemoteNotification:userInfo];
             [self navigateToViewForConversation:conversation];
         }
