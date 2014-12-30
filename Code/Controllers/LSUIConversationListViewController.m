@@ -14,6 +14,7 @@
 
 @interface LSUIConversationListViewController () < LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
+@property (nonatomic, weak) LSUIConversationViewController *conversationViewController;
 
 @end
 
@@ -139,11 +140,25 @@
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
-    LSUIConversationViewController *viewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation
-                                                                                                                    layerClient:self.applicationController.layerClient];
-    viewController.applicationContoller = self.applicationController;
-    viewController.showsAddressBar = YES;
-    [self.navigationController pushViewController:viewController animated:YES];
+    if (self.conversationViewController && self.conversationViewController.conversation == conversation) {
+        if (self.navigationController.topViewController == self.conversationViewController) return;
+        [self.navigationController popToViewController:self.conversationViewController animated:YES];
+        return;
+    }
+
+    LSUIConversationViewController *conversationViewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
+    conversationViewController.applicationContoller = self.applicationController;
+    conversationViewController.showsAddressBar = YES;
+    self.conversationViewController = conversationViewController;
+    if (self.navigationController.topViewController == self) {
+        [self.navigationController pushViewController:conversationViewController animated:YES];
+    } else {
+        NSMutableArray *viewControllers = [self.navigationController.viewControllers mutableCopy];
+        NSUInteger listViewControllerIndex = [viewControllers indexOfObject:self];
+        NSRange replacementRange = NSMakeRange(listViewControllerIndex + 1, viewControllers.count - listViewControllerIndex - 1);
+        [viewControllers replaceObjectsInRange:replacementRange withObjectsFromArray:@[conversationViewController]];
+        [self.navigationController setViewControllers:viewControllers animated:YES];
+    }
 }
 
 #pragma mark - Bar Button Functionality Methods
@@ -167,7 +182,6 @@
 
 - (void)selectConversation:(LYRConversation *)conversation
 {
-    [self.navigationController popToRootViewControllerAnimated:TRUE];
     if (conversation) {
         [self presentControllerWithConversation:conversation];
     }
