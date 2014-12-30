@@ -92,7 +92,7 @@ void LYRTestResetConfiguration(void)
     // ConversationListViewController Config
     _cellClass = [LYRUIConversationTableViewCell class];
     _rowHeight = 72;
-    _allowsEditing = NO;
+    _allowsEditing = YES;
     _displaysConversationImage = NO;
     _displaysSettingsButton = YES;
     
