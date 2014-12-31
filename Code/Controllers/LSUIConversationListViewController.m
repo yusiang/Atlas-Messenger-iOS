@@ -14,8 +14,6 @@
 
 @interface LSUIConversationListViewController () < LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
-@property (nonatomic, weak) LSUIConversationViewController *conversationViewController;
-
 @end
 
 @implementation LSUIConversationListViewController
@@ -140,21 +138,27 @@
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
-    if (self.conversationViewController && self.conversationViewController.conversation == conversation) {
-        if (self.navigationController.topViewController == self.conversationViewController) return;
-        [self.navigationController popToViewController:self.conversationViewController animated:YES];
+    LSUIConversationViewController *existingConversationViewController;
+    NSUInteger listViewControllerIndex = [self.navigationController.viewControllers indexOfObject:self];
+    if (listViewControllerIndex + 1 < self.navigationController.viewControllers.count) {
+        id nextViewController = [self.navigationController.viewControllers objectAtIndex:listViewControllerIndex + 1];
+        if ([nextViewController isKindOfClass:[LSUIConversationViewController class]]) {
+            existingConversationViewController = nextViewController;
+        }
+    }
+    if (existingConversationViewController && existingConversationViewController.conversation == conversation) {
+        if (self.navigationController.topViewController == existingConversationViewController) return;
+        [self.navigationController popToViewController:existingConversationViewController animated:YES];
         return;
     }
 
     LSUIConversationViewController *conversationViewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
     conversationViewController.applicationContoller = self.applicationController;
     conversationViewController.showsAddressBar = YES;
-    self.conversationViewController = conversationViewController;
     if (self.navigationController.topViewController == self) {
         [self.navigationController pushViewController:conversationViewController animated:YES];
     } else {
         NSMutableArray *viewControllers = [self.navigationController.viewControllers mutableCopy];
-        NSUInteger listViewControllerIndex = [viewControllers indexOfObject:self];
         NSRange replacementRange = NSMakeRange(listViewControllerIndex + 1, viewControllers.count - listViewControllerIndex - 1);
         [viewControllers replaceObjectsInRange:replacementRange withObjectsFromArray:@[conversationViewController]];
         [self.navigationController setViewControllers:viewControllers animated:YES];
