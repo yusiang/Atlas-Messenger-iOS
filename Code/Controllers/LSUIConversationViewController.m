@@ -162,7 +162,6 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
     self.delegate = self;
     
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationContoller.persistenceManager];
-    self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
     
     if (self.conversation) {
         [self addDetailsButton];
@@ -373,6 +372,9 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
 {
+    NSSet *selectedParticipantIdentifiers = [addressBarViewController.selectedParticipants valueForKey:@"participantIdentifier"];
+    self.participantPickerDataSource.excludedIdentifiers = selectedParticipantIdentifiers;
+
     LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
                                                                                                             sortType:LYRUIParticipantPickerSortTypeFirstName];
     controller.participantPickerDelegate = self;
