@@ -388,9 +388,7 @@ static BOOL LSIsDateInYear(NSDate *date)
 - (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
 {
     [self.applicationController.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
-        if (!error) {
-            completion(contacts);
-        }
+        completion(contacts ?: @[]);
     }];
 }
 
