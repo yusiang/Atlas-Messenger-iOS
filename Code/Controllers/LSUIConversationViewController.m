@@ -15,7 +15,7 @@
 
 @import QuickLook;
 
-NSURL *LSTestGenerateTempFileFromInputStream(NSInputStream *inputStream)
+static NSURL *LSTestGenerateTempFileFromInputStream(NSInputStream *inputStream)
 {
     NSString *tempFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"Layer-Sample-App-Temp-Image.jpeg"];
     NSOutputStream *datafileOutputStream = [NSOutputStream outputStreamToFileAtPath:tempFilePath append:NO];
