@@ -11,49 +11,19 @@
 #import "LSUIParticipantPickerDataSource.h"
 #import "LYRUIParticipantPickerController.h"
 #import "LSMessageDetailTableViewController.h"
+#import "LSConversationDetailViewController.h"
 
 @import QuickLook;
 
-NSURL *LYRTestGenerateTempFileFromInputStream(NSInputStream *inputStream)
+static NSURL *LSTestGenerateTempFileFromData(NSData *data)
 {
     NSString *tempFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"Layer-Sample-App-Temp-Image.jpeg"];
-    NSOutputStream *datafileOutputStream = [NSOutputStream outputStreamToFileAtPath:tempFilePath append:NO];
-    
-    // Open streams
-    [inputStream open];
-    [datafileOutputStream open];
-    
-    // Create a temp buffer
-    const NSUInteger bufferSize = 1024 * 512;
-    uint8_t *buffer = malloc(bufferSize);
-    
-    // Read and write random data in 1024 byte chunks
-    NSUInteger totalBytesWritten = 0;
-    BOOL endOfStream = NO;
-    while (!endOfStream) {
-        NSInteger bytesRead = [inputStream read:buffer maxLength:bufferSize];
-        if (bytesRead == 0) {
-            endOfStream = YES;
-        } else if (bytesRead < 0) {
-            break;
-        }
-        NSInteger bytesWritten = [datafileOutputStream write:buffer maxLength:bytesRead];
-        if (bytesWritten <= 0) break;
-        totalBytesWritten += bytesWritten;
-    }
-    
-    // Close streams
-    [inputStream close];
-    [datafileOutputStream close];
-    
-    // Free memory
-    free(buffer);
-    
-    if (!endOfStream) return nil;
+    BOOL success = [data writeToFile:tempFilePath atomically:NO];
+    if (!success) return nil;
     return [NSURL fileURLWithPath:tempFilePath];
 }
 
-static NSDateFormatter *LYRUIShortTimeFormatter()
+static NSDateFormatter *LSShortTimeFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
@@ -63,7 +33,7 @@ static NSDateFormatter *LYRUIShortTimeFormatter()
     return dateFormatter;
 }
 
-static NSDateFormatter *LYRUIDayOfWeekDateFormatter()
+static NSDateFormatter *LSDayOfWeekDateFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
@@ -73,7 +43,7 @@ static NSDateFormatter *LYRUIDayOfWeekDateFormatter()
     return dateFormatter;
 }
 
-static NSDateFormatter *LYRUIRelativeDateFormatter()
+static NSDateFormatter *LSRelativeDateFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
@@ -84,7 +54,7 @@ static NSDateFormatter *LYRUIRelativeDateFormatter()
     return dateFormatter;
 }
 
-static NSDateFormatter *LYRUIThisYearDateFormatter()
+static NSDateFormatter *LSThisYearDateFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
@@ -94,56 +64,62 @@ static NSDateFormatter *LYRUIThisYearDateFormatter()
     return dateFormatter;
 }
 
-static NSDateFormatter *LYRUIDefaultDateFormatter()
+static NSDateFormatter *LSDefaultDateFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
         dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"MMM dd, YYYY,"; // Nov 29, 2013,
+        dateFormatter.dateFormat = @"MMM dd, yyyy,"; // Nov 29, 2013,
     }
     return dateFormatter;
 }
 
-static BOOL LYRUIIsDateInToday(NSDate *date)
-{
-    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
-    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return ([dateComponents day] == [todayComponents day] &&
-            [dateComponents month] == [todayComponents month] &&
-            [dateComponents year] == [todayComponents year] &&
-            [dateComponents era] == [todayComponents era]);
-}
+typedef NS_ENUM(NSInteger, LSDateProximity) {
+    LSDateProximityToday,
+    LSDateProximityYesterday,
+    LSDateProximityWeek,
+    LSDateProximityYear,
+    LSDateProximityOther,
+};
 
-static BOOL LYRUIIsDateInYesterday(NSDate *date)
+static LSDateProximity LSProximityToDate(NSDate *date)
 {
-    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
-    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return ([dateComponents day] == ([todayComponents day] - 1) &&
-            [dateComponents month] == [todayComponents month] &&
-            [dateComponents year] == [todayComponents year] &&
-            [dateComponents era] == [todayComponents era]);
-}
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *now = [NSDate date];
+    NSCalendarUnit calendarUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSWeekOfMonthCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents *dateComponents = [calendar components:calendarUnits fromDate:date];
+    NSDateComponents *todayComponents = [calendar components:calendarUnits fromDate:now];
+    if (dateComponents.day == todayComponents.day &&
+        dateComponents.month == todayComponents.month &&
+        dateComponents.year == todayComponents.year &&
+        dateComponents.era == todayComponents.era) {
+        return LSDateProximityToday;
+    }
 
-static BOOL LYRUIIsDateInWeek(NSDate *date)
-{
-    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSWeekOfMonthCalendarUnit;
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
-    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return ([dateComponents weekOfMonth] == [todayComponents weekOfMonth] &&
-            [dateComponents month] == [todayComponents month] &&
-            [dateComponents year] == [todayComponents year] &&
-            [dateComponents era] == [todayComponents era]);
-}
+    NSDateComponents *componentsToYesterday = [NSDateComponents new];
+    componentsToYesterday.day = -1;
+    NSDate *yesterday = [calendar dateByAddingComponents:componentsToYesterday toDate:now options:0];
+    NSDateComponents *yesterdayComponents = [calendar components:calendarUnits fromDate:yesterday];
+    if (dateComponents.day == yesterdayComponents.day &&
+        dateComponents.month == yesterdayComponents.month &&
+        dateComponents.year == yesterdayComponents.year &&
+        dateComponents.era == yesterdayComponents.era) {
+        return LSDateProximityYesterday;
+    }
 
-static BOOL LYRUIIsDateInYear(NSDate *date)
-{
-    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit;
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
-    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return ([dateComponents year] == [todayComponents year] &&
-            [dateComponents era] == [todayComponents era]);
+    if (dateComponents.weekOfMonth == todayComponents.weekOfMonth &&
+        dateComponents.month == todayComponents.month &&
+        dateComponents.year == todayComponents.year &&
+        dateComponents.era == todayComponents.era) {
+        return LSDateProximityWeek;
+    }
+
+    if (dateComponents.year == todayComponents.year &&
+        dateComponents.era == todayComponents.era) {
+        return LSDateProximityYear;
+    }
+
+    return LSDateProximityOther;
 }
 
 @interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
@@ -158,10 +134,11 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     self.dataSource = self;
     self.delegate = self;
     
-    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationContoller.persistenceManager];
+    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
     if (self.conversation) {
         [self addDetailsButton];
@@ -180,12 +157,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
     self.addressBarController.dataSource = self;
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-#pragma mark - Conversation View Controller Data Source
+#pragma mark - LYRUIConversationViewControllerDataSource
 
 /**
  
@@ -195,8 +167,8 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     if (participantIdentifier) {
-        NSSet *set = [self.applicationContoller.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
-        return [[set allObjects] firstObject];
+        NSSet *set = [self.applicationController.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
+        return [set anyObject];
     }
     return nil;
 }
@@ -209,27 +181,32 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
-    NSString *dateString = nil;
-    if (LYRUIIsDateInToday(date) || LYRUIIsDateInYesterday(date)) {
-        dateString = [LYRUIRelativeDateFormatter() stringFromDate:date];
-    } else if (LYRUIIsDateInWeek(date)) {
-        dateString = [LYRUIDayOfWeekDateFormatter() stringFromDate:date];
-    } else if (LYRUIIsDateInYear(date)) {
-        dateString = [LYRUIThisYearDateFormatter() stringFromDate:date];
-    } else {
-        dateString = [LYRUIDefaultDateFormatter() stringFromDate:date];
+    NSDateFormatter *dateFormatter;
+    LSDateProximity dateProximity = LSProximityToDate(date);
+    switch (dateProximity) {
+        case LSDateProximityToday:
+        case LSDateProximityYesterday:
+            dateFormatter = LSRelativeDateFormatter();
+            break;
+        case LSDateProximityWeek:
+            dateFormatter = LSDayOfWeekDateFormatter();
+            break;
+        case LSDateProximityYear:
+            dateFormatter = LSThisYearDateFormatter();
+            break;
+        case LSDateProximityOther:
+            dateFormatter = LSDefaultDateFormatter();
+            break;
     }
-    NSString *timeString = [LYRUIShortTimeFormatter() stringFromDate:date];
+
+    NSString *dateString = [dateFormatter stringFromDate:date];
+    NSString *timeString = [LSShortTimeFormatter() stringFromDate:date];
     
     NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
-    NSRange boldedRange = NSMakeRange(0, [dateString length]);
-    [dateAttributedString beginEditing];
-    
+    NSRange boldedRange = NSMakeRange(0, dateString.length);
     [dateAttributedString addAttribute:NSFontAttributeName
-                       value:[UIFont boldSystemFontOfSize:12]
-                       range:boldedRange];
-    
-    [dateAttributedString endEditing];
+                                 value:[UIFont boldSystemFontOfSize:12]
+                                 range:boldedRange];
     return dateAttributedString;
 }
 
@@ -241,32 +218,37 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
-    NSMutableArray *recipients = [[recipientStatus allKeys] mutableCopy];
-    [recipients removeObject:self.applicationContoller.layerClient.authenticatedUserID];
-    
-    NSAttributedString *attributedString;
-    NSInteger status = [[recipientStatus valueForKey:[recipients lastObject]] integerValue];
-    switch (status) {
-        case LYRRecipientStatusInvalid:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Not Sent"];
-            break;
-            
-        case LYRRecipientStatusSent:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Sent"];
-            break;
-            
-        case LYRRecipientStatusDelivered:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Delivered"];
-            break;
-            
-        case LYRRecipientStatusRead:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Read"];
-            break;
-            
-        default:
-            break;
+    __block BOOL allSent = YES;
+    __block BOOL allDelivered = YES;
+    __block BOOL allRead = YES;
+    [recipientStatus enumerateKeysAndObjectsUsingBlock:^(NSString *userID, NSNumber *statusNumber, BOOL *stop) {
+        if ([userID isEqualToString:self.applicationController.layerClient.authenticatedUserID]) return;
+        LYRRecipientStatus status = statusNumber.integerValue;
+        switch (status) {
+            case LYRRecipientStatusInvalid:
+                allSent = NO;
+            case LYRRecipientStatusSent:
+                allDelivered = NO;
+            case LYRRecipientStatusDelivered:
+                allRead = NO;
+                break;
+            case LYRRecipientStatusRead:
+                break;
+        }
+    }];
+
+    NSString *statusString;
+    if (allRead) {
+        statusString = @"Read";
+    } else if (allDelivered) {
+        statusString = @"Delivered";
+    } else if (allSent) {
+        statusString = @"Sent";
+    } else {
+        statusString = @"Not Sent";
     }
-    return attributedString;
+
+    return [[NSAttributedString alloc] initWithString:statusString];
 }
 
 /**
@@ -277,16 +259,15 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessagePart:(LYRMessagePart *)messagePart
 {
-    if (!self.applicationContoller.shouldSendPushText) return nil;
-    NSString *pushText = [NSString new];
+    if (!self.applicationController.shouldSendPushText) return nil;
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
-        pushText = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
-    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG]) {
-        pushText = @"Has sent a new image";
+        return [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
+    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
+        return @"Has sent a new image";
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeLocation]) {
-        pushText = @"Has sent a new location";
+        return @"Has sent a new location";
     }
-    return pushText;
+    return nil;
 }
 
 /**
@@ -299,7 +280,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
     return YES;
 }
 
-#pragma mark - Conversation View Controller Delegate
+#pragma mark - LYRUIConversationViewControllerDelegate
 
 /**
  
@@ -320,7 +301,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 {
     NSLog(@"Message Send Failed with Error: %@", error);
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
-                                                        message:[error localizedDescription]
+                                                        message:error.localizedDescription
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
@@ -334,27 +315,28 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
-    if (self.applicationContoller.debugModeEnabled) {
-        LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController initWithMessage:message applicationController:self.applicationContoller];
+    if (self.applicationController.debugModeEnabled) {
+        LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController initWithMessage:message applicationController:self.applicationController];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
-        
-        LYRMessagePart *part = message.parts[0];
+        LYRMessagePart *part = message.parts.firstObject;
         if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
-            self.previewFileURL =  LYRTestGenerateTempFileFromInputStream(part.inputStream);
+            self.previewFileURL =  LSTestGenerateTempFileFromData(part.data);
             if (!self.previewFileURL) return;
             QLPreviewController *previewController = [[QLPreviewController alloc] init];
             previewController.dataSource = self;
             previewController.currentPreviewItemIndex = 0;
-            [[self navigationController] pushViewController:previewController animated:YES];
+            [self.navigationController pushViewController:previewController animated:YES];
         }
     }
 }
 
+#pragma mark - QLPreviewControllerDataSource
+
 - (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller
 {
-    return self.previewFileURL != nil;
+    return self.previewFileURL ? 1 : 0;
 }
 
 - (id <QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
@@ -362,7 +344,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
     return self.previewFileURL;
 }
 
-#pragma mark - Address Bar View Controller Delegate
+#pragma mark - LYRUIAddressBarControllerDelegate
 
 /**
  
@@ -382,7 +364,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
     [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
-#pragma mark - Adress Bar View Controller Data Source
+#pragma mark - LYRUIAddressBarControllerDataSource
 
 /**
  
@@ -391,14 +373,12 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
 {
-    [self.applicationContoller.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
-        if (!error) {
-            completion(contacts);
-        }
+    [self.applicationController.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
+        completion(contacts ?: @[]);
     }];
 }
 
-#pragma mark - Participant Picker Delegate Methods
+#pragma mark - LYRUIParticipantPickerControllerDelegate
 
 /**
  
@@ -407,7 +387,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
 }
 
 /**
@@ -418,20 +398,18 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    if (participant) {
-        [self.addressBarController selectParticipant:participant];
-    }
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [self.addressBarController selectParticipant:participant];
+    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - Converation Detail View Controler Data Source
+#pragma mark - LSConversationDetailViewControllerDataSource
 
 - (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     return [self.dataSource conversationViewController:self participantForIdentifier:participantIdentifier];
 }
 
-#pragma mark - Converation Detail View Controler Delegate
+#pragma mark - LSConversationDetailViewControllerDelegate
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
 {
@@ -467,7 +445,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
     LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
     detailViewController.detailDelegate = self;
     detailViewController.detailsDataSource = self;
-    detailViewController.applicationController = self.applicationContoller;
+    detailViewController.applicationController = self.applicationController;
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }
 
