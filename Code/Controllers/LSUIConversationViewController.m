@@ -15,7 +15,7 @@
 
 @import QuickLook;
 
-NSURL *LYRTestGenerateTempFileFromInputStream(NSInputStream *inputStream)
+NSURL *LSTestGenerateTempFileFromInputStream(NSInputStream *inputStream)
 {
     NSString *tempFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"Layer-Sample-App-Temp-Image.jpeg"];
     NSOutputStream *datafileOutputStream = [NSOutputStream outputStreamToFileAtPath:tempFilePath append:NO];
@@ -54,7 +54,7 @@ NSURL *LYRTestGenerateTempFileFromInputStream(NSInputStream *inputStream)
     return [NSURL fileURLWithPath:tempFilePath];
 }
 
-static NSDateFormatter *LYRUIShortTimeFormatter()
+static NSDateFormatter *LSShortTimeFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
@@ -64,7 +64,7 @@ static NSDateFormatter *LYRUIShortTimeFormatter()
     return dateFormatter;
 }
 
-static NSDateFormatter *LYRUIDayOfWeekDateFormatter()
+static NSDateFormatter *LSDayOfWeekDateFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
@@ -74,7 +74,7 @@ static NSDateFormatter *LYRUIDayOfWeekDateFormatter()
     return dateFormatter;
 }
 
-static NSDateFormatter *LYRUIRelativeDateFormatter()
+static NSDateFormatter *LSRelativeDateFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
@@ -85,7 +85,7 @@ static NSDateFormatter *LYRUIRelativeDateFormatter()
     return dateFormatter;
 }
 
-static NSDateFormatter *LYRUIThisYearDateFormatter()
+static NSDateFormatter *LSThisYearDateFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
@@ -95,7 +95,7 @@ static NSDateFormatter *LYRUIThisYearDateFormatter()
     return dateFormatter;
 }
 
-static NSDateFormatter *LYRUIDefaultDateFormatter()
+static NSDateFormatter *LSDefaultDateFormatter()
 {
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
@@ -105,7 +105,7 @@ static NSDateFormatter *LYRUIDefaultDateFormatter()
     return dateFormatter;
 }
 
-static BOOL LYRUIIsDateInToday(NSDate *date)
+static BOOL LSIsDateInToday(NSDate *date)
 {
     NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
@@ -116,7 +116,7 @@ static BOOL LYRUIIsDateInToday(NSDate *date)
             [dateComponents era] == [todayComponents era]);
 }
 
-static BOOL LYRUIIsDateInYesterday(NSDate *date)
+static BOOL LSIsDateInYesterday(NSDate *date)
 {
     NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
@@ -127,7 +127,7 @@ static BOOL LYRUIIsDateInYesterday(NSDate *date)
             [dateComponents era] == [todayComponents era]);
 }
 
-static BOOL LYRUIIsDateInWeek(NSDate *date)
+static BOOL LSIsDateInWeek(NSDate *date)
 {
     NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSWeekOfMonthCalendarUnit;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
@@ -138,7 +138,7 @@ static BOOL LYRUIIsDateInWeek(NSDate *date)
             [dateComponents era] == [todayComponents era]);
 }
 
-static BOOL LYRUIIsDateInYear(NSDate *date)
+static BOOL LSIsDateInYear(NSDate *date)
 {
     NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
@@ -211,16 +211,16 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
     NSString *dateString = nil;
-    if (LYRUIIsDateInToday(date) || LYRUIIsDateInYesterday(date)) {
-        dateString = [LYRUIRelativeDateFormatter() stringFromDate:date];
-    } else if (LYRUIIsDateInWeek(date)) {
-        dateString = [LYRUIDayOfWeekDateFormatter() stringFromDate:date];
-    } else if (LYRUIIsDateInYear(date)) {
-        dateString = [LYRUIThisYearDateFormatter() stringFromDate:date];
+    if (LSIsDateInToday(date) || LSIsDateInYesterday(date)) {
+        dateString = [LSRelativeDateFormatter() stringFromDate:date];
+    } else if (LSIsDateInWeek(date)) {
+        dateString = [LSDayOfWeekDateFormatter() stringFromDate:date];
+    } else if (LSIsDateInYear(date)) {
+        dateString = [LSThisYearDateFormatter() stringFromDate:date];
     } else {
-        dateString = [LYRUIDefaultDateFormatter() stringFromDate:date];
+        dateString = [LSDefaultDateFormatter() stringFromDate:date];
     }
-    NSString *timeString = [LYRUIShortTimeFormatter() stringFromDate:date];
+    NSString *timeString = [LSShortTimeFormatter() stringFromDate:date];
     
     NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
     NSRange boldedRange = NSMakeRange(0, [dateString length]);
@@ -343,7 +343,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
         
         LYRMessagePart *part = message.parts[0];
         if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
-            self.previewFileURL =  LYRTestGenerateTempFileFromInputStream(part.inputStream);
+            self.previewFileURL =  LSTestGenerateTempFileFromInputStream(part.inputStream);
             if (!self.previewFileURL) return;
             QLPreviewController *previewController = [[QLPreviewController alloc] init];
             previewController.dataSource = self;
