@@ -401,7 +401,7 @@ static BOOL LSIsDateInYear(NSDate *date)
  */
 - (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
 }
 
 /**
@@ -413,7 +413,7 @@ static BOOL LSIsDateInYear(NSDate *date)
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
     [self.addressBarController selectParticipant:participant];
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Converation Detail View Controler Data Source
