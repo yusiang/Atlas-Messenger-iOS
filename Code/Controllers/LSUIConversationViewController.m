@@ -181,11 +181,6 @@ static BOOL LSIsDateInYear(NSDate *date)
     self.addressBarController.dataSource = self;
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
 #pragma mark - Conversation View Controller Data Source
 
 /**
