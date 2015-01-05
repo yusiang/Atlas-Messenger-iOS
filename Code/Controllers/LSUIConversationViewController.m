@@ -414,9 +414,7 @@ static BOOL LSIsDateInYear(NSDate *date)
  */
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    if (participant) {
-        [self.addressBarController selectParticipant:participant];
-    }
+    [self.addressBarController selectParticipant:participant];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
