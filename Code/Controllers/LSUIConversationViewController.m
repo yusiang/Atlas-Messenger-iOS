@@ -181,7 +181,7 @@ static BOOL LSIsDateInYear(NSDate *date)
     self.addressBarController.dataSource = self;
 }
 
-#pragma mark - Conversation View Controller Data Source
+#pragma mark - LYRUIConversationViewControllerDataSource
 
 /**
  
@@ -295,7 +295,7 @@ static BOOL LSIsDateInYear(NSDate *date)
     return YES;
 }
 
-#pragma mark - Conversation View Controller Delegate
+#pragma mark - LYRUIConversationViewControllerDelegate
 
 /**
  
@@ -348,6 +348,8 @@ static BOOL LSIsDateInYear(NSDate *date)
     }
 }
 
+#pragma mark - QLPreviewControllerDataSource
+
 - (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller
 {
     return self.previewFileURL ? 1 : 0;
@@ -358,7 +360,7 @@ static BOOL LSIsDateInYear(NSDate *date)
     return self.previewFileURL;
 }
 
-#pragma mark - Address Bar View Controller Delegate
+#pragma mark - LYRUIAddressBarControllerDelegate
 
 /**
  
@@ -378,7 +380,7 @@ static BOOL LSIsDateInYear(NSDate *date)
     [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
-#pragma mark - Adress Bar View Controller Data Source
+#pragma mark - LYRUIAddressBarControllerDataSource
 
 /**
  
@@ -392,7 +394,7 @@ static BOOL LSIsDateInYear(NSDate *date)
     }];
 }
 
-#pragma mark - Participant Picker Delegate Methods
+#pragma mark - LYRUIParticipantPickerControllerDelegate
 
 /**
  
@@ -416,14 +418,14 @@ static BOOL LSIsDateInYear(NSDate *date)
     [participantPickerController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - Converation Detail View Controler Data Source
+#pragma mark - LSConversationDetailViewControllerDataSource
 
 - (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     return [self.dataSource conversationViewController:self participantForIdentifier:participantIdentifier];
 }
 
-#pragma mark - Converation Detail View Controler Delegate
+#pragma mark - LSConversationDetailViewControllerDelegate
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
 {
