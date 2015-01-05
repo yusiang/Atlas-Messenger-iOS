@@ -275,15 +275,14 @@ static BOOL LSIsDateInYear(NSDate *date)
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessagePart:(LYRMessagePart *)messagePart
 {
     if (!self.applicationController.shouldSendPushText) return nil;
-    NSString *pushText = [NSString new];
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
-        pushText = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
+        return [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG]) {
-        pushText = @"Has sent a new image";
+        return @"Has sent a new image";
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeLocation]) {
-        pushText = @"Has sent a new location";
+        return @"Has sent a new location";
     }
-    return pushText;
+    return nil;
 }
 
 /**
