@@ -277,7 +277,7 @@ static BOOL LSIsDateInYear(NSDate *date)
     if (!self.applicationController.shouldSendPushText) return nil;
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         return [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
-    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG]) {
+    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
         return @"Has sent a new image";
     } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeLocation]) {
         return @"Has sent a new location";
