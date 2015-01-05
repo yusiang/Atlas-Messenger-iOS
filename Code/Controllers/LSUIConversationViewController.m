@@ -89,11 +89,14 @@ static BOOL LSIsDateInYesterday(NSDate *date)
 {
     NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
-    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return (dateComponents.day == (todayComponents.day - 1) &&
-            dateComponents.month == todayComponents.month &&
-            dateComponents.year == todayComponents.year &&
-            dateComponents.era == todayComponents.era);
+    NSDateComponents *componentsToYesterday = [NSDateComponents new];
+    componentsToYesterday.day = -1;
+    NSDate *yesterday = [[NSCalendar currentCalendar] dateByAddingComponents:componentsToYesterday toDate:[NSDate date] options:0];
+    NSDateComponents *yesterdayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:yesterday];
+    return (dateComponents.day == yesterdayComponents.day &&
+            dateComponents.month == yesterdayComponents.month &&
+            dateComponents.year == yesterdayComponents.year &&
+            dateComponents.era == yesterdayComponents.era);
 }
 
 static BOOL LSIsDateInWeek(NSDate *date)
