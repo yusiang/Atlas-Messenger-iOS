@@ -192,7 +192,7 @@ static BOOL LSIsDateInYear(NSDate *date)
 {
     if (participantIdentifier) {
         NSSet *set = [self.applicationController.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
-        return set.allObjects.firstObject;
+        return [set anyObject];
     }
     return nil;
 }
