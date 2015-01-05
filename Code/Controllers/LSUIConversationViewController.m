@@ -219,13 +219,9 @@ static BOOL LSIsDateInYear(NSDate *date)
     
     NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
     NSRange boldedRange = NSMakeRange(0, [dateString length]);
-    [dateAttributedString beginEditing];
-    
     [dateAttributedString addAttribute:NSFontAttributeName
-                       value:[UIFont boldSystemFontOfSize:12]
-                       range:boldedRange];
-    
-    [dateAttributedString endEditing];
+                                 value:[UIFont boldSystemFontOfSize:12]
+                                 range:boldedRange];
     return dateAttributedString;
 }
 
