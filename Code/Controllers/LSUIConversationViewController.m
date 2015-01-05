@@ -159,6 +159,7 @@ static BOOL LSIsDateInYear(NSDate *date)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     self.dataSource = self;
     self.delegate = self;
     
@@ -335,7 +336,6 @@ static BOOL LSIsDateInYear(NSDate *date)
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
-        
         LYRMessagePart *part = message.parts.firstObject;
         if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
             self.previewFileURL =  LSTestGenerateTempFileFromInputStream(part.inputStream);
