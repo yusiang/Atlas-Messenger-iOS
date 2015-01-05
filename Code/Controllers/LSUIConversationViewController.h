@@ -11,9 +11,9 @@
 #import "LSConversationDetailViewController.h"
 
 /**
- @abstract Subclass of the `LYRUIConversationViewController` Layer UI Kit component. 
- The class acts as the Data Source and Delegate object of the component. It Presents a user 
- interface for displaying a list of conversations.
+ @abstract Subclass of the `LYRUIConversationViewController` LayerUIKit component.
+ The class acts as the data source and delegate of the component. It presents a user
+ interface for displaying a conversation's messages.
  */
 @interface LSUIConversationViewController : LYRUIConversationViewController <LYRUIConversationViewControllerDataSource, LYRUIConversationViewControllerDelegate>
 
