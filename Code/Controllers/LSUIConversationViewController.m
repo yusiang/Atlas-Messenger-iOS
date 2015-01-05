@@ -233,32 +233,37 @@ static BOOL LSIsDateInYear(NSDate *date)
  */
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
-    NSMutableArray *recipients = [[recipientStatus allKeys] mutableCopy];
-    [recipients removeObject:self.applicationController.layerClient.authenticatedUserID];
-    
-    NSAttributedString *attributedString;
-    NSInteger status = [[recipientStatus valueForKey:[recipients lastObject]] integerValue];
-    switch (status) {
-        case LYRRecipientStatusInvalid:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Not Sent"];
-            break;
-            
-        case LYRRecipientStatusSent:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Sent"];
-            break;
-            
-        case LYRRecipientStatusDelivered:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Delivered"];
-            break;
-            
-        case LYRRecipientStatusRead:
-            attributedString = [[NSAttributedString alloc] initWithString:@"Read"];
-            break;
-            
-        default:
-            break;
+    __block BOOL allSent = YES;
+    __block BOOL allDelivered = YES;
+    __block BOOL allRead = YES;
+    [recipientStatus enumerateKeysAndObjectsUsingBlock:^(NSString *userID, NSNumber *statusNumber, BOOL *stop) {
+        if ([userID isEqualToString:self.applicationController.layerClient.authenticatedUserID]) return;
+        LYRRecipientStatus status = statusNumber.integerValue;
+        switch (status) {
+            case LYRRecipientStatusInvalid:
+                allSent = NO;
+            case LYRRecipientStatusSent:
+                allDelivered = NO;
+            case LYRRecipientStatusDelivered:
+                allRead = NO;
+                break;
+            case LYRRecipientStatusRead:
+                break;
+        }
+    }];
+
+    NSString *statusString;
+    if (allRead) {
+        statusString = @"Read";
+    } else if (allDelivered) {
+        statusString = @"Delivered";
+    } else if (allSent) {
+        statusString = @"Sent";
+    } else {
+        statusString = @"Not Sent";
     }
-    return attributedString;
+
+    return [[NSAttributedString alloc] initWithString:statusString];
 }
 
 /**
