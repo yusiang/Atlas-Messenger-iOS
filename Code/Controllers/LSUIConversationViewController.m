@@ -74,49 +74,52 @@ static NSDateFormatter *LSDefaultDateFormatter()
     return dateFormatter;
 }
 
-static BOOL LSIsDateInToday(NSDate *date)
-{
-    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
-    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return (dateComponents.day == todayComponents.day &&
-            dateComponents.month == todayComponents.month &&
-            dateComponents.year == todayComponents.year &&
-            dateComponents.era == todayComponents.era);
-}
+typedef NS_ENUM(NSInteger, LSDateProximity) {
+    LSDateProximityToday,
+    LSDateProximityYesterday,
+    LSDateProximityWeek,
+    LSDateProximityYear,
+    LSDateProximityOther,
+};
 
-static BOOL LSIsDateInYesterday(NSDate *date)
+static LSDateProximity LSProximityToDate(NSDate *date)
 {
-    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *now = [NSDate date];
+    NSCalendarUnit calendarUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSWeekOfMonthCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents *dateComponents = [calendar components:calendarUnits fromDate:date];
+    NSDateComponents *todayComponents = [calendar components:calendarUnits fromDate:now];
+    if (dateComponents.day == todayComponents.day &&
+        dateComponents.month == todayComponents.month &&
+        dateComponents.year == todayComponents.year &&
+        dateComponents.era == todayComponents.era) {
+        return LSDateProximityToday;
+    }
+
     NSDateComponents *componentsToYesterday = [NSDateComponents new];
     componentsToYesterday.day = -1;
-    NSDate *yesterday = [[NSCalendar currentCalendar] dateByAddingComponents:componentsToYesterday toDate:[NSDate date] options:0];
-    NSDateComponents *yesterdayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:yesterday];
-    return (dateComponents.day == yesterdayComponents.day &&
-            dateComponents.month == yesterdayComponents.month &&
-            dateComponents.year == yesterdayComponents.year &&
-            dateComponents.era == yesterdayComponents.era);
-}
+    NSDate *yesterday = [calendar dateByAddingComponents:componentsToYesterday toDate:now options:0];
+    NSDateComponents *yesterdayComponents = [calendar components:calendarUnits fromDate:yesterday];
+    if (dateComponents.day == yesterdayComponents.day &&
+        dateComponents.month == yesterdayComponents.month &&
+        dateComponents.year == yesterdayComponents.year &&
+        dateComponents.era == yesterdayComponents.era) {
+        return LSDateProximityYesterday;
+    }
 
-static BOOL LSIsDateInWeek(NSDate *date)
-{
-    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSWeekOfMonthCalendarUnit;
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
-    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return (dateComponents.weekOfMonth == todayComponents.weekOfMonth &&
-            dateComponents.month == todayComponents.month &&
-            dateComponents.year == todayComponents.year &&
-            dateComponents.era == todayComponents.era);
-}
+    if (dateComponents.weekOfMonth == todayComponents.weekOfMonth &&
+        dateComponents.month == todayComponents.month &&
+        dateComponents.year == todayComponents.year &&
+        dateComponents.era == todayComponents.era) {
+        return LSDateProximityWeek;
+    }
 
-static BOOL LSIsDateInYear(NSDate *date)
-{
-    NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit;
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
-    NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return (dateComponents.year == todayComponents.year &&
-            dateComponents.era == todayComponents.era);
+    if (dateComponents.year == todayComponents.year &&
+        dateComponents.era == todayComponents.era) {
+        return LSDateProximityYear;
+    }
+
+    return LSDateProximityOther;
 }
 
 @interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
@@ -178,16 +181,25 @@ static BOOL LSIsDateInYear(NSDate *date)
  */
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
-    NSString *dateString;
-    if (LSIsDateInToday(date) || LSIsDateInYesterday(date)) {
-        dateString = [LSRelativeDateFormatter() stringFromDate:date];
-    } else if (LSIsDateInWeek(date)) {
-        dateString = [LSDayOfWeekDateFormatter() stringFromDate:date];
-    } else if (LSIsDateInYear(date)) {
-        dateString = [LSThisYearDateFormatter() stringFromDate:date];
-    } else {
-        dateString = [LSDefaultDateFormatter() stringFromDate:date];
+    NSDateFormatter *dateFormatter;
+    LSDateProximity dateProximity = LSProximityToDate(date);
+    switch (dateProximity) {
+        case LSDateProximityToday:
+        case LSDateProximityYesterday:
+            dateFormatter = LSRelativeDateFormatter();
+            break;
+        case LSDateProximityWeek:
+            dateFormatter = LSDayOfWeekDateFormatter();
+            break;
+        case LSDateProximityYear:
+            dateFormatter = LSThisYearDateFormatter();
+            break;
+        case LSDateProximityOther:
+            dateFormatter = LSDefaultDateFormatter();
+            break;
     }
+
+    NSString *dateString = [dateFormatter stringFromDate:date];
     NSString *timeString = [LSShortTimeFormatter() stringFromDate:date];
     
     NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
