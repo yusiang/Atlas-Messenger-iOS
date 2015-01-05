@@ -205,7 +205,7 @@ static BOOL LSIsDateInYear(NSDate *date)
  */
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
-    NSString *dateString = nil;
+    NSString *dateString;
     if (LSIsDateInToday(date) || LSIsDateInYesterday(date)) {
         dateString = [LSRelativeDateFormatter() stringFromDate:date];
     } else if (LSIsDateInWeek(date)) {
