@@ -350,7 +350,7 @@ static BOOL LSIsDateInYear(NSDate *date)
 
 - (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller
 {
-    return self.previewFileURL != nil;
+    return self.previewFileURL ? 1 : 0;
 }
 
 - (id <QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
