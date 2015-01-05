@@ -11,6 +11,7 @@
 #import "LSUIParticipantPickerDataSource.h"
 #import "LYRUIParticipantPickerController.h"
 #import "LSMessageDetailTableViewController.h"
+#import "LSConversationDetailViewController.h"
 
 @import QuickLook;
 

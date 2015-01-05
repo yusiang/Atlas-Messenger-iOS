@@ -8,7 +8,6 @@
 
 #import "LYRUIConversationViewController.h"
 #import "LSApplicationController.h"
-#import "LSConversationDetailViewController.h"
 
 /**
  @abstract Subclass of the `LYRUIConversationViewController` LayerUIKit component.

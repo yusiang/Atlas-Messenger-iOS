@@ -11,6 +11,7 @@
 #import "LSUser.h"
 #import "LSUIConversationViewController.h"
 #import "LSSettingsTableViewController.h"
+#import "LSConversationDetailViewController.h"
 
 @interface LSUIConversationListViewController () < LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
