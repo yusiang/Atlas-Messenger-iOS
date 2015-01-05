@@ -154,7 +154,7 @@
     }
 
     LSUIConversationViewController *conversationViewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
-    conversationViewController.applicationContoller = self.applicationController;
+    conversationViewController.applicationController = self.applicationController;
     conversationViewController.showsAddressBar = YES;
     if (self.navigationController.topViewController == self) {
         [self.navigationController pushViewController:conversationViewController animated:YES];

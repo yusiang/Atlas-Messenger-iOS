@@ -19,6 +19,6 @@
 /**
  @abstract The controller object for the application.
  */
-@property (nonatomic) LSApplicationController *applicationContoller;
+@property (nonatomic) LSApplicationController *applicationController;
 
 @end

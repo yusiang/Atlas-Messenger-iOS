@@ -162,7 +162,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
     self.dataSource = self;
     self.delegate = self;
     
-    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationContoller.persistenceManager];
+    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
     if (self.conversation) {
         [self addDetailsButton];
@@ -196,7 +196,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     if (participantIdentifier) {
-        NSSet *set = [self.applicationContoller.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
+        NSSet *set = [self.applicationController.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
         return [[set allObjects] firstObject];
     }
     return nil;
@@ -243,7 +243,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
 - (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
     NSMutableArray *recipients = [[recipientStatus allKeys] mutableCopy];
-    [recipients removeObject:self.applicationContoller.layerClient.authenticatedUserID];
+    [recipients removeObject:self.applicationController.layerClient.authenticatedUserID];
     
     NSAttributedString *attributedString;
     NSInteger status = [[recipientStatus valueForKey:[recipients lastObject]] integerValue];
@@ -278,7 +278,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessagePart:(LYRMessagePart *)messagePart
 {
-    if (!self.applicationContoller.shouldSendPushText) return nil;
+    if (!self.applicationController.shouldSendPushText) return nil;
     NSString *pushText = [NSString new];
     if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
         pushText = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
@@ -335,8 +335,8 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
-    if (self.applicationContoller.debugModeEnabled) {
-        LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController initWithMessage:message applicationController:self.applicationContoller];
+    if (self.applicationController.debugModeEnabled) {
+        LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController initWithMessage:message applicationController:self.applicationController];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
@@ -392,7 +392,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
  */
 - (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
 {
-    [self.applicationContoller.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
+    [self.applicationController.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
         if (!error) {
             completion(contacts);
         }
@@ -468,7 +468,7 @@ static BOOL LYRUIIsDateInYear(NSDate *date)
     LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
     detailViewController.detailDelegate = self;
     detailViewController.detailsDataSource = self;
-    detailViewController.applicationController = self.applicationContoller;
+    detailViewController.applicationController = self.applicationController;
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }
 
