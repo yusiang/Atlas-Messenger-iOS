@@ -15,42 +15,11 @@
 
 @import QuickLook;
 
-static NSURL *LSTestGenerateTempFileFromInputStream(NSInputStream *inputStream)
+static NSURL *LSTestGenerateTempFileFromData(NSData *data)
 {
     NSString *tempFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"Layer-Sample-App-Temp-Image.jpeg"];
-    NSOutputStream *datafileOutputStream = [NSOutputStream outputStreamToFileAtPath:tempFilePath append:NO];
-    
-    // Open streams
-    [inputStream open];
-    [datafileOutputStream open];
-    
-    // Create a temp buffer
-    const NSUInteger bufferSize = 1024 * 512;
-    uint8_t *buffer = malloc(bufferSize);
-    
-    // Read and write random data in 1024 byte chunks
-    NSUInteger totalBytesWritten = 0;
-    BOOL endOfStream = NO;
-    while (!endOfStream) {
-        NSInteger bytesRead = [inputStream read:buffer maxLength:bufferSize];
-        if (bytesRead == 0) {
-            endOfStream = YES;
-        } else if (bytesRead < 0) {
-            break;
-        }
-        NSInteger bytesWritten = [datafileOutputStream write:buffer maxLength:bytesRead];
-        if (bytesWritten <= 0) break;
-        totalBytesWritten += bytesWritten;
-    }
-    
-    // Close streams
-    [inputStream close];
-    [datafileOutputStream close];
-    
-    // Free memory
-    free(buffer);
-    
-    if (!endOfStream) return nil;
+    BOOL success = [data writeToFile:tempFilePath atomically:NO];
+    if (!success) return nil;
     return [NSURL fileURLWithPath:tempFilePath];
 }
 
@@ -338,7 +307,7 @@ static BOOL LSIsDateInYear(NSDate *date)
     } else {
         LYRMessagePart *part = message.parts.firstObject;
         if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
-            self.previewFileURL =  LSTestGenerateTempFileFromInputStream(part.inputStream);
+            self.previewFileURL =  LSTestGenerateTempFileFromData(part.data);
             if (!self.previewFileURL) return;
             QLPreviewController *previewController = [[QLPreviewController alloc] init];
             previewController.dataSource = self;
