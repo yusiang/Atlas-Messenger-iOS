@@ -25,7 +25,7 @@ extern void LYRSetLogLevelFromEnvironment();
 extern NSString *LYRApplicationDataDirectory(void);
 extern dispatch_once_t LYRConfigurationURLOnceToken;
 
-void LYRTestResetConfiguration(void)
+void LYRUITestResetConfiguration(void)
 {
     extern dispatch_once_t LYRDefaultConfigurationDispatchOnceToken;
     
@@ -51,6 +51,7 @@ void LYRTestResetConfiguration(void)
 @interface LYRClient ()
 
 @property (nonatomic) NSURL *configurationURL;
+
 - (void)refreshConfiguration;
 
 @end
@@ -63,14 +64,25 @@ void LYRTestResetConfiguration(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
-    [self configureApplication:application forEnvironment:LYRUIStage1];
-    LYRSetLogLevelFromEnvironment();
-    
+    if (!LSIsRunningTests()) {
+        [self configureApplication:application forEnvironment:LYRUIProduction];
+        LYRSetLogLevelFromEnvironment();
+        [self initializeCrashlytics];
+        [self initializeHockeyApp];
+    } else {
+        [self removeSplashView];
+    }
+
     // Setup notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidAuthenticateNotification:)
                                                  name:LSUserDidAuthenticateNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter]  addObserver:self
+                                              selector:@selector(userDidAuthenticateWithLayerNotification:)
+                                                  name:LYRClientDidAuthenticateNotification
+                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidDeauthenticateNotification:)
@@ -160,7 +172,7 @@ void LYRTestResetConfiguration(void)
         [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:@"LAYER_CONFIGURATION_URL"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    LYRTestResetConfiguration();
+    LYRUITestResetConfiguration();
     
     // Configure application controllers
     LSLayerClient *client = [LSLayerClient clientWithAppID:LSLayerAppID(self.environment)];
@@ -364,6 +376,13 @@ void LYRTestResetConfiguration(void)
 
 #pragma mark - Authentication Methods
 
+- (void)userDidAuthenticateWithLayerNotification:(NSNotification *)notification
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentConversationsListViewController];
+    });
+}
+
 - (void)userDidAuthenticateNotification:(NSNotification *)notification
 {
     NSError *error = nil;
@@ -377,9 +396,7 @@ void LYRTestResetConfiguration(void)
     }
     
     [self updateCrashlyticsWithUser:session.user];
-    
     [self loadContacts];
-    [self presentConversationsListViewController];
 }
 
 - (void)userDidDeauthenticateNotification:(NSNotification *)notification
@@ -423,23 +440,27 @@ void LYRTestResetConfiguration(void)
 
 - (void)presentConversationsListViewController
 {
-    if (self.window.rootViewController.presentedViewController) {
+    if (!LSIsRunningTests()) {
+        if (self.window.rootViewController.presentedViewController) {
+            [self removeSplashView];
+            return;
+        }
+        self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
+        self.viewController.applicationController = self.applicationController;
+        self.viewController.displaysConversationImage = self.displaysConversationImage;
+        self.viewController.cellClass = self.cellClass;
+        self.viewController.rowHeight = self.rowHeight;
+        self.viewController.allowsEditing = self.allowsEditing;
+        self.viewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
+        
+        self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+        [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
+            [self.authenticationViewController resetState];
+            [self removeSplashView];
+        }];
+    } else {
         [self removeSplashView];
-        return;
     }
-    self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
-    self.viewController.applicationController = self.applicationController;
-    self.viewController.displaysConversationImage = self.displaysConversationImage;
-    self.viewController.cellClass = self.cellClass;
-    self.viewController.rowHeight = self.rowHeight;
-    self.viewController.allowsEditing = self.allowsEditing;
-    self.viewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
-    
-    self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-    [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
-        [self.authenticationViewController resetState];
-        [self removeSplashView];
-    }];
 }
 
 #pragma mark - Splash View Config
@@ -487,13 +508,10 @@ void LYRTestResetConfiguration(void)
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     switch (buttonIndex) {
-        case 0: {
-//            LSPartnerAPIManager *manager = [LSPartnerAPIManager managerWithBaseURL:[NSURL URLWithString:@"https://layerhq.atlassian.net"]];
-//            [manager attachImage:[UIImage imageNamed:@"testImage"] toIssue:nil];
+        case 1: {
+            LSPartnerAPIManager *manager = [LSPartnerAPIManager managerWithBaseURL:[NSURL URLWithString:@"https://layerhq.atlassian.net"]];
+            [manager postIssueWithPhoto:[UIImage imageNamed:@"back"] summary:@"This is a summage" description:@"And this is the description"];
         }
-            break;
-        case 1:
-            //
             break;
         default:
             break;
