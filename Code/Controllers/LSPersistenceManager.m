@@ -85,6 +85,14 @@
     LSMustBeImplementedBySubclass();
 }
 
+- (NSPredicate *)predicateForParticipantsWithSearchString:(NSString *)searchString
+{
+    NSString *escapedSearchString = [NSRegularExpression escapedPatternForString:searchString];
+    NSString *searchPattern = [NSString stringWithFormat:@".*\\b%@.*", escapedSearchString];
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"fullName MATCHES[cd] %@", searchPattern];
+    return searchPredicate;
+}
+
 @end
 
 @implementation LSInMemoryPersistenceManager
@@ -121,7 +129,7 @@
 
 - (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *contacts, NSError *error))completion
 {
-    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchString]];
+    NSPredicate *searchPredicate = [self predicateForParticipantsWithSearchString:searchString];
     completion([self.users filteredSetUsingPredicate:searchPredicate].allObjects, nil);
 }
 
@@ -238,7 +246,7 @@
         });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(fullName like[cd] %@)", [NSString stringWithFormat:@"*%@*", searchString]];
+            NSPredicate *searchPredicate = [self predicateForParticipantsWithSearchString:searchString];
             completion([allContacts filteredSetUsingPredicate:searchPredicate].allObjects, nil);
         });
     }
