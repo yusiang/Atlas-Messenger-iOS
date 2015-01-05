@@ -96,6 +96,31 @@ void LYRTestResetConfiguration(void)
     _displaysConversationImage = NO;
     _displaysSettingsButton = YES;
     
+    // Connect to Layer and boot the UI
+    BOOL deauthenticateAfterConnection = NO;
+    if (self.applicationController.layerClient.authenticatedUserID) {
+        if ([self resumeSession]) {
+            [self presentConversationsListViewController:NO];
+        } else {
+            deauthenticateAfterConnection = YES;
+        }
+    }
+    [self removeSplashView];
+    
+    // Connect Layer SDK
+    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            NSLog(@"Layer Client is connected");
+            if (deauthenticateAfterConnection) {
+                [self.applicationController.layerClient deauthenticateWithCompletion:nil];
+            }
+        } else {
+            NSLog(@"Error connecting Layer: %@", error);
+        }
+    }];
+    
+    [self registerForRemoteNotifications:application];
+    
     // Handle launching in response to push notification
     NSDictionary *remoteNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     if (remoteNotification) {
@@ -173,25 +198,6 @@ void LYRTestResetConfiguration(void)
     
     self.localNotificationUtilities = [LSLocalNotificationUtilities initWithLayerClient:self.applicationController.layerClient];
     self.authenticationViewController.applicationController = self.applicationController;
-    
-    // Connect Layer SDK
-    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            NSLog(@"Error connecting Layer: %@", error);
-        } else {
-            NSLog(@"Layer Client is connected");
-            if (self.applicationController.layerClient.authenticatedUserID) {
-                if ([self resumeSession]) {
-                    [self presentConversationsListViewController];
-                } else {
-                    [self.applicationController.layerClient deauthenticateWithCompletion:nil];
-                }
-            }
-        }
-        [self removeSplashView];
-    }];
-    
-    [self registerForRemoteNotifications:application];
 }
 
 - (BOOL)resumeSession
@@ -379,7 +385,7 @@ void LYRTestResetConfiguration(void)
     [self updateCrashlyticsWithUser:session.user];
     
     [self loadContacts];
-    [self presentConversationsListViewController];
+    [self presentConversationsListViewController:YES];
 }
 
 - (void)userDidDeauthenticateNotification:(NSNotification *)notification
@@ -421,7 +427,7 @@ void LYRTestResetConfiguration(void)
 
 }
 
-- (void)presentConversationsListViewController
+- (void)presentConversationsListViewController:(BOOL)animated
 {
     if (self.window.rootViewController.presentedViewController) {
         [self removeSplashView];
@@ -436,7 +442,7 @@ void LYRTestResetConfiguration(void)
     self.viewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
     
     self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-    [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
+    [self.navigationController presentViewController:self.authenticatedNavigationController animated:animated completion:^{
         [self.authenticationViewController resetState];
         [self removeSplashView];
     }];
