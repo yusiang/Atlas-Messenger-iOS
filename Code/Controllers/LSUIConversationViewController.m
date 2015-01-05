@@ -69,7 +69,7 @@ static NSDateFormatter *LSDefaultDateFormatter()
     static NSDateFormatter *dateFormatter;
     if (!dateFormatter) {
         dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"MMM dd, YYYY,"; // Nov 29, 2013,
+        dateFormatter.dateFormat = @"MMM dd, yyyy,"; // Nov 29, 2013,
     }
     return dateFormatter;
 }
