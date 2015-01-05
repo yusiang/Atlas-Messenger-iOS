@@ -110,10 +110,10 @@ static BOOL LSIsDateInToday(NSDate *date)
     NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
     NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return ([dateComponents day] == [todayComponents day] &&
-            [dateComponents month] == [todayComponents month] &&
-            [dateComponents year] == [todayComponents year] &&
-            [dateComponents era] == [todayComponents era]);
+    return (dateComponents.day == todayComponents.day &&
+            dateComponents.month == todayComponents.month &&
+            dateComponents.year == todayComponents.year &&
+            dateComponents.era == todayComponents.era);
 }
 
 static BOOL LSIsDateInYesterday(NSDate *date)
@@ -121,10 +121,10 @@ static BOOL LSIsDateInYesterday(NSDate *date)
     NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
     NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return ([dateComponents day] == ([todayComponents day] - 1) &&
-            [dateComponents month] == [todayComponents month] &&
-            [dateComponents year] == [todayComponents year] &&
-            [dateComponents era] == [todayComponents era]);
+    return (dateComponents.day == (todayComponents.day - 1) &&
+            dateComponents.month == todayComponents.month &&
+            dateComponents.year == todayComponents.year &&
+            dateComponents.era == todayComponents.era);
 }
 
 static BOOL LSIsDateInWeek(NSDate *date)
@@ -132,10 +132,10 @@ static BOOL LSIsDateInWeek(NSDate *date)
     NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSWeekOfMonthCalendarUnit;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
     NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return ([dateComponents weekOfMonth] == [todayComponents weekOfMonth] &&
-            [dateComponents month] == [todayComponents month] &&
-            [dateComponents year] == [todayComponents year] &&
-            [dateComponents era] == [todayComponents era]);
+    return (dateComponents.weekOfMonth == todayComponents.weekOfMonth &&
+            dateComponents.month == todayComponents.month &&
+            dateComponents.year == todayComponents.year &&
+            dateComponents.era == todayComponents.era);
 }
 
 static BOOL LSIsDateInYear(NSDate *date)
@@ -143,8 +143,8 @@ static BOOL LSIsDateInYear(NSDate *date)
     NSCalendarUnit dateUnits = NSEraCalendarUnit | NSYearCalendarUnit;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:date];
     NSDateComponents *todayComponents = [[NSCalendar currentCalendar] components:dateUnits fromDate:[NSDate date]];
-    return ([dateComponents year] == [todayComponents year] &&
-            [dateComponents era] == [todayComponents era]);
+    return (dateComponents.year == todayComponents.year &&
+            dateComponents.era == todayComponents.era);
 }
 
 @interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
@@ -192,7 +192,7 @@ static BOOL LSIsDateInYear(NSDate *date)
 {
     if (participantIdentifier) {
         NSSet *set = [self.applicationController.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
-        return [[set allObjects] firstObject];
+        return set.allObjects.firstObject;
     }
     return nil;
 }
@@ -218,7 +218,7 @@ static BOOL LSIsDateInYear(NSDate *date)
     NSString *timeString = [LSShortTimeFormatter() stringFromDate:date];
     
     NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
-    NSRange boldedRange = NSMakeRange(0, [dateString length]);
+    NSRange boldedRange = NSMakeRange(0, dateString.length);
     [dateAttributedString addAttribute:NSFontAttributeName
                                  value:[UIFont boldSystemFontOfSize:12]
                                  range:boldedRange];
@@ -316,7 +316,7 @@ static BOOL LSIsDateInYear(NSDate *date)
 {
     NSLog(@"Message Send Failed with Error: %@", error);
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
-                                                        message:[error localizedDescription]
+                                                        message:error.localizedDescription
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
@@ -343,7 +343,7 @@ static BOOL LSIsDateInYear(NSDate *date)
             QLPreviewController *previewController = [[QLPreviewController alloc] init];
             previewController.dataSource = self;
             previewController.currentPreviewItemIndex = 0;
-            [[self navigationController] pushViewController:previewController animated:YES];
+            [self.navigationController pushViewController:previewController animated:YES];
         }
     }
 }
