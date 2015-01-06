@@ -60,16 +60,11 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     switch (self.authenticationState) {
         case LSAuthenticationStateRegister:
             return 5;
-            break;
             
         case LSAuthenticationStateLogin:
             return 2;
-            break;
             
-        default:
-            break;
     }
-    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -162,8 +157,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             }
             break;
             
-        default:
-            break;
     }
 }
 
@@ -231,8 +224,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             }
             break;
             
-        default:
-            break;
     }
 }
 
@@ -312,8 +303,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
             
-        default:
-            break;
     }
     [self.tableView endUpdates];
 }
@@ -346,8 +335,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             }
             break;
             
-        default:
-            break;
     }
     return YES;
 }
