@@ -11,7 +11,7 @@
 #import "LSAuthenticationTableViewHeader.h"
 #import "LSAuthenticationTableViewFooter.h"
 #import "LYRUIConstants.h"
-#import "SVPRogressHUD.h"
+#import "SVProgressHUD.h"
 #import "LSUtilities.h"
 
 @interface LSAuthenticationTableViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
