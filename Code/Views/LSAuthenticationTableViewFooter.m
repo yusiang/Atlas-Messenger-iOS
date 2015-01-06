@@ -203,12 +203,12 @@ static NSString *const LSRegisterText = @"Create Account";
         self.primaryActionButton.titleLabel.alpha = 0.0;
         self.secondaryActionButton.titleLabel.alpha = 0.0;
     } completion:^(BOOL finished) {
+        if (self.authenticationState == LSAuthenticationStateLogin) {
+            [self setAuthenticationState:LSAuthenticationStateRegister];
+        } else {
+            [self setAuthenticationState:LSAuthenticationStateLogin];
+        }
         [UIView animateWithDuration:0.4 animations:^{
-            if (self.authenticationState == LSAuthenticationStateLogin) {
-                [self setAuthenticationState:LSAuthenticationStateRegister];
-            } else {
-                [self setAuthenticationState:LSAuthenticationStateLogin];
-            }
             self.primaryActionButton.titleLabel.alpha = 1.0;
             self.secondaryActionButton.titleLabel.alpha = 1.0;
             [self.delegate authenticationTableViewFooter:self secondaryActionButtonTappedWithAuthenticationState:self.authenticationState];
