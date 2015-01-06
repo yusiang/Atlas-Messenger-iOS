@@ -358,10 +358,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     return YES;
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    return YES;
-}
 
 - (void)loginTappedWithEmail:(NSString *)email password:(NSString *)password
 {
