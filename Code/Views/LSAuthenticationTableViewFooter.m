@@ -68,6 +68,8 @@ static NSString *const LSRegisterText = @"Create Account";
     return self;
 }
 
+#pragma mark - Constraints
+
 - (void)setUpConstraints
 {
     //********** Primary Button **********//
@@ -170,6 +172,8 @@ static NSString *const LSRegisterText = @"Create Account";
                                                       constant:40]];
 }
 
+#pragma mark - Accessors
+
 - (void)setAuthenticationState:(LSAuthenticationState)authenticationState
 {
     switch (authenticationState) {
@@ -185,6 +189,8 @@ static NSString *const LSRegisterText = @"Create Account";
     }
     _authenticationState = authenticationState;
 }
+
+#pragma mark - Actions
 
 - (void)primaryActionButtonTapped
 {
