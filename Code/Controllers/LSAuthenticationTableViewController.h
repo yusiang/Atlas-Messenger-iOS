@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSAuthenticationTableViewFooter.h"
 #import "LSApplicationController.h"
 #import "LSUtilities.h"
 

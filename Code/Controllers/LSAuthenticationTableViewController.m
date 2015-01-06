@@ -9,6 +9,7 @@
 #import "LSAuthenticationTableViewController.h"
 #import "LSInputTableViewCell.h"
 #import "LSAuthenticationTableViewHeader.h"
+#import "LSAuthenticationTableViewFooter.h"
 #import "LYRUIConstants.h"
 #import "SVPRogressHUD.h"
 #import "LSUtilities.h"
