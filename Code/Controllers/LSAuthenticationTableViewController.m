@@ -521,14 +521,14 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (void)resetState
 {
-    self.authenticationState = LSAuthenticationStateLogin;
-    [self setEditing:NO animated:YES];
     self.firstName = nil;
     self.lastName = nil;
     self.email = nil;
     self.password = nil;
     self.confirmation = nil;
+    self.authenticationState = LSAuthenticationStateLogin;
     [self.tableView reloadData];
+    [self setEditing:NO animated:YES];
 }
 
 @end
