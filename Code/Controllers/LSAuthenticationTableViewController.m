@@ -124,6 +124,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     
                 case 1:
                     [self configurePasswordCell:cell];
+                    cell.textField.returnKeyType = UIReturnKeySend;
                     break;
                     
                 default:
@@ -178,7 +179,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [cell setGuideText:@"Password:"];
     [cell setPlaceHolderText:@"Enter Your Password"];
     cell.textField.secureTextEntry = YES;
-    cell.textField.returnKeyType = UIReturnKeySend;
     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     cell.textField.text = self.password;
     self.passwordTextField = cell.textField;
@@ -341,6 +341,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     NSArray *indexPaths = @[[NSIndexPath indexPathForRow:0 inSection:0],
                             [NSIndexPath indexPathForRow:1 inSection:0],
                             [NSIndexPath indexPathForRow:4 inSection:0]];
+
     [self.tableView beginUpdates];
     switch (authenticationState) {
         case LSAuthenticationStateLogin:
@@ -352,6 +353,20 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             break;
     }
     [self.tableView endUpdates];
+
+    // Cells that aren't being inserted or deleted may display different content depending on the state so they must be reconfigured.
+    for (LSInputTableViewCell *cell in [self.tableView visibleCells]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        switch (authenticationState) {
+            case LSAuthenticationStateLogin:
+                break;
+
+            case LSAuthenticationStateRegister:
+                if ([indexPaths containsObject:indexPath]) continue;
+                break;
+        }
+        [self configureCell:cell forIndexPath:indexPath];
+    }
 }
 
 #pragma mark - UITextFieldDelegate
