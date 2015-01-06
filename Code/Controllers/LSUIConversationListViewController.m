@@ -88,8 +88,9 @@
  */
 - (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController labelForConversation:(LYRConversation *)conversation
 {
-    if ([conversation.metadata valueForKey:LYRUIConversationNameTag]) {
-        return [conversation.metadata valueForKey:LYRUIConversationNameTag];
+    NSString *conversationName = conversation.metadata[LYRUIConversationNameTag];
+    if (conversationName) {
+        return conversationName;
     }
     
     if (!self.layerClient.authenticatedUserID) return @"Not auth'd";
