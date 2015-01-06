@@ -31,7 +31,7 @@
         self.taglineLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.taglineLabel.textAlignment = NSTextAlignmentCenter;
         self.taglineLabel.backgroundColor = [UIColor clearColor];
-        self.taglineLabel.text = @"The open communications platform for the internet.";
+        self.taglineLabel.text = @"The open communications platform\nfor the internet.";
         self.taglineLabel.font = LYRUIMediumFont(12);
         [self addSubview:self.taglineLabel];
 
@@ -80,22 +80,6 @@
                                                      attribute:NSLayoutAttributeCenterY
                                                     multiplier:1.0
                                                       constant:48]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.taglineLabel
-                                                     attribute:NSLayoutAttributeHeight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:nil
-                                                     attribute:NSLayoutAttributeNotAnAttribute
-                                                    multiplier:1.0
-                                                      constant:40]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.taglineLabel
-                                                     attribute:NSLayoutAttributeWidth
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:nil
-                                                     attribute:NSLayoutAttributeNotAnAttribute
-                                                    multiplier:1.0
-                                                      constant:210]];
 }
 
 @end
