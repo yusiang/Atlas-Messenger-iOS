@@ -196,7 +196,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     [cell setGuideText:@"Last Name:"];
     [cell setPlaceHolderText:@"Enter Your Last Name"];
-    cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
     cell.textField.text = self.lastName;
     self.lastNameTextField = cell.textField;
