@@ -99,10 +99,10 @@
         [participantIdentifiers removeObject:self.layerClient.authenticatedUserID];
     }
     
-    if (!participantIdentifiers.count > 0) return @"Personal Conversation";
+    if (participantIdentifiers.count == 0) return @"Personal Conversation";
     
     NSMutableSet *participants = [[self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers] mutableCopy];
-    if (!participants.count > 0) return @"No Matching Participants";
+    if (participants.count == 0) return @"No Matching Participants";
     
     // Put the latest message sender's name first
     LSUser *firstUser;
