@@ -35,7 +35,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        self.authenticationState = LSAuthenticationStateLogin;
+        _authenticationState = LSAuthenticationStateLogin;
     }
     return self;
 }
