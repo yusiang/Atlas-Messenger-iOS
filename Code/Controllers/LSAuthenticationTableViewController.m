@@ -24,7 +24,6 @@
 
 @property (nonatomic) LSAuthenticationState authenticationState;
 @property (nonatomic) LSAuthenticationTableViewHeader *tableViewHeader;
-@property (nonatomic, copy) void (^completionBlock)(NSString *authenticatedUserID, NSError *error);
 @property (nonatomic) BOOL isEditing;
 
 @end
@@ -372,7 +371,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
                         if (authenticatedUserID) {
                             NSLog(@"User Authenticated");
-                            if (self.completionBlock) self.completionBlock(authenticatedUserID, error);
                             [SVProgressHUD dismiss];
                         } else {
                             LSAlertWithError(error);
@@ -409,7 +407,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                         if (identityToken) {
                             [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
                                 if (authenticatedUserID) {
-                                    if (self.completionBlock) self.completionBlock(authenticatedUserID, error);
                                     [SVProgressHUD dismiss];
                                 } else {
                                     LSAlertWithError(error);

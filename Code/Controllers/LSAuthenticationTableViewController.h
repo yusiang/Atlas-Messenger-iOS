@@ -43,12 +43,6 @@
 @property (nonatomic) id<LSAuthenticationTableViewControllerDelegate> delegate;
 
 /**
- @abstract A completion block that is called upon completion of a login or registration attempt.
- @param completionBlock The completion block to be invoked.
- */
-- (void)setCompletionBlock:(void (^)(NSString *authenticatedUserID, NSError *error))completion;
-
-/**
  @abstract Resets the UI after a successful authentication.
  */
 - (void)resetState;
