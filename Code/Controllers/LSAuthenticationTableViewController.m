@@ -24,7 +24,6 @@
 
 @property (nonatomic) LSAuthenticationState authenticationState;
 @property (nonatomic) LSAuthenticationTableViewHeader *tableViewHeader;
-@property (nonatomic) BOOL isEditing;
 
 @end
 
@@ -37,7 +36,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.authenticationState = LSAuthenticationStateLogin;
-        self.isEditing = NO;
     }
     return self;
 }
@@ -79,6 +77,11 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     LSInputTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSAuthenticationCellIdentifier];
     [self configureCell:cell forIndexPath:indexPath];
     return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
 }
 
 - (void)configureCell:(LSInputTableViewCell *)cell forIndexPath:(NSIndexPath *)path
@@ -214,7 +217,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             if (self.isEditing) {
                 [self loginTappedWithEmail:self.email.text password:self.password.text];
             } else {
-                [self setEditing:YES];
+                [self setEditing:YES animated:YES];
                 [self.email becomeFirstResponder];
             }
             break;
@@ -223,7 +226,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             if (self.isEditing) {
                 [self registerTapped];
             } else {
-                [self setEditing:YES];
+                [self setEditing:YES animated:YES];
                 [self.firstName becomeFirstResponder];
             }
             break;
@@ -274,24 +277,24 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     }
 }
 
-- (void)setEditing:(BOOL)editing
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
-    if (!self.isEditing && editing) {
-        self.isEditing = YES;
+    if (self.isEditing == editing) return;
+
+    [super setEditing:editing animated:animated];
+
+    // We need to trigger the recalculation of the table view's height (i.e. namely the header since its height is different when editing) so we call the following without actually making any table view updates.
+    if (animated) {
         [self.tableView beginUpdates];
-        [self.tableViewHeader setShowsContent:NO];
-        [UIView animateWithDuration:0.3 animations:^{
+        [self.tableView endUpdates];
+    } else {
+        [UIView performWithoutAnimation:^{
+            [self.tableView beginUpdates];
             [self.tableView endUpdates];
         }];
     }
-    if (self.editing && !editing) {
-        self.isEditing = NO;
-        [self.tableView beginUpdates];
-        [self.tableViewHeader setShowsContent:YES];
-        [UIView animateWithDuration:0.3 animations:^{
-            [self.tableView endUpdates];
-        }];
-    }
+
+    [self.tableViewHeader setShowsContent:!editing];
 }
 
 - (void)configureTableViewForAuthenticationState:(LSAuthenticationState)authenticationState
@@ -348,7 +351,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    [self setEditing:YES];
+    [self setEditing:YES animated:YES];
     return YES;
 }
 
@@ -433,7 +436,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 - (void)resetState;
 {
     self.authenticationState = LSAuthenticationStateLogin;
-    self.isEditing = NO;
+    [self setEditing:NO animated:YES];
     self.firstName.text = nil;
     self.lastName.text = nil;
     self.email.text = nil;
