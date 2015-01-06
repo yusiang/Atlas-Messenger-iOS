@@ -299,14 +299,17 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (void)configureTableViewForAuthenticationState:(LSAuthenticationState)authenticationState
 {
+    NSArray *indexPaths = @[[NSIndexPath indexPathForRow:0 inSection:0],
+                            [NSIndexPath indexPathForRow:1 inSection:0],
+                            [NSIndexPath indexPathForRow:4 inSection:0]];
     [self.tableView beginUpdates];
     switch (authenticationState) {
         case LSAuthenticationStateLogin:
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:1 inSection:0], [NSIndexPath indexPathForRow:4 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
             
         case LSAuthenticationStateRegister:
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0], [NSIndexPath indexPathForRow:1 inSection:0], [NSIndexPath indexPathForRow:4 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
             
         default:
