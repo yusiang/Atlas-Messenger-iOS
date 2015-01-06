@@ -11,7 +11,6 @@
 @interface LSUIParticipantPickerDataSource ()
 
 @property (nonatomic) LSPersistenceManager *persistenceManager;
-@property (nonatomic) NSPredicate *searchPredicate;
 
 @end
 
