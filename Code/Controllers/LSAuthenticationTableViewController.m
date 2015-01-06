@@ -446,31 +446,31 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     NSString *password = self.password;
     [SVProgressHUD showWithStatus:@"Requesting Nonce"];
     [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-        if (nonce) {
-            NSLog(@"Nonce Created");
-            [SVProgressHUD showWithStatus:@"Requesting Identity Token"];
-            [self.applicationController.APIManager authenticateWithEmail:email password:password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
-                if (identityToken) {
-                    NSLog(@"Identity Token Created");
-                    [SVProgressHUD showWithStatus:@"Authenticating With Layer"];
-                    [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-                        if (authenticatedUserID) {
-                            NSLog(@"User Authenticated");
-                            [SVProgressHUD dismiss];
-                        } else {
-                            LSAlertWithError(error);
-                            [SVProgressHUD dismiss];
-                        }
-                    }];
-                } else {
-                    LSAlertWithError(error);
-                    [SVProgressHUD dismiss];
-                }
-            }];
-        } else {
+        if (error) {
             LSAlertWithError(error);
             [SVProgressHUD dismiss];
+            return;
         }
+        NSLog(@"Nonce Created");
+        [SVProgressHUD showWithStatus:@"Requesting Identity Token"];
+        [self.applicationController.APIManager authenticateWithEmail:email password:password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+            if (error) {
+                LSAlertWithError(error);
+                [SVProgressHUD dismiss];
+                return;
+            }
+            NSLog(@"Identity Token Created");
+            [SVProgressHUD showWithStatus:@"Authenticating With Layer"];
+            [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                if (error) {
+                    LSAlertWithError(error);
+                    [SVProgressHUD dismiss];
+                    return;
+                }
+                NSLog(@"User Authenticated");
+                [SVProgressHUD dismiss];
+            }];
+        }];
     }];
 }
 
