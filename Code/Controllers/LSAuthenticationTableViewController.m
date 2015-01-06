@@ -43,6 +43,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSAuthenticationCellIdentifier];
     self.tableView.contentOffset = CGPointMake(0, 140);
@@ -63,7 +64,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             
         case LSAuthenticationStateLogin:
             return 2;
-            
     }
 }
 
@@ -85,6 +85,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     cell.textField.delegate = self;
     cell.textField.returnKeyType = UIReturnKeyNext;
     cell.textField.enablesReturnKeyAutomatically = YES;
+
     switch (self.authenticationState) {
         case LSAuthenticationStateLogin:
             switch (path.row) {
@@ -156,7 +157,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     break;
             }
             break;
-            
     }
 }
 
@@ -223,7 +223,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                 [self.firstName becomeFirstResponder];
             }
             break;
-            
     }
 }
 
@@ -235,12 +234,11 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (void)environmentButtonTappedForAuthenticationTableViewFooter:(LSAuthenticationTableViewFooter *)tableViewFooter
 {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc]
-                                  initWithTitle:nil
-                                  delegate:self
-                                  cancelButtonTitle:@"Cancel"
-                                  destructiveButtonTitle:nil
-                                  otherButtonTitles:@"Production - Prod", @"Production - Sandbox", @"Staging", @"Dev-1", nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:nil
+                                                    otherButtonTitles:@"Production - Prod", @"Production - Sandbox", @"Staging", @"Dev-1", nil];
     [actionSheet showInView:self.view];
 }
 
@@ -263,6 +261,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         case 3:
             [self.delegate authenticationTableViewController:self didSelectEnvironment:LYRUIDev1];
             break;
+
         default:
             break;
     }
@@ -302,7 +301,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         case LSAuthenticationStateRegister:
             [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
-            
     }
     [self.tableView endUpdates];
 }
@@ -334,7 +332,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                 [self registerTapped];
             }
             break;
-            
     }
     return YES;
 }
