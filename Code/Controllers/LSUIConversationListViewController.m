@@ -95,7 +95,9 @@
     
     if (!self.layerClient.authenticatedUserID) return @"Not auth'd";
     NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
-    [participantIdentifiers minusSet:[NSSet setWithObject:self.layerClient.authenticatedUserID]];
+    if (self.layerClient.authenticatedUserID) {
+        [participantIdentifiers removeObject:self.layerClient.authenticatedUserID];
+    }
     
     if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
