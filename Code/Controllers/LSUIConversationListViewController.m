@@ -105,26 +105,18 @@
     if (participants.count == 0) return @"No Matching Participants";
     
     // Put the latest message sender's name first
-    LSUser *firstUser;
-    if (![conversation.lastMessage.sentByUserID isEqualToString:self.layerClient.authenticatedUserID]){
-        if (conversation.lastMessage) {
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", conversation.lastMessage.sentByUserID];
-            LSUser *lastMessageSender = [[[participants filteredSetUsingPredicate:searchPredicate] allObjects] lastObject];
-            if (lastMessageSender) {
-                firstUser = lastMessageSender;
-                [participants removeObject:lastMessageSender];
-            }
+    NSMutableArray *fullNames = [NSMutableArray new];
+    for (id<LYRUIParticipant> participant in participants) {
+        if (!participant.fullName) continue;
+        if ([conversation.lastMessage.sentByUserID isEqualToString:participant.participantIdentifier]) {
+            [fullNames insertObject:participant.fullName atIndex:0];
+        } else {
+            [fullNames addObject:participant.fullName];
         }
-    } else {
-        firstUser = [[participants allObjects] objectAtIndex:0];
     }
-    
-    NSString *conversationLabel = firstUser.fullName;
-    for (int i = 1; i < [[participants allObjects] count]; i++) {
-        LSUser *user = [[participants allObjects] objectAtIndex:i];
-        conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.fullName];
-    }
-    return conversationLabel;
+
+    NSString *fullNamesString = [fullNames componentsJoinedByString:@", "];
+    return fullNamesString;
 }
 
 /**
