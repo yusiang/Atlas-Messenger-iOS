@@ -45,7 +45,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [super viewDidLoad];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSAuthenticationCellIdentifier];
-    [self.tableView setContentOffset:CGPointMake(0, 140)];
+    self.tableView.contentOffset = CGPointMake(0, 140);
 }
 
 #pragma mark - Table view data source
@@ -294,7 +294,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         }];
     }
 
-    [self.tableViewHeader setShowsContent:!editing];
+    self.tableViewHeader.showsContent = !editing;
 }
 
 - (void)configureTableViewForAuthenticationState:(LSAuthenticationState)authenticationState
