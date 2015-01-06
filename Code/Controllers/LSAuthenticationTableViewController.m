@@ -74,7 +74,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSInputTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSAuthenticationCellIdentifier];
+    LSInputTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSAuthenticationCellIdentifier forIndexPath:indexPath];
     [self configureCell:cell forIndexPath:indexPath];
     return cell;
 }
