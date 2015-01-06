@@ -8,8 +8,6 @@
 
 #import "LYRUIConversationListViewController.h"
 #import "LSApplicationController.h"
-#import "LYRUIConstants.h"
-#import "LSUtilities.h"
 
 /**
  @abstract Subclass of the `LYRUIConversationListViewController. Presents a list of conversations in time series order
