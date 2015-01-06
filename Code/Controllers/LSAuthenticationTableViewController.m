@@ -452,7 +452,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             return;
         }
         NSLog(@"Nonce Created");
-        [SVProgressHUD showWithStatus:@"Requesting Identity Token"];
+        [SVProgressHUD setStatus:@"Requesting Identity Token"];
         [self.applicationController.APIManager authenticateWithEmail:email password:password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
             if (error) {
                 LSAlertWithError(error);
@@ -460,7 +460,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                 return;
             }
             NSLog(@"Identity Token Created");
-            [SVProgressHUD showWithStatus:@"Authenticating With Layer"];
+            [SVProgressHUD setStatus:@"Authenticating With Layer"];
             [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
                 if (error) {
                     LSAlertWithError(error);
