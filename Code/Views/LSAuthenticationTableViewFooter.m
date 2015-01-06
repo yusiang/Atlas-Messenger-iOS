@@ -183,9 +183,6 @@ static NSString *const LSRegisterText = @"Create Account";
             [self.primaryActionButton setTitle:LSLoginText forState:UIControlStateNormal];
             [self.secondaryActionButton setTitle:LSRegisterText forState:UIControlStateNormal];
             break;
-            
-        default:
-            break;
     }
     _authenticationState = authenticationState;
 }
