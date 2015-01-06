@@ -21,7 +21,6 @@
 
 static NSString *const LSLoginText = @"Login To Layer";
 static NSString *const LSRegisterText = @"Create Account";
-static NSString *const LSCancelText = @"Or, Cancel";
 
 - (id)initWithFrame:(CGRect)frame
 {
