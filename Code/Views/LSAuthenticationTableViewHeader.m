@@ -33,7 +33,7 @@
         self.textView.text = @"The open communications platform for the internet.";
         self.textView.font = LYRUIMediumFont(12);
         [self addSubview:self.textView];
-        [self updateConstraints];
+        [self setUpConstraints];
     }
     return self;
 }
@@ -46,7 +46,7 @@
     }
 }
 
-- (void)updateConstraints
+- (void)setUpConstraints
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.logoView
                                                      attribute:NSLayoutAttributeCenterX
@@ -95,7 +95,6 @@
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
                                                       constant:210]];
-    [super updateConstraints];
 }
 
 @end
