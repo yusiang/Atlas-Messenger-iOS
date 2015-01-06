@@ -35,7 +35,7 @@ static NSString *const LSRegisterText = @"Create Account";
         self.primaryActionButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.primaryActionButton.backgroundColor = LYRUIBlueColor();
         self.primaryActionButton.layer.cornerRadius = 4;
-        self.primaryActionButton.clipsToBounds = TRUE;
+        self.primaryActionButton.clipsToBounds = YES;
         [self.primaryActionButton addTarget:self action:@selector(primaryActionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.primaryActionButton];
         
