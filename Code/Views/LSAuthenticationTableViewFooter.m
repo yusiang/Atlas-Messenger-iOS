@@ -51,6 +51,7 @@ static NSString *const LSRegisterText = @"Create Account";
         [self addSubview:self.secondaryActionButton];
         
         self.environmentButton = [[UIButton alloc] init];
+        [self.environmentButton setTitle:@"Change Environment" forState:UIControlStateNormal];
         [self.environmentButton setTitleColor:LYRUIBlueColor() forState:UIControlStateNormal];
         [self.environmentButton setTitleColor:LYRUIBlueColor() forState:UIControlStateHighlighted];
         self.environmentButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -188,7 +189,6 @@ static NSString *const LSRegisterText = @"Create Account";
         default:
             break;
     }
-    [self.environmentButton setTitle:@"Change Environment" forState:UIControlStateNormal];
     _authenticationState = authenticationState;
 }
 
