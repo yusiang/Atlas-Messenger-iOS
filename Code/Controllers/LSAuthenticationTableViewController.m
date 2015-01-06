@@ -111,8 +111,12 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     cell.textField.text = nil;
     cell.textField.delegate = self;
+    cell.textField.keyboardType = UIKeyboardTypeDefault;
     cell.textField.returnKeyType = UIReturnKeyNext;
     cell.textField.enablesReturnKeyAutomatically = YES;
+    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    cell.textField.secureTextEntry = NO;
     [cell.textField addTarget:self action:@selector(textFieldEditingChanged:) forControlEvents:UIControlEventEditingChanged];
 
     switch (self.authenticationState) {
@@ -166,10 +170,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [cell setGuideText:@"Email:"];
     [cell setPlaceHolderText:@"Enter Your Email"];
     cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
-    cell.textField.enablesReturnKeyAutomatically = YES;
-    cell.textField.returnKeyType = UIReturnKeyNext;
-    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
     cell.textField.text = self.email;
     self.emailTextField = cell.textField;
 }
@@ -179,7 +179,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [cell setGuideText:@"Password:"];
     [cell setPlaceHolderText:@"Enter Your Password"];
     cell.textField.secureTextEntry = YES;
-    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     cell.textField.text = self.password;
     self.passwordTextField = cell.textField;
 }
@@ -188,11 +187,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     [cell setGuideText:@"First Name:"];
     [cell setPlaceHolderText:@"Enter Your First Name"];
-    cell.textField.secureTextEntry = NO;
-    cell.textField.enablesReturnKeyAutomatically = YES;
-    cell.textField.returnKeyType = UIReturnKeyNext;
     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
     cell.textField.text = self.firstName;
     self.firstNameTextField = cell.textField;
 }
@@ -201,12 +196,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     [cell setGuideText:@"Last Name:"];
     [cell setPlaceHolderText:@"Enter Your Last Name"];
-    cell.textField.secureTextEntry = NO;
     cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
-    cell.textField.enablesReturnKeyAutomatically = YES;
-    cell.textField.returnKeyType = UIReturnKeyNext;
     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
     cell.textField.text = self.lastName;
     self.lastNameTextField = cell.textField;
 }
@@ -217,7 +208,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [cell setPlaceHolderText:@"Confirm It Please"];
     cell.textField.secureTextEntry = YES;
     cell.textField.returnKeyType = UIReturnKeySend;
-    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     cell.textField.text = self.confirmation;
     self.confirmationTextField = cell.textField;
 }
