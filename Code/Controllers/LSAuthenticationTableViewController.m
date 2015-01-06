@@ -14,6 +14,21 @@
 #import "SVProgressHUD.h"
 #import "LSUtilities.h"
 
+typedef NS_ENUM(NSInteger, LSLoginRow) {
+    LSLoginRowEmail,
+    LSLoginRowPassword,
+    LSLoginRowCount,
+};
+
+typedef NS_ENUM(NSInteger, LSRegisterRow) {
+    LSRegisterRowFirstName,
+    LSRegisterRowLastName,
+    LSRegisterRowEmail,
+    LSRegisterRowPassword,
+    LSRegisterRowConfirmation,
+    LSRegisterRowCount,
+};
+
 @interface LSAuthenticationTableViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, copy) NSString *firstName;
@@ -86,10 +101,10 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     switch (self.authenticationState) {
         case LSAuthenticationStateRegister:
-            return 5;
+            return LSRegisterRowCount;
             
         case LSAuthenticationStateLogin:
-            return 2;
+            return LSLoginRowCount;
     }
 }
 
@@ -121,44 +136,44 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
     switch (self.authenticationState) {
         case LSAuthenticationStateLogin:
-            switch (path.row) {
-                case 0:
+            switch ((LSLoginRow)path.row) {
+                case LSLoginRowEmail:
                     [self configureEmailCell:cell];
                     break;
                     
-                case 1:
+                case LSLoginRowPassword:
                     [self configurePasswordCell:cell];
                     cell.textField.returnKeyType = UIReturnKeySend;
                     break;
                     
-                default:
+                case LSLoginRowCount:
                     break;
             }
             break;
             
         case LSAuthenticationStateRegister:
-            switch (path.row) {
-                case 0:
+            switch ((LSRegisterRow)path.row) {
+                case LSRegisterRowFirstName:
                     [self configureFirstNameCell:cell];
                     break;
                     
-                case 1:
+                case LSRegisterRowLastName:
                     [self configureLastNameCell:cell];
                     break;
                     
-                case 2:
+                case LSRegisterRowEmail:
                     [self configureEmailCell:cell];
                     break;
 
-                case 3:
+                case LSRegisterRowPassword:
                     [self configurePasswordCell:cell];
                     break;
 
-                case 4:
+                case LSRegisterRowConfirmation:
                     [self configureConfirmationCell:cell];
                     break;
                     
-                default:
+                case LSRegisterRowCount:
                     break;
             }
             break;
@@ -328,9 +343,9 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (void)configureTableViewForAuthenticationState:(LSAuthenticationState)authenticationState
 {
-    NSArray *indexPaths = @[[NSIndexPath indexPathForRow:0 inSection:0],
-                            [NSIndexPath indexPathForRow:1 inSection:0],
-                            [NSIndexPath indexPathForRow:4 inSection:0]];
+    NSArray *indexPaths = @[[NSIndexPath indexPathForRow:LSRegisterRowFirstName inSection:0],
+                            [NSIndexPath indexPathForRow:LSRegisterRowLastName inSection:0],
+                            [NSIndexPath indexPathForRow:LSRegisterRowConfirmation inSection:0]];
 
     [self.tableView beginUpdates];
     switch (authenticationState) {
