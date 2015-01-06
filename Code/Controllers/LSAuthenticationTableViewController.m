@@ -38,8 +38,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     if (self) {
         self.authenticationState = LSAuthenticationStateLogin;
         self.isEditing = NO;
-        self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-        [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSAuthenticationCellIdentifier];
     }
     return self;
 }
@@ -47,6 +45,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSAuthenticationCellIdentifier];
     [self.tableView setContentOffset:CGPointMake(0, 140)];
 }
 
