@@ -40,6 +40,7 @@
 
 - (void)setShowsContent:(BOOL)showsContent
 {
+    _showsContent = showsContent;
     if (!showsContent) {
         self.logoView.alpha = 0.0;
         self.textView.alpha = 0.0;
