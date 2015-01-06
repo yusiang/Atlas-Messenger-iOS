@@ -13,7 +13,7 @@
 #import "LSSettingsTableViewController.h"
 #import "LSConversationDetailViewController.h"
 
-@interface LSUIConversationListViewController () < LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
+@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
 @end
 
@@ -94,6 +94,7 @@
     }
     
     if (!self.layerClient.authenticatedUserID) return @"Not auth'd";
+
     NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
     if (self.layerClient.authenticatedUserID) {
         [participantIdentifiers removeObject:self.layerClient.authenticatedUserID];
