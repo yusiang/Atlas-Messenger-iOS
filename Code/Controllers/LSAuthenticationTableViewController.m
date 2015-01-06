@@ -14,7 +14,7 @@
 #import "SVProgressHUD.h"
 #import "LSUtilities.h"
 
-@interface LSAuthenticationTableViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
+@interface LSAuthenticationTableViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) UITextField *firstName;
 @property (nonatomic) UITextField *lastName;
