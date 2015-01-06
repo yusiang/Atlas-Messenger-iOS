@@ -278,7 +278,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     switch (authenticationState) {
         case LSAuthenticationStateLogin:
             if (self.isEditing) {
-                [self loginTappedWithEmail:self.email password:self.password];
+                [self attemptLogin];
             } else {
                 [self setEditing:YES animated:YES];
                 [self.emailTextField becomeFirstResponder];
@@ -394,7 +394,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             if (textField == self.emailTextField) {
                 [self.passwordTextField becomeFirstResponder];
             } else if (textField == self.passwordTextField) {
-                [self loginTappedWithEmail:self.email password:self.password];
+                [self attemptLogin];
             }
             break;
             
@@ -440,8 +440,10 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 #pragma mark - Logging In
 
-- (void)loginTappedWithEmail:(NSString *)email password:(NSString *)password
+- (void)attemptLogin
 {
+    NSString *email = self.email;
+    NSString *password = self.password;
     [SVProgressHUD showWithStatus:@"Requesting Nonce"];
     [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
         if (nonce) {
