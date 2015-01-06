@@ -49,7 +49,27 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     self.tableView.contentOffset = CGPointMake(0, 140);
 }
 
-#pragma mark - Table view data source
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated
+{
+    if (self.isEditing == editing) return;
+
+    [super setEditing:editing animated:animated];
+
+    // We need to trigger the recalculation of the table view's height (i.e. namely the header since its height is different when editing) so we call the following without actually making any table view updates.
+    if (animated) {
+        [self.tableView beginUpdates];
+        [self.tableView endUpdates];
+    } else {
+        [UIView performWithoutAnimation:^{
+            [self.tableView beginUpdates];
+            [self.tableView endUpdates];
+        }];
+    }
+
+    self.tableViewHeader.showsContent = !editing;
+}
+
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -78,6 +98,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     return NO;
 }
+
+#pragma mark - Cell Configuration
 
 - (void)configureCell:(LSInputTableViewCell *)cell forIndexPath:(NSIndexPath *)path
 {
@@ -160,6 +182,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     }
 }
 
+#pragma mark - UITableViewDelegate
+
 - (void)tableView:(UITableView *)tableView willDisplayCell:(LSInputTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.isEditing && indexPath.row == 0) {
@@ -203,6 +227,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     return footer;
 }
 
+#pragma mark - LSAuthenticationTableViewFooterDelegate
+
 - (void)authenticationTableViewFooter:(LSAuthenticationTableViewFooter *)tableViewFooter primaryActionButtonTappedWithAuthenticationState:(LSAuthenticationState)authenticationState
 {
     switch (authenticationState) {
@@ -242,6 +268,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [actionSheet showInView:self.view];
 }
 
+#pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -267,25 +294,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     }
 }
 
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated
-{
-    if (self.isEditing == editing) return;
-
-    [super setEditing:editing animated:animated];
-
-    // We need to trigger the recalculation of the table view's height (i.e. namely the header since its height is different when editing) so we call the following without actually making any table view updates.
-    if (animated) {
-        [self.tableView beginUpdates];
-        [self.tableView endUpdates];
-    } else {
-        [UIView performWithoutAnimation:^{
-            [self.tableView beginUpdates];
-            [self.tableView endUpdates];
-        }];
-    }
-
-    self.tableViewHeader.showsContent = !editing;
-}
+#pragma mark - State Configuration
 
 - (void)configureTableViewForAuthenticationState:(LSAuthenticationState)authenticationState
 {
@@ -305,8 +314,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [self.tableView endUpdates];
 }
 
-#pragma mark
-#pragma mark UITextFieldDelegate
+#pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
@@ -342,6 +350,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     return YES;
 }
 
+#pragma mark - Logging In
 
 - (void)loginTappedWithEmail:(NSString *)email password:(NSString *)password
 {
@@ -374,6 +383,8 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         }
     }];
 }
+
+#pragma mark - Registration
 
 - (void)registerTapped
 {
@@ -416,7 +427,9 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     }];
 }
 
-- (void)resetState;
+#pragma mark - Resetting
+
+- (void)resetState
 {
     self.authenticationState = LSAuthenticationStateLogin;
     [self setEditing:NO animated:YES];
