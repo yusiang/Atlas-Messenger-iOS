@@ -64,12 +64,12 @@ static NSString *const LSRegisterText = @"Create Account";
         [self.environmentButton addTarget:self action:@selector(environmentButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.environmentButton];
         
-        [self updateConstraints];
+        [self setUpConstraints];
     }
     return self;
 }
 
-- (void)updateConstraints
+- (void)setUpConstraints
 {
     //********** Primary Button **********//
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.primaryActionButton
@@ -169,8 +169,6 @@ static NSString *const LSRegisterText = @"Create Account";
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
                                                       constant:40]];
-    
-    [super updateConstraints];
 }
 
 - (void)setAuthenticationState:(LSAuthenticationState)authenticationState
