@@ -11,13 +11,13 @@
 #import "LSPersistenceManager.h"
 
 /**
- @abstract Data source for the `LYRUIParticipantPicker. Supplies a list of object conforming to the `LYRUIParticipant`
- protocol to the to the picker.
+ @abstract Data source for the `LYRUIParticipantPicker`. Supplies a list of objects conforming to the `LYRUIParticipant`
+ protocol to the picker.
  */
 @interface LSUIParticipantPickerDataSource : NSObject <LYRUIParticipantPickerDataSource>
 
 /**
- @abstract Designated initializer for the receiver. Calling `init` will raise NSInternalInconsistencyException
+ @abstract Designated initializer for the receiver. Calling `init` will raise NSInternalInconsistencyException.
  */
 + (instancetype)participantPickerDataSourceWithPersistenceManager:(LSPersistenceManager *)persistenceManager;
 
