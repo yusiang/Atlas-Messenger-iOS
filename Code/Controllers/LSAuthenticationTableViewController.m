@@ -67,7 +67,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSAuthenticationCellIdentifier];
-    self.tableView.contentOffset = CGPointMake(0, 140);
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
