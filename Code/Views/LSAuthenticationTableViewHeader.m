@@ -41,10 +41,8 @@
 - (void)setShowsContent:(BOOL)showsContent
 {
     _showsContent = showsContent;
-    if (!showsContent) {
-        self.logoView.alpha = 0.0;
-        self.textView.alpha = 0.0;
-    }
+    self.logoView.alpha = showsContent ? 1.0 : 0.0;
+    self.textView.alpha = showsContent ? 1.0 : 0.0;
 }
 
 - (void)setUpConstraints
