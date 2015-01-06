@@ -215,14 +215,21 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if (self.isEditing && self.authenticationState == LSAuthenticationStateRegister) {
-        return 20;
-    } else if (self.isEditing && self.authenticationState == LSAuthenticationStateLogin) {
-        return 60;
-    } else if (self.authenticationState == LSAuthenticationStateRegister) {
-        return 140;
+    switch (self.authenticationState) {
+        case LSAuthenticationStateLogin:
+            if (self.isEditing) {
+                return 60;
+            } else {
+                return 200;
+            }
+
+        case LSAuthenticationStateRegister:
+            if (self.isEditing) {
+                return 20;
+            } else {
+                return 140;
+            }
     }
-    return 200;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
