@@ -203,6 +203,7 @@ static NSString *const LSRegisterText = @"Create Account";
         self.primaryActionButton.titleLabel.alpha = 0.0;
         self.secondaryActionButton.titleLabel.alpha = 0.0;
     } completion:^(BOOL finished) {
+        if (!finished) return;
         if (self.authenticationState == LSAuthenticationStateLogin) {
             self.authenticationState = LSAuthenticationStateRegister;
         } else {
