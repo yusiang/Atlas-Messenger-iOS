@@ -36,6 +36,8 @@
      @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
 
+#pragma mark - LYRUIParticipantPickerDataSource
+
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
     [self.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
