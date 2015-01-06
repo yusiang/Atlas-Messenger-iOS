@@ -25,7 +25,6 @@ static NSString *const LSRegisterText = @"Create Account";
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    
     if (self) {
         self.primaryActionButton = [[UIButton alloc] init];
         [self.primaryActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
