@@ -44,7 +44,7 @@
     [self.navigationItem setRightBarButtonItem:composeButton];
 }
 
-#pragma mark Conversation List View Controller Delegate Methods
+#pragma mark - LYRUIConversationListViewControllerDelegate
 
 /**
  
@@ -78,7 +78,7 @@
     NSLog(@"Conversation Deletion Failed with Error: %@", error);
 }
 
-#pragma mark Conversation List View Controller Data Source Methods
+#pragma mark - LYRUIConversationListViewControllerDataSource
 
 /**
  
@@ -131,7 +131,7 @@
     return nil;
 }
 
-#pragma mark Selected Conversation Methods
+#pragma mark - Conversation Selection
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
@@ -162,7 +162,7 @@
     }
 }
 
-#pragma mark - Bar Button Functionality Methods
+#pragma mark - Actions
 
 - (void)settingsButtonTapped
 {
@@ -179,7 +179,7 @@
     [self presentControllerWithConversation:nil];
 }
 
-#pragma mark - Push Notification Selection Method
+#pragma mark - Conversation Selection From Push Notification
 
 - (void)selectConversation:(LYRConversation *)conversation
 {
@@ -188,7 +188,7 @@
     }
 }
 
-#pragma mark - Settings View Controller Delegate
+#pragma mark - LSSettingsTableViewControllerDelegate
 
 - (void)logoutTappedInSettingsTableViewController:(LSSettingsTableViewController *)settingsTableViewController
 {
