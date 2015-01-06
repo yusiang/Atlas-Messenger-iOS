@@ -287,7 +287,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             
         case LSAuthenticationStateRegister:
             if (self.isEditing) {
-                [self registerTapped];
+                [self attemptRegistration];
             } else {
                 [self setEditing:YES animated:YES];
                 [self.firstNameTextField becomeFirstResponder];
@@ -408,7 +408,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             } else if (textField == self.passwordTextField) {
                 [self.confirmationTextField becomeFirstResponder];
             } else if (textField == self.confirmationTextField) {
-                [self registerTapped];
+                [self attemptRegistration];
             }
             break;
     }
@@ -476,7 +476,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 #pragma mark - Registration
 
-- (void)registerTapped
+- (void)attemptRegistration
 {
     LSUser *user = [LSUser new];
     user.firstName = self.firstName;
