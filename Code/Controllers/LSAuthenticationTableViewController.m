@@ -29,7 +29,7 @@
 @property (nonatomic, weak) UITextField *confirmationTextField;
 
 @property (nonatomic) LSAuthenticationState authenticationState;
-@property (nonatomic) LSAuthenticationTableViewHeader *tableViewHeader;
+@property (nonatomic, weak) LSAuthenticationTableViewHeader *tableViewHeader;
 
 @end
 
@@ -239,13 +239,14 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    self.tableViewHeader = [LSAuthenticationTableViewHeader new];
+    LSAuthenticationTableViewHeader *header = [LSAuthenticationTableViewHeader new];
+    self.tableViewHeader = header;
     if (self.isEditing) {
-        self.tableViewHeader.showsContent = NO;
+        header.showsContent = NO;
     } else {
-        self.tableViewHeader.showsContent = YES;
+        header.showsContent = YES;
     }
-    return self.tableViewHeader;
+    return header;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
