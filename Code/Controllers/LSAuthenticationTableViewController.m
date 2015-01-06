@@ -445,6 +445,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     NSString *email = self.email;
     NSString *password = self.password;
     [SVProgressHUD showWithStatus:@"Requesting Nonce" maskType:SVProgressHUDMaskTypeBlack];
+    [self.view endEditing:YES];
     [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
         if (error) {
             LSAlertWithError(error);
@@ -486,6 +487,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     user.passwordConfirmation = self.confirmation;
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
+    [self.view endEditing:YES];
     [self.applicationController.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
         if (error) {
             LSAlertWithError(error);
