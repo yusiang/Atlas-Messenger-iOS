@@ -43,13 +43,6 @@
 @property (nonatomic) id<LSAuthenticationTableViewControllerDelegate> delegate;
 
 /**
- @abstract Attempts to log a user in with an email and password.
- @param email The email address to be authenticated.
- @param password The password provided for a login attempt.
- */
-- (void)loginTappedWithEmail:(NSString *)email password:(NSString *)password;
-
-/**
  @abstract A completion block that is called upon completion of a login or registration attempt.
  @param completionBlock The completion block to be invoked.
  */
