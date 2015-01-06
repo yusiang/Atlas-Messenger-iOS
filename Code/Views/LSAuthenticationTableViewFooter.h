@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, LSAuthenticationState) {
 
 @interface LSAuthenticationTableViewFooter : UIView
 
-@property (nonatomic, weak) id<LSAuthenticationTableViewFooterDelegate>delegate;
+@property (nonatomic, weak) id<LSAuthenticationTableViewFooterDelegate> delegate;
 
 @property (nonatomic) LSAuthenticationState authenticationState;
 
