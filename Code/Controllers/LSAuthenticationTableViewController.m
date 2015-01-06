@@ -213,13 +213,6 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 
 #pragma mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(LSInputTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (self.isEditing && indexPath.row == 0) {
-       [cell.textField becomeFirstResponder];
-    }
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (self.isEditing && self.authenticationState == LSAuthenticationStateRegister) {
@@ -355,6 +348,18 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                 break;
         }
         [self configureCell:cell forIndexPath:indexPath];
+    }
+
+    if (self.isEditing) {
+        switch (authenticationState) {
+            case LSAuthenticationStateLogin:
+                [self.emailTextField becomeFirstResponder];
+                break;
+
+            case LSAuthenticationStateRegister:
+                [self.firstNameTextField becomeFirstResponder];
+                break;
+        }
     }
 }
 
