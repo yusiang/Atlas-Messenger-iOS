@@ -487,33 +487,33 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     
     [SVProgressHUD show];
     [self.applicationController.APIManager registerUser:user completion:^(LSUser *user, NSError *error) {
-        if (user) {
-            [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-                if (nonce) {
-                    [self.applicationController.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
-                        if (identityToken) {
-                            [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-                                if (authenticatedUserID) {
-                                    [SVProgressHUD dismiss];
-                                } else {
-                                    LSAlertWithError(error);
-                                    [SVProgressHUD dismiss];
-                                }
-                            }];
-                        } else {
-                            LSAlertWithError(error);
-                            [SVProgressHUD dismiss];
-                        }
-                    }];
-                } else {
-                    LSAlertWithError(error);
-                    [SVProgressHUD dismiss];
-                }
-            }];
-        } else {
+        if (error) {
             LSAlertWithError(error);
             [SVProgressHUD dismiss];
+            return;
         }
+        [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+            if (error) {
+                LSAlertWithError(error);
+                [SVProgressHUD dismiss];
+                return;
+            }
+            [self.applicationController.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+                if (error) {
+                    LSAlertWithError(error);
+                    [SVProgressHUD dismiss];
+                    return;
+                }
+                [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                    if (error) {
+                        LSAlertWithError(error);
+                        [SVProgressHUD dismiss];
+                        return;
+                    }
+                    [SVProgressHUD dismiss];
+                }];
+            }];
+        }];
     }];
 }
 
