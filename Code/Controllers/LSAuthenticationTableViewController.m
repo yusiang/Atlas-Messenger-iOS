@@ -141,6 +141,14 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                     [self configureLastNameCell:cell];
                     break;
                     
+                case 2:
+                    [self configureEmailCell:cell];
+                    break;
+
+                case 3:
+                    [self configurePasswordCell:cell];
+                    break;
+
                 case 4:
                     [self configureConfirmationCell:cell];
                     break;
