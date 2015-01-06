@@ -119,25 +119,11 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         case LSAuthenticationStateLogin:
             switch (path.row) {
                 case 0:
-                    [cell setGuideText:@"Email:"];
-                    [cell setPlaceHolderText:@"Enter Your Email"];
-                    cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
-                    cell.textField.enablesReturnKeyAutomatically = YES;
-                    cell.textField.returnKeyType = UIReturnKeyNext;
-                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-                    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-                    cell.textField.text = self.email;
-                    self.emailTextField = cell.textField;
+                    [self configureEmailCell:cell];
                     break;
                     
                 case 1:
-                    [cell setGuideText:@"Password:"];
-                    [cell setPlaceHolderText:@"Enter Your Password"];
-                    cell.textField.secureTextEntry = YES;
-                    cell.textField.returnKeyType = UIReturnKeySend;
-                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-                    cell.textField.text = self.password;
-                    self.passwordTextField = cell.textField;
+                    [self configurePasswordCell:cell];
                     break;
                     
                 default:
@@ -148,38 +134,15 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
         case LSAuthenticationStateRegister:
             switch (path.row) {
                 case 0:
-                    [cell setGuideText:@"First Name:"];
-                    [cell setPlaceHolderText:@"Enter Your First Name"];
-                    cell.textField.secureTextEntry = NO;
-                    cell.textField.enablesReturnKeyAutomatically = YES;
-                    cell.textField.returnKeyType = UIReturnKeyNext;
-                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-                    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-                    cell.textField.text = self.firstName;
-                    self.firstNameTextField = cell.textField;
+                    [self configureFirstNameCell:cell];
                     break;
                     
                 case 1:
-                    [cell setGuideText:@"Last Name:"];
-                    [cell setPlaceHolderText:@"Enter Your Last Name"];
-                    cell.textField.secureTextEntry = NO;
-                    cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
-                    cell.textField.enablesReturnKeyAutomatically = YES;
-                    cell.textField.returnKeyType = UIReturnKeyNext;
-                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-                    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-                    cell.textField.text = self.lastName;
-                    self.lastNameTextField = cell.textField;
+                    [self configureLastNameCell:cell];
                     break;
                     
                 case 4:
-                    [cell setGuideText:@"Confirmation:"];
-                    [cell setPlaceHolderText:@"Confirm It Please"];
-                    cell.textField.secureTextEntry = YES;
-                    cell.textField.returnKeyType = UIReturnKeySend;
-                    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-                    cell.textField.text = self.confirmation;
-                    self.confirmationTextField = cell.textField;
+                    [self configureConfirmationCell:cell];
                     break;
                     
                 default:
@@ -187,6 +150,68 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
             }
             break;
     }
+}
+
+- (void)configureEmailCell:(LSInputTableViewCell *)cell
+{
+    [cell setGuideText:@"Email:"];
+    [cell setPlaceHolderText:@"Enter Your Email"];
+    cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
+    cell.textField.enablesReturnKeyAutomatically = YES;
+    cell.textField.returnKeyType = UIReturnKeyNext;
+    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    cell.textField.text = self.email;
+    self.emailTextField = cell.textField;
+}
+
+- (void)configurePasswordCell:(LSInputTableViewCell *)cell
+{
+    [cell setGuideText:@"Password:"];
+    [cell setPlaceHolderText:@"Enter Your Password"];
+    cell.textField.secureTextEntry = YES;
+    cell.textField.returnKeyType = UIReturnKeySend;
+    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    cell.textField.text = self.password;
+    self.passwordTextField = cell.textField;
+}
+
+- (void)configureFirstNameCell:(LSInputTableViewCell *)cell
+{
+    [cell setGuideText:@"First Name:"];
+    [cell setPlaceHolderText:@"Enter Your First Name"];
+    cell.textField.secureTextEntry = NO;
+    cell.textField.enablesReturnKeyAutomatically = YES;
+    cell.textField.returnKeyType = UIReturnKeyNext;
+    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    cell.textField.text = self.firstName;
+    self.firstNameTextField = cell.textField;
+}
+
+- (void)configureLastNameCell:(LSInputTableViewCell *)cell
+{
+    [cell setGuideText:@"Last Name:"];
+    [cell setPlaceHolderText:@"Enter Your Last Name"];
+    cell.textField.secureTextEntry = NO;
+    cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
+    cell.textField.enablesReturnKeyAutomatically = YES;
+    cell.textField.returnKeyType = UIReturnKeyNext;
+    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+    cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    cell.textField.text = self.lastName;
+    self.lastNameTextField = cell.textField;
+}
+
+- (void)configureConfirmationCell:(LSInputTableViewCell *)cell
+{
+    [cell setGuideText:@"Confirmation:"];
+    [cell setPlaceHolderText:@"Confirm It Please"];
+    cell.textField.secureTextEntry = YES;
+    cell.textField.returnKeyType = UIReturnKeySend;
+    cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    cell.textField.text = self.confirmation;
+    self.confirmationTextField = cell.textField;
 }
 
 #pragma mark - UITableViewDelegate
