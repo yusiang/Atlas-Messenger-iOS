@@ -20,7 +20,6 @@
 #import "LSAuthenticationTableViewController.h"
 #import "LSSplashView.h"
 #import "LSLocalNotificationUtilities.h"
-#import "LSPartnerAPIManager.h"
 #import "SVProgressHUD.h" 
 
 extern void LYRSetLogLevelFromEnvironment();
@@ -369,7 +368,7 @@ void LYRUITestResetConfiguration(void)
 
 - (void)userDidAuthenticateWithLayerNotification:(NSNotification *)notification
 {
-    [self presentConversationsListViewController];
+    [self presentConversationsListViewController:YES];
 }
 
 - (void)userDidAuthenticateNotification:(NSNotification *)notification
