@@ -122,7 +122,7 @@ void LSTestResetConfiguration(void)
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [self.localNotificationUtilities setShouldListenForChanges:NO];
+    self.localNotificationUtilities.shouldListenForChanges = NO;
     [self resumeSession];
     [self loadContacts];
 }
@@ -131,7 +131,7 @@ void LSTestResetConfiguration(void)
 {
     [self setApplicationBadgeNumber];
     if (self.applicationController.shouldDisplayLocalNotifications) {
-        [self.localNotificationUtilities setShouldListenForChanges:YES];
+        self.localNotificationUtilities.shouldListenForChanges = YES;
     }
 }
 
@@ -183,7 +183,7 @@ void LSTestResetConfiguration(void)
     self.navigationController.navigationBarHidden = TRUE;
     self.navigationController.navigationBar.barTintColor = LYRUILightGrayColor();
     self.navigationController.navigationBar.tintColor = LYRUIBlueColor();
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     
@@ -254,7 +254,7 @@ void LSTestResetConfiguration(void)
         NSLog(@"Application did register for remote notifications");
     } else {
         NSLog(@"Error updating Layer device token for push:%@", error);
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Updating Device Token Failed" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Updating Device Token Failed" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
     }
 }
