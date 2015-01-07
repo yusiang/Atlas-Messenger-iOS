@@ -26,7 +26,7 @@ extern void LYRSetLogLevelFromEnvironment();
 extern NSString *LYRApplicationDataDirectory(void);
 extern dispatch_once_t LYRConfigurationURLOnceToken;
 
-void LYRUITestResetConfiguration(void)
+void LSTestResetConfiguration(void)
 {
     extern dispatch_once_t LYRDefaultConfigurationDispatchOnceToken;
     
@@ -149,7 +149,7 @@ void LYRUITestResetConfiguration(void)
         [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:@"LAYER_CONFIGURATION_URL"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    LYRUITestResetConfiguration();
+    LSTestResetConfiguration();
     LYRSetLogLevelFromEnvironment();
     
     // Configure application controllers
@@ -500,13 +500,12 @@ void LYRUITestResetConfiguration(void)
     LYRUILastPhotoTaken(^(UIImage *image) {
         NSString *emailSubject = @"New iOS Sample App Bug!";
         NSString *emailBody = @"Please enter your bug description below";
-        NSArray *emailAddress = [NSArray arrayWithObject:@"support@layer.com"];
         
         self.mailComposeViewController = [[MFMailComposeViewController alloc] init];
         self.mailComposeViewController.mailComposeDelegate = self;
         [self.mailComposeViewController setSubject:emailSubject];
         [self.mailComposeViewController setMessageBody:emailBody isHTML:NO];
-        [self.mailComposeViewController setToRecipients:emailAddress];
+        [self.mailComposeViewController setToRecipients:@[@"kevin@layer.com, support@layer.com"]];
         [self.mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
         
         UIViewController *controller = self.window.rootViewController;
