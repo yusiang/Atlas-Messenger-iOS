@@ -497,24 +497,29 @@ void LSTestResetConfiguration(void)
 
 - (void)presentMailComposer
 {
-    LYRUILastPhotoTaken(^(UIImage *image) {
-        NSString *emailSubject = @"New iOS Sample App Bug!";
-        NSString *emailBody = @"Please enter your bug description below";
-        
-        self.mailComposeViewController = [[MFMailComposeViewController alloc] init];
-        self.mailComposeViewController.mailComposeDelegate = self;
-        [self.mailComposeViewController setSubject:emailSubject];
-        [self.mailComposeViewController setMessageBody:emailBody isHTML:NO];
-        [self.mailComposeViewController setToRecipients:@[@"kevin@layer.com, support@layer.com"]];
-        [self.mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
-        
-        UIViewController *controller = self.window.rootViewController;
-        if (controller.presentedViewController) {
-            controller = [(UINavigationController *)controller.presentedViewController topViewController];
+    LYRUILastPhotoTaken(^(UIImage *image, NSError *error) {
+        if (error) {
+            LSAlertWithError(error);
+            return;
         } else {
-            controller = [(UINavigationController *)controller topViewController];
+            NSString *emailSubject = @"New iOS Sample App Bug!";
+            NSString *emailBody = @"Please enter your bug description below";
+            
+            self.mailComposeViewController = [[MFMailComposeViewController alloc] init];
+            self.mailComposeViewController.mailComposeDelegate = self;
+            [self.mailComposeViewController setSubject:emailSubject];
+            [self.mailComposeViewController setMessageBody:emailBody isHTML:NO];
+            [self.mailComposeViewController setToRecipients:@[@"kevin@layer.com, support@layer.com"]];
+            [self.mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
+            
+            UIViewController *controller = self.window.rootViewController;
+            if (controller.presentedViewController) {
+                controller = [(UINavigationController *)controller.presentedViewController topViewController];
+            } else {
+                controller = [(UINavigationController *)controller topViewController];
+            }
+            [controller presentViewController:self.mailComposeViewController animated:YES completion:nil];
         }
-        [controller presentViewController:self.mailComposeViewController animated:YES completion:nil];
     });
 }
 
