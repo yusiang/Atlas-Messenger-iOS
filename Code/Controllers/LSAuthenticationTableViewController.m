@@ -65,6 +65,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     [super viewDidLoad];
 
+    self.tableView.rowHeight = 44;
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSAuthenticationCellIdentifier];
 }
