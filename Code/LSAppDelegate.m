@@ -136,7 +136,6 @@ void LSTestResetConfiguration(void)
     }
 }
 
-
 - (void)configureApplication:(UIApplication *)application forEnvironment:(LSEnvironment)environment
 {
     self.environment = environment;
@@ -185,6 +184,7 @@ void LSTestResetConfiguration(void)
     self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBar.barTintColor = LYRUILightGrayColor();
     self.navigationController.navigationBar.tintColor = LYRUIBlueColor();
+
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
@@ -216,6 +216,7 @@ void LSTestResetConfiguration(void)
 }
 
 #pragma mark - Push Notification Setup and Handlers
+
 /**
  
  LAYER - In order to register for push notifications, your application must first declare the types of
@@ -226,8 +227,7 @@ void LSTestResetConfiguration(void)
 {
     // Declaring that I want to recieve push!
     if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
-        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
-                                                                                             categories:nil];
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil];
         [application registerUserNotificationSettings:notificationSettings];
         [application registerForRemoteNotifications];
     } else {
@@ -427,6 +427,7 @@ void LSTestResetConfiguration(void)
             [self removeSplashView];
             return;
         }
+
         self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
         self.viewController.applicationController = self.applicationController;
         self.viewController.displaysConversationImage = self.displaysConversationImage;
@@ -484,7 +485,8 @@ void LSTestResetConfiguration(void)
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Report Issue?"
                                                         message:@"Would you like to report a bug with the sample app?"
                                                        delegate:self
-                                              cancelButtonTitle:@"Not Now" otherButtonTitles:@"Yes", nil];
+                                              cancelButtonTitle:@"Not Now"
+                                              otherButtonTitles:@"Yes", nil];
     [alertView show];
 }
 
@@ -557,6 +559,5 @@ void LSTestResetConfiguration(void)
     NSUInteger countOfUnreadMessages = [self.applicationController.layerClient countOfUnreadMessages];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
 }
-
 
 @end
