@@ -139,6 +139,8 @@ void LSTestResetConfiguration(void)
     }
 }
 
+#pragma mark - Setup
+
 - (void)configureApplication:(UIApplication *)application forEnvironment:(LSEnvironment)environment
 {
     self.environment = environment;
@@ -174,8 +176,6 @@ void LSTestResetConfiguration(void)
     }
     return NO;
 }
-
-#pragma mark - Setup Methods
 
 - (void)setRootViewController
 {
@@ -213,7 +213,7 @@ void LSTestResetConfiguration(void)
                                                object:nil];
 }
 
-#pragma mark - Push Notification Setup and Handlers
+#pragma mark - Push Notifications
 
 /**
  
@@ -357,7 +357,7 @@ void LSTestResetConfiguration(void)
     [Crashlytics setUserIdentifier:authenticatedUser.userID];
 }
 
-#pragma mark - Authentication Methods
+#pragma mark - Authentication Notification Handlers
 
 - (void)userDidAuthenticateWithLayer:(NSNotification *)notification
 {
@@ -406,6 +406,8 @@ void LSTestResetConfiguration(void)
     }];
 }
 
+#pragma mark - Contacts
+
 - (void)loadContacts
 {
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
@@ -420,6 +422,8 @@ void LSTestResetConfiguration(void)
         }
     }];
 }
+
+#pragma mark - Conversations
 
 - (void)presentConversationsListViewController:(BOOL)animated
 {
@@ -444,7 +448,7 @@ void LSTestResetConfiguration(void)
     }
 }
 
-#pragma mark - Splash View Config
+#pragma mark - Splash View
 
 - (void)addSplashView
 {
@@ -476,7 +480,7 @@ void LSTestResetConfiguration(void)
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LYRUIBlueColor()];
 }
 
-#pragma mark - Screen Shot Handler Methods
+#pragma mark - Bug Reporting
 
 - (void)userDidTakeScreenshot:(NSNotification *)notification
 {
@@ -486,13 +490,6 @@ void LSTestResetConfiguration(void)
                                               cancelButtonTitle:@"Not Now"
                                               otherButtonTitles:@"Yes", nil];
     [alertView show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 1) {
-        [self presentMailComposer];
-    }
 }
 
 - (void)presentMailComposer
@@ -520,6 +517,17 @@ void LSTestResetConfiguration(void)
     });
 }
 
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        [self presentMailComposer];
+    }
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
     switch (result) {
@@ -538,7 +546,7 @@ void LSTestResetConfiguration(void)
     [self.mailComposeViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - Authentaction Controller Delegate Methods
+#pragma mark - LSAuthenticationTableViewControllerDelegate
 
 - (void)authenticationTableViewController:(LSAuthenticationTableViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment
 {
