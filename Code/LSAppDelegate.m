@@ -41,7 +41,6 @@ void LSTestResetConfiguration(void)
 
 @interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
-@property (nonatomic) UINavigationController *authenticatedNavigationController;
 @property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
 @property (nonatomic) LSUIConversationListViewController *conversationListViewController;
 @property (nonatomic) LSSplashView *splashView;
@@ -404,7 +403,6 @@ void LSTestResetConfiguration(void)
     
     [self.authenticationViewController dismissViewControllerAnimated:YES completion:^{
         self.conversationListViewController = nil;
-        self.authenticatedNavigationController = nil;
     }];
 }
 
@@ -440,8 +438,8 @@ void LSTestResetConfiguration(void)
         self.conversationListViewController.allowsEditing = self.allowsEditing;
         self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
         
-        self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
-        [self.authenticationViewController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
+        UINavigationController *authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
+        [self.authenticationViewController presentViewController:authenticatedNavigationController animated:YES completion:^{
             [self.authenticationViewController resetState];
             [self removeSplashView];
         }];
