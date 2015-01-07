@@ -13,7 +13,7 @@
 #import "LSSettingsTableViewController.h"
 #import "LSConversationDetailViewController.h"
 
-@interface LSUIConversationListViewController () < LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
+@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
 
 @end
 
@@ -44,7 +44,7 @@
     [self.navigationItem setRightBarButtonItem:composeButton];
 }
 
-#pragma mark Conversation List View Controller Delegate Methods
+#pragma mark - LYRUIConversationListViewControllerDelegate
 
 /**
  
@@ -78,7 +78,7 @@
     NSLog(@"Conversation Deletion Failed with Error: %@", error);
 }
 
-#pragma mark Conversation List View Controller Data Source Methods
+#pragma mark - LYRUIConversationListViewControllerDataSource
 
 /**
  
@@ -88,40 +88,36 @@
  */
 - (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController labelForConversation:(LYRConversation *)conversation
 {
-    if ([conversation.metadata valueForKey:LYRUIConversationNameTag]) {
-        return [conversation.metadata valueForKey:LYRUIConversationNameTag];
+    NSString *conversationName = conversation.metadata[LYRUIConversationNameTag];
+    if (conversationName) {
+        return conversationName;
     }
     
     if (!self.layerClient.authenticatedUserID) return @"Not auth'd";
+
     NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
-    [participantIdentifiers minusSet:[NSSet setWithObject:self.layerClient.authenticatedUserID]];
+    if (self.layerClient.authenticatedUserID) {
+        [participantIdentifiers removeObject:self.layerClient.authenticatedUserID];
+    }
     
-    if (!participantIdentifiers.count > 0) return @"Personal Conversation";
+    if (participantIdentifiers.count == 0) return @"Personal Conversation";
     
     NSMutableSet *participants = [[self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers] mutableCopy];
-    if (!participants.count > 0) return @"No Matching Participants";
+    if (participants.count == 0) return @"No Matching Participants";
     
     // Put the latest message sender's name first
-    LSUser *firstUser;
-    if (![conversation.lastMessage.sentByUserID isEqualToString:self.layerClient.authenticatedUserID]){
-        if (conversation.lastMessage) {
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", conversation.lastMessage.sentByUserID];
-            LSUser *lastMessageSender = [[[participants filteredSetUsingPredicate:searchPredicate] allObjects] lastObject];
-            if (lastMessageSender) {
-                firstUser = lastMessageSender;
-                [participants removeObject:lastMessageSender];
-            }
+    NSMutableArray *fullNames = [NSMutableArray new];
+    for (id<LYRUIParticipant> participant in participants) {
+        if (!participant.fullName) continue;
+        if ([conversation.lastMessage.sentByUserID isEqualToString:participant.participantIdentifier]) {
+            [fullNames insertObject:participant.fullName atIndex:0];
+        } else {
+            [fullNames addObject:participant.fullName];
         }
-    } else {
-        firstUser = [[participants allObjects] objectAtIndex:0];
     }
-    
-    NSString *conversationLabel = firstUser.fullName;
-    for (int i = 1; i < [[participants allObjects] count]; i++) {
-        LSUser *user = [[participants allObjects] objectAtIndex:i];
-        conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.fullName];
-    }
-    return conversationLabel;
+
+    NSString *fullNamesString = [fullNames componentsJoinedByString:@", "];
+    return fullNamesString;
 }
 
 /**
@@ -135,7 +131,7 @@
     return nil;
 }
 
-#pragma mark Selected Conversation Methods
+#pragma mark - Conversation Selection
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
@@ -166,7 +162,7 @@
     }
 }
 
-#pragma mark - Bar Button Functionality Methods
+#pragma mark - Actions
 
 - (void)settingsButtonTapped
 {
@@ -183,7 +179,7 @@
     [self presentControllerWithConversation:nil];
 }
 
-#pragma mark - Push Notification Selection Method
+#pragma mark - Conversation Selection From Push Notification
 
 - (void)selectConversation:(LYRConversation *)conversation
 {
@@ -192,7 +188,7 @@
     }
 }
 
-#pragma mark - Settings View Controller Delegate
+#pragma mark - LSSettingsTableViewControllerDelegate
 
 - (void)logoutTappedInSettingsTableViewController:(LSSettingsTableViewController *)settingsTableViewController
 {
