@@ -11,6 +11,7 @@
 #import "LSUIConversationListViewController.h"
 #import "LSAPIManager.h"
 #import "LSUtilities.h"
+#import "LYRUIMessagingUtilities.h"
 #import "LYRUIConstants.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -19,7 +20,9 @@
 #import "LSSplashView.h"
 #import "LSLocalNotificationUtilities.h"
 #import "LSPartnerAPIManager.h"
+#import <MessageUI/MessageUI.h> 
 #import <LayerUIKit/LayerUIKit.h>
+#import "SVProgressHUD.h" 
 
 extern void LYRSetLogLevelFromEnvironment();
 extern NSString *LYRApplicationDataDirectory(void);
@@ -37,7 +40,7 @@ void LYRUITestResetConfiguration(void)
     LYRConfigurationURLOnceToken = 0;
 }
 
-@interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate>
+@interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic) UINavigationController *navigationController;
 @property (nonatomic) UINavigationController *authenticatedNavigationController;
@@ -45,6 +48,7 @@ void LYRUITestResetConfiguration(void)
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
 @property (nonatomic) LSLocalNotificationUtilities *localNotificationUtilities;
+@property (nonatomic) MFMailComposeViewController *mailComposeViewController;
 
 @end
 
@@ -159,12 +163,16 @@ void LYRUITestResetConfiguration(void)
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    NSUInteger countOfUnreadMessages = [self.applicationController.layerClient countOfUnreadMessages];
-    
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
+    [self setApplicationBadgeNumber];
     if (self.applicationController.shouldDisplayLocalNotifications) {
         [self.localNotificationUtilities setShouldListenForChanges:YES];
     }
+}
+
+- (void)setApplicationBadgeNumber
+{
+    NSUInteger countOfUnreadMessages = [self.applicationController.layerClient countOfUnreadMessages];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
 }
 
 #pragma mark - Setup Methods
@@ -203,7 +211,6 @@ void LYRUITestResetConfiguration(void)
     LSLayerClient *client = [LSLayerClient clientWithAppID:LSLayerAppID(self.environment)];
     
     // TODO: Change with subclass instead of interface class...
-    
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL()
                                                                     layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
@@ -281,12 +288,6 @@ void LYRUITestResetConfiguration(void)
  */
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    // Increment badge count if a message
-    if ([[userInfo valueForKeyPath:@"aps.content-available"] integerValue] == 0) {
-        NSInteger badgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber];
-        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badgeNumber + 1];
-    }
-    
     BOOL userTappedRemoteNotification = application.applicationState == UIApplicationStateInactive;
     __block LYRConversation *conversation = [self conversationFromRemoteNotification:userInfo];
     if (userTappedRemoteNotification && conversation) {
@@ -297,12 +298,18 @@ void LYRUITestResetConfiguration(void)
         if (fetchResult == UIBackgroundFetchResultFailed) {
             NSLog(@"Failed processing remote notification: %@", error);
         }
+        LYRMessage *message = [self.applicationController.layerClient messageForIdentifier:[userInfo valueForKeyPath:@"aps.objectIdentifier"]];
+        if (message) {
+            
+        }
         
         // Try navigating once the synchronization completed
         if (userTappedRemoteNotification && !conversation) {
             conversation = [self conversationFromRemoteNotification:userInfo];
             [self navigateToViewForConversation:conversation];
         }
+        // Increment badge count if a message
+        [self setApplicationBadgeNumber];
         completionHandler(fetchResult);
     }];
     
@@ -515,13 +522,54 @@ void LYRUITestResetConfiguration(void)
 {
     switch (buttonIndex) {
         case 1: {
-            LSPartnerAPIManager *manager = [LSPartnerAPIManager managerWithBaseURL:[NSURL URLWithString:@"https://layerhq.atlassian.net"]];
-            [manager postIssueWithPhoto:[UIImage imageNamed:@"back"] summary:@"This is a summage" description:@"And this is the description"];
+            [self presentMailComposer];
         }
             break;
         default:
             break;
     }
+}
+
+- (void)presentMailComposer
+{
+    LYRUILastPhotoTaken(^(UIImage *image) {
+        NSString *emailSubject = @"New iOS Sample App Bug!";
+        NSString *emailBody = @"Please enter your bug description below";
+        NSArray *emailAddress = [NSArray arrayWithObject:@"support@layer.com"];
+        
+        self.mailComposeViewController = [[MFMailComposeViewController alloc] init];
+        self.mailComposeViewController.mailComposeDelegate = self;
+        [self.mailComposeViewController setSubject:emailSubject];
+        [self.mailComposeViewController setMessageBody:emailBody isHTML:NO];
+        [self.mailComposeViewController setToRecipients:emailAddress];
+        [self.mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
+        
+        UIViewController *controller = self.window.rootViewController;
+        if (controller.presentedViewController) {
+            controller = [(UINavigationController *)controller.presentedViewController topViewController];
+        } else {
+            controller = [(UINavigationController *)controller topViewController];
+        }
+        [controller presentViewController:self.mailComposeViewController animated:YES completion:nil];
+    });
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    switch (result) {
+        case MFMailComposeResultSaved:
+            [SVProgressHUD showSuccessWithStatus:@"Email Saved"];
+            break;
+        case MFMailComposeResultSent:
+            [SVProgressHUD showSuccessWithStatus:@"Email Sent! Now go tell Kevin or Ben to fix it!"];
+            break;
+        case MFMailComposeResultFailed:
+            [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"Email Failed to Send. Error: %@", error]];
+            break;
+        default:
+            break;
+    }
+    [self.mailComposeViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Authentaction Controller Delegate Methods
