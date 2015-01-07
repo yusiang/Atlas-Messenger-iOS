@@ -10,6 +10,4 @@
 
 @interface LSSplashView : UIView
 
-- (void)animateLogoWithCompletion:(void(^)(void))completion;
-
 @end
