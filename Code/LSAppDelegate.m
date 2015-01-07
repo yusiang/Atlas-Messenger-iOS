@@ -195,22 +195,22 @@ void LSTestResetConfiguration(void)
 - (void)registerNotificationObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(userDidAuthenticateNotification:)
+                                             selector:@selector(userDidAuthenticate:)
                                                  name:LSUserDidAuthenticateNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter]  addObserver:self
-                                              selector:@selector(userDidAuthenticateWithLayerNotification:)
+                                              selector:@selector(userDidAuthenticateWithLayer:)
                                                   name:LYRClientDidAuthenticateNotification
                                                 object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(userDidDeauthenticateNotification:)
+                                             selector:@selector(userDidDeauthenticate:)
                                                  name:LSUserDidDeauthenticateNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(screenshotNotification:)
+                                             selector:@selector(userDidTakeScreenshot:)
                                                  name:UIApplicationUserDidTakeScreenshotNotification
                                                object:nil];
 }
@@ -361,12 +361,12 @@ void LSTestResetConfiguration(void)
 
 #pragma mark - Authentication Methods
 
-- (void)userDidAuthenticateWithLayerNotification:(NSNotification *)notification
+- (void)userDidAuthenticateWithLayer:(NSNotification *)notification
 {
     [self presentConversationsListViewController:YES];
 }
 
-- (void)userDidAuthenticateNotification:(NSNotification *)notification
+- (void)userDidAuthenticate:(NSNotification *)notification
 {
     NSError *error;
     LSSession *session = self.applicationController.APIManager.authenticatedSession;
@@ -382,7 +382,7 @@ void LSTestResetConfiguration(void)
     [self loadContacts];
 }
 
-- (void)userDidDeauthenticateNotification:(NSNotification *)notification
+- (void)userDidDeauthenticate:(NSNotification *)notification
 {
     NSError *error;
     BOOL success = [self.applicationController.persistenceManager persistSession:nil error:&error];
@@ -480,7 +480,7 @@ void LSTestResetConfiguration(void)
 
 #pragma mark - Screen Shot Handler Methods
 
-- (void)screenshotNotification:(NSNotification *)notification
+- (void)userDidTakeScreenshot:(NSNotification *)notification
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Report Issue?"
                                                         message:@"Would you like to report a bug with the sample app?"
