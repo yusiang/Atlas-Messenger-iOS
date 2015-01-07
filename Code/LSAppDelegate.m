@@ -409,14 +409,14 @@ void LSTestResetConfiguration(void)
 - (void)loadContacts
 {
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
-        if (contacts) {
-            NSError *persistenceError;
-            BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
-            if (!success) {
-                LSAlertWithError(persistenceError);
-            }
-        } else {
+        if (error) {
             LSAlertWithError(error);
+            return;
+        }
+        NSError *persistenceError;
+        BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
+        if (!success) {
+            LSAlertWithError(persistenceError);
         }
     }];
 }
