@@ -52,8 +52,6 @@ void LSTestResetConfiguration(void)
 
 @implementation LSAppDelegate
 
-@synthesize window;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration

@@ -12,6 +12,8 @@
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 
+@property (nonatomic) UIWindow *window;
+
 @property (nonatomic) LSApplicationController *applicationController;
 
 @property (nonatomic) LSUIConversationListViewController *viewController;
