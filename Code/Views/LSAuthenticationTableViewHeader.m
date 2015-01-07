@@ -12,7 +12,7 @@
 @interface LSAuthenticationTableViewHeader ()
 
 @property (nonatomic) UIImageView *logoView;
-@property (nonatomic) UITextView *textView;
+@property (nonatomic) UILabel *taglineLabel;
 
 @end
 
@@ -25,28 +25,33 @@
         self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
         self.logoView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.logoView];
-        self.textView = [[UITextView alloc] init];
-        self.textView.editable = NO;
-        self.textView.translatesAutoresizingMaskIntoConstraints = NO;
-        self.textView.textAlignment = NSTextAlignmentCenter;
-        self.textView.backgroundColor = [UIColor clearColor];
-        self.textView.text = @"The open communications platform for the internet.";
-        self.textView.font = LYRUIMediumFont(12);
-        [self addSubview:self.textView];
-        [self updateConstraints];
+
+        self.taglineLabel = [[UILabel alloc] init];
+        self.taglineLabel.numberOfLines = 0;
+        self.taglineLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.taglineLabel.textAlignment = NSTextAlignmentCenter;
+        self.taglineLabel.backgroundColor = [UIColor clearColor];
+        self.taglineLabel.text = @"The open communications platform\nfor the internet.";
+        self.taglineLabel.font = LYRUIMediumFont(12);
+        [self addSubview:self.taglineLabel];
+
+        [self setUpConstraints];
     }
     return self;
 }
 
+#pragma mark - Accessors
+
 - (void)setShowsContent:(BOOL)showsContent
 {
-    if (!showsContent) {
-        self.logoView.alpha = 0.0;
-        self.textView.alpha = 0.0;
-    }
+    _showsContent = showsContent;
+    self.logoView.alpha = showsContent ? 1.0 : 0.0;
+    self.taglineLabel.alpha = showsContent ? 1.0 : 0.0;
 }
 
-- (void)updateConstraints
+#pragma mark - Constraints
+
+- (void)setUpConstraints
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.logoView
                                                      attribute:NSLayoutAttributeCenterX
@@ -64,7 +69,7 @@
                                                     multiplier:1.0
                                                       constant:0]];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textView
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.taglineLabel
                                                      attribute:NSLayoutAttributeCenterX
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
@@ -72,30 +77,13 @@
                                                     multiplier:1.0
                                                       constant:0]];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textView
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.taglineLabel
                                                      attribute:NSLayoutAttributeCenterY
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
                                                      attribute:NSLayoutAttributeCenterY
                                                     multiplier:1.0
                                                       constant:48]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textView
-                                                     attribute:NSLayoutAttributeHeight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:nil
-                                                     attribute:NSLayoutAttributeNotAnAttribute
-                                                    multiplier:1.0
-                                                      constant:40]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textView
-                                                     attribute:NSLayoutAttributeWidth
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:nil
-                                                     attribute:NSLayoutAttributeNotAnAttribute
-                                                    multiplier:1.0
-                                                      constant:210]];
-    [super updateConstraints];
 }
 
 @end

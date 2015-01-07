@@ -21,12 +21,10 @@
 
 static NSString *const LSLoginText = @"Login To Layer";
 static NSString *const LSRegisterText = @"Create Account";
-static NSString *const LSCancelText = @"Or, Cancel";
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    
     if (self) {
         self.primaryActionButton = [[UIButton alloc] init];
         [self.primaryActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -36,7 +34,7 @@ static NSString *const LSCancelText = @"Or, Cancel";
         self.primaryActionButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.primaryActionButton.backgroundColor = LYRUIBlueColor();
         self.primaryActionButton.layer.cornerRadius = 4;
-        self.primaryActionButton.clipsToBounds = TRUE;
+        self.primaryActionButton.clipsToBounds = YES;
         [self.primaryActionButton addTarget:self action:@selector(primaryActionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.primaryActionButton];
         
@@ -52,6 +50,7 @@ static NSString *const LSCancelText = @"Or, Cancel";
         [self addSubview:self.secondaryActionButton];
         
         self.environmentButton = [[UIButton alloc] init];
+        [self.environmentButton setTitle:@"Change Environment" forState:UIControlStateNormal];
         [self.environmentButton setTitleColor:LYRUIBlueColor() forState:UIControlStateNormal];
         [self.environmentButton setTitleColor:LYRUIBlueColor() forState:UIControlStateHighlighted];
         self.environmentButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -64,12 +63,14 @@ static NSString *const LSCancelText = @"Or, Cancel";
         [self.environmentButton addTarget:self action:@selector(environmentButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.environmentButton];
         
-        [self updateConstraints];
+        [self setUpConstraints];
     }
     return self;
 }
 
-- (void)updateConstraints
+#pragma mark - Constraints
+
+- (void)setUpConstraints
 {
     //********** Primary Button **********//
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.primaryActionButton
@@ -169,9 +170,9 @@ static NSString *const LSCancelText = @"Or, Cancel";
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
                                                       constant:40]];
-    
-    [super updateConstraints];
 }
+
+#pragma mark - Accessors
 
 - (void)setAuthenticationState:(LSAuthenticationState)authenticationState
 {
@@ -185,13 +186,11 @@ static NSString *const LSCancelText = @"Or, Cancel";
             [self.primaryActionButton setTitle:LSLoginText forState:UIControlStateNormal];
             [self.secondaryActionButton setTitle:LSRegisterText forState:UIControlStateNormal];
             break;
-            
-        default:
-            break;
     }
-    [self.environmentButton setTitle:@"Change Environment" forState:UIControlStateNormal];
     _authenticationState = authenticationState;
 }
+
+#pragma mark - Actions
 
 - (void)primaryActionButtonTapped
 {
@@ -204,12 +203,13 @@ static NSString *const LSCancelText = @"Or, Cancel";
         self.primaryActionButton.titleLabel.alpha = 0.0;
         self.secondaryActionButton.titleLabel.alpha = 0.0;
     } completion:^(BOOL finished) {
+        if (!finished) return;
+        if (self.authenticationState == LSAuthenticationStateLogin) {
+            self.authenticationState = LSAuthenticationStateRegister;
+        } else {
+            self.authenticationState = LSAuthenticationStateLogin;
+        }
         [UIView animateWithDuration:0.4 animations:^{
-            if (self.authenticationState == LSAuthenticationStateLogin) {
-                [self setAuthenticationState:LSAuthenticationStateRegister];
-            } else {
-                [self setAuthenticationState:LSAuthenticationStateLogin];
-            }
             self.primaryActionButton.titleLabel.alpha = 1.0;
             self.secondaryActionButton.titleLabel.alpha = 1.0;
             [self.delegate authenticationTableViewFooter:self secondaryActionButtonTappedWithAuthenticationState:self.authenticationState];

@@ -21,7 +21,6 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
         _textField = [[UITextField alloc] init];
         _textField.translatesAutoresizingMaskIntoConstraints = NO;
         _textField.returnKeyType = UIReturnKeyDone;
@@ -36,28 +35,68 @@
         [self.contentView addSubview:_guideLabel];
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+
+        [self setUpConstraints];
     }
     
-    [self updateConstraints];
     return self;
 }
-- (void)updateConstraints
+
+- (void)setUpConstraints
 {
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.guideLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:10]];
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.guideLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.guideLabel
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeLeft
+                                                                multiplier:1.0
+                                                                  constant:10]];
+
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.guideLabel
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.0
+                                                                  constant:0]];
     
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.guideLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:10]];
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-    
-    [super updateConstraints];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField
+                                                                 attribute:NSLayoutAttributeRight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:-10]];
+
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField 
+                                                                 attribute:NSLayoutAttributeLeft 
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.guideLabel
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:10]];
+
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField
+                                                                 attribute:NSLayoutAttributeTop
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeTop
+                                                                multiplier:1.0
+                                                                  constant:0]];
+
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                multiplier:1.0
+                                                                  constant:0]];
 }
 
 - (void)setGuideText:(NSString *)guideText
 {
     self.guideLabel.text = guideText;
     self.guideLabel.accessibilityLabel = guideText;
-    [self.guideLabel sizeToFit];
 }
 
 - (void)setPlaceHolderText:(NSString *)placeHolderText

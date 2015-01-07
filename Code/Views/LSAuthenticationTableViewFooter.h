@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum{
+typedef NS_ENUM(NSInteger, LSAuthenticationState) {
     LSAuthenticationStateRegister,
     LSAuthenticationStateLogin
-}LSAuthenticationState;
+};
 
 @class LSAuthenticationTableViewFooter;
 
@@ -27,7 +27,7 @@ typedef enum{
 
 @interface LSAuthenticationTableViewFooter : UIView
 
-@property (nonatomic, weak) id<LSAuthenticationTableViewFooterDelegate>delegate;
+@property (nonatomic, weak) id<LSAuthenticationTableViewFooterDelegate> delegate;
 
 @property (nonatomic) LSAuthenticationState authenticationState;
 
