@@ -51,14 +51,6 @@ void LYRUITestResetConfiguration(void)
 
 @end
 
-@interface LYRClient ()
-
-@property (nonatomic) NSURL *configurationURL;
-
-- (void)refreshConfiguration;
-
-@end
-
 @implementation LSAppDelegate
 
 @synthesize window;
