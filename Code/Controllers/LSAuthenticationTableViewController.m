@@ -70,6 +70,13 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSAuthenticationCellIdentifier];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+}
+
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
     if (self.isEditing == editing) return;
