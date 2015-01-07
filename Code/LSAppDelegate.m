@@ -55,46 +55,25 @@ void LYRUITestResetConfiguration(void)
 
 @synthesize window;
 
-// Fake Commit to build an app
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup environment configuration
     if (!LSIsRunningTests()) {
         [self configureApplication:application forEnvironment:LYRUIProduction];
-        LYRSetLogLevelFromEnvironment();
         [self initializeCrashlytics];
         [self initializeHockeyApp];
     } else {
         [self removeSplashView];
     }
-
-    // Setup notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(userDidAuthenticateNotification:)
-                                                 name:LSUserDidAuthenticateNotification
-                                               object:nil];
     
-    [[NSNotificationCenter defaultCenter]  addObserver:self
-                                              selector:@selector(userDidAuthenticateWithLayerNotification:)
-                                                  name:LYRClientDidAuthenticateNotification
-                                                object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(userDidDeauthenticateNotification:)
-                                                 name:LSUserDidDeauthenticateNotification
-                                               object:nil];
-    // Setup application
+    // Set root view controller
     [self setRootViewController];
     
-    // Setup SDKs
-    [self initializeCrashlytics];
-    [self initializeHockeyApp];
-    
-    // Setup Screenshot Listener for Bugs
-    [self setupScreenShotListener];
-
     // Configure Sample App UI Appearance
     [self configureGlobalUserInterfaceAttributes];
+    
+    // Setup notifications
+    [self registerNotificationObservers];
     
     // ConversationListViewController Config
     _cellClass = [LYRUIConversationTableViewCell class];
@@ -116,7 +95,6 @@ void LYRUITestResetConfiguration(void)
             [self navigateToViewForConversation:conversation];
         }];
     }
-    
     return YES;
 }
 
@@ -135,30 +113,6 @@ void LYRUITestResetConfiguration(void)
     }
 }
 
-- (void)setApplicationBadgeNumber
-{
-    NSUInteger countOfUnreadMessages = [self.applicationController.layerClient countOfUnreadMessages];
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
-}
-
-#pragma mark - Setup Methods
-
-- (void)setRootViewController
-{
-    self.authenticationViewController = [LSAuthenticationTableViewController new];
-    self.authenticationViewController.applicationController = self.applicationController;
-    self.authenticationViewController.delegate = self;
-    
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
-    self.navigationController.navigationBarHidden = TRUE;
-    self.navigationController.navigationBar.barTintColor = LYRUILightGrayColor();
-    self.navigationController.navigationBar.tintColor = LYRUIBlueColor();
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = self.navigationController;
-    [self.window makeKeyAndVisible];
-    
-    [self addSplashView];
-}
 
 - (void)configureApplication:(UIApplication *)application forEnvironment:(LSEnvironment)environment
 {
@@ -172,6 +126,7 @@ void LYRUITestResetConfiguration(void)
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     LYRUITestResetConfiguration();
+    LYRSetLogLevelFromEnvironment();
     
     // Configure application controllers
     LSLayerClient *client = [LSLayerClient clientWithAppID:LSLayerAppID(self.environment)];
@@ -211,6 +166,48 @@ void LYRUITestResetConfiguration(void)
         return YES;
     }
     return NO;
+}
+
+#pragma mark - Setup Methods
+
+- (void)setRootViewController
+{
+    self.authenticationViewController = [LSAuthenticationTableViewController new];
+    self.authenticationViewController.applicationController = self.applicationController;
+    self.authenticationViewController.delegate = self;
+    
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
+    self.navigationController.navigationBarHidden = TRUE;
+    self.navigationController.navigationBar.barTintColor = LYRUILightGrayColor();
+    self.navigationController.navigationBar.tintColor = LYRUIBlueColor();
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.rootViewController = self.navigationController;
+    [self.window makeKeyAndVisible];
+    
+    [self addSplashView];
+}
+
+- (void)registerNotificationObservers
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userDidAuthenticateNotification:)
+                                                 name:LSUserDidAuthenticateNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter]  addObserver:self
+                                              selector:@selector(userDidAuthenticateWithLayerNotification:)
+                                                  name:LYRClientDidAuthenticateNotification
+                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userDidDeauthenticateNotification:)
+                                                 name:LSUserDidDeauthenticateNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(screenshotTaken:)
+                                                 name:UIApplicationUserDidTakeScreenshotNotification
+                                               object:nil];
 }
 
 #pragma mark - Push Notification Setup and Handlers
@@ -362,23 +359,11 @@ void LYRUITestResetConfiguration(void)
     [Crashlytics setUserIdentifier:authenticatedUser.userID];
 }
 
-#pragma mark - Screen Shot Listener
-
-- (void)setupScreenShotListener
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(screenshotTaken:)
-                                                 name:UIApplicationUserDidTakeScreenshotNotification
-                                               object:nil];
-}
-
 #pragma mark - Authentication Methods
 
 - (void)userDidAuthenticateWithLayerNotification:(NSNotification *)notification
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self presentConversationsListViewController];
-    });
+    [self presentConversationsListViewController];
 }
 
 - (void)userDidAuthenticateNotification:(NSNotification *)notification
@@ -433,7 +418,6 @@ void LYRUITestResetConfiguration(void)
             LSAlertWithError(error);
         }
     }];
-
 }
 
 - (void)presentConversationsListViewController
@@ -493,7 +477,8 @@ void LYRUITestResetConfiguration(void)
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LYRUIBlueColor()];
 }
 
-#pragma mark - Screen Shot Handler
+#pragma mark - Screen Shot Handler Methods
+
 - (void)screenshotTaken:(NSNotification *)notification
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Report Issue?"
@@ -505,13 +490,8 @@ void LYRUITestResetConfiguration(void)
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    switch (buttonIndex) {
-        case 1: {
-            [self presentMailComposer];
-        }
-            break;
-        default:
-            break;
+    if (buttonIndex == 1) {
+        [self presentMailComposer];
     }
 }
 
@@ -566,5 +546,14 @@ void LYRUITestResetConfiguration(void)
     }
     [self configureApplication:[UIApplication sharedApplication] forEnvironment:environment];
 }
+
+#pragma mark - Application Badge Setter 
+
+- (void)setApplicationBadgeNumber
+{
+    NSUInteger countOfUnreadMessages = [self.applicationController.layerClient countOfUnreadMessages];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
+}
+
 
 @end
