@@ -40,12 +40,16 @@
     return self;
 }
 
+#pragma mark - Accessors
+
 - (void)setShowsContent:(BOOL)showsContent
 {
     _showsContent = showsContent;
     self.logoView.alpha = showsContent ? 1.0 : 0.0;
     self.taglineLabel.alpha = showsContent ? 1.0 : 0.0;
 }
+
+#pragma mark - Constraints
 
 - (void)setUpConstraints
 {
