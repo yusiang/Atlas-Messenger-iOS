@@ -205,7 +205,7 @@ void LYRUITestResetConfiguration(void)
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(screenshotTaken:)
+                                             selector:@selector(screenshotNotification:)
                                                  name:UIApplicationUserDidTakeScreenshotNotification
                                                object:nil];
 }
@@ -479,7 +479,7 @@ void LYRUITestResetConfiguration(void)
 
 #pragma mark - Screen Shot Handler Methods
 
-- (void)screenshotTaken:(NSNotification *)notification
+- (void)screenshotNotification:(NSNotification *)notification
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Report Issue?"
                                                         message:@"Would you like to report a bug with the sample app?"
