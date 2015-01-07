@@ -7,21 +7,20 @@
 //
 
 #import <LayerKit/LayerKit.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <HockeySDK/HockeySDK.h>
+#import <LayerUIKit/LayerUIKit.h>
+#import <MessageUI/MessageUI.h>
 #import "LSAppDelegate.h"
 #import "LSUIConversationListViewController.h"
 #import "LSAPIManager.h"
 #import "LSUtilities.h"
-#import "LYRUIMessagingUtilities.h"
 #import "LYRUIConstants.h"
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
-#import <HockeySDK/HockeySDK.h>
 #import "LSAuthenticationTableViewController.h"
 #import "LSSplashView.h"
 #import "LSLocalNotificationUtilities.h"
 #import "LSPartnerAPIManager.h"
-#import <MessageUI/MessageUI.h> 
-#import <LayerUIKit/LayerUIKit.h>
 #import "SVProgressHUD.h" 
 
 extern void LYRSetLogLevelFromEnvironment();
