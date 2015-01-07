@@ -426,9 +426,7 @@ void LSTestResetConfiguration(void)
 - (void)presentConversationsListViewController:(BOOL)animated
 {
     if (!LSIsRunningTests()) {
-        if (self.window.rootViewController.presentedViewController) {
-            return;
-        }
+        if (self.conversationListViewController) return;
 
         self.conversationListViewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
         self.conversationListViewController.applicationController = self.applicationController;
