@@ -71,6 +71,10 @@ void LYRTestResetConfiguration(void)
                                              selector:@selector(userDidAuthenticateNotification:)
                                                  name:LSUserDidAuthenticateNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(layerClientDidAuthenticate:)
+                                                 name:LYRClientDidAuthenticateNotification
+                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidDeauthenticateNotification:)
@@ -385,6 +389,10 @@ void LYRTestResetConfiguration(void)
     [self updateCrashlyticsWithUser:session.user];
     
     [self loadContacts];
+}
+
+- (void)layerClientDidAuthenticate:(NSNotification *)notification
+{
     [self presentConversationsListViewController:YES];
 }
 
