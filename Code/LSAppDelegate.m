@@ -499,17 +499,16 @@ void LSTestResetConfiguration(void)
 {
     LYRUILastPhotoTaken(^(UIImage *image, NSError *error) {
         if (error) {
-            LSAlertWithError(error);
             return;
         } else {
             NSString *emailSubject = @"New iOS Sample App Bug!";
             NSString *emailBody = @"Please enter your bug description below";
             
-            self.mailComposeViewController = [[MFMailComposeViewController alloc] init];
+            self.mailComposeViewController = [MFMailComposeViewController new];
             self.mailComposeViewController.mailComposeDelegate = self;
             [self.mailComposeViewController setSubject:emailSubject];
             [self.mailComposeViewController setMessageBody:emailBody isHTML:NO];
-            [self.mailComposeViewController setToRecipients:@[@"kevin@layer.com, support@layer.com"]];
+            [self.mailComposeViewController setToRecipients:@[@"kevin@layer.com", @"jira@layer.com"]];
             [self.mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
             
             UIViewController *controller = self.window.rootViewController;
