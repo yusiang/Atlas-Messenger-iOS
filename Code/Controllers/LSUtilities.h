@@ -46,7 +46,3 @@ NSString *MIMETypeTextPlain();
 NSString *MIMETypeImagePNG();
 
 NSString *MIMETypeImageJPEG();
-
-CGSize LYRUITextPlainSize(NSString *string);
-
-CGSize LYRUIImageSize(UIImage *image);
