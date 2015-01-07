@@ -78,10 +78,18 @@
                                                                   constant:10]];
 
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField
-                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 attribute:NSLayoutAttributeTop
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 attribute:NSLayoutAttributeTop
+                                                                multiplier:1.0
+                                                                  constant:0]];
+
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeHeight
                                                                 multiplier:1.0
                                                                   constant:0]];
 }
