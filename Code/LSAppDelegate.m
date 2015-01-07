@@ -312,7 +312,7 @@ void LSTestResetConfiguration(void)
     if (![NSThread isMainThread]) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Attempted to navigate UI from non-main thread" userInfo:nil];
     }
-    [self.viewController selectConversation:conversation];
+    [self.conversationListViewController selectConversation:conversation];
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
@@ -398,7 +398,7 @@ void LSTestResetConfiguration(void)
     }
     
     [self.navigationController dismissViewControllerAnimated:YES completion:^{
-        self.viewController = nil;
+        self.conversationListViewController = nil;
         self.authenticatedNavigationController = nil;
     }];
 }
@@ -428,15 +428,15 @@ void LSTestResetConfiguration(void)
             return;
         }
 
-        self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
-        self.viewController.applicationController = self.applicationController;
-        self.viewController.displaysConversationImage = self.displaysConversationImage;
-        self.viewController.cellClass = self.cellClass;
-        self.viewController.rowHeight = self.rowHeight;
-        self.viewController.allowsEditing = self.allowsEditing;
-        self.viewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
+        self.conversationListViewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
+        self.conversationListViewController.applicationController = self.applicationController;
+        self.conversationListViewController.displaysConversationImage = self.displaysConversationImage;
+        self.conversationListViewController.cellClass = self.cellClass;
+        self.conversationListViewController.rowHeight = self.rowHeight;
+        self.conversationListViewController.allowsEditing = self.allowsEditing;
+        self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
         
-        self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+        self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
         [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
             [self.authenticationViewController resetState];
             [self removeSplashView];
