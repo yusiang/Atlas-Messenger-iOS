@@ -285,11 +285,6 @@ void LYRUITestResetConfiguration(void)
         if (fetchResult == UIBackgroundFetchResultFailed) {
             NSLog(@"Failed processing remote notification: %@", error);
         }
-        LYRMessage *message = [self.applicationController.layerClient messageForIdentifier:[userInfo valueForKeyPath:@"aps.objectIdentifier"]];
-        if (message) {
-            
-        }
-        
         // Try navigating once the synchronization completed
         if (userTappedRemoteNotification && !conversation) {
             conversation = [self conversationFromRemoteNotification:userInfo];
