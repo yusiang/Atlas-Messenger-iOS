@@ -44,6 +44,7 @@ void LSTestResetConfiguration(void)
 @property (nonatomic) UINavigationController *navigationController;
 @property (nonatomic) UINavigationController *authenticatedNavigationController;
 @property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
+@property (nonatomic) LSUIConversationListViewController *conversationListViewController;
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
 @property (nonatomic) LSLocalNotificationUtilities *localNotificationUtilities;

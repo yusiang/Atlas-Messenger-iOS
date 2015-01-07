@@ -16,8 +16,6 @@
 
 @property (nonatomic) LSApplicationController *applicationController;
 
-@property (nonatomic) LSUIConversationListViewController *conversationListViewController;
-
 //------------------------------------
 // Conversation List VC Test Config
 //------------------------------------
