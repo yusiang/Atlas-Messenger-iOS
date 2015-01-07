@@ -83,14 +83,15 @@ void LSTestResetConfiguration(void)
     
     // Connect to Layer and boot the UI
     BOOL deauthenticateAfterConnection = NO;
+    BOOL resumingSession = NO;
     if (self.applicationController.layerClient.authenticatedUserID) {
         if ([self resumeSession]) {
+            resumingSession = YES;
             [self presentConversationsListViewController:NO];
         } else {
             deauthenticateAfterConnection = YES;
         }
     }
-    [self removeSplashView];
     
     // Connect Layer SDK
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
@@ -101,6 +102,9 @@ void LSTestResetConfiguration(void)
             }
         } else {
             NSLog(@"Error connecting Layer: %@", error);
+        }
+        if (!resumingSession) {
+            [self removeSplashView];
         }
     }];
     
@@ -424,7 +428,6 @@ void LSTestResetConfiguration(void)
 {
     if (!LSIsRunningTests()) {
         if (self.window.rootViewController.presentedViewController) {
-            [self removeSplashView];
             return;
         }
 
