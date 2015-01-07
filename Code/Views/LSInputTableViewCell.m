@@ -90,7 +90,6 @@
 {
     self.guideLabel.text = guideText;
     self.guideLabel.accessibilityLabel = guideText;
-    [self.guideLabel sizeToFit];
 }
 
 - (void)setPlaceHolderText:(NSString *)placeHolderText
