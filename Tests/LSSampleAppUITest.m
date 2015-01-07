@@ -18,7 +18,17 @@
 #import "LYRUITestUser.h"
 #import "LYRUITestInterface.h"
 #import "LYRUILayerContentFactory.h"
+#import "LYRTestUtilities.h"
+#import "LYRTestingContext.h"
+#import "LSUIConversationViewController.h"
 
+@interface LYRClient ()
+
+@property (nonatomic) LYRSession *session;
+
+- (void)synchronizeWithCompletion:(void(^)())completion;
+
+@end
 
 @interface LSSampleAppUITest : KIFTestCase
 
@@ -538,6 +548,179 @@ static NSString *const LSRegisterText = @"Create Account";
 //}
 //
 //======== Factory Methods =========//
+
+- (void)testThatSendingNewMessageFromSecondClientCausesConversationListToUpdate
+{
+    LYRClient *client2 = [LYRClient clientWithAppID:self.layerClient.appID];
+    LYRClient *client3 = [LYRClient clientWithAppID:self.layerClient.appID];
+    NSArray *clients = @[self.layerClient, client2, client3];
+    LYRTestConnectAndAuthenticateClients(clients);
+    
+    // Load the view up
+    LSUIConversationListViewController *controller = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.layerClient];
+    UIViewController *baseController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [baseController presentViewController:navigationController animated:YES completion:nil];
+    
+    NSSet *participants = [NSSet setWithObjects:client2.authenticatedUserID, client3.authenticatedUserID, nil];
+    LYRConversation *conversation = [self.layerClient newConversationWithParticipants:participants options:nil error:nil];
+    expect(conversation).notTo.beNil();
+    [tester waitForViewWithAccessibilityLabel:@"Messages"];
+    
+    // TODO: Seed with 50 messages
+    for (int i = 0; i < 3; i++) {
+        int clientIndex = arc4random_uniform((int)clients.count);
+        LYRClient *client = [clients objectAtIndex:clientIndex];
+        [self sendMessageFromClient:client toConversation:conversation];
+        LYRTestWaitForSyncNotificationFromClientWithBlock(self.layerClient, ^{
+            
+        });
+    }
+    [tester waitForViewWithAccessibilityLabel:@"No Matching Participants"];
+    [tester tapViewWithAccessibilityLabel:@"No Matching Participants"];
+    
+    
+    dispatch_group_t dispatchGroup = dispatch_group_create();
+    dispatch_queue_t dispatchQueue = dispatch_queue_create(NULL, DISPATCH_QUEUE_CONCURRENT);
+    NSMutableArray *clientQueues = [NSMutableArray arrayWithCapacity:clients.count];
+    for (NSUInteger i=0; i<10; i++) {
+        dispatch_queue_t clientQueue = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL);
+        [clientQueues addObject:clientQueue];
+    }
+    
+    dispatch_source_t dispatchSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    uint64_t interval = (uint64_t)(1.0 * NSEC_PER_SEC);
+    dispatch_time_t startTime = dispatch_time(DISPATCH_TIME_NOW, interval);
+    dispatch_source_set_timer(dispatchSource, startTime, interval, 1.0);
+    dispatch_source_set_event_handler(dispatchSource, ^{
+        //[self leaveAndReturnToConversation:conversation];
+    });
+    
+    for (NSUInteger i=0; i<1000; i++) {
+        dispatch_async(dispatchQueue, ^{
+            // Select random client
+            int clientIndex = arc4random_uniform((int)clients.count);
+            LYRClient *client = clients[clientIndex];
+            
+            dispatch_queue_t clientQueue = clientQueues[clientIndex];
+            // synchronize, send message, mark message as read, delete message
+            dispatch_group_enter(dispatchGroup);
+            dispatch_async(clientQueue, ^{
+                int operation = arc4random_uniform(2);
+                switch (operation) {
+                    case 0: // Send message
+                        NSLog(@"CLIENT ID IS %@", client.authenticatedUserID);
+                        //NSLog(@"Executing Insert operation number %lu for client %d", (unsigned long)i, clientIndex);
+                        [self sendMessageFromClient:client2 toConversation:[self conversationWithIdentifier:conversation.identifier forClient:client2]];
+                        break;
+                        
+                    case 1:  {// Query for unread message and mark as read
+                        //NSLog(@"Executing Update operation number %lu", (unsigned long)i);
+                        LYRMessage *message = [self fetchUnreadMessageFromConversation:[self conversationWithIdentifier:conversation.identifier forClient:client]];
+                        NSError *error;
+                        BOOL success = [message markAsRead:&error];
+                        expect(success).to.beTruthy;
+                        expect(error).to.beNil;
+                    }
+                        break;
+                        
+                    case 2:  {// Query for a message and delete it
+                        //NSLog(@"Executing Delete operation number %lu", (unsigned long)i);
+                        LYRMessage *message = [self fetchUnreadMessageFromConversation:[self conversationWithIdentifier:conversation.identifier forClient:client]];
+                        NSError *error;
+                        BOOL success = [message delete:LYRDeletionModeAllParticipants error:&error];
+                        expect(success).to.beTruthy;
+                        expect(error).to.beNil;
+                    }
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
+                [client synchronizeWithCompletion:^{
+                    dispatch_group_leave(dispatchGroup);
+                }];
+            });
+        });
+    }
+    dispatch_resume(dispatchSource);
+    
+    __block BOOL isWaiting = YES;
+    dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^{
+        isWaiting = NO;
+    });
+    
+    [tester runBlock:^KIFTestStepResult(NSError *__autoreleasing *error) {
+        return isWaiting ? KIFTestStepResultWait : KIFTestStepResultSuccess;
+    } timeout:800];
+    [tester waitForAnimationsToFinish];
+}
+
+- (void)leaveAndReturnToConversation:(LYRConversation *)conversation
+{
+    UINavigationController *controller = (UINavigationController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController].presentedViewController;
+    [controller popToRootViewControllerAnimated:TRUE];
+    LSUIConversationViewController *conversationViewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.layerClient];
+    conversationViewController.applicationContoller = self.testInterface.applicationController;
+    conversationViewController.showsAddressBar = YES;
+    if ([controller.viewControllers[0] isKindOfClass:[LSUIConversationListViewController class]]) {
+        [controller pushViewController:conversationViewController animated:YES];
+    }
+}
+
+- (void)sendMessageFromClient:(LYRClient *)client toConversation:(LYRConversation *)conversation
+{
+    NSError *error = nil;
+    LYRMessagePart *part = [LYRMessagePart messagePartWithText:@"test message"];
+    LYRMessage *message1 = [client newMessageWithParts:@[part] options:nil error:&error];
+    BOOL success = [conversation sendMessage:message1 error:&error];
+    NSLog(@"MEssage Sent by userID %@", message1.sentByUserID);
+    expect(success).to.beTruthy();
+}
+
+- (LYRConversation *)conversationWithIdentifier:(NSURL *)identifier forClient:(LYRClient *)layerClient
+{
+    LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
+    query.predicate = [LYRPredicate predicateWithProperty:@"identifier" operator:LYRPredicateOperatorIsEqualTo value:identifier];
+    NSError *error;
+    NSOrderedSet *conversations = [layerClient executeQuery:query error:&error];
+    expect(error).to.beNil;
+    expect(conversations.count).to.beTruthy;
+    return conversations[0];
+}
+
+- (LYRMessage *)fetchMessageFromConversation:(LYRConversation *)conversation
+{
+    LYRQuery *query = [LYRQuery queryWithClass:[LYRMessage class]];
+    query.predicate = [LYRPredicate predicateWithProperty:@"conversation" operator:LYRPredicateOperatorIsEqualTo value:conversation];
+    
+    NSError *error;
+    NSOrderedSet *messages = [self.layerClient executeQuery:query error:&error];
+    expect(error).to.beNil;
+    if (messages.count) {
+        return messages[0];
+    } else {
+        return nil;
+    }
+}
+
+- (LYRMessage *)fetchUnreadMessageFromConversation:(LYRConversation *)conversation
+{
+    LYRQuery *query = [LYRQuery queryWithClass:[LYRMessage class]];
+    LYRPredicate *unreadPredicate = [LYRPredicate predicateWithProperty:@"isUnread" operator:LYRPredicateOperatorIsEqualTo value:@(YES)];
+    LYRPredicate *conversationPredicate = [LYRPredicate predicateWithProperty:@"conversation" operator:LYRPredicateOperatorIsEqualTo value:conversation];
+    query.predicate = [LYRCompoundPredicate compoundPredicateWithType:LYRCompoundPredicateTypeAnd subpredicates:@[unreadPredicate, conversationPredicate]];
+    
+    NSError *error;
+    NSOrderedSet *messages = [self.layerClient executeQuery:query error:&error];
+    expect(error).to.beNil;
+    if (messages.count) {
+        return messages[0];
+    } else {
+        return nil;
+    }
+}
 
 #pragma mark
 #pragma mark Test User Registration and Login Methods
