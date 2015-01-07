@@ -22,6 +22,7 @@
 #import "LSLocalNotificationUtilities.h"
 #import "SVProgressHUD.h" 
 
+static NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
 extern void LYRSetLogLevelFromEnvironment();
 extern NSString *LYRApplicationDataDirectory(void);
 extern dispatch_once_t LYRConfigurationURLOnceToken;
@@ -142,9 +143,10 @@ void LSTestResetConfiguration(void)
     
     // Configure Layer base URL
     NSString *configURLString = LSLayerConfigurationURL(self.environment);
-    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    NSString *configKey = LSUserDefaultsLayerConfigurationURLKey;
+    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:configKey];
     if (![currentConfigURL isEqualToString:configURLString]) {
-        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:@"LAYER_CONFIGURATION_URL"];
+        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:configKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     LSTestResetConfiguration();
