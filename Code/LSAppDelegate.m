@@ -41,7 +41,6 @@ void LSTestResetConfiguration(void)
 
 @interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
-@property (nonatomic) UINavigationController *navigationController;
 @property (nonatomic) UINavigationController *authenticatedNavigationController;
 @property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
 @property (nonatomic) LSUIConversationListViewController *conversationListViewController;
@@ -184,13 +183,9 @@ void LSTestResetConfiguration(void)
     self.authenticationViewController = [LSAuthenticationTableViewController new];
     self.authenticationViewController.applicationController = self.applicationController;
     self.authenticationViewController.delegate = self;
-    
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
-    self.navigationController.navigationBar.barTintColor = LYRUILightGrayColor();
-    self.navigationController.navigationBar.tintColor = LYRUIBlueColor();
 
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.rootViewController = self.navigationController;
+    self.window.rootViewController = self.authenticationViewController;
     [self.window makeKeyAndVisible];
     
     [self addSplashView];
@@ -407,7 +402,7 @@ void LSTestResetConfiguration(void)
         LSAlertWithError(error);
     }
     
-    [self.navigationController dismissViewControllerAnimated:YES completion:^{
+    [self.authenticationViewController dismissViewControllerAnimated:YES completion:^{
         self.conversationListViewController = nil;
         self.authenticatedNavigationController = nil;
     }];
@@ -446,7 +441,7 @@ void LSTestResetConfiguration(void)
         self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
         
         self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
-        [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
+        [self.authenticationViewController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
             [self.authenticationViewController resetState];
             [self removeSplashView];
         }];
