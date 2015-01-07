@@ -412,9 +412,7 @@ void LSTestResetConfiguration(void)
         if (contacts) {
             NSError *persistenceError;
             BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
-            if (success) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"contactsPersited" object:nil];
-            } else {
+            if (!success) {
                 LSAlertWithError(persistenceError);
             }
         } else {
