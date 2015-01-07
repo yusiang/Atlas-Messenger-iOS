@@ -368,7 +368,7 @@ void LSTestResetConfiguration(void)
 
 - (void)userDidAuthenticateNotification:(NSNotification *)notification
 {
-    NSError *error = nil;
+    NSError *error;
     LSSession *session = self.applicationController.APIManager.authenticatedSession;
     BOOL success = [self.applicationController.persistenceManager persistSession:session error:&error];
     if (success) {
@@ -384,7 +384,7 @@ void LSTestResetConfiguration(void)
 
 - (void)userDidDeauthenticateNotification:(NSNotification *)notification
 {
-    NSError *error = nil;
+    NSError *error;
     BOOL success = [self.applicationController.persistenceManager persistSession:nil error:&error];
     
     // Clear out all Crashlytics user information.
@@ -407,7 +407,7 @@ void LSTestResetConfiguration(void)
 {
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
         if (contacts) {
-            NSError *persistenceError = nil;
+            NSError *persistenceError;
             BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
             if (success) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"contactsPersited" object:nil];
