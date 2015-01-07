@@ -317,17 +317,19 @@ void LSTestResetConfiguration(void)
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
+    if (application.applicationState != UIApplicationStateInactive) return;
+
     LYRConversation *conversation;
     NSURL *objectURL = [NSURL URLWithString:notification.userInfo[LSNotificationIdentifierKey]];
     NSString *objectTypeString = notification.userInfo[LSNotificationClassTypeKey];
-    
     if ([objectTypeString isEqualToString:LSNotificationClassTypeConversation]) {
         conversation = [self.applicationController.layerClient conversationForIdentifier:objectURL];
     } else {
         LYRMessage *message = [self.applicationController.layerClient messageForIdentifier:objectURL];
         conversation = message.conversation;
     }
-    if (application.applicationState == UIApplicationStateInactive && conversation) {
+
+    if (conversation) {
         [self navigateToViewForConversation:conversation];
     }
 }
