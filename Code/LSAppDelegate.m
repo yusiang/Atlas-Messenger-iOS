@@ -367,6 +367,12 @@ void LSTestResetConfiguration(void)
 
 - (void)userDidAuthenticateWithLayer:(NSNotification *)notification
 {
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self userDidAuthenticateWithLayer:notification];
+        });
+        return;
+    }
     [self presentConversationsListViewController:YES];
 }
 
