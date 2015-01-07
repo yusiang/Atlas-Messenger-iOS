@@ -54,7 +54,7 @@ void LSTestResetConfiguration(void)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Setup environment configuration
+    // Set up environment configuration
     if (!LSIsRunningTests()) {
         [self configureApplication:application forEnvironment:LYRUIProduction];
         [self initializeCrashlytics];
@@ -66,13 +66,13 @@ void LSTestResetConfiguration(void)
     // Set root view controller
     [self setRootViewController];
     
-    // Configure Sample App UI Appearance
+    // Configure sample app UI appearance
     [self configureGlobalUserInterfaceAttributes];
     
     // Setup notifications
     [self registerNotificationObservers];
     
-    // ConversationListViewController Config
+    // Conversation list view controller config
     _cellClass = [LYRUIConversationTableViewCell class];
     _rowHeight = 72;
     _allowsEditing = YES;
@@ -140,7 +140,7 @@ void LSTestResetConfiguration(void)
 {
     self.environment = environment;
     
-    // Configure Layer Base URL
+    // Configure Layer base URL
     NSString *configURLString = LSLayerConfigurationURL(self.environment);
     NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
     if (![currentConfigURL isEqualToString:configURLString]) {
@@ -217,7 +217,7 @@ void LSTestResetConfiguration(void)
 /**
  
  LAYER - In order to register for push notifications, your application must first declare the types of
- notifications it wishes to receive. This method handles doing so for both iOS7 and iOS8.
+ notifications it wishes to receive. This method handles doing so for both iOS 7 and iOS 8.
  
  */
 - (void)registerForRemoteNotifications:(UIApplication *)application
@@ -242,7 +242,7 @@ void LSTestResetConfiguration(void)
  
  LAYER - When a user succesfully grants your application permission to receive push, the OS will call
  the following method. In your implementation of this method, your applicaiton should pass the 
- `Device Token` property to the `LYRClient` object.
+ `deviceToken` parameter to the `LYRClient` object.
  
  */
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -261,10 +261,10 @@ void LSTestResetConfiguration(void)
 
 /**
  
- LAYER - The following method gets called at 2 different times that interest a Layer powered application. 
+ LAYER - The following method gets called at 2 different times that interest a Layer powered application:
  
  1. When your application receives a push notification from Layer. Upon receiving a push, your application should 
- pass the `userInfo` dictionary to the `sychronizeWithRemoteNotification:completion: method. 
+ pass the `userInfo` dictionary to the `sychronizeWithRemoteNotification:completion:` method.
  
  2. When your application comes out of the background in response to a user opening the app from a push notification. 
  Your application can tell if it is coming our of the backroung by evaluating `application.applicationState`. If the 
@@ -385,7 +385,7 @@ void LSTestResetConfiguration(void)
     NSError *error = nil;
     BOOL success = [self.applicationController.persistenceManager persistSession:nil error:&error];
     
-    // nil out all crashlytics user information.
+    // Clear out all Crashlytics user information.
     [self updateCrashlyticsWithUser:nil];
     
     if (success) {
