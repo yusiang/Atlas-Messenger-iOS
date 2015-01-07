@@ -67,7 +67,7 @@
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
-                                                                  constant:0]];
+                                                                  constant:-10]];
 
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField 
                                                                  attribute:NSLayoutAttributeLeft 
