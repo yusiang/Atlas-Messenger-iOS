@@ -180,7 +180,7 @@ void LSTestResetConfiguration(void)
     self.authenticationViewController.delegate = self;
     
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
-    self.navigationController.navigationBarHidden = TRUE;
+    self.navigationController.navigationBarHidden = YES;
     self.navigationController.navigationBar.barTintColor = LYRUILightGrayColor();
     self.navigationController.navigationBar.tintColor = LYRUIBlueColor();
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
