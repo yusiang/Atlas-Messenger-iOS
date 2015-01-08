@@ -183,9 +183,7 @@
 
 - (NSSet *)persistedUsersWithError:(NSError **)error
 {
-    if (self.users) {
-        return self.users;
-    }
+    if (self.users) return self.users;
     
     NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
     NSSet *users = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
@@ -197,10 +195,8 @@
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *subpaths = [fileManager contentsOfDirectoryAtPath:self.path error:error];
-    if (!subpaths) {
-        return NO;
-    }
-    
+    if (!subpaths) return NO;
+
     for (NSString *subpath in subpaths) {
         if ([[subpath pathExtension] isEqualToString:@"plist"]) {
             if (![fileManager removeItemAtPath:[self.path stringByAppendingPathComponent:subpath] error:error]) {
@@ -224,15 +220,11 @@
 
 - (LSSession *)persistedSessionWithError:(NSError **)error
 {
-    if (self.session) {
-        return self.session;
-    }
-    
+    if (self.session) return self.session;
+
     NSString *path = [self.path stringByAppendingPathComponent:@"Session.plist"];
     LSSession *session = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-    
     self.session = session;
-    
     return session;
 }
 
