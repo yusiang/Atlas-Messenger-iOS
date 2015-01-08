@@ -490,7 +490,7 @@ void LSTestResetConfiguration(void)
     [alertView show];
 }
 
-- (void)presentMailComposer
+- (void)presentBugReportMailComposer
 {
     LYRUILastPhotoTaken(^(UIImage *image, NSError *error) {
         NSString *emailSubject = @"New iOS Sample App Bug!";
@@ -518,7 +518,7 @@ void LSTestResetConfiguration(void)
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 1) {
-        [self presentMailComposer];
+        [self presentBugReportMailComposer];
     }
 }
 
