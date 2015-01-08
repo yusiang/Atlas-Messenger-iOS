@@ -22,7 +22,6 @@
 #import "LSLocalNotificationManager.h"
 #import "SVProgressHUD.h" 
 
-static NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
 extern void LYRSetLogLevelFromEnvironment();
 extern NSString *LYRApplicationDataDirectory(void);
 extern dispatch_once_t LYRConfigurationURLOnceToken;

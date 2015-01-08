@@ -10,22 +10,13 @@
 #import "LSUtilities.h"
 #import <SVProgressHUD/SVProgressHUD.h>
 
-@interface LSApplicationController ()
-
-@property (nonatomic) NSURL *baseURL;
-
-@end
+NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
+static NSString *const LSUserDefaultsShouldSendPushTextKey = @"shouldSendPushText";
+static NSString *const LSUserDefaultsShouldSendPushSoundKey = @"shouldSendPushSound";
+static NSString *const LSUserDefaultsShouldDisplayLocalNotificationKey = @"shouldDisplayLocalNotifications";
+static NSString *const LSUserDefaultsDebugModeEnabledKey = @"debugModeEnabled";
 
 @implementation LSApplicationController
-
-static NSString *const LSShouldSendPushTextKey = @"shouldSendPushText";
-static NSString *const LSShouldSendPushSoundKey = @"shouldSendPushSould";
-static NSString *const LSShouldDisplayLocalNotificationKey = @"shouldDisplayLocalNotifications";
-static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
-
-@synthesize shouldSendPushText = _shouldSendPushText;
-@synthesize shouldSendPushSound = _shouldSendPushSound;
-@synthesize debugModeEnabled = _debugModeEnabled;
 
 + (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LSLayerClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager
 {
@@ -46,11 +37,13 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:)
-                                                     name:LYRClientWillBeginSynchronizationNotification object:layerClient];
+                                                     name:LYRClientWillBeginSynchronizationNotification
+                                                   object:layerClient];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:)
-                                                     name:LYRClientDidFinishSynchronizationNotification object:layerClient];
+                                                     name:LYRClientDidFinishSynchronizationNotification
+                                                   object:layerClient];
     }
     
     return self;
@@ -61,25 +54,26 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#pragma mark - LYRClientDelegate
+
 - (void)layerClient:(LYRClient *)client didReceiveAuthenticationChallengeWithNonce:(NSString *)nonce
 {
     NSLog(@"Layer Client did recieve authentication challenge with nonce: %@", nonce);
     LSUser *user = self.APIManager.authenticatedSession.user;
-    if (user) {
-        [self.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
-            if (identityToken) {
-                [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-                    if (authenticatedUserID) {
-                        NSLog(@"Silent auth in response to auth challenge successfull");
-                    } else {
-                        LSAlertWithError(error);
-                    }
-                }];
+    if (!user) return;
+    [self.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+        if (error) {
+            LSAlertWithError(error);
+            return;
+        }
+        [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+            if (authenticatedUserID) {
+                NSLog(@"Silent auth in response to auth challenge successfull");
             } else {
                 LSAlertWithError(error);
             }
         }];
-    }
+    }];
 }
 
 - (void)layerClient:(LYRClient *)client didAuthenticateAsUserID:(NSString *)userID
@@ -127,7 +121,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 - (void)layerClient:(LYRClient *)client didLoseConnectionWithError:(NSError *)error
 {
     if (self.debugModeEnabled) {
-        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Lost Connection: %@", [error localizedDescription]]];
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Lost Connection: %@", error.localizedDescription]];
     }
 }
 
@@ -137,6 +131,8 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
         [SVProgressHUD showSuccessWithStatus:@"Disconnected from Layer"];
     }
 }
+
+#pragma mark - Notification Handlers
 
 - (void)didReceiveLayerClientWillBeginSynchronizationNotification:(NSNotification *)notification
 {
@@ -148,18 +144,19 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
+#pragma mark - Class Getters
+
 + (NSString *)versionString
 {
-    NSString *marketingVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
-    NSString *bundleVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"];
-    
-    NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
-    NSString *versionString = nil;
-    if (buildInformation) {
-        NSString *layerKitVersion = buildInformation[@"LYRBuildLayerKitVersion"];
-        versionString = [NSString stringWithFormat:@"LayerSample v%@ (%@) - LayerKit v%@", marketingVersion, bundleVersion, layerKitVersion];
-    } else {
-        versionString = [NSString stringWithFormat:@"LayerSample v%@ (%@)", marketingVersion, bundleVersion];
+    NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
+    NSString *marketingVersion = infoDictionary[@"CFBundleShortVersionString"];
+    NSString *bundleVersion = infoDictionary[@"CFBundleVersion"];
+    NSDictionary *layerKitBuildInformation = infoDictionary[@"LYRBuildInformation"];
+    NSString *layerKitVersion = layerKitBuildInformation[@"LYRBuildLayerKitVersion"];
+
+    NSMutableString *versionString = [[NSMutableString alloc] initWithFormat:@"LayerSample v%@ (%@)", marketingVersion, bundleVersion];
+    if (layerKitVersion) {
+        [versionString appendFormat:@" - LayerKit v%@", layerKitVersion];
     }
     
     return versionString;
@@ -167,7 +164,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 + (NSString *)buildInformationString
 {
-    NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
+    NSDictionary *buildInformation = [NSBundle mainBundle].infoDictionary[@"LYRBuildInformation"];
     
     if (!buildInformation) {
         return [NSString stringWithFormat:@"Non-Release Build"];
@@ -182,7 +179,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 + (NSString *)layerServerHostname
 {
-    NSString *configURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    NSString *configURLString = [[NSUserDefaults standardUserDefaults] objectForKey:LSUserDefaultsLayerConfigurationURLKey];
     NSURL *URL = [NSURL URLWithString:configURLString];
     NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
     return URLComponents.host;
@@ -193,57 +190,52 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 - (void)configureApplicationSettings
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if (![defaults valueForKey:LSShouldSendPushTextKey]) {
-        [self setShouldSendPushText:YES];
-    }
-    if (![defaults valueForKey:LSShouldSendPushSoundKey]) {
-        [self setShouldSendPushSound:YES];
-    }
-    if (![defaults valueForKey:LSShouldDisplayLocalNotificationKey]) {
-        [self setShouldDisplayLocalNotifications:NO];
-    }
-    if (![defaults valueForKey:LSDebugModeEnabledKey]) {
-        [self setDebugModeEnabled:NO];
-    }
+    [defaults registerDefaults:@{
+        LSUserDefaultsShouldSendPushTextKey: @YES,
+        LSUserDefaultsShouldSendPushSoundKey: @YES,
+        LSUserDefaultsShouldDisplayLocalNotificationKey: @NO,
+        LSUserDefaultsDebugModeEnabledKey: @NO,
+    }];
 }
 
 - (void)setShouldSendPushText:(BOOL)shouldSendPushText
 {
-    [self setApplicationSetting:shouldSendPushText forKey:LSShouldSendPushTextKey];
+    [self setApplicationSetting:shouldSendPushText forKey:LSUserDefaultsShouldSendPushTextKey];
 }
 
 - (void)setShouldSendPushSound:(BOOL)shouldSendPushSound
 {
-    [self setApplicationSetting:shouldSendPushSound forKey:LSShouldSendPushSoundKey];
+    [self setApplicationSetting:shouldSendPushSound forKey:LSUserDefaultsShouldSendPushSoundKey];
 }
 
 - (void)setShouldDisplayLocalNotifications:(BOOL)shouldDisplayLocalNotifications
 {
-    [self setApplicationSetting:shouldDisplayLocalNotifications forKey:LSShouldDisplayLocalNotificationKey];
+    [self setApplicationSetting:shouldDisplayLocalNotifications forKey:LSUserDefaultsShouldDisplayLocalNotificationKey];
 }
 
 - (void)setDebugModeEnabled:(BOOL)debugModeEnabled
 {
-     [self setApplicationSetting:debugModeEnabled forKey:LSDebugModeEnabledKey];
+     [self setApplicationSetting:debugModeEnabled forKey:LSUserDefaultsDebugModeEnabledKey];
 }
 
 - (BOOL)shouldSendPushText
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushTextKey];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSUserDefaultsShouldSendPushTextKey];
 }
+
 - (BOOL)shouldSendPushSound
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushSoundKey];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSUserDefaultsShouldSendPushSoundKey];
 }
 
 - (BOOL)shouldDisplayLocalNotifications
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldDisplayLocalNotificationKey];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSUserDefaultsShouldDisplayLocalNotificationKey];
 }
 
 - (BOOL)debugModeEnabled
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:LSDebugModeEnabledKey];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:LSUserDefaultsDebugModeEnabledKey];
 }
 
 - (void)setApplicationSetting:(BOOL)setting forKey:(NSString *)key
@@ -252,8 +244,4 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)setAPIManager:(LSAPIManager *)APIManager
-{
-    NSLog(@"Setting API Manager");
-}
 @end

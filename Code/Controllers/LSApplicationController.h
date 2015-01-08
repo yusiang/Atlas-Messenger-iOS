@@ -11,8 +11,10 @@
 #import "LSAPIManager.h"
 #import "LSLayerClient.h"
 
+extern NSString *const LSUserDefaultsLayerConfigurationURLKey;
+
 /**
- @abstract The `LSAppController` manages global resources needed by multiple View Controller classes in the Layer Sample App. 
+ @abstract The `LSAppController` manages global resources needed by multiple view vontroller classes in the Layer Sample App.
  It also implement the `LYRClientDelegate` protocol. Only one instance should be instantiated and it should be passed to 
  controllers that require it.
  */
@@ -49,22 +51,22 @@
 ///--------------------------------
 
 /**
- @abstract Boolean value that determine whether or not Layer should send a push notification payload.
+ @abstract Boolean value that determines whether or not Layer should send a push notification payload.
  */
 @property (nonatomic) BOOL shouldSendPushText;
 
 /**
- @abstract Boolean value that determine whether or not Layer should send a push notification sound.
+ @abstract Boolean value that determines whether or not Layer should send a push notification sound.
  */
 @property (nonatomic) BOOL shouldSendPushSound;
 
 /**
- @abstract Boolean value that determine whether or not Layer should display local notifications.
+ @abstract Boolean value that determines whether or not Layer should display local notifications.
  */
 @property (nonatomic) BOOL shouldDisplayLocalNotifications;
 
 /**
- @abstract Boolean value that determine whether or not the application is in debug mode.
+ @abstract Boolean value that determines whether or not the application is in debug mode.
  */
 @property (nonatomic) BOOL debugModeEnabled;
 
@@ -77,7 +79,7 @@
 @property (nonatomic) NSData *deviceToken;
 
 /**
- @abstranct Constructs and returns a version string describing the current version of the application.
+ @abstract Constructs and returns a version string describing the current version of the application.
  @return The version string suitable for display in the app.
  */
 + (NSString *)versionString;
