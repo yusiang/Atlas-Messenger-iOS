@@ -118,7 +118,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 - (void)layerClient:(LYRClient *)client didLoseConnectionWithError:(NSError *)error
 {
     if (self.debugModeEnabled) {
-        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Lost Connection: %@", [error localizedDescription]]];
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Lost Connection: %@", error.localizedDescription]];
     }
 }
 
@@ -141,10 +141,10 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 + (NSString *)versionString
 {
-    NSString *marketingVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
-    NSString *bundleVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"];
+    NSString *marketingVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
+    NSString *bundleVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"];
     
-    NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
+    NSDictionary *buildInformation = [NSBundle mainBundle].infoDictionary[@"LYRBuildInformation"];
     NSString *versionString = nil;
     if (buildInformation) {
         NSString *layerKitVersion = buildInformation[@"LYRBuildLayerKitVersion"];
@@ -158,7 +158,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 + (NSString *)buildInformationString
 {
-    NSDictionary *buildInformation = [[NSBundle mainBundle] infoDictionary][@"LYRBuildInformation"];
+    NSDictionary *buildInformation = [NSBundle mainBundle].infoDictionary[@"LYRBuildInformation"];
     
     if (!buildInformation) {
         return [NSString stringWithFormat:@"Non-Release Build"];
