@@ -16,12 +16,6 @@ static NSString *const LSShouldSendPushSoundKey = @"shouldSendPushSound";
 static NSString *const LSShouldDisplayLocalNotificationKey = @"shouldDisplayLocalNotifications";
 static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
-@interface LSApplicationController ()
-
-@property (nonatomic) NSURL *baseURL;
-
-@end
-
 @implementation LSApplicationController
 
 @synthesize shouldSendPushText = _shouldSendPushText;
