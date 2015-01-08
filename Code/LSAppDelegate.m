@@ -523,10 +523,8 @@ void LSTestResetConfiguration(void)
             [self.mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
             
             UIViewController *controller = self.window.rootViewController;
-            if (controller.presentedViewController) {
-                controller = [(UINavigationController *)controller.presentedViewController topViewController];
-            } else {
-                controller = [(UINavigationController *)controller topViewController];
+            while (controller.presentedViewController) {
+                controller = controller.presentedViewController;
             }
             [controller presentViewController:self.mailComposeViewController animated:YES completion:nil];
         }
