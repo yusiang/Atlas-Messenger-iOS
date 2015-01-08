@@ -41,7 +41,8 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 - (void)setShouldListenForChanges:(BOOL)shouldListenForChanges
 {
     if (shouldListenForChanges) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerObjectsDidChangeNotification:)
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(didReceiveLayerObjectsDidChangeNotification:)
                                                      name:LYRClientObjectsDidChangeNotification
                                                    object:self.layerClient];
     } else {
@@ -84,6 +85,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
             case LYRObjectChangeTypeCreate:
                 [self initLocalNotificationForConversation:conversation];
                 break;
+
             default:
                 break;
         }
@@ -109,6 +111,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
                     }
                 }
                 break;
+
             case LYRObjectChangeTypeDelete:
                 [self removeLocalNotificationForMessage:message];
                 break;
@@ -123,8 +126,8 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 {
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
     localNotification.alertBody = @"You have a new Layer conversation. Tap to open.";
-    localNotification.userInfo = @{LSNotificationClassTypeKey : LSNotificationClassTypeConversation,
-                                   LSNotificationIdentifierKey : [conversation.identifier absoluteString]};
+    localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeConversation,
+                                   LSNotificationIdentifierKey: [conversation.identifier absoluteString]};
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
     [self.notifications addObject:localNotification];
 }
@@ -136,8 +139,8 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
     
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
     localNotification.alertBody = alertString;
-    localNotification.userInfo = @{LSNotificationClassTypeKey : LSNotificationClassTypeMessage,
-                                   LSNotificationIdentifierKey : [message.identifier absoluteString]};
+    localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeMessage,
+                                   LSNotificationIdentifierKey: [message.identifier absoluteString]};
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
     [self.notifications addObject:localNotification];
 }
@@ -156,6 +159,5 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 @end

@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 
-
 extern NSString *const LSNotificationClassTypeKey;
 extern NSString *const LSNotificationClassTypeConversation;
 extern NSString *const LSNotificationClassTypeMessage;
