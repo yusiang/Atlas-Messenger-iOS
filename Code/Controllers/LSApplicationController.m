@@ -11,6 +11,10 @@
 #import <SVProgressHUD/SVProgressHUD.h>
 
 NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
+static NSString *const LSShouldSendPushTextKey = @"shouldSendPushText";
+static NSString *const LSShouldSendPushSoundKey = @"shouldSendPushSould";
+static NSString *const LSShouldDisplayLocalNotificationKey = @"shouldDisplayLocalNotifications";
+static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 @interface LSApplicationController ()
 
@@ -19,11 +23,6 @@ NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_U
 @end
 
 @implementation LSApplicationController
-
-static NSString *const LSShouldSendPushTextKey = @"shouldSendPushText";
-static NSString *const LSShouldSendPushSoundKey = @"shouldSendPushSould";
-static NSString *const LSShouldDisplayLocalNotificationKey = @"shouldDisplayLocalNotifications";
-static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 @synthesize shouldSendPushText = _shouldSendPushText;
 @synthesize shouldSendPushSound = _shouldSendPushSound;
