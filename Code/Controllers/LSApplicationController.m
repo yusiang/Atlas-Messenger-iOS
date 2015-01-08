@@ -239,8 +239,4 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)setAPIManager:(LSAPIManager *)APIManager
-{
-    NSLog(@"Setting API Manager");
-}
 @end
