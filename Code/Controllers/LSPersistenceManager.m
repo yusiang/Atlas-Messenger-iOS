@@ -254,15 +254,12 @@
 
 - (NSSet *)usersForIdentifiers:(NSSet *)identifiers;
 {
-    NSSet *users;
     NSError *error;
     NSSet *allUsers = [self persistedUsersWithError:&error];
-    if (error) {
-        return nil;
-    } else {
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", identifiers];
-        users = [allUsers filteredSetUsingPredicate:searchPredicate];
-    }
+    if (error) return nil;
+
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", identifiers];
+    NSSet *users = [allUsers filteredSetUsingPredicate:searchPredicate];
     return users;
 }
 
