@@ -16,7 +16,6 @@
     LYRPredicate *unreadPred =[LYRPredicate predicateWithProperty:@"isUnread" operator:LYRPredicateOperatorIsEqualTo value:@(YES)];
     LYRPredicate *userPred = [LYRPredicate predicateWithProperty:@"sentByUserID" operator:LYRPredicateOperatorIsNotEqualTo value:self.authenticatedUserID];
     query.predicate = [LYRCompoundPredicate compoundPredicateWithType:LYRCompoundPredicateTypeAnd subpredicates:@[unreadPred, userPred]];
-    query.resultType = LYRQueryResultTypeCount;
     return [self countForQuery:query error:nil];
 }
 
@@ -36,21 +35,24 @@
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRMessage class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"identifier" operator:LYRPredicateOperatorIsEqualTo value:identifier];
-    return [[self executeQuery:query error:nil] lastObject];
+    query.limit = 1;
+    return [self executeQuery:query error:nil].firstObject;
 }
 
 - (LYRConversation *)conversationForIdentifier:(NSURL *)identifier
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"identifier" operator:LYRPredicateOperatorIsEqualTo value:identifier];
-    return [[self executeQuery:query error:nil] firstObject];
+    query.limit = 1;
+    return [self executeQuery:query error:nil].firstObject;
 }
 
 - (LYRConversation *)conversationForParticipants:(NSSet *)participants
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"participants" operator:LYRPredicateOperatorIsEqualTo value:participants];
-    return [[self executeQuery:query error:nil] lastObject];
+    query.limit = 1;
+    return [self executeQuery:query error:nil].firstObject;
 }
 
 @end
