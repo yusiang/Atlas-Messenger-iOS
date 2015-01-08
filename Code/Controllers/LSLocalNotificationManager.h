@@ -16,7 +16,7 @@ extern NSString *const LSNotificationIdentifierKey;
 
 @interface LSLocalNotificationManager : NSObject
 
-+ (instancetype)initWithLayerClient:(LYRClient *)layerClient;
++ (instancetype)managerWithLayerClient:(LYRClient *)layerClient;
 
 @property (nonatomic) BOOL shouldListenForChanges;
 

@@ -22,7 +22,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 
 @implementation LSLocalNotificationManager
 
-+ (instancetype)initWithLayerClient:(LYRClient *)layerClient
++ (instancetype)managerWithLayerClient:(LYRClient *)layerClient
 {
     return [[self alloc] initWithLayerClient:layerClient];
 }

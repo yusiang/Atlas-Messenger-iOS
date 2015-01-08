@@ -162,7 +162,7 @@ void LSTestResetConfiguration(void)
                                                                     layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
     
-    self.localNotificationManager = [LSLocalNotificationManager initWithLayerClient:self.applicationController.layerClient];
+    self.localNotificationManager = [LSLocalNotificationManager managerWithLayerClient:self.applicationController.layerClient];
     self.authenticationViewController.applicationController = self.applicationController;
 }
 
