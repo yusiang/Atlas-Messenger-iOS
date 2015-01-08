@@ -79,7 +79,6 @@
 		D643A5001A0AC4B400ED613D /* LYRUISettingsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */; };
 		D643A5021A0AC4C200ED613D /* LYRUIAddressBarTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A5011A0AC4C200ED613D /* LYRUIAddressBarTest.m */; };
 		D643A5041A0AC4D300ED613D /* LYRUIConversationDetailsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A5031A0AC4D300ED613D /* LYRUIConversationDetailsTest.m */; };
-		D6440B571A5C57B000607F09 /* .DS_Store in Resources */ = {isa = PBXBuildFile; fileRef = D6440B4C1A5C57B000607F09 /* .DS_Store */; };
 		D648ECFC19FEC9D800ED17F0 /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D648ECFB19FEC9D800ED17F0 /* testImage.png */; };
 		D66F086519FB524E0047F1C6 /* LSCenterTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */; };
 		D673C23B19F9DB7800579249 /* LSSettingsHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D673C23A19F9DB7800579249 /* LSSettingsHeaderView.m */; };
@@ -207,7 +206,6 @@
 		D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUISettingsTest.m; sourceTree = "<group>"; };
 		D643A5011A0AC4C200ED613D /* LYRUIAddressBarTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIAddressBarTest.m; sourceTree = "<group>"; };
 		D643A5031A0AC4D300ED613D /* LYRUIConversationDetailsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIConversationDetailsTest.m; sourceTree = "<group>"; };
-		D6440B4C1A5C57B000607F09 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
 		D648ECFB19FEC9D800ED17F0 /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
 		D66F086319FB524E0047F1C6 /* LSCenterTextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSCenterTextTableViewCell.h; sourceTree = "<group>"; };
 		D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSCenterTextTableViewCell.m; sourceTree = "<group>"; };
@@ -376,7 +374,6 @@
 			children = (
 				2526801F1A49FB69005DAF44 /* LSLayerClient.h */,
 				252680201A49FB69005DAF44 /* LSLayerClient.m */,
-				D6440B4C1A5C57B000607F09 /* .DS_Store */,
 				D6C6195819FC059300768D84 /* LSLocalNotificationManager.h */,
 				D6C6195919FC059300768D84 /* LSLocalNotificationManager.m */,
 				0AD767701963104200582755 /* LSUtilities.h */,
@@ -622,7 +619,6 @@
 				0A7023C419BE4C84004FF43E /* selection-indicator@2x.png in Resources */,
 				0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */,
 				0A605F3119BF735D00D773AF /* logo-icon@2x.png in Resources */,
-				D6440B571A5C57B000607F09 /* .DS_Store in Resources */,
 				259A57751950EB83000E27B0 /* Images.xcassets in Resources */,
 				0A605F3219BF735D00D773AF /* logo-icon.png in Resources */,
 				0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */,
