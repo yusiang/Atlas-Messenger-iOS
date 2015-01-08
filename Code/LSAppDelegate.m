@@ -62,8 +62,8 @@ void LSTestResetConfiguration(void)
         [self removeSplashView];
     }
     
-    // Set root view controller
-    [self setRootViewController];
+    // Set up window
+    [self configureWindow];
     
     // Configure sample app UI appearance
     [self configureGlobalUserInterfaceAttributes];
@@ -175,7 +175,7 @@ void LSTestResetConfiguration(void)
     return NO;
 }
 
-- (void)setRootViewController
+- (void)configureWindow
 {
     self.authenticationViewController = [LSAuthenticationTableViewController new];
     self.authenticationViewController.applicationController = self.applicationController;
