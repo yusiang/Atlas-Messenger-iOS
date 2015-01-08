@@ -145,7 +145,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
     NSString *bundleVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"];
     
     NSDictionary *buildInformation = [NSBundle mainBundle].infoDictionary[@"LYRBuildInformation"];
-    NSString *versionString = nil;
+    NSString *versionString;
     if (buildInformation) {
         NSString *layerKitVersion = buildInformation[@"LYRBuildLayerKitVersion"];
         versionString = [NSString stringWithFormat:@"LayerSample v%@ (%@) - LayerKit v%@", marketingVersion, bundleVersion, layerKitVersion];
