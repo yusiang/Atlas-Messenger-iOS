@@ -36,21 +36,21 @@
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRMessage class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"identifier" operator:LYRPredicateOperatorIsEqualTo value:identifier];
-    return [[self executeQuery:query error:nil] lastObject];
+    return [self executeQuery:query error:nil].lastObject;
 }
 
 - (LYRConversation *)conversationForIdentifier:(NSURL *)identifier
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"identifier" operator:LYRPredicateOperatorIsEqualTo value:identifier];
-    return [[self executeQuery:query error:nil] firstObject];
+    return [self executeQuery:query error:nil].firstObject;
 }
 
 - (LYRConversation *)conversationForParticipants:(NSSet *)participants
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"participants" operator:LYRPredicateOperatorIsEqualTo value:participants];
-    return [[self executeQuery:query error:nil] lastObject];
+    return [self executeQuery:query error:nil].lastObject;
 }
 
 @end
