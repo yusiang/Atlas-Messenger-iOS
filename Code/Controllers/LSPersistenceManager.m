@@ -135,16 +135,10 @@
 
 - (NSSet *)usersForIdentifiers:(NSSet *)identifiers
 {
-    NSMutableSet *users = [[NSMutableSet alloc] init];
-    
-    for (NSString *userIdentifier in identifiers) {
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(userID like[cd] %@)", [NSString stringWithFormat:@"*%@*", userIdentifier]];
-        NSSet * set = [self.users filteredSetUsingPredicate:searchPredicate];
-        if ([set allObjects].count > 0) {
-            [users addObject:[[set allObjects] firstObject]];
-        }
-    }
-    return [NSSet setWithSet:users];
+    NSSet *allUsers = self.users;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", identifiers];
+    NSSet *users = [allUsers filteredSetUsingPredicate:predicate];
+    return users;
 }
 
 @end
