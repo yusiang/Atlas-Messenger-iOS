@@ -12,7 +12,7 @@
 
 NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
 static NSString *const LSShouldSendPushTextKey = @"shouldSendPushText";
-static NSString *const LSShouldSendPushSoundKey = @"shouldSendPushSould";
+static NSString *const LSShouldSendPushSoundKey = @"shouldSendPushSound";
 static NSString *const LSShouldDisplayLocalNotificationKey = @"shouldDisplayLocalNotifications";
 static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
