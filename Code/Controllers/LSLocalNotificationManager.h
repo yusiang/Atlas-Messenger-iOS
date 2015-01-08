@@ -1,5 +1,5 @@
 //
-//  LSLocalNotificationUtilities.h
+//  LSLocalNotificationManager.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 10/25/14.
@@ -15,7 +15,7 @@ extern NSString *const LSNotificationClassTypeConversation;
 extern NSString *const LSNotificationClassTypeMessage;
 extern NSString *const LSNotificationIdentifierKey;
 
-@interface LSLocalNotificationUtilities : NSObject
+@interface LSLocalNotificationManager : NSObject
 
 + (instancetype)initWithLayerClient:(LYRClient *)layerClient;
 

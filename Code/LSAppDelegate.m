@@ -19,7 +19,7 @@
 #import "LYRUIConstants.h"
 #import "LSAuthenticationTableViewController.h"
 #import "LSSplashView.h"
-#import "LSLocalNotificationUtilities.h"
+#import "LSLocalNotificationManager.h"
 #import "SVProgressHUD.h" 
 
 static NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
@@ -45,7 +45,7 @@ void LSTestResetConfiguration(void)
 @property (nonatomic) LSUIConversationListViewController *conversationListViewController;
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
-@property (nonatomic) LSLocalNotificationUtilities *localNotificationUtilities;
+@property (nonatomic) LSLocalNotificationManager *localNotificationUtilities;
 
 @end
 
@@ -162,7 +162,7 @@ void LSTestResetConfiguration(void)
                                                                     layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
     
-    self.localNotificationUtilities = [LSLocalNotificationUtilities initWithLayerClient:self.applicationController.layerClient];
+    self.localNotificationUtilities = [LSLocalNotificationManager initWithLayerClient:self.applicationController.layerClient];
     self.authenticationViewController.applicationController = self.applicationController;
 }
 

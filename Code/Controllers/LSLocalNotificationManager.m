@@ -1,26 +1,26 @@
 //
-//  LSLocalNotificationUtilities.m
+//  LSLocalNotificationManager.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 10/25/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSLocalNotificationUtilities.h"
+#import "LSLocalNotificationManager.h"
 
 NSString *const LSNotificationClassTypeKey = @"class";
 NSString *const LSNotificationClassTypeConversation = @"conversation";
 NSString *const LSNotificationClassTypeMessage = @"message";
 NSString *const LSNotificationIdentifierKey = @"identifier";
 
-@interface LSLocalNotificationUtilities ()
+@interface LSLocalNotificationManager ()
 
 @property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) NSMutableArray *notifications;
 
 @end
 
-@implementation LSLocalNotificationUtilities
+@implementation LSLocalNotificationManager
 
 + (instancetype)initWithLayerClient:(LYRClient *)layerClient
 {
