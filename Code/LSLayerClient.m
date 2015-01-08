@@ -36,6 +36,7 @@
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRMessage class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"identifier" operator:LYRPredicateOperatorIsEqualTo value:identifier];
+    query.limit = 1;
     return [self executeQuery:query error:nil].lastObject;
 }
 
@@ -43,6 +44,7 @@
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"identifier" operator:LYRPredicateOperatorIsEqualTo value:identifier];
+    query.limit = 1;
     return [self executeQuery:query error:nil].firstObject;
 }
 
@@ -50,6 +52,7 @@
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"participants" operator:LYRPredicateOperatorIsEqualTo value:participants];
+    query.limit = 1;
     return [self executeQuery:query error:nil].lastObject;
 }
 
