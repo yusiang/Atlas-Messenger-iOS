@@ -134,7 +134,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 
 - (void)initLocalNotificationForMessage:(LYRMessage *)message
 {
-    LYRMessagePart *messagePart = [message.parts objectAtIndex:0];
+    LYRMessagePart *messagePart = message.parts.firstObject;
     NSString *alertString = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
     
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
