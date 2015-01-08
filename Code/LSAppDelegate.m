@@ -46,7 +46,6 @@ void LSTestResetConfiguration(void)
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
 @property (nonatomic) LSLocalNotificationUtilities *localNotificationUtilities;
-@property (nonatomic) MFMailComposeViewController *mailComposeViewController;
 
 @end
 
@@ -501,18 +500,18 @@ void LSTestResetConfiguration(void)
             NSString *emailSubject = @"New iOS Sample App Bug!";
             NSString *emailBody = @"Please enter your bug description below";
             
-            self.mailComposeViewController = [MFMailComposeViewController new];
-            self.mailComposeViewController.mailComposeDelegate = self;
-            [self.mailComposeViewController setSubject:emailSubject];
-            [self.mailComposeViewController setMessageBody:emailBody isHTML:NO];
-            [self.mailComposeViewController setToRecipients:@[@"kevin@layer.com", @"jira@layer.com"]];
-            [self.mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
+            MFMailComposeViewController *mailComposeViewController = [MFMailComposeViewController new];
+            mailComposeViewController.mailComposeDelegate = self;
+            [mailComposeViewController setSubject:emailSubject];
+            [mailComposeViewController setMessageBody:emailBody isHTML:NO];
+            [mailComposeViewController setToRecipients:@[@"kevin@layer.com", @"jira@layer.com"]];
+            [mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
             
             UIViewController *controller = self.window.rootViewController;
             while (controller.presentedViewController) {
                 controller = controller.presentedViewController;
             }
-            [controller presentViewController:self.mailComposeViewController animated:YES completion:nil];
+            [controller presentViewController:mailComposeViewController animated:YES completion:nil];
         }
     });
 }
@@ -543,7 +542,7 @@ void LSTestResetConfiguration(void)
         default:
             break;
     }
-    [self.mailComposeViewController dismissViewControllerAnimated:YES completion:nil];
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - LSAuthenticationTableViewControllerDelegate
