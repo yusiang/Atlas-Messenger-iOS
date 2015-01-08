@@ -83,7 +83,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
         LYRObjectChangeType updateKey = (LYRObjectChangeType)[conversationChange[LYRObjectChangeTypeKey] integerValue];
         switch (updateKey) {
             case LYRObjectChangeTypeCreate:
-                [self initLocalNotificationForConversation:conversation];
+                [self presentLocalNotificationForConversation:conversation];
                 break;
 
             default:
@@ -99,7 +99,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
         LYRObjectChangeType updateKey = (LYRObjectChangeType)[messageChange[LYRObjectChangeTypeKey] integerValue];
         switch (updateKey) {
             case LYRObjectChangeTypeCreate:
-                [self initLocalNotificationForMessage:message];
+                [self presentLocalNotificationForMessage:message];
                 break;
                 
             case LYRObjectChangeTypeUpdate:
@@ -122,7 +122,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
     }
 }
 
-- (void)initLocalNotificationForConversation:(LYRConversation *)conversation
+- (void)presentLocalNotificationForConversation:(LYRConversation *)conversation
 {
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
     localNotification.alertBody = @"You have a new Layer conversation. Tap to open.";
@@ -132,7 +132,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
     [self.notifications addObject:localNotification];
 }
 
-- (void)initLocalNotificationForMessage:(LYRMessage *)message
+- (void)presentLocalNotificationForMessage:(LYRMessage *)message
 {
     LYRMessagePart *messagePart = message.parts.firstObject;
     NSString *alertString = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
