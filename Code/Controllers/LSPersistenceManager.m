@@ -241,7 +241,7 @@
     NSError *error;
     NSSet *users = [self persistedUsersWithError:&error];
     if (error) {
-        completion(nil, nil);
+        completion(nil, error);
     } else {
         NSPredicate *searchPredicate = [self predicateForUsersWithSearchString:searchString];
         completion([users filteredSetUsingPredicate:searchPredicate].allObjects, nil);
