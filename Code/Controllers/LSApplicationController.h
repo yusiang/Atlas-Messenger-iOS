@@ -11,6 +11,8 @@
 #import "LSAPIManager.h"
 #import "LSLayerClient.h"
 
+extern NSString *const LSUserDefaultsLayerConfigurationURLKey;
+
 /**
  @abstract The `LSAppController` manages global resources needed by multiple view vontroller classes in the Layer Sample App.
  It also implement the `LYRClientDelegate` protocol. Only one instance should be instantiated and it should be passed to 

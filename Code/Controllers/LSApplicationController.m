@@ -10,6 +10,8 @@
 #import "LSUtilities.h"
 #import <SVProgressHUD/SVProgressHUD.h>
 
+NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
+
 @interface LSApplicationController ()
 
 @property (nonatomic) NSURL *baseURL;
@@ -182,7 +184,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 + (NSString *)layerServerHostname
 {
-    NSString *configURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    NSString *configURLString = [[NSUserDefaults standardUserDefaults] objectForKey:LSUserDefaultsLayerConfigurationURLKey];
     NSURL *URL = [NSURL URLWithString:configURLString];
     NSURLComponents *URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
     return URLComponents.host;
