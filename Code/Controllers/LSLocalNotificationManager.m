@@ -80,7 +80,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 {
     for (NSDictionary *conversationChange in conversationChanges) {
         LYRConversation *conversation = conversationChange[LYRObjectChangeObjectKey];
-        LYRObjectChangeType changeType = (LYRObjectChangeType)[conversationChange[LYRObjectChangeTypeKey] integerValue];
+        LYRObjectChangeType changeType = [conversationChange[LYRObjectChangeTypeKey] integerValue];
         switch (changeType) {
             case LYRObjectChangeTypeCreate:
                 [self presentLocalNotificationForConversation:conversation];
@@ -96,7 +96,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 {
     for (NSDictionary *messageChange in messageChanges) {
         LYRMessage *message = messageChange[LYRObjectChangeObjectKey];
-        LYRObjectChangeType changeType = (LYRObjectChangeType)[messageChange[LYRObjectChangeTypeKey] integerValue];
+        LYRObjectChangeType changeType = [messageChange[LYRObjectChangeTypeKey] integerValue];
         switch (changeType) {
             case LYRObjectChangeTypeCreate:
                 [self presentLocalNotificationForMessage:message];
