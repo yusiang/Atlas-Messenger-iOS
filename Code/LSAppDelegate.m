@@ -494,25 +494,23 @@ void LSTestResetConfiguration(void)
 - (void)presentMailComposer
 {
     LYRUILastPhotoTaken(^(UIImage *image, NSError *error) {
-        if (error) {
-            return;
-        } else {
-            NSString *emailSubject = @"New iOS Sample App Bug!";
-            NSString *emailBody = @"Please enter your bug description below";
-            
-            MFMailComposeViewController *mailComposeViewController = [MFMailComposeViewController new];
-            mailComposeViewController.mailComposeDelegate = self;
-            [mailComposeViewController setSubject:emailSubject];
-            [mailComposeViewController setMessageBody:emailBody isHTML:NO];
-            [mailComposeViewController setToRecipients:@[@"kevin@layer.com", @"jira@layer.com"]];
+        NSString *emailSubject = @"New iOS Sample App Bug!";
+        NSString *emailBody = @"Please enter your bug description below";
+        
+        MFMailComposeViewController *mailComposeViewController = [MFMailComposeViewController new];
+        mailComposeViewController.mailComposeDelegate = self;
+        [mailComposeViewController setSubject:emailSubject];
+        [mailComposeViewController setMessageBody:emailBody isHTML:NO];
+        [mailComposeViewController setToRecipients:@[@"kevin@layer.com", @"jira@layer.com"]];
+        if (!error) {
             [mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
-            
-            UIViewController *controller = self.window.rootViewController;
-            while (controller.presentedViewController) {
-                controller = controller.presentedViewController;
-            }
-            [controller presentViewController:mailComposeViewController animated:YES completion:nil];
         }
+
+        UIViewController *controller = self.window.rootViewController;
+        while (controller.presentedViewController) {
+            controller = controller.presentedViewController;
+        }
+        [controller presentViewController:mailComposeViewController animated:YES completion:nil];
     });
 }
 
