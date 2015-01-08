@@ -75,6 +75,13 @@
 - (NSSet *)usersForIdentifiers:(NSSet *)identifiers;
 
 /**
+ @abstract Returns a `LSUser` object whose `userID` property matches the supplied identifier.
+ @param identifier An `NSString` representing a user identifier.
+ @return A `LSUser` object or nil if a user was not found with the supplied identifier.
+ */
+- (LSUser *)userForIdentifier:(NSString *)identifier;
+
+/**
  @abstract Performs a search across the `fullName` property on all persisted `LSUser` objects for the supplied string.
  @param searchString The string object for which the search is performed.
  @param completion The completion block called when search completes.

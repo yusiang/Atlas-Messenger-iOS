@@ -88,6 +88,11 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
     LSMustBeImplementedBySubclass();
 }
 
+- (LSUser *)userForIdentifier:(NSString *)identifier
+{
+    LSMustBeImplementedBySubclass();
+}
+
 #pragma mark - Helpers
 
 - (NSPredicate *)predicateForUsersWithSearchString:(NSString *)searchString
@@ -144,6 +149,16 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", identifiers];
     NSSet *users = [allUsers filteredSetUsingPredicate:predicate];
     return users;
+}
+
+- (LSUser *)userForIdentifier:(NSString *)identifier
+{
+    for (LSUser *user in self.users) {
+        if ([user.userID isEqualToString:identifier]) {
+            return user;
+        }
+    }
+    return nil;
 }
 
 @end
@@ -242,6 +257,20 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", identifiers];
     NSSet *users = [allUsers filteredSetUsingPredicate:searchPredicate];
     return users;
+}
+
+- (LSUser *)userForIdentifier:(NSString *)identifier
+{
+    NSError *error;
+    NSSet *allUsers = [self persistedUsersWithError:&error];
+    if (error) return nil;
+
+    for (LSUser *user in allUsers) {
+        if ([user.userID isEqualToString:identifier]) {
+            return user;
+        }
+    }
+    return nil;
 }
 
 #pragma mark - Helpers

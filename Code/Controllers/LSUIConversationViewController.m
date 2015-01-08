@@ -167,8 +167,8 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     if (participantIdentifier) {
-        NSSet *set = [self.applicationController.persistenceManager usersForIdentifiers:[NSSet setWithObject:participantIdentifier]];
-        return [set anyObject];
+        LSUser *user = [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
+        return user;
     }
     return nil;
 }
