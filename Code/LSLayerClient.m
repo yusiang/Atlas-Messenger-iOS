@@ -16,7 +16,6 @@
     LYRPredicate *unreadPred =[LYRPredicate predicateWithProperty:@"isUnread" operator:LYRPredicateOperatorIsEqualTo value:@(YES)];
     LYRPredicate *userPred = [LYRPredicate predicateWithProperty:@"sentByUserID" operator:LYRPredicateOperatorIsNotEqualTo value:self.authenticatedUserID];
     query.predicate = [LYRCompoundPredicate compoundPredicateWithType:LYRCompoundPredicateTypeAnd subpredicates:@[unreadPred, userPred]];
-    query.resultType = LYRQueryResultTypeCount;
     return [self countForQuery:query error:nil];
 }
 
