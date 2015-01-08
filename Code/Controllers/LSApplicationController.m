@@ -18,10 +18,6 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 @implementation LSApplicationController
 
-@synthesize shouldSendPushText = _shouldSendPushText;
-@synthesize shouldSendPushSound = _shouldSendPushSound;
-@synthesize debugModeEnabled = _debugModeEnabled;
-
 + (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LSLayerClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager
 {
     NSParameterAssert(baseURL);
