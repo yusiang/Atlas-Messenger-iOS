@@ -127,7 +127,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
     localNotification.alertBody = @"You have a new Layer conversation. Tap to open.";
     localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeConversation,
-                                   LSNotificationIdentifierKey: [conversation.identifier absoluteString]};
+                                   LSNotificationIdentifierKey: conversation.identifier.absoluteString};
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
     [self.notifications addObject:localNotification];
 }
@@ -140,7 +140,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
     localNotification.alertBody = alertString;
     localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeMessage,
-                                   LSNotificationIdentifierKey: [message.identifier absoluteString]};
+                                   LSNotificationIdentifierKey: message.identifier.absoluteString};
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
     [self.notifications addObject:localNotification];
 }
@@ -149,7 +149,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 {
     for (UILocalNotification *notification in self.notifications) {
         NSString *identifier = notification.userInfo[LSNotificationIdentifierKey];
-        if ([identifier isEqualToString:[message.identifier absoluteString]]) {
+        if ([identifier isEqualToString:message.identifier.absoluteString]) {
             [[UIApplication sharedApplication] cancelLocalNotification:notification];
         }
     }
