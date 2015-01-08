@@ -173,7 +173,7 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
 
 - (BOOL)persistUsers:(NSSet *)users error:(NSError **)error
 {
-    NSString *path = [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerUsersFileName];
+    NSString *path = [self usersPath];
     self.users = users;
     return [NSKeyedArchiver archiveRootObject:users toFile:path];
 }
@@ -182,7 +182,7 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
 {
     if (self.users) return self.users;
     
-    NSString *path = [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerUsersFileName];
+    NSString *path = [self usersPath];
     NSSet *users = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     self.users = users;
     return users;
@@ -206,7 +206,7 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
 
 - (BOOL)persistSession:(LSSession *)session error:(NSError **)error
 {
-    NSString *path = [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerSessionFileName];
+    NSString *path = [self sessionPath];
     self.session = session;
     return [NSKeyedArchiver archiveRootObject:session toFile:path];
 }
@@ -215,7 +215,7 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
 {
     if (self.session) return self.session;
 
-    NSString *path = [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerSessionFileName];
+    NSString *path = [self sessionPath];
     LSSession *session = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     self.session = session;
     return session;
@@ -242,6 +242,16 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", identifiers];
     NSSet *users = [allUsers filteredSetUsingPredicate:searchPredicate];
     return users;
+}
+
+- (NSString *)usersPath
+{
+    return [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerUsersFileName];
+}
+
+- (NSString *)sessionPath
+{
+    return [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerSessionFileName];
 }
 
 @end
