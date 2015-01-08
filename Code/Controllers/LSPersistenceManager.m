@@ -88,6 +88,8 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
     LSMustBeImplementedBySubclass();
 }
 
+#pragma mark - Helpers
+
 - (NSPredicate *)predicateForUsersWithSearchString:(NSString *)searchString
 {
     NSString *escapedSearchString = [NSRegularExpression escapedPatternForString:searchString];
@@ -241,6 +243,8 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
     NSSet *users = [allUsers filteredSetUsingPredicate:searchPredicate];
     return users;
 }
+
+#pragma mark - Helpers
 
 - (NSString *)usersPath
 {
