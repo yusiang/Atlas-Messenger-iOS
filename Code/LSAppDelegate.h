@@ -12,9 +12,9 @@
 
 @interface LSAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic) LSApplicationController *applicationController;
+@property (nonatomic) UIWindow *window;
 
-@property (nonatomic) LSUIConversationListViewController *viewController;
+@property (nonatomic) LSApplicationController *applicationController;
 
 //------------------------------------
 // Conversation List VC Test Config

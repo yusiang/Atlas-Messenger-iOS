@@ -36,14 +36,4 @@
     return self;
 }
 
-- (void)animateLogoWithCompletion:(void(^)(void))completionBlock
-{
-    self.spinner.alpha = 0.0;
-    [UIView animateWithDuration:1.0f delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.logoImageView.center = CGPointMake(self.center.x, self.center.y - 124);
-    } completion:^(BOOL finished) {
-        completionBlock();
-    }];
-}
-
 @end

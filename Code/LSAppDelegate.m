@@ -22,6 +22,7 @@
 #import "LSLocalNotificationUtilities.h"
 #import "SVProgressHUD.h" 
 
+static NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
 extern void LYRSetLogLevelFromEnvironment();
 extern NSString *LYRApplicationDataDirectory(void);
 extern dispatch_once_t LYRConfigurationURLOnceToken;
@@ -40,23 +41,19 @@ void LSTestResetConfiguration(void)
 
 @interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
-@property (nonatomic) UINavigationController *navigationController;
-@property (nonatomic) UINavigationController *authenticatedNavigationController;
 @property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
+@property (nonatomic) LSUIConversationListViewController *conversationListViewController;
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
 @property (nonatomic) LSLocalNotificationUtilities *localNotificationUtilities;
-@property (nonatomic) MFMailComposeViewController *mailComposeViewController;
 
 @end
 
 @implementation LSAppDelegate
 
-@synthesize window;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Setup environment configuration
+    // Set up environment configuration
     if (!LSIsRunningTests()) {
         [self configureApplication:application forEnvironment:LYRUIProduction];
         [self initializeCrashlytics];
@@ -65,16 +62,16 @@ void LSTestResetConfiguration(void)
         [self removeSplashView];
     }
     
-    // Set root view controller
-    [self setRootViewController];
+    // Set up window
+    [self configureWindow];
     
-    // Configure Sample App UI Appearance
+    // Configure sample app UI appearance
     [self configureGlobalUserInterfaceAttributes];
     
     // Setup notifications
     [self registerNotificationObservers];
     
-    // ConversationListViewController Config
+    // Conversation list view controller config
     _cellClass = [LYRUIConversationTableViewCell class];
     _rowHeight = 72;
     _allowsEditing = YES;
@@ -83,14 +80,15 @@ void LSTestResetConfiguration(void)
     
     // Connect to Layer and boot the UI
     BOOL deauthenticateAfterConnection = NO;
+    BOOL resumingSession = NO;
     if (self.applicationController.layerClient.authenticatedUserID) {
         if ([self resumeSession]) {
+            resumingSession = YES;
             [self presentConversationsListViewController:NO];
         } else {
             deauthenticateAfterConnection = YES;
         }
     }
-    [self removeSplashView];
     
     // Connect Layer SDK
     [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
@@ -101,6 +99,9 @@ void LSTestResetConfiguration(void)
             }
         } else {
             NSLog(@"Error connecting Layer: %@", error);
+        }
+        if (!resumingSession) {
+            [self removeSplashView];
         }
     }];
     
@@ -124,7 +125,7 @@ void LSTestResetConfiguration(void)
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [self.localNotificationUtilities setShouldListenForChanges:NO];
+    self.localNotificationUtilities.shouldListenForChanges = NO;
     [self resumeSession];
     [self loadContacts];
 }
@@ -133,20 +134,22 @@ void LSTestResetConfiguration(void)
 {
     [self setApplicationBadgeNumber];
     if (self.applicationController.shouldDisplayLocalNotifications) {
-        [self.localNotificationUtilities setShouldListenForChanges:YES];
+        self.localNotificationUtilities.shouldListenForChanges = YES;
     }
 }
 
+#pragma mark - Setup
 
 - (void)configureApplication:(UIApplication *)application forEnvironment:(LSEnvironment)environment
 {
     self.environment = environment;
     
-    // Configure Layer Base URL
+    // Configure Layer base URL
     NSString *configURLString = LSLayerConfigurationURL(self.environment);
-    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"LAYER_CONFIGURATION_URL"];
+    NSString *configKey = LSUserDefaultsLayerConfigurationURLKey;
+    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:configKey];
     if (![currentConfigURL isEqualToString:configURLString]) {
-        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:@"LAYER_CONFIGURATION_URL"];
+        [[NSUserDefaults standardUserDefaults] setObject:LSLayerConfigurationURL(self.environment) forKey:configKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     LSTestResetConfiguration();
@@ -155,7 +158,6 @@ void LSTestResetConfiguration(void)
     // Configure application controllers
     LSLayerClient *client = [LSLayerClient clientWithAppID:LSLayerAppID(self.environment)];
     
-    // TODO: Change with subclass instead of interface class...
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL()
                                                                     layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
@@ -173,20 +175,14 @@ void LSTestResetConfiguration(void)
     return NO;
 }
 
-#pragma mark - Setup Methods
-
-- (void)setRootViewController
+- (void)configureWindow
 {
     self.authenticationViewController = [LSAuthenticationTableViewController new];
     self.authenticationViewController.applicationController = self.applicationController;
     self.authenticationViewController.delegate = self;
-    
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.authenticationViewController];
-    self.navigationController.navigationBarHidden = TRUE;
-    self.navigationController.navigationBar.barTintColor = LYRUILightGrayColor();
-    self.navigationController.navigationBar.tintColor = LYRUIBlueColor();
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = self.navigationController;
+
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.rootViewController = self.authenticationViewController;
     [self.window makeKeyAndVisible];
     
     [self addSplashView];
@@ -195,39 +191,39 @@ void LSTestResetConfiguration(void)
 - (void)registerNotificationObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(userDidAuthenticateNotification:)
+                                             selector:@selector(userDidAuthenticate:)
                                                  name:LSUserDidAuthenticateNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter]  addObserver:self
-                                              selector:@selector(userDidAuthenticateWithLayerNotification:)
+                                              selector:@selector(userDidAuthenticateWithLayer:)
                                                   name:LYRClientDidAuthenticateNotification
                                                 object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(userDidDeauthenticateNotification:)
+                                             selector:@selector(userDidDeauthenticate:)
                                                  name:LSUserDidDeauthenticateNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(screenshotNotification:)
+                                             selector:@selector(userDidTakeScreenshot:)
                                                  name:UIApplicationUserDidTakeScreenshotNotification
                                                object:nil];
 }
 
-#pragma mark - Push Notification Setup and Handlers
+#pragma mark - Push Notifications
+
 /**
  
  LAYER - In order to register for push notifications, your application must first declare the types of
- notifications it wishes to receive. This method handles doing so for both iOS7 and iOS8.
+ notifications it wishes to receive. This method handles doing so for both iOS 7 and iOS 8.
  
  */
 - (void)registerForRemoteNotifications:(UIApplication *)application
 {
     // Declaring that I want to recieve push!
     if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
-        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
-                                                                                             categories:nil];
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil];
         [application registerUserNotificationSettings:notificationSettings];
         [application registerForRemoteNotifications];
     } else {
@@ -244,7 +240,7 @@ void LSTestResetConfiguration(void)
  
  LAYER - When a user succesfully grants your application permission to receive push, the OS will call
  the following method. In your implementation of this method, your applicaiton should pass the 
- `Device Token` property to the `LYRClient` object.
+ `deviceToken` parameter to the `LYRClient` object.
  
  */
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -256,17 +252,17 @@ void LSTestResetConfiguration(void)
         NSLog(@"Application did register for remote notifications");
     } else {
         NSLog(@"Error updating Layer device token for push:%@", error);
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Updating Device Token Failed" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Updating Device Token Failed" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
     }
 }
 
 /**
  
- LAYER - The following method gets called at 2 different times that interest a Layer powered application. 
+ LAYER - The following method gets called at 2 different times that interest a Layer powered application:
  
  1. When your application receives a push notification from Layer. Upon receiving a push, your application should 
- pass the `userInfo` dictionary to the `sychronizeWithRemoteNotification:completion: method. 
+ pass the `userInfo` dictionary to the `sychronizeWithRemoteNotification:completion:` method.
  
  2. When your application comes out of the background in response to a user opening the app from a push notification. 
  Your application can tell if it is coming our of the backroung by evaluating `application.applicationState`. If the 
@@ -312,24 +308,24 @@ void LSTestResetConfiguration(void)
     if (![NSThread isMainThread]) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Attempted to navigate UI from non-main thread" userInfo:nil];
     }
-    UINavigationController *controller = (UINavigationController *)self.window.rootViewController.presentedViewController;
-    LSUIConversationListViewController *conversationListViewController = [controller.viewControllers objectAtIndex:0];
-    [conversationListViewController selectConversation:conversation];
+    [self.conversationListViewController selectConversation:conversation];
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
+    if (application.applicationState != UIApplicationStateInactive) return;
+
     LYRConversation *conversation;
-    NSURL *objectURL = [NSURL URLWithString:[notification.userInfo objectForKey:LSNotificationIdentifierKey]];
-    NSString *objectTypeString = [notification.userInfo valueForKey:LSNotificationClassTypeKey];
-    
+    NSURL *objectURL = [NSURL URLWithString:notification.userInfo[LSNotificationIdentifierKey]];
+    NSString *objectTypeString = notification.userInfo[LSNotificationClassTypeKey];
     if ([objectTypeString isEqualToString:LSNotificationClassTypeConversation]) {
         conversation = [self.applicationController.layerClient conversationForIdentifier:objectURL];
     } else {
         LYRMessage *message = [self.applicationController.layerClient messageForIdentifier:objectURL];
         conversation = message.conversation;
     }
-    if (application.applicationState == UIApplicationStateInactive && conversation) {
+
+    if (conversation) {
         [self navigateToViewForConversation:conversation];
     }
 }
@@ -359,16 +355,22 @@ void LSTestResetConfiguration(void)
     [Crashlytics setUserIdentifier:authenticatedUser.userID];
 }
 
-#pragma mark - Authentication Methods
+#pragma mark - Authentication Notification Handlers
 
-- (void)userDidAuthenticateWithLayerNotification:(NSNotification *)notification
+- (void)userDidAuthenticateWithLayer:(NSNotification *)notification
 {
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self userDidAuthenticateWithLayer:notification];
+        });
+        return;
+    }
     [self presentConversationsListViewController:YES];
 }
 
-- (void)userDidAuthenticateNotification:(NSNotification *)notification
+- (void)userDidAuthenticate:(NSNotification *)notification
 {
-    NSError *error = nil;
+    NSError *error;
     LSSession *session = self.applicationController.APIManager.authenticatedSession;
     BOOL success = [self.applicationController.persistenceManager persistSession:session error:&error];
     if (success) {
@@ -382,12 +384,12 @@ void LSTestResetConfiguration(void)
     [self loadContacts];
 }
 
-- (void)userDidDeauthenticateNotification:(NSNotification *)notification
+- (void)userDidDeauthenticate:(NSNotification *)notification
 {
-    NSError *error = nil;
+    NSError *error;
     BOOL success = [self.applicationController.persistenceManager persistSession:nil error:&error];
     
-    // nil out all crashlytics user information.
+    // Clear out all Crashlytics user information.
     [self updateCrashlyticsWithUser:nil];
     
     if (success) {
@@ -397,46 +399,45 @@ void LSTestResetConfiguration(void)
         LSAlertWithError(error);
     }
     
-    [self.navigationController dismissViewControllerAnimated:YES completion:^{
-        self.viewController = nil;
-        self.authenticatedNavigationController = nil;
+    [self.authenticationViewController dismissViewControllerAnimated:YES completion:^{
+        self.conversationListViewController = nil;
     }];
 }
+
+#pragma mark - Contacts
 
 - (void)loadContacts
 {
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
-        if (contacts) {
-            NSError *persistenceError = nil;
-            BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
-            if (success) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"contactsPersited" object:nil];
-            } else {
-                LSAlertWithError(persistenceError);
-            }
-        } else {
+        if (error) {
             LSAlertWithError(error);
+            return;
+        }
+        NSError *persistenceError;
+        BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
+        if (!success) {
+            LSAlertWithError(persistenceError);
         }
     }];
 }
 
+#pragma mark - Conversations
+
 - (void)presentConversationsListViewController:(BOOL)animated
 {
     if (!LSIsRunningTests()) {
-        if (self.window.rootViewController.presentedViewController) {
-            [self removeSplashView];
-            return;
-        }
-        self.viewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
-        self.viewController.applicationController = self.applicationController;
-        self.viewController.displaysConversationImage = self.displaysConversationImage;
-        self.viewController.cellClass = self.cellClass;
-        self.viewController.rowHeight = self.rowHeight;
-        self.viewController.allowsEditing = self.allowsEditing;
-        self.viewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
+        if (self.conversationListViewController) return;
+
+        self.conversationListViewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
+        self.conversationListViewController.applicationController = self.applicationController;
+        self.conversationListViewController.displaysConversationImage = self.displaysConversationImage;
+        self.conversationListViewController.cellClass = self.cellClass;
+        self.conversationListViewController.rowHeight = self.rowHeight;
+        self.conversationListViewController.allowsEditing = self.allowsEditing;
+        self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
         
-        self.authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-        [self.navigationController presentViewController:self.authenticatedNavigationController animated:YES completion:^{
+        UINavigationController *authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
+        [self.authenticationViewController presentViewController:authenticatedNavigationController animated:YES completion:^{
             [self.authenticationViewController resetState];
             [self removeSplashView];
         }];
@@ -445,7 +446,7 @@ void LSTestResetConfiguration(void)
     }
 }
 
-#pragma mark - Splash View Config
+#pragma mark - Splash View
 
 - (void)addSplashView
 {
@@ -477,50 +478,51 @@ void LSTestResetConfiguration(void)
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LYRUIBlueColor()];
 }
 
-#pragma mark - Screen Shot Handler Methods
+#pragma mark - Bug Reporting
 
-- (void)screenshotNotification:(NSNotification *)notification
+- (void)userDidTakeScreenshot:(NSNotification *)notification
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Report Issue?"
                                                         message:@"Would you like to report a bug with the sample app?"
                                                        delegate:self
-                                              cancelButtonTitle:@"Not Now" otherButtonTitles:@"Yes", nil];
+                                              cancelButtonTitle:@"Not Now"
+                                              otherButtonTitles:@"Yes", nil];
     [alertView show];
 }
 
+- (void)presentBugReportMailComposer
+{
+    LYRUILastPhotoTaken(^(UIImage *image, NSError *error) {
+        NSString *emailSubject = @"New iOS Sample App Bug!";
+        NSString *emailBody = @"Please enter your bug description below";
+        
+        MFMailComposeViewController *mailComposeViewController = [MFMailComposeViewController new];
+        mailComposeViewController.mailComposeDelegate = self;
+        [mailComposeViewController setSubject:emailSubject];
+        [mailComposeViewController setMessageBody:emailBody isHTML:NO];
+        [mailComposeViewController setToRecipients:@[@"kevin@layer.com", @"jira@layer.com"]];
+        if (!error) {
+            [mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
+        }
+
+        UIViewController *controller = self.window.rootViewController;
+        while (controller.presentedViewController) {
+            controller = controller.presentedViewController;
+        }
+        [controller presentViewController:mailComposeViewController animated:YES completion:nil];
+    });
+}
+
+#pragma mark - UIAlertViewDelegate
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 1) {
-        [self presentMailComposer];
+    if (buttonIndex == alertView.firstOtherButtonIndex) {
+        [self presentBugReportMailComposer];
     }
 }
 
-- (void)presentMailComposer
-{
-    LYRUILastPhotoTaken(^(UIImage *image, NSError *error) {
-        if (error) {
-            return;
-        } else {
-            NSString *emailSubject = @"New iOS Sample App Bug!";
-            NSString *emailBody = @"Please enter your bug description below";
-            
-            self.mailComposeViewController = [MFMailComposeViewController new];
-            self.mailComposeViewController.mailComposeDelegate = self;
-            [self.mailComposeViewController setSubject:emailSubject];
-            [self.mailComposeViewController setMessageBody:emailBody isHTML:NO];
-            [self.mailComposeViewController setToRecipients:@[@"kevin@layer.com", @"jira@layer.com"]];
-            [self.mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
-            
-            UIViewController *controller = self.window.rootViewController;
-            if (controller.presentedViewController) {
-                controller = [(UINavigationController *)controller.presentedViewController topViewController];
-            } else {
-                controller = [(UINavigationController *)controller topViewController];
-            }
-            [controller presentViewController:self.mailComposeViewController animated:YES completion:nil];
-        }
-    });
-}
+#pragma mark - MFMailComposeViewControllerDelegate
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
@@ -537,10 +539,10 @@ void LSTestResetConfiguration(void)
         default:
             break;
     }
-    [self.mailComposeViewController dismissViewControllerAnimated:YES completion:nil];
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - Authentaction Controller Delegate Methods
+#pragma mark - LSAuthenticationTableViewControllerDelegate
 
 - (void)authenticationTableViewController:(LSAuthenticationTableViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment
 {
@@ -557,6 +559,5 @@ void LSTestResetConfiguration(void)
     NSUInteger countOfUnreadMessages = [self.applicationController.layerClient countOfUnreadMessages];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
 }
-
 
 @end
