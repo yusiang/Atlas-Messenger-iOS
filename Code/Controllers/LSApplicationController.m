@@ -184,18 +184,12 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 - (void)configureApplicationSettings
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if (![defaults valueForKey:LSShouldSendPushTextKey]) {
-        [self setShouldSendPushText:YES];
-    }
-    if (![defaults valueForKey:LSShouldSendPushSoundKey]) {
-        [self setShouldSendPushSound:YES];
-    }
-    if (![defaults valueForKey:LSShouldDisplayLocalNotificationKey]) {
-        [self setShouldDisplayLocalNotifications:NO];
-    }
-    if (![defaults valueForKey:LSDebugModeEnabledKey]) {
-        [self setDebugModeEnabled:NO];
-    }
+    [defaults registerDefaults:@{
+        LSShouldSendPushTextKey: @YES,
+        LSShouldSendPushSoundKey: @YES,
+        LSShouldDisplayLocalNotificationKey: @NO,
+        LSDebugModeEnabledKey: @NO,
+    }];
 }
 
 - (void)setShouldSendPushText:(BOOL)shouldSendPushText
