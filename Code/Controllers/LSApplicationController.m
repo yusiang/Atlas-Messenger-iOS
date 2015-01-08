@@ -37,11 +37,13 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:)
-                                                     name:LYRClientWillBeginSynchronizationNotification object:layerClient];
+                                                     name:LYRClientWillBeginSynchronizationNotification
+                                                   object:layerClient];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:)
-                                                     name:LYRClientDidFinishSynchronizationNotification object:layerClient];
+                                                     name:LYRClientDidFinishSynchronizationNotification
+                                                   object:layerClient];
     }
     
     return self;
@@ -143,8 +145,8 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 {
     NSString *marketingVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
     NSString *bundleVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"];
-    
     NSDictionary *buildInformation = [NSBundle mainBundle].infoDictionary[@"LYRBuildInformation"];
+
     NSString *versionString;
     if (buildInformation) {
         NSString *layerKitVersion = buildInformation[@"LYRBuildLayerKitVersion"];
@@ -216,6 +218,7 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 {
     return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushTextKey];
 }
+
 - (BOOL)shouldSendPushSound
 {
     return [[NSUserDefaults standardUserDefaults] boolForKey:LSShouldSendPushSoundKey];
