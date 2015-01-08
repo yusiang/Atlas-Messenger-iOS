@@ -143,16 +143,15 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 
 + (NSString *)versionString
 {
-    NSString *marketingVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
-    NSString *bundleVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"];
-    NSDictionary *buildInformation = [NSBundle mainBundle].infoDictionary[@"LYRBuildInformation"];
+    NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
+    NSString *marketingVersion = infoDictionary[@"CFBundleShortVersionString"];
+    NSString *bundleVersion = infoDictionary[@"CFBundleVersion"];
+    NSDictionary *layerKitBuildInformation = infoDictionary[@"LYRBuildInformation"];
+    NSString *layerKitVersion = layerKitBuildInformation[@"LYRBuildLayerKitVersion"];
 
-    NSString *versionString;
-    if (buildInformation) {
-        NSString *layerKitVersion = buildInformation[@"LYRBuildLayerKitVersion"];
-        versionString = [NSString stringWithFormat:@"LayerSample v%@ (%@) - LayerKit v%@", marketingVersion, bundleVersion, layerKitVersion];
-    } else {
-        versionString = [NSString stringWithFormat:@"LayerSample v%@ (%@)", marketingVersion, bundleVersion];
+    NSMutableString *versionString = [[NSMutableString alloc] initWithFormat:@"LayerSample v%@ (%@)", marketingVersion, bundleVersion];
+    if (layerKitVersion) {
+        [versionString appendFormat:@" - LayerKit v%@", layerKitVersion];
     }
     
     return versionString;
