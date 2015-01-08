@@ -54,6 +54,8 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#pragma mark - LYRClientDelegate
+
 - (void)layerClient:(LYRClient *)client didReceiveAuthenticationChallengeWithNonce:(NSString *)nonce
 {
     NSLog(@"Layer Client did recieve authentication challenge with nonce: %@", nonce);
@@ -130,6 +132,8 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
     }
 }
 
+#pragma mark - Notification Handlers
+
 - (void)didReceiveLayerClientWillBeginSynchronizationNotification:(NSNotification *)notification
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -139,6 +143,8 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
+
+#pragma mark - Class Getters
 
 + (NSString *)versionString
 {
