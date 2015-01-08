@@ -158,7 +158,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
 
 - (NSString *)recipientNameForUserId:(NSString *)userID
 {
-    NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:[NSSet setWithObject:userID]];
+    NSSet *participants = [self.applicationController.persistenceManager usersForIdentifiers:[NSSet setWithObject:userID]];
     return [[[participants allObjects] firstObject] fullName];
 }
 

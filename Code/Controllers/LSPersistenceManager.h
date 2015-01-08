@@ -72,14 +72,14 @@
  @param identifiers An `NSSet` of `NSString` objects representing user identifiers.
  @return An `NSSet` of `LSUser` objects.
  */
-- (NSSet *)participantsForIdentifiers:(NSSet *)identifiers;
+- (NSSet *)usersForIdentifiers:(NSSet *)identifiers;
 
 /**
  @abstract Performs a search across the `fullName` property on all persisted `LSUser` objects for the supplied string.
  @param searchString The string object for which the search is performed.
  @param completion The completion block called when search completes.
  */
-- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *participants, NSError *error))completion;
+- (void)performUserSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *users, NSError *error))completion;
 
 ///---------------------------------------
 /// @name Deletion

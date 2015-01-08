@@ -164,7 +164,7 @@
     
     if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
-    NSSet *participants = [self.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers];
+    NSSet *participants = [self.applicationController.persistenceManager usersForIdentifiers:participantIdentifiers];
     
     if (!participants.count > 0) return @"No Matching Participants";
     

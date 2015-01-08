@@ -363,7 +363,7 @@
     
     if (!participantIdentifiers.count > 0) return @"Personal Conversation";
     
-    NSMutableSet *participants = [[self.testInterface.applicationController.persistenceManager participantsForIdentifiers:participantIdentifiers] mutableCopy];
+    NSMutableSet *participants = [[self.testInterface.applicationController.persistenceManager usersForIdentifiers:participantIdentifiers] mutableCopy];
     if (!participants.count > 0) return @"No Matching Participants";
     
     // Put the latest message sender's name first

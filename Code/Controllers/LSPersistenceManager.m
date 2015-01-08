@@ -75,17 +75,17 @@
     LSMustBeImplementedBySubclass();
 }
 
-- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *contacts, NSError *error))completion
+- (void)performUserSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *users, NSError *error))completion
 {
     LSMustBeImplementedBySubclass();
 }
 
-- (NSSet *)participantsForIdentifiers:(NSSet *)identifiers
+- (NSSet *)usersForIdentifiers:(NSSet *)identifiers
 {
     LSMustBeImplementedBySubclass();
 }
 
-- (NSPredicate *)predicateForParticipantsWithSearchString:(NSString *)searchString
+- (NSPredicate *)predicateForUsersWithSearchString:(NSString *)searchString
 {
     NSString *escapedSearchString = [NSRegularExpression escapedPatternForString:searchString];
     NSString *searchPattern = [NSString stringWithFormat:@".*\\b%@.*", escapedSearchString];
@@ -127,24 +127,24 @@
     return YES;
 }
 
-- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *contacts, NSError *error))completion
+- (void)performUserSearchWithString:(NSString *)searchString completion:(void(^)(NSArray *users, NSError *error))completion
 {
-    NSPredicate *searchPredicate = [self predicateForParticipantsWithSearchString:searchString];
+    NSPredicate *searchPredicate = [self predicateForUsersWithSearchString:searchString];
     completion([self.users filteredSetUsingPredicate:searchPredicate].allObjects, nil);
 }
 
-- (NSSet *)participantsForIdentifiers:(NSSet *)identifiers
+- (NSSet *)usersForIdentifiers:(NSSet *)identifiers
 {
-    NSMutableSet *participants = [[NSMutableSet alloc] init];
+    NSMutableSet *users = [[NSMutableSet alloc] init];
     
-    for (NSString *participantIdentifier in identifiers) {
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(userID like[cd] %@)", [NSString stringWithFormat:@"*%@*", participantIdentifier]];
+    for (NSString *userIdentifier in identifiers) {
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"(userID like[cd] %@)", [NSString stringWithFormat:@"*%@*", userIdentifier]];
         NSSet * set = [self.users filteredSetUsingPredicate:searchPredicate];
         if ([set allObjects].count > 0) {
-            [participants addObject:[[set allObjects] firstObject]];
+            [users addObject:[[set allObjects] firstObject]];
         }
     }
-    return [NSSet setWithSet:participants];
+    return [NSSet setWithSet:users];
 }
 
 @end
@@ -236,34 +236,34 @@
     return session;
 }
 
-- (void)performParticipantSearchWithString:(NSString *)searchString completion:(void (^)(NSArray *contacts, NSError *error))completion
+- (void)performUserSearchWithString:(NSString *)searchString completion:(void (^)(NSArray *users, NSError *error))completion
 {
     NSError *error;
-    NSSet *allContacts = [self persistedUsersWithError:&error];
+    NSSet *users = [self persistedUsersWithError:&error];
     if (error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(nil, nil);
         });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSPredicate *searchPredicate = [self predicateForParticipantsWithSearchString:searchString];
-            completion([allContacts filteredSetUsingPredicate:searchPredicate].allObjects, nil);
+            NSPredicate *searchPredicate = [self predicateForUsersWithSearchString:searchString];
+            completion([users filteredSetUsingPredicate:searchPredicate].allObjects, nil);
         });
     }
 }
 
-- (NSSet *)participantsForIdentifiers:(NSSet *)identifiers;
+- (NSSet *)usersForIdentifiers:(NSSet *)identifiers;
 {
-    NSSet *participants;
+    NSSet *users;
     NSError *error;
-    NSSet *allContacts = [self persistedUsersWithError:&error];
+    NSSet *allUsers = [self persistedUsersWithError:&error];
     if (error) {
         return nil;
     } else {
         NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", identifiers];
-        participants = [allContacts filteredSetUsingPredicate:searchPredicate];
+        users = [allUsers filteredSetUsingPredicate:searchPredicate];
     }
-    return participants;
+    return users;
 }
 
 @end
