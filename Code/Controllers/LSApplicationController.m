@@ -58,21 +58,20 @@ static NSString *const LSDebugModeEnabledKey = @"debugModeEnabled";
 {
     NSLog(@"Layer Client did recieve authentication challenge with nonce: %@", nonce);
     LSUser *user = self.APIManager.authenticatedSession.user;
-    if (user) {
-        [self.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
-            if (identityToken) {
-                [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-                    if (authenticatedUserID) {
-                        NSLog(@"Silent auth in response to auth challenge successfull");
-                    } else {
-                        LSAlertWithError(error);
-                    }
-                }];
+    if (!user) return;
+    [self.APIManager authenticateWithEmail:user.email password:user.password nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+        if (error) {
+            LSAlertWithError(error);
+            return;
+        }
+        [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+            if (authenticatedUserID) {
+                NSLog(@"Silent auth in response to auth challenge successfull");
             } else {
                 LSAlertWithError(error);
             }
         }];
-    }
+    }];
 }
 
 - (void)layerClient:(LYRClient *)client didAuthenticateAsUserID:(NSString *)userID
