@@ -517,7 +517,7 @@ void LSTestResetConfiguration(void)
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 1) {
+    if (buttonIndex == alertView.firstOtherButtonIndex) {
         [self presentBugReportMailComposer];
     }
 }
