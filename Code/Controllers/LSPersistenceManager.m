@@ -241,14 +241,10 @@
     NSError *error;
     NSSet *users = [self persistedUsersWithError:&error];
     if (error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(nil, nil);
-        });
+        completion(nil, nil);
     } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSPredicate *searchPredicate = [self predicateForUsersWithSearchString:searchString];
-            completion([users filteredSetUsingPredicate:searchPredicate].allObjects, nil);
-        });
+        NSPredicate *searchPredicate = [self predicateForUsersWithSearchString:searchString];
+        completion([users filteredSetUsingPredicate:searchPredicate].allObjects, nil);
     }
 }
 
