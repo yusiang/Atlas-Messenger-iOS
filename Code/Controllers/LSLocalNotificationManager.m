@@ -53,11 +53,6 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 
 - (void)didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
 {
-  [self processLayerChangeNotification:notification];
-}
-
-- (void)processLayerChangeNotification:(NSNotification *)notification
-{
     NSMutableArray *messageChanges = [[NSMutableArray alloc] init];
     NSMutableArray *conversationChanges = [[NSMutableArray alloc] init];
     NSArray *changes = notification.userInfo[LYRClientObjectChangesUserInfoKey];
