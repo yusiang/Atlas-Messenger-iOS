@@ -174,8 +174,9 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
 - (BOOL)persistUsers:(NSSet *)users error:(NSError **)error
 {
     NSString *path = [self usersPath];
+    if (![NSKeyedArchiver archiveRootObject:users toFile:path]) return NO;
     self.users = users;
-    return [NSKeyedArchiver archiveRootObject:users toFile:path];
+    return YES;
 }
 
 - (NSSet *)persistedUsersWithError:(NSError **)error
@@ -191,14 +192,11 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
 - (BOOL)deleteAllObjects:(NSError **)error
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *fileNames = @[LSOnDiskPersistenceManagerUsersFileName, LSOnDiskPersistenceManagerSessionFileName];
-    for (NSString *fileName in fileNames) {
-        NSString *path = [self.path stringByAppendingPathComponent:fileName];
-        BOOL success = [fileManager removeItemAtPath:path error:error];
-        if (!success) return NO;
-    }
-    
+
+    if (![fileManager removeItemAtPath:[self usersPath] error:error]) return NO;
     self.users = nil;
+
+    if (![fileManager removeItemAtPath:[self sessionPath] error:error]) return NO;
     self.session = nil;
     
     return YES;
