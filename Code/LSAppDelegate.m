@@ -158,7 +158,6 @@ void LSTestResetConfiguration(void)
     // Configure application controllers
     LSLayerClient *client = [LSLayerClient clientWithAppID:LSLayerAppID(self.environment)];
     
-    // TODO: Change with subclass instead of interface class...
     self.applicationController = [LSApplicationController controllerWithBaseURL:LSRailsBaseURL()
                                                                     layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
