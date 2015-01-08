@@ -10,6 +10,9 @@
 
 #define LSMustBeImplementedBySubclass() @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Must be implemented by concrete subclass." userInfo:nil]
 
+static NSString *const LSOnDiskPersistenceManagerUsersFileName = @"Users.plist";
+static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.plist";
+
 @interface LSPersistenceManager ()
 
 @property (nonatomic) NSSet *users;
@@ -170,7 +173,7 @@
 
 - (BOOL)persistUsers:(NSSet *)users error:(NSError **)error
 {
-    NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
+    NSString *path = [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerUsersFileName];
     self.users = users;
     return [NSKeyedArchiver archiveRootObject:users toFile:path];
 }
@@ -179,7 +182,7 @@
 {
     if (self.users) return self.users;
     
-    NSString *path = [self.path stringByAppendingPathComponent:@"Users.plist"];
+    NSString *path = [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerUsersFileName];
     NSSet *users = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     self.users = users;
     return users;
@@ -207,7 +210,7 @@
 
 - (BOOL)persistSession:(LSSession *)session error:(NSError **)error
 {
-    NSString *path = [self.path stringByAppendingPathComponent:@"Session.plist"];
+    NSString *path = [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerSessionFileName];
     self.session = session;
     return [NSKeyedArchiver archiveRootObject:session toFile:path];
 }
@@ -216,7 +219,7 @@
 {
     if (self.session) return self.session;
 
-    NSString *path = [self.path stringByAppendingPathComponent:@"Session.plist"];
+    NSString *path = [self.path stringByAppendingPathComponent:LSOnDiskPersistenceManagerSessionFileName];
     LSSession *session = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     self.session = session;
     return session;
