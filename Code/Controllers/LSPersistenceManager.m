@@ -191,15 +191,11 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
 - (BOOL)deleteAllObjects:(NSError **)error
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *subpaths = [fileManager contentsOfDirectoryAtPath:self.path error:error];
-    if (!subpaths) return NO;
-
-    for (NSString *subpath in subpaths) {
-        if ([[subpath pathExtension] isEqualToString:@"plist"]) {
-            if (![fileManager removeItemAtPath:[self.path stringByAppendingPathComponent:subpath] error:error]) {
-                return NO;
-            }
-        }
+    NSArray *fileNames = @[LSOnDiskPersistenceManagerUsersFileName, LSOnDiskPersistenceManagerSessionFileName];
+    for (NSString *fileName in fileNames) {
+        NSString *path = [self.path stringByAppendingPathComponent:fileName];
+        BOOL success = [fileManager removeItemAtPath:path error:error];
+        if (!success) return NO;
     }
     
     self.users = nil;
