@@ -19,7 +19,7 @@
 #import "LYRUIConstants.h"
 #import "LSAuthenticationTableViewController.h"
 #import "LSSplashView.h"
-#import "LSLocalNotificationUtilities.h"
+#import "LSLocalNotificationManager.h"
 #import "SVProgressHUD.h" 
 
 static NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
@@ -45,7 +45,7 @@ void LSTestResetConfiguration(void)
 @property (nonatomic) LSUIConversationListViewController *conversationListViewController;
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
-@property (nonatomic) LSLocalNotificationUtilities *localNotificationUtilities;
+@property (nonatomic) LSLocalNotificationManager *localNotificationManager;
 
 @end
 
@@ -125,7 +125,7 @@ void LSTestResetConfiguration(void)
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    self.localNotificationUtilities.shouldListenForChanges = NO;
+    self.localNotificationManager.shouldListenForChanges = NO;
     [self resumeSession];
     [self loadContacts];
 }
@@ -134,7 +134,7 @@ void LSTestResetConfiguration(void)
 {
     [self setApplicationBadgeNumber];
     if (self.applicationController.shouldDisplayLocalNotifications) {
-        self.localNotificationUtilities.shouldListenForChanges = YES;
+        self.localNotificationManager.shouldListenForChanges = YES;
     }
 }
 
@@ -162,7 +162,7 @@ void LSTestResetConfiguration(void)
                                                                     layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
     
-    self.localNotificationUtilities = [LSLocalNotificationUtilities initWithLayerClient:self.applicationController.layerClient];
+    self.localNotificationManager = [LSLocalNotificationManager managerWithLayerClient:self.applicationController.layerClient];
     self.authenticationViewController.applicationController = self.applicationController;
 }
 
