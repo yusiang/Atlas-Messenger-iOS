@@ -39,9 +39,9 @@
 
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
-    [self.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
+    [self.persistenceManager performUserSearchWithString:searchText completion:^(NSArray *users, NSError *error) {
         NSPredicate *exclusionPredicate = [NSPredicate predicateWithFormat:@"NOT participantIdentifier IN %@", self.excludedIdentifiers];
-        NSArray *availableParticipants = [contacts filteredArrayUsingPredicate:exclusionPredicate];
+        NSArray *availableParticipants = [users filteredArrayUsingPredicate:exclusionPredicate];
         completion([NSSet setWithArray:availableParticipants]);
     }];
 }
@@ -49,7 +49,7 @@
 - (NSSet *)participantsForParticipantPickerController:(LYRUIParticipantPickerController *)participantPickerController
 {
     NSMutableSet *participants = [[self.persistenceManager persistedUsersWithError:nil] mutableCopy];
-    NSSet *participantsToExclude = [self.persistenceManager participantsForIdentifiers:self.excludedIdentifiers];
+    NSSet *participantsToExclude = [self.persistenceManager usersForIdentifiers:self.excludedIdentifiers];
     [participants minusSet:participantsToExclude];
     return participants;
 }

@@ -167,8 +167,8 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 - (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     if (participantIdentifier) {
-        NSSet *set = [self.applicationController.persistenceManager participantsForIdentifiers:[NSSet setWithObject:participantIdentifier]];
-        return [set anyObject];
+        LSUser *user = [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
+        return user;
     }
     return nil;
 }
@@ -373,8 +373,8 @@ static LSDateProximity LSProximityToDate(NSDate *date)
  */
 - (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
 {
-    [self.applicationController.persistenceManager performParticipantSearchWithString:searchText completion:^(NSArray *contacts, NSError *error) {
-        completion(contacts ?: @[]);
+    [self.applicationController.persistenceManager performUserSearchWithString:searchText completion:^(NSArray *users, NSError *error) {
+        completion(users ?: @[]);
     }];
 }
 
