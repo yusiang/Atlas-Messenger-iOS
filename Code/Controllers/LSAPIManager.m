@@ -54,8 +54,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     return [NSURLSession sessionWithConfiguration:configuration];
 }
 
-#pragma mark
-#pragma mark Public Authentication Methods
+#pragma mark - Public Authentication Methods
 
 - (void)registerUser:(LSUser *)user completion:(void (^)(LSUser *user, NSError *error))completion
 {
@@ -264,8 +263,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     }] resume];
 }
 
-#pragma mark
-#pragma mark Private implementation methods
+#pragma mark - Private Implementation Methods
 
 - (void)setAuthenticatedSession:(LSSession *)authenticatedSession
 {
