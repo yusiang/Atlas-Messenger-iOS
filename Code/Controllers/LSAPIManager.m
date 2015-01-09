@@ -61,7 +61,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 {
     NSParameterAssert(completion);
     
-    NSError *error = nil;
+    NSError *error;
     if (![user validate:&error]) {
         completion(nil, error);
         return;
@@ -83,8 +83,8 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             return;
         }
         
-        NSError *serializationError = nil;
-        NSDictionary *userDetails = nil;
+        NSError *serializationError;
+        NSDictionary *userDetails;
         BOOL success = [LSHTTPResponseSerializer responseObject:&userDetails withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (success) {
             NSLog(@"Loaded User Response: %@", userDetails);
@@ -136,8 +136,8 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             return;
         }
         
-        NSError *serializationError = nil;
-        NSDictionary *loginInfo = nil;
+        NSError *serializationError;
+        NSDictionary *loginInfo;
         BOOL success = [LSHTTPResponseSerializer responseObject:&loginInfo withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (!success) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -199,8 +199,8 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             return;
         }
         
-        NSArray *userRepresentations = nil;
-        NSError *serializationError = nil;
+        NSArray *userRepresentations;
+        NSError *serializationError;
         BOOL success = [LSHTTPResponseSerializer responseObject:&userRepresentations withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (!success) {
             if (completion) {
@@ -244,7 +244,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             return;
         }
         
-        NSError *serializationError = nil;
+        NSError *serializationError;
         BOOL success = [LSHTTPResponseSerializer responseObject:&response withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (!success) {
             if (completion) {
