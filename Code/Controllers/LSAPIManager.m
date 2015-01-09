@@ -167,13 +167,14 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 - (void)deauthenticate
 {
-    if (self.authenticatedSession) {
-        self.authenticatedSession = nil;
-        self.authenticatedURLSessionConfiguration = nil;
-        
-        [self.URLSession invalidateAndCancel];
-        self.URLSession = [self defaultURLSession];
-    }
+    if (!self.authenticatedSession) return;
+
+    self.authenticatedSession = nil;
+    self.authenticatedURLSessionConfiguration = nil;
+
+    [self.URLSession invalidateAndCancel];
+    self.URLSession = [self defaultURLSession];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:self.authenticatedSession.user];
 }
 
