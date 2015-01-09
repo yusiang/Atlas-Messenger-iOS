@@ -66,7 +66,7 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
 NSString *LSApplicationDataDirectory(void)
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    return ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    return paths.firstObject;
 }
 
 NSString *LSLayerPersistencePath(LSEnvironment environment)
