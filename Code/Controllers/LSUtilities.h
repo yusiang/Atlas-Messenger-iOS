@@ -11,7 +11,7 @@
 #import "LSPersistenceManager.h"
 
 /**
- @abstract The `LSUtilities` class provides convenince functions for app configuration
+ @abstract `LSUtilities` provides convenience functions for app configuration.
  */
 
 typedef enum {
