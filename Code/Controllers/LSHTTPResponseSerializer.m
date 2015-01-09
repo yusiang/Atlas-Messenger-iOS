@@ -26,11 +26,13 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
         // Rails errors in nested dictionary
         id errors = representation[@"errors"];
         if ([errors isKindOfClass:[NSDictionary class]]) {
-            NSMutableArray *components = [NSMutableArray new];
-            for (NSString *key in errors) {
-                [components addObject:[NSMutableString stringWithFormat:@"%@ %@", key, LSHTTPErrorMessageFromErrorRepresentation(errors[key])]];
-            }
-            return [components componentsJoinedByString:@" "];
+            NSMutableArray *messages = [NSMutableArray new];
+            [errors enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                NSString *description = LSHTTPErrorMessageFromErrorRepresentation(obj);
+                NSString *message = [NSString stringWithFormat:@"%@ %@", key, description];
+                [messages addObject:message];
+            }];
+            return [messages componentsJoinedByString:@" "];
         }
     }
     return [NSString stringWithFormat:@"An unknown error representation was encountered. (%@)", representation];
