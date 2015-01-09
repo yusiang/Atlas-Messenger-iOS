@@ -142,21 +142,22 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(nil, serializationError);
             });
-        } else {
-            NSString *authToken = loginInfo[@"authentication_token"];
-            LSUser *user = [LSUser userFromDictionaryRepresentation:loginInfo[@"user"]];
-            user.password = password;
-            LSSession *session = [LSSession sessionWithAuthenticationToken:authToken user:user];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSError *sessionConfigurationError;
-                BOOL success = [self configureWithSession:session error:&sessionConfigurationError];
-                if (!success) {
-                    completion(nil, sessionConfigurationError);
-                    return;
-                }
-                completion(loginInfo[@"layer_identity_token"], error);
-            });
+            return;
         }
+
+        NSString *authToken = loginInfo[@"authentication_token"];
+        LSUser *user = [LSUser userFromDictionaryRepresentation:loginInfo[@"user"]];
+        user.password = password;
+        LSSession *session = [LSSession sessionWithAuthenticationToken:authToken user:user];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *sessionConfigurationError;
+            BOOL success = [self configureWithSession:session error:&sessionConfigurationError];
+            if (!success) {
+                completion(nil, sessionConfigurationError);
+                return;
+            }
+            completion(loginInfo[@"layer_identity_token"], error);
+        });
     }] resume];
 }
 
