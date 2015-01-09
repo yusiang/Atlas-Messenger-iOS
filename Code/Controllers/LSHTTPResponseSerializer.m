@@ -43,16 +43,16 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
     NSParameterAssert(object);
     NSParameterAssert(response);
     
-    if (data.length && ![[response MIMEType] isEqualToString:@"application/json"]) {
-        NSString *description = [NSString stringWithFormat:@"Expected content type of 'application/json', but encountered a response with '%@' instead.", [response MIMEType]];
+    if (data.length && ![response.MIMEType isEqualToString:@"application/json"]) {
+        NSString *description = [NSString stringWithFormat:@"Expected content type of 'application/json', but encountered a response with '%@' instead.", response.MIMEType];
         if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{ NSLocalizedDescriptionKey: description }];
         return NO;
     }
     
-    BOOL isClientErrorStatusCode = NSLocationInRange([response statusCode], NSMakeRange(400, 100));
-    BOOL isErrorStatusCode = (isClientErrorStatusCode || NSLocationInRange([response statusCode], NSMakeRange(500, 100)));
-    if (!(NSLocationInRange([response statusCode], NSMakeRange(200, 100)) || isErrorStatusCode)) {
-        NSString *description = [NSString stringWithFormat:@"Expected status code of 2xx, 4xx, or 5xx but encountered a status code '%ld' instead.", (long)[response statusCode]];
+    BOOL isClientErrorStatusCode = NSLocationInRange(response.statusCode, NSMakeRange(400, 100));
+    BOOL isErrorStatusCode = (isClientErrorStatusCode || NSLocationInRange(response.statusCode, NSMakeRange(500, 100)));
+    if (!(NSLocationInRange(response.statusCode, NSMakeRange(200, 100)) || isErrorStatusCode)) {
+        NSString *description = [NSString stringWithFormat:@"Expected status code of 2xx, 4xx, or 5xx but encountered a status code '%ld' instead.", (long)response.statusCode];
         if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{ NSLocalizedDescriptionKey: description }];
         return NO;
     }
