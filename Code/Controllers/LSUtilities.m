@@ -48,24 +48,18 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
     switch (environment) {
         case LYRUIProduction:
             return [[NSUUID alloc] initWithUUIDString:@"9ec30af8-5591-11e4-af9e-f7a201004a3b"];
-            break;
         case LYRUIDevelopment:
             return [[NSUUID alloc] initWithUUIDString:@"361ff3ca-70e0-11e4-a4ef-1dec000000e6"];
-            break;
         case LYRUIStage1:
             return [[NSUUID alloc] initWithUUIDString:@"24f43c32-4d95-11e4-b3a2-0fd00000020d"];
-            break;
         case LYRUIDev1:
             return [[NSUUID alloc] initWithUUIDString:@"9ae66b44-1682-11e4-92e4-0b53000001d0"];
-            break;
         case LSTestEnvironment:
             return [[NSUUID alloc] initWithUUIDString:@"46dfa7da-6d1d-11e4-a787-e6f4000000e7"];
-            break;
         case LSAdHoc:
             return [[NSUUID alloc] initWithUUIDString:@"d354316c-63be-11e4-841a-364a00000bce"];
-            break;
         default:
-            break;
+            return nil;
     }
 }
 
