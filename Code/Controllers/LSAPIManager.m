@@ -50,7 +50,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 - (NSURLSession *)defaultURLSession
 {
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-    configuration.HTTPAdditionalHeaders = @{@"Accept": @"application/json", @"Content-Type": @"application/json", @"X_LAYER_APP_ID": [self.layerClient.appID UUIDString]};
+    configuration.HTTPAdditionalHeaders = @{@"Accept": @"application/json", @"Content-Type": @"application/json", @"X_LAYER_APP_ID": self.layerClient.appID.UUIDString};
     return [NSURLSession sessionWithConfiguration:configuration];
 }
 
@@ -257,7 +257,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
                                                        @"Content-Type": @"application/json",
                                                        @"X_AUTH_EMAIL": authenticatedSession.user.email,
                                                        @"X_AUTH_TOKEN": authenticatedSession.authenticationToken,
-                                                       @"X_LAYER_APP_ID": [self.layerClient.appID UUIDString]};
+                                                       @"X_LAYER_APP_ID": self.layerClient.appID.UUIDString};
         _authenticatedURLSessionConfiguration = sessionConfiguration;
         
         [self.URLSession finishTasksAndInvalidate];
