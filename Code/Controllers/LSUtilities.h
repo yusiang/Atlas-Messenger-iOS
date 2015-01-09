@@ -14,14 +14,14 @@
  @abstract `LSUtilities` provides convenience functions for app configuration.
  */
 
-typedef enum {
+typedef NS_ENUM(NSInteger, LSEnvironment) {
     LYRUIProduction,
     LYRUIDevelopment,
     LYRUIStage1,
     LYRUIDev1,
     LSTestEnvironment,
     LSAdHoc
-} LSEnvironment;
+};
 
 BOOL LSIsRunningTests();
 
