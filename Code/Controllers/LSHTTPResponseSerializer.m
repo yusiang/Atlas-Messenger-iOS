@@ -9,6 +9,24 @@
 #import "LSHTTPResponseSerializer.h"
 
 NSString *const LSHTTPResponseErrorDomain = @"com.layer.LSSample.HTTPResponseError";
+static NSRange const LSHTTPSuccessStatusCodeRange = {200, 100};
+static NSRange const LSHTTPClientErrorStatusCodeRange = {400, 100};
+static NSRange const LSHTTPServerErrorStatusCodeRange = {500, 100};
+
+typedef NS_ENUM(NSInteger, LSHTTPResponseStatus) {
+    LSHTTPResponseStatusSuccess,
+    LSHTTPResponseStatusClientError,
+    LSHTTPResponseStatusServerError,
+    LSHTTPResponseStatusOther,
+};
+
+static LSHTTPResponseStatus LSHTTPResponseStatusFromStatusCode(NSInteger statusCode)
+{
+    if (NSLocationInRange(statusCode, LSHTTPSuccessStatusCodeRange)) return LSHTTPResponseStatusSuccess;
+    if (NSLocationInRange(statusCode, LSHTTPClientErrorStatusCodeRange)) return LSHTTPResponseStatusClientError;
+    if (NSLocationInRange(statusCode, LSHTTPServerErrorStatusCodeRange)) return LSHTTPResponseStatusServerError;
+    return LSHTTPResponseStatusOther;
+}
 
 static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
 {
@@ -51,9 +69,8 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
         return NO;
     }
     
-    BOOL isClientErrorStatusCode = NSLocationInRange(response.statusCode, NSMakeRange(400, 100));
-    BOOL isErrorStatusCode = (isClientErrorStatusCode || NSLocationInRange(response.statusCode, NSMakeRange(500, 100)));
-    if (!(NSLocationInRange(response.statusCode, NSMakeRange(200, 100)) || isErrorStatusCode)) {
+    LSHTTPResponseStatus status = LSHTTPResponseStatusFromStatusCode(response.statusCode);
+    if (status == LSHTTPResponseStatusOther) {
         NSString *description = [NSString stringWithFormat:@"Expected status code of 2xx, 4xx, or 5xx but encountered a status code '%ld' instead.", (long)response.statusCode];
         if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{NSLocalizedDescriptionKey: description}];
         return NO;
@@ -61,8 +78,8 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
     
     // No response body
     if (!data.length) {
-        if (isErrorStatusCode) {
-            if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(isClientErrorStatusCode ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: @"An error was encountered without a response body."}];
+        if (status != LSHTTPResponseStatusSuccess) {
+            if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(status == LSHTTPResponseStatusClientError ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: @"An error was encountered without a response body."}];
             return NO;
         } else {
             // Successful response with no data (typical of a 204 (No Content) response)
@@ -79,9 +96,9 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
         return NO;
     }
     
-    if (isErrorStatusCode) {
+    if (status != LSHTTPResponseStatusSuccess) {
         NSString *errorMessage = LSHTTPErrorMessageFromErrorRepresentation(deserializedResponse);
-        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(isClientErrorStatusCode ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(status == LSHTTPResponseStatusClientError ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
         return NO;
     }
     
