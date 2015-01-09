@@ -19,6 +19,8 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 @property (nonatomic, readonly) LYRClient *layerClient;
 @property (nonatomic) NSURL *baseURL;
 @property (nonatomic) NSURLSession *URLSession;
+@property (nonatomic) LSSession *authenticatedSession;
+@property (nonatomic) NSURLSessionConfiguration *authenticatedURLSessionConfiguration;
 
 @end
 
@@ -145,8 +147,13 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             LSUser *user = [LSUser userFromDictionaryRepresentation:loginInfo[@"user"]];
             user.password = password;
             LSSession *session = [LSSession sessionWithAuthenticationToken:authToken user:user];
-            self.authenticatedSession = session;
             dispatch_async(dispatch_get_main_queue(), ^{
+                NSError *sessionConfigurationError;
+                BOOL success = [self configureWithSession:session error:&sessionConfigurationError];
+                if (!success) {
+                    completion(nil, sessionConfigurationError);
+                    return;
+                }
                 completion(loginInfo[@"layer_identity_token"], error);
             });
         }
@@ -155,20 +162,14 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 - (BOOL)resumeSession:(LSSession *)session error:(NSError **)error
 {
-    if (session) {
-        self.authenticatedSession = session;
-        return YES;
-    } else {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"No authenticated session"}];
-        return NO;
-    }
+    return [self configureWithSession:session error:error];
 }
 
 - (void)deauthenticate
 {
     if (self.authenticatedSession) {
-        _authenticatedSession = nil;
-        _authenticatedURLSessionConfiguration = nil;
+        self.authenticatedSession = nil;
+        self.authenticatedURLSessionConfiguration = nil;
         
         [self.URLSession invalidateAndCancel];
         self.URLSession = [self defaultURLSession];
@@ -247,26 +248,31 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
 #pragma mark - Private Implementation Methods
 
-- (void)setAuthenticatedSession:(LSSession *)authenticatedSession
+- (BOOL)configureWithSession:(LSSession *)session error:(NSError **)error
 {
-    if (authenticatedSession && !self.authenticatedSession) {
-        _authenticatedSession = authenticatedSession;
-        
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-        sessionConfiguration.HTTPAdditionalHeaders = @{@"Accept": @"application/json",
-                                                       @"Content-Type": @"application/json",
-                                                       @"X_AUTH_EMAIL": authenticatedSession.user.email,
-                                                       @"X_AUTH_TOKEN": authenticatedSession.authenticationToken,
-                                                       @"X_LAYER_APP_ID": self.layerClient.appID.UUIDString};
-        _authenticatedURLSessionConfiguration = sessionConfiguration;
-        
-        [self.URLSession finishTasksAndInvalidate];
-        self.URLSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidAuthenticateNotification object:authenticatedSession.user];
-        });
+    if (self.authenticatedSession) return YES;
+
+    if (!session) {
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"No authenticated session"}];
+        return NO;
     }
+
+    self.authenticatedSession = session;
+
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    sessionConfiguration.HTTPAdditionalHeaders = @{@"Accept": @"application/json",
+                                                   @"Content-Type": @"application/json",
+                                                   @"X_AUTH_EMAIL": session.user.email,
+                                                   @"X_AUTH_TOKEN": session.authenticationToken,
+                                                   @"X_LAYER_APP_ID": self.layerClient.appID.UUIDString};
+    self.authenticatedURLSessionConfiguration = sessionConfiguration;
+
+    [self.URLSession finishTasksAndInvalidate];
+    self.URLSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidAuthenticateNotification object:session.user];
+
+    return YES;
 }
 
 @end
