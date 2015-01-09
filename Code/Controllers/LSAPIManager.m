@@ -186,11 +186,9 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
     [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (!response && error) {
-            if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(nil, error);
-                });
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil, error);
+            });
             return;
         }
         
@@ -198,11 +196,9 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         NSError *serializationError;
         BOOL success = [LSHTTPResponseSerializer responseObject:&userRepresentations withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (!success) {
-            if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(nil, serializationError);
-                });
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil, serializationError);
+            });
             return;
         }
         
@@ -212,11 +208,9 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             [contacts addObject:user];
         }
         
-        if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(contacts, nil);
-            });
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(contacts, nil);
+        });
     }] resume];
 }
 
@@ -230,30 +224,24 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 
     [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (!response && error) {
-            if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(NO, error);
-                });
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(NO, error);
+            });
             return;
         }
         
         NSError *serializationError;
         BOOL success = [LSHTTPResponseSerializer responseObject:&response withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (!success) {
-            if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(NO, serializationError);
-                });
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(NO, serializationError);
+            });
             return;
         }
-        
-        if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(success, nil);
-            });
-        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(success, nil);
+        });
     }] resume];
 }
 
