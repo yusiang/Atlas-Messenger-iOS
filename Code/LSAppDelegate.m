@@ -25,14 +25,13 @@
 #import "SVProgressHUD.h" 
 
 extern void LYRSetLogLevelFromEnvironment();
-extern NSString *LYRApplicationDataDirectory(void);
 extern dispatch_once_t LYRConfigurationURLOnceToken;
 
 void LSTestResetConfiguration(void)
 {
     extern dispatch_once_t LYRDefaultConfigurationDispatchOnceToken;
     
-    NSString *archivePath = [LYRApplicationDataDirectory() stringByAppendingPathComponent:@"LayerConfiguration.plist"];
+    NSString *archivePath = [LSApplicationDataDirectory() stringByAppendingPathComponent:@"LayerConfiguration.plist"];
     [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
     
     // Ensure the next call through `LYRDefaultConfiguration` will reload
