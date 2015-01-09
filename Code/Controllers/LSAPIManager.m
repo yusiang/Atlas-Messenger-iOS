@@ -89,7 +89,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         if (success) {
             user.userID = userDetails[@"id"];
             dispatch_async(dispatch_get_main_queue(), ^{
-                completion(user, serializationError);
+                completion(user, nil);
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -156,7 +156,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
                 completion(nil, sessionConfigurationError);
                 return;
             }
-            completion(loginInfo[@"layer_identity_token"], error);
+            completion(loginInfo[@"layer_identity_token"], nil);
         });
     }] resume];
 }
