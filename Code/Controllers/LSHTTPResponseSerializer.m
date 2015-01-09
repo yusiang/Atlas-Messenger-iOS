@@ -36,7 +36,7 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
         return [representation componentsJoinedByString:@", "];
     } else if ([representation isKindOfClass:[NSDictionary class]]) {
         // Check for direct error message
-        NSString *errorMessage = representation[@"error"];
+        id errorMessage = representation[@"error"];
         if (errorMessage) {
             return LSHTTPErrorMessageFromErrorRepresentation(errorMessage);
         }
