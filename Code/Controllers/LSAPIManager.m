@@ -104,19 +104,19 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     NSParameterAssert(completion);
     
     if (!email.length) {
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{NSLocalizedDescriptionKey: @"Please enter your Email address in order to Login"}];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{NSLocalizedDescriptionKey: @"Please enter your email address to log in"}];
         completion(nil, error);
         return;
     }
     
     if (!password.length) {
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{NSLocalizedDescriptionKey: @"Please enter your password in order to login"}];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{NSLocalizedDescriptionKey: @"Please enter your password to log in"}];
         completion(nil, error);
         return;
     }
     
     if (!nonce.length) {
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidAuthenticationNonce userInfo:@{NSLocalizedDescriptionKey: @"Application must supply authenticate nonce to complete"}];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidAuthenticationNonce userInfo:@{NSLocalizedDescriptionKey: @"Application must supply authentication nonce to complete"}];
         completion(nil, error);
         return;
     }
