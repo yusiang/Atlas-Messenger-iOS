@@ -65,7 +65,7 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
             if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(isClientErrorStatusCode ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: @"An error was encountered without a response body."}];
             return NO;
         } else {
-            // Successful response with no data (typical of a 204 (No Content) response
+            // Successful response with no data (typical of a 204 (No Content) response)
             *object = nil;
             return YES;
         }
