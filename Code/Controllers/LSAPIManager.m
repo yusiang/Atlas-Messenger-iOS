@@ -159,7 +159,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         self.authenticatedSession = session;
         return YES;
     } else {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSNoAuthenticatedSession userInfo:@{@"error": @"No authenticated session"}];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"No authenticated session"}];
         return NO;
     }
 }
