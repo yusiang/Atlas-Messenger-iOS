@@ -25,7 +25,7 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
         
         // Rails errors in nested dictionary
         id errors = representation[@"errors"];
-        if (errors) {
+        if ([errors isKindOfClass:[NSDictionary class]]) {
             NSMutableArray *components = [NSMutableArray new];
             for (NSString *key in errors) {
                 [components addObject:[NSMutableString stringWithFormat:@"%@ %@", key, LSHTTPErrorMessageFromErrorRepresentation(errors[key])]];
