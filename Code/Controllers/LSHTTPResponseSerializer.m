@@ -70,7 +70,7 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
     }
     
     // We have response body and passed Content-Type checks, deserialize it
-    NSError *serializationError = nil;
+    NSError *serializationError;
     id deserializedResponse = [NSJSONSerialization JSONObjectWithData:data options:0 error:&serializationError];
     if (!deserializedResponse) {
         if (error) *error = serializationError;
