@@ -73,7 +73,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
     
     [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSLog(@"Got response: %@, data: %@, error: %@", response, data, error);
         if (!response && error) {
             NSLog(@"Failed with error: %@", error);
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -86,7 +85,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         NSDictionary *userDetails;
         BOOL success = [LSHTTPResponseSerializer responseObject:&userDetails withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (success) {
-            NSLog(@"Loaded User Response: %@", userDetails);
             user.userID = userDetails[@"id"];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(user, serializationError);
@@ -208,7 +206,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             return;
         }
         
-        //NSLog(@"Loaded user representations: %@", userRepresentations);
         NSMutableSet *contacts = [NSMutableSet new];
         for (NSDictionary *representation in userRepresentations) {
             LSUser *user = [LSUser userFromDictionaryRepresentation:representation];
@@ -252,7 +249,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             return;
         }
         
-        NSLog(@"Users succesfully deleted");
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(success, nil);
