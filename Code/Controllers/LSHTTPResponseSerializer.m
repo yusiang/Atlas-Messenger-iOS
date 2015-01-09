@@ -45,7 +45,7 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
     
     if (data.length && ![response.MIMEType isEqualToString:@"application/json"]) {
         NSString *description = [NSString stringWithFormat:@"Expected content type of 'application/json', but encountered a response with '%@' instead.", response.MIMEType];
-        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{ NSLocalizedDescriptionKey: description }];
+        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{NSLocalizedDescriptionKey: description}];
         return NO;
     }
     
@@ -53,14 +53,14 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
     BOOL isErrorStatusCode = (isClientErrorStatusCode || NSLocationInRange(response.statusCode, NSMakeRange(500, 100)));
     if (!(NSLocationInRange(response.statusCode, NSMakeRange(200, 100)) || isErrorStatusCode)) {
         NSString *description = [NSString stringWithFormat:@"Expected status code of 2xx, 4xx, or 5xx but encountered a status code '%ld' instead.", (long)response.statusCode];
-        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{ NSLocalizedDescriptionKey: description }];
+        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{NSLocalizedDescriptionKey: description}];
         return NO;
     }
     
     // No response body
     if (!data.length) {
         if (isErrorStatusCode) {
-            if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(isClientErrorStatusCode ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{ NSLocalizedDescriptionKey: @"An error was encountered without a response body." }];
+            if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(isClientErrorStatusCode ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: @"An error was encountered without a response body."}];
             return NO;
         } else {
             // Successful response with no data (typical of a 204 (No Content) response
@@ -79,7 +79,7 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
     
     if (isErrorStatusCode) {
         NSString *errorMessage = LSHTTPErrorMessageFromErrorRepresentation(deserializedResponse);
-        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(isClientErrorStatusCode ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{ NSLocalizedDescriptionKey: errorMessage }];
+        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(isClientErrorStatusCode ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
         return NO;
     }
     
