@@ -9,6 +9,24 @@
 #import "LSHTTPResponseSerializer.h"
 
 NSString *const LSHTTPResponseErrorDomain = @"com.layer.LSSample.HTTPResponseError";
+static NSRange const LSHTTPSuccessStatusCodeRange = {200, 100};
+static NSRange const LSHTTPClientErrorStatusCodeRange = {400, 100};
+static NSRange const LSHTTPServerErrorStatusCodeRange = {500, 100};
+
+typedef NS_ENUM(NSInteger, LSHTTPResponseStatus) {
+    LSHTTPResponseStatusSuccess,
+    LSHTTPResponseStatusClientError,
+    LSHTTPResponseStatusServerError,
+    LSHTTPResponseStatusOther,
+};
+
+static LSHTTPResponseStatus LSHTTPResponseStatusFromStatusCode(NSInteger statusCode)
+{
+    if (NSLocationInRange(statusCode, LSHTTPSuccessStatusCodeRange)) return LSHTTPResponseStatusSuccess;
+    if (NSLocationInRange(statusCode, LSHTTPClientErrorStatusCodeRange)) return LSHTTPResponseStatusClientError;
+    if (NSLocationInRange(statusCode, LSHTTPServerErrorStatusCodeRange)) return LSHTTPResponseStatusServerError;
+    return LSHTTPResponseStatusOther;
+}
 
 static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
 {
@@ -18,19 +36,21 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
         return [representation componentsJoinedByString:@", "];
     } else if ([representation isKindOfClass:[NSDictionary class]]) {
         // Check for direct error message
-        NSString *errorMessage = representation[@"error"];
+        id errorMessage = representation[@"error"];
         if (errorMessage) {
             return LSHTTPErrorMessageFromErrorRepresentation(errorMessage);
         }
         
         // Rails errors in nested dictionary
         id errors = representation[@"errors"];
-        if (errors) {
-            NSMutableArray *components = [NSMutableArray new];
-            for (NSString *key in errors) {
-                [components addObject:[NSMutableString stringWithFormat:@"%@ %@", key, LSHTTPErrorMessageFromErrorRepresentation(errors[key])]];
-            }
-            return [components componentsJoinedByString:@" "];
+        if ([errors isKindOfClass:[NSDictionary class]]) {
+            NSMutableArray *messages = [NSMutableArray new];
+            [errors enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                NSString *description = LSHTTPErrorMessageFromErrorRepresentation(obj);
+                NSString *message = [NSString stringWithFormat:@"%@ %@", key, description];
+                [messages addObject:message];
+            }];
+            return [messages componentsJoinedByString:@" "];
         }
     }
     return [NSString stringWithFormat:@"An unknown error representation was encountered. (%@)", representation];
@@ -43,43 +63,42 @@ static NSString *LSHTTPErrorMessageFromErrorRepresentation(id representation)
     NSParameterAssert(object);
     NSParameterAssert(response);
     
-    if (data.length && ![[response MIMEType] isEqualToString:@"application/json"]) {
-        NSString *description = [NSString stringWithFormat:@"Expected content type of 'application/json', but encountered a response with '%@' instead.", [response MIMEType]];
-        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{ NSLocalizedDescriptionKey: description }];
+    if (data.length && ![response.MIMEType isEqualToString:@"application/json"]) {
+        NSString *description = [NSString stringWithFormat:@"Expected content type of 'application/json', but encountered a response with '%@' instead.", response.MIMEType];
+        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{NSLocalizedDescriptionKey: description}];
         return NO;
     }
     
-    BOOL isClientErrorStatusCode = NSLocationInRange([response statusCode], NSMakeRange(400, 100));
-    BOOL isErrorStatusCode = (isClientErrorStatusCode || NSLocationInRange([response statusCode], NSMakeRange(500, 100)));
-    if (!(NSLocationInRange([response statusCode], NSMakeRange(200, 100)) || isErrorStatusCode)) {
-        NSString *description = [NSString stringWithFormat:@"Expected status code of 2xx, 4xx, or 5xx but encountered a status code '%ld' instead.", (long)[response statusCode]];
-        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{ NSLocalizedDescriptionKey: description }];
+    LSHTTPResponseStatus status = LSHTTPResponseStatusFromStatusCode(response.statusCode);
+    if (status == LSHTTPResponseStatusOther) {
+        NSString *description = [NSString stringWithFormat:@"Expected status code of 2xx, 4xx, or 5xx but encountered a status code '%ld' instead.", (long)response.statusCode];
+        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:LSHTTPResponseErrorInvalidContentType userInfo:@{NSLocalizedDescriptionKey: description}];
         return NO;
     }
     
     // No response body
     if (!data.length) {
-        if (isErrorStatusCode) {
-            if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(isClientErrorStatusCode ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{ NSLocalizedDescriptionKey: @"An error was encountered without a response body." }];
+        if (status != LSHTTPResponseStatusSuccess) {
+            if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(status == LSHTTPResponseStatusClientError ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: @"An error was encountered without a response body."}];
             return NO;
         } else {
-            // Successful response with no data (typical of a 204 (No Content) response
+            // Successful response with no data (typical of a 204 (No Content) response)
             *object = nil;
             return YES;
         }
     }
     
     // We have response body and passed Content-Type checks, deserialize it
-    NSError *serializationError = nil;
+    NSError *serializationError;
     id deserializedResponse = [NSJSONSerialization JSONObjectWithData:data options:0 error:&serializationError];
     if (!deserializedResponse) {
         if (error) *error = serializationError;
         return NO;
     }
     
-    if (isErrorStatusCode) {
+    if (status != LSHTTPResponseStatusSuccess) {
         NSString *errorMessage = LSHTTPErrorMessageFromErrorRepresentation(deserializedResponse);
-        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(isClientErrorStatusCode ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{ NSLocalizedDescriptionKey: errorMessage }];
+        if (error) *error = [NSError errorWithDomain:LSHTTPResponseErrorDomain code:(status == LSHTTPResponseStatusClientError ? LSHTTPResponseErrorClientError : LSHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
         return NO;
     }
     
