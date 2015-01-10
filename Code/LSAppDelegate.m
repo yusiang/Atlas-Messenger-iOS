@@ -12,6 +12,8 @@
 #import <HockeySDK/HockeySDK.h>
 #import <LayerUIKit/LayerUIKit.h>
 #import <MessageUI/MessageUI.h>
+#import <sys/sysctl.h>
+#import <asl.h>
 #import "LSAppDelegate.h"
 #import "LSUIConversationListViewController.h"
 #import "LSAPIManager.h"
@@ -492,17 +494,27 @@ void LSTestResetConfiguration(void)
 - (void)presentBugReportMailComposer
 {
     LYRUILastPhotoTaken(^(UIImage *image, NSError *error) {
-        NSString *emailSubject = @"New iOS Sample App Bug!";
-        NSString *emailBody = @"Please enter your bug description below";
+        NSString *appVersion = [self bugReportAppVersion];
+        NSString *layerKitVersion = [self bugReportLayerKitVersion];
+        NSData *consoleData = [self bugReportConsoleData];
+        NSString *deviceVersion = [self bugReportDeviceVersion];
+        NSString *environmentName = [LSApplicationController layerServerHostname];
+        NSString *timestamp = [self bugReportTimeStamp];
+        NSString *email = [self bugReportEmail];
+        NSString *platformWithOSVersion = [NSString stringWithFormat:@"iOS %@", [UIDevice currentDevice].systemVersion];
+        NSString *userID = self.applicationController.layerClient.authenticatedUserID ?: @"None";
+        NSString *deviceToken = self.applicationController.deviceToken.description ?: @"None";
+
+        NSString *emailBody = [NSString stringWithFormat:@"email: %@\ntime: %@\nplatform: %@\ndevice: %@\napp: %@\nsdk: %@\nenv: %@\nuserid: %@\ndevice token: %@", email, timestamp, platformWithOSVersion, deviceVersion, appVersion, layerKitVersion, environmentName, userID, deviceToken];
         
         MFMailComposeViewController *mailComposeViewController = [MFMailComposeViewController new];
         mailComposeViewController.mailComposeDelegate = self;
-        [mailComposeViewController setSubject:emailSubject];
         [mailComposeViewController setMessageBody:emailBody isHTML:NO];
         [mailComposeViewController setToRecipients:@[@"kevin@layer.com", @"jira@layer.com"]];
         if (!error) {
             [mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
         }
+        [mailComposeViewController addAttachmentData:consoleData mimeType:@"text/plain" fileName:@"console.log"];
 
         UIViewController *controller = self.window.rootViewController;
         while (controller.presentedViewController) {
@@ -510,6 +522,80 @@ void LSTestResetConfiguration(void)
         }
         [controller presentViewController:mailComposeViewController animated:YES completion:nil];
     });
+}
+
+- (NSData *)bugReportConsoleData
+{
+    // Adopted from http://stackoverflow.com/a/7151773
+    NSMutableString *consoleLog = [NSMutableString new];
+    aslclient client = asl_open(NULL, NULL, ASL_OPT_STDERR);
+
+    aslmsg query = asl_new(ASL_TYPE_QUERY);
+    asl_set_query(query, ASL_KEY_MSG, NULL, ASL_QUERY_OP_NOT_EQUAL);
+    aslresponse response = asl_search(client, query);
+    asl_free(query);
+
+    aslmsg message;
+    while((message = asl_next(response))) {
+        const char *msg = asl_get(message, ASL_KEY_MSG);
+        if (consoleLog.length > 0) {
+            [consoleLog appendString:@"\n"];
+        }
+        [consoleLog appendString:[NSString stringWithCString:msg encoding:NSUTF8StringEncoding]];
+    }
+
+    asl_release(response);
+    asl_close(client);
+
+    NSData *consoleData = [consoleLog dataUsingEncoding:NSUTF8StringEncoding];
+    return consoleData;
+}
+
+- (NSString *)bugReportAppVersion
+{
+    NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
+    NSString *appVersion = [NSString stringWithFormat:@"LayerSample v%@ (%@)", infoDictionary[@"CFBundleShortVersionString"], infoDictionary[@"CFBundleVersion"]];
+    return appVersion;
+}
+
+- (NSString *)bugReportLayerKitVersion
+{
+    NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
+    NSDictionary *layerKitBuildInformation = infoDictionary[@"LYRBuildInformation"];
+    NSString *layerKitVersion = [NSString stringWithFormat:@"LayerKit v%@", layerKitBuildInformation[@"LYRBuildLayerKitVersion"]];
+    return layerKitVersion;
+}
+
+- (NSString *)bugReportDeviceVersion
+{
+    size_t size;
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char *machine = malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString *deviceVersion = @(machine);
+    free(machine);
+    return deviceVersion;
+}
+
+- (NSString *)bugReportTimeStamp
+{
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    dateFormatter.timeStyle = NSDateFormatterLongStyle;
+    NSString *timestamp = [dateFormatter stringFromDate:[NSDate date]];
+    return timestamp;
+}
+
+- (NSString *)bugReportEmail
+{
+    NSString *authenticatedUserID = self.applicationController.layerClient.authenticatedUserID;
+    if (authenticatedUserID) {
+        LSUser *user = [self.applicationController.persistenceManager userForIdentifier:authenticatedUserID];
+        if (user) {
+            return user.email;
+        }
+    }
+    return @"";
 }
 
 #pragma mark - UIAlertViewDelegate
