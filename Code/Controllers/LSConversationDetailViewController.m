@@ -68,8 +68,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     self.title = @"Details";
     self.accessibilityLabel = @"Details";
     
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
     self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
     self.tableView.rowHeight = 48.0f;
