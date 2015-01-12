@@ -63,6 +63,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.sectionFooterHeight = 0.0f;
+    self.tableView.rowHeight = 48.0f;
     
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterContentCellIdentifier];
     [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LSParticipantCellIdentifier];
@@ -79,11 +80,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 }
 
 #pragma mark - Table view data source
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 48;
-}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
