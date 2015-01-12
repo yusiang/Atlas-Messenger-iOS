@@ -33,16 +33,6 @@ NSUUID *LSLayerAppID(LSEnvironment);
 
 NSString *LSApplicationDataDirectory();
 
-NSString *LSLayerPersistencePath();
-
 LSPersistenceManager *LSPersitenceManager();
 
 void LSAlertWithError(NSError *error);
-
-CGRect LSImageRectForThumb(CGSize size, NSUInteger maxConstraint);
-
-NSString *MIMETypeTextPlain();
-
-NSString *MIMETypeImagePNG();
-
-NSString *MIMETypeImageJPEG();

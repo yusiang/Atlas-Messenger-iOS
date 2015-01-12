@@ -69,11 +69,6 @@ NSString *LSApplicationDataDirectory(void)
     return paths.firstObject;
 }
 
-NSString *LSLayerPersistencePath(LSEnvironment environment)
-{
-    return [LSApplicationDataDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqllite", LSLayerAppID(environment)]];
-}
-
 LSPersistenceManager *LSPersitenceManager(void)
 {
     if (LSIsRunningTests()){
@@ -90,34 +85,3 @@ void LSAlertWithError(NSError *error)
                                               cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alertView show];
 }
-
-CGRect LSImageRectForThumb(CGSize size, NSUInteger maxConstraint)
-{
-    CGRect thumbRect;
-    if (size.width > size.height) {
-        double ratio = maxConstraint/size.width;
-        double height = size.height * ratio;
-        thumbRect = CGRectMake(0, 0, maxConstraint, height);
-    } else {
-        double ratio = maxConstraint/size.height;
-        double width = size.width * ratio;
-        thumbRect = CGRectMake(0, 0, width, maxConstraint);
-    }
-    return thumbRect;
-}
-
-NSString *MIMETypeTextPlain()
-{
-    return @"text/plain";
-}
-
-NSString *MIMETypeImagePNG()
-{
-    return @"image/png";
-}
-
-NSString *MIMETypeImageJPEG()
-{
-    return @"image/jpeg";
-}
-
