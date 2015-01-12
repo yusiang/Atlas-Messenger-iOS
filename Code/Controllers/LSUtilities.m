@@ -24,22 +24,18 @@ NSString *LSLayerConfigurationURL(LSEnvironment environment)
     switch (environment) {
         case LYRUIProduction:
             return @"https://conf.lyr8.net/conf";
-            break;
         case LYRUIDevelopment:
             return @"https://conf.lyr8.net/conf";
-            break;
         case LYRUIStage1:
              return @"https://conf.stage1.lyr8.net/conf";
-            break;
         case LYRUIDev1:
             return @"https://dev-1.preview.layer.com:444/conf";
-            break;
         case LSTestEnvironment:
             return @"https://conf.lyr8.net/conf";
         case LSAdHoc:
             return @"https://130.211.117.22:444/conf";
         default:
-            break;
+            return nil;
     }
 }
 
