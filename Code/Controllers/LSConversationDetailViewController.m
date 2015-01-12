@@ -16,6 +16,14 @@
 #import "LSCenterTextTableViewCell.h"
 #import "LSInputTableViewCell.h"
 
+typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
+    LSConversationDetailTableSectionMetadata,
+    LSConversationDetailTableSectionParticipants,
+    LSConversationDetailTableSectionLocation,
+    LSConversationDetailTableSectionDeletion,
+    LSConversationDetailTableSectionCount,
+};
+
 @interface LSConversationDetailViewController () <LYRUIParticipantPickerControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
@@ -93,20 +101,20 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
+    switch ((LSConversationDetailTableSection)section) {
+        case LSConversationDetailTableSectionMetadata:
             return 1;
-        case 1:
+        case LSConversationDetailTableSectionParticipants:
             if (self.authenticatedUserIsConversationMember){
                 return self.participantIdentifiers.count + 1;
             } else {
                 return self.participantIdentifiers.count;
             }
             
-        case 2:
+        case LSConversationDetailTableSectionLocation:
             return 1;
             
-        case 3:
+        case LSConversationDetailTableSectionDeletion:
             return 1;
             
         default:
@@ -118,8 +126,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
-    switch (indexPath.section) {
-        case 0: {
+    switch ((LSConversationDetailTableSection)indexPath.section) {
+        case LSConversationDetailTableSectionMetadata: {
             cell = [self.tableView dequeueReusableCellWithIdentifier:LSInputCellIdentifier];
             [(LSInputTableViewCell *)cell textField].delegate = self;
             [(LSInputTableViewCell *)cell setGuideText:@"Name:"];
@@ -130,7 +138,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             }
         }
             break;
-        case 1:
+        case LSConversationDetailTableSectionParticipants:
             if (indexPath.row > self.participantIdentifiers.count - 1 ) {
                 cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
                 cell.textLabel.text = @"+ Add Participant";
@@ -145,7 +153,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             }
             break;
             
-        case 2: {
+        case LSConversationDetailTableSectionLocation: {
             cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
             cell.textLabel.text = @"Share My Location";
             cell.textLabel.textColor = LYRUIBlueColor();
@@ -153,7 +161,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         }
             break;
             
-        case 3: {
+        case LSConversationDetailTableSectionDeletion: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
             [centerCell setCenterText:@"Global Delete Conversation"];
             centerCell.centerTextLabel.textColor = LYRUIRedColor();
@@ -168,14 +176,14 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
+    switch ((LSConversationDetailTableSection)section) {
+        case LSConversationDetailTableSectionMetadata:
             return @"Conversation Name";
 
-        case 1:
+        case LSConversationDetailTableSectionParticipants:
             return @"PARTICIPANTS";
             
-        case 2:
+        case LSConversationDetailTableSectionLocation:
             return @"LOCATION";
             
         default:
@@ -185,8 +193,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch (indexPath.section) {
-        case 1:
+    switch ((LSConversationDetailTableSection)indexPath.section) {
+        case LSConversationDetailTableSectionParticipants:
             if (indexPath.row == self.participantIdentifiers.count) {
                 self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
                 self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
@@ -198,11 +206,11 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             }
             break;
             
-        case 2:
+        case LSConversationDetailTableSectionLocation:
             [self startLocationManager];
             break;
         
-        case 3:
+        case LSConversationDetailTableSectionDeletion:
             [self.conversation delete:LYRDeletionModeAllParticipants error:nil];
             [self.navigationController popToRootViewControllerAnimated:YES];
             break;
