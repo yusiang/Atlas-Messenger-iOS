@@ -95,28 +95,23 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     switch (section) {
         case 0:
             return 1;
-            break;
         case 1:
             if (self.authenticatedUserIsConversationMember){
                 return self.participantIdentifiers.count + 1;
             } else {
                 return self.participantIdentifiers.count;
             }
-            break;
             
         case 2:
             return 1;
-            break;
             
         case 3:
             return 1;
-            break;
             
         default:
-            break;
+            return 0;
             
     }
-    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -180,20 +175,16 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     switch (section) {
         case 0:
             return @"Conversation Name";
-            break;
 
         case 1:
             return @"PARTICIPANTS";
-            break;
             
         case 2:
             return @"LOCATION";
-            break;
             
         default:
-            break;
+            return nil;
     }
-    return nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
