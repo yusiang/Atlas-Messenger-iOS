@@ -93,7 +93,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (self.authenticatedUserIsConversationMember) {
-        return 3;
+        return LSConversationDetailTableSectionCount;
     } else {
         return 1;
     }
