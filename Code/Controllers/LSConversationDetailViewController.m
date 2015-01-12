@@ -78,11 +78,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.tableView reloadData];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
 #pragma mark - Table view data source
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -309,11 +304,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.tableView reloadData];
 }
 
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-{
-    return YES;
-}
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (textField.text) {
@@ -321,11 +311,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     }
     [textField resignFirstResponder];
     return YES;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    //Setup metadata here
 }
 
 #pragma Cell Appearance Configuration
