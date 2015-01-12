@@ -150,8 +150,8 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 {
     [super viewWillAppear:animated];
     
-    if ([self.conversation.metadata valueForKey:LYRUIConversationNameTag]) {
-        self.conversationTitle = [self.conversation.metadata valueForKey:LYRUIConversationNameTag];
+    if ([self.conversation.metadata valueForKey:LSConversationNameTag]) {
+        self.conversationTitle = [self.conversation.metadata valueForKey:LSConversationNameTag];
     }
     
     self.addressBarController.dataSource = self;
