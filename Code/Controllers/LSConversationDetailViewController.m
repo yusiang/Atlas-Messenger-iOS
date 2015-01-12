@@ -222,7 +222,16 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+    switch ((LSConversationDetailTableSection)indexPath.section) {
+        case LSConversationDetailTableSectionParticipants:
+            return indexPath.row < self.participantIdentifiers.count;
+
+        case LSConversationDetailTableSectionMetadata:
+        case LSConversationDetailTableSectionLocation:
+        case LSConversationDetailTableSectionDeletion:
+        case LSConversationDetailTableSectionCount:
+            return NO;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
