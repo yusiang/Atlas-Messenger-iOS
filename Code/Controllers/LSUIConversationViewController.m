@@ -444,7 +444,7 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 {
     LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
     detailViewController.detailDelegate = self;
-    detailViewController.detailsDataSource = self;
+    detailViewController.detailDataSource = self;
     detailViewController.applicationController = self.applicationController;
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }

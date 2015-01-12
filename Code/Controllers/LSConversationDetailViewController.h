@@ -74,7 +74,7 @@ extern NSString *const LYRUIConversationNameTag;
 /**
  @abstract The `LSConversationDetailViewControllerDataSource` object for the controller.
  */
-@property (nonatomic) id<LSConversationDetailViewControllerDataSource> detailsDataSource;
+@property (nonatomic) id<LSConversationDetailViewControllerDataSource> detailDataSource;
 
 /**
  @abstract The controller object for the application.
