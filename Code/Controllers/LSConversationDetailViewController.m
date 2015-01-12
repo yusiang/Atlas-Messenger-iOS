@@ -267,12 +267,12 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
 {
-    [self dismissViewControllerAnimated:TRUE completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    [self dismissViewControllerAnimated:TRUE completion:^{
+    [self dismissViewControllerAnimated:YES completion:^{
         NSMutableSet *participants = [self.conversation.participants mutableCopy];
         [participants addObject:participant.participantIdentifier];
         [self setConversationForParticipants:participants];
