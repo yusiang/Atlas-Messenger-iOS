@@ -70,8 +70,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
    
     [self configureAppearance];
-    
-    self.locationShared = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
