@@ -57,11 +57,9 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     
     [self configureForConversation];
     
-    //VC Title
     self.title = @"Details";
     self.accessibilityLabel = @"Details";
     
-    // Table View Setup
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.sectionFooterHeight = 0.0f;
@@ -71,7 +69,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.tableView registerClass:[LSInputTableViewCell  class] forCellReuseIdentifier:LSInputCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
    
-    // Setup UI
     [self configureAppearance];
     
     self.locationShared = NO;
