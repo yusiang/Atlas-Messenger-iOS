@@ -88,7 +88,7 @@
  */
 - (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController labelForConversation:(LYRConversation *)conversation
 {
-    NSString *conversationName = conversation.metadata[LSConversationNameTag];
+    NSString *conversationName = conversation.metadata[LSConversationMetadataNameKey];
     if (conversationName) {
         return conversationName;
     }

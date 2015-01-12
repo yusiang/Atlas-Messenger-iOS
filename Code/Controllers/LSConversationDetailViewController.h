@@ -12,7 +12,7 @@
 #import "LSApplicationController.h"
 #import <CoreLocation/CoreLocation.h>
 
-extern NSString *const LSConversationNameTag;
+extern NSString *const LSConversationMetadataNameKey;
 
 @class LSConversationDetailViewController;
 

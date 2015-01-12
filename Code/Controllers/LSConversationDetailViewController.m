@@ -30,7 +30,7 @@
 
 @implementation LSConversationDetailViewController
 
-NSString *const LSConversationNameTag = @"conversationName";
+NSString *const LSConversationMetadataNameKey = @"conversationName";
 static NSString *const LYRUIParticipantCellIdentifier = @"participantCell";
 static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
 static NSString *const LYRUIInputCellIdentifier = @"inputCell";
@@ -154,8 +154,8 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIInputCellIdentifier];
             [(LSInputTableViewCell *)cell textField].delegate = self;
             [(LSInputTableViewCell *)cell setGuideText:@"Name:"];
-            if ([self.conversation.metadata valueForKey:LSConversationNameTag]) {
-                [[(LSInputTableViewCell *)cell textField] setText:[self.conversation.metadata valueForKey:LSConversationNameTag]];
+            if ([self.conversation.metadata valueForKey:LSConversationMetadataNameKey]) {
+                [[(LSInputTableViewCell *)cell textField] setText:[self.conversation.metadata valueForKey:LSConversationMetadataNameKey]];
             } else {
                 [(LSInputTableViewCell *)cell setPlaceHolderText:@"Enter Conversation Name"];
             }
@@ -334,7 +334,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (textField.text) {
-        [self.conversation setValue:textField.text forMetadataAtKeyPath:LSConversationNameTag];
+        [self.conversation setValue:textField.text forMetadataAtKeyPath:LSConversationMetadataNameKey];
     }
     [textField resignFirstResponder];
     return YES;
