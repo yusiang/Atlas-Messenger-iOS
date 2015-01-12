@@ -76,7 +76,7 @@ LSPersistenceManager *LSPersitenceManager(void)
 void LSAlertWithError(NSError *error)
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Unexpected Error"
-                                                        message:[error localizedDescription]
+                                                        message:error.localizedDescription
                                                        delegate:nil
                                               cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alertView show];
