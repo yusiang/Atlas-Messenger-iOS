@@ -32,7 +32,6 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
 @property (nonatomic) BOOL locationShared;
-@property (nonatomic) BOOL authenticatedUserIsConversationMember;
 
 @end
 
@@ -90,11 +89,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (self.authenticatedUserIsConversationMember) {
-        return LSConversationDetailTableSectionCount;
-    } else {
-        return 1;
-    }
+    return LSConversationDetailTableSectionCount;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -103,11 +98,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         case LSConversationDetailTableSectionMetadata:
             return 1;
         case LSConversationDetailTableSectionParticipants:
-            if (self.authenticatedUserIsConversationMember){
-                return self.participantIdentifiers.count + 1;
-            } else {
-                return self.participantIdentifiers.count;
-            }
+            return self.participantIdentifiers.count + 1;
             
         case LSConversationDetailTableSectionLocation:
             return 1;
@@ -325,11 +316,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 - (void)configureForConversation
 {
     self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
-    if ([self.participantIdentifiers containsObject:self.layerClient.authenticatedUserID]) {
-        self.authenticatedUserIsConversationMember = YES;
-    } else {
+    if (![self.participantIdentifiers containsObject:self.layerClient.authenticatedUserID]) {
         [self.participantIdentifiers addObject:self.layerClient.authenticatedUserID];
-        self.authenticatedUserIsConversationMember = NO;
     }
 }
 
