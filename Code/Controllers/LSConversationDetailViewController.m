@@ -62,6 +62,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
     self.tableView.rowHeight = 48.0f;
     
@@ -163,11 +164,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 48;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
