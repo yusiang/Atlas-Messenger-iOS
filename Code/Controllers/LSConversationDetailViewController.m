@@ -47,7 +47,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     if (self) {
         _layerClient = layerClient;
         _conversation = conversation;
-        _participantIdentifiers = [[conversation.participants allObjects] mutableCopy];
     }
     return self;
 }
@@ -56,7 +55,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 {
     [super viewDidLoad];
     
-    self.conversation = _conversation;
+    [self configureForConversation];
     
     //VC Title
     self.title = @"Details";
@@ -76,18 +75,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self configureAppearance];
     
     self.locationShared = NO;
-}
-
-- (void)setConversation:(LYRConversation *)conversation
-{
-    _conversation = conversation;
-    self.participantIdentifiers = [[conversation.participants allObjects] mutableCopy];
-    if ([self.participantIdentifiers containsObject:self.layerClient.authenticatedUserID]) {
-        self.authenticatedUserIsConversationMember = YES;
-    } else {
-        [self.participantIdentifiers addObject:self.layerClient.authenticatedUserID];
-        self.authenticatedUserIsConversationMember = NO;
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -323,6 +310,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     }
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;
+    [self configureForConversation];
     [self.tableView reloadData];
 }
 
@@ -354,6 +342,18 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [[LYRUIParticipantTableViewCell appearance] setBoldTitleFont:[UIFont systemFontOfSize:14]];
 }
 
+#pragma mark - Helpers
+
+- (void)configureForConversation
+{
+    self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
+    if ([self.participantIdentifiers containsObject:self.layerClient.authenticatedUserID]) {
+        self.authenticatedUserIsConversationMember = YES;
+    } else {
+        [self.participantIdentifiers addObject:self.layerClient.authenticatedUserID];
+        self.authenticatedUserIsConversationMember = NO;
+    }
+}
 
 @end
 
