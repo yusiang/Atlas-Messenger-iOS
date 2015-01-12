@@ -11,17 +11,17 @@
 #import "LSPersistenceManager.h"
 
 /**
- @abstract The `LSUtilities` class provides convenince functions for app configuration
+ @abstract `LSUtilities` provides convenience functions for app configuration.
  */
 
-typedef enum {
+typedef NS_ENUM(NSInteger, LSEnvironment) {
     LYRUIProduction,
     LYRUIDevelopment,
     LYRUIStage1,
     LYRUIDev1,
     LSTestEnvironment,
-    LSAddhock
-} LSEnvironment;
+    LSAdHoc
+};
 
 BOOL LSIsRunningTests();
 
@@ -33,16 +33,6 @@ NSUUID *LSLayerAppID(LSEnvironment);
 
 NSString *LSApplicationDataDirectory();
 
-NSString *LSLayerPersistencePath();
-
 LSPersistenceManager *LSPersitenceManager();
 
 void LSAlertWithError(NSError *error);
-
-CGRect LSImageRectForThumb(CGSize size, NSUInteger maxConstraint);
-
-NSString *MIMETypeTextPlain();
-
-NSString *MIMETypeImagePNG();
-
-NSString *MIMETypeImageJPEG();
