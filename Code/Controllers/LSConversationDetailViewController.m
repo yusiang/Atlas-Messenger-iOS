@@ -31,10 +31,10 @@
 @implementation LSConversationDetailViewController
 
 NSString *const LSConversationMetadataNameKey = @"conversationName";
-static NSString *const LYRUIParticipantCellIdentifier = @"participantCell";
-static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
-static NSString *const LYRUIInputCellIdentifier = @"inputCell";
-static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIdentifier";
+static NSString *const LSParticipantCellIdentifier = @"participantCell";
+static NSString *const LSDefaultCellIdentifier = @"defaultCellIdentifier";
+static NSString *const LSInputCellIdentifier = @"inputCell";
+static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdentifier";
 
 + (instancetype)conversationDetailViewControllerLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
 {
@@ -67,10 +67,10 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     self.tableView.dataSource = self;
     self.tableView.sectionFooterHeight = 0.0f;
     
-    [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LYRUICenterContentCellIdentifier];
-    [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LYRUIParticipantCellIdentifier];
-    [self.tableView registerClass:[LSInputTableViewCell  class] forCellReuseIdentifier:LYRUIInputCellIdentifier];
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LYRUIDefaultCellIdentifier];
+    [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterContentCellIdentifier];
+    [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LSParticipantCellIdentifier];
+    [self.tableView registerClass:[LSInputTableViewCell  class] forCellReuseIdentifier:LSInputCellIdentifier];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
    
     // Setup UI
     [self configureAppearance];
@@ -151,7 +151,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     UITableViewCell *cell;
     switch (indexPath.section) {
         case 0: {
-            cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIInputCellIdentifier];
+            cell = [self.tableView dequeueReusableCellWithIdentifier:LSInputCellIdentifier];
             [(LSInputTableViewCell *)cell textField].delegate = self;
             [(LSInputTableViewCell *)cell setGuideText:@"Name:"];
             if ([self.conversation.metadata valueForKey:LSConversationMetadataNameKey]) {
@@ -163,21 +163,21 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             break;
         case 1:
             if (indexPath.row > self.participantIdentifiers.count - 1 ) {
-                cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
+                cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
                 cell.textLabel.text = @"+ Add Participant";
                 cell.textLabel.textColor = LYRUIBlueColor();
                 cell.textLabel.font = LYRUIMediumFont(14);
             } else {
                 NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
                 id<LYRUIParticipant>participant = [self.detailDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
-                UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIParticipantCellIdentifier forIndexPath:indexPath];
+                UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LSParticipantCellIdentifier forIndexPath:indexPath];
                 [participantCell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarImage:YES];
                 cell = participantCell;
             }
             break;
             
         case 2: {
-            cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
+            cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
             cell.textLabel.text = @"Share My Location";
             cell.textLabel.textColor = LYRUIBlueColor();
             cell.textLabel.font = LYRUIMediumFont(14);
@@ -185,7 +185,7 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
             break;
             
         case 3: {
-            LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUICenterContentCellIdentifier];
+            LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
             [centerCell setCenterText:@"Global Delete Conversation"];
             centerCell.centerTextLabel.textColor = LYRUIRedColor();
             return centerCell;
