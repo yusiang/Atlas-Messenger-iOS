@@ -17,20 +17,20 @@ extern NSString *const LYRUIConversationNameTag;
 @class LSConversationDetailViewController;
 
 /**
- @abstract The `LSConversationDetailViewControllerDelegate` notififies its receiver to events that occur within the controller.
+ @abstract The `LSConversationDetailViewControllerDelegate` notifies its receiver of events that occur within the controller.
  */
 @protocol LSConversationDetailViewControllerDelegate <NSObject>
 
 /**
  @abstract Informs the delegate that a user has elected to share the application's current location.
- @param conversationDetailViewController The `LSConversationDetailViewController` in which the selection occured.
+ @param conversationDetailViewController The `LSConversationDetailViewController` in which the selection occurred.
  @param location The `CLLocation` object representing the application's current location.
  */
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location;
 
 /**
  @abstract Informs the delegate that a user has elected to switch the conversation.
- @param conversationDetailViewController The `LSConversationDetailViewController` in which the selection occured.
+ @param conversationDetailViewController The `LSConversationDetailViewController` in which the selection occurred.
  @param conversation The new `LYRConversation` object.
  @discussion The user changes the `LYRConversation` object in response to adding or deleting participants from a conversation. 
  If the user mutates the participant list, the application checks to see if a Layer conversation exists with the new participant
@@ -41,12 +41,12 @@ extern NSString *const LYRUIConversationNameTag;
 @end
 
 /**
- @abstract The `LSConversationDetailViewControllerDataSource` requests information to be displayed within the controller.
+ @abstract The `LSConversationDetailViewControllerDataSource` supplies information to be displayed within the controller.
  */
 @protocol LSConversationDetailViewControllerDataSource <NSObject>
 
 /**
- @abstract Requests an `LYRUIParticipant` object for a given identifier.
+ @abstract Requests an object conforming to `LYRUIParticipant` for a given identifier.
  @param conversationDetailViewController The `LSConversationDetailViewController` requesting the object.
  @param participantIdentifier An `NSString` object representing a participant.
  */
@@ -55,9 +55,8 @@ extern NSString *const LYRUIConversationNameTag;
 @end
 
 /**
- @abstract The `LSConversationDetailViewController` Ppresents a user interface that displays information about a given 
- conversation. It also provides for adding/removing participants from a conversation, sharing location or deleting the 
- conversation.
+ @abstract The `LSConversationDetailViewController` presents a user interface that displays information about a given
+ conversation. It also provides for adding/removing participants to/from a conversation and sharing the user's location.
  */
 @interface LSConversationDetailViewController : UITableViewController
 
@@ -70,12 +69,12 @@ extern NSString *const LYRUIConversationNameTag;
 /**
  @abstract The `LSConversationDetailViewControllerDelegate` object for the controller.
  */
-@property (nonatomic) id<LSConversationDetailViewControllerDelegate>detailDelegate;
+@property (nonatomic) id<LSConversationDetailViewControllerDelegate> detailDelegate;
 
 /**
  @abstract The `LSConversationDetailViewControllerDataSource` object for the controller.
  */
-@property (nonatomic) id<LSConversationDetailViewControllerDataSource>detailsDataSource;
+@property (nonatomic) id<LSConversationDetailViewControllerDataSource> detailsDataSource;
 
 /**
  @abstract The controller object for the application.
