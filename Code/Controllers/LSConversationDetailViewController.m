@@ -161,10 +161,10 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             return @"Conversation Name";
 
         case LSConversationDetailTableSectionParticipants:
-            return @"PARTICIPANTS";
+            return @"Participants";
             
         case LSConversationDetailTableSectionLocation:
-            return @"LOCATION";
+            return @"Location";
             
         default:
             return nil;
