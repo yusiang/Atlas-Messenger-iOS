@@ -144,7 +144,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
         case LSConversationDetailTableSectionDeletion: {
             LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
-            [cell setCenterText:@"Global Delete Conversation"];
+            cell.centerTextLabel.text = @"Global Delete Conversation";
             cell.centerTextLabel.textColor = LYRUIRedColor();
             return cell;
         }

@@ -25,11 +25,6 @@
     return self;
 }
 
-- (void)setCenterText:(NSString *)text
-{
-    self.centerTextLabel.text = text;
-}
-
 - (void)setUpConstraints
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel

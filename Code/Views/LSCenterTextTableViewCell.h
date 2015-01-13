@@ -12,6 +12,4 @@
 
 @property (nonatomic) UILabel *centerTextLabel;
 
-- (void)setCenterText:(NSString *)text;
-
 @end
