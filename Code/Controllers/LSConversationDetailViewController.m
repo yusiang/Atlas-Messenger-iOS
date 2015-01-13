@@ -249,7 +249,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     if (!self.locationShared) {
         self.locationShared = YES;
         [self.detailDelegate conversationDetailViewController:self didShareLocation:[locations lastObject]];
-        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

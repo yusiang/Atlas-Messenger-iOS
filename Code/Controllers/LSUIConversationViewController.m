@@ -421,6 +421,7 @@ static LSDateProximity LSProximityToDate(NSDate *date)
     } else {
         NSLog(@"Message send failed with error: %@", error);
     }
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
