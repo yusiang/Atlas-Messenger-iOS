@@ -105,7 +105,12 @@ static NSString *const LSConnecting = @"Connecting";
     [self addConnectionObservers];
 }
 
-#pragma mark - Table view data source
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -245,6 +250,26 @@ static NSString *const LSConnecting = @"Connecting";
     }
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    switch ((LSSettingsTableSection)section) {
+        case LSSettingsTableSectionNotifications:
+            return @"Notifications";
+
+        case LSSettingsTableSectionDebug:
+            return @"Debug";
+
+        case LSSettingsTableSectionStatistics:
+            return @"Statistics";
+
+        case LSSettingsTableSectionLogout:
+        case LSSettingsTableSectionCount:
+            return nil;
+    }
+}
+
+#pragma mark - Cell Configuration
+
 - (UITableViewCell *)defaultCellForIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
@@ -264,6 +289,8 @@ static NSString *const LSConnecting = @"Connecting";
     [switchControl addTarget:self action:@selector(switchSwitched:) forControlEvents:UIControlEventTouchUpInside];
     return switchControl;
 }
+
+#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -310,30 +337,7 @@ static NSString *const LSConnecting = @"Connecting";
     }
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    switch ((LSSettingsTableSection)section) {
-        case LSSettingsTableSectionNotifications:
-            return @"Notifications";
-            
-        case LSSettingsTableSectionDebug:
-            return @"Debug";
-            
-        case LSSettingsTableSectionStatistics:
-            return @"Statistics";
-            
-        case LSSettingsTableSectionLogout:
-        case LSSettingsTableSectionCount:
-            return nil;
-    }
-}
-
-- (void)fetchConversationStatistics
-{
-    self.conversationsCount = [self.applicationController.layerClient countOfConversations];
-    self.messagesCount = [self.applicationController.layerClient countOfMessages];
-    self.unreadMessagesCount = [self.applicationController.layerClient countOfUnreadMessages];
-}
+#pragma mark - Actions
 
 - (void)switchSwitched:(UISwitch *)switchControl
 {
@@ -384,15 +388,7 @@ static NSString *const LSConnecting = @"Connecting";
     [self.settingsDelegate settingsTableViewControllerDidFinish:self];
 }
 
-- (void)showAlertViewForDebuggingWithTitle:(NSString *)title message:(NSString *)message
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                        message:message
-                                                       delegate:self
-                                              cancelButtonTitle:@"Copy"
-                                              otherButtonTitles:@"OK", nil];
-    [alertView show];
-}
+#pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -407,6 +403,25 @@ static NSString *const LSConnecting = @"Connecting";
         default:
             break;
     }
+}
+
+#pragma mark - Helpers
+
+- (void)fetchConversationStatistics
+{
+    self.conversationsCount = [self.applicationController.layerClient countOfConversations];
+    self.messagesCount = [self.applicationController.layerClient countOfMessages];
+    self.unreadMessagesCount = [self.applicationController.layerClient countOfUnreadMessages];
+}
+
+- (void)showAlertViewForDebuggingWithTitle:(NSString *)title message:(NSString *)message
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:@"Copy"
+                                              otherButtonTitles:@"OK", nil];
+    [alertView show];
 }
 
 - (void)logOut
@@ -444,12 +459,7 @@ static NSString *const LSConnecting = @"Connecting";
     [self.headerView updateConnectedStateWithString:LSLostConnection];
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-#pragma mark - UITextFieldDelegate Methods
+#pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
