@@ -101,6 +101,7 @@ static NSString *const LSConnecting = @"Connecting";
     self.tableView.tableHeaderView = self.headerView;
     self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
+    self.tableView.rowHeight = 44.0f;
 
     [self addConnectionObservers];
 }
