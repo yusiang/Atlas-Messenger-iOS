@@ -1,9 +1,9 @@
 //
 //  LYRUIConversationDetailViewController.m
-//  Pods
+//  LayerSample
 //
 //  Created by Kevin Coleman on 10/2/14.
-//
+//  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
 #import "LSConversationDetailViewController.h"
@@ -12,42 +12,44 @@
 #import "LYRUIParticipantPickerController.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUtilities.h"
-#import "LYRUIAvatarImageView.h"
 #import "LSCenterTextTableViewCell.h"
 #import "LSInputTableViewCell.h"
+
+typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
+    LSConversationDetailTableSectionMetadata,
+    LSConversationDetailTableSectionParticipants,
+    LSConversationDetailTableSectionLocation,
+    LSConversationDetailTableSectionDeletion,
+    LSConversationDetailTableSectionCount,
+};
 
 @interface LSConversationDetailViewController () <LYRUIParticipantPickerControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
-@property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) NSMutableArray *participantIdentifiers;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
-@property (nonatomic) BOOL locationShared;
-@property (nonatomic) BOOL authenticatedUserIsConversationMember;
 
 @end
 
 @implementation LSConversationDetailViewController
 
-NSString *const LYRUIConversationNameTag = @"conversationName";
-static NSString *const LYRUIParticipantCellIdentifier = @"participantCell";
-static NSString *const LYRUIDefaultCellIdentifier = @"defaultCellIdentifier";
-static NSString *const LYRUIInputCellIdentifier = @"inputCell";
-static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIdentifier";
+NSString *const LSConversationMetadataNameKey = @"conversationName";
+static NSString *const LSParticipantCellIdentifier = @"participantCell";
+static NSString *const LSDefaultCellIdentifier = @"defaultCellIdentifier";
+static NSString *const LSInputCellIdentifier = @"inputCell";
+static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdentifier";
 
-+ (instancetype)conversationDetailViewControllerLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
++ (instancetype)conversationDetailViewControllerWithConversation:(LYRConversation *)conversation
 {
-    return [[self alloc] initWithLayerClient:layerClient conversation:conversation];
+    return [[self alloc] initWithConversation:conversation];
 }
 
-- (id)initWithLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
+- (id)initWithConversation:(LYRConversation *)conversation
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        _layerClient = layerClient;
         _conversation = conversation;
-        _participantIdentifiers = [[conversation.participants allObjects] mutableCopy];
     }
     return self;
 }
@@ -56,242 +58,158 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
 {
     [super viewDidLoad];
     
-    self.conversation = _conversation;
+    [self configureForConversation];
     
-    //VC Title
     self.title = @"Details";
     self.accessibilityLabel = @"Details";
     
-    // Table View Setup
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
+    self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
-    
-    [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LYRUICenterContentCellIdentifier];
-    [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LYRUIParticipantCellIdentifier];
-    [self.tableView registerClass:[LSInputTableViewCell  class] forCellReuseIdentifier:LYRUIInputCellIdentifier];
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LYRUIDefaultCellIdentifier];
+    self.tableView.rowHeight = 48.0f;
+    [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterContentCellIdentifier];
+    [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LSParticipantCellIdentifier];
+    [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSInputCellIdentifier];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
    
-    // Setup UI
     [self configureAppearance];
-    
-    self.locationShared = NO;
 }
 
-- (void)setConversation:(LYRConversation *)conversation
-{
-    _conversation = conversation;
-    self.participantIdentifiers = [[conversation.participants allObjects] mutableCopy];
-    if ([self.participantIdentifiers containsObject:self.layerClient.authenticatedUserID]) {
-        self.authenticatedUserIsConversationMember = YES;
-    } else {
-        [self.participantIdentifiers addObject:self.layerClient.authenticatedUserID];
-        self.authenticatedUserIsConversationMember = NO;
-    }
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self.tableView reloadData];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-#pragma mark - Table view data source
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 48;
-}
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (self.authenticatedUserIsConversationMember) {
-        return 3;
-    } else {
-        return 1;
-    }
+    return LSConversationDetailTableSectionCount;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
+    switch ((LSConversationDetailTableSection)section) {
+        case LSConversationDetailTableSectionMetadata:
             return 1;
-            break;
-        case 1:
-            if (self.authenticatedUserIsConversationMember){
-                return self.participantIdentifiers.count + 1;
-            } else {
-                return self.participantIdentifiers.count;
-            }
-            break;
-            
-        case 2:
+
+        case LSConversationDetailTableSectionParticipants:
+            return self.participantIdentifiers.count + 1;
+
+        case LSConversationDetailTableSectionLocation:
             return 1;
-            break;
             
-        case 3:
+        case LSConversationDetailTableSectionDeletion:
             return 1;
-            break;
-            
+
         default:
-            break;
-            
+            return 0;
     }
-    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell;
-    switch (indexPath.section) {
-        case 0: {
-            cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIInputCellIdentifier];
-            [(LSInputTableViewCell *)cell textField].delegate = self;
-            [(LSInputTableViewCell *)cell setGuideText:@"Name:"];
-            if ([self.conversation.metadata valueForKey:LYRUIConversationNameTag]) {
-                [[(LSInputTableViewCell *)cell textField] setText:[self.conversation.metadata valueForKey:LYRUIConversationNameTag]];
+    switch ((LSConversationDetailTableSection)indexPath.section) {
+        case LSConversationDetailTableSectionMetadata: {
+            LSInputTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSInputCellIdentifier forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.textField.delegate = self;
+            [cell setGuideText:@"Name:"];
+            NSString *conversationName = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
+            if (conversationName) {
+                cell.textField.text = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
             } else {
-                [(LSInputTableViewCell *)cell setPlaceHolderText:@"Enter Conversation Name"];
+                [cell setPlaceHolderText:@"Enter Conversation Name"];
             }
+            return cell;
         }
-            break;
-        case 1:
-            if (indexPath.row > self.participantIdentifiers.count - 1 ) {
-                cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
+
+        case LSConversationDetailTableSectionParticipants:
+            if (indexPath.row < self.participantIdentifiers.count) {
+                NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
+                id<LYRUIParticipant>participant = [self.detailDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
+                LYRUIParticipantTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSParticipantCellIdentifier forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                [cell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarImage:YES];
+                return cell;
+            } else {
+                UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
                 cell.textLabel.text = @"+ Add Participant";
                 cell.textLabel.textColor = LYRUIBlueColor();
                 cell.textLabel.font = LYRUIMediumFont(14);
-            } else {
-                NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
-                id<LYRUIParticipant>participant = [self.detailsDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
-                UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIParticipantCellIdentifier forIndexPath:indexPath];
-                [participantCell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarImage:YES];
-                cell = participantCell;
+                return cell;
             }
-            break;
-            
-        case 2: {
-            cell = [self.tableView dequeueReusableCellWithIdentifier:LYRUIDefaultCellIdentifier forIndexPath:indexPath];
+
+        case LSConversationDetailTableSectionLocation: {
+            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
             cell.textLabel.text = @"Share My Location";
             cell.textLabel.textColor = LYRUIBlueColor();
             cell.textLabel.font = LYRUIMediumFont(14);
+            return cell;
         }
-            break;
-            
-        case 3: {
-            LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LYRUICenterContentCellIdentifier];
-            [centerCell setCenterText:@"Global Delete Conversation"];
-            centerCell.centerTextLabel.textColor = LYRUIRedColor();
-            return centerCell;
-        }
-        default:
-            break;
-    }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    return cell;
-}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 48;
+        case LSConversationDetailTableSectionDeletion: {
+            LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
+            [cell setCenterText:@"Global Delete Conversation"];
+            cell.centerTextLabel.textColor = LYRUIRedColor();
+            return cell;
+        }
+
+        default:
+            return nil;
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
+    switch ((LSConversationDetailTableSection)section) {
+        case LSConversationDetailTableSectionMetadata:
             return @"Conversation Name";
-            break;
 
-        case 1:
-            return @"PARTICIPANTS";
-            break;
-            
-        case 2:
-            return @"LOCATION";
-            break;
-            
-        default:
-            break;
-    }
-    return nil;
-}
+        case LSConversationDetailTableSectionParticipants:
+            return @"Participants";
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    switch (indexPath.section) {
-        case 1:
-            if (indexPath.row == self.participantIdentifiers.count) {
-                self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
-                self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
-                LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
-                                                                                                                        sortType:LYRUIParticipantPickerSortTypeFirstName];
-                controller.participantPickerDelegate = self;
-                controller.allowsMultipleSelection = YES;
-                [self presentViewController:controller animated:YES completion:nil];
-            }
-            break;
-            
-        case 2:
-            [self startLocationManager];
-            break;
-        
-        case 3:
-            [self.conversation delete:LYRDeletionModeAllParticipants error:nil];
-            [self.navigationController popToRootViewControllerAnimated:YES];
-            break;
-            
+        case LSConversationDetailTableSectionLocation:
+            return @"Location";
+
         default:
-            break;
+            return nil;
     }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+    switch ((LSConversationDetailTableSection)indexPath.section) {
+        case LSConversationDetailTableSectionParticipants:
+            return indexPath.row < self.participantIdentifiers.count;
+
+        case LSConversationDetailTableSectionMetadata:
+        case LSConversationDetailTableSectionLocation:
+        case LSConversationDetailTableSectionDeletion:
+        case LSConversationDetailTableSectionCount:
+            return NO;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
-        [self setConversationForParticipants:[NSSet setWithArray:self.participantIdentifiers]];
+        [self configureForParticipantIdentifiers:[NSSet setWithArray:self.participantIdentifiers]];
     }
 }
 
-#pragma mark - Location Manager Methods
+#pragma mark - UITableViewDelegate
 
-- (void)startLocationManager
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([CLLocationManager locationServicesEnabled]) {
-        self.locationManager = [[CLLocationManager alloc] init];
-        self.locationManager.delegate = self;
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        [self.locationManager requestWhenInUseAuthorization];
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    [self.locationManager stopUpdatingLocation];
-    if (!self.locationShared) {
-        self.locationShared = YES;
-        [self.detailDelegate conversationDetailViewController:self didShareLocation:[locations lastObject]];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
-{
-    switch (status) {
-        case kCLAuthorizationStatusAuthorizedWhenInUse:
-            [self.locationManager startUpdatingLocation];
+    switch ((LSConversationDetailTableSection)indexPath.section) {
+        case LSConversationDetailTableSectionParticipants:
+            if (indexPath.row == self.participantIdentifiers.count) {
+                [self chooseParticipantToAdd];
+            }
+            break;
+            
+        case LSConversationDetailTableSectionLocation:
+            [self shareLocation];
+            break;
+        
+        case LSConversationDetailTableSectionDeletion:
+            [self deleteConversation];
             break;
             
         default:
@@ -299,23 +217,94 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     }
 }
 
-#pragma Participant Picker Delegate Methods
+#pragma mark - Actions
+
+- (void)shareLocation
+{
+    if (![CLLocationManager locationServicesEnabled]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Required"
+                                                            message:@"To share your location, enable location services in the Privacy section of the Settings app."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
+
+    switch ([CLLocationManager authorizationStatus]) {
+        case kCLAuthorizationStatusDenied:
+        case kCLAuthorizationStatusRestricted: {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Access Required"
+                                                                message:@"To share your location, enable location services for this app in the Privacy section of the Settings app."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        }
+            return;
+
+        default:
+            break;
+    }
+
+    if (self.locationManager) return;
+
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+    [self.locationManager startUpdatingLocation];
+}
+
+- (void)chooseParticipantToAdd
+{
+    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
+    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource sortType:LYRUIParticipantPickerSortTypeFirstName];
+    controller.participantPickerDelegate = self;
+    [self presentViewController:controller animated:YES completion:nil];
+}
+
+- (void)deleteConversation
+{
+    [self.conversation delete:LYRDeletionModeAllParticipants error:nil];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    if (manager != self.locationManager) return;
+
+    self.locationManager = nil;
+    [manager stopUpdatingLocation];
+    [self.detailDelegate conversationDetailViewController:self didShareLocation:locations.lastObject];
+}
+
+#pragma mark - LYRUIParticipantPickerControllerDelegate
 
 - (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
 {
-    [self dismissViewControllerAnimated:TRUE completion:nil];
+    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
+    self.participantPickerDataSource = nil;
 }
 
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    [self dismissViewControllerAnimated:TRUE completion:^{
-        NSMutableSet *participants = [self.conversation.participants mutableCopy];
-        [participants addObject:participant.participantIdentifier];
-        [self setConversationForParticipants:participants];
-    }];
+    NSMutableSet *participantIdentifiers = [self.conversation.participants mutableCopy];
+    [participantIdentifiers addObject:participant.participantIdentifier];
+    [self configureForParticipantIdentifiers:participantIdentifiers];
+
+    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
+    self.participantPickerDataSource = nil;
 }
 
-- (void)setConversationForParticipants:(NSSet *)participants
+#pragma mark - Conversation Configuration
+
+- (void)configureForParticipantIdentifiers:(NSSet *)participants
 {
     LYRConversation *conversation = [self.applicationController.layerClient conversationForParticipants:participants];
     if (!conversation) {
@@ -323,38 +312,36 @@ static NSString *const LYRUICenterContentCellIdentifier = @"centerContentCellIde
     }
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;
+    [self configureForConversation];
     [self.tableView reloadData];
 }
 
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+- (void)configureForConversation
 {
-    return YES;
+    self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
+    [self.participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
 }
+
+#pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if (textField.text) {
-        [self.conversation setValue:textField.text forMetadataAtKeyPath:LYRUIConversationNameTag];
+    if (textField.text.length > 0) {
+        [self.conversation setValue:textField.text forMetadataAtKeyPath:LSConversationMetadataNameKey];
+    } else {
+        [self.conversation deleteValueForMetadataAtKeyPath:LSConversationMetadataNameKey];
     }
     [textField resignFirstResponder];
     return YES;
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    //Setup metadata here
-}
-
-#pragma Cell Appearance Configuration
+#pragma mark - Cell Appearance Configuration
 
 - (void)configureAppearance
 {
-    [[LYRUIParticipantTableViewCell appearance] setTitleColor:[UIColor blackColor]];
-    [[LYRUIParticipantTableViewCell appearance] setTitleFont:LYRUIMediumFont(14)];
-    [[LYRUIParticipantTableViewCell appearance] setBoldTitleFont:[UIFont systemFontOfSize:14]];
+    [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleColor:[UIColor blackColor]];
+    [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleFont:LYRUIMediumFont(14)];
+    [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setBoldTitleFont:[UIFont systemFontOfSize:14]];
 }
 
-
 @end
-
-

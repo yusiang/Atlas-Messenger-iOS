@@ -150,8 +150,10 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 {
     [super viewWillAppear:animated];
     
-    if ([self.conversation.metadata valueForKey:LYRUIConversationNameTag]) {
-        self.conversationTitle = [self.conversation.metadata valueForKey:LYRUIConversationNameTag];
+    if ([self.conversation.metadata valueForKey:LSConversationMetadataNameKey]) {
+        self.conversationTitle = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
+    } else {
+        self.conversationTitle = nil;
     }
     
     self.addressBarController.dataSource = self;
@@ -421,6 +423,7 @@ static LSDateProximity LSProximityToDate(NSDate *date)
     } else {
         NSLog(@"Message send failed with error: %@", error);
     }
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
@@ -442,9 +445,9 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 
 - (void)detailsButtonTapped
 {
-    LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
+    LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
     detailViewController.detailDelegate = self;
-    detailViewController.detailsDataSource = self;
+    detailViewController.detailDataSource = self;
     detailViewController.applicationController = self.applicationController;
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }
