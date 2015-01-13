@@ -54,10 +54,9 @@ static NSString *const LSConnecting = @"Connecting";
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterTextCellIdentifier];
     
     // Left navigation item
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                                                   style:UIBarButtonItemStylePlain
-                                                                  target:self
-                                                                  action:@selector(doneTapped:)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                target:self
+                                                                                action:@selector(doneTapped:)];
     doneButton.accessibilityLabel = @"Done";
     [self.navigationItem setRightBarButtonItem:doneButton];
     
