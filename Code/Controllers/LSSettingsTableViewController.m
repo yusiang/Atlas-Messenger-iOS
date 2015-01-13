@@ -21,6 +21,30 @@ typedef NS_ENUM(NSInteger, LSSettingsTableSection) {
     LSSettingsTableSectionCount,
 };
 
+typedef NS_ENUM(NSInteger, LSNotificationsTableRow) {
+    LSNotificationsTableRowSendPush,
+    LSNotificationsTableRowDisplayLocal,
+    LSNotificationsTableRowCount,
+};
+
+typedef NS_ENUM(NSInteger, LSDebugTableRow) {
+    LSDebugTableRowMode,
+    LSDebugTableRowSyncInterval,
+    LSDebugTableRowVersion,
+    LSDebugTableRowBuild,
+    LSDebugTableRowHost,
+    LSDebugTableRowUserID,
+    LSDebugTableRowDeviceToken,
+    LSDebugTableRowCount,
+};
+
+typedef NS_ENUM(NSInteger, LSStatisticsTableRow) {
+    LSStatisticsTableRowConversations,
+    LSStatisticsTableRowMessages,
+    LSStatisticsTableRowUnread,
+    LSStatisticsTableRowCount,
+};
+
 @interface LSSettingsTableViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) NSDictionary *conversationStatistics;
@@ -99,15 +123,15 @@ static NSString *const LSConnecting = @"Connecting";
 {
     switch ((LSSettingsTableSection)section) {
         case LSSettingsTableSectionNotifications:
-            return 2;
+            return LSNotificationsTableRowCount;
             break;
             
         case LSSettingsTableSectionDebug:
-            return 6;
+            return LSDebugTableRowCount;
             break;
             
         case LSSettingsTableSectionStatistics:
-            return 3;
+            return LSStatisticsTableRowCount;
             break;
             
         case LSSettingsTableSectionLogout:
@@ -135,34 +159,34 @@ static NSString *const LSConnecting = @"Connecting";
     switch ((LSSettingsTableSection)indexPath.section) {
             
         case LSSettingsTableSectionNotifications: {
-            switch (indexPath.row) {
-                case 0:
+            switch ((LSNotificationsTableRow)indexPath.row) {
+                case LSNotificationsTableRowSendPush:
                     cell.textLabel.text = @"Send Push Notifications";
                     radioSwitch.on = self.applicationController.shouldSendPushText;
                     cell.accessoryView = radioSwitch;
                     break;
                     
-                case 1:
+                case LSNotificationsTableRowDisplayLocal:
                     cell.textLabel.text = @"Display Local Notifications";
                     radioSwitch.on = self.applicationController.shouldDisplayLocalNotifications;
                     cell.accessoryView = radioSwitch;
                     break;
                     
-                default:
+                case LSNotificationsTableRowCount:
                     break;
             }
         }
             break;
             
         case LSSettingsTableSectionDebug: {
-            switch (indexPath.row) {
-                case 0:
+            switch ((LSDebugTableRow)indexPath.row) {
+                case LSDebugTableRowMode:
                     cell.textLabel.text = @"Debug Mode ";
                     radioSwitch.on = self.applicationController.debugModeEnabled;
                     cell.accessoryView = radioSwitch;
                     break;
                     
-                case 1: {
+                case LSDebugTableRowSyncInterval: {
                     cell.textLabel.text = @"Synchronization Interval";
                     UITextField *syncIntervalLabel = [[UITextField alloc] init];
                     syncIntervalLabel.delegate = self;
@@ -172,40 +196,40 @@ static NSString *const LSConnecting = @"Connecting";
                     break;
                 }
                     
-                case 2:
+                case LSDebugTableRowVersion:
                     cell.textLabel.text = [NSString stringWithFormat:@"Version: %@", [LSApplicationController versionString]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
-                case 3:
+                case LSDebugTableRowBuild:
                     cell.textLabel.text = [NSString stringWithFormat:@"Build: %@", [LSApplicationController buildInformationString]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
-                case 4:
+                case LSDebugTableRowHost:
                     cell.textLabel.text = [NSString stringWithFormat:@"Host: %@", [LSApplicationController layerServerHostname]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
-                case 5:
+                case LSDebugTableRowUserID:
                     cell.textLabel.text = [NSString stringWithFormat:@"UserID: %@", self.applicationController.layerClient.authenticatedUserID];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
-                case 6:
+                case LSDebugTableRowDeviceToken:
                     cell.textLabel.text = [NSString stringWithFormat:@"Device Token: %@", [self.applicationController.deviceToken description]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
-                default:
+                case LSDebugTableRowCount:
                     break;
             }
         }
             break;
             
         case LSSettingsTableSectionStatistics: {
-            switch (indexPath.row) {
-                case 0: {
+            switch ((LSStatisticsTableRow)indexPath.row) {
+                case LSStatisticsTableRowConversations: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
                     UILabel *conversationsLabel = [[UILabel alloc] init];
                     conversationsLabel.text = [[self.conversationStatistics objectForKey:LSConversationCountKey]stringValue];
@@ -215,7 +239,7 @@ static NSString *const LSConnecting = @"Connecting";
                 }
                     break;
                     
-                case 1: {
+                case LSStatisticsTableRowMessages: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Messages:"];
                     UILabel *messagesLabel = [[UILabel alloc] init];
                     messagesLabel.text = [[self.conversationStatistics objectForKey:LSMessageCountKey]stringValue];
@@ -225,7 +249,7 @@ static NSString *const LSConnecting = @"Connecting";
                 }
                     break;
                     
-                case 2: {
+                case LSStatisticsTableRowUnread: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Unread Messages:"];
                     UILabel *unreadMessagesLabel = [[UILabel alloc] init];
                     unreadMessagesLabel.text = [[self.conversationStatistics objectForKey:LSUnreadMessageCountKey]stringValue];
@@ -235,7 +259,7 @@ static NSString *const LSConnecting = @"Connecting";
                 }
                     break;
                     
-                default:
+                case LSStatisticsTableRowCount:
                     break;
                     
             }
@@ -260,32 +284,30 @@ static NSString *const LSConnecting = @"Connecting";
 {
     switch ((LSSettingsTableSection)indexPath.section) {
         case LSSettingsTableSectionDebug:
-            switch (indexPath.row) {
-                case 1:
-                    
-                    break;
-                    
-                case 2:
+            switch ((LSDebugTableRow)indexPath.row) {
+                case LSDebugTableRowVersion:
                      [self settingsAlertWithString:[LSApplicationController versionString]];
                     break;
                     
-                case 3:
+                case LSDebugTableRowBuild:
                      [self settingsAlertWithString:[LSApplicationController buildInformationString]];
                     break;
                     
-                case 4:
+                case LSDebugTableRowHost:
                      [self settingsAlertWithString:[LSApplicationController layerServerHostname]];
                     break;
                     
-                case 5:
+                case LSDebugTableRowUserID:
                      [self settingsAlertWithString:self.applicationController.layerClient.authenticatedUserID];
                     break;
                     
-                case 6:
+                case LSDebugTableRowDeviceToken:
                      [self settingsAlertWithString:[self.applicationController.deviceToken description]];
                     break;
                     
-                default:
+                case LSDebugTableRowMode:
+                case LSDebugTableRowSyncInterval:
+                case LSDebugTableRowCount:
                     break;
             }
             break;
@@ -345,27 +367,33 @@ static NSString *const LSConnecting = @"Connecting";
     NSIndexPath *indexPath = [(LSSwitch *)sender indexPath];
     switch ((LSSettingsTableSection)indexPath.section) {
         case LSSettingsTableSectionNotifications:
-            switch (indexPath.row) {
-                case 0:
+            switch ((LSNotificationsTableRow)indexPath.row) {
+                case LSNotificationsTableRowSendPush:
                     self.applicationController.shouldSendPushText = radioButton.on;
                     break;
                     
-                case 1:
+                case LSNotificationsTableRowDisplayLocal:
                     self.applicationController.shouldDisplayLocalNotifications = radioButton.on;
                     break;
                     
-                default:
+                case LSNotificationsTableRowCount:
                     break;
             }
             break;
             
         case LSSettingsTableSectionDebug:
-            switch (indexPath.row) {
-                case 0:
+            switch ((LSDebugTableRow)indexPath.row) {
+                case LSDebugTableRowMode:
                     self.applicationController.debugModeEnabled = radioButton.on;
                     break;
                     
-                default:
+                case LSDebugTableRowSyncInterval:
+                case LSDebugTableRowVersion:
+                case LSDebugTableRowBuild:
+                case LSDebugTableRowHost:
+                case LSDebugTableRowUserID:
+                case LSDebugTableRowDeviceToken:
+                case LSDebugTableRowCount:
                     break;
             }
             break;
