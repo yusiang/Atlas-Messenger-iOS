@@ -20,7 +20,7 @@
 
 static NSString *const LSMessageDetailCell = @"messageDetailCell";
 
-+ (instancetype)initWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController
++ (instancetype)messageDetailTableViewControllerWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController
 {
     return [[self alloc] initWithMessage:message applicationController:applicationController];
 }
