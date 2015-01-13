@@ -136,11 +136,6 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier];
-    cell.textLabel.font = [UIFont systemFontOfSize:14];
-    cell.textLabel.textColor = [UIColor blackColor];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
     LSSwitch *radioSwitch = [[LSSwitch alloc] init];
     radioSwitch.indexPath = indexPath;
     [radioSwitch addTarget:self action:@selector(switchSwitched:) forControlEvents:UIControlEventTouchUpInside];
@@ -148,6 +143,7 @@ static NSString *const LSConnecting = @"Connecting";
     switch ((LSSettingsTableSection)indexPath.section) {
             
         case LSSettingsTableSectionNotifications: {
+            UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
             switch ((LSNotificationsTableRow)indexPath.row) {
                 case LSNotificationsTableRowSendPush:
                     cell.textLabel.text = @"Send Push Notifications";
@@ -164,10 +160,11 @@ static NSString *const LSConnecting = @"Connecting";
                 case LSNotificationsTableRowCount:
                     break;
             }
+            return cell;
         }
-            break;
             
         case LSSettingsTableSectionDebug: {
+            UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
             switch ((LSDebugTableRow)indexPath.row) {
                 case LSDebugTableRowMode:
                     cell.textLabel.text = @"Debug Mode ";
@@ -213,10 +210,11 @@ static NSString *const LSConnecting = @"Connecting";
                 case LSDebugTableRowCount:
                     break;
             }
+            return cell;
         }
-            break;
             
         case LSSettingsTableSectionStatistics: {
+            UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
             switch ((LSStatisticsTableRow)indexPath.row) {
                 case LSStatisticsTableRowConversations: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
@@ -252,8 +250,8 @@ static NSString *const LSConnecting = @"Connecting";
                     break;
                     
             }
+            return cell;
         }
-            break;
         
         case LSSettingsTableSectionLogout: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCellIdentifier];
@@ -263,8 +261,17 @@ static NSString *const LSConnecting = @"Connecting";
         }
             
         case LSSettingsTableSectionCount:
-            break;
+            return nil;
     }
+}
+
+- (UITableViewCell *)defaultCellForIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    cell.textLabel.textColor = [UIColor blackColor];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryView = nil;
     return cell;
 }
 
