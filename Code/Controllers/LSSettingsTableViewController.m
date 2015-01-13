@@ -253,10 +253,10 @@ static NSString *const LSConnecting = @"Connecting";
         }
         
         case LSSettingsTableSectionLogout: {
-            LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCellIdentifier forIndexPath:indexPath];
-            [centerCell setCenterText:@"Log Out"];
-            centerCell.centerTextLabel.textColor = LYRUIRedColor();
-            return centerCell;
+            LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCellIdentifier forIndexPath:indexPath];
+            [cell setCenterText:@"Log Out"];
+            cell.centerTextLabel.textColor = LYRUIRedColor();
+            return cell;
         }
             
         case LSSettingsTableSectionCount:
