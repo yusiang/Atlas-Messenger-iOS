@@ -105,53 +105,57 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell;
     switch ((LSConversationDetailTableSection)indexPath.section) {
         case LSConversationDetailTableSectionMetadata: {
-            cell = [self.tableView dequeueReusableCellWithIdentifier:LSInputCellIdentifier];
-            [(LSInputTableViewCell *)cell textField].delegate = self;
-            [(LSInputTableViewCell *)cell setGuideText:@"Name:"];
-            if ([self.conversation.metadata valueForKey:LSConversationMetadataNameKey]) {
-                [[(LSInputTableViewCell *)cell textField] setText:[self.conversation.metadata valueForKey:LSConversationMetadataNameKey]];
+            LSInputTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSInputCellIdentifier forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.textField.delegate = self;
+            [cell setGuideText:@"Name:"];
+            NSString *conversationName = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
+            if (conversationName) {
+                cell.textField.text = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
             } else {
-                [(LSInputTableViewCell *)cell setPlaceHolderText:@"Enter Conversation Name"];
+                [cell setPlaceHolderText:@"Enter Conversation Name"];
             }
+            return cell;
         }
-            break;
+
         case LSConversationDetailTableSectionParticipants:
             if (indexPath.row < self.participantIdentifiers.count) {
                 NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
                 id<LYRUIParticipant>participant = [self.detailDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
-                UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LSParticipantCellIdentifier forIndexPath:indexPath];
-                [participantCell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarImage:YES];
-                cell = participantCell;
+                LYRUIParticipantTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSParticipantCellIdentifier forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                [cell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarImage:YES];
+                return cell;
             } else {
-                cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
+                UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.textLabel.text = @"+ Add Participant";
                 cell.textLabel.textColor = LYRUIBlueColor();
                 cell.textLabel.font = LYRUIMediumFont(14);
+                return cell;
             }
-            break;
-            
+
         case LSConversationDetailTableSectionLocation: {
-            cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
+            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.textLabel.text = @"Share My Location";
             cell.textLabel.textColor = LYRUIBlueColor();
             cell.textLabel.font = LYRUIMediumFont(14);
+            return cell;
         }
-            break;
-            
+
         case LSConversationDetailTableSectionDeletion: {
-            LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
-            [centerCell setCenterText:@"Global Delete Conversation"];
-            centerCell.centerTextLabel.textColor = LYRUIRedColor();
-            return centerCell;
+            LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
+            [cell setCenterText:@"Global Delete Conversation"];
+            cell.centerTextLabel.textColor = LYRUIRedColor();
+            return cell;
         }
+
         default:
-            break;
+            return nil;
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
