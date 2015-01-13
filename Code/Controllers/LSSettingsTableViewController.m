@@ -137,18 +137,18 @@ static NSString *const LSConnecting = @"Connecting";
     switch ((LSSettingsTableSection)indexPath.section) {
         case LSSettingsTableSectionNotifications: {
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
-            UISwitch *radioSwitch = [self switchForCell];
+            UISwitch *switchControl = [self switchForCell];
             switch ((LSNotificationsTableRow)indexPath.row) {
                 case LSNotificationsTableRowSendPush:
                     cell.textLabel.text = @"Send Push Notifications";
-                    radioSwitch.on = self.applicationController.shouldSendPushText;
-                    cell.accessoryView = radioSwitch;
+                    switchControl.on = self.applicationController.shouldSendPushText;
+                    cell.accessoryView = switchControl;
                     break;
                     
                 case LSNotificationsTableRowDisplayLocal:
                     cell.textLabel.text = @"Display Local Notifications";
-                    radioSwitch.on = self.applicationController.shouldDisplayLocalNotifications;
-                    cell.accessoryView = radioSwitch;
+                    switchControl.on = self.applicationController.shouldDisplayLocalNotifications;
+                    cell.accessoryView = switchControl;
                     break;
                     
                 case LSNotificationsTableRowCount:
@@ -162,9 +162,9 @@ static NSString *const LSConnecting = @"Connecting";
             switch ((LSDebugTableRow)indexPath.row) {
                 case LSDebugTableRowMode: {
                     cell.textLabel.text = @"Debug Mode";
-                    UISwitch *radioSwitch = [self switchForCell];
-                    radioSwitch.on = self.applicationController.debugModeEnabled;
-                    cell.accessoryView = radioSwitch;
+                    UISwitch *switchControl = [self switchForCell];
+                    switchControl.on = self.applicationController.debugModeEnabled;
+                    cell.accessoryView = switchControl;
                 }
                     break;
 
@@ -347,19 +347,19 @@ static NSString *const LSConnecting = @"Connecting";
     self.unreadMessagesCount = [self.applicationController.layerClient countOfUnreadMessages];
 }
 
-- (void)switchSwitched:(UISwitch *)radioButton
+- (void)switchSwitched:(UISwitch *)switchControl
 {
-    CGPoint switchControlCenter = [self.tableView convertPoint:radioButton.center fromView:radioButton.superview];
+    CGPoint switchControlCenter = [self.tableView convertPoint:switchControl.center fromView:switchControl.superview];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:switchControlCenter];
     switch ((LSSettingsTableSection)indexPath.section) {
         case LSSettingsTableSectionNotifications:
             switch ((LSNotificationsTableRow)indexPath.row) {
                 case LSNotificationsTableRowSendPush:
-                    self.applicationController.shouldSendPushText = radioButton.on;
+                    self.applicationController.shouldSendPushText = switchControl.on;
                     break;
                     
                 case LSNotificationsTableRowDisplayLocal:
-                    self.applicationController.shouldDisplayLocalNotifications = radioButton.on;
+                    self.applicationController.shouldDisplayLocalNotifications = switchControl.on;
                     break;
                     
                 case LSNotificationsTableRowCount:
@@ -370,7 +370,7 @@ static NSString *const LSConnecting = @"Connecting";
         case LSSettingsTableSectionDebug:
             switch ((LSDebugTableRow)indexPath.row) {
                 case LSDebugTableRowMode:
-                    self.applicationController.debugModeEnabled = radioButton.on;
+                    self.applicationController.debugModeEnabled = switchControl.on;
                     break;
                     
                 case LSDebugTableRowSyncInterval:
