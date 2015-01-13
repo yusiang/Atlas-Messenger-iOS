@@ -393,7 +393,7 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (void)doneTapped:(UIControl *)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.settingsDelegate settingsTableViewControllerDidFinish:self];
 }
 
 - (void)showAlertViewForDebuggingWithTitle:(NSString *)title message:(NSString *)message

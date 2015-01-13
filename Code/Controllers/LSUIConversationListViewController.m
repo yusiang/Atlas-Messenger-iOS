@@ -204,4 +204,9 @@
     }
 }
 
+- (void)settingsTableViewControllerDidFinish:(LSSettingsTableViewController *)settingsTableViewController
+{
+    [settingsTableViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
 @end

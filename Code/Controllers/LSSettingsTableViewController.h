@@ -24,6 +24,12 @@
  */
 - (void)logoutTappedInSettingsTableViewController:(LSSettingsTableViewController *)settingsTableViewController;
 
+/**
+ @abstract Informs the receiver that the user wants to dismiss the controller.
+ @param settingsTableViewController The controller in which the selection occurred.
+ */
+- (void)settingsTableViewControllerDidFinish:(LSSettingsTableViewController *)settingsTableViewController;
+
 @end
 
 /**
