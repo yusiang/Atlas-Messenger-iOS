@@ -88,7 +88,7 @@ static NSString *const LSConnecting = @"Connecting";
                                                                                 target:self
                                                                                 action:@selector(doneTapped:)];
     doneButton.accessibilityLabel = @"Done";
-    [self.navigationItem setRightBarButtonItem:doneButton];
+    self.navigationItem.rightBarButtonItem = doneButton;
     
     self.headerView = [LSSettingsHeaderView headerViewWithUser:self.applicationController.APIManager.authenticatedSession.user];
     self.headerView.frame = CGRectMake(0, 0, 320, 148);
@@ -470,7 +470,7 @@ static NSString *const LSConnecting = @"Connecting";
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    [self.applicationController.layerClient setValue:@([textField.text intValue]) forKeyPath:@"synchronizationManager.syncInterval"];
+    [self.applicationController.layerClient setValue:@(textField.text.intValue) forKeyPath:@"synchronizationManager.syncInterval"];
     return YES;
 }
 
