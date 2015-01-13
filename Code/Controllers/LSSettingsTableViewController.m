@@ -136,14 +136,11 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    LSSwitch *radioSwitch = [[LSSwitch alloc] init];
-    radioSwitch.indexPath = indexPath;
-    [radioSwitch addTarget:self action:@selector(switchSwitched:) forControlEvents:UIControlEventTouchUpInside];
-    
     switch ((LSSettingsTableSection)indexPath.section) {
             
         case LSSettingsTableSectionNotifications: {
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
+            LSSwitch *radioSwitch = [self switchForIndexPath:indexPath];
             switch ((LSNotificationsTableRow)indexPath.row) {
                 case LSNotificationsTableRowSendPush:
                     cell.textLabel.text = @"Send Push Notifications";
@@ -166,12 +163,14 @@ static NSString *const LSConnecting = @"Connecting";
         case LSSettingsTableSectionDebug: {
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
             switch ((LSDebugTableRow)indexPath.row) {
-                case LSDebugTableRowMode:
+                case LSDebugTableRowMode: {
                     cell.textLabel.text = @"Debug Mode ";
+                    LSSwitch *radioSwitch = [self switchForIndexPath:indexPath];
                     radioSwitch.on = self.applicationController.debugModeEnabled;
                     cell.accessoryView = radioSwitch;
                     break;
-                    
+                }
+
                 case LSDebugTableRowSyncInterval: {
                     cell.textLabel.text = @"Synchronization Interval";
                     UITextField *syncIntervalLabel = [[UITextField alloc] init];
@@ -273,6 +272,14 @@ static NSString *const LSConnecting = @"Connecting";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryView = nil;
     return cell;
+}
+
+- (LSSwitch *)switchForIndexPath:(NSIndexPath *)indexPath
+{
+    LSSwitch *switchControl = [[LSSwitch alloc] init];
+    switchControl.indexPath = indexPath;
+    [switchControl addTarget:self action:@selector(switchSwitched:) forControlEvents:UIControlEventTouchUpInside];
+    return switchControl;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
