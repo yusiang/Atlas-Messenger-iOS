@@ -239,7 +239,10 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        [self.locationManager requestWhenInUseAuthorization];
+        if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+            [self.locationManager requestWhenInUseAuthorization];
+        }
+        [self.locationManager startUpdatingLocation];
     }
 }
 
@@ -249,18 +252,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     if (!self.locationShared) {
         self.locationShared = YES;
         [self.detailDelegate conversationDetailViewController:self didShareLocation:[locations lastObject]];
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
-{
-    switch (status) {
-        case kCLAuthorizationStatusAuthorizedWhenInUse:
-            [self.locationManager startUpdatingLocation];
-            break;
-            
-        default:
-            break;
     }
 }
 
