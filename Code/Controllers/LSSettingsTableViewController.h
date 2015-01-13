@@ -40,6 +40,6 @@
 /**
  @abstract The `LSSettingsTableViewControllerDelegate` object for the controller.
  */
-@property (nonatomic) id<LSSettingsTableViewControllerDelegate>settingsDelegate;
+@property (nonatomic) id<LSSettingsTableViewControllerDelegate> settingsDelegate;
 
 @end

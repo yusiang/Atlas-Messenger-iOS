@@ -133,11 +133,9 @@ static NSString *const LSConnecting = @"Connecting";
     }
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch ((LSSettingsTableSection)indexPath.section) {
-            
         case LSSettingsTableSectionNotifications: {
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
             LSSwitch *radioSwitch = [self switchForIndexPath:indexPath];
@@ -164,12 +162,12 @@ static NSString *const LSConnecting = @"Connecting";
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
             switch ((LSDebugTableRow)indexPath.row) {
                 case LSDebugTableRowMode: {
-                    cell.textLabel.text = @"Debug Mode ";
+                    cell.textLabel.text = @"Debug Mode";
                     LSSwitch *radioSwitch = [self switchForIndexPath:indexPath];
                     radioSwitch.on = self.applicationController.debugModeEnabled;
                     cell.accessoryView = radioSwitch;
-                    break;
                 }
+                    break;
 
                 case LSDebugTableRowSyncInterval: {
                     cell.textLabel.text = @"Synchronization Interval";
@@ -178,9 +176,9 @@ static NSString *const LSConnecting = @"Connecting";
                     syncIntervalLabel.text = [NSString stringWithFormat:@"%@", [self.applicationController.layerClient valueForKeyPath:@"synchronizationManager.syncInterval"]];
                     [syncIntervalLabel sizeToFit];
                     cell.accessoryView = syncIntervalLabel;
-                    break;
                 }
-                    
+                    break;
+
                 case LSDebugTableRowVersion:
                     cell.textLabel.text = [NSString stringWithFormat:@"Version: %@", [LSApplicationController versionString]];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -247,7 +245,6 @@ static NSString *const LSConnecting = @"Connecting";
                     
                 case LSStatisticsTableRowCount:
                     break;
-                    
             }
             return cell;
         }
@@ -334,7 +331,7 @@ static NSString *const LSConnecting = @"Connecting";
             return @"Notifications";
             
         case LSSettingsTableSectionDebug:
-            return  @"Debug";
+            return @"Debug";
             
         case LSSettingsTableSectionStatistics:
             return @"Statistics";
@@ -406,7 +403,8 @@ static NSString *const LSConnecting = @"Connecting";
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
                                                         message:message
                                                        delegate:self
-                                              cancelButtonTitle:@"Copy" otherButtonTitles:@"OK", nil];
+                                              cancelButtonTitle:@"Copy"
+                                              otherButtonTitles:@"OK", nil];
     [alertView show];
 }
 
@@ -475,4 +473,5 @@ static NSString *const LSConnecting = @"Connecting";
     [self.applicationController.layerClient setValue:@([textField.text intValue]) forKeyPath:@"synchronizationManager.syncInterval"];
     return YES;
 }
+
 @end
