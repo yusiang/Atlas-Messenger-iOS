@@ -95,7 +95,11 @@ static NSString *const LSConnecting = @"Connecting";
     self.headerView = [LSSettingsHeaderView headerViewWithUser:self.applicationController.APIManager.authenticatedSession.user];
     self.headerView.frame = CGRectMake(0, 0, 320, 148);
     self.headerView.backgroundColor = [UIColor whiteColor];
-    [self.headerView updateConnectedStateWithString:@"Connected"];
+    if (self.applicationController.layerClient.isConnected){
+        [self.headerView updateConnectedStateWithString:LSConnected];
+    } else {
+        [self.headerView updateConnectedStateWithString:LSDisconnected];
+    }
     
     self.tableView.tableHeaderView = self.headerView;
     self.tableView.sectionFooterHeight = 0.0f;
@@ -104,11 +108,6 @@ static NSString *const LSConnecting = @"Connecting";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (self.applicationController.layerClient.isConnected){
-        [self.headerView updateConnectedStateWithString:LSConnected];
-    } else {
-        [self.headerView updateConnectedStateWithString:LSDisconnected];
-    }
     [self addConnectionObservers];
 }
 
