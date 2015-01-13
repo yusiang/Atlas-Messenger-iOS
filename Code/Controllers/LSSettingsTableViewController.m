@@ -425,14 +425,6 @@ static NSString *const LSConnecting = @"Connecting";
     }
 }
 
-- (void)reloadContacts
-{
-    [SVProgressHUD showWithStatus:@"Loading Contacts"];
-    [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
-        [SVProgressHUD showSuccessWithStatus:@"Contacts Loaded"];
-    }];
-}
-
 - (void)logOut
 {
     [self dismissViewControllerAnimated:TRUE completion:^{
