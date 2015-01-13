@@ -13,6 +13,14 @@
 #import "LSSettingsHeaderView.h"
 #import "LSCenterTextTableViewCell.h"
 
+typedef NS_ENUM(NSInteger, LSSettingsTableSection) {
+    LSSettingsTableSectionNotifications,
+    LSSettingsTableSectionDebug,
+    LSSettingsTableSectionStatistics,
+    LSSettingsTableSectionLogout,
+    LSSettingsTableSectionCount,
+};
+
 @interface LSSettingsTableViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) NSDictionary *conversationStatistics;
@@ -84,29 +92,29 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 4;
+    return LSSettingsTableSectionCount;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
+    switch ((LSSettingsTableSection)section) {
+        case LSSettingsTableSectionNotifications:
             return 2;
             break;
             
-        case 1:
+        case LSSettingsTableSectionDebug:
             return 6;
             break;
             
-        case 2:
+        case LSSettingsTableSectionStatistics:
             return 3;
             break;
             
-        case 3:
+        case LSSettingsTableSectionLogout:
             return 1;
             break;
             
-        default:
+        case LSSettingsTableSectionCount:
             break;
     }
     return 0;
@@ -124,10 +132,9 @@ static NSString *const LSConnecting = @"Connecting";
     radioSwitch.indexPath = indexPath;
     [radioSwitch addTarget:self action:@selector(switchSwitched:) forControlEvents:UIControlEventTouchUpInside];
     
-    switch (indexPath.section) {
+    switch ((LSSettingsTableSection)indexPath.section) {
             
-        case 0: {
-            // Push Configuration
+        case LSSettingsTableSectionNotifications: {
             switch (indexPath.row) {
                 case 0:
                     cell.textLabel.text = @"Send Push Notifications";
@@ -147,8 +154,7 @@ static NSString *const LSConnecting = @"Connecting";
         }
             break;
             
-        case 1: {
-            // // Debug Mode
+        case LSSettingsTableSectionDebug: {
             switch (indexPath.row) {
                 case 0:
                     cell.textLabel.text = @"Debug Mode ";
@@ -197,8 +203,7 @@ static NSString *const LSConnecting = @"Connecting";
         }
             break;
             
-        case 2: {
-            // Layer Stats Stats
+        case LSSettingsTableSectionStatistics: {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
@@ -237,7 +242,7 @@ static NSString *const LSConnecting = @"Connecting";
         }
             break;
         
-        case 3: {
+        case LSSettingsTableSectionLogout: {
             LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCellIdentifier];
             [centerCell setCenterText:@"Log Out"];
             centerCell.centerTextLabel.textColor = LYRUIRedColor();
@@ -245,7 +250,7 @@ static NSString *const LSConnecting = @"Connecting";
         }
             break;
             
-        default:
+        case LSSettingsTableSectionCount:
             break;
     }
     return cell;
@@ -253,8 +258,8 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch (indexPath.section) {
-        case 1:
+    switch ((LSSettingsTableSection)indexPath.section) {
+        case LSSettingsTableSectionDebug:
             switch (indexPath.row) {
                 case 1:
                     
@@ -285,11 +290,13 @@ static NSString *const LSConnecting = @"Connecting";
             }
             break;
         
-        case 3:
+        case LSSettingsTableSectionLogout:
             [self logOut];
             break;
             
-        default:
+        case LSSettingsTableSectionNotifications:
+        case LSSettingsTableSectionStatistics:
+        case LSSettingsTableSectionCount:
             break;
     }
 }
@@ -301,20 +308,21 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
+    switch ((LSSettingsTableSection)section) {
+        case LSSettingsTableSectionNotifications:
             return @"NOTIFICATIONS";
             break;
             
-        case 1:
+        case LSSettingsTableSectionDebug:
             return  @"DEBUG";
             break;
             
-        case 2:
+        case LSSettingsTableSectionStatistics:
             return @"STATISTICS";
             break;
             
-        default:
+        case LSSettingsTableSectionLogout:
+        case LSSettingsTableSectionCount:
             break;
     }
     return nil;
@@ -335,9 +343,8 @@ static NSString *const LSConnecting = @"Connecting";
 {
     LSSwitch *radioButton = (LSSwitch *)sender;
     NSIndexPath *indexPath = [(LSSwitch *)sender indexPath];
-    switch (indexPath.section) {
-        case 0:
-            // Push Configuration
+    switch ((LSSettingsTableSection)indexPath.section) {
+        case LSSettingsTableSectionNotifications:
             switch (indexPath.row) {
                 case 0:
                     self.applicationController.shouldSendPushText = radioButton.on;
@@ -352,8 +359,7 @@ static NSString *const LSConnecting = @"Connecting";
             }
             break;
             
-        case 1:
-            // // Debug Mode
+        case LSSettingsTableSectionDebug:
             switch (indexPath.row) {
                 case 0:
                     self.applicationController.debugModeEnabled = radioButton.on;
@@ -364,7 +370,9 @@ static NSString *const LSConnecting = @"Connecting";
             }
             break;
             
-        default:
+        case LSSettingsTableSectionStatistics:
+        case LSSettingsTableSectionLogout:
+        case LSSettingsTableSectionCount:
             break;
     }
 }
