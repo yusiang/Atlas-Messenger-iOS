@@ -264,7 +264,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
     LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource sortType:LYRUIParticipantPickerSortTypeFirstName];
     controller.participantPickerDelegate = self;
-    controller.allowsMultipleSelection = YES;
     [self presentViewController:controller animated:YES completion:nil];
 }
 
