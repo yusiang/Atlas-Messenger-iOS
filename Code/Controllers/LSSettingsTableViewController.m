@@ -197,7 +197,7 @@ static NSString *const LSConnecting = @"Connecting";
                     break;
                     
                 case LSDebugTableRowUserID:
-                    cell.textLabel.text = [NSString stringWithFormat:@"UserID: %@", self.applicationController.layerClient.authenticatedUserID];
+                    cell.textLabel.text = [NSString stringWithFormat:@"User ID: %@", self.applicationController.layerClient.authenticatedUserID];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                     
