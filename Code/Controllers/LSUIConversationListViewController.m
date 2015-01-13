@@ -192,7 +192,7 @@
 
 - (void)logoutTappedInSettingsTableViewController:(LSSettingsTableViewController *)settingsTableViewController
 {
-    [SVProgressHUD show];
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     if (self.applicationController.layerClient.isConnected) {
         [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
             [self.applicationController.APIManager deauthenticate];
