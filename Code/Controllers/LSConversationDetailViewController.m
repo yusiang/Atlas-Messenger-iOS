@@ -189,7 +189,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
-        [self setConversationForParticipants:[NSSet setWithArray:self.participantIdentifiers]];
+        [self configureForParticipantIdentifiers:[NSSet setWithArray:self.participantIdentifiers]];
     }
 }
 
@@ -296,14 +296,14 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 {
     NSMutableSet *participants = [self.conversation.participants mutableCopy];
     [participants addObject:participant.participantIdentifier];
-    [self setConversationForParticipants:participants];
+    [self configureForParticipantIdentifiers:participants];
 
     [participantPickerController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Conversation Configuration
 
-- (void)setConversationForParticipants:(NSSet *)participants
+- (void)configureForParticipantIdentifiers:(NSSet *)participants
 {
     LYRConversation *conversation = [self.applicationController.layerClient conversationForParticipants:participants];
     if (!conversation) {
