@@ -427,7 +427,7 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (void)logOut
 {
-    [self dismissViewControllerAnimated:TRUE completion:^{
+    [self dismissViewControllerAnimated:YES completion:^{
         [self.settingsDelegate logoutTappedInSettingsTableViewController:self];
     }];
 }
