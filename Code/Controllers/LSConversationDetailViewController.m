@@ -200,13 +200,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     switch ((LSConversationDetailTableSection)indexPath.section) {
         case LSConversationDetailTableSectionParticipants:
             if (indexPath.row == self.participantIdentifiers.count) {
-                self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
-                self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
-                LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
-                                                                                                                        sortType:LYRUIParticipantPickerSortTypeFirstName];
-                controller.participantPickerDelegate = self;
-                controller.allowsMultipleSelection = YES;
-                [self presentViewController:controller animated:YES completion:nil];
+                [self chooseParticipantToAdd];
             }
             break;
             
@@ -215,8 +209,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             break;
         
         case LSConversationDetailTableSectionDeletion:
-            [self.conversation delete:LYRDeletionModeAllParticipants error:nil];
-            [self.navigationController popToRootViewControllerAnimated:YES];
+            [self deleteConversation];
             break;
             
         default:
@@ -224,7 +217,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     }
 }
 
-#pragma mark - Location Sharing
+#pragma mark - Actions
 
 - (void)shareLocation
 {
@@ -263,6 +256,22 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         [self.locationManager requestWhenInUseAuthorization];
     }
     [self.locationManager startUpdatingLocation];
+}
+
+- (void)chooseParticipantToAdd
+{
+    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
+    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource sortType:LYRUIParticipantPickerSortTypeFirstName];
+    controller.participantPickerDelegate = self;
+    controller.allowsMultipleSelection = YES;
+    [self presentViewController:controller animated:YES completion:nil];
+}
+
+- (void)deleteConversation
+{
+    [self.conversation delete:LYRDeletionModeAllParticipants error:nil];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 #pragma mark - CLLocationManagerDelegate
