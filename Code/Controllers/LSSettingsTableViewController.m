@@ -23,12 +23,12 @@
 
 @implementation LSSettingsTableViewController
 
-NSString *const LSDefaultCellIdentifier = @"defaultTableViewCell";
-NSString *const LSCenterTextCellIdentifier = @"centerContentTableViewCell";
+static NSString *const LSDefaultCellIdentifier = @"defaultTableViewCell";
+static NSString *const LSCenterTextCellIdentifier = @"centerContentTableViewCell";
 
-NSString *const LSConversationCount = @"LSConversationCount";
-NSString *const LSMessageCount = @"LSMessageCount";
-NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
+static NSString *const LSConversationCount = @"LSConversationCount";
+static NSString *const LSMessageCount = @"LSMessageCount";
+static NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
 
 static NSString *const LSConnected = @"Connected";
 static NSString *const LSDisconnected = @"Disconnected";
