@@ -423,9 +423,7 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (void)logOut
 {
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self.settingsDelegate logoutTappedInSettingsTableViewController:self];
-    }];
+    [self.settingsDelegate logoutTappedInSettingsTableViewController:self];
 }
 
 # pragma mark - Layer Connection State Monitoring
