@@ -7,7 +7,6 @@
 //
 
 #import "LSSettingsTableViewController.h"
-#import "LSSwitch.h"
 #import "LYRUIConstants.h"
 #import "SVProgressHUD.h"
 #import "LSSettingsHeaderView.h"
@@ -138,7 +137,7 @@ static NSString *const LSConnecting = @"Connecting";
     switch ((LSSettingsTableSection)indexPath.section) {
         case LSSettingsTableSectionNotifications: {
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
-            LSSwitch *radioSwitch = [self switchForIndexPath:indexPath];
+            UISwitch *radioSwitch = [self switchForCell];
             switch ((LSNotificationsTableRow)indexPath.row) {
                 case LSNotificationsTableRowSendPush:
                     cell.textLabel.text = @"Send Push Notifications";
@@ -163,7 +162,7 @@ static NSString *const LSConnecting = @"Connecting";
             switch ((LSDebugTableRow)indexPath.row) {
                 case LSDebugTableRowMode: {
                     cell.textLabel.text = @"Debug Mode";
-                    LSSwitch *radioSwitch = [self switchForIndexPath:indexPath];
+                    UISwitch *radioSwitch = [self switchForCell];
                     radioSwitch.on = self.applicationController.debugModeEnabled;
                     cell.accessoryView = radioSwitch;
                 }
@@ -271,10 +270,9 @@ static NSString *const LSConnecting = @"Connecting";
     return cell;
 }
 
-- (LSSwitch *)switchForIndexPath:(NSIndexPath *)indexPath
+- (UISwitch *)switchForCell
 {
-    LSSwitch *switchControl = [[LSSwitch alloc] init];
-    switchControl.indexPath = indexPath;
+    UISwitch *switchControl = [[UISwitch alloc] init];
     [switchControl addTarget:self action:@selector(switchSwitched:) forControlEvents:UIControlEventTouchUpInside];
     return switchControl;
 }
@@ -349,10 +347,10 @@ static NSString *const LSConnecting = @"Connecting";
     self.unreadMessagesCount = [self.applicationController.layerClient countOfUnreadMessages];
 }
 
-- (void)switchSwitched:(UIControl *)sender
+- (void)switchSwitched:(UISwitch *)radioButton
 {
-    LSSwitch *radioButton = (LSSwitch *)sender;
-    NSIndexPath *indexPath = [(LSSwitch *)sender indexPath];
+    CGPoint switchControlCenter = [self.tableView convertPoint:radioButton.center fromView:radioButton.superview];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:switchControlCenter];
     switch ((LSSettingsTableSection)indexPath.section) {
         case LSSettingsTableSectionNotifications:
             switch ((LSNotificationsTableRow)indexPath.row) {
