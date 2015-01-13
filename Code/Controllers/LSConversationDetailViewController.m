@@ -66,10 +66,9 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
     self.tableView.rowHeight = 48.0f;
-    
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterContentCellIdentifier];
     [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LSParticipantCellIdentifier];
-    [self.tableView registerClass:[LSInputTableViewCell  class] forCellReuseIdentifier:LSInputCellIdentifier];
+    [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSInputCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
    
     [self configureAppearance];
@@ -87,18 +86,18 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     switch ((LSConversationDetailTableSection)section) {
         case LSConversationDetailTableSectionMetadata:
             return 1;
+
         case LSConversationDetailTableSectionParticipants:
             return self.participantIdentifiers.count + 1;
-            
+
         case LSConversationDetailTableSectionLocation:
             return 1;
             
         case LSConversationDetailTableSectionDeletion:
             return 1;
-            
+
         default:
             return 0;
-            
     }
 }
 
@@ -163,10 +162,10 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
         case LSConversationDetailTableSectionParticipants:
             return @"Participants";
-            
+
         case LSConversationDetailTableSectionLocation:
             return @"Location";
-            
+
         default:
             return nil;
     }
@@ -330,5 +329,3 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 }
 
 @end
-
-
