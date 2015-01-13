@@ -103,11 +103,7 @@ static NSString *const LSConnecting = @"Connecting";
     
     self.tableView.tableHeaderView = self.headerView;
     self.tableView.sectionFooterHeight = 0.0f;
-}
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
     [self addConnectionObservers];
 }
 
