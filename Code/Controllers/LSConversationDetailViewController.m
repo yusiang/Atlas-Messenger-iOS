@@ -290,6 +290,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 - (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
 {
     [participantPickerController dismissViewControllerAnimated:YES completion:nil];
+    self.participantPickerDataSource = nil;
 }
 
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
@@ -299,6 +300,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self configureForParticipantIdentifiers:participantIdentifiers];
 
     [participantPickerController dismissViewControllerAnimated:YES completion:nil];
+    self.participantPickerDataSource = nil;
 }
 
 #pragma mark - Conversation Configuration
