@@ -58,8 +58,6 @@ static NSString *const LSRegisterText = @"Create Account";
         self.environmentButton.titleLabel.font = LYRUIMediumFont(16);
         self.environmentButton.titleLabel.textColor = LYRUIBlueColor();
         self.environmentButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        self.environmentButton.layer.borderColor = LYRUIBlueColor().CGColor;
-        self.environmentButton.layer.cornerRadius = 1.0;
         [self.environmentButton addTarget:self action:@selector(environmentButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.environmentButton];
         
