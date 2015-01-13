@@ -20,6 +20,7 @@
         self.centerTextLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.centerTextLabel];
         
+        [self setUpConstraints];
     }
     return self;
 }
@@ -27,10 +28,9 @@
 - (void)setCenterText:(NSString *)text
 {
     self.centerTextLabel.text = text;
-    [self updateLabelConstraints];
 }
 
-- (void)updateLabelConstraints
+- (void)setUpConstraints
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel
                                                      attribute:NSLayoutAttributeLeft
