@@ -12,7 +12,6 @@
 #import "LYRUIParticipantPickerController.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LSUtilities.h"
-#import "LYRUIAvatarImageView.h"
 #import "LSCenterTextTableViewCell.h"
 #import "LSInputTableViewCell.h"
 
