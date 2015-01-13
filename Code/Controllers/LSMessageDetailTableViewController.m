@@ -46,10 +46,9 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSMessageDetailCell];
     
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                                                       style:UIBarButtonItemStylePlain
-                                                                      target:self
-                                                                      action:@selector(doneButtonTapped)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                target:self
+                                                                                action:@selector(doneButtonTapped)];
     doneButton.accessibilityLabel = @"Done";
     [self.navigationItem setRightBarButtonItem:doneButton];
 }
