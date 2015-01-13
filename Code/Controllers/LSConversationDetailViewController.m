@@ -128,17 +128,17 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         }
             break;
         case LSConversationDetailTableSectionParticipants:
-            if (indexPath.row > self.participantIdentifiers.count - 1 ) {
-                cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
-                cell.textLabel.text = @"+ Add Participant";
-                cell.textLabel.textColor = LYRUIBlueColor();
-                cell.textLabel.font = LYRUIMediumFont(14);
-            } else {
+            if (indexPath.row < self.participantIdentifiers.count) {
                 NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
                 id<LYRUIParticipant>participant = [self.detailDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
                 UITableViewCell <LYRUIParticipantPresenting> *participantCell = [self.tableView dequeueReusableCellWithIdentifier:LSParticipantCellIdentifier forIndexPath:indexPath];
                 [participantCell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarImage:YES];
                 cell = participantCell;
+            } else {
+                cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
+                cell.textLabel.text = @"+ Add Participant";
+                cell.textLabel.textColor = LYRUIBlueColor();
+                cell.textLabel.font = LYRUIMediumFont(14);
             }
             break;
             
@@ -316,9 +316,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 - (void)configureForConversation
 {
     self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
-    if (![self.participantIdentifiers containsObject:self.layerClient.authenticatedUserID]) {
-        [self.participantIdentifiers addObject:self.layerClient.authenticatedUserID];
-    }
+    [self.participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
 }
 
 @end
