@@ -44,8 +44,6 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     
     self.title = @"Message Detail";
     
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSMessageDetailCell];
     
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
