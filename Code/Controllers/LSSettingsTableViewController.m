@@ -288,23 +288,23 @@ static NSString *const LSConnecting = @"Connecting";
         case LSSettingsTableSectionDebug:
             switch ((LSDebugTableRow)indexPath.row) {
                 case LSDebugTableRowVersion:
-                     [self settingsAlertWithString:[LSApplicationController versionString]];
+                     [self showAlertViewWithMessage:[LSApplicationController versionString]];
                     break;
                     
                 case LSDebugTableRowBuild:
-                     [self settingsAlertWithString:[LSApplicationController buildInformationString]];
+                     [self showAlertViewWithMessage:[LSApplicationController buildInformationString]];
                     break;
                     
                 case LSDebugTableRowHost:
-                     [self settingsAlertWithString:[LSApplicationController layerServerHostname]];
+                     [self showAlertViewWithMessage:[LSApplicationController layerServerHostname]];
                     break;
                     
                 case LSDebugTableRowUserID:
-                     [self settingsAlertWithString:self.applicationController.layerClient.authenticatedUserID];
+                     [self showAlertViewWithMessage:self.applicationController.layerClient.authenticatedUserID];
                     break;
                     
                 case LSDebugTableRowDeviceToken:
-                     [self settingsAlertWithString:[self.applicationController.deviceToken description]];
+                     [self showAlertViewWithMessage:[self.applicationController.deviceToken description]];
                     break;
                     
                 case LSDebugTableRowMode:
@@ -399,10 +399,10 @@ static NSString *const LSConnecting = @"Connecting";
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)settingsAlertWithString:(NSString *)string
+- (void)showAlertViewWithMessage:(NSString *)message
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Layer Talk Settings"
-                                                        message:string
+                                                        message:message
                                                        delegate:nil
                                               cancelButtonTitle:@"Copy" otherButtonTitles:@"OK", nil];
     alertView.delegate = self;
