@@ -17,6 +17,7 @@
         
         self.centerTextLabel = [[UILabel alloc] init];
         self.centerTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.centerTextLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.centerTextLabel];
         
     }
@@ -26,20 +27,27 @@
 - (void)setCenterText:(NSString *)text
 {
     self.centerTextLabel.text = text;
-    [self.centerTextLabel sizeToFit];
     [self updateLabelConstraints];
 }
 
 - (void)updateLabelConstraints
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel
-                                                     attribute:NSLayoutAttributeCenterX
+                                                     attribute:NSLayoutAttributeLeft
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeCenterX
+                                                        toItem:self.contentView
+                                                     attribute:NSLayoutAttributeLeft
                                                     multiplier:1.0
-                                                      constant:0.0]];
-    
+                                                      constant:10.0]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel
+                                                     attribute:NSLayoutAttributeRight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self.contentView
+                                                     attribute:NSLayoutAttributeRight
+                                                    multiplier:1.0
+                                                      constant:-10.0]];
+
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel
                                                      attribute:NSLayoutAttributeCenterY
                                                      relatedBy:NSLayoutRelationEqual
