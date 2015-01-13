@@ -74,7 +74,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self configureAppearance];
 }
 
-#pragma mark - Table view data source
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -171,6 +171,30 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     }
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch ((LSConversationDetailTableSection)indexPath.section) {
+        case LSConversationDetailTableSectionParticipants:
+            return indexPath.row < self.participantIdentifiers.count;
+
+        case LSConversationDetailTableSectionMetadata:
+        case LSConversationDetailTableSectionLocation:
+        case LSConversationDetailTableSectionDeletion:
+        case LSConversationDetailTableSectionCount:
+            return NO;
+    }
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
+        [self setConversationForParticipants:[NSSet setWithArray:self.participantIdentifiers]];
+    }
+}
+
+#pragma mark - UITableViewDelegate
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch ((LSConversationDetailTableSection)indexPath.section) {
@@ -200,29 +224,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     }
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    switch ((LSConversationDetailTableSection)indexPath.section) {
-        case LSConversationDetailTableSectionParticipants:
-            return indexPath.row < self.participantIdentifiers.count;
-
-        case LSConversationDetailTableSectionMetadata:
-        case LSConversationDetailTableSectionLocation:
-        case LSConversationDetailTableSectionDeletion:
-        case LSConversationDetailTableSectionCount:
-            return NO;
-    }
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
-        [self setConversationForParticipants:[NSSet setWithArray:self.participantIdentifiers]];
-    }
-}
-
-#pragma mark - Location Manager Methods
+#pragma mark - Location Sharing
 
 - (void)shareLocation
 {
@@ -263,6 +265,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.locationManager startUpdatingLocation];
 }
 
+#pragma mark - CLLocationManagerDelegate
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     if (manager != self.locationManager) return;
@@ -272,7 +276,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.detailDelegate conversationDetailViewController:self didShareLocation:locations.lastObject];
 }
 
-#pragma Participant Picker Delegate Methods
+#pragma mark - LYRUIParticipantPickerControllerDelegate
 
 - (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
 {
@@ -288,6 +292,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [participantPickerController dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - Conversation Configuration
+
 - (void)setConversationForParticipants:(NSSet *)participants
 {
     LYRConversation *conversation = [self.applicationController.layerClient conversationForParticipants:participants];
@@ -300,6 +306,14 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.tableView reloadData];
 }
 
+- (void)configureForConversation
+{
+    self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
+    [self.participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
+}
+
+#pragma mark - UITextFieldDelegate
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (textField.text.length > 0) {
@@ -311,21 +325,13 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     return YES;
 }
 
-#pragma Cell Appearance Configuration
+#pragma mark - Cell Appearance Configuration
 
 - (void)configureAppearance
 {
     [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleColor:[UIColor blackColor]];
     [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleFont:LYRUIMediumFont(14)];
     [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setBoldTitleFont:[UIFont systemFontOfSize:14]];
-}
-
-#pragma mark - Helpers
-
-- (void)configureForConversation
-{
-    self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
-    [self.participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
 }
 
 @end
