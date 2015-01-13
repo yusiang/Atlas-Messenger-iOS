@@ -26,9 +26,9 @@
 static NSString *const LSDefaultCellIdentifier = @"defaultTableViewCell";
 static NSString *const LSCenterTextCellIdentifier = @"centerContentTableViewCell";
 
-static NSString *const LSConversationCount = @"LSConversationCount";
-static NSString *const LSMessageCount = @"LSMessageCount";
-static NSString *const LSUnreadMessageCount = @"LSUnreadMessageCount";
+static NSString *const LSConversationCountKey = @"LSConversationCount";
+static NSString *const LSMessageCountKey = @"LSMessageCount";
+static NSString *const LSUnreadMessageCountKey = @"LSUnreadMessageCount";
 
 static NSString *const LSConnected = @"Connected";
 static NSString *const LSDisconnected = @"Disconnected";
@@ -204,7 +204,7 @@ static NSString *const LSConnecting = @"Connecting";
                 case 0: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
                     UILabel *conversationsLabel = [[UILabel alloc] init];
-                    conversationsLabel.text = [[self.conversationStatistics objectForKey:LSConversationCount]stringValue];
+                    conversationsLabel.text = [[self.conversationStatistics objectForKey:LSConversationCountKey]stringValue];
                     conversationsLabel.font = cell.textLabel.font;
                     [conversationsLabel sizeToFit];
                     cell.accessoryView = conversationsLabel;
@@ -214,7 +214,7 @@ static NSString *const LSConnecting = @"Connecting";
                 case 1: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Messages:"];
                     UILabel *messagesLabel = [[UILabel alloc] init];
-                    messagesLabel.text = [[self.conversationStatistics objectForKey:LSMessageCount]stringValue];
+                    messagesLabel.text = [[self.conversationStatistics objectForKey:LSMessageCountKey]stringValue];
                     messagesLabel.font = cell.textLabel.font;
                     [messagesLabel sizeToFit];
                     cell.accessoryView = messagesLabel;
@@ -224,7 +224,7 @@ static NSString *const LSConnecting = @"Connecting";
                 case 2: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Unread Messages:"];
                     UILabel *unreadMessagesLabel = [[UILabel alloc] init];
-                    unreadMessagesLabel.text = [[self.conversationStatistics objectForKey:LSUnreadMessageCount]stringValue];
+                    unreadMessagesLabel.text = [[self.conversationStatistics objectForKey:LSUnreadMessageCountKey]stringValue];
                     unreadMessagesLabel.font = cell.textLabel.font;
                     [unreadMessagesLabel sizeToFit];
                     cell.accessoryView = unreadMessagesLabel;
@@ -326,9 +326,9 @@ static NSString *const LSConnecting = @"Connecting";
     NSUInteger conversationCount = [self.applicationController.layerClient countOfConversations];
     NSUInteger messageCount = [self.applicationController.layerClient countOfMessages];
     NSUInteger unreadMessageCount = [self.applicationController.layerClient countOfUnreadMessages];
-    NSDictionary *conversationStatistics = @{LSConversationCount : [NSNumber numberWithInteger:conversationCount],
-                                             LSMessageCount : [NSNumber numberWithInteger:messageCount],
-                                             LSUnreadMessageCount : [NSNumber numberWithInteger:unreadMessageCount]};
+    NSDictionary *conversationStatistics = @{LSConversationCountKey : [NSNumber numberWithInteger:conversationCount],
+                                             LSMessageCountKey : [NSNumber numberWithInteger:messageCount],
+                                             LSUnreadMessageCountKey : [NSNumber numberWithInteger:unreadMessageCount]};
     return conversationStatistics;
 }
 
