@@ -294,9 +294,9 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    NSMutableSet *participants = [self.conversation.participants mutableCopy];
-    [participants addObject:participant.participantIdentifier];
-    [self configureForParticipantIdentifiers:participants];
+    NSMutableSet *participantIdentifiers = [self.conversation.participants mutableCopy];
+    [participantIdentifiers addObject:participant.participantIdentifier];
+    [self configureForParticipantIdentifiers:participantIdentifiers];
 
     [participantPickerController dismissViewControllerAnimated:YES completion:nil];
 }
