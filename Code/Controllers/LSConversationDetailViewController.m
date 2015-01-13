@@ -187,7 +187,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             break;
             
         case LSConversationDetailTableSectionLocation:
-            [self startLocationManager];
+            [self shareLocation];
             break;
         
         case LSConversationDetailTableSectionDeletion:
@@ -224,7 +224,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 #pragma mark - Location Manager Methods
 
-- (void)startLocationManager
+- (void)shareLocation
 {
     if (![CLLocationManager locationServicesEnabled]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Required"
