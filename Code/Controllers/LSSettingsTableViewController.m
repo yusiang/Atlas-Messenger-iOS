@@ -11,6 +11,7 @@
 #import "SVProgressHUD.h"
 #import "LSSettingsHeaderView.h"
 #import "LSCenterTextTableViewCell.h"
+#import "LSSettingsTableViewCell.h"
 
 typedef NS_ENUM(NSInteger, LSSettingsTableSection) {
     LSSettingsTableSectionNotifications,
@@ -79,7 +80,7 @@ static NSString *const LSConnecting = @"Connecting";
     
     [self fetchConversationStatistics];
     
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
+    [self.tableView registerClass:[LSSettingsTableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterTextCellIdentifier];
     
     // Left navigation item
@@ -211,34 +212,19 @@ static NSString *const LSConnecting = @"Connecting";
         case LSSettingsTableSectionStatistics: {
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
             switch ((LSStatisticsTableRow)indexPath.row) {
-                case LSStatisticsTableRowConversations: {
+                case LSStatisticsTableRowConversations:
                     cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
-                    UILabel *conversationsLabel = [[UILabel alloc] init];
-                    conversationsLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.conversationsCount];
-                    conversationsLabel.font = cell.textLabel.font;
-                    [conversationsLabel sizeToFit];
-                    cell.accessoryView = conversationsLabel;
-                }
+                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.conversationsCount];
                     break;
                     
-                case LSStatisticsTableRowMessages: {
+                case LSStatisticsTableRowMessages:
                     cell.textLabel.text = [NSString stringWithFormat:@"Messages:"];
-                    UILabel *messagesLabel = [[UILabel alloc] init];
-                    messagesLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.messagesCount];
-                    messagesLabel.font = cell.textLabel.font;
-                    [messagesLabel sizeToFit];
-                    cell.accessoryView = messagesLabel;
-                }
+                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.messagesCount];
                     break;
                     
-                case LSStatisticsTableRowUnread: {
+                case LSStatisticsTableRowUnread:
                     cell.textLabel.text = [NSString stringWithFormat:@"Unread Messages:"];
-                    UILabel *unreadMessagesLabel = [[UILabel alloc] init];
-                    unreadMessagesLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.unreadMessagesCount];
-                    unreadMessagesLabel.font = cell.textLabel.font;
-                    [unreadMessagesLabel sizeToFit];
-                    cell.accessoryView = unreadMessagesLabel;
-                }
+                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.unreadMessagesCount];
                     break;
                     
                 case LSStatisticsTableRowCount:
@@ -264,6 +250,9 @@ static NSString *const LSConnecting = @"Connecting";
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     cell.textLabel.textColor = [UIColor blackColor];
+    cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+    cell.detailTextLabel.textColor = [UIColor blackColor];
+    cell.detailTextLabel.text = nil;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryView = nil;
     return cell;
