@@ -63,16 +63,13 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     switch (section) {
         case 0:
             return 6;
-            break;
             
         case 1:
             return self.message.recipientStatusByUserID.count;
-            break;
             
         default:
-            break;
+            return 0;
     }
-    return 0;
 }
 
 
@@ -164,22 +161,18 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     switch ([self.message recipientStatusForUserID:userID]) {
         case LYRRecipientStatusSent:
             return @"Sent";
-            break;
             
         case LYRRecipientStatusDelivered:
             return @"Delivered";
-            break;
             
         case LYRRecipientStatusRead:
             return @"Read";
-            break;
             
         case LYRRecipientStatusInvalid:
             return @"Invalid";
-            break;
             
         default:
-            break;
+            return nil;
     }
 }
 
