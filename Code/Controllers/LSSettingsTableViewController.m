@@ -102,6 +102,7 @@ static NSString *const LSConnecting = @"Connecting";
     }
     
     self.tableView.tableHeaderView = self.headerView;
+    self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
 
     [self addConnectionObservers];
@@ -310,11 +311,6 @@ static NSString *const LSConnecting = @"Connecting";
         case LSSettingsTableSectionCount:
             break;
     }
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 48;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
