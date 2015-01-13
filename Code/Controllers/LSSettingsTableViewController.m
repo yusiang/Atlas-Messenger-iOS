@@ -315,13 +315,13 @@ static NSString *const LSConnecting = @"Connecting";
 {
     switch ((LSSettingsTableSection)section) {
         case LSSettingsTableSectionNotifications:
-            return @"NOTIFICATIONS";
+            return @"Notifications";
             
         case LSSettingsTableSectionDebug:
-            return  @"DEBUG";
+            return  @"Debug";
             
         case LSSettingsTableSectionStatistics:
-            return @"STATISTICS";
+            return @"Statistics";
             
         case LSSettingsTableSectionLogout:
         case LSSettingsTableSectionCount:
