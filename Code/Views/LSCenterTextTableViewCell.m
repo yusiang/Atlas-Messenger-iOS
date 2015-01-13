@@ -14,7 +14,6 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
         self.centerTextLabel = [[UILabel alloc] init];
         self.centerTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.centerTextLabel.textAlignment = NSTextAlignmentCenter;
@@ -50,6 +49,6 @@
                                                      attribute:NSLayoutAttributeCenterY
                                                     multiplier:1.0
                                                       constant:0.0]];
-    
 }
+
 @end
