@@ -18,7 +18,7 @@
         self.centerTextLabel = [[UILabel alloc] init];
         self.centerTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.centerTextLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:self.centerTextLabel];
+        [self.contentView addSubview:self.centerTextLabel];
         
         [self setUpConstraints];
     }
@@ -46,7 +46,7 @@
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel
                                                      attribute:NSLayoutAttributeCenterY
                                                      relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
+                                                        toItem:self.contentView
                                                      attribute:NSLayoutAttributeCenterY
                                                     multiplier:1.0
                                                       constant:0.0]];
