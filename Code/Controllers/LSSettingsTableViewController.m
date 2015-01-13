@@ -403,9 +403,8 @@ static NSString *const LSConnecting = @"Connecting";
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Layer Talk Settings"
                                                         message:message
-                                                       delegate:nil
+                                                       delegate:self
                                               cancelButtonTitle:@"Copy" otherButtonTitles:@"OK", nil];
-    alertView.delegate = self;
     [alertView show];
 }
 
