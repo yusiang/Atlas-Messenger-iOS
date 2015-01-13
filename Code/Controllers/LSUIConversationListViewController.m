@@ -195,7 +195,6 @@
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     if (self.applicationController.layerClient.isConnected) {
         [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-            [self.applicationController.APIManager deauthenticate];
             [SVProgressHUD dismiss];
         }];
     } else {
