@@ -27,7 +27,6 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
 @interface LSConversationDetailViewController () <LYRUIParticipantPickerControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
-@property (nonatomic) LYRClient *layerClient;
 @property (nonatomic) NSMutableArray *participantIdentifiers;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
@@ -42,16 +41,15 @@ static NSString *const LSDefaultCellIdentifier = @"defaultCellIdentifier";
 static NSString *const LSInputCellIdentifier = @"inputCell";
 static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdentifier";
 
-+ (instancetype)conversationDetailViewControllerLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
++ (instancetype)conversationDetailViewControllerWithConversation:(LYRConversation *)conversation
 {
-    return [[self alloc] initWithLayerClient:layerClient conversation:conversation];
+    return [[self alloc] initWithConversation:conversation];
 }
 
-- (id)initWithLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation
+- (id)initWithConversation:(LYRConversation *)conversation
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        _layerClient = layerClient;
         _conversation = conversation;
     }
     return self;

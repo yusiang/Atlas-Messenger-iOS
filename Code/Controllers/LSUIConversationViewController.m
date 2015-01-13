@@ -443,7 +443,7 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 
 - (void)detailsButtonTapped
 {
-    LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerLayerClient:self.layerClient conversation:self.conversation];
+    LSConversationDetailViewController *detailViewController = [LSConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
     detailViewController.detailDelegate = self;
     detailViewController.detailDataSource = self;
     detailViewController.applicationController = self.applicationController;

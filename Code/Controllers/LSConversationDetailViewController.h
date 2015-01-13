@@ -64,7 +64,7 @@ extern NSString *const LSConversationMetadataNameKey;
 /// @name Designated Initializer
 ///-------------------------------
 
-+(instancetype)conversationDetailViewControllerLayerClient:(LYRClient *)layerClient conversation:(LYRConversation *)conversation;
++(instancetype)conversationDetailViewControllerWithConversation:(LYRConversation *)conversation;
 
 /**
  @abstract The `LSConversationDetailViewControllerDelegate` object for the controller.
