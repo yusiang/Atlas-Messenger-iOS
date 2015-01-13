@@ -288,23 +288,23 @@ static NSString *const LSConnecting = @"Connecting";
         case LSSettingsTableSectionDebug:
             switch ((LSDebugTableRow)indexPath.row) {
                 case LSDebugTableRowVersion:
-                     [self showAlertViewWithMessage:[LSApplicationController versionString]];
+                    [self showAlertViewForDebuggingWithTitle:@"Version" message:[LSApplicationController versionString]];
                     break;
                     
                 case LSDebugTableRowBuild:
-                     [self showAlertViewWithMessage:[LSApplicationController buildInformationString]];
+                    [self showAlertViewForDebuggingWithTitle:@"Build" message:[LSApplicationController buildInformationString]];
                     break;
                     
                 case LSDebugTableRowHost:
-                     [self showAlertViewWithMessage:[LSApplicationController layerServerHostname]];
+                    [self showAlertViewForDebuggingWithTitle:@"Host" message:[LSApplicationController layerServerHostname]];
                     break;
                     
                 case LSDebugTableRowUserID:
-                     [self showAlertViewWithMessage:self.applicationController.layerClient.authenticatedUserID];
+                    [self showAlertViewForDebuggingWithTitle:@"User ID" message:self.applicationController.layerClient.authenticatedUserID];
                     break;
                     
                 case LSDebugTableRowDeviceToken:
-                     [self showAlertViewWithMessage:[self.applicationController.deviceToken description]];
+                    [self showAlertViewForDebuggingWithTitle:@"Device Token" message:[self.applicationController.deviceToken description]];
                     break;
                     
                 case LSDebugTableRowMode:
@@ -399,9 +399,9 @@ static NSString *const LSConnecting = @"Connecting";
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)showAlertViewWithMessage:(NSString *)message
+- (void)showAlertViewForDebuggingWithTitle:(NSString *)title message:(NSString *)message
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Layer Talk Settings"
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
                                                         message:message
                                                        delegate:self
                                               cancelButtonTitle:@"Copy" otherButtonTitles:@"OK", nil];
