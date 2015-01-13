@@ -119,24 +119,19 @@ static NSString *const LSConnecting = @"Connecting";
     switch ((LSSettingsTableSection)section) {
         case LSSettingsTableSectionNotifications:
             return LSNotificationsTableRowCount;
-            break;
             
         case LSSettingsTableSectionDebug:
             return LSDebugTableRowCount;
-            break;
             
         case LSSettingsTableSectionStatistics:
             return LSStatisticsTableRowCount;
-            break;
             
         case LSSettingsTableSectionLogout:
             return 1;
-            break;
             
         case LSSettingsTableSectionCount:
-            break;
+            return 0;
     }
-    return 0;
 }
 
 
@@ -267,7 +262,6 @@ static NSString *const LSConnecting = @"Connecting";
             centerCell.centerTextLabel.textColor = LYRUIRedColor();
             return centerCell;
         }
-            break;
             
         case LSSettingsTableSectionCount:
             break;
@@ -328,21 +322,17 @@ static NSString *const LSConnecting = @"Connecting";
     switch ((LSSettingsTableSection)section) {
         case LSSettingsTableSectionNotifications:
             return @"NOTIFICATIONS";
-            break;
             
         case LSSettingsTableSectionDebug:
             return  @"DEBUG";
-            break;
             
         case LSSettingsTableSectionStatistics:
             return @"STATISTICS";
-            break;
             
         case LSSettingsTableSectionLogout:
         case LSSettingsTableSectionCount:
-            break;
+            return nil;
     }
-    return nil;
 }
 
 - (NSDictionary *)fetchConversationStatistics
