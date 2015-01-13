@@ -23,8 +23,8 @@
 
 @implementation LSSettingsTableViewController
 
-NSString *const LSDefaultCell = @"defaultTableViewCell";
-NSString *const LSCenterTextCell = @"centerContentTableViewCell";
+NSString *const LSDefaultCellIdentifier = @"defaultTableViewCell";
+NSString *const LSCenterTextCellIdentifier = @"centerContentTableViewCell";
 
 NSString *const LSConversationCount = @"LSConversationCount";
 NSString *const LSMessageCount = @"LSMessageCount";
@@ -50,8 +50,8 @@ static NSString *const LSConnecting = @"Connecting";
     
     self.conversationStatistics = [self fetchConversationStatistics];
     
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCell];
-    [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterTextCell];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
+    [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterTextCellIdentifier];
     
     // Left navigation item
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
@@ -116,7 +116,7 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCell];
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     cell.textLabel.textColor = [UIColor blackColor];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -239,7 +239,7 @@ static NSString *const LSConnecting = @"Connecting";
             break;
         
         case 3: {
-            LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCell];
+            LSCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCellIdentifier];
             [centerCell setCenterText:@"Log Out"];
             centerCell.centerTextLabel.textColor = LYRUIRedColor();
             return centerCell;
