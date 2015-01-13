@@ -31,7 +31,6 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
 @property (nonatomic) NSMutableArray *participantIdentifiers;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
-@property (nonatomic) BOOL locationShared;
 
 @end
 
@@ -261,6 +260,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             break;
     }
 
+    if (self.locationManager) return;
+
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
@@ -272,11 +273,11 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    [self.locationManager stopUpdatingLocation];
-    if (!self.locationShared) {
-        self.locationShared = YES;
-        [self.detailDelegate conversationDetailViewController:self didShareLocation:[locations lastObject]];
-    }
+    if (manager != self.locationManager) return;
+
+    self.locationManager = nil;
+    [manager stopUpdatingLocation];
+    [self.detailDelegate conversationDetailViewController:self didShareLocation:locations.lastObject];
 }
 
 #pragma Participant Picker Delegate Methods
