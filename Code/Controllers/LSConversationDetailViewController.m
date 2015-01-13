@@ -302,8 +302,10 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if (textField.text) {
+    if (textField.text.length > 0) {
         [self.conversation setValue:textField.text forMetadataAtKeyPath:LSConversationMetadataNameKey];
+    } else {
+        [self.conversation deleteValueForMetadataAtKeyPath:LSConversationMetadataNameKey];
     }
     [textField resignFirstResponder];
     return YES;
