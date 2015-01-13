@@ -152,6 +152,8 @@ static LSDateProximity LSProximityToDate(NSDate *date)
     
     if ([self.conversation.metadata valueForKey:LSConversationMetadataNameKey]) {
         self.conversationTitle = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
+    } else {
+        self.conversationTitle = nil;
     }
     
     self.addressBarController.dataSource = self;
