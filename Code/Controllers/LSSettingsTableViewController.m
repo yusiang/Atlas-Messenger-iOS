@@ -304,7 +304,9 @@ static NSString *const LSConnecting = @"Connecting";
                     break;
                     
                 case LSDebugTableRowDeviceToken:
-                    [self showAlertViewForDebuggingWithTitle:@"Device Token" message:[self.applicationController.deviceToken description]];
+                    if (self.applicationController.deviceToken) {
+                        [self showAlertViewForDebuggingWithTitle:@"Device Token" message:[self.applicationController.deviceToken description]];
+                    }
                     break;
                     
                 case LSDebugTableRowMode:
@@ -413,12 +415,8 @@ static NSString *const LSConnecting = @"Connecting";
     switch (buttonIndex) {
         case 0: {
             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-            if (self.applicationController.deviceToken) {
-                pasteboard.string = alertView.message;
-                [SVProgressHUD showSuccessWithStatus:@"Copied"];
-            } else {
-                [SVProgressHUD showErrorWithStatus:@"No Device Token Available"];
-            }
+            pasteboard.string = alertView.message;
+            [SVProgressHUD showSuccessWithStatus:@"Copied"];
         }
             break;
             
