@@ -130,7 +130,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
                 return cell;
             } else {
                 UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.textLabel.text = @"+ Add Participant";
                 cell.textLabel.textColor = LYRUIBlueColor();
                 cell.textLabel.font = LYRUIMediumFont(14);
@@ -139,7 +138,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
         case LSConversationDetailTableSectionLocation: {
             UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.textLabel.text = @"Share My Location";
             cell.textLabel.textColor = LYRUIBlueColor();
             cell.textLabel.font = LYRUIMediumFont(14);
