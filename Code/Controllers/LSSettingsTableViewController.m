@@ -439,28 +439,28 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (void)addConnectionObservers
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidConnect) name:LYRClientDidConnectNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidDisconnect) name:LYRClientDidDisconnectNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerIsConnecting) name:LYRClientWillAttemptToConnectNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidLoseConnection) name:LYRClientDidLoseConnectionNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidConnect:) name:LYRClientDidConnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidDisconnect:) name:LYRClientDidDisconnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerIsConnecting:) name:LYRClientWillAttemptToConnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidLoseConnection:) name:LYRClientDidLoseConnectionNotification object:nil];
 }
 
-- (void)layerDidConnect
+- (void)layerDidConnect:(NSNotification *)notification
 {
     [self.headerView updateConnectedStateWithString:LSConnected];
 }
 
-- (void)layerDidDisconnect
+- (void)layerDidDisconnect:(NSNotification *)notification
 {
     [self.headerView updateConnectedStateWithString:LSDisconnected];
 }
 
-- (void)layerIsConnecting
+- (void)layerIsConnecting:(NSNotification *)notification
 {
     [self.headerView updateConnectedStateWithString:LSConnecting];
 }
 
-- (void)layerDidLoseConnection
+- (void)layerDidLoseConnection:(NSNotification *)notification
 {
     [self.headerView updateConnectedStateWithString:LSLostConnection];
 }
