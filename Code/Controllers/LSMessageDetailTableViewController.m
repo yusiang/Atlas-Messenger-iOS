@@ -125,7 +125,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
                     
                 case 5:
                     cell.textLabel.text = [NSString stringWithFormat:@"Sent By:"];
-                    messagesLabel.text = [self recipientNameForUserId:self.message.sentByUserID];
+                    messagesLabel.text = [self recipientNameForUserID:self.message.sentByUserID];
                     messagesLabel.font = cell.textLabel.font;
                     [messagesLabel sizeToFit];
                     cell.accessoryView = messagesLabel;
@@ -136,7 +136,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
             }
             break;
         case 1:
-            cell.textLabel.text = [self recipientNameForUserId:[recipients objectAtIndex:indexPath.row]];
+            cell.textLabel.text = [self recipientNameForUserID:[recipients objectAtIndex:indexPath.row]];
             messagesLabel.text = [self recipientStateForUserID:[recipients objectAtIndex:indexPath.row]];
             messagesLabel.font = cell.textLabel.font;
             [messagesLabel sizeToFit];
@@ -150,7 +150,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     return cell;
 }
 
-- (NSString *)recipientNameForUserId:(NSString *)userID
+- (NSString *)recipientNameForUserID:(NSString *)userID
 {
     LSUser *user = [self.applicationController.persistenceManager userForIdentifier:userID];
     return user.fullName;
