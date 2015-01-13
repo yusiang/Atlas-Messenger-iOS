@@ -47,7 +47,9 @@ typedef NS_ENUM(NSInteger, LSStatisticsTableRow) {
 
 @interface LSSettingsTableViewController () <UITextFieldDelegate>
 
-@property (nonatomic, strong) NSDictionary *conversationStatistics;
+@property (nonatomic) NSUInteger conversationsCount;
+@property (nonatomic) NSUInteger messagesCount;
+@property (nonatomic) NSUInteger unreadMessagesCount;
 @property (nonatomic) LSSettingsHeaderView *headerView;
 @property (nonatomic) NSUInteger averageSend;
 
@@ -57,10 +59,6 @@ typedef NS_ENUM(NSInteger, LSStatisticsTableRow) {
 
 static NSString *const LSDefaultCellIdentifier = @"defaultTableViewCell";
 static NSString *const LSCenterTextCellIdentifier = @"centerContentTableViewCell";
-
-static NSString *const LSConversationCountKey = @"LSConversationCount";
-static NSString *const LSMessageCountKey = @"LSMessageCount";
-static NSString *const LSUnreadMessageCountKey = @"LSUnreadMessageCount";
 
 static NSString *const LSConnected = @"Connected";
 static NSString *const LSDisconnected = @"Disconnected";
@@ -80,7 +78,7 @@ static NSString *const LSConnecting = @"Connecting";
 {
     [super viewDidLoad];
     
-    self.conversationStatistics = [self fetchConversationStatistics];
+    [self fetchConversationStatistics];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterTextCellIdentifier];
@@ -223,7 +221,7 @@ static NSString *const LSConnecting = @"Connecting";
                 case LSStatisticsTableRowConversations: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
                     UILabel *conversationsLabel = [[UILabel alloc] init];
-                    conversationsLabel.text = [[self.conversationStatistics objectForKey:LSConversationCountKey]stringValue];
+                    conversationsLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.conversationsCount];
                     conversationsLabel.font = cell.textLabel.font;
                     [conversationsLabel sizeToFit];
                     cell.accessoryView = conversationsLabel;
@@ -233,7 +231,7 @@ static NSString *const LSConnecting = @"Connecting";
                 case LSStatisticsTableRowMessages: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Messages:"];
                     UILabel *messagesLabel = [[UILabel alloc] init];
-                    messagesLabel.text = [[self.conversationStatistics objectForKey:LSMessageCountKey]stringValue];
+                    messagesLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.messagesCount];
                     messagesLabel.font = cell.textLabel.font;
                     [messagesLabel sizeToFit];
                     cell.accessoryView = messagesLabel;
@@ -243,7 +241,7 @@ static NSString *const LSConnecting = @"Connecting";
                 case LSStatisticsTableRowUnread: {
                     cell.textLabel.text = [NSString stringWithFormat:@"Unread Messages:"];
                     UILabel *unreadMessagesLabel = [[UILabel alloc] init];
-                    unreadMessagesLabel.text = [[self.conversationStatistics objectForKey:LSUnreadMessageCountKey]stringValue];
+                    unreadMessagesLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.unreadMessagesCount];
                     unreadMessagesLabel.font = cell.textLabel.font;
                     [unreadMessagesLabel sizeToFit];
                     cell.accessoryView = unreadMessagesLabel;
@@ -331,15 +329,11 @@ static NSString *const LSConnecting = @"Connecting";
     }
 }
 
-- (NSDictionary *)fetchConversationStatistics
+- (void)fetchConversationStatistics
 {
-    NSUInteger conversationCount = [self.applicationController.layerClient countOfConversations];
-    NSUInteger messageCount = [self.applicationController.layerClient countOfMessages];
-    NSUInteger unreadMessageCount = [self.applicationController.layerClient countOfUnreadMessages];
-    NSDictionary *conversationStatistics = @{LSConversationCountKey : [NSNumber numberWithInteger:conversationCount],
-                                             LSMessageCountKey : [NSNumber numberWithInteger:messageCount],
-                                             LSUnreadMessageCountKey : [NSNumber numberWithInteger:unreadMessageCount]};
-    return conversationStatistics;
+    self.conversationsCount = [self.applicationController.layerClient countOfConversations];
+    self.messagesCount = [self.applicationController.layerClient countOfMessages];
+    self.unreadMessagesCount = [self.applicationController.layerClient countOfUnreadMessages];
 }
 
 - (void)switchSwitched:(UIControl *)sender
