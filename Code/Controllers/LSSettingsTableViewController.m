@@ -91,7 +91,6 @@ static NSString *const LSConnecting = @"Connecting";
     
     self.headerView = [LSSettingsHeaderView headerViewWithUser:self.applicationController.APIManager.authenticatedSession.user];
     self.headerView.frame = CGRectMake(0, 0, 320, 148);
-    self.headerView.backgroundColor = [UIColor whiteColor];
     if (self.applicationController.layerClient.isConnected){
         [self.headerView updateConnectedStateWithString:LSConnected];
     } else {
