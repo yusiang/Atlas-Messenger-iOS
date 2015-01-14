@@ -67,7 +67,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
                                                                                 target:self
                                                                                 action:@selector(doneButtonTapped)];
     doneButton.accessibilityLabel = @"Done";
-    [self.navigationItem setRightBarButtonItem:doneButton];
+    self.navigationItem.rightBarButtonItem = doneButton;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
