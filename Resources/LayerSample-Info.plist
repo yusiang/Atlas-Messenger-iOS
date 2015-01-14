@@ -53,8 +53,6 @@
 		<key>LYRBuildShortSha</key>
 		<string>b6a4147</string>
 	</dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Boom</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Hello</string>
 	<key>UIBackgroundModes</key>
