@@ -17,7 +17,7 @@
 @interface LSMessageDetailTableViewController : UITableViewController
 
 ///--------------------------------
-/// @name Designated Initializer
+/// @name Initializing a Controller
 ///--------------------------------
 
 + (instancetype)initWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController;

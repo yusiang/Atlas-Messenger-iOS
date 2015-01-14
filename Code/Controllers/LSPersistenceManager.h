@@ -17,7 +17,7 @@
 @interface LSPersistenceManager : NSObject
 
 ///---------------------------------------
-/// @name Designated Initializers
+/// @name Initializing a Manager
 ///---------------------------------------
 
 /**

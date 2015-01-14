@@ -60,9 +60,9 @@ extern NSString *const LSConversationMetadataNameKey;
  */
 @interface LSConversationDetailViewController : UITableViewController
 
-///-------------------------------
-/// @name Designated Initializer
-///-------------------------------
+///--------------------------------
+/// @name Initializing a Controller
+///--------------------------------
 
 +(instancetype)conversationDetailViewControllerWithConversation:(LYRConversation *)conversation;
 
