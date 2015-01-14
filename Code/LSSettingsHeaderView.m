@@ -16,12 +16,13 @@
 @property (nonatomic) LYRUIAvatarImageView *imageView;
 @property (nonatomic) UILabel *nameLabel;
 @property (nonatomic) UILabel *connectionStateLabel;
+@property (nonatomic) UIView *bottomBorder;
 
 @end
 
 @implementation LSSettingsHeaderView
 
-static CGFloat const LSAvatarDiameter  = 72;
+static CGFloat const LSAvatarDiameter = 72;
 
 + (instancetype)headerViewWithUser:(LSUser *)user
 {
@@ -60,46 +61,162 @@ static CGFloat const LSAvatarDiameter  = 72;
         _connectionStateLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_connectionStateLabel];
     
+        _bottomBorder = [[UIView alloc] init];
+        _bottomBorder.translatesAutoresizingMaskIntoConstraints = NO;
+        _bottomBorder.backgroundColor = LYRUIGrayColor();
+        [self addSubview:_bottomBorder];
+
+        [self setUpAvatarImageViewConstraints];
+        [self setUpNameLabelConstraints];
+        [self setUpConnectionLabelConstraints];
+        [self setUpBottomBorderConstraints];
     }
-    [self updateConstraints];
     return self;
 }
 
-- (void)updateConstraints
+- (void)setUpAvatarImageViewConstraints
 {
-    //**********Avatar Image**********//
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:LSAvatarDiameter]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:LSAvatarDiameter]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:20]];
-    
-    //**********Name Label**********//
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.nameLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.nameLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:20]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.nameLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.nameLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:4]];
-    
-    //**********Connection Label**********//
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionStateLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionStateLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:20]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionStateLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionStateLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.nameLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
-    
-    [super updateConstraints];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:LSAvatarDiameter]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView 
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:LSAvatarDiameter]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
+                                                     attribute:NSLayoutAttributeCenterX
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterX
+                                                    multiplier:1.0
+                                                      constant:0]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView
+                                                     attribute:NSLayoutAttributeTop
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeTop
+                                                    multiplier:1.0
+                                                      constant:20]];
+}
+
+- (void)setUpNameLabelConstraints
+{
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.nameLabel
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeWidth
+                                                    multiplier:1.0
+                                                      constant:0.0]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.nameLabel
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:20]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.nameLabel
+                                                     attribute:NSLayoutAttributeCenterX
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterX
+                                                    multiplier:1.0
+                                                      constant:0]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.nameLabel
+                                                     attribute:NSLayoutAttributeTop
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self.imageView
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1.0
+                                                      constant:4]];
+}
+
+- (void)setUpConnectionLabelConstraints
+{
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionStateLabel
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeWidth
+                                                    multiplier:1.0
+                                                      constant:0]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionStateLabel
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:0.0
+                                                      constant:20]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionStateLabel
+                                                     attribute:NSLayoutAttributeCenterX
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterX
+                                                    multiplier:1.0
+                                                      constant:0]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.connectionStateLabel
+                                                     attribute:NSLayoutAttributeTop
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self.nameLabel
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1.0
+                                                      constant:0]];
+}
+
+- (void)setUpBottomBorderConstraints
+{
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBorder
+                                                     attribute:NSLayoutAttributeWidth
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeWidth
+                                                    multiplier:1.0
+                                                      constant:0]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBorder
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1.0
+                                                      constant:0.5]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBorder
+                                                     attribute:NSLayoutAttributeBottom
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1.0
+                                                      constant:0]];
+
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBorder
+                                                     attribute:NSLayoutAttributeLeft
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeLeft
+                                                    multiplier:1.0
+                                                      constant:0]];
 }
 
 - (void)updateConnectedStateWithString:(NSString *)string
 {
     self.connectionStateLabel.text = string;
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    UIView *blackLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 0.5, self.frame.size.width, 0.5)];
-    blackLine.backgroundColor = LYRUIGrayColor();
-    [self addSubview:blackLine];
 }
 
 @end

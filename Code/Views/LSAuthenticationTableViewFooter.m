@@ -58,21 +58,20 @@ static NSString *const LSRegisterText = @"Create Account";
         self.environmentButton.titleLabel.font = LYRUIMediumFont(16);
         self.environmentButton.titleLabel.textColor = LYRUIBlueColor();
         self.environmentButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        self.environmentButton.layer.borderColor = LYRUIBlueColor().CGColor;
-        self.environmentButton.layer.cornerRadius = 1.0;
         [self.environmentButton addTarget:self action:@selector(environmentButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.environmentButton];
         
-        [self setUpConstraints];
+        [self setUpPrimaryButtonConstraints];
+        [self setUpSecondaryButtonConstraints];
+        [self setUpEnvironmentButtonConstraints];
     }
     return self;
 }
 
 #pragma mark - Constraints
 
-- (void)setUpConstraints
+- (void)setUpPrimaryButtonConstraints
 {
-    //********** Primary Button **********//
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.primaryActionButton
                                                      attribute:NSLayoutAttributeCenterX
                                                      relatedBy:NSLayoutRelationEqual
@@ -104,8 +103,10 @@ static NSString *const LSRegisterText = @"Create Account";
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
                                                       constant:40]];
-    
-    //********** Secondary Button **********//
+}
+
+- (void)setUpSecondaryButtonConstraints
+{
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.secondaryActionButton
                                                      attribute:NSLayoutAttributeCenterX
                                                      relatedBy:NSLayoutRelationEqual
@@ -137,8 +138,10 @@ static NSString *const LSRegisterText = @"Create Account";
                                                      attribute:NSLayoutAttributeNotAnAttribute
                                                     multiplier:1.0
                                                       constant:40]];
-    
-    //********** Environment Button **********//
+}
+
+- (void)setUpEnvironmentButtonConstraints
+{
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.environmentButton
                                                      attribute:NSLayoutAttributeCenterX
                                                      relatedBy:NSLayoutRelationEqual
