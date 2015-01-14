@@ -87,14 +87,14 @@ static NSString *const LSUserDefaultsDebugModeEnabledKey = @"debugModeEnabled";
     NSLog(@"Layer Client did deauthenticate");
 }
 
-- (void)layerClient:(LYRClient *)client didFinishSynchronizationWithChanges:(NSArray *)changes
+- (void)layerClient:(LYRClient *)client objectsDidChange:(NSArray *)changes
 {
-    NSLog(@"Layer Client did finish sychronization");
+    NSLog(@"Layer Client objects did change");
 }
 
-- (void)layerClient:(LYRClient *)client didFailSynchronizationWithError:(NSError *)error
+- (void)layerClient:(LYRClient *)client didFailOperationWithError:(NSError *)error
 {
-    NSLog(@"Layer Client did fail synchronization with error: %@", error);
+    NSLog(@"Layer Client did fail operation with error: %@", error);
     if (self.debugModeEnabled) {
         LSAlertWithError(error);
     }
