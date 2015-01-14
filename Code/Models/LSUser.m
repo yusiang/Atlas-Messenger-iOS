@@ -67,22 +67,22 @@
 
 - (BOOL)validate:(NSError *__autoreleasing *)error
 {
-    if (!self.email) {
+    if (!self.email.length) {
         if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email to register" }];
         return NO;
     }
     
-    if (!self.firstName) {
+    if (!self.firstName.length) {
         if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidFirstName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter your first name to register" }];
         return NO;
     }
     
-    if (!self.lastName) {
+    if (!self.lastName.length) {
         if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidLastName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter your last name to register" }];
         return NO;
     }
     
-    if (!self.password || !self.passwordConfirmation || ![self.password isEqualToString:self.passwordConfirmation]) {
+    if (!self.password.length || !self.passwordConfirmation.length || ![self.password isEqualToString:self.passwordConfirmation]) {
         if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{ NSLocalizedDescriptionKey: @"Please enter matching passwords to register" }];
         return NO;
     }
