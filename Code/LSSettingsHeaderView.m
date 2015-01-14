@@ -34,6 +34,8 @@ static CGFloat const LSAvatarDiameter  = 72;
     if (self) {
         _user = user;
         
+        self.backgroundColor = [UIColor whiteColor];
+
         _imageView = [[LYRUIAvatarImageView alloc] init];
         _imageView.translatesAutoresizingMaskIntoConstraints = NO;
         _imageView.initialsFont = LYRUILightFont(22);

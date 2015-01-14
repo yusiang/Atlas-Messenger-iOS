@@ -192,16 +192,20 @@
 
 - (void)logoutTappedInSettingsTableViewController:(LSSettingsTableViewController *)settingsTableViewController
 {
-    [SVProgressHUD show];
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     if (self.applicationController.layerClient.isConnected) {
         [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-            [self.applicationController.APIManager deauthenticate];
             [SVProgressHUD dismiss];
         }];
     } else {
         [self.applicationController.APIManager deauthenticate];
         [SVProgressHUD dismiss];
     }
+}
+
+- (void)settingsTableViewControllerDidFinish:(LSSettingsTableViewController *)settingsTableViewController
+{
+    [settingsTableViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
