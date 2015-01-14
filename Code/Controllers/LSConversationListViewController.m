@@ -12,6 +12,7 @@
 #import "LSConversationViewController.h"
 #import "LSSettingsViewController.h"
 #import "LSConversationDetailViewController.h"
+#import "LSNavigationController.h"
 
 @interface LSConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsViewControllerDelegate, UIActionSheetDelegate>
 
@@ -218,6 +219,13 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
 
 - (void)conversationDeleted:(NSNotification *)notification
 {
+    if (self.ls_navigationController.isAnimating) {
+        [self.ls_navigationController notifyWhenCompletionEndsUsingBlock:^{
+            [self conversationDeleted:notification];
+        }];
+        return;
+    }
+
     LSConversationViewController *conversationViewController = [self existingConversationViewController];
     if (!conversationViewController) return;
 

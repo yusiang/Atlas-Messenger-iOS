@@ -15,6 +15,7 @@
 #import <sys/sysctl.h>
 #import <asl.h>
 #import "LSAppDelegate.h"
+#import "LSNavigationController.h"
 #import "LSConversationListViewController.h"
 #import "LSAPIManager.h"
 #import "LSUtilities.h"
@@ -456,7 +457,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
     self.conversationListViewController.allowsEditing = self.allowsEditing;
     self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
     
-    UINavigationController *authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
+    LSNavigationController *authenticatedNavigationController = [[LSNavigationController alloc] initWithRootViewController:self.conversationListViewController];
     [self.authenticationViewController presentViewController:authenticatedNavigationController animated:YES completion:^{
         [self.authenticationViewController resetState];
         [self removeSplashView];
