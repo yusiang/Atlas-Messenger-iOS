@@ -92,14 +92,15 @@
 
 - (NSUInteger)hash
 {
-    return [self.userID hash];
+    return self.userID.hash;
 }
 
 - (BOOL)isEqual:(id)object
 {
     if (!object) return NO;
     if (![object isKindOfClass:[LSUser class]]) return NO;
-    return [self.userID isEqualToString:[(LSUser *)object userID]];
+    LSUser *otherUser = (LSUser *)object;
+    return [self.userID isEqualToString:otherUser.userID];
 }
 
 - (NSString *)description
