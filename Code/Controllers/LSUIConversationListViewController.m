@@ -42,6 +42,13 @@
                                                                                    action:@selector(composeButtonTapped)];
     composeButton.accessibilityLabel = @"Compose Button";
     [self.navigationItem setRightBarButtonItem:composeButton];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationDeleted:) name:LSConversationDeletedNotification object:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - LYRUIConversationListViewControllerDelegate
@@ -200,6 +207,26 @@
 - (void)settingsTableViewControllerDidFinish:(LSSettingsTableViewController *)settingsTableViewController
 {
     [settingsTableViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Notification Handlers
+
+- (void)conversationDeleted:(NSNotification *)notification
+{
+    LSUIConversationViewController *conversationViewController = [self existingConversationViewController];
+    if (!conversationViewController) return;
+
+    LYRConversation *deletedConversation = notification.object;
+    if (![conversationViewController.conversation isEqual:deletedConversation]) return;
+
+    [self.navigationController popToViewController:self animated:YES];
+
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Conversation Deleted"
+                                                        message:@"The conversation has been deleted."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
 }
 
 #pragma mark - Helpers
