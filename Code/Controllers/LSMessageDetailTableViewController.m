@@ -29,6 +29,7 @@ typedef NS_ENUM(NSInteger, LSMessageMetadataTableRow) {
 
 @property (nonatomic) LSApplicationController *applicationController;
 @property (nonatomic) LYRMessage *message;
+@property (nonatomic) NSArray *recipientUserIDs;
 @property (nonatomic) NSDateFormatter *dateFormatter;
 
 @end
@@ -48,6 +49,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     if (self) {
         _applicationController = applicationController;
         _message = message;
+        _recipientUserIDs = message.recipientStatusByUserID.allKeys;
         _dateFormatter = [[NSDateFormatter alloc] init];
         _dateFormatter.dateStyle = NSDateFormatterShortStyle;
         _dateFormatter.timeStyle = NSDateFormatterMediumStyle;
@@ -83,7 +85,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
             return LSMessageMetadataTableRowCount;
             
         case LSMessageDetailTableSectionRecipientStatus:
-            return self.message.recipientStatusByUserID.count;
+            return self.recipientUserIDs.count;
             
         case LSMessageDetailTableSectionCount:
             return 0;
@@ -93,8 +95,6 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSMessageDetailCell];
-    
-    NSArray *recipients = [self.message.recipientStatusByUserID allKeys];
     
     switch ((LSMessageDetailTableSection)indexPath.section) {
         case LSMessageDetailTableSectionMetadata:
@@ -135,8 +135,8 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
             break;
 
         case LSMessageDetailTableSectionRecipientStatus:
-            cell.textLabel.text = [self recipientNameForUserID:recipients[indexPath.row]];
-            cell.detailTextLabel.text = [self recipientStateForUserID:recipients[indexPath.row]];
+            cell.textLabel.text = [self recipientNameForUserID:self.recipientUserIDs[indexPath.row]];
+            cell.detailTextLabel.text = [self recipientStateForUserID:self.recipientUserIDs[indexPath.row]];
             break;
 
         case LSMessageDetailTableSectionCount:
