@@ -48,7 +48,7 @@
 
 - (NSUInteger)hash
 {
-    return [self.authenticationToken hash] ^ [self.user.userID hash];
+    return self.authenticationToken.hash ^ self.user.userID.hash;
 }
 
 - (BOOL)isEqual:(id)object
