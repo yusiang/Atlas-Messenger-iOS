@@ -56,7 +56,9 @@
     if (!object) return NO;
     if (![object isKindOfClass:[LSSession class]]) return NO;
     LSSession *otherSession = object;
-    return [self.authenticationToken isEqualToString:otherSession.authenticationToken] && [self.user isEqual:otherSession.user];
+    if (![self.authenticationToken isEqualToString:otherSession.authenticationToken]) return NO;
+    if (![self.user isEqual:otherSession.user]) return NO;
+    return YES;
 }
 
 @end
