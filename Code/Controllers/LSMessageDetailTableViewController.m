@@ -73,6 +73,8 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     self.navigationItem.rightBarButtonItem = doneButton;
 }
 
+#pragma mark - UITableViewDataSource
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return LSMessageDetailTableSectionCount;
@@ -146,6 +148,8 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     return cell;
 }
 
+#pragma mark - Helpers
+
 - (NSString *)recipientNameForUserID:(NSString *)userID
 {
     LSUser *user = [self.applicationController.persistenceManager userForIdentifier:userID];
@@ -171,6 +175,8 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
             return nil;
     }
 }
+
+#pragma mark - Actions
 
 - (void)doneButtonTapped
 {
