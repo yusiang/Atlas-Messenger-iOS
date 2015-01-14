@@ -135,8 +135,8 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
             break;
 
         case LSMessageDetailTableSectionRecipientStatus:
-            cell.textLabel.text = [self recipientNameForUserID:[recipients objectAtIndex:indexPath.row]];
-            cell.detailTextLabel.text = [self recipientStateForUserID:[recipients objectAtIndex:indexPath.row]];
+            cell.textLabel.text = [self recipientNameForUserID:recipients[indexPath.row]];
+            cell.detailTextLabel.text = [self recipientStateForUserID:recipients[indexPath.row]];
             break;
 
         case LSMessageDetailTableSectionCount:
