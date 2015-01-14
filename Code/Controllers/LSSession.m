@@ -33,6 +33,8 @@
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
 
+#pragma mark - NSCoding
+
 - (id)initWithCoder:(NSCoder *)decoder
 {    
     NSString *authenticationToken = [decoder decodeObjectForKey:NSStringFromSelector(@selector(authenticationToken))];
@@ -45,6 +47,8 @@
     [encoder encodeObject:self.authenticationToken forKey:NSStringFromSelector(@selector(authenticationToken))];
     [encoder encodeObject:self.user forKey:NSStringFromSelector(@selector(user))];
 }
+
+#pragma mark - NSObject
 
 - (NSUInteger)hash
 {
