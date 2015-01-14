@@ -1,5 +1,5 @@
 //
-//  LSSettingsTableViewCell.h
+//  LSStyleValue1TableViewCell.h
 //  LayerSample
 //
 //  Created by Ben Blakley on 1/13/15.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LSSettingsTableViewCell : UITableViewCell
+@interface LSStyleValue1TableViewCell : UITableViewCell
 
 @end
