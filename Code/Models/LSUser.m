@@ -68,22 +68,22 @@
 - (BOOL)validate:(NSError *__autoreleasing *)error
 {
     if (!self.email) {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email to register" }];
         return NO;
     }
     
     if (!self.firstName) {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidFirstName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidFirstName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter your first name to register" }];
         return NO;
     }
     
     if (!self.lastName) {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidLastName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidLastName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter your last name to register" }];
         return NO;
     }
     
     if (!self.password || !self.passwordConfirmation || ![self.password isEqualToString:self.passwordConfirmation]) {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{ NSLocalizedDescriptionKey: @"Please enter matching passwords in order to register" }];
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{ NSLocalizedDescriptionKey: @"Please enter matching passwords to register" }];
         return NO;
     }
     
