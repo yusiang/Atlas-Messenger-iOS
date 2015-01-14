@@ -11,6 +11,7 @@
 #import "LSAPIManager.h"
 #import "LSLayerClient.h"
 
+extern NSString *const LSConversationDeletedNotification;
 extern NSString *const LSUserDefaultsLayerConfigurationURLKey;
 
 /**

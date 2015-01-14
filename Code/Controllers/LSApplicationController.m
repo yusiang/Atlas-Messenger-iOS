@@ -10,6 +10,7 @@
 #import "LSUtilities.h"
 #import <SVProgressHUD/SVProgressHUD.h>
 
+NSString *const LSConversationDeletedNotification = @"LSConversationDeletedNotification";
 NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
 static NSString *const LSUserDefaultsShouldSendPushTextKey = @"shouldSendPushText";
 static NSString *const LSUserDefaultsShouldSendPushSoundKey = @"shouldSendPushSound";
@@ -90,6 +91,15 @@ static NSString *const LSUserDefaultsDebugModeEnabledKey = @"debugModeEnabled";
 - (void)layerClient:(LYRClient *)client objectsDidChange:(NSArray *)changes
 {
     NSLog(@"Layer Client objects did change");
+    for (NSDictionary *change in changes) {
+        id changedObject = change[LYRObjectChangeObjectKey];
+        if (![changedObject isKindOfClass:[LYRConversation class]]) continue;
+
+        LYRObjectChangeType changeType = [change[LYRObjectChangeTypeKey] integerValue];
+        if (changeType != LYRObjectChangeTypeDelete) continue;
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:LSConversationDeletedNotification object:changedObject];
+    }
 }
 
 - (void)layerClient:(LYRClient *)client didFailOperationWithError:(NSError *)error
