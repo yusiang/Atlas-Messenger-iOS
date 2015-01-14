@@ -8,6 +8,12 @@
 
 #import "LSMessageDetailTableViewController.h"
 
+typedef NS_ENUM(NSInteger, LSMessageDetailTableSection) {
+    LSMessageDetailTableSectionMetadata,
+    LSMessageDetailTableSectionRecipientStatus,
+    LSMessageDetailTableSectionCount,
+};
+
 @interface LSMessageDetailTableViewController ()
 
 @property (nonatomic) LSApplicationController *applicationController;
@@ -55,19 +61,19 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return LSMessageDetailTableSectionCount;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
+    switch ((LSMessageDetailTableSection)section) {
+        case LSMessageDetailTableSectionMetadata:
             return 6;
             
-        case 1:
+        case LSMessageDetailTableSectionRecipientStatus:
             return self.message.recipientStatusByUserID.count;
             
-        default:
+        case LSMessageDetailTableSectionCount:
             return 0;
     }
 }
@@ -80,8 +86,8 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     
     NSArray *recipients = [self.message.recipientStatusByUserID allKeys];
     
-    switch (indexPath.section) {
-        case 0:
+    switch ((LSMessageDetailTableSection)indexPath.section) {
+        case LSMessageDetailTableSectionMetadata:
             switch (indexPath.row) {
                 case 0:
                     cell.textLabel.text = [NSString stringWithFormat:@"Number of Parts:"];
@@ -135,7 +141,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
                     break;
             }
             break;
-        case 1:
+        case LSMessageDetailTableSectionRecipientStatus:
             cell.textLabel.text = [self recipientNameForUserID:[recipients objectAtIndex:indexPath.row]];
             messagesLabel.text = [self recipientStateForUserID:[recipients objectAtIndex:indexPath.row]];
             messagesLabel.font = cell.textLabel.font;
@@ -143,7 +149,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
             cell.accessoryView = messagesLabel;
             break;
 
-        default:
+        case LSMessageDetailTableSectionCount:
             break;
     }
     
