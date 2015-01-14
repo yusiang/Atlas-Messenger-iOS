@@ -35,15 +35,15 @@
 
 - (id)initWithCoder:(NSCoder *)decoder
 {    
-    NSString *authenticationToken = [decoder decodeObjectForKey:@"authenticationToken"];
-    LSUser *user = [decoder decodeObjectForKey:@"user"];
+    NSString *authenticationToken = [decoder decodeObjectForKey:NSStringFromSelector(@selector(authenticationToken))];
+    LSUser *user = [decoder decodeObjectForKey:NSStringFromSelector(@selector(user))];
     return [self initWithAuthenticationToken:authenticationToken user:user];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-    [encoder encodeObject:self.authenticationToken forKey:@"authenticationToken"];
-    [encoder encodeObject:self.user forKey:@"user"];
+    [encoder encodeObject:self.authenticationToken forKey:NSStringFromSelector(@selector(authenticationToken))];
+    [encoder encodeObject:self.user forKey:NSStringFromSelector(@selector(user))];
 }
 
 - (NSUInteger)hash
