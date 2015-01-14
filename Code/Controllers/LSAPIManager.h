@@ -80,6 +80,7 @@ extern NSString *const LSUserDidDeauthenticateNotification;
  @param session The model object for the current session.
  @param error A reference to an `NSError` object that will contain error information in case the action was not successful.
  @return A boolean value that indicates if the manager has a valid session.
+ @discussion Note that if the manager already has a session, the manager will continue to use the existing session (ignoring the passed session) and this method will return `YES`.
  */
 - (BOOL)resumeSession:(LSSession *)session error:(NSError **)error;
 
