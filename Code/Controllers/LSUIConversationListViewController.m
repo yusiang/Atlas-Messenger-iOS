@@ -135,14 +135,7 @@
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
-    LSUIConversationViewController *existingConversationViewController;
-    NSUInteger listViewControllerIndex = [self.navigationController.viewControllers indexOfObject:self];
-    if (listViewControllerIndex + 1 < self.navigationController.viewControllers.count) {
-        id nextViewController = [self.navigationController.viewControllers objectAtIndex:listViewControllerIndex + 1];
-        if ([nextViewController isKindOfClass:[LSUIConversationViewController class]]) {
-            existingConversationViewController = nextViewController;
-        }
-    }
+    LSUIConversationViewController *existingConversationViewController = [self existingConversationViewController];
     if (existingConversationViewController && existingConversationViewController.conversation == conversation) {
         if (self.navigationController.topViewController == existingConversationViewController) return;
         [self.navigationController popToViewController:existingConversationViewController animated:YES];
@@ -156,6 +149,7 @@
         [self.navigationController pushViewController:conversationViewController animated:YES];
     } else {
         NSMutableArray *viewControllers = [self.navigationController.viewControllers mutableCopy];
+        NSUInteger listViewControllerIndex = [self.navigationController.viewControllers indexOfObject:self];
         NSRange replacementRange = NSMakeRange(listViewControllerIndex + 1, viewControllers.count - listViewControllerIndex - 1);
         [viewControllers replaceObjectsInRange:replacementRange withObjectsFromArray:@[conversationViewController]];
         [self.navigationController setViewControllers:viewControllers animated:YES];
@@ -206,6 +200,24 @@
 - (void)settingsTableViewControllerDidFinish:(LSSettingsTableViewController *)settingsTableViewController
 {
     [settingsTableViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Helpers
+
+- (LSUIConversationViewController *)existingConversationViewController
+{
+    if (!self.navigationController) return nil;
+
+    NSUInteger listViewControllerIndex = [self.navigationController.viewControllers indexOfObject:self];
+    if (listViewControllerIndex == NSNotFound) return nil;
+
+    NSUInteger nextViewControllerIndex = listViewControllerIndex + 1;
+    if (nextViewControllerIndex >= self.navigationController.viewControllers.count) return nil;
+
+    id nextViewController = [self.navigationController.viewControllers objectAtIndex:nextViewControllerIndex];
+    if (![nextViewController isKindOfClass:[LSUIConversationViewController class]]) return nil;
+
+    return nextViewController;
 }
 
 @end
