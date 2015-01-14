@@ -56,7 +56,8 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     return self;
 }
 
-- (void)viewDidLoad{
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     self.title = @"Message Detail";
@@ -88,7 +89,6 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
             return 0;
     }
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -133,6 +133,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
                     break;
             }
             break;
+
         case LSMessageDetailTableSectionRecipientStatus:
             cell.textLabel.text = [self recipientNameForUserID:[recipients objectAtIndex:indexPath.row]];
             cell.detailTextLabel.text = [self recipientStateForUserID:[recipients objectAtIndex:indexPath.row]];
