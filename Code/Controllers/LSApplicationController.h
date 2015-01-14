@@ -21,7 +21,7 @@ extern NSString *const LSUserDefaultsLayerConfigurationURLKey;
 @interface LSApplicationController : NSObject <LYRClientDelegate>
 
 ///--------------------------------
-/// @name Designated Initializer
+/// @name Initializing a Controller
 ///--------------------------------
 
 + (instancetype)controllerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient persistenceManager:(LSPersistenceManager *)persistenceManager;
