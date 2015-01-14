@@ -53,10 +53,8 @@
 		<key>LYRBuildShortSha</key>
 		<string>b6a4147</string>
 	</dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Boom</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Hello</string>
+	<string>Your location will only be shared in conversations that you choose.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
