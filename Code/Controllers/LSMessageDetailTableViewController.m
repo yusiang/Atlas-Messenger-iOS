@@ -116,12 +116,12 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
                     
                 case LSMessageMetadataTableRowIsSent:
                     cell.textLabel.text = [NSString stringWithFormat:@"Is Sent:"];
-                    cell.detailTextLabel.text = (self.message.isSent) ? @"Yes" : @"No";
+                    cell.detailTextLabel.text = self.message.isSent ? @"Yes" : @"No";
                     break;
                     
                 case LSMessageMetadataTableRowIsDeleted:
                     cell.textLabel.text = [NSString stringWithFormat:@"Is Deleted:"];
-                    cell.detailTextLabel.text = (self.message.isDeleted) ? @"Yes" : @"No";
+                    cell.detailTextLabel.text = self.message.isDeleted ? @"Yes" : @"No";
                     break;
                     
                 case LSMessageMetadataTableRowSentBy:
