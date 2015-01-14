@@ -50,6 +50,8 @@
     [encoder encodeObject:self.password forKey:NSStringFromSelector(@selector(password))];
 }
 
+#pragma mark - Accessors
+
 - (NSString *)fullName
 {
     return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
@@ -64,6 +66,8 @@
 {
     return nil;
 }
+
+#pragma mark - Validation
 
 - (BOOL)validate:(NSError *__autoreleasing *)error
 {
@@ -89,6 +93,8 @@
     
     return YES;
 }
+
+#pragma mark - NSObject
 
 - (NSUInteger)hash
 {
