@@ -50,6 +50,8 @@
     [encoder encodeObject:self.password forKey:NSStringFromSelector(@selector(password))];
 }
 
+#pragma mark - Accessors
+
 - (NSString *)fullName
 {
     return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
@@ -65,41 +67,46 @@
     return nil;
 }
 
+#pragma mark - Validation
+
 - (BOOL)validate:(NSError *__autoreleasing *)error
 {
-    if (!self.email) {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+    if (!self.email.length) {
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{NSLocalizedDescriptionKey: @"Please enter an email to register"}];
         return NO;
     }
     
-    if (!self.firstName) {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidFirstName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+    if (!self.firstName.length) {
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidFirstName userInfo:@{NSLocalizedDescriptionKey: @"Please enter your first name to register"}];
         return NO;
     }
     
-    if (!self.lastName) {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidLastName userInfo:@{ NSLocalizedDescriptionKey: @"Please enter an email in order to register" }];
+    if (!self.lastName.length) {
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidLastName userInfo:@{NSLocalizedDescriptionKey: @"Please enter your last name to register"}];
         return NO;
     }
     
-    if (!self.password || !self.passwordConfirmation || ![self.password isEqualToString:self.passwordConfirmation]) {
-        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{ NSLocalizedDescriptionKey: @"Please enter matching passwords in order to register" }];
+    if (!self.password.length || !self.passwordConfirmation.length || ![self.password isEqualToString:self.passwordConfirmation]) {
+        if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{NSLocalizedDescriptionKey: @"Please enter matching passwords to register"}];
         return NO;
     }
     
     return YES;
 }
 
+#pragma mark - NSObject
+
 - (NSUInteger)hash
 {
-    return [self.userID hash];
+    return self.userID.hash;
 }
 
 - (BOOL)isEqual:(id)object
 {
     if (!object) return NO;
     if (![object isKindOfClass:[LSUser class]]) return NO;
-    return [self.userID isEqualToString:[(LSUser *)object userID]];
+    LSUser *otherUser = (LSUser *)object;
+    return [self.userID isEqualToString:otherUser.userID];
 }
 
 - (NSString *)description

@@ -24,5 +24,4 @@
 
 - (BOOL)validate:(NSError **)error;
 
-
 @end

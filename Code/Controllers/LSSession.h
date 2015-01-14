@@ -10,7 +10,7 @@
 #import "LSUser.h"
 
 /**
- @abstract The `LSSession` class models a persistent User session.
+ @abstract The `LSSession` class models a persistent user session.
  */
 @interface LSSession : NSObject <NSCoding>
 
