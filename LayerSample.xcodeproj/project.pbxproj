@@ -27,7 +27,6 @@
 		0A51BD1A19B66570004105DC /* LYRUIParticipantPickerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1919B66570004105DC /* LYRUIParticipantPickerTest.m */; };
 		0A51BD1D19B66A98004105DC /* LYRUITestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD1C19B66A98004105DC /* LYRUITestUser.m */; };
 		0A51BD2119B686F6004105DC /* LYRUIConversationListTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */; };
-		0A51BD2419B68B9C004105DC /* LSUIParticipantPickerDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A51BD2319B68B9C004105DC /* LSUIParticipantPickerDataSource.m */; };
 		0A605F3119BF735D00D773AF /* logo-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F2F19BF735D00D773AF /* logo-icon@2x.png */; };
 		0A605F3219BF735D00D773AF /* logo-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3019BF735D00D773AF /* logo-icon.png */; };
 		0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3319BF744600D773AF /* logo-icon-blue@2x.png */; };
@@ -75,6 +74,7 @@
 		B5D66E6B1A67574200158901 /* LSHTTPResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E6A1A67574200158901 /* LSHTTPResponseSerializer.m */; };
 		B5D66E6E1A67576F00158901 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E6D1A67576F00158901 /* LSUtilities.m */; };
 		B5D66E711A6757E700158901 /* LSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E701A6757E700158901 /* LSSession.m */; };
+		B5D66E741A67583E00158901 /* LSUIParticipantPickerDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E731A67583E00158901 /* LSUIParticipantPickerDataSource.m */; };
 		B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */; };
 		D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */; };
 		D643A5001A0AC4B400ED613D /* LYRUISettingsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */; };
@@ -127,8 +127,6 @@
 		0A51BD1B19B66A98004105DC /* LYRUITestUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LYRUITestUser.h; sourceTree = "<group>"; };
 		0A51BD1C19B66A98004105DC /* LYRUITestUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUITestUser.m; sourceTree = "<group>"; };
 		0A51BD2019B686F6004105DC /* LYRUIConversationListTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUIConversationListTest.m; sourceTree = "<group>"; };
-		0A51BD2219B68B9C004105DC /* LSUIParticipantPickerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUIParticipantPickerDataSource.h; sourceTree = "<group>"; };
-		0A51BD2319B68B9C004105DC /* LSUIParticipantPickerDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUIParticipantPickerDataSource.m; sourceTree = "<group>"; };
 		0A52D5FC1961FD0D0030A34A /* LSApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSApplicationController.h; sourceTree = "<group>"; };
 		0A52D5FD1961FD0D0030A34A /* LSApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSApplicationController.m; sourceTree = "<group>"; };
 		0A605F2F19BF735D00D773AF /* logo-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon@2x.png"; sourceTree = "<group>"; };
@@ -203,6 +201,8 @@
 		B5D66E6D1A67576F00158901 /* LSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSUtilities.m; path = Utilities/LSUtilities.m; sourceTree = "<group>"; };
 		B5D66E6F1A6757E700158901 /* LSSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSession.h; sourceTree = "<group>"; };
 		B5D66E701A6757E700158901 /* LSSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSession.m; sourceTree = "<group>"; };
+		B5D66E721A67583E00158901 /* LSUIParticipantPickerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSUIParticipantPickerDataSource.h; path = Utilities/LSUIParticipantPickerDataSource.h; sourceTree = "<group>"; };
+		B5D66E731A67583E00158901 /* LSUIParticipantPickerDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSUIParticipantPickerDataSource.m; path = Utilities/LSUIParticipantPickerDataSource.m; sourceTree = "<group>"; };
 		D613BD2D19F5D4D900ABC996 /* LSSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingsTableViewController.h; sourceTree = "<group>"; };
 		D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSettingsTableViewController.m; sourceTree = "<group>"; };
 		D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUISettingsTest.m; sourceTree = "<group>"; };
@@ -382,6 +382,8 @@
 				B5D66E6D1A67576F00158901 /* LSUtilities.m */,
 				B5D66E691A67574200158901 /* LSHTTPResponseSerializer.h */,
 				B5D66E6A1A67574200158901 /* LSHTTPResponseSerializer.m */,
+				B5D66E721A67583E00158901 /* LSUIParticipantPickerDataSource.h */,
+				B5D66E731A67583E00158901 /* LSUIParticipantPickerDataSource.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -423,8 +425,6 @@
 				259A57161950EB76000E27B0 /* LSAPIManager.m */,
 				0AB2687E19C7B0F50041BD62 /* LSUIConversationListViewController.h */,
 				0AB2687F19C7B0F50041BD62 /* LSUIConversationListViewController.m */,
-				0A51BD2219B68B9C004105DC /* LSUIParticipantPickerDataSource.h */,
-				0A51BD2319B68B9C004105DC /* LSUIParticipantPickerDataSource.m */,
 				0A23C95F19C10D97004789EC /* LSUIConversationViewController.h */,
 				0A23C96019C10D97004789EC /* LSUIConversationViewController.m */,
 				0AE1A14C19B0DA8700BFB754 /* LSAuthenticationTableViewController.h */,
@@ -741,6 +741,7 @@
 				0A48C92C19B7F49900B536AB /* LYRUITestParticipantCell.m in Sources */,
 				B5D66E6B1A67574200158901 /* LSHTTPResponseSerializer.m in Sources */,
 				D6C6195A19FC059300768D84 /* LSLocalNotificationManager.m in Sources */,
+				B5D66E741A67583E00158901 /* LSUIParticipantPickerDataSource.m in Sources */,
 				D68E1C391A18337C00A32EA9 /* LSTestObserver.m in Sources */,
 				B5D66E681A6756AF00158901 /* LSErrors.m in Sources */,
 				0AFE400419B0E1BD00FCA264 /* LSUser.m in Sources */,
@@ -755,7 +756,6 @@
 				0A8258CC19DE00D200ACCC8E /* LSConversationDetailViewController.m in Sources */,
 				0AFE3FE419B0E19C00FCA264 /* main.m in Sources */,
 				D66F086519FB524E0047F1C6 /* LSCenterTextTableViewCell.m in Sources */,
-				0A51BD2419B68B9C004105DC /* LSUIParticipantPickerDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
