@@ -20,6 +20,6 @@
 /// @name Initializing a Controller
 ///--------------------------------
 
-+ (instancetype)initWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController;
++ (instancetype)messageDetailTableViewControllerWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController;
 
 @end

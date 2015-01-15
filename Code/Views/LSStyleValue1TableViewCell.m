@@ -1,14 +1,14 @@
 //
-//  LSSettingsTableViewCell.m
+//  LSStyleValue1TableViewCell.m
 //  LayerSample
 //
 //  Created by Ben Blakley on 1/13/15.
 //  Copyright (c) 2015 Layer, Inc. All rights reserved.
 //
 
-#import "LSSettingsTableViewCell.h"
+#import "LSStyleValue1TableViewCell.h"
 
-@implementation LSSettingsTableViewCell
+@implementation LSStyleValue1TableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

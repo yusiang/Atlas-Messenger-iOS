@@ -73,7 +73,7 @@
 		259A57801950EB92000E27B0 /* LSSampleAppUITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577D1950EB92000E27B0 /* LSSampleAppUITest.m */; };
 		9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */; };
 		B53937841A24F6AF00DE60F9 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B53937831A24F6AF00DE60F9 /* Fabric.framework */; };
-		B5A0DABA1A65D13900F3F349 /* LSSettingsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A0DAB91A65D13900F3F349 /* LSSettingsTableViewCell.m */; };
+		B5A0DABA1A65D13900F3F349 /* LSStyleValue1TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A0DAB91A65D13900F3F349 /* LSStyleValue1TableViewCell.m */; };
 		B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */; };
 		D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */; };
 		D643A5001A0AC4B400ED613D /* LYRUISettingsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */; };
@@ -199,8 +199,8 @@
 		A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF9EB0255130554DFDAF0741 /* Pods-LayerSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.debug.xcconfig"; sourceTree = "<group>"; };
 		B53937831A24F6AF00DE60F9 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
-		B5A0DAB81A65D13900F3F349 /* LSSettingsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingsTableViewCell.h; sourceTree = "<group>"; };
-		B5A0DAB91A65D13900F3F349 /* LSSettingsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSettingsTableViewCell.m; sourceTree = "<group>"; };
+		B5A0DAB81A65D13900F3F349 /* LSStyleValue1TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSStyleValue1TableViewCell.h; sourceTree = "<group>"; };
+		B5A0DAB91A65D13900F3F349 /* LSStyleValue1TableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSStyleValue1TableViewCell.m; sourceTree = "<group>"; };
 		D613BD2D19F5D4D900ABC996 /* LSSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingsTableViewController.h; sourceTree = "<group>"; };
 		D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSettingsTableViewController.m; sourceTree = "<group>"; };
 		D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUISettingsTest.m; sourceTree = "<group>"; };
@@ -467,8 +467,8 @@
 				0AE1A15219B0DAE900BFB754 /* LSAuthenticationTableViewHeader.m */,
 				259A57461950EB76000E27B0 /* LSInputTableViewCell.h */,
 				259A57471950EB76000E27B0 /* LSInputTableViewCell.m */,
-				B5A0DAB81A65D13900F3F349 /* LSSettingsTableViewCell.h */,
-				B5A0DAB91A65D13900F3F349 /* LSSettingsTableViewCell.m */,
+				B5A0DAB81A65D13900F3F349 /* LSStyleValue1TableViewCell.h */,
+				B5A0DAB91A65D13900F3F349 /* LSStyleValue1TableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -731,7 +731,7 @@
 				D6FB95481A5DBD9D007BD16D /* LSAppDelegate.m in Sources */,
 				0AB2688019C7B0F50041BD62 /* LSUIConversationListViewController.m in Sources */,
 				0A23C96119C10D97004789EC /* LSUIConversationViewController.m in Sources */,
-				B5A0DABA1A65D13900F3F349 /* LSSettingsTableViewCell.m in Sources */,
+				B5A0DABA1A65D13900F3F349 /* LSStyleValue1TableViewCell.m in Sources */,
 				0A51BD1D19B66A98004105DC /* LYRUITestUser.m in Sources */,
 				0A48C92919B7D2D100B536AB /* LYRUILayerContentFactory.m in Sources */,
 				D6F6EDE819F9AFF5005DDB26 /* LSAuthenticationTableViewFooter.m in Sources */,

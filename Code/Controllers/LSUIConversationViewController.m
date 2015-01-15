@@ -318,7 +318,7 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
     if (self.applicationController.debugModeEnabled) {
-        LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController initWithMessage:message applicationController:self.applicationController];
+        LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController messageDetailTableViewControllerWithMessage:message applicationController:self.applicationController];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {

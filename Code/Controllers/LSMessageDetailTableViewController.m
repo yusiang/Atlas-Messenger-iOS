@@ -7,11 +7,29 @@
 //
 
 #import "LSMessageDetailTableViewController.h"
+#import "LSStyleValue1TableViewCell.h"
+
+typedef NS_ENUM(NSInteger, LSMessageDetailTableSection) {
+    LSMessageDetailTableSectionMetadata,
+    LSMessageDetailTableSectionRecipientStatus,
+    LSMessageDetailTableSectionCount,
+};
+
+typedef NS_ENUM(NSInteger, LSMessageMetadataTableRow) {
+    LSMessageMetadataTableRowParts,
+    LSMessageMetadataTableRowSentAt,
+    LSMessageMetadataTableRowReceivedAt,
+    LSMessageMetadataTableRowIsSent,
+    LSMessageMetadataTableRowIsDeleted,
+    LSMessageMetadataTableRowSentBy,
+    LSMessageMetadataTableRowCount,
+};
 
 @interface LSMessageDetailTableViewController ()
 
 @property (nonatomic) LSApplicationController *applicationController;
 @property (nonatomic) LYRMessage *message;
+@property (nonatomic) NSArray *recipientUserIDs;
 @property (nonatomic) NSDateFormatter *dateFormatter;
 
 @end
@@ -20,7 +38,7 @@
 
 static NSString *const LSMessageDetailCell = @"messageDetailCell";
 
-+ (instancetype)initWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController
++ (instancetype)messageDetailTableViewControllerWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController
 {
     return [[self alloc] initWithMessage:message applicationController:applicationController];
 }
@@ -31,6 +49,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     if (self) {
         _applicationController = applicationController;
         _message = message;
+        _recipientUserIDs = message.recipientStatusByUserID.allKeys;
         _dateFormatter = [[NSDateFormatter alloc] init];
         _dateFormatter.dateStyle = NSDateFormatterShortStyle;
         _dateFormatter.timeStyle = NSDateFormatterMediumStyle;
@@ -39,124 +58,99 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     return self;
 }
 
-- (void)viewDidLoad{
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     self.title = @"Message Detail";
     
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSMessageDetailCell];
+    [self.tableView registerClass:[LSStyleValue1TableViewCell class] forCellReuseIdentifier:LSMessageDetailCell];
     
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                                                       style:UIBarButtonItemStylePlain
-                                                                      target:self
-                                                                      action:@selector(doneButtonTapped)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                target:self
+                                                                                action:@selector(doneButtonTapped)];
     doneButton.accessibilityLabel = @"Done";
-    [self.navigationItem setRightBarButtonItem:doneButton];
+    self.navigationItem.rightBarButtonItem = doneButton;
 }
+
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return LSMessageDetailTableSectionCount;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
-            return 6;
-            break;
+    switch ((LSMessageDetailTableSection)section) {
+        case LSMessageDetailTableSectionMetadata:
+            return LSMessageMetadataTableRowCount;
             
-        case 1:
-            return self.message.recipientStatusByUserID.count;
-            break;
+        case LSMessageDetailTableSectionRecipientStatus:
+            return self.recipientUserIDs.count;
             
-        default:
-            break;
+        case LSMessageDetailTableSectionCount:
+            return 0;
     }
-    return 0;
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSMessageDetailCell];
-    UILabel *messagesLabel = [[UILabel alloc] init];
     
-    NSArray *recipients = [self.message.recipientStatusByUserID allKeys];
-    
-    switch (indexPath.section) {
-        case 0:
-            switch (indexPath.row) {
-                case 0:
+    switch ((LSMessageDetailTableSection)indexPath.section) {
+        case LSMessageDetailTableSectionMetadata:
+            switch ((LSMessageMetadataTableRow)indexPath.row) {
+                case LSMessageMetadataTableRowParts:
                     cell.textLabel.text = [NSString stringWithFormat:@"Number of Parts:"];
-                    messagesLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.message.parts.count];
-                    messagesLabel.font = cell.textLabel.font;
-                    [messagesLabel sizeToFit];
-                    cell.accessoryView = messagesLabel;
+                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.message.parts.count];
                     break;
 
-                case 1:
+                case LSMessageMetadataTableRowSentAt:
                     cell.textLabel.text = [NSString stringWithFormat:@"Sent At:"];
-                    messagesLabel.text = [self.dateFormatter stringFromDate:self.message.sentAt];
-                    messagesLabel.font = cell.textLabel.font;
-                    [messagesLabel sizeToFit];
-                    cell.accessoryView = messagesLabel;
+                    cell.detailTextLabel.text = [self.dateFormatter stringFromDate:self.message.sentAt];
                     break;
                 
-                case 2:
+                case LSMessageMetadataTableRowReceivedAt:
                     cell.textLabel.text = [NSString stringWithFormat:@"Received At:"];
-                    messagesLabel.text = [self.dateFormatter stringFromDate:self.message.receivedAt];
-                    messagesLabel.font = cell.textLabel.font;
-                    [messagesLabel sizeToFit];
-                    cell.accessoryView = messagesLabel;
+                    cell.detailTextLabel.text = [self.dateFormatter stringFromDate:self.message.receivedAt];
                     break;
                     
-                case 3:
+                case LSMessageMetadataTableRowIsSent:
                     cell.textLabel.text = [NSString stringWithFormat:@"Is Sent:"];
-                    messagesLabel.text = (self.message.isSent) ? @"Yes" : @"No";
-                    messagesLabel.font = cell.textLabel.font;
-                    [messagesLabel sizeToFit];
-                    cell.accessoryView = messagesLabel;
+                    cell.detailTextLabel.text = self.message.isSent ? @"Yes" : @"No";
                     break;
                     
-                case 4:
+                case LSMessageMetadataTableRowIsDeleted:
                     cell.textLabel.text = [NSString stringWithFormat:@"Is Deleted:"];
-                    messagesLabel.text = (self.message.isDeleted) ? @"Yes" : @"No";
-                    messagesLabel.font = cell.textLabel.font;
-                    [messagesLabel sizeToFit];
-                    cell.accessoryView = messagesLabel;
+                    cell.detailTextLabel.text = self.message.isDeleted ? @"Yes" : @"No";
                     break;
                     
-                case 5:
+                case LSMessageMetadataTableRowSentBy:
                     cell.textLabel.text = [NSString stringWithFormat:@"Sent By:"];
-                    messagesLabel.text = [self recipientNameForUserId:self.message.sentByUserID];
-                    messagesLabel.font = cell.textLabel.font;
-                    [messagesLabel sizeToFit];
-                    cell.accessoryView = messagesLabel;
+                    cell.detailTextLabel.text = [self recipientNameForUserID:self.message.sentByUserID];
                     break;
                     
-                default:
+                case LSMessageMetadataTableRowCount:
                     break;
             }
             break;
-        case 1:
-            cell.textLabel.text = [self recipientNameForUserId:[recipients objectAtIndex:indexPath.row]];
-            messagesLabel.text = [self recipientStateForUserID:[recipients objectAtIndex:indexPath.row]];
-            messagesLabel.font = cell.textLabel.font;
-            [messagesLabel sizeToFit];
-            cell.accessoryView = messagesLabel;
+
+        case LSMessageDetailTableSectionRecipientStatus:
+            cell.textLabel.text = [self recipientNameForUserID:self.recipientUserIDs[indexPath.row]];
+            cell.detailTextLabel.text = [self recipientStateForUserID:self.recipientUserIDs[indexPath.row]];
             break;
 
-        default:
+        case LSMessageDetailTableSectionCount:
             break;
     }
     
     return cell;
 }
 
-- (NSString *)recipientNameForUserId:(NSString *)userID
+#pragma mark - Helpers
+
+- (NSString *)recipientNameForUserID:(NSString *)userID
 {
     LSUser *user = [self.applicationController.persistenceManager userForIdentifier:userID];
     return user.fullName;
@@ -167,24 +161,22 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
     switch ([self.message recipientStatusForUserID:userID]) {
         case LYRRecipientStatusSent:
             return @"Sent";
-            break;
             
         case LYRRecipientStatusDelivered:
             return @"Delivered";
-            break;
             
         case LYRRecipientStatusRead:
             return @"Read";
-            break;
             
         case LYRRecipientStatusInvalid:
             return @"Invalid";
-            break;
             
         default:
-            break;
+            return nil;
     }
 }
+
+#pragma mark - Actions
 
 - (void)doneButtonTapped
 {

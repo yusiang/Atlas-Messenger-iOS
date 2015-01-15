@@ -11,7 +11,7 @@
 #import "SVProgressHUD.h"
 #import "LSSettingsHeaderView.h"
 #import "LSCenterTextTableViewCell.h"
-#import "LSSettingsTableViewCell.h"
+#import "LSStyleValue1TableViewCell.h"
 
 typedef NS_ENUM(NSInteger, LSSettingsTableSection) {
     LSSettingsTableSectionNotifications,
@@ -80,7 +80,7 @@ static NSString *const LSConnecting = @"Connecting";
     
     [self fetchConversationStatistics];
     
-    [self.tableView registerClass:[LSSettingsTableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
+    [self.tableView registerClass:[LSStyleValue1TableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterTextCellIdentifier];
     
     // Left navigation item
