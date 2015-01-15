@@ -42,6 +42,13 @@
                                                                                    action:@selector(composeButtonTapped)];
     composeButton.accessibilityLabel = @"Compose Button";
     [self.navigationItem setRightBarButtonItem:composeButton];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationDeleted:) name:LSConversationDeletedNotification object:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - LYRUIConversationListViewControllerDelegate
@@ -135,14 +142,7 @@
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
-    LSUIConversationViewController *existingConversationViewController;
-    NSUInteger listViewControllerIndex = [self.navigationController.viewControllers indexOfObject:self];
-    if (listViewControllerIndex + 1 < self.navigationController.viewControllers.count) {
-        id nextViewController = [self.navigationController.viewControllers objectAtIndex:listViewControllerIndex + 1];
-        if ([nextViewController isKindOfClass:[LSUIConversationViewController class]]) {
-            existingConversationViewController = nextViewController;
-        }
-    }
+    LSUIConversationViewController *existingConversationViewController = [self existingConversationViewController];
     if (existingConversationViewController && existingConversationViewController.conversation == conversation) {
         if (self.navigationController.topViewController == existingConversationViewController) return;
         [self.navigationController popToViewController:existingConversationViewController animated:YES];
@@ -156,6 +156,7 @@
         [self.navigationController pushViewController:conversationViewController animated:YES];
     } else {
         NSMutableArray *viewControllers = [self.navigationController.viewControllers mutableCopy];
+        NSUInteger listViewControllerIndex = [self.navigationController.viewControllers indexOfObject:self];
         NSRange replacementRange = NSMakeRange(listViewControllerIndex + 1, viewControllers.count - listViewControllerIndex - 1);
         [viewControllers replaceObjectsInRange:replacementRange withObjectsFromArray:@[conversationViewController]];
         [self.navigationController setViewControllers:viewControllers animated:YES];
@@ -206,6 +207,44 @@
 - (void)settingsTableViewControllerDidFinish:(LSSettingsTableViewController *)settingsTableViewController
 {
     [settingsTableViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Notification Handlers
+
+- (void)conversationDeleted:(NSNotification *)notification
+{
+    LSUIConversationViewController *conversationViewController = [self existingConversationViewController];
+    if (!conversationViewController) return;
+
+    LYRConversation *deletedConversation = notification.object;
+    if (![conversationViewController.conversation isEqual:deletedConversation]) return;
+
+    [self.navigationController popToViewController:self animated:YES];
+
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Conversation Deleted"
+                                                        message:@"The conversation has been deleted."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
+}
+
+#pragma mark - Helpers
+
+- (LSUIConversationViewController *)existingConversationViewController
+{
+    if (!self.navigationController) return nil;
+
+    NSUInteger listViewControllerIndex = [self.navigationController.viewControllers indexOfObject:self];
+    if (listViewControllerIndex == NSNotFound) return nil;
+
+    NSUInteger nextViewControllerIndex = listViewControllerIndex + 1;
+    if (nextViewControllerIndex >= self.navigationController.viewControllers.count) return nil;
+
+    id nextViewController = [self.navigationController.viewControllers objectAtIndex:nextViewControllerIndex];
+    if (![nextViewController isKindOfClass:[LSUIConversationViewController class]]) return nil;
+
+    return nextViewController;
 }
 
 @end
