@@ -12,16 +12,7 @@
 #import "LYRUIParticipantPickerController.h"
 #import "LSMessageDetailTableViewController.h"
 #import "LSConversationDetailViewController.h"
-
-@import QuickLook;
-
-static NSURL *LSTestGenerateTempFileFromData(NSData *data)
-{
-    NSString *tempFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"Layer-Sample-App-Temp-Image.jpeg"];
-    BOOL success = [data writeToFile:tempFilePath atomically:NO];
-    if (!success) return nil;
-    return [NSURL fileURLWithPath:tempFilePath];
-}
+#import "LSImageViewController.h"
 
 static NSDateFormatter *LSShortTimeFormatter()
 {
@@ -122,10 +113,9 @@ static LSDateProximity LSProximityToDate(NSDate *date)
     return LSDateProximityOther;
 }
 
-@interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
+@interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
-@property (nonatomic) NSURL *previewFileURL;
 
 @end
 
@@ -324,26 +314,12 @@ static LSDateProximity LSProximityToDate(NSDate *date)
     } else {
         LYRMessagePart *part = message.parts.firstObject;
         if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
-            self.previewFileURL =  LSTestGenerateTempFileFromData(part.data);
-            if (!self.previewFileURL) return;
-            QLPreviewController *previewController = [[QLPreviewController alloc] init];
-            previewController.dataSource = self;
-            previewController.currentPreviewItemIndex = 0;
-            [self.navigationController pushViewController:previewController animated:YES];
+            UIImage *image = [[UIImage alloc] initWithData:part.data];
+            if (!image) return;
+            LSImageViewController *imageViewController = [[LSImageViewController alloc] initWithImage:image];
+            [self.navigationController pushViewController:imageViewController animated:YES];
         }
     }
-}
-
-#pragma mark - QLPreviewControllerDataSource
-
-- (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller
-{
-    return self.previewFileURL ? 1 : 0;
-}
-
-- (id <QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
-{
-    return self.previewFileURL;
 }
 
 #pragma mark - LYRUIAddressBarControllerDelegate
