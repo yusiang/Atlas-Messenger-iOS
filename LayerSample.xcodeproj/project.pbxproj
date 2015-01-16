@@ -402,12 +402,12 @@
 		259A57111950EB76000E27B0 /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				D6FB95461A5DBD9D007BD16D /* LSAppDelegate.h */,
+				D6FB95471A5DBD9D007BD16D /* LSAppDelegate.m */,
 				259A573B1950EB76000E27B0 /* Views */,
 				0AE1B93A19C9E4FD00FB28A7 /* Utilities */,
 				259A57121950EB76000E27B0 /* Controllers */,
 				259A572E1950EB76000E27B0 /* LayerSample-Prefix.pch */,
-				D6FB95461A5DBD9D007BD16D /* LSAppDelegate.h */,
-				D6FB95471A5DBD9D007BD16D /* LSAppDelegate.m */,
 				259A57311950EB76000E27B0 /* main.m */,
 				0A0C242519477D8F00401B74 /* Frameworks */,
 			);
