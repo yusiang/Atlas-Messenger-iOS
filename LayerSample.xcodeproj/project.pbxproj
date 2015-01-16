@@ -61,7 +61,6 @@
 		0AFE400919B0E1BD00FCA264 /* LSAuthenticationTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE1A15219B0DAE900BFB754 /* LSAuthenticationTableViewHeader.m */; };
 		0AFE400E19B0E1BD00FCA264 /* LSInputTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57471950EB76000E27B0 /* LSInputTableViewCell.m */; };
 		252531601960CE2700C87647 /* LSPersistenceManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */; };
-		252680211A49FB69005DAF44 /* LSLayerClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 252680201A49FB69005DAF44 /* LSLayerClient.m */; };
 		259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 259A576E1950EB83000E27B0 /* InfoPlist.strings */; };
 		259A57751950EB83000E27B0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A57701950EB83000E27B0 /* Images.xcassets */; };
 		259A577E1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A577A1950EB92000E27B0 /* KIFUITestActor+LSAdditions.m */; };
@@ -75,6 +74,7 @@
 		B5D66E6E1A67576F00158901 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E6D1A67576F00158901 /* LSUtilities.m */; };
 		B5D66E711A6757E700158901 /* LSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E701A6757E700158901 /* LSSession.m */; };
 		B5D66E741A67583E00158901 /* LSUIParticipantPickerDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E731A67583E00158901 /* LSUIParticipantPickerDataSource.m */; };
+		B5D66E7F1A68A30800158901 /* LSLayerClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E7E1A68A30800158901 /* LSLayerClient.m */; };
 		B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */; };
 		D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */; };
 		D643A5001A0AC4B400ED613D /* LYRUISettingsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */; };
@@ -166,8 +166,6 @@
 		0AE1A15119B0DAE900BFB754 /* LSAuthenticationTableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationTableViewHeader.h; sourceTree = "<group>"; };
 		0AE1A15219B0DAE900BFB754 /* LSAuthenticationTableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAuthenticationTableViewHeader.m; sourceTree = "<group>"; };
 		2525315F1960CE2700C87647 /* LSPersistenceManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSPersistenceManagerTest.m; sourceTree = "<group>"; };
-		2526801F1A49FB69005DAF44 /* LSLayerClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLayerClient.h; sourceTree = "<group>"; };
-		252680201A49FB69005DAF44 /* LSLayerClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLayerClient.m; sourceTree = "<group>"; };
 		259A57151950EB76000E27B0 /* LSAPIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAPIManager.h; sourceTree = "<group>"; };
 		259A57161950EB76000E27B0 /* LSAPIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAPIManager.m; sourceTree = "<group>"; };
 		259A572E1950EB76000E27B0 /* LayerSample-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LayerSample-Prefix.pch"; sourceTree = "<group>"; };
@@ -203,6 +201,8 @@
 		B5D66E701A6757E700158901 /* LSSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSession.m; sourceTree = "<group>"; };
 		B5D66E721A67583E00158901 /* LSUIParticipantPickerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSUIParticipantPickerDataSource.h; path = Utilities/LSUIParticipantPickerDataSource.h; sourceTree = "<group>"; };
 		B5D66E731A67583E00158901 /* LSUIParticipantPickerDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSUIParticipantPickerDataSource.m; path = Utilities/LSUIParticipantPickerDataSource.m; sourceTree = "<group>"; };
+		B5D66E7D1A68A30800158901 /* LSLayerClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSLayerClient.h; path = Utilities/LSLayerClient.h; sourceTree = "<group>"; };
+		B5D66E7E1A68A30800158901 /* LSLayerClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSLayerClient.m; path = Utilities/LSLayerClient.m; sourceTree = "<group>"; };
 		D613BD2D19F5D4D900ABC996 /* LSSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingsTableViewController.h; sourceTree = "<group>"; };
 		D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSettingsTableViewController.m; sourceTree = "<group>"; };
 		D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUISettingsTest.m; sourceTree = "<group>"; };
@@ -372,8 +372,8 @@
 		0AE1B93A19C9E4FD00FB28A7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				2526801F1A49FB69005DAF44 /* LSLayerClient.h */,
-				252680201A49FB69005DAF44 /* LSLayerClient.m */,
+				B5D66E7D1A68A30800158901 /* LSLayerClient.h */,
+				B5D66E7E1A68A30800158901 /* LSLayerClient.m */,
 				D6C6195819FC059300768D84 /* LSLocalNotificationManager.h */,
 				D6C6195919FC059300768D84 /* LSLocalNotificationManager.m */,
 				B5D66E661A6756AF00158901 /* LSErrors.h */,
@@ -726,7 +726,7 @@
 			files = (
 				0A6B47CA19B3975A00D485D1 /* LSAuthenticationTableViewController.m in Sources */,
 				0A6B47C619B3967A00D485D1 /* LSPersistenceManager.m in Sources */,
-				252680211A49FB69005DAF44 /* LSLayerClient.m in Sources */,
+				B5D66E7F1A68A30800158901 /* LSLayerClient.m in Sources */,
 				D6FB95481A5DBD9D007BD16D /* LSAppDelegate.m in Sources */,
 				B5D66E651A67553B00158901 /* LSSettingsHeaderView.m in Sources */,
 				0AB2688019C7B0F50041BD62 /* LSUIConversationListViewController.m in Sources */,
