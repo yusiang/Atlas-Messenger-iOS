@@ -407,6 +407,7 @@
 				259A573B1950EB76000E27B0 /* Views */,
 				0AE1B93A19C9E4FD00FB28A7 /* Utilities */,
 				259A57121950EB76000E27B0 /* Controllers */,
+				259A57321950EB76000E27B0 /* Models */,
 				259A572E1950EB76000E27B0 /* LayerSample-Prefix.pch */,
 				259A57311950EB76000E27B0 /* main.m */,
 				0A0C242519477D8F00401B74 /* Frameworks */,
@@ -435,7 +436,6 @@
 				0AB2687F19C7B0F50041BD62 /* LSUIConversationListViewController.m */,
 				0A23C95F19C10D97004789EC /* LSUIConversationViewController.h */,
 				0A23C96019C10D97004789EC /* LSUIConversationViewController.m */,
-				259A57321950EB76000E27B0 /* Models */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -448,8 +448,7 @@
 				259A57391950EB76000E27B0 /* LSUser.h */,
 				259A573A1950EB76000E27B0 /* LSUser.m */,
 			);
-			name = Models;
-			path = ../Models;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		259A573B1950EB76000E27B0 /* Views */ = {
