@@ -75,6 +75,7 @@
 		B5D66E711A6757E700158901 /* LSSession.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E701A6757E700158901 /* LSSession.m */; };
 		B5D66E741A67583E00158901 /* LSUIParticipantPickerDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E731A67583E00158901 /* LSUIParticipantPickerDataSource.m */; };
 		B5D66E7F1A68A30800158901 /* LSLayerClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E7E1A68A30800158901 /* LSLayerClient.m */; };
+		B5D66EB71A69BB6000158901 /* LSImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66EB61A69BB6000158901 /* LSImageViewController.m */; };
 		B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */; };
 		D613BD2F19F5D4D900ABC996 /* LSSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */; };
 		D643A5001A0AC4B400ED613D /* LYRUISettingsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */; };
@@ -203,6 +204,8 @@
 		B5D66E731A67583E00158901 /* LSUIParticipantPickerDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSUIParticipantPickerDataSource.m; path = Utilities/LSUIParticipantPickerDataSource.m; sourceTree = "<group>"; };
 		B5D66E7D1A68A30800158901 /* LSLayerClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSLayerClient.h; path = Utilities/LSLayerClient.h; sourceTree = "<group>"; };
 		B5D66E7E1A68A30800158901 /* LSLayerClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSLayerClient.m; path = Utilities/LSLayerClient.m; sourceTree = "<group>"; };
+		B5D66EB51A69BB6000158901 /* LSImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSImageViewController.h; sourceTree = "<group>"; };
+		B5D66EB61A69BB6000158901 /* LSImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSImageViewController.m; sourceTree = "<group>"; };
 		D613BD2D19F5D4D900ABC996 /* LSSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSettingsTableViewController.h; sourceTree = "<group>"; };
 		D613BD2E19F5D4D900ABC996 /* LSSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSettingsTableViewController.m; sourceTree = "<group>"; };
 		D643A4FF1A0AC4B400ED613D /* LYRUISettingsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LYRUISettingsTest.m; sourceTree = "<group>"; };
@@ -426,6 +429,8 @@
 				0AE1A14D19B0DA8700BFB754 /* LSAuthenticationTableViewController.m */,
 				0A8258CA19DE00D200ACCC8E /* LSConversationDetailViewController.h */,
 				0A8258CB19DE00D200ACCC8E /* LSConversationDetailViewController.m */,
+				B5D66EB51A69BB6000158901 /* LSImageViewController.h */,
+				B5D66EB61A69BB6000158901 /* LSImageViewController.m */,
 				D6CD986F1A085161009ADE36 /* LSMessageDetailTableViewController.h */,
 				D6CD98701A085161009ADE36 /* LSMessageDetailTableViewController.m */,
 				0A6B47C419B3967A00D485D1 /* LSPersistenceManager.h */,
@@ -730,6 +735,7 @@
 				B5D66E651A67553B00158901 /* LSSettingsHeaderView.m in Sources */,
 				0AB2688019C7B0F50041BD62 /* LSUIConversationListViewController.m in Sources */,
 				0A23C96119C10D97004789EC /* LSUIConversationViewController.m in Sources */,
+				B5D66EB71A69BB6000158901 /* LSImageViewController.m in Sources */,
 				B5A0DABA1A65D13900F3F349 /* LSStyleValue1TableViewCell.m in Sources */,
 				0A51BD1D19B66A98004105DC /* LYRUITestUser.m in Sources */,
 				0A48C92919B7D2D100B536AB /* LYRUILayerContentFactory.m in Sources */,
