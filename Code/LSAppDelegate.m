@@ -110,8 +110,8 @@ void LSTestResetConfiguration(void)
     // Handle launching in response to push notification
     NSDictionary *remoteNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     if (remoteNotification) {
-        [self.applicationController.layerClient synchronizeWithRemoteNotification:remoteNotification completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
-            if (fetchResult == UIBackgroundFetchResultFailed) {
+        [self.applicationController.layerClient synchronizeWithRemoteNotification:remoteNotification completion:^(NSArray *changes, NSError *error) {
+            if (error) {
                 NSLog(@"Failed processing remote notification: %@", error);
             }
             
@@ -277,8 +277,8 @@ void LSTestResetConfiguration(void)
         [self navigateToViewForConversation:conversation];
     }
     
-    BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(UIBackgroundFetchResult fetchResult, NSError *error) {
-        if (fetchResult == UIBackgroundFetchResultFailed) {
+    BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(NSArray *changes, NSError *error) {
+        if (error) {
             NSLog(@"Failed processing remote notification: %@", error);
         }
         // Try navigating once the synchronization completed
@@ -288,7 +288,7 @@ void LSTestResetConfiguration(void)
         }
         // Increment badge count if a message
         [self setApplicationBadgeNumber];
-        completionHandler(fetchResult);
+        completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNewData);
     }];
     
     if (!success) {
