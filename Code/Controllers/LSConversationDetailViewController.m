@@ -109,11 +109,10 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.textField.delegate = self;
             [cell setGuideText:@"Name:"];
+            [cell setPlaceHolderText:@"Enter Conversation Name"];
             NSString *conversationName = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
             if (conversationName) {
-                cell.textField.text = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
-            } else {
-                [cell setPlaceHolderText:@"Enter Conversation Name"];
+                cell.textField.text = conversationName;
             }
             return cell;
         }
