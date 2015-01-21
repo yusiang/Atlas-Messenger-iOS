@@ -511,7 +511,7 @@ void LSTestResetConfiguration(void)
         [mailComposeViewController setMessageBody:emailBody isHTML:NO];
         [mailComposeViewController setToRecipients:@[@"kevin@layer.com", @"jira@layer.com"]];
         if (!error) {
-            [mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
+            [mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/jpeg" fileName:@"screenshot.jpg"];
         }
         [mailComposeViewController addAttachmentData:consoleData mimeType:@"text/plain" fileName:@"console.log"];
 
