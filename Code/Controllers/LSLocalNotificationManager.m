@@ -117,22 +117,6 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
     localNotification.alertBody = @"You have a new Layer conversation. Tap to open.";
     localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeConversation,
-                                   LSNotificationIdentifierKey: message.conversation.identifier.absoluteString};
-    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-    [self.notifications addObject:localNotification];
-}
-
-- (void)presentLocalNotificationForMessage:(LYRMessage *)message
-{
-    if (!message) {
-        return;
-    }
-    LYRMessagePart *messagePart = message.parts.firstObject;
-    NSString *alertString = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
-    
-    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = alertString;
-    localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeMessage,
                                    LSNotificationIdentifierKey: message.identifier.absoluteString};
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
     [self.notifications addObject:localNotification];
