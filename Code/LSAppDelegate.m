@@ -54,7 +54,7 @@ void LSTestResetConfiguration(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Set up environment configuration
-    [self configureApplication:application forEnvironment:LSTestEnvironment];
+    [self configureApplication:application forEnvironment:LSProductionEnvironment];
     [self initializeCrashlytics];
     [self initializeHockeyApp];
     [self removeSplashView];
