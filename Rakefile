@@ -90,9 +90,7 @@ task :release do
   builder_email = `git config --get user.email`.strip
 
   # 2) Insert generated object into Info.plist.
-
   plist_path = 'Resources/LayerSample-Info.plist'
-
   info_plist = Plist::parse_xml(plist_path)
   info_plist['LYRBuildInformation'] = {
     'LYRBuildLayerKitVersion' => layer_kit_version,
@@ -105,6 +103,7 @@ task :release do
   info_plist['CFBundleVersion'] = Time.now.to_i.to_s
 
   # Write the plist.
+  trap("SIGINT") { run("git checkout -- Resources/LayerSample-Info.plist", quiet: true) }
   File.open(plist_path, 'w') { |file| file.write(info_plist.to_plist) }
 
   archive_path = 'LayerSample.xcarchive'
@@ -117,17 +116,21 @@ task :release do
 
   # 4) Archive project with shenzhen, but pipe to xcpretty.
   run("ipa build --workspace LayerSample.xcworkspace --scheme LayerSample --configuration Release --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
+  
+  output = with_clean_env { `ipa info` }
+  unless output =~ /LayerSample In House Distribution/
+    puts output
+    fail "!! Build does not appear to be built against the 'LayerSample In House Distribution' provisioning profile -- aborting upload."
+  end
 
   # 5) Upload to HockeyApp.net via shenzhen.
   run("ipa distribute:hockeyapp --token 4293de2a6ba5492c9d77b6faaf8d5343 -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
   #run("ipa distribute:hockeyapp --token 4293de2a6ba5492c9d77b6faaf8d5343 --tags dev -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
+  
+  run("ipa info LayerSample.ipa")
 
   # 6) Reset Info.plist.
-  run("git checkout -- Resources/LayerSample-Info.plist")
-
-  # 7) Clean up build data.
-  FileUtils::Verbose.rm "LayerSample.ipa"
-  FileUtils::Verbose.rm "LayerSample.app.dSYM.zip"
+  run("git checkout -- Resources/LayerSample-Info.plist", quiet: true)
 
   # 8) Let everyone know that Layer Sample is Available
   require 'slack-notifier'
@@ -144,8 +147,8 @@ def with_clean_env(&block)
   end
 end
 
-def run(command)
-  puts "Executing `#{command}`"
+def run(command, options = {})
+  puts "Executing `#{command}`" unless options[:quiet]
   unless with_clean_env { system(command) }
     fail("Command exited with non-zero exit status (#{$?}): `#{command}`")
   end
