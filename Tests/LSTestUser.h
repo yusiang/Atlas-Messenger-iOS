@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "LSUser.h"
 
-@interface LYRUITestUser : NSObject
+@interface LSTestUser : LSUser
 
-+ (LSUser *)testUserWithNumber:(NSUInteger)number;
++ (instancetype)testUserWithNumber:(NSUInteger)number;
 
 @end

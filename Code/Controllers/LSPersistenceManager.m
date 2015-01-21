@@ -103,16 +103,9 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
 
 - (LSUser *)userForIdentifier:(NSString *)identifier
 {
-    NSError *error;
-    NSSet *allUsers = [self persistedUsersWithError:&error];
-    if (error) return nil;
-
-    for (LSUser *user in allUsers) {
-        if ([user.userID isEqualToString:identifier]) {
-            return user;
-        }
-    }
-    return nil;
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.userID IN %@", identifier];
+    NSSet *users = [self.users filteredSetUsingPredicate:searchPredicate];
+    return [users allObjects].firstObject;
 }
 
 #pragma mark - Helpers

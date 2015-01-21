@@ -15,11 +15,11 @@
 #import <sys/sysctl.h>
 #import <asl.h>
 #import "LSAppDelegate.h"
-#import "LSUIConversationListViewController.h"
+#import "LSConversationListViewController.h"
 #import "LSAPIManager.h"
 #import "LSUtilities.h"
 #import "LYRUIConstants.h"
-#import "LSAuthenticationTableViewController.h"
+#import "LSAuthenticationViewController.h"
 #import "LSSplashView.h"
 #import "LSLocalNotificationManager.h"
 #import "SVProgressHUD.h" 
@@ -41,8 +41,8 @@ void LSTestResetConfiguration(void)
 
 @interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
-@property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
-@property (nonatomic) LSUIConversationListViewController *conversationListViewController;
+@property (nonatomic) LSAuthenticationViewController *authenticationViewController;
+@property (nonatomic) LSConversationListViewController *conversationListViewController;
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
 @property (nonatomic) LSLocalNotificationManager *localNotificationManager;
@@ -54,13 +54,10 @@ void LSTestResetConfiguration(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Set up environment configuration
-    if (!LSIsRunningTests()) {
-        [self configureApplication:application forEnvironment:LYRUIProduction];
-        [self initializeCrashlytics];
-        [self initializeHockeyApp];
-    } else {
-        [self removeSplashView];
-    }
+    [self configureApplication:application forEnvironment:LSTestEnvironment];
+    [self initializeCrashlytics];
+    [self initializeHockeyApp];
+    [self removeSplashView];
     
     // Set up window
     [self configureWindow];
@@ -125,7 +122,6 @@ void LSTestResetConfiguration(void)
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    self.localNotificationManager.shouldListenForChanges = NO;
     [self resumeSession];
     [self loadContacts];
 }
@@ -134,7 +130,6 @@ void LSTestResetConfiguration(void)
 {
     [self setApplicationBadgeNumber];
     if (self.applicationController.shouldDisplayLocalNotifications) {
-        self.localNotificationManager.shouldListenForChanges = YES;
     }
 }
 
@@ -162,7 +157,7 @@ void LSTestResetConfiguration(void)
                                                                     layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
     
-    self.localNotificationManager = [LSLocalNotificationManager managerWithLayerClient:self.applicationController.layerClient];
+    self.localNotificationManager = [LSLocalNotificationManager new];
     self.authenticationViewController.applicationController = self.applicationController;
 }
 
@@ -177,7 +172,7 @@ void LSTestResetConfiguration(void)
 
 - (void)configureWindow
 {
-    self.authenticationViewController = [LSAuthenticationTableViewController new];
+    self.authenticationViewController = [LSAuthenticationViewController new];
     self.authenticationViewController.applicationController = self.applicationController;
     self.authenticationViewController.delegate = self;
 
@@ -377,7 +372,9 @@ void LSTestResetConfiguration(void)
         NSLog(@"Persisted authenticated user session: %@", session);
     } else {
         NSLog(@"Failed persisting authenticated user: %@. Error: %@", session, error);
-        LSAlertWithError(error);
+        if (self.applicationController.debugModeEnabled) {
+            LSAlertWithError(error);
+        }
     }
     
     [self updateCrashlyticsWithUser:session.user];
@@ -396,7 +393,9 @@ void LSTestResetConfiguration(void)
         NSLog(@"Cleared persisted user session");
     } else {
         NSLog(@"Failed clearing persistent user session: %@", error);
-        LSAlertWithError(error);
+        if (self.applicationController.debugModeEnabled) {
+            LSAlertWithError(error);
+        }
     }
     
     [self.authenticationViewController dismissViewControllerAnimated:YES completion:^{
@@ -410,13 +409,16 @@ void LSTestResetConfiguration(void)
 {
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
         if (error) {
-            LSAlertWithError(error);
+            if (self.applicationController.debugModeEnabled) {
+                LSAlertWithError(error);
+            }
             return;
-        }
-        NSError *persistenceError;
-        BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
-        if (!success) {
-            LSAlertWithError(persistenceError);
+        } else {
+            NSError *persistenceError;
+            BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
+            if (!success && self.applicationController.debugModeEnabled) {
+                LSAlertWithError(persistenceError);
+            }
         }
     }];
 }
@@ -425,25 +427,21 @@ void LSTestResetConfiguration(void)
 
 - (void)presentConversationsListViewController:(BOOL)animated
 {
-    if (!LSIsRunningTests()) {
-        if (self.conversationListViewController) return;
+    if (self.conversationListViewController) return;
 
-        self.conversationListViewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
-        self.conversationListViewController.applicationController = self.applicationController;
-        self.conversationListViewController.displaysConversationImage = self.displaysConversationImage;
-        self.conversationListViewController.cellClass = self.cellClass;
-        self.conversationListViewController.rowHeight = self.rowHeight;
-        self.conversationListViewController.allowsEditing = self.allowsEditing;
-        self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
-        
-        UINavigationController *authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
-        [self.authenticationViewController presentViewController:authenticatedNavigationController animated:YES completion:^{
-            [self.authenticationViewController resetState];
-            [self removeSplashView];
-        }];
-    } else {
+    self.conversationListViewController = [LSConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
+    self.conversationListViewController.applicationController = self.applicationController;
+    self.conversationListViewController.displaysConversationImage = self.displaysConversationImage;
+    self.conversationListViewController.cellClass = self.cellClass;
+    self.conversationListViewController.rowHeight = self.rowHeight;
+    self.conversationListViewController.allowsEditing = self.allowsEditing;
+    self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
+    
+    UINavigationController *authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
+    [self.authenticationViewController presentViewController:authenticatedNavigationController animated:YES completion:^{
+        [self.authenticationViewController resetState];
         [self removeSplashView];
-    }
+    }];
 }
 
 #pragma mark - Splash View
@@ -628,7 +626,7 @@ void LSTestResetConfiguration(void)
 
 #pragma mark - LSAuthenticationTableViewControllerDelegate
 
-- (void)authenticationTableViewController:(LSAuthenticationTableViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment
+- (void)authenticationTableViewController:(LSAuthenticationViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment
 {
     if (self.applicationController.layerClient.isConnected) {
         [self.applicationController.layerClient disconnect];

@@ -1,16 +1,16 @@
 //
-//  LSUIConversationViewController.m
+//  LSConversationViewController.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 9/10/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSUIConversationViewController.h"
+#import "LSConversationViewController.h"
 #import "LYRUIMessagingUtilities.h"
 #import "LSUIParticipantPickerDataSource.h"
 #import "LYRUIParticipantPickerController.h"
-#import "LSMessageDetailTableViewController.h"
+#import "LSMessageDetailViewController.h"
 #import "LSConversationDetailViewController.h"
 #import "LSImageViewController.h"
 
@@ -113,23 +113,25 @@ static LSDateProximity LSProximityToDate(NSDate *date)
     return LSDateProximityOther;
 }
 
-@interface LSUIConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
+@interface LSConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
 
 @end
 
-@implementation LSUIConversationViewController
+@implementation LSConversationViewController
+
+NSString *const LSConversationViewControllerAccessibilityLabel = @"Conversation View Controller";
+NSString *const LSDetailsButtonAccessibilityLabel = @"Details Button";
+NSString *const LSDetailsButtonLabel = @"Details";
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    self.view.accessibilityLabel = LSConversationViewControllerAccessibilityLabel;
     self.dataSource = self;
     self.delegate = self;
-    
     self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
-    
     if (self.conversation) {
         [self addDetailsButton];
     }
@@ -308,7 +310,7 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
     if (self.applicationController.debugModeEnabled) {
-        LSMessageDetailTableViewController *controller = [LSMessageDetailTableViewController messageDetailTableViewControllerWithMessage:message applicationController:self.applicationController];
+        LSMessageDetailViewController *controller = [LSMessageDetailViewController messageDetailViewControllerWithMessage:message applicationController:self.applicationController];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
@@ -411,11 +413,11 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 
 - (void)addDetailsButton
 {
-    UIBarButtonItem *detailsButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Details"
+    UIBarButtonItem *detailsButtonItem = [[UIBarButtonItem alloc] initWithTitle:LSDetailsButtonLabel
                                                                           style:UIBarButtonItemStylePlain
                                                                          target:self
                                                                          action:@selector(detailsButtonTapped)];
-    detailsButtonItem.accessibilityLabel = @"Contacts";
+    detailsButtonItem.accessibilityLabel = LSDetailsButtonAccessibilityLabel;
     self.navigationItem.rightBarButtonItem = detailsButtonItem;
 }
 

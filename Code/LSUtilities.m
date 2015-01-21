@@ -22,24 +22,27 @@ NSURL *LSRailsBaseURL(void)
 NSString *LSLayerConfigurationURL(LSEnvironment environment)
 {
     switch (environment) {
-        case LYRUIProduction:
-            return @"https://conf.lyr8.net/conf";
+        case LSProductionEnvironment:
+            return @"https://conf.lyr8.net/conf";               //https://developer.layer.com/dashboard/login
 
-        case LYRUIDevelopment:
-            return @"https://conf.lyr8.net/conf";
-
-        case LYRUIStage1:
-             return @"https://conf.stage1.lyr8.net/conf";
-
-        case LYRUIDev1:
-            return @"https://dev-1.preview.layer.com:444/conf";
+        case LSProductionDebugEnvironment:
+            return @"https://conf.lyr8.net/conf";               //https://developer.layer.com/dashboard/login
+        
+        case LSStagingEnvironment:
+            return @"https://conf.stage1.lyr8.net/conf";        //https://developer.stage1.lyr8.net/dashboard
+            
+        case LSStagingDebugEnvironment:
+             return @"https://conf.stage1.lyr8.net/conf";       //https://developer.stage1.lyr8.net/dashboard
 
         case LSTestEnvironment:
-            return @"https://conf.lyr8.net/conf";
+            return @"https://conf.lyr8.net/conf";               //https://developer.layer.com/dashboard/login
 
-        case LSAdHoc:
+        case LSAdHocEnvironment:
             return @"https://130.211.117.22:444/conf";
-
+            
+        case LSLoadTestEnvironment:
+            return @"https://conf.dev1.lyr8.net/conf";          //https://developer.dev1.lyr8.net/dashboard/login
+            
         default:
             return nil;
     }
@@ -48,24 +51,27 @@ NSString *LSLayerConfigurationURL(LSEnvironment environment)
 NSUUID *LSLayerAppID(LSEnvironment environment)
 {
     switch (environment) {
-        case LYRUIProduction:
+        case LSProductionEnvironment:
             return [[NSUUID alloc] initWithUUIDString:@"9ec30af8-5591-11e4-af9e-f7a201004a3b"];
 
-        case LYRUIDevelopment:
+        case LSProductionDebugEnvironment:
             return [[NSUUID alloc] initWithUUIDString:@"361ff3ca-70e0-11e4-a4ef-1dec000000e6"];
-
-        case LYRUIStage1:
-            return [[NSUUID alloc] initWithUUIDString:@"24f43c32-4d95-11e4-b3a2-0fd00000020d"];
-
-        case LYRUIDev1:
-            return [[NSUUID alloc] initWithUUIDString:@"9ae66b44-1682-11e4-92e4-0b53000001d0"];
+            
+        case LSStagingEnvironment:
+            return [[NSUUID alloc] initWithUUIDString:@"84002f7e-9b56-11e4-b7c1-e6d202002423"];
+            
+        case LSStagingDebugEnvironment:
+            return [[NSUUID alloc] initWithUUIDString:@"8d6ee1c2-9b56-11e4-8bf1-e6d202002423"];
 
         case LSTestEnvironment:
             return [[NSUUID alloc] initWithUUIDString:@"46dfa7da-6d1d-11e4-a787-e6f4000000e7"];
 
-        case LSAdHoc:
+        case LSAdHocEnvironment:
             return [[NSUUID alloc] initWithUUIDString:@"d354316c-63be-11e4-841a-364a00000bce"];
-
+        
+        case LSLoadTestEnvironment:
+            return [[NSUUID alloc] initWithUUIDString:@"7c5cc92c-9de4-11e4-a951-a84200000d8d"];
+        
         default:
             return nil;
     }

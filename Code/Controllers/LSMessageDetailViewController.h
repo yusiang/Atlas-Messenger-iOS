@@ -1,5 +1,5 @@
 //
-//  LSMessageDetailTableViewController.h
+//  LSMessageDetailViewController.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 11/3/14.
@@ -14,12 +14,12 @@
  @abstract The `LSMessageDetailTableViewController` presents a user interface for displaying 
  information regarding a single Layer `LYRMessage` object.
  */
-@interface LSMessageDetailTableViewController : UITableViewController
+@interface LSMessageDetailViewController : UITableViewController
 
 ///--------------------------------
 /// @name Initializing a Controller
 ///--------------------------------
 
-+ (instancetype)messageDetailTableViewControllerWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController;
++ (instancetype)messageDetailViewControllerWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController;
 
 @end

@@ -6,17 +6,17 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LYRUILayerContentFactory.h"
+#import "LSLayerContentFactory.h"
 #import "LSUser.h"
 
 
-@interface LYRUILayerContentFactory ()
+@interface LSLayerContentFactory ()
 
 @property (nonatomic) LYRClient *layerClient;
 
 @end
 
-@implementation LYRUILayerContentFactory
+@implementation LSLayerContentFactory
 
 NSString *const LYRUITestMessageText = @"Hi, this is a test!";
 
@@ -34,23 +34,23 @@ NSString *const LYRUITestMessageText = @"Hi, this is a test!";
     return self;
 }
 
-- (void)conversationsWithParticipants:(NSSet *)participants number:(NSUInteger)number
+- (LYRConversation *)newConversationsWithParticipants:(NSSet *)participants
 {
-    while (number > 0) {
-        LYRConversation *conversation = [self.layerClient newConversationWithParticipants:participants options:nil error:nil];
-        [self sendMessagesToConversation:conversation number:100];
-        number -= 1;
-    }
+    LYRConversation *conversation = [self.layerClient newConversationWithParticipants:participants options:nil error:nil];
+    [self sendMessagesToConversation:conversation number:10];
+    return conversation;
 }
 
 - (void)sendMessagesToConversation:(LYRConversation *)conversation number:(NSUInteger)number
 {
     for (int i = 0; i < number; i++) {
         LYRMessagePart *part = [LYRMessagePart messagePartWithText:LYRUITestMessageText];
-        
         NSError *error;
         LYRMessage *message = [self.layerClient newMessageWithParts:@[part] options:@{LYRMessageOptionsPushNotificationAlertKey: @"Test Push"} error:nil];
         [conversation sendMessage:message error:&error];
+        if (error) {
+            NSLog(@"Error sending messages");
+        }
     }
 }
 

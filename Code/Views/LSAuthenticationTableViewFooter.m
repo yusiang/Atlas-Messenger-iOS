@@ -19,8 +19,8 @@
 
 @implementation LSAuthenticationTableViewFooter
 
-static NSString *const LSLoginText = @"Login To Layer";
-static NSString *const LSRegisterText = @"Create Account";
+NSString *const LSLoginButtonText = @"Login To Layer";
+NSString *const LSRegisterButtonText = @"Create Account";
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -181,13 +181,13 @@ static NSString *const LSRegisterText = @"Create Account";
 {
     switch (authenticationState) {
         case LSAuthenticationStateRegister:
-            [self.primaryActionButton setTitle:LSRegisterText forState:UIControlStateNormal];
-            [self.secondaryActionButton setTitle:LSLoginText forState:UIControlStateNormal];
+            [self.primaryActionButton setTitle:LSRegisterButtonText forState:UIControlStateNormal];
+            [self.secondaryActionButton setTitle:LSLoginButtonText forState:UIControlStateNormal];
             break;
             
         case LSAuthenticationStateLogin:
-            [self.primaryActionButton setTitle:LSLoginText forState:UIControlStateNormal];
-            [self.secondaryActionButton setTitle:LSRegisterText forState:UIControlStateNormal];
+            [self.primaryActionButton setTitle:LSLoginButtonText forState:UIControlStateNormal];
+            [self.secondaryActionButton setTitle:LSRegisterButtonText forState:UIControlStateNormal];
             break;
     }
     _authenticationState = authenticationState;

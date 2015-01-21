@@ -144,7 +144,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             });
             return;
         }
-
+        
         NSString *authToken = loginInfo[@"authentication_token"];
         LSUser *user = [LSUser userFromDictionaryRepresentation:loginInfo[@"user"]];
         user.password = password;
@@ -169,13 +169,13 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 - (void)deauthenticate
 {
     if (!self.authenticatedSession) return;
-
+    
     self.authenticatedSession = nil;
     self.authenticatedURLSessionConfiguration = nil;
-
+    
     [self.URLSession invalidateAndCancel];
     self.URLSession = [self defaultURLSession];
-
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:self.authenticatedSession.user];
 }
 
@@ -186,7 +186,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     NSURL *URL = [NSURL URLWithString:@"users.json" relativeToURL:self.baseURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"GET";
-
+    
     [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (!response && error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -220,11 +220,11 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 - (void)deleteAllContactsWithCompletion:(void(^)(BOOL completion, NSError *error))completion
 {
     NSParameterAssert(completion);
-
+    
     NSURL *URL = [NSURL URLWithString:@"users/all" relativeToURL:self.baseURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"DELETE";
-
+    
     [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (!response && error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -241,7 +241,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             });
             return;
         }
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(success, nil);
         });
@@ -253,14 +253,14 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 - (BOOL)configureWithSession:(LSSession *)session error:(NSError **)error
 {
     if (self.authenticatedSession) return YES;
-
+    
     if (!session) {
         if (error) *error = [NSError errorWithDomain:LSErrorDomain code:LSNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"No authenticated session"}];
         return NO;
     }
-
+    
     self.authenticatedSession = session;
-
+    
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
     sessionConfiguration.HTTPAdditionalHeaders = @{@"Accept": @"application/json",
                                                    @"Content-Type": @"application/json",
@@ -268,12 +268,12 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
                                                    @"X_AUTH_TOKEN": session.authenticationToken,
                                                    @"X_LAYER_APP_ID": self.layerClient.appID.UUIDString};
     self.authenticatedURLSessionConfiguration = sessionConfiguration;
-
+    
     [self.URLSession finishTasksAndInvalidate];
     self.URLSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
-
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidAuthenticateNotification object:session.user];
-
+    
     return YES;
 }
 

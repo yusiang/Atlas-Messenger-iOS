@@ -1,12 +1,12 @@
 //
-//  LSMessageDetailTableViewController.m
+//  LSMessageDetailViewController.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 11/3/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSMessageDetailTableViewController.h"
+#import "LSMessageDetailViewController.h"
 #import "LSStyleValue1TableViewCell.h"
 
 typedef NS_ENUM(NSInteger, LSMessageDetailTableSection) {
@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, LSMessageMetadataTableRow) {
     LSMessageMetadataTableRowCount,
 };
 
-@interface LSMessageDetailTableViewController ()
+@interface LSMessageDetailViewController ()
 
 @property (nonatomic) LSApplicationController *applicationController;
 @property (nonatomic) LYRMessage *message;
@@ -34,11 +34,13 @@ typedef NS_ENUM(NSInteger, LSMessageMetadataTableRow) {
 
 @end
 
-@implementation LSMessageDetailTableViewController
+@implementation LSMessageDetailViewController
 
-static NSString *const LSMessageDetailCell = @"messageDetailCell";
+NSString *const LSMessageDetailViewControllerAccessibilityLabel = @"Message Detail View Controller";
+NSString *const LSMessageDetailViewControllerTitle = @"Message Detail";
+static NSString *const LSMessageDetailCellIdentifier = @"messageDetailCell";
 
-+ (instancetype)messageDetailTableViewControllerWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController
++ (instancetype)messageDetailViewControllerWithMessage:(LYRMessage *)message applicationController:(LSApplicationController *)applicationController;
 {
     return [[self alloc] initWithMessage:message applicationController:applicationController];
 }
@@ -62,9 +64,10 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
 {
     [super viewDidLoad];
     
-    self.title = @"Message Detail";
+    self.title = LSMessageDetailViewControllerTitle;
+    self.accessibilityLabel = LSMessageDetailViewControllerAccessibilityLabel;
     
-    [self.tableView registerClass:[LSStyleValue1TableViewCell class] forCellReuseIdentifier:LSMessageDetailCell];
+    [self.tableView registerClass:[LSStyleValue1TableViewCell class] forCellReuseIdentifier:LSMessageDetailCellIdentifier];
     
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                 target:self
@@ -96,7 +99,7 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSMessageDetailCell];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSMessageDetailCellIdentifier];
     
     switch ((LSMessageDetailTableSection)indexPath.section) {
         case LSMessageDetailTableSectionMetadata:
@@ -144,8 +147,23 @@ static NSString *const LSMessageDetailCell = @"messageDetailCell";
         case LSMessageDetailTableSectionCount:
             break;
     }
-    
+    cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
     return cell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    switch ((LSMessageDetailTableSection)section) {
+        case LSMessageDetailTableSectionMetadata:
+            return @"Message Detail";
+            
+        case LSMessageDetailTableSectionRecipientStatus:
+            return @"Recipient Status";
+
+        case LSMessageDetailTableSectionCount:
+            return nil;
+    }
 }
 
 #pragma mark - Helpers

@@ -1,5 +1,5 @@
 //
-//  LSTableViewController.h
+//  LSAuthenticationViewController.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 8/26/14.
@@ -10,7 +10,7 @@
 #import "LSApplicationController.h"
 #import "LSUtilities.h"
 
-@class LSAuthenticationTableViewController;
+@class LSAuthenticationViewController;
 
 /**
  @abstract The `LSAuthenticationTableViewControllerDelegate` inform the delegate to events occuring within the controller.
@@ -22,7 +22,7 @@
  @param authenticationTableViewController The controller object within which the selection occurred.
  @param environment The `LSEnvironment` enumeration that was selected.
  */
-- (void)authenticationTableViewController:(LSAuthenticationTableViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment;
+- (void)authenticationTableViewController:(LSAuthenticationViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment;
 
 @end
 
@@ -30,7 +30,7 @@
  @abstract The `LSAuthenticationTableViewController` presents a user interface allowing for user login or user registration.
  When a user enters his or her credentials, the controller will attempt to authenticate and/or register the user.
  */
-@interface LSAuthenticationTableViewController : UITableViewController
+@interface LSAuthenticationViewController : UITableViewController
 
 /**
  @abstract The controller object for the application.

@@ -1,5 +1,5 @@
 //
-//  LSAppController.h
+//  LSApplicationController.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 6/30/14.

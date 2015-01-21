@@ -12,7 +12,7 @@
 /**
  @abstract Subclass of the `LYRUIConversationListViewController`. Presents a list of conversations in time series order.
  */
-@interface LSUIConversationListViewController : LYRUIConversationListViewController
+@interface LSConversationListViewController : LYRUIConversationListViewController
 
 /**
  @abstract Programatically simulates the selection of a `LYRConversation` object in the conversations table view.

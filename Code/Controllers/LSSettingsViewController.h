@@ -1,5 +1,5 @@
 //
-//  LSSettingsViewControllerTableViewController.h
+//  LSSettingsViewController.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 10/20/14.
@@ -10,7 +10,7 @@
 #import <LayerKit/LayerKit.h>
 #import "LSApplicationController.h"
 
-@class LSSettingsTableViewController;
+@class LSSettingsViewController;
 
 /**
  @abstract The `LSSettingsTableViewControllerDelegate` protocol informs the receiver of events that have occurred
@@ -22,13 +22,13 @@
  @abstract Informs the receiver that a logout button has been tapped in the controller.
  @param settingsTableViewController The controller in which the selection occurred.
  */
-- (void)logoutTappedInSettingsTableViewController:(LSSettingsTableViewController *)settingsTableViewController;
+- (void)logoutTappedInSettingsViewController:(LSSettingsViewController *)settingsTableViewController;
 
 /**
  @abstract Informs the receiver that the user wants to dismiss the controller.
  @param settingsTableViewController The controller in which the selection occurred.
  */
-- (void)settingsTableViewControllerDidFinish:(LSSettingsTableViewController *)settingsTableViewController;
+- (void)settingsViewControllerDidFinish:(LSSettingsViewController *)settingsTableViewController;
 
 @end
 
@@ -36,7 +36,7 @@
  @abstract The `LSSettingsTableViewController` presents a user interface for viewing and configuring application settings
  in addition to information related to the application.
  */
-@interface LSSettingsTableViewController : UITableViewController
+@interface LSSettingsViewController : UITableViewController
 
 /**
  @abstract The controller object for the application.

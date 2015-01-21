@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
 #import "LSAPIManager.h"
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
@@ -15,19 +14,12 @@
 #import "LYRCountdownLatch.h"
 #import "LSApplicationController.h"
 #import "LSAppDelegate.h"
-#import "LYRUITestUser.h"
-#import "LYRUITestInterface.h"
-
-
-@interface LYRClient ()
-
-- (id)initWithBaseURL:(NSURL *)baseURL appID:(NSUUID *)appID databasePath:(NSString *)path;
-
-@end
+#import "LSTestUser.h"
+#import "LSTestInterface.h"
 
 @interface LSAPIManagerTest : XCTestCase
 
-@property (nonatomic) LYRUITestInterface *testInterface;
+@property (nonatomic) LSTestInterface *testInterface;
 
 @end
 
@@ -36,24 +28,17 @@
 - (void)setUp
 {
     [super setUp];
-    
     LSApplicationController *applicationController =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
-    self.testInterface = [LYRUITestInterface testInterfaceWithApplicationController:applicationController];
+    self.testInterface = [LSTestInterface testInterfaceWithApplicationController:applicationController];
 }
 
 - (void)tearDown
 {
+    [self.testInterface logoutIfNeeded];
     [super tearDown];
-    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:5.0];
-    [self.testInterface.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-        [self.testInterface.applicationController.APIManager deauthenticate];
-    }];
-    [latch waitTilCount:0];
-    self.testInterface.applicationController.APIManager = nil;
-    [self.testInterface.applicationController.layerClient disconnect];
 }
 
-- (void)testRaisesOnAttempToInit
+- (void)testRaisesOnAttempToInitx
 {
     expect(^{ [LSAPIManager new]; }).to.raise(NSInternalInconsistencyException);
 }
@@ -72,7 +57,7 @@
 
 - (void)testRegistrationsWithNilEmail
 {
-    LSUser *user = [LYRUITestUser testUserWithNumber:1];
+    LSUser *user = [LSTestUser testUserWithNumber:1];
     user.email = nil;
     
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
@@ -86,8 +71,7 @@
 
 - (void)testRegistrationWithExistingEmail
 {
-    LSUser *user1 = [LYRUITestUser testUserWithNumber:1];
-    [self.testInterface registerUser:user1];
+    LSTestUser *user1 = [self.testInterface registerTestUser:[LSTestUser testUserWithNumber:1]];
     
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     [self.testInterface.applicationController.APIManager registerUser:user1 completion:^(LSUser *user, NSError *error) {
@@ -101,13 +85,13 @@
 
 - (void)testRegistrationWithValidCredentials
 {
-    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerTestUser:[LSTestUser testUserWithNumber:1]];
 }
 
 - (void)testLoginWithInvalidCredentials
 {
-    LSUser *user = [LYRUITestUser testUserWithNumber:1];
-    [self.testInterface registerUser:user];
+    LSTestUser *user = [LSTestUser testUserWithNumber:1];
+    [self.testInterface registerTestUser:user];
     
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     [self.testInterface.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
@@ -124,8 +108,7 @@
 
 - (void)testLoginWithValidCredentials
 {
-    LSUser *user = [LYRUITestUser testUserWithNumber:1];
-    [self.testInterface registerUser:user];
+    LSTestUser *user = [self.testInterface registerTestUser:[LSTestUser testUserWithNumber:1]];
     
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:3 timeoutInterval:10];
     [self.testInterface.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
@@ -148,26 +131,26 @@
 
 - (void)testLoadingAllContactsForAuthenticatedUser
 {
-    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerTestUser:[LSTestUser testUserWithNumber:1]];
     [self.testInterface loadContacts];
 }
 
 - (void)testDeletingAllContactsForAuthenticatedUser
 {
-    [self.testInterface registerUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerTestUser:[LSTestUser testUserWithNumber:1]];
     [self.testInterface deleteContacts];
 }
 
 - (void)testToVerifyResumingSession
 {
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
+    [self.testInterface registerAndAuthenticateTestUser:[LSTestUser testUserWithNumber:1]];
    
     [tester waitForTimeInterval:2];
     [self.testInterface.applicationController.layerClient disconnect];
     
     LSSession *session = self.testInterface.applicationController.APIManager.authenticatedSession;
     expect(session).toNot.beNil;
-    expect(session.user.email).to.equal([LYRUITestUser testUserWithNumber:1].email);
+    expect(session.user.email).to.equal([LSTestUser testUserWithNumber:1].email);
     NSError *error;
     [self.testInterface.applicationController.APIManager resumeSession:session error:&error];
     expect(error).to.beNil;
@@ -175,8 +158,8 @@
 
 - (void)testToVerifyLogout
 {
-    [self.testInterface registerAndAuthenticateUser:[LYRUITestUser testUserWithNumber:1]];
-    [self.testInterface logout];
+    [self.testInterface registerAndAuthenticateTestUser:[LSTestUser testUserWithNumber:1]];
+    [self.testInterface logoutIfNeeded];
 }
 
 
