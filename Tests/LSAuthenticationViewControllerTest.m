@@ -28,7 +28,7 @@ extern NSString *const LYRUIConversationTableViewTitle;
 
 @interface LSAuthenticationViewControllerTest : KIFTestCase
 
-@property (nonatomic) LSAuthenticationViewController *authenticationTableViewController;
+@property (nonatomic) LSAuthenticationViewController *authenticationViewController;
 @property (nonatomic) LSTestInterface *testInterface;
 
 @end
@@ -40,12 +40,12 @@ extern NSString *const LYRUIConversationTableViewTitle;
     [super setUp];
     LSApplicationController *applicationController =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [LSTestInterface testInterfaceWithApplicationController:applicationController];
-    self.authenticationTableViewController = (LSAuthenticationViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    self.authenticationViewController = (LSAuthenticationViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
 }
 
 - (void)tearDown {
     
-    [self.authenticationTableViewController resetState];
+    [self.authenticationViewController resetState];
     [self.testInterface logoutIfNeeded];
     [super tearDown];
 }

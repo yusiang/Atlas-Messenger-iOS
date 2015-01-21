@@ -17,7 +17,7 @@ typedef NS_ENUM(NSInteger, LSSettingsTableSection) {
     LSSettingsTableSectionNotifications,
     LSSettingsTableSectionDebug,
     LSSettingsTableSectionStatistics,
-    LSSettingsTableSectionLogOut,
+    LSSettingsTableSectionLogout,
     LSSettingsTableSectionCount,
 };
 
@@ -59,7 +59,7 @@ typedef NS_ENUM(NSInteger, LSStatisticsTableRow) {
 
 NSString *const LSSettingsViewControllerTitle = @"Settings";
 NSString *const LSSettingsTableViewAccessibilityIdentifier = @"Settings Table View";
-NSString *const LSSettingsHeaderAccessibilitLabel = @"Settings Header";
+NSString *const LSSettingsHeaderAccessibilityLabel = @"Settings Header";
 
 NSString *const LSPushNotificationSettingSwitch = @"Push Notification Setting Switch";
 NSString *const LSLocalNotificationSettingSwitch = @"Local Notification Setting Switch";
@@ -99,7 +99,7 @@ static NSString *const LSConnecting = @"Connecting";
     
     self.headerView = [LSSettingsHeaderView headerViewWithUser:self.applicationController.APIManager.authenticatedSession.user];
     self.headerView.frame = CGRectMake(0, 0, 320, 148);
-    self.headerView.accessibilityLabel = LSSettingsHeaderAccessibilitLabel;
+    self.headerView.accessibilityLabel = LSSettingsHeaderAccessibilityLabel;
     if (self.applicationController.layerClient.isConnected){
         [self.headerView updateConnectedStateWithString:LSConnected];
     } else {
@@ -139,7 +139,7 @@ static NSString *const LSConnecting = @"Connecting";
         case LSSettingsTableSectionStatistics:
             return LSStatisticsTableRowCount;
             
-        case LSSettingsTableSectionLogOut:
+        case LSSettingsTableSectionLogout:
             return 1;
             
         case LSSettingsTableSectionCount:
@@ -251,7 +251,7 @@ static NSString *const LSConnecting = @"Connecting";
             return cell;
         }
         
-        case LSSettingsTableSectionLogOut: {
+        case LSSettingsTableSectionLogout: {
             LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCellIdentifier forIndexPath:indexPath];
             cell.centerTextLabel.text = @"Log Out";
             cell.centerTextLabel.textColor = LYRUIRedColor();
@@ -275,7 +275,7 @@ static NSString *const LSConnecting = @"Connecting";
         case LSSettingsTableSectionStatistics:
             return @"Statistics";
 
-        case LSSettingsTableSectionLogOut:
+        case LSSettingsTableSectionLogout:
         case LSSettingsTableSectionCount:
             return nil;
     }
@@ -339,7 +339,7 @@ static NSString *const LSConnecting = @"Connecting";
             }
             break;
         
-        case LSSettingsTableSectionLogOut:
+        case LSSettingsTableSectionLogout:
             [self logOut];
             break;
             
@@ -390,7 +390,7 @@ static NSString *const LSConnecting = @"Connecting";
             break;
             
         case LSSettingsTableSectionStatistics:
-        case LSSettingsTableSectionLogOut:
+        case LSSettingsTableSectionLogout:
         case LSSettingsTableSectionCount:
             break;
     }

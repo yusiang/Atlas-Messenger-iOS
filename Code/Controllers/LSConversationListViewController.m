@@ -13,7 +13,7 @@
 #import "LSSettingsViewController.h"
 #import "LSConversationDetailViewController.h"
 
-@interface LSConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
+@interface LSConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsViewControllerDelegate, UIActionSheetDelegate>
 
 @end
 
@@ -172,11 +172,11 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
 
 - (void)settingsButtonTapped
 {
-    LSSettingsViewController *settingsTableViewController = [[LSSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    settingsTableViewController.applicationController = self.applicationController;
-    settingsTableViewController.settingsDelegate = self;
+    LSSettingsViewController *settingsViewController = [[LSSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    settingsViewController.applicationController = self.applicationController;
+    settingsViewController.settingsDelegate = self;
     
-    UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:settingsTableViewController];
+    UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
@@ -194,9 +194,9 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
     }
 }
 
-#pragma mark - LSSettingsTableViewControllerDelegate
+#pragma mark - LSSettingsViewControllerDelegate
 
-- (void)logoutTappedInSettingsViewController:(LSSettingsViewController *)settingsTableViewController
+- (void)logoutTappedInSettingsViewController:(LSSettingsViewController *)settingsViewController
 {
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     if (self.applicationController.layerClient.isConnected) {
@@ -209,9 +209,9 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
     }
 }
 
-- (void)settingsViewControllerDidFinish:(LSSettingsViewController *)settingsTableViewController
+- (void)settingsViewControllerDidFinish:(LSSettingsViewController *)settingsViewController
 {
-    [settingsTableViewController dismissViewControllerAnimated:YES completion:nil];
+    [settingsViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Notification Handlers

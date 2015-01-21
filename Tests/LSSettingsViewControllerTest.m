@@ -18,7 +18,7 @@
 
 extern NSString *const LSConversationListTableViewAccessibilityLabel;
 extern NSString *const LSSettingsTableViewAccessibilityIdentifier;
-extern NSString *const LSSettingsHeaderAccessibilitLabel;
+extern NSString *const LSSettingsHeaderAccessibilityLabel;
 extern NSString *const LSPushNotificationSettingSwitch;
 extern NSString *const LSLocalNotificationSettingSwitch;
 extern NSString *const LSDebugModeSettingSwitch;
@@ -51,7 +51,7 @@ extern NSString *const LSDebugModeSettingSwitch;
 {
     [tester tapViewWithAccessibilityLabel:@"Settings"];
     LSUser *user = self.testInterface.applicationController.APIManager.authenticatedSession.user;
-    [tester waitForViewWithAccessibilityLabel:LSSettingsHeaderAccessibilitLabel];
+    [tester waitForViewWithAccessibilityLabel:LSSettingsHeaderAccessibilityLabel];
     [tester waitForViewWithAccessibilityLabel:user.fullName];
     [tester waitForViewWithAccessibilityLabel:@"Connected"];
 }
@@ -67,7 +67,7 @@ extern NSString *const LSDebugModeSettingSwitch;
 {
     LSSettingsViewController *controller = [[LSSettingsViewController alloc] init];
     controller.applicationController = self.testInterface.applicationController;
-    id delegateMock = OCMProtocolMock(@protocol(LSSettingsTableViewControllerDelegate));
+    id delegateMock = OCMProtocolMock(@protocol(LSSettingsViewControllerDelegate));
     controller.settingsDelegate = delegateMock;
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
@@ -85,7 +85,7 @@ extern NSString *const LSDebugModeSettingSwitch;
 {
     LSSettingsViewController *controller = [[LSSettingsViewController alloc] init];
     controller.applicationController = self.testInterface.applicationController;
-    id delegateMock = OCMProtocolMock(@protocol(LSSettingsTableViewControllerDelegate));
+    id delegateMock = OCMProtocolMock(@protocol(LSSettingsViewControllerDelegate));
     controller.settingsDelegate = delegateMock;
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
@@ -95,7 +95,7 @@ extern NSString *const LSDebugModeSettingSwitch;
         
     }] logoutTappedInSettingsViewController:[OCMArg any]];
     
-    [tester swipeViewWithAccessibilityLabel:LSSettingsHeaderAccessibilitLabel inDirection:KIFSwipeDirectionUp];
+    [tester swipeViewWithAccessibilityLabel:LSSettingsHeaderAccessibilityLabel inDirection:KIFSwipeDirectionUp];
     [tester waitForViewWithAccessibilityLabel:@"Log Out"];
     [tester tapViewWithAccessibilityLabel:@"Log Out"];
     [delegateMock verify];
@@ -191,7 +191,7 @@ extern NSString *const LSDebugModeSettingSwitch;
 - (void)testToVerifyLogoutButtonFunctionality
 {
     [tester tapViewWithAccessibilityLabel:@"Settings"];
-    [tester swipeViewWithAccessibilityLabel:LSSettingsHeaderAccessibilitLabel inDirection:KIFSwipeDirectionUp];
+    [tester swipeViewWithAccessibilityLabel:LSSettingsHeaderAccessibilityLabel inDirection:KIFSwipeDirectionUp];
     [tester waitForViewWithAccessibilityLabel:@"Log Out"];
     [tester tapViewWithAccessibilityLabel:@"Log Out"];
 }

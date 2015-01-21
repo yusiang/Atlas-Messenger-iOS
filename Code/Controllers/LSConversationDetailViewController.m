@@ -32,8 +32,8 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
 
 @end
 
-@implementation LSConversationDetailViewController
-;
+@implementation LSConversationDetailViewController;
+
 NSString *const LSConversationDetailViewControllerTitle = @"Details";
 NSString *const LSAddParticipantsAccessibilityLabel = @"Add Participants";
 NSString *const LSConversationNamePlaceholderText = @"Enter Conversation Name";

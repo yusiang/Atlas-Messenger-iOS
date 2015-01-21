@@ -11,7 +11,7 @@
 #import "LSApplicationController.h"
 
 /**
- @abstract The `LSMessageDetailTableViewController` presents a user interface for displaying 
+ @abstract The `LSMessageDetailViewController` presents a user interface for displaying
  information regarding a single Layer `LYRMessage` object.
  */
 @interface LSMessageDetailViewController : UITableViewController

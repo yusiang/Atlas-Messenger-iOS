@@ -43,7 +43,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 - (void)notificationForSyncCompletionWithChanges:(NSArray *)changes
 {
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = [NSString stringWithFormat:@"Finished Sync with changes %lu", (unsigned long)changes.count];
+    localNotification.alertBody = [NSString stringWithFormat:@"Finished sync with changes %lu", (unsigned long)changes.count];
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 }
 
@@ -115,8 +115,8 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 - (void)notificationForNewMessage:(LYRMessage *)message
 {
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = @"You have a new Layer conversation. Tap to open.";
-    localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeConversation,
+    localNotification.alertBody = @"You have a new Layer message. Tap to open.";
+    localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeMessage,
                                    LSNotificationIdentifierKey: message.identifier.absoluteString};
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
     [self.notifications addObject:localNotification];

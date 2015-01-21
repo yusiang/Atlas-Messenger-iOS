@@ -312,8 +312,6 @@
 		0AE1B93A19C9E4FD00FB28A7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				D6306DF91A6F305E00E16E85 /* LSUtilities.h */,
-				D6306DF81A6F305E00E16E85 /* LSUtilities.m */,
 				B5D66E661A6756AF00158901 /* LSErrors.h */,
 				B5D66E671A6756AF00158901 /* LSErrors.m */,
 				B5D66E691A67574200158901 /* LSHTTPResponseSerializer.h */,
@@ -322,6 +320,8 @@
 				B5D66E7E1A68A30800158901 /* LSLayerClient.m */,
 				B5D66E721A67583E00158901 /* LSUIParticipantPickerDataSource.h */,
 				B5D66E731A67583E00158901 /* LSUIParticipantPickerDataSource.m */,
+				D6306DF91A6F305E00E16E85 /* LSUtilities.h */,
+				D6306DF81A6F305E00E16E85 /* LSUtilities.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -396,8 +396,8 @@
 		259A573B1950EB76000E27B0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D6306E0A1A6F329900E16E85 /* LSAuthenticationTableViewFooter.m */,
 				D6306E0B1A6F329900E16E85 /* LSAuthenticationTableViewFooter.h */,
+				D6306E0A1A6F329900E16E85 /* LSAuthenticationTableViewFooter.m */,
 				0AE1A15119B0DAE900BFB754 /* LSAuthenticationTableViewHeader.h */,
 				0AE1A15219B0DAE900BFB754 /* LSAuthenticationTableViewHeader.m */,
 				D66F086319FB524E0047F1C6 /* LSCenterTextTableViewCell.h */,

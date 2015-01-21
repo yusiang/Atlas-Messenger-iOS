@@ -168,8 +168,10 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 - (void)deauthenticate
 {
     if (!self.authenticatedSession) return;
+    
     self.authenticatedSession = nil;
     self.authenticatedURLSessionConfiguration = nil;
+    
     [self.URLSession invalidateAndCancel];
     self.URLSession = [self defaultURLSession];
     [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:self.authenticatedSession.user];
@@ -178,6 +180,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 - (void)loadContactsWithCompletion:(void (^)(NSSet *contacts, NSError *error))completion
 {
     NSParameterAssert(completion);
+   
     NSURL *URL = [NSURL URLWithString:@"users.json" relativeToURL:self.baseURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"GET";
@@ -198,7 +201,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             });
             return;
         }
-        
         NSMutableSet *contacts = [NSMutableSet new];
         for (NSDictionary *representation in userRepresentations) {
             LSUser *user = [LSUser userFromDictionaryRepresentation:representation];

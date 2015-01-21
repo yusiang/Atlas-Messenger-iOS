@@ -13,27 +13,27 @@
 @class LSSettingsViewController;
 
 /**
- @abstract The `LSSettingsTableViewControllerDelegate` protocol informs the receiver of events that have occurred
+ @abstract The `LSSettingsViewControllerDelegate` protocol informs the receiver of events that have occurred
  within the controller.
  */
-@protocol LSSettingsTableViewControllerDelegate <NSObject>
+@protocol LSSettingsViewControllerDelegate <NSObject>
 
 /**
  @abstract Informs the receiver that a logout button has been tapped in the controller.
- @param settingsTableViewController The controller in which the selection occurred.
+ @param settingsViewController The controller in which the selection occurred.
  */
-- (void)logoutTappedInSettingsViewController:(LSSettingsViewController *)settingsTableViewController;
+- (void)logoutTappedInSettingsViewController:(LSSettingsViewController *)settingsViewController;
 
 /**
  @abstract Informs the receiver that the user wants to dismiss the controller.
- @param settingsTableViewController The controller in which the selection occurred.
+ @param settingsViewController The controller in which the selection occurred.
  */
-- (void)settingsViewControllerDidFinish:(LSSettingsViewController *)settingsTableViewController;
+- (void)settingsViewControllerDidFinish:(LSSettingsViewController *)settingsViewController;
 
 @end
 
 /**
- @abstract The `LSSettingsTableViewController` presents a user interface for viewing and configuring application settings
+ @abstract The `LSSettingsViewController` presents a user interface for viewing and configuring application settings
  in addition to information related to the application.
  */
 @interface LSSettingsViewController : UITableViewController
@@ -44,8 +44,8 @@
 @property (nonatomic) LSApplicationController *applicationController;
 
 /**
- @abstract The `LSSettingsTableViewControllerDelegate` object for the controller.
+ @abstract The `LSSettingsViewControllerDelegate` object for the controller.
  */
-@property (nonatomic) id<LSSettingsTableViewControllerDelegate> settingsDelegate;
+@property (nonatomic) id<LSSettingsViewControllerDelegate> settingsDelegate;
 
 @end

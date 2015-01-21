@@ -13,21 +13,21 @@
 @class LSAuthenticationViewController;
 
 /**
- @abstract The `LSAuthenticationTableViewControllerDelegate` inform the delegate to events occuring within the controller.
+ @abstract The `LSAuthenticationViewControllerDelegate` inform the delegate to events occuring within the controller.
  */
-@protocol LSAuthenticationTableViewControllerDelegate <NSObject>
+@protocol LSAuthenticationViewControllerDelegate <NSObject>
 
 /**
  @abstract Informs the delegate that the user has selected a Layer Sample App environment.
- @param authenticationTableViewController The controller object within which the selection occurred.
+ @param authenticationViewController The controller object within which the selection occurred.
  @param environment The `LSEnvironment` enumeration that was selected.
  */
-- (void)authenticationTableViewController:(LSAuthenticationViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment;
+- (void)authenticationViewController:(LSAuthenticationViewController *)authenticationViewController didSelectEnvironment:(LSEnvironment)environment;
 
 @end
 
 /**
- @abstract The `LSAuthenticationTableViewController` presents a user interface allowing for user login or user registration.
+ @abstract The `LSAuthenticationViewController` presents a user interface allowing for user login or user registration.
  When a user enters his or her credentials, the controller will attempt to authenticate and/or register the user.
  */
 @interface LSAuthenticationViewController : UITableViewController
@@ -38,9 +38,9 @@
 @property (nonatomic) LSApplicationController *applicationController;
 
 /**
- @abstract The `LSAuthenticationTableViewControllerDelegate` object for the controller.
+ @abstract The `LSAuthenticationViewControllerDelegate` object for the controller.
  */
-@property (nonatomic) id<LSAuthenticationTableViewControllerDelegate> delegate;
+@property (nonatomic) id<LSAuthenticationViewControllerDelegate> delegate;
 
 /**
  @abstract Resets the UI after a successful authentication.

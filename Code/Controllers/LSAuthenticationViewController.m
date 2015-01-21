@@ -58,7 +58,6 @@ NSString *const LSEmailRowPlaceholderText = @"Enter Your First Name";
 NSString *const LSPasswordRowPlaceholderText = @"Enter Your Last Name";
 NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 
-
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
@@ -328,24 +327,25 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
     
     switch (buttonIndex) {
         case 0:
-            [self.delegate authenticationTableViewController:self didSelectEnvironment:LSProductionEnvironment];
+            [self.delegate authenticationViewController:self didSelectEnvironment:LSProductionEnvironment];
             break;
             
         case 1:
-            [self.delegate authenticationTableViewController:self didSelectEnvironment:LSProductionDebugEnvironment];
+            [self.delegate authenticationViewController:self didSelectEnvironment:LSProductionDebugEnvironment];
             break;
             
         case 2:
-            [self.delegate authenticationTableViewController:self didSelectEnvironment:LSStagingEnvironment];
+            [self.delegate authenticationViewController:self didSelectEnvironment:LSStagingEnvironment];
             break;
             
         case 3:
-            [self.delegate authenticationTableViewController:self didSelectEnvironment:LSStagingDebugEnvironment];
+            [self.delegate authenticationViewController:self didSelectEnvironment:LSStagingDebugEnvironment];
             break;
 
         default:
             break;
     }
+    [SVProgressHUD showSuccessWithStatus:@"New Environment Configured"];
 }
 
 #pragma mark - State Configuration
@@ -452,8 +452,6 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 
 - (void)attemptLogin
 {
-    if (![self validateLoginAttempt]) return;
-    
     NSString *email = self.email;
     NSString *password = self.password;
     
@@ -492,8 +490,6 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 
 - (void)attemptRegistration
 {
-    if (![self validateRegistrationAttempt]) return;
-    
     LSUser *user = [LSUser new];
     user.firstName = self.firstName;
     user.lastName = self.lastName;
@@ -533,64 +529,6 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
         }];
     }];
 }
-
-- (BOOL)validateLoginAttempt
-{
-    if (!self.email.length) {
-        NSString *description = @"Cannot login without an email address.";
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{NSLocalizedDescriptionKey : description}];
-        LSAlertWithError(error);
-        return NO;
-    }
-    if (!self.password.length) {
-        NSString *description = @"Cannot login without a password.";
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{NSLocalizedDescriptionKey : description}];
-        LSAlertWithError(error);
-        return NO;
-    }
-    return YES;
-}
-
-
-- (BOOL)validateRegistrationAttempt
-{
-    if (!self.firstName.length) {
-        NSString *description = @"Cannot register without a first name.";
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidFirstName userInfo:@{NSLocalizedDescriptionKey : description}];
-        LSAlertWithError(error);
-        return NO;
-    }
-    
-    if (!self.lastName.length) {
-        NSString *description = @"Cannot register without a last name.";
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidLastName userInfo:@{NSLocalizedDescriptionKey : description}];
-        LSAlertWithError(error);
-        return NO;
-    }
-    
-    if (!self.email.length) {
-        NSString *description = @"Cannot register without an email address.";
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{NSLocalizedDescriptionKey : description}];
-        LSAlertWithError(error);
-        return NO;
-    }
-    
-    if (!self.password.length) {
-        NSString *description = @"Cannot register without a password.";
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{NSLocalizedDescriptionKey : description}];
-        LSAlertWithError(error);
-        return NO;
-    }
-    
-    if (!self.confirmation.length) {
-        NSString *description = @"Cannot register without password confirmation.";
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{NSLocalizedDescriptionKey : description}];
-        LSAlertWithError(error);
-        return NO;
-    }
-    return YES;
-}
-
 
 #pragma mark - Resetting
 

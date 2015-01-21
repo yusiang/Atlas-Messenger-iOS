@@ -39,7 +39,7 @@ void LSTestResetConfiguration(void)
     LYRConfigurationURLOnceToken = 0;
 }
 
-@interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
+@interface LSAppDelegate () <LSAuthenticationViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic) LSAuthenticationViewController *authenticationViewController;
 @property (nonatomic) LSConversationListViewController *conversationListViewController;
@@ -54,7 +54,7 @@ void LSTestResetConfiguration(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Set up environment configuration
-    [self configureApplication:application forEnvironment:LSTestEnvironment];
+    [self configureApplication:application forEnvironment:LSProductionEnvironment];
     [self initializeCrashlytics];
     [self initializeHockeyApp];
     [self removeSplashView];
@@ -129,8 +129,6 @@ void LSTestResetConfiguration(void)
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     [self setApplicationBadgeNumber];
-    if (self.applicationController.shouldDisplayLocalNotifications) {
-    }
 }
 
 #pragma mark - Setup
@@ -624,9 +622,9 @@ void LSTestResetConfiguration(void)
     [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - LSAuthenticationTableViewControllerDelegate
+#pragma mark - LSAuthenticationViewControllerDelegate
 
-- (void)authenticationTableViewController:(LSAuthenticationViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment
+- (void)authenticationViewController:(LSAuthenticationViewController *)authenticationViewController didSelectEnvironment:(LSEnvironment)environment
 {
     if (self.applicationController.layerClient.isConnected) {
         [self.applicationController.layerClient disconnect];
