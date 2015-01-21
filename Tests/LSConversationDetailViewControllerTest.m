@@ -18,7 +18,7 @@
 
 extern NSString *const LSConversationDetailViewControllerTitle;
 extern NSString *const LSAddParticipantsAccessibilityLabel;
-extern NSString *const LSConversationListViewControllerAccessibilityLabel;
+extern NSString *const LSConversationListTableViewAccessibilityLabel;
 extern NSString *const LSDetailsButtonAccessibilityLabel;
 extern NSString *const LSConversationNamePlaceholderText;
 
@@ -156,7 +156,7 @@ extern NSString *const LSConversationNamePlaceholderText;
     
     [tester tapViewWithAccessibilityLabel:@"Global Delete Conversation"];
     [tester waitForAbsenceOfViewWithAccessibilityLabel:LSConversationDetailViewControllerTitle];
-    [tester waitForViewWithAccessibilityLabel:LSConversationListViewControllerAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:LSConversationListTableViewAccessibilityLabel];
 }
 
 - (void)testToVerifyMetadataFunctionality

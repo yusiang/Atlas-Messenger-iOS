@@ -15,7 +15,7 @@
 #import "LSTestInterface.h"
 #import "LSTestUser.h"
 
-extern NSString *const LSConversationListViewControllerAccessibilityLabel;
+extern NSString *const LSConversationListTableViewAccessibilityLabel;
 extern NSString *const LSConversationViewControllerAccessibilityLabel;
 extern NSString *const LYRUIAddressBarAccessibilityLabel;
 extern NSString *const LSSettingsButtonAccessibilityLabel;
@@ -48,7 +48,7 @@ extern NSString *const LSSettingsViewControllerTitle;
 {
     [tester waitForViewWithAccessibilityLabel:LSSettingsButtonAccessibilityLabel];
     [tester waitForViewWithAccessibilityLabel:LSComposeButtonAccessibilityLabel];
-    [tester waitForViewWithAccessibilityLabel:LSConversationListViewControllerAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:LSConversationListTableViewAccessibilityLabel];
 }
 
 - (void)testToVerifySettingsButtonFunctionality

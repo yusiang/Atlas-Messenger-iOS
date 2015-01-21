@@ -16,7 +16,7 @@
 #import "LSSettingsHeaderView.h"
 #import "LSSettingsViewController.h"
 
-extern NSString *const LSConversationListViewControllerAccessibilityLabel;
+extern NSString *const LSConversationListTableViewAccessibilityLabel;
 extern NSString *const LSSettingsTableViewAccessibilityIdentifier;
 extern NSString *const LSSettingsHeaderAccessibilitLabel;
 extern NSString *const LSPushNotificationSettingSwitch;
@@ -60,7 +60,7 @@ extern NSString *const LSDebugModeSettingSwitch;
 {
     [tester tapViewWithAccessibilityLabel:@"Settings"];
     [tester tapViewWithAccessibilityLabel:@"Done"];
-    [tester waitForViewWithAccessibilityLabel:LSConversationListViewControllerAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:LSConversationListTableViewAccessibilityLabel];
 }
 
 - (void)testToVerifySettingsDelegateFunctionalityOnDoneButtonTap

@@ -19,7 +19,7 @@
 
 @implementation LSConversationListViewController
 
-NSString *const LSConversationListViewControllerAccessibilityLabel = @"Conversation List View Controller";
+NSString *const LSConversationListTableViewAccessibilityLabel = @"Conversation List Table View";
 NSString *const LSSettingsButtonAccessibilityLabel = @"Settings Button";
 NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
 
@@ -29,8 +29,8 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
 
     self.delegate = self;
     self.dataSource = self;
+    self.tableView.accessibilityLabel = LSConversationListTableViewAccessibilityLabel;
     
-    self.tableView.accessibilityLabel = LSConversationListViewControllerAccessibilityLabel;
     // Left navigation item
     if (self.shouldDisplaySettingsItem) {
         UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings"
