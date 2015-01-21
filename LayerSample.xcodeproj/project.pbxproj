@@ -65,7 +65,6 @@
 		D6306DEE1A6F2FE300E16E85 /* LSSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6306DEC1A6F2FE300E16E85 /* LSSettingsViewController.m */; };
 		D6306DF11A6F2FFD00E16E85 /* LSPersistenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6306DEF1A6F2FFD00E16E85 /* LSPersistenceManager.m */; };
 		D6306DF41A6F301300E16E85 /* LSMessageDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6306DF21A6F301300E16E85 /* LSMessageDetailViewController.m */; };
-		D6306DFA1A6F305E00E16E85 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D6306DF81A6F305E00E16E85 /* LSUtilities.m */; };
 		D6306DFB1A6F30B200E16E85 /* LSAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107B1A6F2D99009BFA9C /* LSAPIManagerTest.m */; };
 		D6306DFC1A6F30B200E16E85 /* LSApplicationControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107C1A6F2D99009BFA9C /* LSApplicationControllerTest.m */; };
 		D6306DFD1A6F30B200E16E85 /* LSAuthenticationViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107D1A6F2D99009BFA9C /* LSAuthenticationViewControllerTest.m */; };
@@ -80,6 +79,7 @@
 		D6306E061A6F30BE00E16E85 /* LSTestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B108A1A6F2D99009BFA9C /* LSTestUser.m */; };
 		D6306E091A6F31DB00E16E85 /* LSLocalNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6306E071A6F31DB00E16E85 /* LSLocalNotificationManager.m */; };
 		D6306E0C1A6F329900E16E85 /* LSAuthenticationTableViewFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = D6306E0A1A6F329900E16E85 /* LSAuthenticationTableViewFooter.m */; };
+		D645F22E1A70493100131FE2 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D645F22D1A70493100131FE2 /* LSUtilities.m */; };
 		D648ECFC19FEC9D800ED17F0 /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D648ECFB19FEC9D800ED17F0 /* testImage.png */; };
 		D66F086519FB524E0047F1C6 /* LSCenterTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */; };
 		D6FB95481A5DBD9D007BD16D /* LSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D6FB95471A5DBD9D007BD16D /* LSAppDelegate.m */; };
@@ -197,12 +197,12 @@
 		D6306DF01A6F2FFD00E16E85 /* LSPersistenceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSPersistenceManager.h; sourceTree = "<group>"; };
 		D6306DF21A6F301300E16E85 /* LSMessageDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMessageDetailViewController.m; sourceTree = "<group>"; };
 		D6306DF31A6F301300E16E85 /* LSMessageDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSMessageDetailViewController.h; sourceTree = "<group>"; };
-		D6306DF81A6F305E00E16E85 /* LSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUtilities.m; sourceTree = "<group>"; };
-		D6306DF91A6F305E00E16E85 /* LSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUtilities.h; sourceTree = "<group>"; };
 		D6306E071A6F31DB00E16E85 /* LSLocalNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLocalNotificationManager.m; sourceTree = "<group>"; };
 		D6306E081A6F31DB00E16E85 /* LSLocalNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLocalNotificationManager.h; sourceTree = "<group>"; };
 		D6306E0A1A6F329900E16E85 /* LSAuthenticationTableViewFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAuthenticationTableViewFooter.m; sourceTree = "<group>"; };
 		D6306E0B1A6F329900E16E85 /* LSAuthenticationTableViewFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAuthenticationTableViewFooter.h; sourceTree = "<group>"; };
+		D645F22C1A70493100131FE2 /* LSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSUtilities.h; path = Utilities/LSUtilities.h; sourceTree = "<group>"; };
+		D645F22D1A70493100131FE2 /* LSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSUtilities.m; path = Utilities/LSUtilities.m; sourceTree = "<group>"; };
 		D648ECFB19FEC9D800ED17F0 /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
 		D66F086319FB524E0047F1C6 /* LSCenterTextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSCenterTextTableViewCell.h; sourceTree = "<group>"; };
 		D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSCenterTextTableViewCell.m; sourceTree = "<group>"; };
@@ -320,8 +320,8 @@
 				B5D66E7E1A68A30800158901 /* LSLayerClient.m */,
 				B5D66E721A67583E00158901 /* LSUIParticipantPickerDataSource.h */,
 				B5D66E731A67583E00158901 /* LSUIParticipantPickerDataSource.m */,
-				D6306DF91A6F305E00E16E85 /* LSUtilities.h */,
-				D6306DF81A6F305E00E16E85 /* LSUtilities.m */,
+				D645F22C1A70493100131FE2 /* LSUtilities.h */,
+				D645F22D1A70493100131FE2 /* LSUtilities.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -691,7 +691,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D61B10A91A6F2ED4009BFA9C /* LSAuthenticationViewController.m in Sources */,
-				D6306DFA1A6F305E00E16E85 /* LSUtilities.m in Sources */,
 				B5D66E7F1A68A30800158901 /* LSLayerClient.m in Sources */,
 				D6FB95481A5DBD9D007BD16D /* LSAppDelegate.m in Sources */,
 				B5D66E651A67553B00158901 /* LSSettingsHeaderView.m in Sources */,
@@ -716,6 +715,7 @@
 				0AFE400E19B0E1BD00FCA264 /* LSInputTableViewCell.m in Sources */,
 				B5D66E711A6757E700158901 /* LSSession.m in Sources */,
 				0AFE3FE419B0E19C00FCA264 /* main.m in Sources */,
+				D645F22E1A70493100131FE2 /* LSUtilities.m in Sources */,
 				D66F086519FB524E0047F1C6 /* LSCenterTextTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

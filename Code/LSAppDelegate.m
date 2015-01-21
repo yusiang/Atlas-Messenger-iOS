@@ -54,7 +54,7 @@ void LSTestResetConfiguration(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Set up environment configuration
-    [self configureApplication:application forEnvironment:LSProductionEnvironment];
+    [self configureApplication:application forEnvironment:LSTestEnvironment];
     [self initializeCrashlytics];
     [self initializeHockeyApp];
     [self removeSplashView];
@@ -111,7 +111,6 @@ void LSTestResetConfiguration(void)
             if (error) {
                 NSLog(@"Failed processing remote notification: %@", error);
             }
-            
             // Try navigating once the synchronization completed
             LYRConversation *conversation = [self conversationFromRemoteNotification:remoteNotification];
             [self navigateToViewForConversation:conversation];
@@ -409,13 +408,14 @@ void LSTestResetConfiguration(void)
         if (error) {
             if (self.applicationController.debugModeEnabled) {
                 LSAlertWithError(error);
+                return;
             }
-            return;
         } else {
             NSError *persistenceError;
             BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
             if (!success && self.applicationController.debugModeEnabled) {
                 LSAlertWithError(persistenceError);
+                return;
             }
         }
     }];
