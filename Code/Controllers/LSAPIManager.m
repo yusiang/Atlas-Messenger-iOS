@@ -67,6 +67,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         completion(nil, error);
         return;
     }
+    
     NSURL *URL = [NSURL URLWithString:@"users.json" relativeToURL:self.baseURL];
     NSDictionary *parameters = @{@"user": @{@"first_name": user.firstName, @"last_name": user.lastName, @"email": user.email, @"password": user.password, @"password_confirmation": user.passwordConfirmation}};
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
@@ -81,6 +82,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             });
             return;
         }
+        
         NSError *serializationError;
         NSDictionary *userDetails;
         BOOL success = [LSHTTPResponseSerializer responseObject:&userDetails withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
@@ -100,11 +102,13 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 - (void)authenticateWithEmail:(NSString *)email password:(NSString *)password nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion;
 {
     NSParameterAssert(completion);
+    
     if (!email.length) {
         NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidEmailAddress userInfo:@{NSLocalizedDescriptionKey: @"Please enter your email address to log in"}];
         completion(nil, error);
         return;
     }
+    
     if (!password.length) {
         NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSInvalidPassword userInfo:@{NSLocalizedDescriptionKey: @"Please enter your password to log in"}];
         completion(nil, error);
@@ -140,7 +144,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
             });
             return;
         }
-        
         NSString *authToken = loginInfo[@"authentication_token"];
         LSUser *user = [LSUser userFromDictionaryRepresentation:loginInfo[@"user"]];
         user.password = password;
@@ -169,7 +172,6 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     self.authenticatedURLSessionConfiguration = nil;
     [self.URLSession invalidateAndCancel];
     self.URLSession = [self defaultURLSession];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:LSUserDidDeauthenticateNotification object:self.authenticatedSession.user];
 }
 
