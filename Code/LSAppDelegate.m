@@ -39,10 +39,31 @@ void LSTestResetConfiguration(void)
     LYRConfigurationURLOnceToken = 0;
 }
 
+static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiveShakeMotionNotification";
+
+@interface LSShakableWindow : UIWindow
+@end
+
+@implementation LSShakableWindow
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:LSAppDidReceiveShakeMotionNotification object:event];
+    }
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+@end
+
 @interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
-@property (nonatomic) LSAuthenticationTableViewController *authenticationViewController;
-@property (nonatomic) LSUIConversationListViewController *conversationListViewController;
+@property (nonatomic) LSAuthenticationViewController *authenticationViewController;
+@property (nonatomic) LSConversationListViewController *conversationListViewController;
 @property (nonatomic) LSSplashView *splashView;
 @property (nonatomic) LSEnvironment environment;
 @property (nonatomic) LSLocalNotificationManager *localNotificationManager;
@@ -53,14 +74,13 @@ void LSTestResetConfiguration(void)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Enable debug shaking
+    application.applicationSupportsShakeToEdit = YES;
+    
     // Set up environment configuration
-    if (!LSIsRunningTests()) {
-        [self configureApplication:application forEnvironment:LYRUIProduction];
-        [self initializeCrashlytics];
-        [self initializeHockeyApp];
-    } else {
-        [self removeSplashView];
-    }
+    [self configureApplication:application forEnvironment:LSTestEnvironment];
+    [self initializeCrashlytics];
+    [self initializeHockeyApp];
     
     // Set up window
     [self configureWindow];
@@ -114,7 +134,6 @@ void LSTestResetConfiguration(void)
             if (error) {
                 NSLog(@"Failed processing remote notification: %@", error);
             }
-            
             // Try navigating once the synchronization completed
             LYRConversation *conversation = [self conversationFromRemoteNotification:remoteNotification];
             [self navigateToViewForConversation:conversation];
@@ -125,7 +144,6 @@ void LSTestResetConfiguration(void)
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    self.localNotificationManager.shouldListenForChanges = NO;
     [self resumeSession];
     [self loadContacts];
 }
@@ -133,9 +151,6 @@ void LSTestResetConfiguration(void)
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     [self setApplicationBadgeNumber];
-    if (self.applicationController.shouldDisplayLocalNotifications) {
-        self.localNotificationManager.shouldListenForChanges = YES;
-    }
 }
 
 #pragma mark - Setup
@@ -162,7 +177,7 @@ void LSTestResetConfiguration(void)
                                                                     layerClient:client
                                                              persistenceManager:LSPersitenceManager()];
     
-    self.localNotificationManager = [LSLocalNotificationManager managerWithLayerClient:self.applicationController.layerClient];
+    self.localNotificationManager = [LSLocalNotificationManager new];
     self.authenticationViewController.applicationController = self.applicationController;
 }
 
@@ -177,11 +192,11 @@ void LSTestResetConfiguration(void)
 
 - (void)configureWindow
 {
-    self.authenticationViewController = [LSAuthenticationTableViewController new];
+    self.authenticationViewController = [LSAuthenticationViewController new];
     self.authenticationViewController.applicationController = self.applicationController;
     self.authenticationViewController.delegate = self;
-
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
+    self.window = [[LSShakableWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = self.authenticationViewController;
     [self.window makeKeyAndVisible];
     
@@ -208,6 +223,11 @@ void LSTestResetConfiguration(void)
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidTakeScreenshot:)
                                                  name:UIApplicationUserDidTakeScreenshotNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appDidReceiveShakeMotion:)
+                                                 name:LSAppDidReceiveShakeMotionNotification
                                                object:nil];
 }
 
@@ -239,7 +259,7 @@ void LSTestResetConfiguration(void)
 /**
  
  LAYER - When a user succesfully grants your application permission to receive push, the OS will call
- the following method. In your implementation of this method, your applicaiton should pass the 
+ the following method. In your implementation of this method, your applicaiton should pass the
  `deviceToken` parameter to the `LYRClient` object.
  
  */
@@ -261,11 +281,11 @@ void LSTestResetConfiguration(void)
  
  LAYER - The following method gets called at 2 different times that interest a Layer powered application:
  
- 1. When your application receives a push notification from Layer. Upon receiving a push, your application should 
+ 1. When your application receives a push notification from Layer. Upon receiving a push, your application should
  pass the `userInfo` dictionary to the `sychronizeWithRemoteNotification:completion:` method.
  
- 2. When your application comes out of the background in response to a user opening the app from a push notification. 
- Your application can tell if it is coming our of the backroung by evaluating `application.applicationState`. If the 
+ 2. When your application comes out of the background in response to a user opening the app from a push notification.
+ Your application can tell if it is coming our of the backroung by evaluating `application.applicationState`. If the
  state is `UIApplicationSateInactive`, your application is coming out of the background and into the foreground.
  
  */
@@ -278,9 +298,18 @@ void LSTestResetConfiguration(void)
     }
     
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(NSArray *changes, NSError *error) {
-        if (error) {
-            NSLog(@"Failed processing remote notification: %@", error);
+        [self setApplicationBadgeNumber];
+        if (changes) {
+            if ([changes count]) {
+                [self processLayerBackgroundChanges:changes];
+                completionHandler(UIBackgroundFetchResultNewData);
+            } else {
+                completionHandler(UIBackgroundFetchResultNoData);
+            }
+        } else {
+            completionHandler(UIBackgroundFetchResultFailed);
         }
+        
         // Try navigating once the synchronization completed
         if (userTappedRemoteNotification && !conversation) {
             conversation = [self conversationFromRemoteNotification:userInfo];
@@ -290,10 +319,23 @@ void LSTestResetConfiguration(void)
         [self setApplicationBadgeNumber];
         completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNewData);
     }];
-    
     if (!success) {
         completionHandler(UIBackgroundFetchResultNoData);
     }
+}
+
+- (void)processLayerBackgroundChanges:(NSArray *)changes
+{
+    if (self.applicationController.shouldDisplayLocalNotifications) {
+        [self.localNotificationManager processLayerChanges:changes];
+    }
+}
+
+- (LYRMessage *)messageForRemoteNotification:(NSDictionary *)remoteNotification
+{
+    // Fetch message object from LayerKit
+    NSURL *conversationIdentifier = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.message_identifier"]];
+    return [self.applicationController.layerClient messageForIdentifier:conversationIdentifier];
 }
 
 - (LYRConversation *)conversationFromRemoteNotification:(NSDictionary *)remoteNotification
@@ -314,7 +356,7 @@ void LSTestResetConfiguration(void)
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
     if (application.applicationState != UIApplicationStateInactive) return;
-
+    
     LYRConversation *conversation;
     NSURL *objectURL = [NSURL URLWithString:notification.userInfo[LSNotificationIdentifierKey]];
     NSString *objectTypeString = notification.userInfo[LSNotificationClassTypeKey];
@@ -324,7 +366,7 @@ void LSTestResetConfiguration(void)
         LYRMessage *message = [self.applicationController.layerClient messageForIdentifier:objectURL];
         conversation = message.conversation;
     }
-
+    
     if (conversation) {
         [self navigateToViewForConversation:conversation];
     }
@@ -410,13 +452,17 @@ void LSTestResetConfiguration(void)
 {
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
         if (error) {
-            LSAlertWithError(error);
+            if (self.applicationController.debugModeEnabled) {
+                LSAlertWithError(error);
+            }
             return;
         }
         NSError *persistenceError;
         BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
         if (!success) {
-            LSAlertWithError(persistenceError);
+            if (self.applicationController.debugModeEnabled) {
+                LSAlertWithError(persistenceError);
+            }
         }
     }];
 }
@@ -425,25 +471,21 @@ void LSTestResetConfiguration(void)
 
 - (void)presentConversationsListViewController:(BOOL)animated
 {
-    if (!LSIsRunningTests()) {
-        if (self.conversationListViewController) return;
-
-        self.conversationListViewController = [LSUIConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
-        self.conversationListViewController.applicationController = self.applicationController;
-        self.conversationListViewController.displaysConversationImage = self.displaysConversationImage;
-        self.conversationListViewController.cellClass = self.cellClass;
-        self.conversationListViewController.rowHeight = self.rowHeight;
-        self.conversationListViewController.allowsEditing = self.allowsEditing;
-        self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
-        
-        UINavigationController *authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
-        [self.authenticationViewController presentViewController:authenticatedNavigationController animated:YES completion:^{
-            [self.authenticationViewController resetState];
-            [self removeSplashView];
-        }];
-    } else {
+    if (self.conversationListViewController) return;
+    
+    self.conversationListViewController = [LSConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
+    self.conversationListViewController.applicationController = self.applicationController;
+    self.conversationListViewController.displaysConversationImage = self.displaysConversationImage;
+    self.conversationListViewController.cellClass = self.cellClass;
+    self.conversationListViewController.rowHeight = self.rowHeight;
+    self.conversationListViewController.allowsEditing = self.allowsEditing;
+    self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
+    
+    UINavigationController *authenticatedNavigationController = [[UINavigationController alloc] initWithRootViewController:self.conversationListViewController];
+    [self.authenticationViewController presentViewController:authenticatedNavigationController animated:YES completion:^{
+        [self.authenticationViewController resetState];
         [self removeSplashView];
-    }
+    }];
 }
 
 #pragma mark - Splash View
@@ -480,6 +522,11 @@ void LSTestResetConfiguration(void)
 
 #pragma mark - Bug Reporting
 
+- (void)appDidReceiveShakeMotion:(NSNotification *)notification
+{
+    NSLog(@"Receive Shake Event: Dumping LayerKit Diagnostics:\n%@", [self.applicationController.layerClient valueForKey:@"diagnosticDescription"]);
+}
+
 - (void)userDidTakeScreenshot:(NSNotification *)notification
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Report Issue?"
@@ -503,7 +550,7 @@ void LSTestResetConfiguration(void)
         NSString *platformWithOSVersion = [NSString stringWithFormat:@"iOS %@", [UIDevice currentDevice].systemVersion];
         NSString *userID = self.applicationController.layerClient.authenticatedUserID ?: @"None";
         NSString *deviceToken = self.applicationController.deviceToken.description ?: @"None";
-
+        
         NSString *emailBody = [NSString stringWithFormat:@"email: %@\ntime: %@\nplatform: %@\ndevice: %@\napp: %@\nsdk: %@\nenv: %@\nuserid: %@\ndevice token: %@", email, timestamp, platformWithOSVersion, deviceVersion, appVersion, layerKitVersion, environmentName, userID, deviceToken];
         
         MFMailComposeViewController *mailComposeViewController = [MFMailComposeViewController new];
@@ -514,7 +561,7 @@ void LSTestResetConfiguration(void)
             [mailComposeViewController addAttachmentData:UIImageJPEGRepresentation(image, 0.5) mimeType:@"image/png" fileName:@"screenshot.png"];
         }
         [mailComposeViewController addAttachmentData:consoleData mimeType:@"text/plain" fileName:@"console.log"];
-
+        
         UIViewController *controller = self.window.rootViewController;
         while (controller.presentedViewController) {
             controller = controller.presentedViewController;
@@ -528,12 +575,12 @@ void LSTestResetConfiguration(void)
     // Adopted from http://stackoverflow.com/a/7151773
     NSMutableString *consoleLog = [NSMutableString new];
     aslclient client = asl_open(NULL, NULL, ASL_OPT_STDERR);
-
+    
     aslmsg query = asl_new(ASL_TYPE_QUERY);
     asl_set_query(query, ASL_KEY_MSG, NULL, ASL_QUERY_OP_NOT_EQUAL);
     aslresponse response = asl_search(client, query);
     asl_free(query);
-
+    
     aslmsg message;
     while((message = asl_next(response))) {
         const char *msg = asl_get(message, ASL_KEY_MSG);
@@ -542,10 +589,10 @@ void LSTestResetConfiguration(void)
         }
         [consoleLog appendString:[NSString stringWithCString:msg encoding:NSUTF8StringEncoding]];
     }
-
+    
     asl_release(response);
     asl_close(client);
-
+    
     NSData *consoleData = [consoleLog dataUsingEncoding:NSUTF8StringEncoding];
     return consoleData;
 }
@@ -628,15 +675,16 @@ void LSTestResetConfiguration(void)
 
 #pragma mark - LSAuthenticationTableViewControllerDelegate
 
-- (void)authenticationTableViewController:(LSAuthenticationTableViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment
+- (void)authenticationTableViewController:(LSAuthenticationViewController *)authenticationTabelViewController didSelectEnvironment:(LSEnvironment)environment
 {
     if (self.applicationController.layerClient.isConnected) {
         [self.applicationController.layerClient disconnect];
     }
     [self configureApplication:[UIApplication sharedApplication] forEnvironment:environment];
+    [SVProgressHUD showSuccessWithStatus:@"New Environment Configured"];
 }
 
-#pragma mark - Application Badge Setter 
+#pragma mark - Application Badge Setter
 
 - (void)setApplicationBadgeNumber
 {
