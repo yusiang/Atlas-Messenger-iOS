@@ -40,8 +40,6 @@ task :init do
   run("rbenv exec bundle install --binstubs .bundle/bin --quiet")
   puts green("Ensuring Layer Specs repository")
   run("[ -d ~/.cocoapods/repos/layer ] || rbenv exec bundle exec pod repo add layer git@github.com:layerhq/cocoapods-specs.git")
-  puts green("Ensuring Layer Release Specs repository")
-  run("[ -d ~/.cocoapods/repos/layer-releases ] || rbenv exec bundle exec pod repo add layer-releases git@github.com:layerhq/releases-cocoapods.git")
   puts green("Installing CocoaPods...")
   run("rbenv exec bundle exec pod install --verbose")
   puts green("Checking rbenv configuration...")
