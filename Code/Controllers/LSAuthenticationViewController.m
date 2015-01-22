@@ -52,10 +52,10 @@ typedef NS_ENUM(NSInteger, LSRegisterRow) {
 
 static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIdentifier";
 
-NSString *const LSFirstNameRowPlaceholderText = @"Enter Your Email";
-NSString *const LSLastNameRowPlaceholderText = @"Enter Your Password";
-NSString *const LSEmailRowPlaceholderText = @"Enter Your First Name";
-NSString *const LSPasswordRowPlaceholderText = @"Enter Your Last Name";
+NSString *const LSFirstNameRowPlaceholderText = @"Enter Your First Name";
+NSString *const LSLastNameRowPlaceholderText = @"Enter Your Last Name";
+NSString *const LSEmailRowPlaceholderText = @"Enter Your Email";
+NSString *const LSPasswordRowPlaceholderText = @"Enter Your Password";
 NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 
 - (id)initWithStyle:(UITableViewStyle)style

@@ -19,7 +19,7 @@
 
 @implementation LSAuthenticationTableViewFooter
 
-NSString *const LSLoginButtonText = @"Login To Layer";
+NSString *const LSLoginButtonText = @"Log In To Layer";
 NSString *const LSRegisterButtonText = @"Create Account";
 
 - (id)initWithFrame:(CGRect)frame
