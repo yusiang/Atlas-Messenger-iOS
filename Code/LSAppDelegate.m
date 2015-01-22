@@ -530,7 +530,11 @@ void LSTestResetConfiguration(void)
     asl_free(query);
 
     aslmsg message;
-    while((message = asl_next(response))) {
+    // We're using aslresponse_next here even though it's deprecated because asl_next causes a crash on iOS 7.1 despite the documentation saying it is available.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    while((message = aslresponse_next(response))) {
+#pragma GCC diagnostic pop
         const char *msg = asl_get(message, ASL_KEY_MSG);
         if (consoleLog.length > 0) {
             [consoleLog appendString:@"\n"];
@@ -538,7 +542,11 @@ void LSTestResetConfiguration(void)
         [consoleLog appendString:[NSString stringWithCString:msg encoding:NSUTF8StringEncoding]];
     }
 
-    asl_release(response);
+    // We're using aslresponse_free here even though it's deprecated because asl_release causes a crash on iOS 7.1 despite the documentation saying it is available.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    aslresponse_free(response);
+#pragma GCC diagnostic pop
     asl_close(client);
 
     NSData *consoleData = [consoleLog dataUsingEncoding:NSUTF8StringEncoding];
