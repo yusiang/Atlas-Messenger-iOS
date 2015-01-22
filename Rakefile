@@ -60,8 +60,13 @@ if defined?(XCTasks)
     t.schemes_dir = 'Tests/Schemes'
     t.runner = :xcpretty
     t.output_log = 'xcodebuild.log'
-    t.settings["LAYER_TEST_HOST"] = (ENV['LAYER_TEST_HOST'] || 'localhost')
-    t.subtasks = { app: 'LayerSampleTests' }
+    t.subtask(app: 'LayerSampleTests') do |s|
+      s.destination do |d|
+        d.platform = :iossimulator
+        d.name = 'iPhone 6 Plus'
+        d.os = :latest
+      end
+    end    
   end
 end
 
