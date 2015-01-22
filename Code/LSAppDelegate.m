@@ -39,6 +39,15 @@ void LSTestResetConfiguration(void)
     LYRConfigurationURLOnceToken = 0;
 }
 
+LSEnvironment LSEnvironmentConfiguration(void)
+{
+    if (LSIsRunningTests()){
+        return LSTestEnvironment;
+    } else {
+        return LSProductionEnvironment;
+    }
+}
+
 @interface LSAppDelegate () <LSAuthenticationViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic) LSAuthenticationViewController *authenticationViewController;
@@ -54,7 +63,7 @@ void LSTestResetConfiguration(void)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Set up environment configuration
-    [self configureApplication:application forEnvironment:LSProductionEnvironment];
+    [self configureApplication:application forEnvironment:LSEnvironmentConfiguration()];
     [self initializeCrashlytics];
     [self initializeHockeyApp];
     [self removeSplashView];
