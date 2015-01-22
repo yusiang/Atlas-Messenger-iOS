@@ -323,8 +323,6 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    [SVProgressHUD show];
-    
     switch (buttonIndex) {
         case 0:
             [self.delegate authenticationViewController:self didSelectEnvironment:LSProductionEnvironment];
