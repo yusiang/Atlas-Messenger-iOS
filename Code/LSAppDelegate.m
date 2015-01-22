@@ -264,6 +264,8 @@ LSEnvironment LSEnvironmentConfiguration(void)
     __block LYRConversation *conversation = [self conversationFromRemoteNotification:userInfo];
     if (userTappedRemoteNotification && conversation) {
         [self navigateToViewForConversation:conversation];
+    } else if (userTappedRemoteNotification) {
+        [SVProgressHUD showWithStatus:@"Loading Conversation" maskType:SVProgressHUDMaskTypeBlack];
     }
     
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(NSArray *changes, NSError *error) {
@@ -272,6 +274,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
         }
         // Try navigating once the synchronization completed
         if (userTappedRemoteNotification && !conversation) {
+            [SVProgressHUD dismiss];
             conversation = [self conversationFromRemoteNotification:userInfo];
             [self navigateToViewForConversation:conversation];
         }
