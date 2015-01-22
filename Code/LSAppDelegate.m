@@ -408,15 +408,14 @@ void LSTestResetConfiguration(void)
         if (error) {
             if (self.applicationController.debugModeEnabled) {
                 LSAlertWithError(error);
-                return;
             }
-        } else {
-            NSError *persistenceError;
-            BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
-            if (!success && self.applicationController.debugModeEnabled) {
-                LSAlertWithError(persistenceError);
-                return;
-            }
+            return;
+        }
+        
+        NSError *persistenceError;
+        BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
+        if (!success && self.applicationController.debugModeEnabled) {
+            LSAlertWithError(persistenceError);
         }
     }];
 }
