@@ -15,12 +15,13 @@
  */
 
 typedef NS_ENUM(NSInteger, LSEnvironment) {
-    LYRUIProduction,
-    LYRUIDevelopment,
-    LYRUIStage1,
-    LYRUIDev1,
-    LSTestEnvironment,
-    LSAdHoc
+    LSProductionEnvironment,           // Layer production environment w/ prod APNs
+    LSProductionDebugEnvironment,      // Layer production environment w/ dev APNs
+    LSStagingEnvironment,              // Layer staging environment w/ prod APNs
+    LSStagingDebugEnvironment,         // Layer staging environment w/ dev APNs
+    LSTestEnvironment,                 // Layer test Environment
+    LSAdHocEnvironment,                // Coleman AdHoc test environment
+    LSLoadTestEnvironment              // Layer load testing environment
 };
 
 BOOL LSIsRunningTests();

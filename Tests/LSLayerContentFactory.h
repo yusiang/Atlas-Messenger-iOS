@@ -11,10 +11,10 @@
 
 extern NSString *const LYRUITestMessageText;
 
-@interface LYRUILayerContentFactory : NSObject
+@interface LSLayerContentFactory : NSObject
 
 + (instancetype)layerContentFactoryWithLayerClient:(LYRClient *)layerClient;
 
-- (void)conversationsWithParticipants:(NSSet *)participants number:(NSUInteger)number;
+- (LYRConversation *)newConversationsWithParticipants:(NSSet *)participants;
 
 @end

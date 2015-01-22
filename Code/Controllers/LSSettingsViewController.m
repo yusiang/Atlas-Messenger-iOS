@@ -1,12 +1,12 @@
 //
-//  LSSettingsViewControllerTableViewController.m
+//  LSSettingsViewController.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 10/20/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSSettingsTableViewController.h"
+#import "LSSettingsViewController.h"
 #import "LYRUIConstants.h"
 #import "SVProgressHUD.h"
 #import "LSSettingsHeaderView.h"
@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, LSStatisticsTableRow) {
     LSStatisticsTableRowCount,
 };
 
-@interface LSSettingsTableViewController () <UITextFieldDelegate>
+@interface LSSettingsViewController () <UITextFieldDelegate>
 
 @property (nonatomic) NSUInteger conversationsCount;
 @property (nonatomic) NSUInteger messagesCount;
@@ -55,7 +55,15 @@ typedef NS_ENUM(NSInteger, LSStatisticsTableRow) {
 
 @end
 
-@implementation LSSettingsTableViewController
+@implementation LSSettingsViewController
+
+NSString *const LSSettingsViewControllerTitle = @"Settings";
+NSString *const LSSettingsTableViewAccessibilityIdentifier = @"Settings Table View";
+NSString *const LSSettingsHeaderAccessibilityLabel = @"Settings Header";
+
+NSString *const LSPushNotificationSettingSwitch = @"Push Notification Setting Switch";
+NSString *const LSLocalNotificationSettingSwitch = @"Local Notification Setting Switch";
+NSString *const LSDebugModeSettingSwitch = @"Debug Mode Setting Switch";
 
 static NSString *const LSDefaultCellIdentifier = @"defaultTableViewCell";
 static NSString *const LSCenterTextCellIdentifier = @"centerContentTableViewCell";
@@ -69,7 +77,7 @@ static NSString *const LSConnecting = @"Connecting";
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = @"Settings";
+        self.title = LSSettingsViewControllerTitle;
     }
     return self;
 }
@@ -77,7 +85,6 @@ static NSString *const LSConnecting = @"Connecting";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self fetchConversationStatistics];
     
     [self.tableView registerClass:[LSStyleValue1TableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
@@ -92,6 +99,7 @@ static NSString *const LSConnecting = @"Connecting";
     
     self.headerView = [LSSettingsHeaderView headerViewWithUser:self.applicationController.APIManager.authenticatedSession.user];
     self.headerView.frame = CGRectMake(0, 0, 320, 148);
+    self.headerView.accessibilityLabel = LSSettingsHeaderAccessibilityLabel;
     if (self.applicationController.layerClient.isConnected){
         [self.headerView updateConnectedStateWithString:LSConnected];
     } else {
@@ -102,7 +110,8 @@ static NSString *const LSConnecting = @"Connecting";
     self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
     self.tableView.rowHeight = 44.0f;
-
+    self.tableView.accessibilityIdentifier = LSSettingsTableViewAccessibilityIdentifier;
+    
     [self addConnectionObservers];
 }
 
@@ -147,12 +156,14 @@ static NSString *const LSConnecting = @"Connecting";
             switch ((LSNotificationsTableRow)indexPath.row) {
                 case LSNotificationsTableRowSendPush:
                     cell.textLabel.text = @"Send Push Notifications";
+                    switchControl.accessibilityLabel = LSPushNotificationSettingSwitch;
                     switchControl.on = self.applicationController.shouldSendPushText;
                     cell.accessoryView = switchControl;
                     break;
                     
                 case LSNotificationsTableRowDisplayLocal:
                     cell.textLabel.text = @"Display Local Notifications";
+                    switchControl.accessibilityLabel = LSLocalNotificationSettingSwitch;
                     switchControl.on = self.applicationController.shouldDisplayLocalNotifications;
                     cell.accessoryView = switchControl;
                     break;
@@ -169,6 +180,7 @@ static NSString *const LSConnecting = @"Connecting";
                 case LSDebugTableRowMode: {
                     cell.textLabel.text = @"Debug Mode";
                     UISwitch *switchControl = [self switchForCell];
+                    switchControl.accessibilityLabel = LSDebugModeSettingSwitch;
                     switchControl.on = self.applicationController.debugModeEnabled;
                     cell.accessoryView = switchControl;
                 }
@@ -287,7 +299,7 @@ static NSString *const LSConnecting = @"Connecting";
 - (UISwitch *)switchForCell
 {
     UISwitch *switchControl = [[UISwitch alloc] init];
-    [switchControl addTarget:self action:@selector(switchSwitched:) forControlEvents:UIControlEventTouchUpInside];
+    [switchControl addTarget:self action:@selector(switchSwitched:) forControlEvents:UIControlEventValueChanged];
     return switchControl;
 }
 
@@ -386,7 +398,7 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (void)doneTapped:(UIControl *)sender
 {
-    [self.settingsDelegate settingsTableViewControllerDidFinish:self];
+    [self.settingsDelegate settingsViewControllerDidFinish:self];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -427,7 +439,7 @@ static NSString *const LSConnecting = @"Connecting";
 
 - (void)logOut
 {
-    [self.settingsDelegate logoutTappedInSettingsTableViewController:self];
+    [self.settingsDelegate logoutTappedInSettingsViewController:self];
 }
 
 # pragma mark - Layer Connection State Monitoring

@@ -1,5 +1,5 @@
 //
-//  LSAppController.h
+//  LSApplicationController.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 6/30/14.
@@ -15,7 +15,7 @@ extern NSString *const LSConversationDeletedNotification;
 extern NSString *const LSUserDefaultsLayerConfigurationURLKey;
 
 /**
- @abstract The `LSAppController` manages global resources needed by multiple view vontroller classes in the Layer Sample App.
+ @abstract The `LSApplicationController` manages global resources needed by multiple view controller classes in the Layer Sample App.
  It also implement the `LYRClientDelegate` protocol. Only one instance should be instantiated and it should be passed to 
  controllers that require it.
  */

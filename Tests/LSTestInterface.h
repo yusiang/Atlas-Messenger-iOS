@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 #import "LSApplicationController.h"
-#import "LYRUILayerContentFactory.h"
+#import "LSLayerContentFactory.h"
 #import "LSAppDelegate.h"
-#import "LYRUITestUser.h"
+#import "LSTestUser.h"
 
 // Testing Imports
 #import <OCMock/OCMock.h>
@@ -21,30 +21,39 @@
 #import "KIFTestCase.h"
 #import <KIF/KIF.h>
 #import "KIFSystemTestActor+ViewControllerActions.h"
+#import "LSUtilities.h"
 
-@interface LYRUITestInterface : NSObject
+@interface LSTestInterface : NSObject
 
 + (instancetype)testInterfaceWithApplicationController:(LSApplicationController *)applicationController;
 
-@property LYRUILayerContentFactory *contentFactory;
+@property (nonatomic) LSApplicationController *applicationController;
+
+@property (nonatomic) LSEnvironment testEnvironment;
+
+@property LSLayerContentFactory *contentFactory;
+
+//-------------------------------------
+// Layer Client Authentication Methods
+//-------------------------------------
+
+- (LYRClient *)authenticateLayerClient:(LYRClient *)layerClient withTestUser:(LSTestUser *)testUser;
 
 //-------------------------------
 // Authentication Methods
 //-------------------------------
 
-- (LSUser *)registerUser:(LSUser *)newUser;
+- (LSTestUser *)registerAndAuthenticateTestUser:(LSTestUser *)testUser;
 
-- (NSString *)authenticateWithEmail:(NSString *)email password:(NSString *)password;
+- (LSTestUser *)registerTestUser:(LSTestUser *)testUser;
 
-- (NSString *)registerAndAuthenticateUser:(LSUser *)user;
+- (NSString *)authenticateTestUser:(LSTestUser *)testUser;
 
-- (void)logout;
+- (void)logoutIfNeeded;
 
 //-------------------------------
 // Participant Management Methods
 //-------------------------------
-
-- (void)registerTestUsers;
 
 - (void)loadContacts;
 
@@ -52,13 +61,9 @@
 
 - (void)deleteContacts;
 
-@property (nonatomic) LSUser *testUser0;
-@property (nonatomic) LSUser *testUser1;
-@property (nonatomic) LSUser *testUser2;
-@property (nonatomic) LSUser *testUser3;
-@property (nonatomic) LSUser *testUser4;
-
 - (LSUser *)randomUser;
+
+- (LSUser *)userForIdentifier:(NSString *)identifier;
 
 //-------------------------------
 // Accessibility Label Methods
@@ -67,7 +72,5 @@
 - (NSString *)conversationLabelForParticipants:(NSSet *)participantIDs;
 
 - (NSString *)selectionIndicatorAccessibilityLabelForUser:(LSUser *)testUser;
-
-@property (nonatomic) LSApplicationController *applicationController;
 
 @end

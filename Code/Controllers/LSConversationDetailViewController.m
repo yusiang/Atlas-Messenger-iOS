@@ -1,5 +1,5 @@
 //
-//  LYRUIConversationDetailViewController.m
+//  LSConversationDetailViewController.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 10/2/14.
@@ -34,7 +34,11 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
 
 @implementation LSConversationDetailViewController
 
+NSString *const LSConversationDetailViewControllerTitle = @"Details";
+NSString *const LSAddParticipantsAccessibilityLabel = @"Add Participants";
+NSString *const LSConversationNamePlaceholderText = @"Enter Conversation Name";
 NSString *const LSConversationMetadataNameKey = @"conversationName";
+
 static NSString *const LSParticipantCellIdentifier = @"participantCell";
 static NSString *const LSDefaultCellIdentifier = @"defaultCellIdentifier";
 static NSString *const LSInputCellIdentifier = @"inputCell";
@@ -57,11 +61,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.title = LSConversationDetailViewControllerTitle;
     [self configureForConversation];
-    
-    self.title = @"Details";
-    self.accessibilityLabel = @"Details";
     
     self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
@@ -95,7 +96,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             
         case LSConversationDetailTableSectionDeletion:
             return 1;
-
+            
         default:
             return 0;
     }
@@ -128,6 +129,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             } else {
                 UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
                 cell.textLabel.text = @"+ Add Participant";
+                cell.accessibilityLabel = LSAddParticipantsAccessibilityLabel;
                 cell.textLabel.textColor = LYRUIBlueColor();
                 cell.textLabel.font = LYRUIMediumFont(14);
                 return cell;
@@ -182,6 +184,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         case LSConversationDetailTableSectionCount:
             return NO;
     }
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath

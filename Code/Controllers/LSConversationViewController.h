@@ -1,5 +1,5 @@
 //
-//  LSUIConversationViewController.h
+//  LSConversationViewController.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 9/10/14.
@@ -14,7 +14,7 @@
  The class acts as the data source and delegate of the component. It presents a user
  interface for displaying a conversation's messages.
  */
-@interface LSUIConversationViewController : LYRUIConversationViewController <LYRUIConversationViewControllerDataSource, LYRUIConversationViewControllerDelegate>
+@interface LSConversationViewController : LYRUIConversationViewController <LYRUIConversationViewControllerDataSource, LYRUIConversationViewControllerDelegate>
 
 /**
  @abstract The controller object for the application.

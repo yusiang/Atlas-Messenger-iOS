@@ -6,18 +6,22 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSUIConversationListViewController.h"
+#import "LSConversationListViewController.h"
 #import "SVProgressHUD.h"
 #import "LSUser.h"
-#import "LSUIConversationViewController.h"
-#import "LSSettingsTableViewController.h"
+#import "LSConversationViewController.h"
+#import "LSSettingsViewController.h"
 #import "LSConversationDetailViewController.h"
 
-@interface LSUIConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsTableViewControllerDelegate, UIActionSheetDelegate>
+@interface LSConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsViewControllerDelegate, UIActionSheetDelegate>
 
 @end
 
-@implementation LSUIConversationListViewController
+@implementation LSConversationListViewController
+
+NSString *const LSConversationListTableViewAccessibilityLabel = @"Conversation List Table View";
+NSString *const LSSettingsButtonAccessibilityLabel = @"Settings Button";
+NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
 
 - (void)viewDidLoad
 {
@@ -25,6 +29,7 @@
 
     self.delegate = self;
     self.dataSource = self;
+    self.tableView.accessibilityLabel = LSConversationListTableViewAccessibilityLabel;
     
     // Left navigation item
     if (self.shouldDisplaySettingsItem) {
@@ -32,7 +37,7 @@
                                                                            style:UIBarButtonItemStylePlain
                                                                           target:self
                                                                           action:@selector(settingsButtonTapped)];
-        settingsButton.accessibilityLabel = @"Settings Button";
+        settingsButton.accessibilityLabel = LSSettingsButtonAccessibilityLabel;
         [self.navigationItem setLeftBarButtonItem:settingsButton];
     }
 
@@ -40,7 +45,7 @@
     UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
                                                                                    target:self
                                                                                    action:@selector(composeButtonTapped)];
-    composeButton.accessibilityLabel = @"Compose Button";
+    composeButton.accessibilityLabel = LSComposeButtonAccessibilityLabel;
     [self.navigationItem setRightBarButtonItem:composeButton];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationDeleted:) name:LSConversationDeletedNotification object:nil];
@@ -142,14 +147,14 @@
 
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
-    LSUIConversationViewController *existingConversationViewController = [self existingConversationViewController];
+    LSConversationViewController *existingConversationViewController = [self existingConversationViewController];
     if (existingConversationViewController && existingConversationViewController.conversation == conversation) {
         if (self.navigationController.topViewController == existingConversationViewController) return;
         [self.navigationController popToViewController:existingConversationViewController animated:YES];
         return;
     }
 
-    LSUIConversationViewController *conversationViewController = [LSUIConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
+    LSConversationViewController *conversationViewController = [LSConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
     conversationViewController.applicationController = self.applicationController;
     conversationViewController.showsAddressBar = YES;
     if (self.navigationController.topViewController == self) {
@@ -167,11 +172,11 @@
 
 - (void)settingsButtonTapped
 {
-    LSSettingsTableViewController *settingsTableViewController = [[LSSettingsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    settingsTableViewController.applicationController = self.applicationController;
-    settingsTableViewController.settingsDelegate = self;
+    LSSettingsViewController *settingsViewController = [[LSSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    settingsViewController.applicationController = self.applicationController;
+    settingsViewController.settingsDelegate = self;
     
-    UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:settingsTableViewController];
+    UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
@@ -189,9 +194,9 @@
     }
 }
 
-#pragma mark - LSSettingsTableViewControllerDelegate
+#pragma mark - LSSettingsViewControllerDelegate
 
-- (void)logoutTappedInSettingsTableViewController:(LSSettingsTableViewController *)settingsTableViewController
+- (void)logoutTappedInSettingsViewController:(LSSettingsViewController *)settingsViewController
 {
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     if (self.applicationController.layerClient.isConnected) {
@@ -204,16 +209,16 @@
     }
 }
 
-- (void)settingsTableViewControllerDidFinish:(LSSettingsTableViewController *)settingsTableViewController
+- (void)settingsViewControllerDidFinish:(LSSettingsViewController *)settingsViewController
 {
-    [settingsTableViewController dismissViewControllerAnimated:YES completion:nil];
+    [settingsViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Notification Handlers
 
 - (void)conversationDeleted:(NSNotification *)notification
 {
-    LSUIConversationViewController *conversationViewController = [self existingConversationViewController];
+    LSConversationViewController *conversationViewController = [self existingConversationViewController];
     if (!conversationViewController) return;
 
     LYRConversation *deletedConversation = notification.object;
@@ -231,7 +236,7 @@
 
 #pragma mark - Helpers
 
-- (LSUIConversationViewController *)existingConversationViewController
+- (LSConversationViewController *)existingConversationViewController
 {
     if (!self.navigationController) return nil;
 
@@ -242,7 +247,7 @@
     if (nextViewControllerIndex >= self.navigationController.viewControllers.count) return nil;
 
     id nextViewController = [self.navigationController.viewControllers objectAtIndex:nextViewControllerIndex];
-    if (![nextViewController isKindOfClass:[LSUIConversationViewController class]]) return nil;
+    if (![nextViewController isKindOfClass:[LSConversationViewController class]]) return nil;
 
     return nextViewController;
 }

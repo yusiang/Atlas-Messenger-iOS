@@ -106,7 +106,7 @@ static NSString *const LSOnDiskPersistenceManagerSessionFileName = @"Session.pli
     NSError *error;
     NSSet *allUsers = [self persistedUsersWithError:&error];
     if (error) return nil;
-
+    
     for (LSUser *user in allUsers) {
         if ([user.userID isEqualToString:identifier]) {
             return user;

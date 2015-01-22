@@ -1,18 +1,18 @@
 //
-//  LSTableViewController.m
+//  LSAuthenticationViewController.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 8/26/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSAuthenticationTableViewController.h"
+#import "LSAuthenticationViewController.h"
 #import "LSInputTableViewCell.h"
 #import "LSAuthenticationTableViewHeader.h"
 #import "LSAuthenticationTableViewFooter.h"
-#import "LYRUIConstants.h"
 #import "SVProgressHUD.h"
 #import "LSUtilities.h"
+#import "LSErrors.h"
 
 typedef NS_ENUM(NSInteger, LSLoginRow) {
     LSLoginRowEmail,
@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, LSRegisterRow) {
     LSRegisterRowCount,
 };
 
-@interface LSAuthenticationTableViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIActionSheetDelegate>
+@interface LSAuthenticationViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, copy) NSString *firstName;
 @property (nonatomic, copy) NSString *lastName;
@@ -48,9 +48,15 @@ typedef NS_ENUM(NSInteger, LSRegisterRow) {
 
 @end
 
-@implementation LSAuthenticationTableViewController
+@implementation LSAuthenticationViewController
 
 static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIdentifier";
+
+NSString *const LSFirstNameRowPlaceholderText = @"Enter Your Email";
+NSString *const LSLastNameRowPlaceholderText = @"Enter Your Password";
+NSString *const LSEmailRowPlaceholderText = @"Enter Your First Name";
+NSString *const LSPasswordRowPlaceholderText = @"Enter Your Last Name";
+NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -183,7 +189,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 - (void)configureEmailCell:(LSInputTableViewCell *)cell
 {
     [cell setGuideText:@"Email:"];
-    [cell setPlaceHolderText:@"Enter Your Email"];
+    [cell setPlaceHolderText:LSEmailRowPlaceholderText];
     cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
     cell.textField.text = self.email;
     self.emailTextField = cell.textField;
@@ -192,7 +198,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 - (void)configurePasswordCell:(LSInputTableViewCell *)cell
 {
     [cell setGuideText:@"Password:"];
-    [cell setPlaceHolderText:@"Enter Your Password"];
+    [cell setPlaceHolderText:LSPasswordRowPlaceholderText];
     cell.textField.secureTextEntry = YES;
     cell.textField.text = self.password;
     self.passwordTextField = cell.textField;
@@ -201,7 +207,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 - (void)configureFirstNameCell:(LSInputTableViewCell *)cell
 {
     [cell setGuideText:@"First Name:"];
-    [cell setPlaceHolderText:@"Enter Your First Name"];
+    [cell setPlaceHolderText:LSFirstNameRowPlaceholderText];
     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
     cell.textField.text = self.firstName;
     self.firstNameTextField = cell.textField;
@@ -210,7 +216,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 - (void)configureLastNameCell:(LSInputTableViewCell *)cell
 {
     [cell setGuideText:@"Last Name:"];
-    [cell setPlaceHolderText:@"Enter Your Last Name"];
+    [cell setPlaceHolderText:LSLastNameRowPlaceholderText];
     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
     cell.textField.text = self.lastName;
     self.lastNameTextField = cell.textField;
@@ -219,7 +225,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 - (void)configureConfirmationCell:(LSInputTableViewCell *)cell
 {
     [cell setGuideText:@"Confirmation:"];
-    [cell setPlaceHolderText:@"Confirm It Please"];
+    [cell setPlaceHolderText:LSConfirmationRowPlaceholderText];
     cell.textField.secureTextEntry = YES;
     cell.textField.returnKeyType = UIReturnKeySend;
     cell.textField.text = self.confirmation;
@@ -309,7 +315,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Production - Prod", @"Production - Sandbox", @"Staging", @"Dev-1", nil];
+                                                    otherButtonTitles:@"Production - Prod APNs", @"Production - Dev APNs", @"Staging - Prod APNs", @"Staging - Dev APNs", nil];
     [actionSheet showInView:self.view];
 }
 
@@ -319,24 +325,25 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     switch (buttonIndex) {
         case 0:
-            [self.delegate authenticationTableViewController:self didSelectEnvironment:LYRUIProduction];
+            [self.delegate authenticationViewController:self didSelectEnvironment:LSProductionEnvironment];
             break;
             
         case 1:
-            [self.delegate authenticationTableViewController:self didSelectEnvironment:LYRUIDevelopment];
+            [self.delegate authenticationViewController:self didSelectEnvironment:LSProductionDebugEnvironment];
             break;
             
         case 2:
-            [self.delegate authenticationTableViewController:self didSelectEnvironment:LYRUIStage1];
+            [self.delegate authenticationViewController:self didSelectEnvironment:LSStagingEnvironment];
             break;
-        
+            
         case 3:
-            [self.delegate authenticationTableViewController:self didSelectEnvironment:LYRUIDev1];
+            [self.delegate authenticationViewController:self didSelectEnvironment:LSStagingDebugEnvironment];
             break;
 
         default:
             break;
     }
+    [SVProgressHUD showSuccessWithStatus:@"New Environment Configured"];
 }
 
 #pragma mark - State Configuration
@@ -445,6 +452,7 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
 {
     NSString *email = self.email;
     NSString *password = self.password;
+    
     [SVProgressHUD showWithStatus:@"Requesting Nonce" maskType:SVProgressHUDMaskTypeBlack];
     [self.view endEditing:YES];
     [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
@@ -529,6 +537,13 @@ static NSString *const LSAuthenticationCellIdentifier = @"authenticationCellIden
     self.email = nil;
     self.password = nil;
     self.confirmation = nil;
+    
+    self.firstNameTextField = nil;
+    self.lastNameTextField = nil;
+    self.emailTextField = nil;
+    self.passwordTextField = nil;
+    self.confirmationTextField = nil;
+    
     self.authenticationState = LSAuthenticationStateLogin;
     [self.tableView reloadData];
     [self setEditing:NO animated:YES];

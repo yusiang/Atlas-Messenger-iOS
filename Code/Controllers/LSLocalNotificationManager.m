@@ -22,40 +22,35 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
 
 @implementation LSLocalNotificationManager
 
-+ (instancetype)managerWithLayerClient:(LYRClient *)layerClient
-{
-    return [[self alloc] initWithLayerClient:layerClient];
-}
-
-- (id)initWithLayerClient:(LYRClient *)layerClient
+- (id)init
 {
     self = [super init];
     if (self) {
-        _layerClient = layerClient;
-        _shouldListenForChanges = NO;
         _notifications = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
-- (void)setShouldListenForChanges:(BOOL)shouldListenForChanges
+#pragma mark - Public Methods 
+
+- (void)notificationForReceiptOfPush
 {
-    if (shouldListenForChanges) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(didReceiveLayerObjectsDidChangeNotification:)
-                                                     name:LYRClientObjectsDidChangeNotification
-                                                   object:self.layerClient];
-    } else {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-    }
-    _shouldListenForChanges = shouldListenForChanges;
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    localNotification.alertBody = @"Got a push...Layer processing";
+    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 }
 
-- (void)didReceiveLayerObjectsDidChangeNotification:(NSNotification *)notification;
+- (void)notificationForSyncCompletionWithChanges:(NSArray *)changes
+{
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    localNotification.alertBody = [NSString stringWithFormat:@"Finished sync with changes %lu", (unsigned long)changes.count];
+    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+}
+
+- (void)processLayerChanges:(NSArray *)changes
 {
     NSMutableArray *messageChanges = [[NSMutableArray alloc] init];
     NSMutableArray *conversationChanges = [[NSMutableArray alloc] init];
-    NSArray *changes = notification.userInfo[LYRClientObjectChangesUserInfoKey];
     for (NSDictionary *change in changes) {
         if ([change[LYRObjectChangeObjectKey] isKindOfClass:[LYRMessage class]]) {
             [messageChanges addObject:change];
@@ -78,7 +73,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
         LYRObjectChangeType changeType = [conversationChange[LYRObjectChangeTypeKey] integerValue];
         switch (changeType) {
             case LYRObjectChangeTypeCreate:
-                [self presentLocalNotificationForConversation:conversation];
+                [self notificationForNewConversation:conversation];
                 break;
 
             default:
@@ -94,7 +89,7 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
         LYRObjectChangeType changeType = [messageChange[LYRObjectChangeTypeKey] integerValue];
         switch (changeType) {
             case LYRObjectChangeTypeCreate:
-                [self presentLocalNotificationForMessage:message];
+                [self notificationForNewMessage:message];
                 break;
                 
             case LYRObjectChangeTypeUpdate:
@@ -117,25 +112,23 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
     }
 }
 
-- (void)presentLocalNotificationForConversation:(LYRConversation *)conversation
+- (void)notificationForNewMessage:(LYRMessage *)message
 {
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = @"You have a new Layer conversation. Tap to open.";
-    localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeConversation,
-                                   LSNotificationIdentifierKey: conversation.identifier.absoluteString};
+    localNotification.alertBody = @"You have a new Layer message. Tap to open.";
+    localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeMessage,
+                                   LSNotificationIdentifierKey: message.identifier.absoluteString};
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
     [self.notifications addObject:localNotification];
 }
 
-- (void)presentLocalNotificationForMessage:(LYRMessage *)message
+- (void)notificationForNewConversation:(LYRConversation *)conversation
 {
-    LYRMessagePart *messagePart = message.parts.firstObject;
-    NSString *alertString = [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
-    
+    if (!conversation) return;
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = alertString;
-    localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeMessage,
-                                   LSNotificationIdentifierKey: message.identifier.absoluteString};
+    localNotification.alertBody = @"You have a new Layer conversation. Tap to open.";
+    localNotification.userInfo = @{LSNotificationClassTypeKey: LSNotificationClassTypeConversation,
+                                   LSNotificationIdentifierKey: conversation.identifier.absoluteString};
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
     [self.notifications addObject:localNotification];
 }
@@ -148,11 +141,6 @@ NSString *const LSNotificationIdentifierKey = @"identifier";
             [[UIApplication sharedApplication] cancelLocalNotification:notification];
         }
     }
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
