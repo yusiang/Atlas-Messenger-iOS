@@ -112,9 +112,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             [cell setGuideText:@"Name:"];
             [cell setPlaceHolderText:@"Enter Conversation Name"];
             NSString *conversationName = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
-            if (conversationName) {
-                cell.textField.text = conversationName;
-            }
+            cell.textField.text = conversationName;
             return cell;
         }
 
