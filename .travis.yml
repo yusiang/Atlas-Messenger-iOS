@@ -1,6 +1,6 @@
 language: objective-c
 
-before_install: 
+install: 
   - rake init
 
 script: 
