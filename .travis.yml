@@ -1,23 +1,8 @@
 language: objective-c
 
 install: 
-  - git submodule update --init --recursive
-  - which brew > /dev/null && brew update; true
-  - which brew > /dev/null || ruby -e \"$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)\"
-  - packages = %w{rbenv ruby-build rbenv-gem-rehash rbenv-binstubs xctool thrift}
-  - packages.each { |package| brew install #{package} || brew upgrade #{package} }
-  - rbenv version-name || rbenv install
-  - rbenv whence bundle | grep `cat .ruby-version` || rbenv exec gem install bundler
-  - rbenv exec bundle install --binstubs .bundle/bin --quiet
-  - [ -d ~/.cocoapods/repos/layer ] || rbenv exec bundle exec pod repo add layer git@github.com:layerhq/cocoapods-specs.git
-  - rbenv exec bundle exec pod install --verbose
-  - system <<-SH
-  - if [ -f ~/.zshrc ]; then
-    - grep -q 'rbenv init' ~/.zshrc || echo 'eval "$(rbenv init - --no-rehash)"' >> ~/.zshrc
-  - else
-    - grep -q 'rbenv init' ~/.bash_profile || echo 'eval "$(rbenv init - --no-rehash)"' >> ~/.bash_profile
-  - fi
-  - SH
+  - bundle install
+  - rake init
 
 script: 
   - rake test
