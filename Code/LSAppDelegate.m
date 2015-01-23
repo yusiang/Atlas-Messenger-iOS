@@ -70,8 +70,6 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
 
 @interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
-@interface LSAppDelegate () <LSAuthenticationViewControllerDelegate, MFMailComposeViewControllerDelegate>
-
 @property (nonatomic) LSAuthenticationViewController *authenticationViewController;
 @property (nonatomic) LSConversationListViewController *conversationListViewController;
 @property (nonatomic) LSSplashView *splashView;
