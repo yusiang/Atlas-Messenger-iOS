@@ -1,25 +1,16 @@
 language: objective-c
 
 install: 
-  - puts ("Update submodules...")
-  - run("git submodule update --init --recursive")
-  - puts ("Checking for Homebrew...")
-  - run("which brew > /dev/null && brew update; true")
-  - run("which brew > /dev/null || ruby -e \"$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)\"")
-  - puts ("Bundling Homebrew packages...")
+  - git submodule update --init --recursive
+  - which brew > /dev/null && brew update; true
+  - which brew > /dev/null || ruby -e \"$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)\"
   - packages = %w{rbenv ruby-build rbenv-gem-rehash rbenv-binstubs xctool thrift}
-  - packages.each { |package| run("brew install #{package} || brew upgrade #{package}") }
-  - puts ("Checking rbenv version...")
-  - run("rbenv version-name || rbenv install")
-  - puts ("Checking for Bundler...")
-  - run("rbenv whence bundle | grep `cat .ruby-version` || rbenv exec gem install bundler")
-  - puts ("Bundling Ruby Gems...")
-  - run("rbenv exec bundle install --binstubs .bundle/bin --quiet")
-  - puts ("Ensuring Layer Specs repository")
-  - run("[ -d ~/.cocoapods/repos/layer ] || rbenv exec bundle exec pod repo add layer git@github.com:layerhq/cocoapods-specs.git")
-  - puts ("Installing CocoaPods...")
-  - run("rbenv exec bundle exec pod install --verbose")
-  - puts  ("Checking rbenv configuration...")
+  - packages.each { |package| brew install #{package} || brew upgrade #{package} }
+  - rbenv version-name || rbenv install
+  - rbenv whence bundle | grep `cat .ruby-version` || rbenv exec gem install bundler
+  - rbenv exec bundle install --binstubs .bundle/bin --quiet
+  - [ -d ~/.cocoapods/repos/layer ] || rbenv exec bundle exec pod repo add layer git@github.com:layerhq/cocoapods-specs.git
+  - rbenv exec bundle exec pod install --verbose
   - system <<-SH
   - if [ -f ~/.zshrc ]; then
     - grep -q 'rbenv init' ~/.zshrc || echo 'eval "$(rbenv init - --no-rehash)"' >> ~/.zshrc
@@ -27,8 +18,6 @@ install:
     - grep -q 'rbenv init' ~/.bash_profile || echo 'eval "$(rbenv init - --no-rehash)"' >> ~/.bash_profile
   - fi
   - SH
-  - puts "\n" ("If first initialization, load rbenv by executing:")
-  - puts ("$ `eval \"$(rbenv init - --no-rehash)\"`")
 
 script: 
   - rake test
