@@ -265,9 +265,9 @@ LSEnvironment LSEnvironmentConfiguration(void)
  1. When your application receives a push notification from Layer. Upon receiving a push, your application should 
  pass the `userInfo` dictionary to the `sychronizeWithRemoteNotification:completion:` method.
  
- 2. When your application comes out of the background in response to a user opening the app from a push notification. 
- Your application can tell if it is coming our of the backroung by evaluating `application.applicationState`. If the 
- state is `UIApplicationSateInactive`, your application is coming out of the background and into the foreground.
+ 2. When your application comes to the foreground in response to a user opening the app from a push notification.
+ Your application can tell if it is coming to the foreground by evaluating `application.applicationState`. If the
+ state is `UIApplicationStateInactive`, your application is coming to the foreground.
  
  */
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
