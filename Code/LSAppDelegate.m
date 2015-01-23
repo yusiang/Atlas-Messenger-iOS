@@ -43,7 +43,7 @@ void LSTestResetConfiguration(void)
 LSEnvironment LSEnvironmentConfiguration(void)
 {
     if (LSIsRunningTests()){
-        return LSTestEnvironment;
+        return LSLoadTestEnvironment;
     } else {
         return LSProductionEnvironment;
     }
@@ -271,14 +271,18 @@ LSEnvironment LSEnvironmentConfiguration(void)
     } else if (userTappedRemoteNotification) {
         [SVProgressHUD showWithStatus:@"Loading Conversation" maskType:SVProgressHUDMaskTypeBlack];
     }
-    
+    NSLog(@"Received Push...processing");
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(NSArray *changes, NSError *error) {
+        NSLog(@"Finished processing push with %lu changes", (unsigned long)changes.count);
         [self setApplicationBadgeNumber];
         if (changes.count) {
             [self processLayerBackgroundChanges:changes];
             completionHandler(UIBackgroundFetchResultNewData);
         } else {
             completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNoData);
+        }
+        if (error) {
+            NSLog(@"Background sync failed with error %@", error);
         }
         
         // Try navigating once the synchronization completed

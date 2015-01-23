@@ -25,7 +25,7 @@
 {
     self = [super init];
     if (self) {
-        _testEnvironment = LSTestEnvironment;
+        _testEnvironment = LSLoadTestEnvironment;
         _applicationController = applicationController;
         _contentFactory = [LSLayerContentFactory layerContentFactoryWithLayerClient:applicationController.layerClient];
         [self deleteContacts];

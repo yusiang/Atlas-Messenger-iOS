@@ -28,6 +28,12 @@
 
 @implementation LSPushNotificationTest
 
+CGFloat const LSCountOfConversations = 10;
+CGFloat const LSCountOfClients = 10;
+CGFloat const LSCountOfItterations = 1000;
+CGFloat const LSMessageSendInterval = 60;
+CGFloat const LSMaxMessageSend = 5;
+
 - (void)setUp
 {
     [super setUp];
@@ -36,15 +42,17 @@
     self.testInterface = [LSTestInterface testInterfaceWithApplicationController:applicationController];
     [self.testInterface deleteContacts];
     
-    [self.testInterface registerAndAuthenticateTestUser:[LSTestUser testUserWithNumber:10]];
-    
-    self.layerClients = [self instantiateLayerClientsWithCount:5];
+    [self.testInterface registerAndAuthenticateTestUser:[LSTestUser testUserWithNumber:100]];
+    self.layerClients = [self instantiateLayerClientsWithCount:LSCountOfClients];
     self.messageCount = 0;
     self.messageQueue = dispatch_queue_create(NULL, DISPATCH_QUEUE_CONCURRENT);
 }
 
 - (void)tearDown
 {
+    for (LYRClient *client in self.layerClients) {
+        [self clearPreviousConversationsForLayerClient:client];
+    }
     [self.testInterface logoutIfNeeded];
     [super tearDown];
 }
@@ -65,9 +73,9 @@
 - (void)testToAttemptMassivePushNotificationFrenzy
 {
     LYRClient *client = self.layerClients[0];
-    [self clearPreviousConversationsForLayerClient:client];
     [self createNewConversationForClient:client withDeviceIDs:@[@"b79671cf-a132-45f9-9249-ac397d6e6c76"]];
-    [self sendMessagesWithMaxDelay:5 maxCount:10 itterations:500];
+    [self sendMessagesWithMaxDelay:LSMessageSendInterval maxCount:LSMaxMessageSend itterations:LSCountOfItterations];
+    NSLog(@"Number of messages sent %lu", (unsigned long)self.messageCount);
 }
 
 - (void)clearPreviousConversationsForLayerClient:(LYRClient *)layerClient
@@ -116,12 +124,14 @@
 {
     for (int i = 0; i < itterations; i++) {
         int timeInterval = arc4random_uniform((int)maxDelay);
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:timeInterval]];
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:maxDelay]];
         dispatch_async(self.messageQueue, ^{
+            self.messageCount += 1;
+            NSLog(@"Sending message number %lu", (unsigned long)self.messageCount);
             int clientIndex = arc4random_uniform((int)self.layerClients.count);
-            int numberOfMessages = arc4random_uniform((int)maxCount);
+            //int numberOfMessages = arc4random_uniform((int)maxCount);
             LYRClient *layerClient = self.layerClients[clientIndex];
-            [self sendMessagesForLayerClient:layerClient count:numberOfMessages];
+            [self sendMessagesForLayerClient:layerClient count:maxCount];
         });
     }
 }
@@ -135,21 +145,20 @@
     if (error) {
         NSLog(@"Failed to to fetch conversations with error: %@", error);
     } else {
-        NSLog(@"Fetched conversation");
+        //NSLog(@"Fetched conversations");
     }
-    
+    if (!conversations.count) return;
     // Mark all messages as read
     LYRConversation *conversation = conversations[0];
     [conversation markAllMessagesAsRead:&error];
     if (error) {
         NSLog(@"Failed to mark all messages as read with error: %@", error);
     } else {
-        NSLog(@"Successfully marked all messages as read");
+        //NSLog(@"Successfully marked all messages as read");
     }
     
     // Send the messages
     for (int i = 0; i < count;  i++) {
-        self.messageCount += 1;
         NSLog(@"Sending Message number %lu from %@", (unsigned long)self.messageCount, layerClient.authenticatedUserID);
         LYRMessagePart *part = [LYRMessagePart messagePartWithText:[NSString stringWithFormat:@"Test Message %lu", (unsigned long)self.messageCount]];
         LYRMessage *message = [layerClient newMessageWithParts:@[part] options:nil error:&error];

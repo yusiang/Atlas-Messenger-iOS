@@ -70,7 +70,7 @@ NSUUID *LSLayerAppID(LSEnvironment environment)
             return [[NSUUID alloc] initWithUUIDString:@"d354316c-63be-11e4-841a-364a00000bce"];
         
         case LSLoadTestEnvironment:
-            return [[NSUUID alloc] initWithUUIDString:@"7c5cc92c-9de4-11e4-a951-a84200000d8d"];
+            return [[NSUUID alloc] initWithUUIDString:@"954e00da-a2a4-11e4-8b1f-90f0000000f4"];
         
         default:
             return nil;
