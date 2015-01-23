@@ -47,6 +47,28 @@ LSEnvironment LSEnvironmentConfiguration(void)
         return LSProductionEnvironment;
     }
 }
+static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiveShakeMotionNotification";
+
+@interface LSShakableWindow : UIWindow
+@end
+
+@implementation LSShakableWindow
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:LSAppDidReceiveShakeMotionNotification object:event];
+    }
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+@end
+
+@interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @interface LSAppDelegate () <LSAuthenticationViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
@@ -62,6 +84,9 @@ LSEnvironment LSEnvironmentConfiguration(void)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Enable debug shaking
+    application.applicationSupportsShakeToEdit = YES;
+    
     // Set up environment configuration
     [self configureApplication:application forEnvironment:LSEnvironmentConfiguration()];
     [self initializeCrashlytics];
@@ -169,8 +194,8 @@ LSEnvironment LSEnvironmentConfiguration(void)
     self.authenticationViewController = [LSAuthenticationViewController new];
     self.authenticationViewController.applicationController = self.applicationController;
     self.authenticationViewController.delegate = self;
-
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
+    self.window = [[LSShakableWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = self.authenticationViewController;
     [self.window makeKeyAndVisible];
     
@@ -197,6 +222,11 @@ LSEnvironment LSEnvironmentConfiguration(void)
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidTakeScreenshot:)
                                                  name:UIApplicationUserDidTakeScreenshotNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appDidReceiveShakeMotion:)
+                                                 name:LSAppDidReceiveShakeMotionNotification
                                                object:nil];
 }
 
@@ -228,7 +258,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
 /**
  
  LAYER - When a user succesfully grants your application permission to receive push, the OS will call
- the following method. In your implementation of this method, your applicaiton should pass the 
+ the following method. In your implementation of this method, your applicaiton should pass the
  `deviceToken` parameter to the `LYRClient` object.
  
  */
@@ -250,7 +280,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
  
  LAYER - The following method gets called at 2 different times that interest a Layer powered application:
  
- 1. When your application receives a push notification from Layer. Upon receiving a push, your application should 
+ 1. When your application receives a push notification from Layer. Upon receiving a push, your application should
  pass the `userInfo` dictionary to the `sychronizeWithRemoteNotification:completion:` method.
  
  2. When your application comes to the foreground in response to a user opening the app from a push notification.
@@ -269,9 +299,18 @@ LSEnvironment LSEnvironmentConfiguration(void)
     }
     
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(NSArray *changes, NSError *error) {
-        if (error) {
-            NSLog(@"Failed processing remote notification: %@", error);
+        [self setApplicationBadgeNumber];
+        if (changes) {
+            if ([changes count]) {
+                [self processLayerBackgroundChanges:changes];
+                completionHandler(UIBackgroundFetchResultNewData);
+            } else {
+                completionHandler(UIBackgroundFetchResultNoData);
+            }
+        } else {
+            completionHandler(UIBackgroundFetchResultFailed);
         }
+        
         // Try navigating once the synchronization completed
         if (userTappedRemoteNotification && !conversation) {
             [SVProgressHUD dismiss];
@@ -282,10 +321,23 @@ LSEnvironment LSEnvironmentConfiguration(void)
         [self setApplicationBadgeNumber];
         completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNewData);
     }];
-    
     if (!success) {
         completionHandler(UIBackgroundFetchResultNoData);
     }
+}
+
+- (void)processLayerBackgroundChanges:(NSArray *)changes
+{
+    if (self.applicationController.shouldDisplayLocalNotifications) {
+        [self.localNotificationManager processLayerChanges:changes];
+    }
+}
+
+- (LYRMessage *)messageForRemoteNotification:(NSDictionary *)remoteNotification
+{
+    // Fetch message object from LayerKit
+    NSURL *conversationIdentifier = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.message_identifier"]];
+    return [self.applicationController.layerClient messageForIdentifier:conversationIdentifier];
 }
 
 - (LYRConversation *)conversationFromRemoteNotification:(NSDictionary *)remoteNotification
@@ -411,7 +463,6 @@ LSEnvironment LSEnvironmentConfiguration(void)
             }
             return;
         }
-        
         NSError *persistenceError;
         BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
         if (!success && self.applicationController.debugModeEnabled) {
@@ -425,7 +476,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
 - (void)presentConversationsListViewController:(BOOL)animated
 {
     if (self.conversationListViewController) return;
-
+    
     self.conversationListViewController = [LSConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
     self.conversationListViewController.applicationController = self.applicationController;
     self.conversationListViewController.displaysConversationImage = self.displaysConversationImage;
@@ -474,6 +525,11 @@ LSEnvironment LSEnvironmentConfiguration(void)
 }
 
 #pragma mark - Bug Reporting
+
+- (void)appDidReceiveShakeMotion:(NSNotification *)notification
+{
+    NSLog(@"Receive Shake Event: Dumping LayerKit Diagnostics:\n%@", [self.applicationController.layerClient valueForKey:@"diagnosticDescription"]);
+}
 
 - (void)userDidTakeScreenshot:(NSNotification *)notification
 {
@@ -637,9 +693,10 @@ LSEnvironment LSEnvironmentConfiguration(void)
         [self.applicationController.layerClient disconnect];
     }
     [self configureApplication:[UIApplication sharedApplication] forEnvironment:environment];
+    [SVProgressHUD showSuccessWithStatus:@"New Environment Configured"];
 }
 
-#pragma mark - Application Badge Setter 
+#pragma mark - Application Badge Setter
 
 - (void)setApplicationBadgeNumber
 {
