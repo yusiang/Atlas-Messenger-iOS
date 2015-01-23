@@ -233,7 +233,7 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
 
 - (void)registerForRemoteNotifications:(UIApplication *)application
 {
-    // Declaring that I want to recieve push!
+    // Registers for push on iOS 7 and iOS 8
     if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
         UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil];
         [application registerUserNotificationSettings:notificationSettings];
@@ -278,7 +278,8 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
             [self processLayerBackgroundChanges:changes];
             completionHandler(UIBackgroundFetchResultNewData);
         }
-        completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNewData);
+        completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNoData);
+        
         // Try navigating once the synchronization completed
         if (userTappedRemoteNotification && !conversation) {
             [SVProgressHUD dismiss];
@@ -300,7 +301,6 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
 
 - (LYRConversation *)conversationFromRemoteNotification:(NSDictionary *)remoteNotification
 {
-    // Fetch message object from LayerKit
     NSURL *conversationIdentifier = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.conversation_identifier"]];
     return [self.applicationController.layerClient conversationForIdentifier:conversationIdentifier];
 }
@@ -421,6 +421,7 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
             }
             return;
         }
+        
         NSError *persistenceError;
         BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
         if (!success && self.applicationController.debugModeEnabled) {
