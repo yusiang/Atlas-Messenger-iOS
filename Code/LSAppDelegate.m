@@ -50,6 +50,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
 static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiveShakeMotionNotification";
 
 @interface LSShakableWindow : UIWindow
+
 @end
 
 @implementation LSShakableWindow
@@ -68,7 +69,7 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
 
 @end
 
-@interface LSAppDelegate () <LSAuthenticationTableViewControllerDelegate, MFMailComposeViewControllerDelegate>
+@interface LSAppDelegate () <LSAuthenticationViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic) LSAuthenticationViewController *authenticationViewController;
 @property (nonatomic) LSConversationListViewController *conversationListViewController;
@@ -230,12 +231,6 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
 
 #pragma mark - Push Notifications
 
-/**
- 
- LAYER - In order to register for push notifications, your application must first declare the types of
- notifications it wishes to receive. This method handles doing so for both iOS 7 and iOS 8.
- 
- */
 - (void)registerForRemoteNotifications:(UIApplication *)application
 {
     // Declaring that I want to recieve push!
@@ -253,13 +248,6 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
     NSLog(@"Application failed to register for remote notifications with error %@", error);
 }
 
-/**
- 
- LAYER - When a user succesfully grants your application permission to receive push, the OS will call
- the following method. In your implementation of this method, your applicaiton should pass the
- `deviceToken` parameter to the `LYRClient` object.
- 
- */
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     self.applicationController.deviceToken = deviceToken;
@@ -274,18 +262,6 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
     }
 }
 
-/**
- 
- LAYER - The following method gets called at 2 different times that interest a Layer powered application:
- 
- 1. When your application receives a push notification from Layer. Upon receiving a push, your application should
- pass the `userInfo` dictionary to the `sychronizeWithRemoteNotification:completion:` method.
- 
- 2. When your application comes to the foreground in response to a user opening the app from a push notification.
- Your application can tell if it is coming to the foreground by evaluating `application.applicationState`. If the
- state is `UIApplicationStateInactive`, your application is coming to the foreground.
- 
- */
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     BOOL userTappedRemoteNotification = application.applicationState == UIApplicationStateInactive;
@@ -298,26 +274,17 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
     
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(NSArray *changes, NSError *error) {
         [self setApplicationBadgeNumber];
-        if (changes) {
-            if ([changes count]) {
-                [self processLayerBackgroundChanges:changes];
-                completionHandler(UIBackgroundFetchResultNewData);
-            } else {
-                completionHandler(UIBackgroundFetchResultNoData);
-            }
-        } else {
-            completionHandler(UIBackgroundFetchResultFailed);
+        if ([changes count]) {
+            [self processLayerBackgroundChanges:changes];
+            completionHandler(UIBackgroundFetchResultNewData);
         }
-        
+        completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNewData);
         // Try navigating once the synchronization completed
         if (userTappedRemoteNotification && !conversation) {
             [SVProgressHUD dismiss];
             conversation = [self conversationFromRemoteNotification:userInfo];
             [self navigateToViewForConversation:conversation];
         }
-        // Increment badge count if a message
-        [self setApplicationBadgeNumber];
-        completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNewData);
     }];
     if (!success) {
         completionHandler(UIBackgroundFetchResultNoData);
