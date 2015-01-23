@@ -54,6 +54,12 @@ task :init do
   puts grey("$ `eval \"$(rbenv init - --no-rehash)\"`")
 end
 
+desc "Initialize the project for build and test with Travis-CI"
+task :travis do
+  puts green("Ensuring Layer Specs repository")
+  run("[ -d ~/.cocoapods/repos/layer ] || rbenv exec bundle exec pod repo add layer git@github.com:layerhq/cocoapods-specs.git")
+end
+
 if defined?(XCTasks)
   XCTasks::TestTask.new do |t|
     t.workspace = 'LayerSample.xcworkspace'
