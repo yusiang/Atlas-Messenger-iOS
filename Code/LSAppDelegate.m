@@ -47,6 +47,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
         return LSProductionEnvironment;
     }
 }
+
 static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiveShakeMotionNotification";
 
 @interface LSShakableWindow : UIWindow
