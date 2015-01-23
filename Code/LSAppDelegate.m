@@ -298,13 +298,6 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
     }
 }
 
-- (LYRMessage *)messageForRemoteNotification:(NSDictionary *)remoteNotification
-{
-    // Fetch message object from LayerKit
-    NSURL *conversationIdentifier = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.message_identifier"]];
-    return [self.applicationController.layerClient messageForIdentifier:conversationIdentifier];
-}
-
 - (LYRConversation *)conversationFromRemoteNotification:(NSDictionary *)remoteNotification
 {
     // Fetch message object from LayerKit
