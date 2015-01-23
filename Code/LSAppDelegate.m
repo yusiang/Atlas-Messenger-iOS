@@ -26,6 +26,7 @@
 
 extern void LYRSetLogLevelFromEnvironment();
 extern dispatch_once_t LYRConfigurationURLOnceToken;
+static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiveShakeMotionNotification";
 
 void LSTestResetConfiguration(void)
 {
@@ -47,8 +48,6 @@ LSEnvironment LSEnvironmentConfiguration(void)
         return LSProductionEnvironment;
     }
 }
-
-static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiveShakeMotionNotification";
 
 @interface LSShakableWindow : UIWindow
 
@@ -275,11 +274,12 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
     
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(NSArray *changes, NSError *error) {
         [self setApplicationBadgeNumber];
-        if ([changes count]) {
+        if (changes.count) {
             [self processLayerBackgroundChanges:changes];
             completionHandler(UIBackgroundFetchResultNewData);
+        } else {
+            completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNoData);
         }
-        completionHandler(error ? UIBackgroundFetchResultFailed : UIBackgroundFetchResultNoData);
         
         // Try navigating once the synchronization completed
         if (userTappedRemoteNotification && !conversation) {
@@ -288,6 +288,7 @@ static NSString *const LSAppDidReceiveShakeMotionNotification = @"LSAppDidReceiv
             [self navigateToViewForConversation:conversation];
         }
     }];
+    
     if (!success) {
         completionHandler(UIBackgroundFetchResultNoData);
     }
