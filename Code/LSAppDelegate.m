@@ -113,18 +113,6 @@ LSEnvironment LSEnvironmentConfiguration(void)
     
     [self registerForRemoteNotifications:application];
     
-    // Handle launching in response to push notification
-    NSDictionary *remoteNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-    if (remoteNotification) {
-        [self.applicationController.layerClient synchronizeWithRemoteNotification:remoteNotification completion:^(NSArray *changes, NSError *error) {
-            if (error) {
-                NSLog(@"Failed processing remote notification: %@", error);
-            }
-            // Try navigating once the synchronization completed
-            LYRConversation *conversation = [self conversationFromRemoteNotification:remoteNotification];
-            [self navigateToViewForConversation:conversation];
-        }];
-    }
     return YES;
 }
 
