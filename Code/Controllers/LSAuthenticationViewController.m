@@ -343,7 +343,6 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
         default:
             break;
     }
-    [SVProgressHUD showSuccessWithStatus:@"New Environment Configured"];
 }
 
 #pragma mark - State Configuration
