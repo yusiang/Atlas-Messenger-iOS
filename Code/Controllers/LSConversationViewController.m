@@ -413,6 +413,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
 {
     self.conversation = conversation;
+    [self configureTitle];
 }
 
 #pragma mark - Details Button Actions
