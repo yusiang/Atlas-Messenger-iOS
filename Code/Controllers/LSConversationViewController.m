@@ -138,7 +138,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
     [self markAllMessagesAsRead];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleLinkTap:)
+                                             selector:@selector(userDidTapLink:)
                                                  name:LYRUIUserDidTapLinkNotification
                                                object:nil];
 }
@@ -154,6 +154,11 @@ NSString *const LSDetailsButtonLabel = @"Details";
     }
     
     self.addressBarController.dataSource = self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - LYRUIConversationViewControllerDataSource
@@ -445,7 +450,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 #pragma mark - Link Tap Handler
 
-- (void)handleLinkTap:(NSNotification *)notification
+- (void)userDidTapLink:(NSNotification *)notification
 {
     [[UIApplication sharedApplication] openURL:notification.object];
 }
