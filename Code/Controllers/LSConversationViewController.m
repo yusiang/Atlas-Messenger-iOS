@@ -136,6 +136,11 @@ NSString *const LSDetailsButtonLabel = @"Details";
         [self addDetailsButton];
     }
     [self markAllMessagesAsRead];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleLinkTap:)
+                                                 name:LYRUIUserDidTapLinkNotification
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -162,7 +167,8 @@ NSString *const LSDetailsButtonLabel = @"Details";
 {
     if (participantIdentifier) {
         LSUser *user = [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
-        return user;
+        if (user)  return user;
+        [self.applicationController.APIManager loadContactsWithCompletion:nil];
     }
     return nil;
 }
@@ -435,6 +441,13 @@ NSString *const LSDetailsButtonLabel = @"Details";
 - (void)markAllMessagesAsRead
 {
     [self.conversation markAllMessagesAsRead:nil];
+}
+
+#pragma mark - Link Tap Handler
+
+- (void)handleLinkTap:(NSNotification *)notification
+{
+    [[UIApplication sharedApplication] openURL:notification.object];
 }
 
 @end
