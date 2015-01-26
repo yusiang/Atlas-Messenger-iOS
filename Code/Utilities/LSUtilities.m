@@ -9,6 +9,8 @@
 #import "LSPersistenceManager.h"
 #import "LSUtilities.h"
 
+NSString *const LSAppEncounteredUnknownUser = @"LSAppEncounteredUnknownUser";
+
 BOOL LSIsRunningTests(void)
 {
     return NSClassFromString(@"XCTestCase") != Nil;

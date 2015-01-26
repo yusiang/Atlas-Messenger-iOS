@@ -227,6 +227,11 @@ LSEnvironment LSEnvironmentConfiguration(void)
                                              selector:@selector(appDidReceiveShakeMotion:)
                                                  name:LSAppDidReceiveShakeMotionNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appEncounteredUnknownUser:)
+                                                 name:LSAppEncounteredUnknownUser
+                                               object:nil];
 }
 
 #pragma mark - Push Notifications
@@ -413,6 +418,11 @@ LSEnvironment LSEnvironmentConfiguration(void)
 }
 
 #pragma mark - Contacts
+
+- (void)appEncounteredUnknownUser:(NSNotification *)notification
+{
+    [self loadContacts];
+}
 
 - (void)loadContacts
 {

@@ -21,6 +21,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 @property (nonatomic) NSURLSession *URLSession;
 @property (nonatomic) LSSession *authenticatedSession;
 @property (nonatomic) NSURLSessionConfiguration *authenticatedURLSessionConfiguration;
+@property (nonatomic) BOOL isLoadingContacts;
 
 @end
 
@@ -40,6 +41,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
         _baseURL = baseURL;
         _layerClient = layerClient;
         _URLSession = [self defaultURLSession];
+        _isLoadingContacts = NO;
     }
     return self;
 }
@@ -180,11 +182,22 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
 - (void)loadContactsWithCompletion:(void (^)(NSSet *contacts, NSError *error))completion
 {
     NSParameterAssert(completion);
-   
+    
+    //Prevent multiple calls to load contacts
+    if (self.isLoadingContacts) {
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSRequestInProgress userInfo:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(nil, error);
+        });
+        return;
+    }
+    self.isLoadingContacts = YES;
+    
     NSURL *URL = [NSURL URLWithString:@"users.json" relativeToURL:self.baseURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"GET";
     [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        self.isLoadingContacts = NO;
         if (!response && error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(nil, error);

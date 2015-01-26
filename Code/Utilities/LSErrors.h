@@ -20,4 +20,5 @@ typedef NS_ENUM(NSUInteger, LSAuthenticationError) {
     LSInvalidPassword                               = 7004,
     LSInvalidAuthenticationNonce                    = 7005,
     LSNoAuthenticatedSession                        = 7006,
+    LSRequestInProgress                             = 7007
 };

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LYRUIConversationViewController.h"
+#import <LayerUIKit/LayerUIKit.h>"
 #import "LSApplicationController.h"
 
 /**
