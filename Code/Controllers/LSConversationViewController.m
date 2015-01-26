@@ -136,6 +136,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
         [self addDetailsButton];
     }
     [self markAllMessagesAsRead];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationMetadataDidChange:) name:LSConversationMetadataDidChangeNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -149,6 +150,11 @@ NSString *const LSDetailsButtonLabel = @"Details";
     }
     
     self.addressBarController.dataSource = self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - LYRUIConversationViewControllerDataSource
@@ -407,6 +413,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
 {
     self.conversation = conversation;
+    [self configureTitle];
 }
 
 #pragma mark - Details Button Actions
@@ -430,11 +437,31 @@ NSString *const LSDetailsButtonLabel = @"Details";
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }
 
-#pragma mark - Mark All Messages Read Method
+#pragma mark - Notification Handlers
+
+- (void)conversationMetadataDidChange:(NSNotification *)notification
+{
+    if (!self.conversation) return;
+    if (!notification.object) return;
+    if (![notification.object isEqual:self.conversation]) return;
+
+    [self configureTitle];
+}
+
+#pragma mark - Helpers
 
 - (void)markAllMessagesAsRead
 {
     [self.conversation markAllMessagesAsRead:nil];
+}
+
+- (void)configureTitle
+{
+    if ([self.conversation.metadata valueForKey:LSConversationMetadataNameKey]) {
+        self.conversationTitle = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
+    } else {
+        self.conversationTitle = nil;
+    }
 }
 
 @end

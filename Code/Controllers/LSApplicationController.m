@@ -10,6 +10,7 @@
 #import "LSUtilities.h"
 #import <SVProgressHUD/SVProgressHUD.h>
 
+NSString *const LSConversationMetadataDidChangeNotification = @"LSConversationMetadataDidChangeNotification";
 NSString *const LSConversationDeletedNotification = @"LSConversationDeletedNotification";
 NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
 static NSString *const LSUserDefaultsShouldSendPushTextKey = @"shouldSendPushText";
@@ -96,9 +97,15 @@ static NSString *const LSUserDefaultsDebugModeEnabledKey = @"debugModeEnabled";
         if (![changedObject isKindOfClass:[LYRConversation class]]) continue;
 
         LYRObjectChangeType changeType = [change[LYRObjectChangeTypeKey] integerValue];
-        if (changeType != LYRObjectChangeTypeDelete) continue;
+        NSString *changedProperty = change[LYRObjectChangePropertyKey];
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:LSConversationDeletedNotification object:changedObject];
+        if (changeType == LYRObjectChangeTypeUpdate && [changedProperty isEqualToString:@"metadata"]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:LSConversationMetadataDidChangeNotification object:changedObject];
+        }
+
+        if (changeType == LYRObjectChangeTypeDelete) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:LSConversationDeletedNotification object:changedObject];
+        }
     }
 }
 
