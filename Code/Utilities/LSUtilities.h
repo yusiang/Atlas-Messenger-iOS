@@ -24,6 +24,11 @@ typedef NS_ENUM(NSInteger, LSEnvironment) {
     LSLoadTestEnvironment              // Layer load testing environment
 };
 
+/**
+ @abstract Posted when the sample app encounters and unknown participant identifier.
+ */
+extern NSString *const LSAppShouldFetchContactsNotification;
+
 BOOL LSIsRunningTests();
 
 NSURL *LSRailsBaseURL();

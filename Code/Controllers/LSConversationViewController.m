@@ -13,6 +13,7 @@
 #import "LSMessageDetailViewController.h"
 #import "LSConversationDetailViewController.h"
 #import "LSImageViewController.h"
+#import "LSUtilities.h"
 
 static NSDateFormatter *LSShortTimeFormatter()
 {
@@ -136,6 +137,11 @@ NSString *const LSDetailsButtonLabel = @"Details";
         [self addDetailsButton];
     }
     [self markAllMessagesAsRead];
+    self.hasFetchedParticipants = NO;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userDidTapLink:)
+                                                 name:LYRUIUserDidTapLinkNotification
+                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationMetadataDidChange:) name:LSConversationMetadataDidChangeNotification object:nil];
 }
 
@@ -168,7 +174,11 @@ NSString *const LSDetailsButtonLabel = @"Details";
 {
     if (participantIdentifier) {
         LSUser *user = [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
-        return user;
+        if (user)  return user;
+        if (!self.hasFetchedParticipants) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:LSAppShouldFetchContactsNotification object:nil];
+            self.hasFetchedParticipants = YES;
+        }
     }
     return nil;
 }
@@ -462,6 +472,13 @@ NSString *const LSDetailsButtonLabel = @"Details";
     } else {
         self.conversationTitle = nil;
     }
+}
+
+#pragma mark - Link Tap Handler
+
+- (void)userDidTapLink:(NSNotification *)notification
+{
+	[[UIApplication sharedApplication] openURL:notification.object];
 }
 
 @end
