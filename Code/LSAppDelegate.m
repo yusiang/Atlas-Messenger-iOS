@@ -229,11 +229,6 @@ LSEnvironment LSEnvironmentConfiguration(void)
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(appDidReceiveShakeMotion:)
-                                                 name:LSAppDidReceiveShakeMotionNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appShouldFetchContacts:)
                                                  name:LSAppShouldFetchContactsNotification
                                                object:nil];
