@@ -9,7 +9,7 @@
 #import "LSPersistenceManager.h"
 #import "LSUtilities.h"
 
-NSString *const LSAppShouldFetchContactsNotification = @"LSAppShouldFetchContactsNotification";
+NSString *const LSAppEncounteredUnknownUser = @"LSAppEncounteredUnknownUser";
 
 BOOL LSIsRunningTests(void)
 {

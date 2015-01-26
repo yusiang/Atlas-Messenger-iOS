@@ -229,8 +229,8 @@ LSEnvironment LSEnvironmentConfiguration(void)
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(appShouldFetchContacts:)
-                                                 name:LSAppShouldFetchContactsNotification
+                                             selector:@selector(appEncounteredUnknownUser:)
+                                                 name:LSAppEncounteredUnknownUser
                                                object:nil];
 }
 
@@ -419,7 +419,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
 
 #pragma mark - Contacts
 
-- (void)appShouldFetchContacts:(NSNotification *)notification
+- (void)appEncounteredUnknownUser:(NSNotification *)notification
 {
     [self loadContacts];
 }
