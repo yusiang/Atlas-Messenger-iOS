@@ -137,7 +137,6 @@ NSString *const LSDetailsButtonLabel = @"Details";
         [self addDetailsButton];
     }
     [self markAllMessagesAsRead];
-    self.hasFetchedParticipants = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidTapLink:)
                                                  name:LYRUIUserDidTapLinkNotification
@@ -174,11 +173,8 @@ NSString *const LSDetailsButtonLabel = @"Details";
 {
     if (participantIdentifier) {
         LSUser *user = [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
-        if (user)  return user;
-        if (!self.hasFetchedParticipants) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:LSAppShouldFetchContactsNotification object:nil];
-            self.hasFetchedParticipants = YES;
-        }
+        if (user) return user;
+        [[NSNotificationCenter defaultCenter] postNotificationName:LSAppEncounteredUnknownUser object:nil];
     }
     return nil;
 }

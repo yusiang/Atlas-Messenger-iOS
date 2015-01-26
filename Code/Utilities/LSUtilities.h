@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, LSEnvironment) {
 /**
  @abstract Posted when the sample app encounters and unknown participant identifier.
  */
-extern NSString *const LSAppShouldFetchContactsNotification;
+extern NSString *const LSAppEncounteredUnknownUser;
 
 BOOL LSIsRunningTests();
 
