@@ -12,6 +12,7 @@
 #import "LSLayerClient.h"
 
 extern NSString *const LSConversationMetadataDidChangeNotification;
+extern NSString *const LSConversationParticipantsDidChangeNotification;
 extern NSString *const LSConversationDeletedNotification;
 extern NSString *const LSUserDefaultsLayerConfigurationURLKey;
 

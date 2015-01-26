@@ -81,4 +81,9 @@ extern NSString *const LSConversationMetadataNameKey;
  */
 @property (nonatomic) LSApplicationController *applicationController;
 
+/**
+ @abstract Boolean value that determines whether adding/removing participants affects the conversation itself (`YES`) or switches to a different conversation (`NO`).
+ */
+@property (nonatomic) BOOL changingParticipantsMutatesConversation;
+
 @end

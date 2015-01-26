@@ -11,6 +11,7 @@
 #import <SVProgressHUD/SVProgressHUD.h>
 
 NSString *const LSConversationMetadataDidChangeNotification = @"LSConversationMetadataDidChangeNotification";
+NSString *const LSConversationParticipantsDidChangeNotification = @"LSConversationParticipantsDidChangeNotification";
 NSString *const LSConversationDeletedNotification = @"LSConversationDeletedNotification";
 NSString *const LSUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
 static NSString *const LSUserDefaultsShouldSendPushTextKey = @"shouldSendPushText";
@@ -101,6 +102,10 @@ static NSString *const LSUserDefaultsDebugModeEnabledKey = @"debugModeEnabled";
 
         if (changeType == LYRObjectChangeTypeUpdate && [changedProperty isEqualToString:@"metadata"]) {
             [[NSNotificationCenter defaultCenter] postNotificationName:LSConversationMetadataDidChangeNotification object:changedObject];
+        }
+
+        if (changeType == LYRObjectChangeTypeUpdate && [changedProperty isEqualToString:@"participants"]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:LSConversationParticipantsDidChangeNotification object:changedObject];
         }
 
         if (changeType == LYRObjectChangeTypeDelete) {
