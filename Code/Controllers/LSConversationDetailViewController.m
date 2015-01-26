@@ -182,11 +182,22 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
+    if (editingStyle != UITableViewCellEditingStyleDelete) return;
+
+    NSString *participantIdentifier = self.participantIdentifiers[indexPath.row];
+    if (self.changingParticipantsMutatesConversation) {
+        NSError *error;
+        BOOL success = [self.conversation removeParticipants:[NSSet setWithObject:participantIdentifier] error:&error];
+        if (!success) {
+            LSAlertWithError(error);
+            return;
+        }
         [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
-        [self configureForParticipants];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    } else {
+        [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
+        [self switchToConversationForParticipants];
     }
+    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
 }
 
 #pragma mark - UITableViewDelegate
@@ -298,14 +309,24 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     NSString *authenticatedUserID = self.applicationController.layerClient.authenticatedUserID;
     if ([participant.participantIdentifier isEqualToString:authenticatedUserID]) return;
 
-    [self.participantIdentifiers addObject:participant.participantIdentifier];
-    [self configureForParticipants];
+    if (self.changingParticipantsMutatesConversation) {
+        NSError *error;
+        BOOL success = [self.conversation addParticipants:[NSSet setWithObject:participant.participantIdentifier] error:&error];
+        if (!success) {
+            LSAlertWithError(error);
+            return;
+        }
+        [self.participantIdentifiers addObject:participant.participantIdentifier];
+    } else {
+        [self.participantIdentifiers addObject:participant.participantIdentifier];
+        [self switchToConversationForParticipants];
+    }
     [self.tableView reloadData];
 }
 
 #pragma mark - Conversation Configuration
 
-- (void)configureForParticipants
+- (void)switchToConversationForParticipants
 {
     NSSet *participants = [NSSet setWithArray:self.participantIdentifiers];
     LYRConversation *conversation = [self.applicationController.layerClient conversationForParticipants:participants];

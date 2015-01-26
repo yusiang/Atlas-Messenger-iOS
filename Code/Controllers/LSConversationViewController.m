@@ -137,14 +137,20 @@ NSString *const LSDetailsButtonLabel = @"Details";
         [self addDetailsButton];
     }
     [self markAllMessagesAsRead];
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidTapLink:)
                                                  name:LYRUIUserDidTapLinkNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(conversationMetadataDidChange:)
+                                             selector:@selector(conversationDidChange:)
                                                  name:LSConversationMetadataDidChangeNotification
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(conversationDidChange:)
+                                                 name:LSConversationParticipantsDidChangeNotification
                                                object:nil];
 }
 
@@ -444,12 +450,13 @@ NSString *const LSDetailsButtonLabel = @"Details";
     detailViewController.detailDelegate = self;
     detailViewController.detailDataSource = self;
     detailViewController.applicationController = self.applicationController;
+    detailViewController.changingParticipantsMutatesConversation = self.applicationController.debugModeEnabled;
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }
 
 #pragma mark - Notification Handlers
 
-- (void)conversationMetadataDidChange:(NSNotification *)notification
+- (void)conversationDidChange:(NSNotification *)notification
 {
     if (!self.conversation) return;
     if (!notification.object) return;
