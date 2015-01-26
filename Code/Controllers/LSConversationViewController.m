@@ -136,11 +136,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
         [self addDetailsButton];
     }
     [self markAllMessagesAsRead];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(userDidTapLink:)
-                                                 name:LYRUIUserDidTapLinkNotification
-                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationMetadataDidChange:) name:LSConversationMetadataDidChangeNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -172,8 +168,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 {
     if (participantIdentifier) {
         LSUser *user = [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
-        if (user)  return user;
-        [self.applicationController.APIManager loadContactsWithCompletion:nil];
+        return user;
     }
     return nil;
 }
@@ -418,6 +413,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
 {
     self.conversation = conversation;
+    [self configureTitle];
 }
 
 #pragma mark - Details Button Actions
@@ -441,18 +437,31 @@ NSString *const LSDetailsButtonLabel = @"Details";
     [self.navigationController pushViewController:detailViewController animated:TRUE];
 }
 
-#pragma mark - Mark All Messages Read Method
+#pragma mark - Notification Handlers
+
+- (void)conversationMetadataDidChange:(NSNotification *)notification
+{
+    if (!self.conversation) return;
+    if (!notification.object) return;
+    if (![notification.object isEqual:self.conversation]) return;
+
+    [self configureTitle];
+}
+
+#pragma mark - Helpers
 
 - (void)markAllMessagesAsRead
 {
     [self.conversation markAllMessagesAsRead:nil];
 }
 
-#pragma mark - Link Tap Handler
-
-- (void)userDidTapLink:(NSNotification *)notification
+- (void)configureTitle
 {
-    [[UIApplication sharedApplication] openURL:notification.object];
+    if ([self.conversation.metadata valueForKey:LSConversationMetadataNameKey]) {
+        self.conversationTitle = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
+    } else {
+        self.conversationTitle = nil;
+    }
 }
 
 @end

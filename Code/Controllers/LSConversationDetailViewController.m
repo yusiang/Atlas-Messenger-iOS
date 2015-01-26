@@ -107,12 +107,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     switch ((LSConversationDetailTableSection)indexPath.section) {
         case LSConversationDetailTableSectionMetadata: {
             LSInputTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSInputCellIdentifier forIndexPath:indexPath];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.textField.delegate = self;
-            [cell setGuideText:@"Name:"];
-            [cell setPlaceHolderText:@"Enter Conversation Name"];
-            NSString *conversationName = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
-            cell.textField.text = conversationName;
+            [self configureConversationNameCell:cell];
             return cell;
         }
 
@@ -189,7 +184,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
-        [self configureForParticipantIdentifiers:[NSSet setWithArray:self.participantIdentifiers]];
+        [self configureForParticipants];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     }
 }
 
@@ -294,26 +290,36 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    NSMutableSet *participantIdentifiers = [self.conversation.participants mutableCopy];
-    [participantIdentifiers addObject:participant.participantIdentifier];
-    [self configureForParticipantIdentifiers:participantIdentifiers];
-
     [participantPickerController dismissViewControllerAnimated:YES completion:nil];
     self.participantPickerDataSource = nil;
+
+    if ([self.participantIdentifiers containsObject:participant.participantIdentifier]) return;
+
+    NSString *authenticatedUserID = self.applicationController.layerClient.authenticatedUserID;
+    if ([participant.participantIdentifier isEqualToString:authenticatedUserID]) return;
+
+    [self.participantIdentifiers addObject:participant.participantIdentifier];
+    [self configureForParticipants];
+    [self.tableView reloadData];
 }
 
 #pragma mark - Conversation Configuration
 
-- (void)configureForParticipantIdentifiers:(NSSet *)participants
+- (void)configureForParticipants
 {
+    NSSet *participants = [NSSet setWithArray:self.participantIdentifiers];
     LYRConversation *conversation = [self.applicationController.layerClient conversationForParticipants:participants];
     if (!conversation) {
         conversation = [self.applicationController.layerClient newConversationWithParticipants:participants options:nil error:nil];
     }
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;
-    [self configureForConversation];
-    [self.tableView reloadData];
+
+    NSIndexPath *nameIndexPath = [NSIndexPath indexPathForRow:0 inSection:LSConversationDetailTableSectionMetadata];
+    LSInputTableViewCell *nameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:nameIndexPath];
+    if (nameCell) {
+        [self configureConversationNameCell:nameCell];
+    }
 }
 
 - (void)configureForConversation
@@ -335,13 +341,23 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     return YES;
 }
 
-#pragma mark - Cell Appearance Configuration
+#pragma mark - Cell Configuration
 
 - (void)configureAppearance
 {
     [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleColor:[UIColor blackColor]];
     [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleFont:LYRUIMediumFont(14)];
     [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setBoldTitleFont:[UIFont systemFontOfSize:14]];
+}
+
+- (void)configureConversationNameCell:(LSInputTableViewCell *)cell
+{
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.textField.delegate = self;
+    [cell setGuideText:@"Name:"];
+    [cell setPlaceHolderText:@"Enter Conversation Name"];
+    NSString *conversationName = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
+    cell.textField.text = conversationName;
 }
 
 @end
