@@ -13,6 +13,7 @@
 #import "LSMessageDetailViewController.h"
 #import "LSConversationDetailViewController.h"
 #import "LSImageViewController.h"
+#import "LSUtilities.h"
 
 static NSDateFormatter *LSShortTimeFormatter()
 {
@@ -116,6 +117,7 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 @interface LSConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
+@property (nonatomic) BOOL hasFetchedParticipants;
 
 @end
 
@@ -136,7 +138,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
         [self addDetailsButton];
     }
     [self markAllMessagesAsRead];
-    
+    self.hasFetchedParticipants = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidTapLink:)
                                                  name:LYRUIUserDidTapLinkNotification
@@ -173,7 +175,10 @@ NSString *const LSDetailsButtonLabel = @"Details";
     if (participantIdentifier) {
         LSUser *user = [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
         if (user)  return user;
-        [self.applicationController.APIManager loadContactsWithCompletion:nil];
+        if (!self.hasFetchedParticipants) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:LSAppShouldFetchContactsNotification object:nil];
+            self.hasFetchedParticipants = YES;
+        }
     }
     return nil;
 }
