@@ -184,8 +184,8 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     NSParameterAssert(completion);
     
     //Prevent multiple calls to load contacts
-    NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSRequestInProgress userInfo:nil];
     if (self.isLoadingContacts) {
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSRequestInProgress userInfo:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(nil, error);
         });

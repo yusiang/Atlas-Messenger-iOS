@@ -478,7 +478,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 - (void)userDidTapLink:(NSNotification *)notification
 {
-	[[UIApplication sharedApplication] openURL:notification.object];
+    [[UIApplication sharedApplication] openURL:notification.object];
 }
 
 @end
