@@ -9,6 +9,8 @@
 #import "LSPersistenceManager.h"
 #import "LSUtilities.h"
 
+NSString *const LSAppShouldFetchContactsNotification = @"LSAppShouldFetchContactsNotification";
+
 BOOL LSIsRunningTests(void)
 {
     return NSClassFromString(@"XCTestCase") != Nil;
