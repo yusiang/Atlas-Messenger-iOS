@@ -185,7 +185,12 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     
     //Prevent multiple calls to load contacts
     NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSRequestInProgress userInfo:nil];
-    if (self.isLoadingContacts) completion(nil, error);
+    if (self.isLoadingContacts) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(nil, error);
+        });
+        return;
+    }
     self.isLoadingContacts = YES;
     
     NSURL *URL = [NSURL URLWithString:@"users.json" relativeToURL:self.baseURL];
