@@ -172,6 +172,14 @@ NSString *const LSDetailsButtonLabel = @"Details";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#pragma mark - Accessors
+
+- (void)setConversation:(LYRConversation *)conversation
+{
+    [super setConversation:conversation];
+    [self configureTitle];
+}
+
 #pragma mark - LYRUIConversationViewControllerDataSource
 
 /**
