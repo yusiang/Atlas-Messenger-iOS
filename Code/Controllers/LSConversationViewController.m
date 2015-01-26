@@ -117,7 +117,6 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 @interface LSConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
-
 @end
 
 @implementation LSConversationViewController
