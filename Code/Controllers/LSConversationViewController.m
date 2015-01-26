@@ -117,6 +117,7 @@ static LSDateProximity LSProximityToDate(NSDate *date)
 @interface LSConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
 
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
+
 @end
 
 @implementation LSConversationViewController
@@ -140,7 +141,11 @@ NSString *const LSDetailsButtonLabel = @"Details";
                                              selector:@selector(userDidTapLink:)
                                                  name:LYRUIUserDidTapLinkNotification
                                                object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationMetadataDidChange:) name:LSConversationMetadataDidChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(conversationMetadataDidChange:)
+                                                 name:LSConversationMetadataDidChangeNotification
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
