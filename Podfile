@@ -6,7 +6,7 @@ dropbox_path = ENV['LAYER_DROPBOX_PATH'] || '~/Dropbox (Layer)'
 target 'LayerSample' do
   pod 'CocoaLumberjack'
   pod 'SVProgressHUD', :head
-  pod 'LayerKit', path: "#{dropbox_path}/Layer/Builds/iOS/LayerKit-0.9.6-rc1"
+  pod 'LayerKit', '0.9.5'
   pod 'HockeySDK', '~> 3.5.6'
   pod 'LayerUIKit', path: 'LayerUIKit'
 end
@@ -24,7 +24,6 @@ end
 #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git', branch: 'feature/APPS-560-Refactor-API'
 #pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
 #pod 'LayerKit', path: '/Users/blake/Projects/Layer/LayerKit-again'
-#pod 'LayerKit', '0.9.5'
-
+#pod 'LayerKit', path: "#{dropbox_path}/Layer/Builds/iOS/LayerKit-0.9.6-rc1"
 # Other LayerUIKit Build Source
 #pod 'LayerUIKit', git: 'git@github.com:layerhq/LayerUIKit', branch: 'coleman-radius-customization'
