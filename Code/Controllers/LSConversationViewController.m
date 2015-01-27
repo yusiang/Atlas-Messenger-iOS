@@ -451,7 +451,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
     detailViewController.detailDataSource = self;
     detailViewController.applicationController = self.applicationController;
     detailViewController.changingParticipantsMutatesConversation = self.applicationController.debugModeEnabled;
-    [self.navigationController pushViewController:detailViewController animated:TRUE];
+    [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 #pragma mark - Notification Handlers
