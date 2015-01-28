@@ -144,13 +144,8 @@ NSString *const LSDetailsButtonLabel = @"Details";
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(conversationDidChange:)
+                                             selector:@selector(conversationMetadataDidChange:)
                                                  name:LSConversationMetadataDidChangeNotification
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(conversationDidChange:)
-                                                 name:LSConversationParticipantsDidChangeNotification
                                                object:nil];
 }
 
@@ -464,7 +459,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 #pragma mark - Notification Handlers
 
-- (void)conversationDidChange:(NSNotification *)notification
+- (void)conversationMetadataDidChange:(NSNotification *)notification
 {
     if (!self.conversation) return;
     if (!notification.object) return;
