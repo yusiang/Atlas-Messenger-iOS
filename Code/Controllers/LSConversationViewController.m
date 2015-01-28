@@ -309,6 +309,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSendMessage:(LYRMessage *)message
 {
     NSLog(@"Successful Message Send");
+    [self addDetailsButton];
 }
 
 /**
@@ -439,6 +440,8 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 - (void)addDetailsButton
 {
+    if (self.navigationItem.rightBarButtonItem) return;
+
     UIBarButtonItem *detailsButtonItem = [[UIBarButtonItem alloc] initWithTitle:LSDetailsButtonLabel
                                                                           style:UIBarButtonItemStylePlain
                                                                          target:self
