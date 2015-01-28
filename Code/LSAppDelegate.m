@@ -102,13 +102,6 @@ LSEnvironment LSEnvironmentConfiguration(void)
     // Setup notifications
     [self registerNotificationObservers];
     
-    // Conversation list view controller config
-    _cellClass = [LYRUIConversationTableViewCell class];
-    _rowHeight = 72;
-    _allowsEditing = YES;
-    _displaysConversationImage = NO;
-    _displaysSettingsButton = YES;
-    
     // Connect to Layer and boot the UI
     BOOL deauthenticateAfterConnection = NO;
     BOOL resumingSession = NO;
@@ -448,14 +441,8 @@ LSEnvironment LSEnvironmentConfiguration(void)
 - (void)presentConversationsListViewController:(BOOL)animated
 {
     if (self.conversationListViewController) return;
-    
     self.conversationListViewController = [LSConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
     self.conversationListViewController.applicationController = self.applicationController;
-    self.conversationListViewController.displaysConversationImage = self.displaysConversationImage;
-    self.conversationListViewController.cellClass = self.cellClass;
-    self.conversationListViewController.rowHeight = self.rowHeight;
-    self.conversationListViewController.allowsEditing = self.allowsEditing;
-    self.conversationListViewController.shouldDisplaySettingsItem = self.displaysSettingsButton;
     
     LSNavigationController *authenticatedNavigationController = [[LSNavigationController alloc] initWithRootViewController:self.conversationListViewController];
     [self.authenticationViewController presentViewController:authenticatedNavigationController animated:YES completion:^{

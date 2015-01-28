@@ -32,8 +32,11 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
     self.dataSource = self;
     self.tableView.accessibilityLabel = LSConversationListTableViewAccessibilityLabel;
     
+    self.allowsEditing = NO;
+    self.displaysSettingsItem = YES;
+    
     // Left navigation item
-    if (self.shouldDisplaySettingsItem) {
+    if (self.displaysSettingsItem) {
         UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings"
                                                                            style:UIBarButtonItemStylePlain
                                                                           target:self
