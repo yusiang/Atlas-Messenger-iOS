@@ -31,7 +31,7 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
     self.dataSource = self;
     self.tableView.accessibilityLabel = LSConversationListTableViewAccessibilityLabel;
     
-    self.allowsEditing = NO;
+    self.allowsEditing = YES;
     self.displaysSettingsItem = YES;
     
     // Left navigation item
