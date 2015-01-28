@@ -75,6 +75,11 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self configureAppearance];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(conversationMetadataDidChange:)
+                                                 name:LSConversationMetadataDidChangeNotification
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(conversationParticipantsDidChange:)
                                                  name:LSConversationParticipantsDidChangeNotification
                                                object:nil];
@@ -373,6 +378,20 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 }
 
 #pragma mark - Notification Handlers
+
+- (void)conversationMetadataDidChange:(NSNotification *)notification
+{
+    if (!self.conversation) return;
+    if (!notification.object) return;
+    if (![notification.object isEqual:self.conversation]) return;
+
+    NSIndexPath *nameIndexPath = [NSIndexPath indexPathForRow:0 inSection:LSConversationDetailTableSectionMetadata];
+    LSInputTableViewCell *nameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:nameIndexPath];
+    if (!nameCell) return;
+    if ([nameCell.textField isFirstResponder]) return;
+
+    [self configureConversationNameCell:nameCell];
+}
 
 - (void)conversationParticipantsDidChange:(NSNotification *)notification
 {
