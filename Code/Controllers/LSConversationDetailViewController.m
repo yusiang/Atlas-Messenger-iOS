@@ -73,6 +73,21 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
    
     [self configureAppearance];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(conversationMetadataDidChange:)
+                                                 name:LSConversationMetadataDidChangeNotification
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(conversationParticipantsDidChange:)
+                                                 name:LSConversationParticipantsDidChangeNotification
+                                               object:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - UITableViewDataSource
@@ -360,6 +375,60 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     }
     [textField resignFirstResponder];
     return YES;
+}
+
+#pragma mark - Notification Handlers
+
+- (void)conversationMetadataDidChange:(NSNotification *)notification
+{
+    if (!self.conversation) return;
+    if (!notification.object) return;
+    if (![notification.object isEqual:self.conversation]) return;
+
+    NSIndexPath *nameIndexPath = [NSIndexPath indexPathForRow:0 inSection:LSConversationDetailTableSectionMetadata];
+    LSInputTableViewCell *nameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:nameIndexPath];
+    if (!nameCell) return;
+    if ([nameCell.textField isFirstResponder]) return;
+
+    [self configureConversationNameCell:nameCell];
+}
+
+- (void)conversationParticipantsDidChange:(NSNotification *)notification
+{
+    if (!self.conversation) return;
+    if (!notification.object) return;
+    if (![notification.object isEqual:self.conversation]) return;
+
+    [self.tableView beginUpdates];
+
+    NSSet *existingIdentifiers = [NSSet setWithArray:self.participantIdentifiers];
+
+    NSMutableArray *deletedIndexPaths = [NSMutableArray new];
+    NSMutableIndexSet *deletedIndexSet = [NSMutableIndexSet new];
+    NSMutableSet *deletedIdentifiers = [existingIdentifiers mutableCopy];
+    [deletedIdentifiers minusSet:self.conversation.participants];
+    for (NSString *deletedIdentifier in deletedIdentifiers) {
+        NSUInteger row = [self.participantIdentifiers indexOfObject:deletedIdentifier];
+        [deletedIndexSet addIndex:row];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:LSConversationDetailTableSectionParticipants];
+        [deletedIndexPaths addObject:indexPath];
+    }
+    [self.participantIdentifiers removeObjectsAtIndexes:deletedIndexSet];
+    [self.tableView deleteRowsAtIndexPaths:deletedIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    NSMutableArray *insertedIndexPaths = [NSMutableArray new];
+    NSMutableSet *insertedIdentifiers = [self.conversation.participants mutableCopy];
+    NSString *authenticatedUserID = self.applicationController.layerClient.authenticatedUserID;
+    if (authenticatedUserID) [insertedIdentifiers removeObject:authenticatedUserID];
+    [insertedIdentifiers minusSet:existingIdentifiers];
+    for (NSString *identifier in insertedIdentifiers) {
+        [self.participantIdentifiers addObject:identifier];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.participantIdentifiers.count - 1 inSection:LSConversationDetailTableSectionParticipants];
+        [insertedIndexPaths addObject:indexPath];
+    }
+    [self.tableView insertRowsAtIndexPaths:insertedIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    [self.tableView endUpdates];
 }
 
 #pragma mark - Cell Configuration
