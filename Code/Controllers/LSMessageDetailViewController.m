@@ -100,6 +100,7 @@ static NSString *const LSMessageDetailCellIdentifier = @"messageDetailCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LSMessageDetailCellIdentifier];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     switch ((LSMessageDetailTableSection)indexPath.section) {
         case LSMessageDetailTableSectionMetadata:
