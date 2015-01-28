@@ -83,6 +83,7 @@
 		D648ECFC19FEC9D800ED17F0 /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D648ECFB19FEC9D800ED17F0 /* testImage.png */; };
 		D65DB8DF1A70663200A63842 /* LSConversationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10A21A6F2ED3009BFA9C /* LSConversationDetailViewController.m */; };
 		D66F086519FB524E0047F1C6 /* LSCenterTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */; };
+		D6D2789D1A795C6F00B2AC93 /* LSErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E671A6756AF00158901 /* LSErrors.m */; };
 		D6FB95481A5DBD9D007BD16D /* LSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D6FB95471A5DBD9D007BD16D /* LSAppDelegate.m */; };
 /* End PBXBuildFile section */
 
@@ -725,6 +726,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6D2789D1A795C6F00B2AC93 /* LSErrors.m in Sources */,
 				D65DB8DF1A70663200A63842 /* LSConversationDetailViewController.m in Sources */,
 				D6306E041A6F30BE00E16E85 /* LSLayerContentFactory.m in Sources */,
 				D6306E051A6F30BE00E16E85 /* LSTestInterface.m in Sources */,

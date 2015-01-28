@@ -61,7 +61,7 @@ task :travis do
 end
 
 if defined?(XCTasks)
-  XCTasks::TestTask.new do |t|
+  XCTasks::TestTask.new(test: :sim) do |t|
     t.workspace = 'LayerSample.xcworkspace'
     t.schemes_dir = 'Tests/Schemes'
     t.runner = :xcpretty
@@ -69,13 +69,29 @@ if defined?(XCTasks)
     t.subtask(app: 'LayerSampleTests') do |s|
       s.destination do |d|
         d.platform = :iossimulator
-        d.name = 'iPhone 6 Plus'
+        d.name = 'LayerUIKit-Test-Device'
         d.os = :latest
       end
     end    
   end
 end
 
+desc "Creates a Testing Simulator configured for LayerUIKit Testing"
+task :sim do
+  # Check if LayerUIKit Test Device Exists
+  device = `xcrun simctl list | grep LayerUIKit-Test-Device`
+  if $?.exitstatus.zero?
+    puts ("Found Layer Test Device #{device}")
+    device.each_line do |line|
+      if device_id = line.match(/\(([^\)]+)/)[1]
+        puts green ("Deleting device with ID #{device_id}")
+        run ("xcrun simctl delete #{device_id}")
+      end
+    end
+  end
+  puts green ("Creating iOS simulator for LayerUIKit Testing")
+  run("xcrun simctl create LayerUIKit-Test-Device com.apple.CoreSimulator.SimDeviceType.iPhone-6 com.apple.CoreSimulator.SimRuntime.iOS-8-1")
+end
 
 desc "Builds and pushes a new release to Hockey App"
 task :release do
@@ -144,7 +160,13 @@ task :release do
   # 8) Let everyone know that Layer Sample is Available
   require 'slack-notifier'
   notifier = Slack::Notifier.new "layer", "IBYcWAHe4H4CEKLKUUJkzkAf"
-  notifier.ping "Good news everyone! A new version of the Layer iOS Sample App is available on Hockey App", channel: '#dev', username: 'LayerBot', icon_emoji: ":goodnewseveryone:"
+  notifier.ping "Good news everyone! A new version of the Layer iOS Sample App is available on Hockey App", channel: '#dev', username: 'LayerBot', icon_emoji: ":marshawn:"
+  notifier.ping "Good news everyone! A new version of the Layer iOS Sample App is available on Hockey App", channel: '#applications', username: 'LayerBot', icon_emoji: ":marshawn:"
+  
+  # 9) Remove the build artifacts from repository
+  run ("rm -rf LayerSample.app.dSYM.zip")
+  run ("rm -rf LayerSample.ipa")
+  
 end
 
 # Safe to run when Bundler is not available

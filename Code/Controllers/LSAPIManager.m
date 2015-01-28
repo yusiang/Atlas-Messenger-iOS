@@ -185,7 +185,7 @@ NSString *const LSUserDidDeauthenticateNotification = @"LSUserDidDeauthenticateN
     
     //Prevent multiple calls to load contacts
     if (self.isLoadingContacts) {
-        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSRequestInProgress userInfo:nil];
+        NSError *error = [NSError errorWithDomain:LSErrorDomain code:LSRequestInProgress userInfo:@{NSLocalizedDescriptionKey : @"There is a load contacts operation already in progress"}];
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(nil, error);
         });
