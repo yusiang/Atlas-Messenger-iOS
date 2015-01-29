@@ -16,18 +16,4 @@
 
 @property (nonatomic) LSApplicationController *applicationController;
 
-//------------------------------------
-// Conversation List VC Test Config
-//------------------------------------
-
-@property (nonatomic) BOOL allowsEditing;
-
-@property (nonatomic) BOOL displaysConversationImage;
-
-@property (nonatomic) BOOL displaysSettingsButton;
-
-@property (nonatomic) Class<LYRUIConversationPresenting> cellClass;
-
-@property (nonatomic, assign) CGFloat rowHeight;
-
 @end
