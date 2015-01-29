@@ -272,7 +272,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 /**
  
- LAYER UI KIT - Return an `NSOrderedSet` of `LYRMessage` objects. If nil is returned, controller will fall back to defaul
+ LAYER UI KIT - Return an `NSOrderedSet` of `LYRMessage` objects. If nil is returned, controller will fall back to default
  message sending behavior. If an empty `NSOrderedSet` is returned, no messages will be sent.
  
  */
