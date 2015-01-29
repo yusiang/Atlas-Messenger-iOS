@@ -8,6 +8,7 @@
 
 #import "LSTestInterface.h"
 #import "LSTestUser.h"
+#import "LSErrors.h"
 
 @interface LSTestInterface ();
 
@@ -138,11 +139,15 @@
 {
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     [self.applicationController.APIManager loadContactsWithCompletion:^(NSSet *contacts, NSError *error) {
-        expect(contacts).toNot.beNil;
-        expect(error).to.beNil;
-        NSError *persistenceError;
-        BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
-        expect(success).to.beTruthy;
+        if (error) {
+            expect(error.code).to.equal(LSRequestInProgress);
+        } else {
+            expect(contacts).toNot.beNil;
+            expect(error).to.beNil;
+            NSError *persistenceError;
+            BOOL success = [self.applicationController.persistenceManager persistUsers:contacts error:&persistenceError];
+            expect(success).to.beTruthy;
+        }
         [latch decrementCount];
     }];
     [latch waitTilCount:0];

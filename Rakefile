@@ -16,12 +16,6 @@ rescue LoadError => exception
   end
 end
 
-# Enable realtime output under Jenkins
-if ENV['JENKINS_HOME']
-  STDOUT.sync = true
-  STDERR.sync = true
-end
-
 desc "Initialize the project for development and testing"
 task :init do
   puts green("Update submodules...")
@@ -61,7 +55,7 @@ task :travis do
 end
 
 if defined?(XCTasks)
-  XCTasks::TestTask.new do |t|
+  XCTasks::TestTask.new(test: :sim) do |t|
     t.workspace = 'LayerSample.xcworkspace'
     t.schemes_dir = 'Tests/Schemes'
     t.runner = :xcpretty
@@ -69,51 +63,62 @@ if defined?(XCTasks)
     t.subtask(app: 'LayerSampleTests') do |s|
       s.destination do |d|
         d.platform = :iossimulator
-        d.name = 'iPhone 6 Plus'
+        d.name = 'LayerUIKit-Test-Device'
         d.os = :latest
       end
     end    
   end
 end
 
+desc "Creates a Testing Simulator configured for LayerUIKit Testing"
+task :sim do
+  # Check if LayerUIKit Test Device Exists
+  device = `xcrun simctl list | grep LayerUIKit-Test-Device`
+  if $?.exitstatus.zero?
+    puts ("Found Layer Test Device #{device}")
+    device.each_line do |line|
+      if device_id = line.match(/\(([^\)]+)/)[1]
+        puts green ("Deleting device with ID #{device_id}")
+        run ("xcrun simctl delete #{device_id}")
+      end
+    end
+  end
+  puts green ("Creating iOS simulator for LayerUIKit Testing")
+  run("xcrun simctl create LayerUIKit-Test-Device com.apple.CoreSimulator.SimDeviceType.iPhone-6 com.apple.CoreSimulator.SimRuntime.iOS-8-1")
+end
 
 desc "Builds and pushes a new release to Hockey App"
 task :release do
 
-  # 1) Generate objects with: builder name/email (via git config), short-sha
-  require 'yaml'
   require 'byebug'
   require 'plist'
-  lockfile = YAML.load_file('Podfile.lock')
-  layer_kit_version = nil
-  lockfile['PODS'].detect do |entry|
-    if entry.kind_of?(String) && entry =~ /^LayerKit/
-      layer_kit_version = entry.match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
-    elsif entry.kind_of?(Hash) && entry.keys[0] =~ /^LayerKit/
-      layer_kit_version = entry.keys[0].match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
-    end
-  end
-
+  require "highline/import"
+  
+  # 1) Set the new version of the sample App.
+  plist = info_plist
+  sample_version = ask "Set Sample Version... \nCurrent Sample Version: #{sample_app_version} \nCurrent LayerKit Version: #{layerkit_version}"
+  puts green ("New Layer Sample App Version: #{sample_version}")
+  plist['CFBundleShortVersionString'] = sample_version
+  
+  # 2) Generate objects with: builder name/email (via git config), short-sha
   short_sha = `git rev-parse --short HEAD`.strip
   builder_name = `git config --get user.name`.strip
   builder_email = `git config --get user.email`.strip
 
   # 2) Insert generated object into Info.plist.
-  plist_path = 'Resources/LayerSample-Info.plist'
-  info_plist = Plist::parse_xml(plist_path)
-  info_plist['LYRBuildInformation'] = {
-    'LYRBuildLayerKitVersion' => layer_kit_version,
+  plist['LYRBuildInformation'] = {
+    'LYRBuildLayerKitVersion' => layerkit_version,
     'LYRBuildShortSha' => short_sha,
     'LYRBuildBuilderName' => builder_name,
     'LYRBuildBuilderEmail' => builder_email
   }
-
-  # 3) Set the bundle version to the current timestamp.
-  info_plist['CFBundleVersion'] = Time.now.to_i.to_s
-
+  
   # Write the plist.
+  plist_path = 'Resources/LayerSample-Info.plist'
   trap("SIGINT") { run("git checkout -- Resources/LayerSample-Info.plist", quiet: true) }
-  File.open(plist_path, 'w') { |file| file.write(info_plist.to_plist) }
+  File.open(plist_path, 'w') { |file| file.write(plist.to_plist) }
+  run ("git add Resources/LayerSample-Info.plist")
+  run ("git commit -m 'Changed LayerKit version string to #{sample_version}'")
 
   archive_path = 'LayerSample.xcarchive'
 
@@ -144,7 +149,36 @@ task :release do
   # 8) Let everyone know that Layer Sample is Available
   require 'slack-notifier'
   notifier = Slack::Notifier.new "layer", "IBYcWAHe4H4CEKLKUUJkzkAf"
-  notifier.ping "Good news everyone! A new version of the Layer iOS Sample App is available on Hockey App", channel: '#dev', username: 'LayerBot', icon_emoji: ":goodnewseveryone:"
+  notifier.ping "Good news everyone! Layer iOS Sample App v#{sample_version} is now available on Hockey App", channel: '#dev', username: 'LayerBot', icon_emoji: ":marshawn:"
+  notifier.ping "Good news everyone! Layer iOS Sample App v#{sample_version} is now available on Hockey App", channel: '#applications', username: 'LayerBot', icon_emoji: ":marshawn:"
+  
+  # 9) Remove the build artifacts from repository
+  run ("rm -rf LayerSample.app.dSYM.zip")
+  run ("rm -rf LayerSample.ipa")
+  
+end
+
+def info_plist
+  require 'plist'
+  plist_path = 'Resources/LayerSample-Info.plist'
+  info_plist = Plist::parse_xml(plist_path)
+end
+
+def sample_app_version
+  sample_version = info_plist['CFBundleShortVersionString']
+end
+
+def layerkit_version
+  require 'yaml'
+  lockfile = YAML.load_file('Podfile.lock')
+  layer_kit_version = nil
+  lockfile['PODS'].detect do |entry|
+    if entry.kind_of?(String) && entry =~ /^LayerKit/
+      layer_kit_version = entry.match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+    elsif entry.kind_of?(Hash) && entry.keys[0] =~ /^LayerKit/
+      layer_kit_version = entry.keys[0].match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+    end
+  end
 end
 
 # Safe to run when Bundler is not available
