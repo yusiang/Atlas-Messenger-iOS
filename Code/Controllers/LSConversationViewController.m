@@ -272,20 +272,12 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 /**
  
- LAYER UI KIT - Returns an `NSString` object that will be displayed as the push notification test for the given message.
- If no string is returned, Layer will not deliver a text based push notification.
+ LAYER UI KIT - Return an `NSOrderedSet` of `LYRMessage` objects. If nil is returned, controller will fall back to defaul
+ message sending behavior. If an empty `NSOrderedSet` is returned, no messages will be sent.
  
  */
-- (NSString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController pushNotificationTextForMessagePart:(LYRMessagePart *)messagePart
+- (NSOrderedSet *)conversationViewController:(LYRUIConversationViewController *)conversationViewController messagesForContentParts:(NSArray *)contentParts
 {
-    if (!self.applicationController.shouldSendPushText) return nil;
-    if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeTextPlain]) {
-        return [[NSString alloc] initWithData:messagePart.data encoding:NSUTF8StringEncoding];
-    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [messagePart.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
-        return @"Has sent a new image";
-    } else if ([messagePart.MIMEType isEqualToString:LYRUIMIMETypeLocation]) {
-        return @"Has sent a new location";
-    }
     return nil;
 }
 
