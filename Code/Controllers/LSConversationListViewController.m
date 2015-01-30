@@ -53,6 +53,8 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
     [self.navigationItem setRightBarButtonItem:composeButton];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationDeleted:) name:LSConversationDeletedNotification object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationParticipantsDidChange:) name:LSConversationParticipantsDidChangeNotification object:nil];
 }
 
 - (void)dealloc
@@ -239,6 +241,34 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
 
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Conversation Deleted"
                                                         message:@"The conversation has been deleted."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
+}
+
+- (void)conversationParticipantsDidChange:(NSNotification *)notification
+{
+    if (self.ls_navigationController.isAnimating) {
+        [self.ls_navigationController notifyWhenCompletionEndsUsingBlock:^{
+            [self conversationParticipantsDidChange:notification];
+        }];
+        return;
+    }
+
+    NSString *authenticatedUserID = self.applicationController.layerClient.authenticatedUserID;
+    if (!authenticatedUserID) return;
+    LYRConversation *conversation = notification.object;
+    if ([conversation.participants containsObject:authenticatedUserID]) return;
+
+    LSConversationViewController *conversationViewController = [self existingConversationViewController];
+    if (!conversationViewController) return;
+    if (![conversationViewController.conversation isEqual:conversation]) return;
+
+    [self.navigationController popToViewController:self animated:YES];
+
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Removed From Conversation"
+                                                        message:@"You have been removed from the conversation."
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
