@@ -91,7 +91,6 @@ LSEnvironment LSEnvironmentConfiguration(void)
     [self configureApplication:application forEnvironment:LSEnvironmentConfiguration()];
     [self initializeCrashlytics];
     [self initializeHockeyApp];
-    [self removeSplashView];
     
     // Set up window
     [self configureWindow];
