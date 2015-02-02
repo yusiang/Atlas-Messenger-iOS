@@ -6,7 +6,8 @@ dropbox_path = ENV['LAYER_DROPBOX_PATH'] || '~/Dropbox (Layer)'
 target 'LayerSample' do
   pod 'CocoaLumberjack'
   pod 'SVProgressHUD', :head
-  pod 'LayerKit', '0.9.6'
+#  pod 'LayerKit', '0.9.6'
+  pod 'LayerKit', path: '/Users/chipxsd/Development/Layer/LayerKit'
   pod 'HockeySDK', '~> 3.5.6'
   pod 'LayerUIKit', path: 'LayerUIKit'
 end
