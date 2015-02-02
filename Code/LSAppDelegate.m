@@ -505,6 +505,16 @@ LSEnvironment LSEnvironmentConfiguration(void)
 
 - (void)presentBugReportMailComposer
 {
+    if (![MFMailComposeViewController canSendMail]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Mail Account Required"
+                                                            message:@"Please first use the Settings app to configure your device to send email."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
+
     LYRUILastPhotoTaken(^(UIImage *image, NSError *error) {
         NSString *appVersion = [self bugReportAppVersion];
         NSString *layerKitVersion = [self bugReportLayerKitVersion];
