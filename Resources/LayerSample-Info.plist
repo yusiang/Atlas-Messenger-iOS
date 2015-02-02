@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9.5</string>
+	<string></string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -45,13 +45,27 @@
 	<key>LYRBuildInformation</key>
 	<dict>
 		<key>LYRBuildBuilderEmail</key>
-		<string>kcoleman731@gmail.com</string>
+		<string>klemen.verdnik@gmail.com</string>
 		<key>LYRBuildBuilderName</key>
-		<string>Kevin Coleman</string>
+		<string>Klemen Verdnik</string>
 		<key>LYRBuildLayerKitVersion</key>
-		<string>LayerKit (0.9.6)</string>
+		<dict>
+			<key>LayerKit (0.10.0-pre5)</key>
+			<array>
+				<string>CocoaLumberjack (~&gt; 1.8.1)</string>
+				<string>CocoaSPDY-Layer (~&gt; 20150126164828156)</string>
+				<string>FMDB/standalone/FTS (= 2.4-20141216161347845)</string>
+				<string>FMDBMigrationManager (~&gt; 1.3.2)</string>
+				<string>GCNetworkReachability (~&gt; 1.3.2)</string>
+				<string>layer-client-messaging-schema (= 20141124205020533.6)</string>
+				<string>layer-thrift (= 0.68.0)</string>
+				<string>LayerKit/Public (= 0.10.0-pre5)</string>
+				<string>sqlite3 (= 3.8.7.4-1)</string>
+				<string>TransitionKit (~&gt; 2.1.0)</string>
+			</array>
+		</dict>
 		<key>LYRBuildShortSha</key>
-		<string>196e2ce</string>
+		<string>50ab1da</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location will only be shared in conversations that you choose.</string>
