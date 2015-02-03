@@ -1,9 +1,4 @@
 PODS:
-  - CocoaLumberjack (1.9.2):
-    - CocoaLumberjack/Extensions (= 1.9.2)
-  - CocoaLumberjack/Core (1.9.2)
-  - CocoaLumberjack/Extensions (1.9.2):
-    - CocoaLumberjack/Core
   - Expecta (0.3.1)
   - HockeySDK (3.5.7)
   - KIF (3.0.8):
@@ -18,7 +13,6 @@ PODS:
   - SVProgressHUD (HEAD based on 1.1.2)
 
 DEPENDENCIES:
-  - CocoaLumberjack
   - Expecta (~> 0.3.0)
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0.8)
@@ -48,7 +42,6 @@ CHECKOUT OPTIONS:
     :git: git@github.com:layerhq/LYRCountDownLatch.git
 
 SPEC CHECKSUMS:
-  CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   HockeySDK: f0e874d1c6833163ee0c4e423606faf33ad04071
   KIF: 2db5e8cf59136dd1267d49cca0d55883389b09d3

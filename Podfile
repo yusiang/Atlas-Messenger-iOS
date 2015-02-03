@@ -4,7 +4,6 @@ source 'https://github.com/CocoaPods/Specs.git'
 dropbox_path = ENV['LAYER_DROPBOX_PATH'] || '~/Dropbox (Layer)'
 
 target 'LayerSample' do
-  pod 'CocoaLumberjack'
   pod 'SVProgressHUD', :head
   pod 'LayerKit', path: "#{dropbox_path}/Layer/Builds/iOS/LayerKit-0.10.0-pre4"
   pod 'HockeySDK', '~> 3.5.6'
