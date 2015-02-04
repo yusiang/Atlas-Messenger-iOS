@@ -128,8 +128,6 @@ LSEnvironment LSEnvironmentConfiguration(void)
         }
     }];
     
-    [self registerForRemoteNotifications:application];
-    
     return YES;
 }
 
@@ -174,6 +172,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
     NSDictionary *downloadConfiguration = @{ LYRConnectionConfigurationAutodownloadMaximumFileSizeKey : @(128 * 1024),
                                              LYRConnectionConfigurationAutodownloadMIMETypesKey : [NSSet setWithObject:LYRUIMIMETypeImageJPEGPreview] };
     [client setConfiguration:downloadConfiguration forConnection:LYRConnectionProfileDefault];
+    [self registerForRemoteNotifications:application];
 }
 
 - (BOOL)resumeSession
@@ -243,6 +242,11 @@ LSEnvironment LSEnvironmentConfiguration(void)
     } else {
         [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
     }
+}
+
+- (void)unregisterForRemoteNotifications:(UIApplication *)application
+{
+    [application unregisterForRemoteNotifications];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -412,6 +416,12 @@ LSEnvironment LSEnvironmentConfiguration(void)
     [self.authenticationViewController dismissViewControllerAnimated:YES completion:^{
         self.conversationListViewController = nil;
     }];
+    
+    // TODO: kevin: should we be keeping a reference to the app in the class,
+    //       or just use sharedApplication. We need to call
+    //       register and unregister for remote notifications from different
+    //       places.
+    [self unregisterForRemoteNotifications:[UIApplication sharedApplication]];
 }
 
 #pragma mark - Contacts
