@@ -327,7 +327,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
  */
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
-    if (![message.parts[0] isDownloaded]) {
+    if ([message.parts[0] transferStatus] != LYRContentTransferComplete) {
         NSError *error;
         [message.parts[0] downloadContent:&error];
         if (error) {
