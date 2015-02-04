@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, LSRegisterRow) {
     LSRegisterRowCount,
 };
 
-@interface LSAuthenticationViewController () <LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIActionSheetDelegate>
+@interface LSAuthenticationViewController () <UITableViewDataSource, UITableViewDelegate, LSAuthenticationTableViewFooterDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, copy) NSString *firstName;
 @property (nonatomic, copy) NSString *lastName;
@@ -37,6 +37,7 @@ typedef NS_ENUM(NSInteger, LSRegisterRow) {
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *confirmation;
 
+@property (nonatomic) UITableView *tableView;
 @property (nonatomic, weak) UITextField *firstNameTextField;
 @property (nonatomic, weak) UITextField *lastNameTextField;
 @property (nonatomic, weak) UITextField *emailTextField;
@@ -58,9 +59,9 @@ NSString *const LSEmailRowPlaceholderText = @"Enter Your Email";
 NSString *const LSPasswordRowPlaceholderText = @"Enter Your Password";
 NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:UITableViewStyleGrouped];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _authenticationState = LSAuthenticationStateLogin;
     }
@@ -71,9 +72,17 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 {
     [super viewDidLoad];
 
+    // We're not using UITableViewController because its handling of the keyboard causes the table view to scroll multiple times unnecessarily and can leave our text fields offscreen on a 3.5-inch device.
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
     self.tableView.rowHeight = 44;
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSAuthenticationCellIdentifier];
+    [self.view addSubview:self.tableView];
+
+    [self configureLayoutConstraintsForTableView];
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
@@ -426,6 +435,16 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 {
     [self setEditing:YES animated:YES];
     return YES;
+}
+
+#pragma mark - Layout Constraints
+
+- (void)configureLayoutConstraintsForTableView
+{
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
 }
 
 #pragma mark - Actions
