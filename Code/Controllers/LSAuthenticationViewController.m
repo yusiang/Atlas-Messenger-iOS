@@ -356,11 +356,13 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
     [self.tableView beginUpdates];
     switch (authenticationState) {
         case LSAuthenticationStateLogin:
-            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+            // We use the fade animation here for consistency with the insertion animation below.
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case LSAuthenticationStateRegister:
-            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+            // We use the fade animation here instead of automatic since automatic causes the inserted cells to immediately appear instead of animating on iOS 8.
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
     [self.tableView endUpdates];
