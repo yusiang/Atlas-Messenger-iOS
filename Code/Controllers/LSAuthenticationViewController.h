@@ -30,7 +30,7 @@
  @abstract The `LSAuthenticationViewController` presents a user interface allowing for user login or user registration.
  When a user enters his or her credentials, the controller will attempt to authenticate and/or register the user.
  */
-@interface LSAuthenticationViewController : UITableViewController
+@interface LSAuthenticationViewController : UIViewController
 
 /**
  @abstract The controller object for the application.
