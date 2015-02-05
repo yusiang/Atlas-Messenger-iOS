@@ -90,15 +90,16 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 
             // We make this call within our own animation block to have the section header's content/constraints animate alongside the table view animations.
             [self.tableView layoutIfNeeded];
+
+            self.tableViewHeader.showsContent = !editing;
         }];
     } else {
         [UIView performWithoutAnimation:^{
             [self.tableView beginUpdates];
             [self.tableView endUpdates];
         }];
+        self.tableViewHeader.showsContent = !editing;
     }
-
-    self.tableViewHeader.showsContent = !editing;
 }
 
 #pragma mark - UITableViewDataSource
