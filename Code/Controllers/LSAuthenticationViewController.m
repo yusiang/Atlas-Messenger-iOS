@@ -84,8 +84,13 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
 
     // We need to trigger the recalculation of the table view's height (i.e. namely the header since its height is different when editing) so we call the following without actually making any table view updates.
     if (animated) {
-        [self.tableView beginUpdates];
-        [self.tableView endUpdates];
+        [UIView animateWithDuration:0.3 animations:^{
+            [self.tableView beginUpdates];
+            [self.tableView endUpdates];
+
+            // We make this call within our own animation block to have the section header's content/constraints animate alongside the table view animations.
+            [self.tableView layoutIfNeeded];
+        }];
     } else {
         [UIView performWithoutAnimation:^{
             [self.tableView beginUpdates];
@@ -353,19 +358,24 @@ NSString *const LSConfirmationRowPlaceholderText = @"Confirm Your Password";
                             [NSIndexPath indexPathForRow:LSRegisterRowLastName inSection:0],
                             [NSIndexPath indexPathForRow:LSRegisterRowConfirmation inSection:0]];
 
-    [self.tableView beginUpdates];
-    switch (authenticationState) {
-        case LSAuthenticationStateLogin:
-            // We use the fade animation here for consistency with the insertion animation below.
-            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case LSAuthenticationStateRegister:
-            // We use the fade animation here instead of automatic since automatic causes the inserted cells to immediately appear instead of animating on iOS 8.
-            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
-    [self.tableView endUpdates];
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.tableView beginUpdates];
+        switch (authenticationState) {
+            case LSAuthenticationStateLogin:
+                // We use the fade animation here for consistency with the insertion animation below.
+                [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+                break;
+
+            case LSAuthenticationStateRegister:
+                // We use the fade animation here instead of automatic since automatic causes the inserted cells to immediately appear instead of animating on iOS 8.
+                [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+                break;
+        }
+        [self.tableView endUpdates];
+
+        // We make this call within our own animation block to have the section header's content/constraints animate alongside the table view animations.
+        [self.tableView layoutIfNeeded];
+    }];
 
     // Cells that aren't being inserted or deleted may display different content depending on the state so they must be reconfigured.
     for (LSInputTableViewCell *cell in [self.tableView visibleCells]) {
