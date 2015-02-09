@@ -17,7 +17,7 @@ DEPENDENCIES:
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0.8)
   - KIFViewControllerActions (from `git@github.com:blakewatters/KIFViewControllerActions.git`)
-  - LayerKit
+  - LayerKit (~> 0.9.6)
   - LayerUIKit (from `LayerUIKit`)
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - OCMock (~> 3.1)
