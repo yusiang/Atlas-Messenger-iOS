@@ -327,18 +327,6 @@ NSString *const LSDetailsButtonLabel = @"Details";
  */
 - (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
-    if ([message.parts[0] transferStatus] != LYRContentTransferComplete) {
-        NSError *error;
-        [message.parts[0] downloadContent:&error];
-        if (error) {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed downloading message part"
-                                                                message:error.localizedDescription
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-            [alertView show];
-        }
-    }
     if (self.applicationController.debugModeEnabled) {
         LSMessageDetailViewController *controller = [LSMessageDetailViewController messageDetailViewControllerWithMessage:message applicationController:self.applicationController];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];

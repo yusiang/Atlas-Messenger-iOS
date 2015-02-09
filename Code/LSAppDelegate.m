@@ -169,9 +169,6 @@ LSEnvironment LSEnvironmentConfiguration(void)
     self.localNotificationManager = [LSLocalNotificationManager new];
     self.authenticationViewController.applicationController = self.applicationController;
     
-    NSDictionary *downloadConfiguration = @{ LYRConnectionConfigurationAutodownloadMaximumFileSizeKey : @(128 * 1024),
-                                             LYRConnectionConfigurationAutodownloadMIMETypesKey : [NSSet setWithObject:LYRUIMIMETypeImageJPEGPreview] };
-    [client setConfiguration:downloadConfiguration forConnection:LYRConnectionProfileDefault];
     [self registerForRemoteNotifications:application];
 }
 
