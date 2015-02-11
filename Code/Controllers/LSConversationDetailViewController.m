@@ -223,7 +223,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Implementation Need for custom edit actions
+    // TODO - Handle on iOS 7
 }
 
 - (void)removeParticipantAtIndexPath:(NSIndexPath *)indexPath
