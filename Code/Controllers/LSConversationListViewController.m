@@ -106,8 +106,8 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
  */
 - (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController titleForConversation:(LYRConversation *)conversation
 {
-    NSString *conversationName = conversation.metadata[LSConversationMetadataNameKey];
-    if (conversationName) return conversationName;
+    NSString *conversationTitle = conversation.metadata[LSConversationMetadataNameKey];
+    if (conversationTitle) return conversationTitle;
     
     NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
     [participantIdentifiers minusSet:[NSSet setWithObject:self.layerClient.authenticatedUserID]];
