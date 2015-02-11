@@ -131,8 +131,8 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
         }
     }];
 
-    NSString *fullNamesString = [firstNames componentsJoinedByString:@", "];
-    return fullNamesString;
+    NSString *firstNamesString = [firstNames componentsJoinedByString:@", "];
+    return firstNamesString;
 }
 
 /**
