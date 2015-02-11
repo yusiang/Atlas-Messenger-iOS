@@ -12,6 +12,7 @@
 @interface LSInputTableViewCell ()
 
 @property (nonatomic) UILabel *guideLabel;
+@property (nonatomic) NSLayoutConstraint *guideLabelLeftConstraint;
 
 @end
 
@@ -42,15 +43,22 @@
     return self;
 }
 
+- (void)updateConstraints
+{
+    self.guideLabelLeftConstraint.constant = self.separatorInset.left;
+    [super updateConstraints];
+}
+
 - (void)setUpConstraints
 {
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.guideLabel
+    self.guideLabelLeftConstraint = [NSLayoutConstraint constraintWithItem:self.guideLabel
                                                                  attribute:NSLayoutAttributeLeft
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeLeft
                                                                 multiplier:1.0
-                                                                  constant:10]];
+                                                                  constant:self.separatorInset.left];
+    [self.contentView addConstraint:self.guideLabelLeftConstraint];
 
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.guideLabel
                                                                  attribute:NSLayoutAttributeCenterY
@@ -91,6 +99,12 @@
                                                                  attribute:NSLayoutAttributeHeight
                                                                 multiplier:1.0
                                                                   constant:0]];
+}
+
+- (void)setSeparatorInset:(UIEdgeInsets)separatorInset
+{
+    [super setSeparatorInset:separatorInset];
+    [self setNeedsUpdateConstraints];
 }
 
 - (void)setGuideText:(NSString *)guideText
