@@ -104,38 +104,35 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
  name representing the `lastMessage.sentByUserID` property first in the string.
  
  */
-- (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController labelForConversation:(LYRConversation *)conversation
+- (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController titleForConversation:(LYRConversation *)conversation
 {
-    NSString *conversationName = conversation.metadata[LSConversationMetadataNameKey];
-    if (conversationName) {
-        return conversationName;
-    }
+    NSString *conversationTitle = conversation.metadata[LSConversationMetadataNameKey];
+    if (conversationTitle) return conversationTitle;
     
-    if (!self.layerClient.authenticatedUserID) return @"Not auth'd";
-
     NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
-    if (self.layerClient.authenticatedUserID) {
-        [participantIdentifiers removeObject:self.layerClient.authenticatedUserID];
-    }
+    [participantIdentifiers minusSet:[NSSet setWithObject:self.layerClient.authenticatedUserID]];
     
     if (participantIdentifiers.count == 0) return @"Personal Conversation";
     
     NSMutableSet *participants = [[self.applicationController.persistenceManager usersForIdentifiers:participantIdentifiers] mutableCopy];
     if (participants.count == 0) return @"No Matching Participants";
+    if (participants.count == 1) return [[participants allObjects][0] fullName];
     
-    // Put the latest message sender's name first
-    NSMutableArray *fullNames = [NSMutableArray new];
-    for (id<LYRUIParticipant> participant in participants) {
-        if (!participant.fullName) continue;
-        if ([conversation.lastMessage.sentByUserID isEqualToString:participant.participantIdentifier]) {
-            [fullNames insertObject:participant.fullName atIndex:0];
-        } else {
-            [fullNames addObject:participant.fullName];
+    NSMutableArray *firstNames = [NSMutableArray new];
+    [participants enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+        id<LYRUIParticipant> participant = obj;
+        if (participant.firstName) {
+            // Put the last message sender's name first
+            if ([conversation.lastMessage.sentByUserID isEqualToString:participant.participantIdentifier]) {
+                [firstNames insertObject:participant.firstName atIndex:0];
+            } else {
+                [firstNames addObject:participant.firstName];
+            }
         }
-    }
+    }];
 
-    NSString *fullNamesString = [fullNames componentsJoinedByString:@", "];
-    return fullNamesString;
+    NSString *firstNamesString = [firstNames componentsJoinedByString:@", "];
+    return firstNamesString;
 }
 
 /**
@@ -160,9 +157,10 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
         return;
     }
 
-    LSConversationViewController *conversationViewController = [LSConversationViewController conversationViewControllerWithConversation:conversation layerClient:self.applicationController.layerClient];
+    LSConversationViewController *conversationViewController = [LSConversationViewController conversationViewControllerWithLayerClient:self.applicationController.layerClient];
+    conversationViewController.conversation = conversation;
     conversationViewController.applicationController = self.applicationController;
-    conversationViewController.showsAddressBar = YES;
+    conversationViewController.displaysAddressBar = YES;
     if (self.navigationController.topViewController == self) {
         [self.navigationController pushViewController:conversationViewController animated:YES];
     } else {
