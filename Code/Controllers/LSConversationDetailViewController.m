@@ -14,6 +14,7 @@
 #import "LSUtilities.h"
 #import "LSCenterTextTableViewCell.h"
 #import "LSInputTableViewCell.h"
+#import "SVProgressHUD.h"
 
 typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
     LSConversationDetailTableSectionMetadata,
@@ -71,14 +72,14 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LSParticipantCellIdentifier];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSInputCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
-   
+    
     [self configureAppearance];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(conversationMetadataDidChange:)
                                                  name:LSConversationMetadataDidChangeNotification
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(conversationParticipantsDidChange:)
                                                  name:LSConversationParticipantsDidChangeNotification
@@ -102,10 +103,10 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     switch ((LSConversationDetailTableSection)section) {
         case LSConversationDetailTableSectionMetadata:
             return 1;
-
+            
         case LSConversationDetailTableSectionParticipants:
             return self.participantIdentifiers.count + 1;
-
+            
         case LSConversationDetailTableSectionLocation:
             return 1;
             
@@ -125,13 +126,21 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             [self configureConversationNameCell:cell];
             return cell;
         }
-
+            
         case LSConversationDetailTableSectionParticipants:
             if (indexPath.row < self.participantIdentifiers.count) {
                 NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
                 id<LYRUIParticipant>participant = [self.detailDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
                 LYRUIParticipantTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSParticipantCellIdentifier forIndexPath:indexPath];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                if ([self blockedParticipantAtIndexPath:indexPath]) {
+                    UILabel *blockLabel = [[UILabel alloc] init];
+                    blockLabel.text = @"Blocked";
+                    blockLabel.textColor = [UIColor redColor];
+                    blockLabel.font = [UIFont systemFontOfSize:12];
+                    [blockLabel sizeToFit];
+                    cell.accessoryView = blockLabel;
+                }
                 [cell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarImage:YES];
                 return cell;
             } else {
@@ -142,7 +151,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
                 cell.textLabel.font = LYRUIMediumFont(14);
                 return cell;
             }
-
+            
         case LSConversationDetailTableSectionLocation: {
             UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
             cell.textLabel.text = @"Share My Location";
@@ -150,14 +159,14 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             cell.textLabel.font = LYRUIMediumFont(14);
             return cell;
         }
-
+            
         case LSConversationDetailTableSectionDeletion: {
             LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
             cell.centerTextLabel.text = @"Global Delete Conversation";
             cell.centerTextLabel.textColor = LYRUIRedColor();
             return cell;
         }
-
+            
         default:
             return nil;
     }
@@ -168,13 +177,13 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     switch ((LSConversationDetailTableSection)section) {
         case LSConversationDetailTableSectionMetadata:
             return @"Conversation Name";
-
+            
         case LSConversationDetailTableSectionParticipants:
             return @"Participants";
-
+            
         case LSConversationDetailTableSectionLocation:
             return @"Location";
-
+            
         default:
             return nil;
     }
@@ -183,9 +192,10 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch ((LSConversationDetailTableSection)indexPath.section) {
-        case LSConversationDetailTableSectionParticipants:
-            return indexPath.row < self.participantIdentifiers.count;
-
+        case LSConversationDetailTableSectionParticipants: {
+            BOOL canEdit = indexPath.row < self.participantIdentifiers.count;
+            return canEdit;
+        }
         case LSConversationDetailTableSectionMetadata:
         case LSConversationDetailTableSectionLocation:
         case LSConversationDetailTableSectionDeletion:
@@ -195,10 +205,29 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     return NO;
 }
 
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewRowAction *removeAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Remove" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+        [self removeParticipantAtIndexPath:indexPath];
+    }];
+    removeAction.backgroundColor = [UIColor lightGrayColor];
+    
+    NSString *blockString = [self blockedParticipantAtIndexPath:indexPath] ? @"Unblock" : @"Block";
+    UITableViewRowAction *blockAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:blockString handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+        [self blockParticipantAtIndexPath:indexPath];
+    }];
+    
+    blockAction.backgroundColor = [UIColor redColor];
+    return @[removeAction, blockAction];
+}
+
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle != UITableViewCellEditingStyleDelete) return;
+    // TODO - Handle on iOS 7
+}
 
+- (void)removeParticipantAtIndexPath:(NSIndexPath *)indexPath
+{
     NSString *participantIdentifier = self.participantIdentifiers[indexPath.row];
     if (self.changingParticipantsMutatesConversation) {
         NSError *error;
@@ -212,7 +241,37 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
         [self switchToConversationForParticipants];
     }
-    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+}
+
+- (void)blockParticipantAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *identifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
+    LYRPolicy *policy =  [self blockedParticipantAtIndexPath:indexPath];
+    
+    if (policy) {
+        NSError *error;
+        [self.applicationController.layerClient removePolicy:policy error:&error];
+        if (error) {
+            NSLog(@"Falied to remove policy with error: %@", error);
+        }
+    } else {
+        [self blockParticipantWithIdentifier:identifier];
+    }
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (void)blockParticipantWithIdentifier:(NSString *)identitifer
+{
+    LYRPolicy *blockPolicy = [LYRPolicy policyWithType:LYRPolicyTypeBlock];
+    blockPolicy.sentByUserID = identitifer;
+    
+    NSError *error;
+    [self.applicationController.layerClient addPolicy:blockPolicy error:&error];
+    if (error) {
+        NSLog(@"Failed adding policy with error %@", error);
+    }
+    [SVProgressHUD showSuccessWithStatus:@"Participant Blocked"];
 }
 
 #pragma mark - UITableViewDelegate
@@ -229,9 +288,20 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         case LSConversationDetailTableSectionLocation:
             [self shareLocation];
             break;
-        
+            
         case LSConversationDetailTableSectionDeletion:
-            [self deleteConversation];
+            switch (indexPath.row) {
+                case 0:
+                    [self deleteConversation];
+                    break;
+                    
+                case 1:
+                    [self blockParticipantAtIndexPath:indexPath];
+                    break;
+                default:
+                    break;
+            }
+            
             break;
             
         default:
@@ -252,7 +322,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         [alertView show];
         return;
     }
-
+    
     switch ([CLLocationManager authorizationStatus]) {
         case kCLAuthorizationStatusDenied:
         case kCLAuthorizationStatusRestricted: {
@@ -264,13 +334,13 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             [alertView show];
         }
             return;
-
+            
         default:
             break;
     }
-
+    
     if (self.locationManager) return;
-
+    
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
@@ -300,7 +370,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     if (manager != self.locationManager) return;
-
+    
     self.locationManager = nil;
     [manager stopUpdatingLocation];
     [self.detailDelegate conversationDetailViewController:self didShareLocation:locations.lastObject];
@@ -318,12 +388,12 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 {
     [participantPickerController dismissViewControllerAnimated:YES completion:nil];
     self.participantPickerDataSource = nil;
-
+    
     if ([self.participantIdentifiers containsObject:participant.participantIdentifier]) return;
-
+    
     NSString *authenticatedUserID = self.applicationController.layerClient.authenticatedUserID;
     if ([participant.participantIdentifier isEqualToString:authenticatedUserID]) return;
-
+    
     if (self.changingParticipantsMutatesConversation) {
         NSError *error;
         BOOL success = [self.conversation addParticipants:[NSSet setWithObject:participant.participantIdentifier] error:&error];
@@ -350,7 +420,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     }
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;
-
+    
     NSIndexPath *nameIndexPath = [NSIndexPath indexPathForRow:0 inSection:LSConversationDetailTableSectionMetadata];
     LSInputTableViewCell *nameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:nameIndexPath];
     if (nameCell) {
@@ -362,6 +432,19 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 {
     self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
     [self.participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
+}
+
+- (LYRPolicy *)blockedParticipantAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSOrderedSet *policies = self.applicationController.layerClient.policies;
+    NSString *participant = self.participantIdentifiers[indexPath.row];
+    NSPredicate *policyPredicate = [NSPredicate predicateWithFormat:@"SELF.sentByUserID = %@", participant];
+    NSOrderedSet *filteredPolicies = [policies filteredOrderedSetUsingPredicate:policyPredicate];
+    if (filteredPolicies.count) {
+        return filteredPolicies.firstObject;
+    } else {
+        return nil;
+    }
 }
 
 #pragma mark - UITextFieldDelegate
@@ -384,12 +467,12 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     if (!self.conversation) return;
     if (!notification.object) return;
     if (![notification.object isEqual:self.conversation]) return;
-
+    
     NSIndexPath *nameIndexPath = [NSIndexPath indexPathForRow:0 inSection:LSConversationDetailTableSectionMetadata];
     LSInputTableViewCell *nameCell = (LSInputTableViewCell *)[self.tableView cellForRowAtIndexPath:nameIndexPath];
     if (!nameCell) return;
     if ([nameCell.textField isFirstResponder]) return;
-
+    
     [self configureConversationNameCell:nameCell];
 }
 
@@ -398,11 +481,11 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     if (!self.conversation) return;
     if (!notification.object) return;
     if (![notification.object isEqual:self.conversation]) return;
-
+    
     [self.tableView beginUpdates];
-
+    
     NSSet *existingIdentifiers = [NSSet setWithArray:self.participantIdentifiers];
-
+    
     NSMutableArray *deletedIndexPaths = [NSMutableArray new];
     NSMutableIndexSet *deletedIndexSet = [NSMutableIndexSet new];
     NSMutableSet *deletedIdentifiers = [existingIdentifiers mutableCopy];
@@ -415,7 +498,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     }
     [self.participantIdentifiers removeObjectsAtIndexes:deletedIndexSet];
     [self.tableView deleteRowsAtIndexPaths:deletedIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
-
+    
     NSMutableArray *insertedIndexPaths = [NSMutableArray new];
     NSMutableSet *insertedIdentifiers = [self.conversation.participants mutableCopy];
     NSString *authenticatedUserID = self.applicationController.layerClient.authenticatedUserID;
@@ -427,7 +510,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         [insertedIndexPaths addObject:indexPath];
     }
     [self.tableView insertRowsAtIndexPaths:insertedIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
-
+    
     [self.tableView endUpdates];
 }
 

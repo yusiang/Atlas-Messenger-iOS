@@ -29,7 +29,6 @@
         _testEnvironment = LSTestEnvironment;
         _applicationController = applicationController;
         _contentFactory = [LSLayerContentFactory layerContentFactoryWithLayerClient:applicationController.layerClient];
-        [self deleteContacts];
     }
     return self;
 }
@@ -45,9 +44,13 @@
 - (LSTestUser *)registerAndAuthenticateTestUser:(LSTestUser *)testUser
 {
     LSTestUser *user = [self registerTestUser:testUser];
-    [self authenticateTestUser:user];
-    [self loadContacts];
-    return testUser;
+    if (user) {
+        [self authenticateTestUser:user];
+        [self loadContacts];
+        return testUser;
+    } else {
+        return nil;
+    }
 }
 
 - (LSTestUser *)registerTestUser:(LSTestUser *)testUser
@@ -123,6 +126,7 @@
 
 - (void)logoutIfNeeded
 {
+    [self deleteContacts];
     if (self.applicationController.layerClient.authenticatedUserID) {
         LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
         [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
