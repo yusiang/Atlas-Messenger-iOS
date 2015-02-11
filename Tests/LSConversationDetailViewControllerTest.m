@@ -26,7 +26,8 @@ extern NSString *const LSConversationNamePlaceholderText;
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) LSTestInterface *testInterface;
-@property (nonatomic) NSSet *participants;
+@property (nonatomic) LSTestUser *participant;
+@property (nonatomic) NSSet *participantIdentifiers;
 
 @end
 
@@ -35,16 +36,17 @@ extern NSString *const LSConversationNamePlaceholderText;
 - (void)setUp
 {
     [super setUp];
+
     LSApplicationController *applicationController =  [(LSAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [LSTestInterface testInterfaceWithApplicationController:applicationController];
     [self.testInterface registerAndAuthenticateTestUser:[LSTestUser testUserWithNumber:0]];
     
-    LSTestUser *testUser2 = [self.testInterface registerTestUser:[LSTestUser testUserWithNumber:2]];
+    self.participant = [self.testInterface registerTestUser:[LSTestUser testUserWithNumber:2]];
     [self.testInterface loadContacts];
     
-    self.participants = [NSSet setWithObject:testUser2.userID];
-    self.conversation = [self.testInterface.contentFactory newConversationsWithParticipants:self.participants];
-    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
+    self.participantIdentifiers = [NSSet setWithObject:self.participant.participantIdentifier];
+    self.conversation = [self.testInterface.contentFactory newConversationsWithParticipants:self.participantIdentifiers];
+    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participantIdentifiers]];
 }
 
 - (void)tearDown
@@ -106,7 +108,7 @@ extern NSString *const LSConversationNamePlaceholderText;
     
     [tester waitForViewWithAccessibilityLabel:[[LSTestUser testUserWithNumber:2] fullName]];
     [tester swipeViewWithAccessibilityLabel:[[LSTestUser testUserWithNumber:2] fullName] inDirection:KIFSwipeDirectionLeft];
-    [tester tapViewWithAccessibilityLabel:@"Delete"];
+    [tester tapViewWithAccessibilityLabel:@"Remove"];
     [tester waitForAbsenceOfViewWithAccessibilityLabel:[[LSTestUser testUserWithNumber:2] fullName]];
     [delegateMock verify];
 }
@@ -150,7 +152,7 @@ extern NSString *const LSConversationNamePlaceholderText;
 
 - (void)testToVerifyConversationDeletionFunctionality
 {
-    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participantIdentifiers]];
     [tester tapViewWithAccessibilityLabel:LSDetailsButtonAccessibilityLabel];
     [tester waitForViewWithAccessibilityLabel:LSConversationDetailViewControllerTitle];
     
@@ -180,6 +182,43 @@ extern NSString *const LSConversationNamePlaceholderText;
 
 }
 
+- (void)testToVerifyParticipantBlockingFunctionality
+{
+    [self navigateToConversationDetailViewController];
+    
+    [tester swipeViewWithAccessibilityLabel:self.participant.fullName inDirection:KIFSwipeDirectionLeft];
+    [tester waitForViewWithAccessibilityLabel:@"Block"];
+    [tester tapViewWithAccessibilityLabel:@"Block"];
+    [tester waitForViewWithAccessibilityLabel:@"Blocked"];
+    
+    LYRPolicy *policy = self.testInterface.applicationController.layerClient.policies.firstObject;
+    expect(policy).toNot.beNil;
+    expect(policy.sentByUserID).to.equal(self.participant.participantIdentifier);
+}
+
+- (void)testToVerifyParticipantUnBlockingFunctionality
+{
+    LYRPolicy *policy = [LYRPolicy policyWithType:LYRPolicyTypeBlock];
+    policy.sentByUserID = self.participant.participantIdentifier;
+    NSError *error;
+    [self.testInterface.applicationController.layerClient addPolicy:policy error:&error];
+    expect(error).to.beNil;
+    
+    LYRPolicy *newPolicy = self.testInterface.applicationController.layerClient.policies.firstObject;
+    expect(newPolicy).toNot.beNil;
+    expect(newPolicy.sentByUserID).to.equal(self.participant.participantIdentifier);
+    
+    [self navigateToConversationDetailViewController];
+    [tester waitForViewWithAccessibilityLabel:@"Blocked"];
+    [tester swipeViewWithAccessibilityLabel:self.participant.fullName inDirection:KIFSwipeDirectionLeft];
+    [tester waitForViewWithAccessibilityLabel:@"Unblock"];
+    [tester tapViewWithAccessibilityLabel:@"Unblock"];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Blocked"];
+    
+    NSOrderedSet *policies = self.testInterface.applicationController.layerClient.policies;
+    expect(policies).to.beNil;
+}
+
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
 {
     expect(conversationDetailViewController).toNot.beNil;
@@ -199,5 +238,11 @@ extern NSString *const LSConversationNamePlaceholderText;
     return [self.testInterface userForIdentifier:participantIdentifier];
 }
 
+- (void)navigateToConversationDetailViewController
+{
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participantIdentifiers]];
+    [tester tapViewWithAccessibilityLabel:LSDetailsButtonAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:LSConversationDetailViewControllerTitle];
+}
 
 @end
