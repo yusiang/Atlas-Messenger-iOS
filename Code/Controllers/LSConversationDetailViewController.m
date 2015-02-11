@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
 @property (nonatomic) NSMutableArray *participantIdentifiers;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
-@property (nonatomic) LYRPolicy *blockPolicy;
+
 @end
 
 @implementation LSConversationDetailViewController
@@ -271,7 +271,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     if (error) {
         NSLog(@"Failed adding policy with error %@", error);
     }
-    self.blockPolicy = blockPolicy;
     [SVProgressHUD showSuccessWithStatus:@"Participant Blocked"];
 }
 
