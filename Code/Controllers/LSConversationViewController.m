@@ -154,11 +154,10 @@ NSString *const LSDetailsButtonLabel = @"Details";
     [super viewWillAppear:animated];
     
     if ([self.conversation.metadata valueForKey:LSConversationMetadataNameKey]) {
-        self.conversationTitle = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
+        self.title = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
     } else {
-        self.conversationTitle = nil;
+        self.title = [self defaultTitle];
     }
-    
     self.addressBarController.dataSource = self;
 }
 
@@ -222,10 +221,9 @@ NSString *const LSDetailsButtonLabel = @"Details";
     NSString *timeString = [LSShortTimeFormatter() stringFromDate:date];
     
     NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
-    NSRange boldedRange = NSMakeRange(0, dateString.length);
-    [dateAttributedString addAttribute:NSFontAttributeName
-                                 value:[UIFont boldSystemFontOfSize:12]
-                                 range:boldedRange];
+    [dateAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(0, dateAttributedString.length)];
+    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, dateAttributedString.length)];
+    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:12] range:NSMakeRange(0, dateString.length)];
     return dateAttributedString;
 }
 
@@ -266,8 +264,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
     } else {
         statusString = @"Not Sent";
     }
-
-    return [[NSAttributedString alloc] initWithString:statusString];
+    return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}];
 }
 
 /**
@@ -279,16 +276,6 @@ NSString *const LSDetailsButtonLabel = @"Details";
 - (NSOrderedSet *)conversationViewController:(LYRUIConversationViewController *)conversationViewController messagesForContentParts:(NSArray *)contentParts
 {
     return nil;
-}
-
-/**
- 
- LAYER UI KIT - If your application would like to mark messages as read, return YES.
- 
- */
-- (BOOL)conversationViewController:(LYRUIConversationViewController *)conversationViewController shouldUpdateRecipientStatusForMessage:(LYRMessage *)message
-{
-    return YES;
 }
 
 #pragma mark - LYRUIConversationViewControllerDelegate
@@ -473,10 +460,24 @@ NSString *const LSDetailsButtonLabel = @"Details";
 - (void)configureTitle
 {
     if ([self.conversation.metadata valueForKey:LSConversationMetadataNameKey]) {
-        self.conversationTitle = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
+        self.title = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];
     } else {
-        self.conversationTitle = nil;
+        self.title = [self defaultTitle];
     }
+}
+
+- (NSString *)defaultTitle
+{
+    if (!self.conversation) return @"New Message";
+    NSMutableSet *otherParticipantIDs = [self.conversation.participants mutableCopy];
+    if (self.layerClient.authenticatedUserID) [otherParticipantIDs removeObject:self.layerClient.authenticatedUserID];
+    if (otherParticipantIDs.count == 0) return @"Personal";
+    if (otherParticipantIDs.count == 1) {
+        NSString *otherParticipantID = [otherParticipantIDs anyObject];
+        id<LYRUIParticipant> participant = [self.dataSource conversationViewController:self participantForIdentifier:otherParticipantID];
+        return participant ? participant.firstName : @"Unknown";
+    }
+    return @"Group";
 }
 
 #pragma mark - Link Tap Handler
