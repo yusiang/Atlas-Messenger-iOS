@@ -9,12 +9,12 @@
 #import "LSConversationDetailViewController.h"
 #import "LYRUIParticipantTableViewCell.h"
 #import "LYRUIConstants.h"
-#import "LYRUIParticipantPickerController.h"
-#import "LSUIParticipantPickerDataSource.h"
+#import "LSParticipantDataSource.h"
 #import "LSUtilities.h"
 #import "LSCenterTextTableViewCell.h"
 #import "LSInputTableViewCell.h"
 #import "SVProgressHUD.h"
+#import "LSParticipantTableViewController.h"
 
 typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
     LSConversationDetailTableSectionMetadata,
@@ -24,12 +24,12 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
     LSConversationDetailTableSectionCount,
 };
 
-@interface LSConversationDetailViewController () <LYRUIParticipantPickerControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
+@interface LSConversationDetailViewController () <LYRUIParticipantTableViewControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) NSMutableArray *participantIdentifiers;
 @property (nonatomic) CLLocationManager *locationManager;
-@property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
+@property (nonatomic) LSParticipantDataSource *participantDataSource;
 
 @end
 
@@ -352,11 +352,14 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)chooseParticipantToAdd
 {
-    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
-    self.participantPickerDataSource.excludedIdentifiers = self.conversation.participants;
-    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource sortType:LYRUIParticipantPickerSortTypeFirstName];
-    controller.participantPickerDelegate = self;
-    [self presentViewController:controller animated:YES completion:nil];
+    self.participantDataSource = [LSParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    self.participantDataSource.excludedIdentifiers = self.conversation.participants;
+    LSParticipantTableViewController  *controller = [LSParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:LYRUIParticipantPickerSortTypeFirstName];
+    controller.delegate = self;
+    controller.allowsMultipleSelection = NO;
+    
+    UINavigationController *navigationController =[[UINavigationController alloc] initWithRootViewController:controller];
+    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)deleteConversation
@@ -376,18 +379,12 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.detailDelegate conversationDetailViewController:self didShareLocation:locations.lastObject];
 }
 
-#pragma mark - LYRUIParticipantPickerControllerDelegate
+#pragma mark - LYRUIParticipantTableViewControllerDelegate
 
-- (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
+- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
-    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
-    self.participantPickerDataSource = nil;
-}
-
-- (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
-{
-    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
-    self.participantPickerDataSource = nil;
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    self.participantDataSource = nil;
     
     if ([self.participantIdentifiers containsObject:participant.participantIdentifier]) return;
     
@@ -407,6 +404,13 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         [self switchToConversationForParticipants];
     }
     [self.tableView reloadData];
+}
+
+- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *))completion
+{
+    [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
+        completion(participants);
+    }];
 }
 
 #pragma mark - Conversation Configuration

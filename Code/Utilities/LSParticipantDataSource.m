@@ -6,15 +6,15 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LSUIParticipantPickerDataSource.h"
+#import "LSParticipantDataSource.h"
 
-@interface LSUIParticipantPickerDataSource ()
+@interface LSParticipantDataSource ()
 
 @property (nonatomic) LSPersistenceManager *persistenceManager;
 
 @end
 
-@implementation LSUIParticipantPickerDataSource
+@implementation LSParticipantDataSource
 
 + (instancetype)participantPickerDataSourceWithPersistenceManager:(LSPersistenceManager *)persistenceManager
 {
@@ -37,7 +37,7 @@
 
 #pragma mark - LYRUIParticipantPickerDataSource
 
-- (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSSet *))completion
+- (void)participantsMatchingSearchText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
     [self.persistenceManager performUserSearchWithString:searchText completion:^(NSArray *users, NSError *error) {
         NSPredicate *exclusionPredicate = [NSPredicate predicateWithFormat:@"NOT participantIdentifier IN %@", self.excludedIdentifiers];
@@ -46,7 +46,7 @@
     }];
 }
 
-- (NSSet *)participantsForParticipantPickerController:(LYRUIParticipantPickerController *)participantPickerController
+- (NSSet *)participants
 {
     NSMutableSet *participants = [[self.persistenceManager persistedUsersWithError:nil] mutableCopy];
     NSSet *participantsToExclude = [self.persistenceManager usersForIdentifiers:self.excludedIdentifiers];

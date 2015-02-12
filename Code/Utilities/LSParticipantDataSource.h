@@ -1,5 +1,5 @@
 //
-//  LSUIParticipantPickerDataSource.h
+//  LSParticipantDataSource
 //  LayerSample
 //
 //  Created by Kevin Coleman on 9/2/14.
@@ -7,19 +7,23 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LYRUIParticipantPickerController.h"
 #import "LSPersistenceManager.h"
 
 /**
  @abstract Data source for the `LYRUIParticipantPicker`. Supplies a list of objects conforming to the `LYRUIParticipant`
  protocol to the picker.
  */
-@interface LSUIParticipantPickerDataSource : NSObject <LYRUIParticipantPickerDataSource>
+@interface LSParticipantDataSource : NSObject
 
 /**
  @abstract Designated initializer for the receiver. Calling `init` will raise NSInternalInconsistencyException.
  */
 + (instancetype)participantPickerDataSourceWithPersistenceManager:(LSPersistenceManager *)persistenceManager;
+
+
+- (void)participantsMatchingSearchText:(NSString *)searchText completion:(void(^)(NSSet *participants))completion;
+         
+@property (nonatomic) NSSet *participants;
 
 /**
  @abstract The `NSSet` of user identifiers to be excluded from the pariticipant picker. 
