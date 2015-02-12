@@ -13,7 +13,6 @@
 #import "LSImageViewController.h"
 #import "LSUtilities.h"
 #import "LSParticipantTableViewController.h"
-#import "LSParticipantDataSource.h"
 
 static NSDateFormatter *LSShortTimeFormatter()
 {

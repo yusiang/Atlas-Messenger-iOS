@@ -1,5 +1,5 @@
 //
-//  LSParticipantViewController.m
+//  LSParticipantTableViewController.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 2/11/15.
