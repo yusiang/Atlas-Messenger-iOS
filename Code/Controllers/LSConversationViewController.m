@@ -7,13 +7,12 @@
 //
 
 #import "LSConversationViewController.h"
-#import "LYRUIMessagingUtilities.h"
-#import "LSUIParticipantPickerDataSource.h"
-#import "LYRUIParticipantPickerController.h"
+#import "LSParticipantDataSource.h"
 #import "LSMessageDetailViewController.h"
 #import "LSConversationDetailViewController.h"
 #import "LSImageViewController.h"
 #import "LSUtilities.h"
+#import "LSParticipantTableViewController.h"
 
 static NSDateFormatter *LSShortTimeFormatter()
 {
@@ -114,9 +113,9 @@ static LSDateProximity LSProximityToDate(NSDate *date)
     return LSDateProximityOther;
 }
 
-@interface LSConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantPickerControllerDelegate>
+@interface LSConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantTableViewControllerDelegate>
 
-@property (nonatomic) LSUIParticipantPickerDataSource *participantPickerDataSource;
+@property (nonatomic) LSParticipantDataSource *participantDataSource;
 
 @end
 
@@ -132,7 +131,6 @@ NSString *const LSDetailsButtonLabel = @"Details";
     self.view.accessibilityLabel = LSConversationViewControllerAccessibilityLabel;
     self.dataSource = self;
     self.delegate = self;
-    self.participantPickerDataSource = [LSUIParticipantPickerDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     if (self.conversation) {
         [self addDetailsButton];
     }
@@ -340,13 +338,15 @@ NSString *const LSDetailsButtonLabel = @"Details";
 - (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
 {
     NSSet *selectedParticipantIdentifiers = [addressBarViewController.selectedParticipants valueForKey:@"participantIdentifier"];
-    self.participantPickerDataSource.excludedIdentifiers = selectedParticipantIdentifiers;
-
-    LYRUIParticipantPickerController *controller = [LYRUIParticipantPickerController participantPickerWithDataSource:self.participantPickerDataSource
-                                                                                                            sortType:LYRUIParticipantPickerSortTypeFirstName];
-    controller.participantPickerDelegate = self;
+    self.participantDataSource = [LSParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    self.participantDataSource.excludedIdentifiers = selectedParticipantIdentifiers;
+    
+    LSParticipantTableViewController  *controller = [LSParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:LYRUIParticipantPickerSortTypeFirstName];
+    controller.delegate = self;
     controller.allowsMultipleSelection = NO;
-    [self.navigationController presentViewController:controller animated:YES completion:nil];
+    
+    UINavigationController *navigationController =[[UINavigationController alloc] initWithRootViewController:controller];
+    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
 #pragma mark - LYRUIAddressBarControllerDataSource
@@ -363,28 +363,19 @@ NSString *const LSDetailsButtonLabel = @"Details";
     }];
 }
 
-#pragma mark - LYRUIParticipantPickerControllerDelegate
+#pragma mark - LYRUIParticipantTableViewControllerDelegate
 
-/**
- 
- LAYER UI KIT - Handles a `Cancel` selection from the `LYRUIParticipantPickerController` component and dismisses the component.
- 
- */
-- (void)participantPickerControllerDidCancel:(LYRUIParticipantPickerController *)participantPickerController
-{
-    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
-}
-
-/**
- 
- LAYER UI KIT - Handles a participant selection in the `LYRUIParticipantController`. In response, the application informs the 
- `addressBarController` property of the selection and then dismissess the picker.
- 
- */
-- (void)participantPickerController:(LYRUIParticipantPickerController *)participantPickerController didSelectParticipant:(id<LYRUIParticipant>)participant
+- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
 {
     [self.addressBarController selectParticipant:participant];
-    [participantPickerController dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *))completion
+{
+    [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
+        completion(participants);
+    }];
 }
 
 #pragma mark - LSConversationDetailViewControllerDataSource
