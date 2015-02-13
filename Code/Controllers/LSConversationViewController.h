@@ -8,7 +8,6 @@
 
 #import <LayerUIKit/LayerUIKit.h>
 #import "LSApplicationController.h"
-
 /**
  @abstract Subclass of the `LYRUIConversationViewController` LayerUIKit component.
  The class acts as the data source and delegate of the component. It presents a user
