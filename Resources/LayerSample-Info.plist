@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9.8-pre3</string>
+	<string>0.9.8</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -49,9 +49,9 @@
 		<key>LYRBuildBuilderName</key>
 		<string>Kevin Coleman</string>
 		<key>LYRBuildLayerKitVersion</key>
-		<string>LayerKit (0.9.8-pre3)</string>
+		<string>LayerKit (0.9.8)</string>
 		<key>LYRBuildShortSha</key>
-		<string>dce866b</string>
+		<string>f23fe56</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location will only be shared in conversations that you choose.</string>
