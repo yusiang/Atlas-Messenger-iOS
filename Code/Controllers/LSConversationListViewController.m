@@ -174,7 +174,7 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
         [self.navigationController setViewControllers:viewControllers animated:YES];
     }
 }
-- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *))completion
+- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSearchForText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
     [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
         completion(participants);
