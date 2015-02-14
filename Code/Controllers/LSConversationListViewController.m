@@ -15,7 +15,7 @@
 #import "LSNavigationController.h"
 #import "LSParticipantDataSource.h"
 
-@interface LSConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsViewControllerDelegate, UIActionSheetDelegate>
+@interface LSConversationListViewController () <ATLConversationListViewControllerDelegate, ATLConversationListViewControllerDataSource, LSSettingsViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) LSParticipantDataSource *participantDataSource;
 
@@ -65,15 +65,15 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - LYRUIConversationListViewControllerDelegate
+#pragma mark - ATLConversationListViewControllerDelegate
 
 /**
  
  LAYER UI KIT - Allows your application to react to a conversation selection. This application pushses a subclass of 
- the `LYRUIConversationViewController` component.
+ the `ATLConversationViewController` component.
  
  */
-- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
+- (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
     [self presentControllerWithConversation:conversation];
 }
@@ -84,7 +84,7 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
  need to react because the superclass component will handle removing the conversation in response to a deletion.
  
  */
-- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didDeleteConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode
+- (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didDeleteConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode
 {
     NSLog(@"Conversation Successsfully Deleted");
 }
@@ -94,12 +94,12 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
  LAYER UI KIT - Allows your application react to a failed conversation deletion if necessary.
  
  */
-- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didFailDeletingConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode error:(NSError *)error
+- (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didFailDeletingConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode error:(NSError *)error
 {
     NSLog(@"Conversation Deletion Failed with Error: %@", error);
 }
 
-#pragma mark - LYRUIConversationListViewControllerDataSource
+#pragma mark - ATLConversationListViewControllerDataSource
 
 /**
  
@@ -107,7 +107,7 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
  name representing the `lastMessage.sentByUserID` property first in the string.
  
  */
-- (NSString *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController titleForConversation:(LYRConversation *)conversation
+- (NSString *)conversationListViewController:(ATLConversationListViewController *)conversationListViewController titleForConversation:(LYRConversation *)conversation
 {
     NSString *conversationTitle = conversation.metadata[LSConversationMetadataNameKey];
     if (conversationTitle) return conversationTitle;
@@ -123,7 +123,7 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
     
     NSMutableArray *firstNames = [NSMutableArray new];
     [participants enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-        id<LYRUIParticipant> participant = obj;
+        id<ATLParticipant> participant = obj;
         if (participant.firstName) {
             // Put the last message sender's name first
             if ([conversation.lastMessage.sentByUserID isEqualToString:participant.participantIdentifier]) {
@@ -144,7 +144,7 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
  is returned, no image will be displayed.
  
  */
-- (UIImage *)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController imageForConversation:(LYRConversation *)conversation
+- (UIImage *)conversationListViewController:(ATLConversationListViewController *)conversationListViewController imageForConversation:(LYRConversation *)conversation
 {
     return nil;
 }
@@ -174,7 +174,7 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
         [self.navigationController setViewControllers:viewControllers animated:YES];
     }
 }
-- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSearchForText:(NSString *)searchText completion:(void (^)(NSSet *))completion
+- (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didSearchForText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
     [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
         completion(participants);

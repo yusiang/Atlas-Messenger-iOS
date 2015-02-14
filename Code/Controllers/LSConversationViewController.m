@@ -113,7 +113,7 @@ static LSDateProximity LSProximityToDate(NSDate *date)
     return LSDateProximityOther;
 }
 
-@interface LSConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, LYRUIAddressBarControllerDataSource, LYRUIParticipantTableViewControllerDelegate>
+@interface LSConversationViewController () <LSConversationDetailViewControllerDelegate, LSConversationDetailViewControllerDataSource, ATLAddressBarControllerDataSource, ATLParticipantTableViewControllerDelegate>
 
 @property (nonatomic) LSParticipantDataSource *participantDataSource;
 
@@ -138,7 +138,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidTapLink:)
-                                                 name:LYRUIUserDidTapLinkNotification
+                                                 name:ATLUserDidTapLinkNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -172,14 +172,14 @@ NSString *const LSDetailsButtonLabel = @"Details";
     [self configureTitle];
 }
 
-#pragma mark - LYRUIConversationViewControllerDataSource
+#pragma mark - ATLConversationViewControllerDataSource
 
 /**
  
- LAYER UI KIT - Returns an object conforming to the `LYRUIParticipant` protocol.
+ LAYER UI KIT - Returns an object conforming to the `ATLParticipant` protocol.
  
  */
-- (id<LYRUIParticipant>)conversationViewController:(LYRUIConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
+- (id<ATLParticipant>)conversationViewController:(ATLConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     if (participantIdentifier) {
         LSUser *user = [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
@@ -195,7 +195,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
  whatever format your application wishes to display.
  
  */
-- (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
+- (NSAttributedString *)conversationViewController:(ATLConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
     NSDateFormatter *dateFormatter;
     LSDateProximity dateProximity = LSProximityToDate(date);
@@ -231,7 +231,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
  below the latest message that was sent by the currently authenticated user.
  
  */
-- (NSAttributedString *)conversationViewController:(LYRUIConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
+- (NSAttributedString *)conversationViewController:(ATLConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
     __block BOOL allSent = YES;
     __block BOOL allDelivered = YES;
@@ -271,19 +271,19 @@ NSString *const LSDetailsButtonLabel = @"Details";
  message sending behavior. If an empty `NSOrderedSet` is returned, no messages will be sent.
  
  */
-- (NSOrderedSet *)conversationViewController:(LYRUIConversationViewController *)conversationViewController messagesForContentParts:(NSArray *)contentParts
+- (NSOrderedSet *)conversationViewController:(ATLConversationViewController *)conversationViewController messagesForContentParts:(NSArray *)contentParts
 {
     return nil;
 }
 
-#pragma mark - LYRUIConversationViewControllerDelegate
+#pragma mark - ATLConversationViewControllerDelegate
 
 /**
  
  LAYER UI KIT - Handle succesful message send if needed.
  
  */
-- (void)conversationViewController:(LYRUIConversationViewController *)viewController didSendMessage:(LYRMessage *)message
+- (void)conversationViewController:(ATLConversationViewController *)viewController didSendMessage:(LYRMessage *)message
 {
     NSLog(@"Successful Message Send");
     [self addDetailsButton];
@@ -294,7 +294,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
  LAYER UI KIT - React to unsuccesful message send if needed.
  
  */
-- (void)conversationViewController:(LYRUIConversationViewController *)viewController didFailSendingMessage:(LYRMessage *)message error:(NSError *)error;
+- (void)conversationViewController:(ATLConversationViewController *)viewController didFailSendingMessage:(LYRMessage *)message error:(NSError *)error;
 {
     NSLog(@"Message Send Failed with Error: %@", error);
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
@@ -310,7 +310,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
  LAYER UI KIT - React to a tap on a message object.
  
  */
-- (void)conversationViewController:(LYRUIConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
+- (void)conversationViewController:(ATLConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
     if (self.applicationController.debugModeEnabled) {
         LSMessageDetailViewController *controller = [LSMessageDetailViewController messageDetailViewControllerWithMessage:message applicationController:self.applicationController];
@@ -318,7 +318,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         LYRMessagePart *part = message.parts.firstObject;
-        if ([part.MIMEType isEqualToString:LYRUIMIMETypeImageJPEG] || [part.MIMEType isEqualToString:LYRUIMIMETypeImagePNG]) {
+        if ([part.MIMEType isEqualToString:ATLMIMETypeImageJPEG] || [part.MIMEType isEqualToString:ATLMIMETypeImagePNG]) {
             UIImage *image = [[UIImage alloc] initWithData:part.data];
             if (!image) return;
             LSImageViewController *imageViewController = [[LSImageViewController alloc] initWithImage:image];
@@ -327,21 +327,21 @@ NSString *const LSDetailsButtonLabel = @"Details";
     }
 }
 
-#pragma mark - LYRUIAddressBarControllerDelegate
+#pragma mark - ATLAddressBarControllerDelegate
 
 /**
  
- LAYER UI KIT - Allows your applicaiton to react to a tap on the `addContacts` button of the `LYRUIAddressBarViewController`. 
- In this case, we present an `LYRUIParticipantPickerController` component.
+ LAYER UI KIT - Allows your applicaiton to react to a tap on the `addContacts` button of the `ATLAddressBarViewController`. 
+ In this case, we present an `ATLParticipantPickerController` component.
  
  */
-- (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
+- (void)addressBarViewController:(ATLAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
 {
     NSSet *selectedParticipantIdentifiers = [addressBarViewController.selectedParticipants valueForKey:@"participantIdentifier"];
     self.participantDataSource = [LSParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.participantDataSource.excludedIdentifiers = selectedParticipantIdentifiers;
     
-    LSParticipantTableViewController  *controller = [LSParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:LYRUIParticipantPickerSortTypeFirstName];
+    LSParticipantTableViewController  *controller = [LSParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:ATLParticipantPickerSortTypeFirstName];
     controller.delegate = self;
     controller.allowsMultipleSelection = NO;
     
@@ -349,29 +349,29 @@ NSString *const LSDetailsButtonLabel = @"Details";
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
-#pragma mark - LYRUIAddressBarControllerDataSource
+#pragma mark - ATLAddressBarControllerDataSource
 
 /**
  
  LAYER UI KIT - Searches for a participant given and search string.
  
  */
-- (void)addressBarViewController:(LYRUIAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
+- (void)addressBarViewController:(ATLAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
 {
     [self.applicationController.persistenceManager performUserSearchWithString:searchText completion:^(NSArray *users, NSError *error) {
         completion(users ?: @[]);
     }];
 }
 
-#pragma mark - LYRUIParticipantTableViewControllerDelegate
+#pragma mark - ATLParticipantTableViewControllerDelegate
 
-- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
+- (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<ATLParticipant>)participant
 {
     [self.addressBarController selectParticipant:participant];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *))completion
+- (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
     [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
         completion(participants);
@@ -380,7 +380,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 #pragma mark - LSConversationDetailViewControllerDataSource
 
-- (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
+- (id<ATLParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     return [self.dataSource conversationViewController:self participantForIdentifier:participantIdentifier];
 }
@@ -389,7 +389,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
 {
-    LYRMessage *message = [self.layerClient newMessageWithParts:@[LYRUIMessagePartWithLocation(location)] options:nil error:nil];
+    LYRMessage *message = [self.layerClient newMessageWithParts:@[ATLMessagePartWithLocation(location)] options:nil error:nil];
     NSError *error;
     BOOL success = [self.conversation sendMessage:message error:&error];
     if (success) {
@@ -465,7 +465,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
     if (otherParticipantIDs.count == 0) return @"Personal";
     if (otherParticipantIDs.count == 1) {
         NSString *otherParticipantID = [otherParticipantIDs anyObject];
-        id<LYRUIParticipant> participant = [self.dataSource conversationViewController:self participantForIdentifier:otherParticipantID];
+        id<ATLParticipant> participant = [self.dataSource conversationViewController:self participantForIdentifier:otherParticipantID];
         return participant ? participant.firstName : @"Unknown";
     }
     return @"Group";

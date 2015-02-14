@@ -7,7 +7,7 @@ target 'LayerSample' do
   pod 'SVProgressHUD', :head
   pod 'LayerKit', '0.9.7'
   pod 'HockeySDK', '~> 3.5.6'
-  pod 'LayerUIKit', path: 'LayerUIKit'
+  pod 'Atlas', path: 'LayerUIKit'
 end
 
 target 'LayerSampleTests' do

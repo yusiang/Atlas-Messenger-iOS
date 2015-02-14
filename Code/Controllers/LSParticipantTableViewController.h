@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Layer, Inc. All rights reserved.
 //
 
-#import "LYRUIParticipantTableViewController.h"
+#import <Atlas/Atlas.h>
 
-@interface LSParticipantTableViewController : LYRUIParticipantTableViewController
+@interface LSParticipantTableViewController : ATLParticipantTableViewController
 
 @end

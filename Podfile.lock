@@ -1,5 +1,7 @@
 PODS:
-  - Expecta (0.3.1)
+  - Atlas (0.2.0):
+    - LayerKit
+  - Expecta (0.3.2)
   - HockeySDK (3.5.7)
   - KIF (3.0.8):
     - KIF/XCTest (= 3.0.8)
@@ -7,27 +9,26 @@ PODS:
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
   - LayerKit (0.9.7)
-  - LayerUIKit (0.2.0)
   - LYRCountDownLatch (0.9.0)
   - OCMock (3.1.2)
   - SVProgressHUD (HEAD based on 1.1.2)
 
 DEPENDENCIES:
+  - Atlas (from `LayerUIKit`)
   - Expecta (~> 0.3.0)
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0.8)
   - KIFViewControllerActions (from `git@github.com:blakewatters/KIFViewControllerActions.git`)
   - LayerKit (= 0.9.7)
-  - LayerUIKit (from `LayerUIKit`)
   - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
   - OCMock (~> 3.1)
   - SVProgressHUD (HEAD)
 
 EXTERNAL SOURCES:
+  Atlas:
+    :path: LayerUIKit
   KIFViewControllerActions:
     :git: git@github.com:blakewatters/KIFViewControllerActions.git
-  LayerUIKit:
-    :path: LayerUIKit
   LYRCountDownLatch:
     :git: git@github.com:layerhq/LYRCountDownLatch.git
 
@@ -40,12 +41,12 @@ CHECKOUT OPTIONS:
     :git: git@github.com:layerhq/LYRCountDownLatch.git
 
 SPEC CHECKSUMS:
-  Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
+  Atlas: 12ec273de13f18588ce3f0aa6ed99e5f586a9f1f
+  Expecta: ee641011fe10aa1855d487b40e4976dac50ec342
   HockeySDK: f0e874d1c6833163ee0c4e423606faf33ad04071
   KIF: 2db5e8cf59136dd1267d49cca0d55883389b09d3
   KIFViewControllerActions: 6d680038a329864d62526928dd89556c0177bc55
   LayerKit: 11c3fe473d16c95ea5d0d660ecd4494875c5b540
-  LayerUIKit: 00fef7300ffd73031efe76d95371dff752fdf817
   LYRCountDownLatch: 2187adb9194b398e7f62b00da1e1fb42c22baaaf
   OCMock: ecdd510b73ef397f2f97274785c1e87fd147c49f
   SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
