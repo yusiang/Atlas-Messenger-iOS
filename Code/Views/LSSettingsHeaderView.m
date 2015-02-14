@@ -43,7 +43,7 @@ static CGFloat const LSAvatarDiameter = 72;
         _imageView.initialsColor = LYRUIGrayColor();
         _imageView.backgroundColor = LYRUILightGrayColor();
         _imageView.layer.cornerRadius = LSAvatarDiameter / 2;
-        [_imageView setInitialsForFullName:self.user.fullName];
+        _imageView.avatarItem = user;
         [self addSubview:_imageView];
         
         _nameLabel = [[UILabel alloc] init];

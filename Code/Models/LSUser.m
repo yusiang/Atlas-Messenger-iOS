@@ -67,6 +67,22 @@
     return nil;
 }
 
+- (NSString *)avatarInitials
+{
+    NSMutableString *initials = [NSMutableString new];
+    NSString *nameComponents = [self.fullName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSArray *names = [nameComponents componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (names.count > 2) {
+        NSString *firstName = names.firstObject;
+        NSString *lastName = names.lastObject;
+        names = @[firstName, lastName];
+    }
+    for (NSString *name in names) {
+        [initials appendString:[name substringToIndex:1]];
+    }
+    return initials;
+}
+
 #pragma mark - Validation
 
 - (BOOL)validate:(NSError *__autoreleasing *)error
