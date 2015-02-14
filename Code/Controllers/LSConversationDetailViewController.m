@@ -141,7 +141,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
                     [blockLabel sizeToFit];
                     cell.accessoryView = blockLabel;
                 }
-                [cell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarImage:YES];
+                [cell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES];
                 return cell;
             } else {
                 UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];

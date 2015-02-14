@@ -13,8 +13,11 @@
 #import "LSSettingsViewController.h"
 #import "LSConversationDetailViewController.h"
 #import "LSNavigationController.h"
+#import "LSParticipantDataSource.h"
 
 @interface LSConversationListViewController () <LYRUIConversationListViewControllerDelegate, LYRUIConversationListViewControllerDataSource, LSSettingsViewControllerDelegate, UIActionSheetDelegate>
+
+@property (nonatomic) LSParticipantDataSource *participantDataSource;
 
 @end
 
@@ -44,7 +47,7 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
         settingsButton.accessibilityLabel = LSSettingsButtonAccessibilityLabel;
         [self.navigationItem setLeftBarButtonItem:settingsButton];
     }
-
+    self.participantDataSource = [LSParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     // Right navigation item
     UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
                                                                                    target:self
@@ -170,6 +173,12 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
         [viewControllers replaceObjectsInRange:replacementRange withObjectsFromArray:@[conversationViewController]];
         [self.navigationController setViewControllers:viewControllers animated:YES];
     }
+}
+- (void)conversationListViewController:(LYRUIConversationListViewController *)conversationListViewController didSearchForText:(NSString *)searchText completion:(void (^)(NSSet *))completion
+{
+    [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
+        completion(participants);
+    }];
 }
 
 #pragma mark - Actions
