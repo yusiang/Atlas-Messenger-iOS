@@ -7,7 +7,7 @@
 //
 
 #import "LSAuthenticationTableViewFooter.h"
-#import "LYRUIConstants.h"
+#import <Atlas/Atlas.h>
 
 @interface LSAuthenticationTableViewFooter ()
 
@@ -28,35 +28,35 @@ NSString *const LSRegisterButtonText = @"Create Account";
     if (self) {
         self.primaryActionButton = [[UIButton alloc] init];
         [self.primaryActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.primaryActionButton setTitleColor:LYRUILightGrayColor() forState:UIControlStateHighlighted];
-        self.primaryActionButton.titleLabel.font = LYRUIMediumFont(16);
+        [self.primaryActionButton setTitleColor:ATLLightGrayColor() forState:UIControlStateHighlighted];
+        self.primaryActionButton.titleLabel.font = ATLMediumFont(16);
         self.primaryActionButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.primaryActionButton.translatesAutoresizingMaskIntoConstraints = NO;
-        self.primaryActionButton.backgroundColor = LYRUIBlueColor();
+        self.primaryActionButton.backgroundColor = ATLBlueColor();
         self.primaryActionButton.layer.cornerRadius = 4;
         self.primaryActionButton.clipsToBounds = YES;
         [self.primaryActionButton addTarget:self action:@selector(primaryActionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.primaryActionButton];
         
         self.secondaryActionButton = [[UIButton alloc] init];
-        [self.secondaryActionButton setTitleColor:LYRUIBlueColor() forState:UIControlStateNormal];
-        [self.secondaryActionButton setTitleColor:LYRUIBlueColor() forState:UIControlStateHighlighted];
+        [self.secondaryActionButton setTitleColor:ATLBlueColor() forState:UIControlStateNormal];
+        [self.secondaryActionButton setTitleColor:ATLBlueColor() forState:UIControlStateHighlighted];
         self.secondaryActionButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.secondaryActionButton.backgroundColor = [UIColor clearColor];
-        self.secondaryActionButton.titleLabel.font = LYRUIMediumFont(16);
-        self.secondaryActionButton.titleLabel.textColor = LYRUIBlueColor();
+        self.secondaryActionButton.titleLabel.font = ATLMediumFont(16);
+        self.secondaryActionButton.titleLabel.textColor = ATLBlueColor();
         self.secondaryActionButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         [self.secondaryActionButton addTarget:self action:@selector(secondaryActionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.secondaryActionButton];
         
         self.environmentButton = [[UIButton alloc] init];
         [self.environmentButton setTitle:@"Change Environment" forState:UIControlStateNormal];
-        [self.environmentButton setTitleColor:LYRUIBlueColor() forState:UIControlStateNormal];
-        [self.environmentButton setTitleColor:LYRUIBlueColor() forState:UIControlStateHighlighted];
+        [self.environmentButton setTitleColor:ATLBlueColor() forState:UIControlStateNormal];
+        [self.environmentButton setTitleColor:ATLBlueColor() forState:UIControlStateHighlighted];
         self.environmentButton.translatesAutoresizingMaskIntoConstraints = NO;
         self.environmentButton.backgroundColor = [UIColor clearColor];
-        self.environmentButton.titleLabel.font = LYRUIMediumFont(16);
-        self.environmentButton.titleLabel.textColor = LYRUIBlueColor();
+        self.environmentButton.titleLabel.font = ATLMediumFont(16);
+        self.environmentButton.titleLabel.textColor = ATLBlueColor();
         self.environmentButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         [self.environmentButton addTarget:self action:@selector(environmentButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.environmentButton];

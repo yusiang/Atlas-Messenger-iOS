@@ -7,7 +7,7 @@
 //
 
 #import "LSAuthenticationTableViewHeader.h"
-#import "LYRUIConstants.h"
+#import <Atlas/Atlas.h>
 
 @interface LSAuthenticationTableViewHeader ()
 
@@ -32,7 +32,7 @@
         self.taglineLabel.textAlignment = NSTextAlignmentCenter;
         self.taglineLabel.backgroundColor = [UIColor clearColor];
         self.taglineLabel.text = @"The open communications platform\nfor the internet.";
-        self.taglineLabel.font = LYRUIMediumFont(12);
+        self.taglineLabel.font = ATLMediumFont(12);
         [self addSubview:self.taglineLabel];
 
         [self setUpConstraints];

@@ -7,13 +7,12 @@
 //
 
 #import "LSSettingsHeaderView.h"
-#import "LYRUIAvatarImageView.h"
-#import "LYRUIConstants.h" 
+#import <Atlas/Atlas.h>
 
 @interface LSSettingsHeaderView ()
 
 @property (nonatomic) LSUser *user;
-@property (nonatomic) LYRUIAvatarImageView *imageView;
+@property (nonatomic) ATLAvatarImageView *imageView;
 @property (nonatomic) UILabel *nameLabel;
 @property (nonatomic) UILabel *connectionStateLabel;
 @property (nonatomic) UIView *bottomBorder;
@@ -37,11 +36,11 @@ static CGFloat const LSAvatarDiameter = 72;
         
         self.backgroundColor = [UIColor whiteColor];
 
-        _imageView = [[LYRUIAvatarImageView alloc] init];
+        _imageView = [[ATLAvatarImageView alloc] init];
         _imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        _imageView.initialsFont = LYRUILightFont(22);
-        _imageView.initialsColor = LYRUIGrayColor();
-        _imageView.backgroundColor = LYRUILightGrayColor();
+        _imageView.initialsFont = ATLLightFont(22);
+        _imageView.initialsColor = ATLGrayColor();
+        _imageView.backgroundColor = ATLLightGrayColor();
         _imageView.layer.cornerRadius = LSAvatarDiameter / 2;
         _imageView.avatarItem = user;
         [self addSubview:_imageView];
@@ -49,21 +48,21 @@ static CGFloat const LSAvatarDiameter = 72;
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _nameLabel.text = user.fullName;
-        _nameLabel.font = LYRUILightFont(16);
-        _nameLabel.textColor = LYRUIGrayColor();
+        _nameLabel.font = ATLLightFont(16);
+        _nameLabel.textColor = ATLGrayColor();
         _nameLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_nameLabel];
         
         _connectionStateLabel = [[UILabel alloc] init];
         _connectionStateLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        _connectionStateLabel.font = LYRUILightFont(14);
-        _connectionStateLabel.textColor = LYRUIBlueColor();
+        _connectionStateLabel.font = ATLLightFont(14);
+        _connectionStateLabel.textColor = ATLBlueColor();
         _connectionStateLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_connectionStateLabel];
     
         _bottomBorder = [[UIView alloc] init];
         _bottomBorder.translatesAutoresizingMaskIntoConstraints = NO;
-        _bottomBorder.backgroundColor = LYRUIGrayColor();
+        _bottomBorder.backgroundColor = ATLGrayColor();
         [self addSubview:_bottomBorder];
 
         [self setUpAvatarImageViewConstraints];

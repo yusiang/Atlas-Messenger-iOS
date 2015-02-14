@@ -7,7 +7,7 @@
 //
 
 #import "LSSettingsViewController.h"
-#import "LYRUIConstants.h"
+#import <Atlas/Atlas.h>
 #import "SVProgressHUD.h"
 #import "LSSettingsHeaderView.h"
 #import "LSCenterTextTableViewCell.h"
@@ -254,7 +254,7 @@ static NSString *const LSConnecting = @"Connecting";
         case LSSettingsTableSectionLogout: {
             LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterTextCellIdentifier forIndexPath:indexPath];
             cell.centerTextLabel.text = @"Log Out";
-            cell.centerTextLabel.textColor = LYRUIRedColor();
+            cell.centerTextLabel.textColor = ATLRedColor();
             return cell;
         }
             

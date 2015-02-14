@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 
-#import "LYRUIConversationListViewController.h"
+#import <Atlas/Atlas.h>
 #import "LSApplicationController.h"
 
 /**
  @abstract Subclass of the `LYRUIConversationListViewController`. Presents a list of conversations in time series order.
  */
-@interface LSConversationListViewController : LYRUIConversationListViewController
+@interface LSConversationListViewController : ATLConversationListViewController
 
 /**
  @abstract Programatically simulates the selection of a `LYRConversation` object in the conversations table view.

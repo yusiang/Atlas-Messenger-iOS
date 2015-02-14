@@ -7,8 +7,7 @@
 //
 
 #import "LSConversationDetailViewController.h"
-#import "LYRUIParticipantTableViewCell.h"
-#import "LYRUIConstants.h"
+#import <Atlas/Atlas.h>
 #import "LSParticipantDataSource.h"
 #import "LSUtilities.h"
 #import "LSCenterTextTableViewCell.h"
@@ -24,7 +23,7 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
     LSConversationDetailTableSectionCount,
 };
 
-@interface LSConversationDetailViewController () <LYRUIParticipantTableViewControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
+@interface LSConversationDetailViewController () <ATLParticipantTableViewControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) NSMutableArray *participantIdentifiers;
@@ -69,7 +68,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     self.tableView.sectionFooterHeight = 0.0f;
     self.tableView.rowHeight = 48.0f;
     [self.tableView registerClass:[LSCenterTextTableViewCell class] forCellReuseIdentifier:LSCenterContentCellIdentifier];
-    [self.tableView registerClass:[LYRUIParticipantTableViewCell class] forCellReuseIdentifier:LSParticipantCellIdentifier];
+    [self.tableView registerClass:[ATLParticipantTableViewCell class] forCellReuseIdentifier:LSParticipantCellIdentifier];
     [self.tableView registerClass:[LSInputTableViewCell class] forCellReuseIdentifier:LSInputCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:LSDefaultCellIdentifier];
     
@@ -130,8 +129,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         case LSConversationDetailTableSectionParticipants:
             if (indexPath.row < self.participantIdentifiers.count) {
                 NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
-                id<LYRUIParticipant>participant = [self.detailDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
-                LYRUIParticipantTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSParticipantCellIdentifier forIndexPath:indexPath];
+                id<ATLParticipant>participant = [self.detailDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
+                ATLParticipantTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSParticipantCellIdentifier forIndexPath:indexPath];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 if ([self blockedParticipantAtIndexPath:indexPath]) {
                     UILabel *blockLabel = [[UILabel alloc] init];
@@ -141,29 +140,29 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
                     [blockLabel sizeToFit];
                     cell.accessoryView = blockLabel;
                 }
-                [cell presentParticipant:participant withSortType:LYRUIParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES];
+                [cell presentParticipant:participant withSortType:ATLParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES];
                 return cell;
             } else {
                 UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
                 cell.textLabel.text = @"+ Add Participant";
                 cell.accessibilityLabel = LSAddParticipantsAccessibilityLabel;
-                cell.textLabel.textColor = LYRUIBlueColor();
-                cell.textLabel.font = LYRUIMediumFont(14);
+                cell.textLabel.textColor = ATLBlueColor();
+                cell.textLabel.font = ATLMediumFont(14);
                 return cell;
             }
             
         case LSConversationDetailTableSectionLocation: {
             UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
             cell.textLabel.text = @"Share My Location";
-            cell.textLabel.textColor = LYRUIBlueColor();
-            cell.textLabel.font = LYRUIMediumFont(14);
+            cell.textLabel.textColor = ATLBlueColor();
+            cell.textLabel.font = ATLMediumFont(14);
             return cell;
         }
             
         case LSConversationDetailTableSectionDeletion: {
             LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
             cell.centerTextLabel.text = @"Global Delete Conversation";
-            cell.centerTextLabel.textColor = LYRUIRedColor();
+            cell.centerTextLabel.textColor = ATLRedColor();
             return cell;
         }
             
@@ -354,7 +353,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 {
     self.participantDataSource = [LSParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.participantDataSource.excludedIdentifiers = self.conversation.participants;
-    LSParticipantTableViewController  *controller = [LSParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:LYRUIParticipantPickerSortTypeFirstName];
+    LSParticipantTableViewController  *controller = [LSParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:ATLParticipantPickerSortTypeFirstName];
     controller.delegate = self;
     controller.allowsMultipleSelection = NO;
     
@@ -379,9 +378,9 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.detailDelegate conversationDetailViewController:self didShareLocation:locations.lastObject];
 }
 
-#pragma mark - LYRUIParticipantTableViewControllerDelegate
+#pragma mark - ATLParticipantTableViewControllerDelegate
 
-- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<LYRUIParticipant>)participant
+- (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<ATLParticipant>)participant
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     self.participantDataSource = nil;
@@ -406,7 +405,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.tableView reloadData];
 }
 
-- (void)participantTableViewController:(LYRUIParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *))completion
+- (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
     [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
         completion(participants);
@@ -522,9 +521,9 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)configureAppearance
 {
-    [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleColor:[UIColor blackColor]];
-    [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleFont:LYRUIMediumFont(14)];
-    [[LYRUIParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setBoldTitleFont:[UIFont systemFontOfSize:14]];
+    [[ATLParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleColor:[UIColor blackColor]];
+    [[ATLParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleFont:ATLMediumFont(14)];
+    [[ATLParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setBoldTitleFont:[UIFont systemFontOfSize:14]];
 }
 
 - (void)configureConversationNameCell:(LSInputTableViewCell *)cell

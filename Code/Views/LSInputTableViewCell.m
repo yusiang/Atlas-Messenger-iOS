@@ -7,7 +7,7 @@
 //
 
 #import "LSInputTableViewCell.h"
-#import "LYRUIConstants.h"
+#import <Atlas/Atlas.h>
 
 @interface LSInputTableViewCell ()
 
@@ -25,13 +25,13 @@
         _textField = [[UITextField alloc] init];
         _textField.translatesAutoresizingMaskIntoConstraints = NO;
         _textField.returnKeyType = UIReturnKeyDone;
-        _textField.font = LYRUIMediumFont(16);
+        _textField.font = ATLMediumFont(16);
         _textField.textColor = [UIColor darkGrayColor];
         [self.contentView addSubview:_textField];
         
         _guideLabel = [[UILabel alloc] init];
         _guideLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        _guideLabel.font = LYRUIMediumFont(14);
+        _guideLabel.font = ATLMediumFont(14);
         _guideLabel.textColor = [UIColor darkGrayColor];
         [self.contentView addSubview:_guideLabel];
         

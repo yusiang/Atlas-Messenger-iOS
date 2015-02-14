@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LYRUIParticipant.h"
+#import <Atlas/Atlas.h>
 
-@interface LSUser : NSObject <NSCoding, LYRUIParticipant>
+@interface LSUser : NSObject <NSCoding, ATLParticipant>
 
 + (instancetype)userFromDictionaryRepresentation:(NSDictionary *)representation;
 

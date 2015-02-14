@@ -10,7 +10,7 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <HockeySDK/HockeySDK.h>
-#import <LayerUIKit/LayerUIKit.h>
+#import <Atlas/Atlas.h>
 #import <MessageUI/MessageUI.h>
 #import <sys/sysctl.h>
 #import <asl.h>
@@ -19,7 +19,6 @@
 #import "LSConversationListViewController.h"
 #import "LSAPIManager.h"
 #import "LSUtilities.h"
-#import "LYRUIConstants.h"
 #import "LSAuthenticationViewController.h"
 #import "LSSplashView.h"
 #import "LSLocalNotificationManager.h"
@@ -485,12 +484,12 @@ LSEnvironment LSEnvironmentConfiguration(void)
 
 - (void)configureGlobalUserInterfaceAttributes
 {
-    [[UINavigationBar appearance] setTintColor:LYRUIBlueColor()];
-    [[UINavigationBar appearance] setBarTintColor:LYRUILightGrayColor()];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: LYRUIBoldFont(18)}];
+    [[UINavigationBar appearance] setTintColor:ATLBlueColor()];
+    [[UINavigationBar appearance] setBarTintColor:ATLLightGrayColor()];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: ATLBoldFont(18)}];
     
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : LYRUIMediumFont(16)} forState:UIControlStateNormal];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:LYRUIBlueColor()];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : ATLMediumFont(16)} forState:UIControlStateNormal];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:ATLBlueColor()];
 }
 
 #pragma mark - Bug Reporting
@@ -522,7 +521,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
         return;
     }
 
-    LYRUILastPhotoTaken(^(UIImage *image, NSError *error) {
+    ATLLastPhotoTaken(^(UIImage *image, NSError *error) {
         NSString *appVersion = [self bugReportAppVersion];
         NSString *layerKitVersion = [self bugReportLayerKitVersion];
         NSData *consoleData = [self bugReportConsoleData];

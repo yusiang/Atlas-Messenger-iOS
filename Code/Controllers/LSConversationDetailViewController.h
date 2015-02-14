@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
-#import "LYRUIParticipant.h"
+#import <Atlas/Atlas.h>
 #import "LSApplicationController.h"
 #import <CoreLocation/CoreLocation.h>
 
@@ -50,7 +50,7 @@ extern NSString *const LSConversationMetadataNameKey;
  @param conversationDetailViewController The `LSConversationDetailViewController` requesting the object.
  @param participantIdentifier An `NSString` object representing a participant.
  */
-- (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier;
+- (id<ATLParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier;
 
 @end
 
