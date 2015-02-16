@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
     LSConversationDetailTableSectionMetadata,
     LSConversationDetailTableSectionParticipants,
     LSConversationDetailTableSectionLocation,
-    LSConversationDetailTableSectionDeletion,
+    LSConversationDetailTableSectionLeave,
     LSConversationDetailTableSectionCount,
 };
 
@@ -109,8 +109,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         case LSConversationDetailTableSectionLocation:
             return 1;
             
-        case LSConversationDetailTableSectionDeletion:
-            return 2;
+        case LSConversationDetailTableSectionLeave:
+            return 1;
             
         default:
             return 0;
@@ -159,14 +159,10 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             return cell;
         }
             
-        case LSConversationDetailTableSectionDeletion: {
+        case LSConversationDetailTableSectionLeave: {
             LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
             cell.centerTextLabel.textColor = ATLRedColor();
-            if (indexPath.row == 0) {
-                cell.centerTextLabel.text = @"Leave Conversation";
-            } else {
-                cell.centerTextLabel.text = @"Delete Conversation";
-            }
+            cell.centerTextLabel.text = @"Leave Conversation";
             return cell;
         }
             
@@ -201,7 +197,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         }
         case LSConversationDetailTableSectionMetadata:
         case LSConversationDetailTableSectionLocation:
-        case LSConversationDetailTableSectionDeletion:
+        case LSConversationDetailTableSectionLeave:
         case LSConversationDetailTableSectionCount:
             return NO;
     }
@@ -292,12 +288,8 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             [self shareLocation];
             break;
             
-        case LSConversationDetailTableSectionDeletion:
-            if (indexPath.row == 0) {
-                [self leaveConversation];
-            } else {
-                [self deleteConversation];
-            }
+        case LSConversationDetailTableSectionLeave:
+            [self leaveConversation];
             break;
             
         default:
@@ -365,17 +357,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.conversation removeParticipants:participants error:&error];
     if (error) {
         NSLog(@"Failed removing participant from conversation with error: %@", error);
-    } else {
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    }
-}
-
-- (void)deleteConversation
-{
-    NSError *error;
-    [self.conversation delete:LYRDeletionModeAllParticipants error:&error];
-    if (error) {
-        NSLog(@"Failed deleting conversation with error: %@", error);
     } else {
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
