@@ -337,9 +337,11 @@ NSString *const LSDetailsButtonLabel = @"Details";
  */
 - (void)addressBarViewController:(ATLAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
 {
-    NSSet *selectedParticipantIdentifiers = [addressBarViewController.selectedParticipants valueForKey:@"participantIdentifier"];
+    NSMutableSet *excludedIdentifiers = [[NSMutableSet alloc] initWithObjects:self.layerClient.authenticatedUserID, nil];
+    [excludedIdentifiers addObjectsFromArray:[[addressBarViewController.selectedParticipants valueForKey:@"participantIdentifier"] allObjects]];
+
     self.participantDataSource = [LSParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
-    self.participantDataSource.excludedIdentifiers = selectedParticipantIdentifiers;
+    self.participantDataSource.excludedIdentifiers = excludedIdentifiers;
     
     LSParticipantTableViewController  *controller = [LSParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:ATLParticipantPickerSortTypeFirstName];
     controller.delegate = self;
