@@ -7,16 +7,16 @@ target 'LayerSample' do
   pod 'SVProgressHUD', :head
   pod 'LayerKit', '0.9.7'
   pod 'HockeySDK', '~> 3.5.6'
-  pod 'Atlas', path: 'LayerUIKit'
+  pod 'Atlas', path: 'Libraries/Atlas'
 end
 
 target 'LayerSampleTests' do
   pod 'KIF', '~> 3.0.8'
   pod 'OCMock', '~> 3.1'
-  pod 'KIFViewControllerActions', git: 'git@github.com:blakewatters/KIFViewControllerActions.git'
+  pod 'KIFViewControllerActions', git: 'https://github.com/blakewatters/KIFViewControllerActions.git'
   #pod 'KIFViewControllerActions', '~> 1.0'
   pod 'Expecta', '~> 0.3.0'
-  pod 'LYRCountDownLatch', git: 'git@github.com:layerhq/LYRCountDownLatch.git'
+  pod 'LYRCountDownLatch', git: 'https://github.com/layerhq/LYRCountDownLatch.git'
 end
 
 # Other LayerKit Build Sources
