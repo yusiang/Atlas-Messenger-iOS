@@ -110,7 +110,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             return 1;
             
         case LSConversationDetailTableSectionDeletion:
-            return 1;
+            return 2;
             
         default:
             return 0;
@@ -161,8 +161,12 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             
         case LSConversationDetailTableSectionDeletion: {
             LSCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSCenterContentCellIdentifier];
-            cell.centerTextLabel.text = @"Global Delete Conversation";
             cell.centerTextLabel.textColor = ATLRedColor();
+            if (indexPath.row == 0) {
+                cell.centerTextLabel.text = @"Leave Conversation";
+            } else {
+                cell.centerTextLabel.text = @"Delete Conversation";
+            }
             return cell;
         }
             
@@ -289,18 +293,11 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
             break;
             
         case LSConversationDetailTableSectionDeletion:
-            switch (indexPath.row) {
-                case 0:
-                    [self deleteConversation];
-                    break;
-                    
-                case 1:
-                    [self blockParticipantAtIndexPath:indexPath];
-                    break;
-                default:
-                    break;
+            if (indexPath.row == 0) {
+                [self leaveConversation];
+            } else {
+                [self deleteConversation];
             }
-            
             break;
             
         default:
@@ -361,10 +358,27 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
+- (void)leaveConversation
+{
+    NSSet *participants = [NSSet setWithObject:self.applicationController.layerClient.authenticatedUserID];
+    NSError *error;
+    [self.conversation removeParticipants:participants error:&error];
+    if (error) {
+        NSLog(@"Failed removing participant from conversation with error: %@", error);
+    } else {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+}
+
 - (void)deleteConversation
 {
-    [self.conversation delete:LYRDeletionModeAllParticipants error:nil];
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    NSError *error;
+    [self.conversation delete:LYRDeletionModeAllParticipants error:&error];
+    if (error) {
+        NSLog(@"Failed deleting conversation with error: %@", error);
+    } else {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
 }
 
 #pragma mark - CLLocationManagerDelegate
