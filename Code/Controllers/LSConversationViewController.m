@@ -271,7 +271,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
  message sending behavior. If an empty `NSOrderedSet` is returned, no messages will be sent.
  
  */
-- (NSOrderedSet *)conversationViewController:(ATLConversationViewController *)conversationViewController messagesForContentParts:(NSArray *)contentParts
+- (NSOrderedSet *)conversationViewController:(ATLConversationViewController *)conversationViewController messagesForMediaAttachments:(NSArray *)mediaAttachments
 {
     return nil;
 }
