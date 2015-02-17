@@ -24,9 +24,8 @@ extern NSString *const LSConversationMetadataNameKey;
 /**
  @abstract Informs the delegate that a user has elected to share the application's current location.
  @param conversationDetailViewController The `LSConversationDetailViewController` in which the selection occurred.
- @param location The `CLLocation` object representing the application's current location.
  */
-- (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location;
+- (void)conversationDetailViewControllerShouldShareLocation:(LSConversationDetailViewController *)conversationDetailViewController;
 
 /**
  @abstract Informs the delegate that a user has elected to switch the conversation.

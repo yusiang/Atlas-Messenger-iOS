@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, LSConversationDetailTableSection) {
     LSConversationDetailTableSectionCount,
 };
 
-@interface LSConversationDetailViewController () <ATLParticipantTableViewControllerDelegate, CLLocationManagerDelegate, UITextFieldDelegate>
+@interface LSConversationDetailViewController () <ATLParticipantTableViewControllerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) NSMutableArray *participantIdentifiers;
@@ -304,7 +304,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)shareLocation
 {
-    // Fix
+    
 }
 
 - (void)chooseParticipantToAdd

@@ -30,6 +30,6 @@
  @abstract Determines if the view controller should display a `Settings` item as the left bar button item of
  the navigation controller.
  */
-@property (nonatomic) BOOL displaysSettingsItem;
+@property (nonatomic) BOOL displaysInfoItem;
 
 @end

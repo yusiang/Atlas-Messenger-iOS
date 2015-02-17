@@ -284,11 +284,7 @@ static NSString *const LSConnecting = @"Connecting";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     if (section == LSSettingsTableSectionCount) {
-        UIView *iconView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 60)];
-        UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"AtlasResource.bundle/layerLogo"]];
-        iconImageView.center = iconImageView.center;
-        [iconView addSubview:iconImageView];
-        return iconView;
+        //TODO - Add Atlas Footer
     }
     return nil;
 }

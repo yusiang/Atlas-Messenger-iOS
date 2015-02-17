@@ -394,19 +394,17 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 #pragma mark - LSConversationDetailViewControllerDelegate
 
-- (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
+- (void)conversationDetailViewControllerShouldShareLocation:(LSConversationDetailViewController *)conversationDetailViewController
 {
-    ATLMediaAttachment *mediaAttachment = [ATLMediaAttachment mediaAttachmentWithLocation:location];
-    NSArray *parts = ATLMessagePartsWithMediaAttachment(mediaAttachment);
-    LYRMessage *message = [self.layerClient newMessageWithParts:parts options:nil error:nil];
-    NSError *error;
-    BOOL success = [self.conversation sendMessage:message error:&error];
-    if (success) {
-        NSLog(@"Message sent!");
-    } else {
-        NSLog(@"Message send failed with error: %@", error);
-    }
-    [self.navigationController popToViewController:self animated:YES];
+//    LYRMessage *message = [self.layerClient newMessageWithParts:@[ATLMessagePartWithLocation(location)] options:nil error:nil];
+//    NSError *error;
+//    BOOL success = [self.conversation sendMessage:message error:&error];
+//    if (success) {
+//        NSLog(@"Message sent!");
+//    } else {
+//        NSLog(@"Message send failed with error: %@", error);
+//    }
+//    [self.navigationController popToViewController:self animated:YES];
 }
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation

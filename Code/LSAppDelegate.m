@@ -45,7 +45,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
     if (LSIsRunningTests()){
         return LSTestEnvironment;
     } else {
-        return LSProductionDebugEnvironment;
+        return LSProductionEnvironment;
     }
 }
 
