@@ -396,7 +396,9 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
 {
-    LYRMessage *message = [self.layerClient newMessageWithParts:@[ATLMessagePartWithLocation(location)] options:nil error:nil];
+    ATLMediaAttachment *mediaAttachment = [ATLMediaAttachment mediaAttachmentWithLocation:location];
+    NSArray *parts = ATLMessagePartsWithMediaAttachment(mediaAttachment);
+    LYRMessage *message = [self.layerClient newMessageWithParts:parts options:nil error:nil];
     NSError *error;
     BOOL success = [self.conversation sendMessage:message error:&error];
     if (success) {
