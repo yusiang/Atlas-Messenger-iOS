@@ -5,7 +5,7 @@ dropbox_path = ENV['LAYER_DROPBOX_PATH'] || '~/Dropbox (Layer)'
 
 target 'LayerSample' do
   pod 'SVProgressHUD', :head
-  pod 'LayerKit'
+  pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
   pod 'HockeySDK', '~> 3.5.6'
   pod 'Atlas', path: 'Libraries/Atlas'
 end
