@@ -633,7 +633,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# ./Fabric.framework/run 0a0f48084316c34c98d99db32b6d9f9a93416892 9ae567b35b4bfc3f68296d25122038a6de4752faa8a5a2790506fbc165726882";
+			shellScript = "# ./Libraries/Fabric.framework/run 0a0f48084316c34c98d99db32b6d9f9a93416892 9ae567b35b4bfc3f68296d25122038a6de4752faa8a5a2790506fbc165726882";
 		};
 		6D1B6C4F72A14767A34B248A /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -856,8 +856,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Libraries",
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Code/LayerSample-Prefix.pch";
@@ -886,8 +886,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Phone.ly, Inc.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Phone.ly, Inc.";
 				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Libraries",
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Code/LayerSample-Prefix.pch";

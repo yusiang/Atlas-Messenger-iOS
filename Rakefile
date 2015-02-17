@@ -126,7 +126,7 @@ task :release do
 
   # 3.5) Move the shared scheme into the workspace directory.
   FileUtils::Verbose.mkdir_p "LayerSample.xcworkspace/xcshareddata/xcschemes"
-  FileUtils::Verbose.cp Dir.glob("Schemes/*.xcscheme"), "LayerSample.xcworkspace/xcshareddata/xcschemes"
+  FileUtils::Verbose.cp Dir.glob("Resources/Schemes/*.xcscheme"), "LayerSample.xcworkspace/xcshareddata/xcschemes"
 
   # 4) Archive project with shenzhen, but pipe to xcpretty.
   run("ipa build --workspace LayerSample.xcworkspace --scheme LayerSample --configuration Release --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
