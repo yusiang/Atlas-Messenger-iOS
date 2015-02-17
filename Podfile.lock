@@ -79,9 +79,9 @@ DEPENDENCIES:
   - Expecta (~> 0.3.0)
   - HockeySDK (~> 3.5.6)
   - KIF (~> 3.0.8)
-  - KIFViewControllerActions (from `git@github.com:blakewatters/KIFViewControllerActions.git`)
+  - KIFViewControllerActions (from `https://github.com/blakewatters/KIFViewControllerActions.git`)
   - LayerKit (from `git@github.com:layerhq/LayerKit.git`)
-  - LYRCountDownLatch (from `git@github.com:layerhq/LYRCountDownLatch.git`)
+  - LYRCountDownLatch (from `https://github.com/layerhq/LYRCountDownLatch.git`)
   - OCMock (~> 3.1)
   - SVProgressHUD (HEAD)
 
@@ -89,7 +89,7 @@ EXTERNAL SOURCES:
   Atlas:
     :path: Libraries/Atlas
   KIFViewControllerActions:
-    :git: git@github.com:blakewatters/KIFViewControllerActions.git
+    :git: https://github.com/blakewatters/KIFViewControllerActions.git
   LayerKit:
     :git: git@github.com:layerhq/LayerKit.git
   LYRCountDownLatch:
@@ -98,7 +98,7 @@ EXTERNAL SOURCES:
 CHECKOUT OPTIONS:
   KIFViewControllerActions:
     :commit: 41edeeade3ea0618c2ddac6c90a648f322f1b5a2
-    :git: git@github.com:blakewatters/KIFViewControllerActions.git
+    :git: https://github.com/blakewatters/KIFViewControllerActions.git
   LayerKit:
     :commit: 88dcdc0a7ea1b81fb4cd6fa86c344951bf5b2b95
     :git: git@github.com:layerhq/LayerKit.git

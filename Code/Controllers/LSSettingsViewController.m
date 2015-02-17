@@ -281,14 +281,30 @@ static NSString *const LSConnecting = @"Connecting";
     }
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if (section == LSSettingsTableSectionCount) {
+        //TODO - Add Atlas Footer
+    }
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if (section == LSSettingsTableSectionLogout) {
+        return 100;
+    }
+    return 0;
+}
+
 #pragma mark - Cell Configuration
 
 - (UITableViewCell *)defaultCellForIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
-    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    cell.textLabel.font = [UIFont systemFontOfSize:16];
     cell.textLabel.textColor = [UIColor blackColor];
-    cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+    cell.detailTextLabel.font = [UIFont systemFontOfSize:16];
     cell.detailTextLabel.textColor = [UIColor blackColor];
     cell.detailTextLabel.text = nil;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;

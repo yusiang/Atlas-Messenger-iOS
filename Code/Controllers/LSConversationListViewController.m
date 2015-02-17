@@ -36,27 +36,22 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
     self.tableView.accessibilityLabel = LSConversationListTableViewAccessibilityLabel;
     
     self.allowsEditing = YES;
-    self.displaysSettingsItem = YES;
-    
+
     // Left navigation item
-    if (self.displaysSettingsItem) {
-        UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings"
-                                                                           style:UIBarButtonItemStylePlain
-                                                                          target:self
-                                                                          action:@selector(settingsButtonTapped)];
-        settingsButton.accessibilityLabel = LSSettingsButtonAccessibilityLabel;
-        [self.navigationItem setLeftBarButtonItem:settingsButton];
-    }
-    self.participantDataSource = [LSParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    UIButton* infoButton= [UIButton buttonWithType:UIButtonTypeInfoLight];
+    UIBarButtonItem *infoItem  = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+    [infoButton addTarget:self action:@selector(settingsButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    infoButton.accessibilityLabel = LSSettingsButtonAccessibilityLabel;
+    [self.navigationItem setLeftBarButtonItem:infoItem];
+    
     // Right navigation item
-    UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
-                                                                                   target:self
-                                                                                   action:@selector(composeButtonTapped)];
+    UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonTapped)];
     composeButton.accessibilityLabel = LSComposeButtonAccessibilityLabel;
     [self.navigationItem setRightBarButtonItem:composeButton];
 
+    self.participantDataSource = [LSParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationDeleted:) name:LSConversationDeletedNotification object:nil];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationParticipantsDidChange:) name:LSConversationParticipantsDidChangeNotification object:nil];
 }
 
@@ -144,9 +139,9 @@ NSString *const LSComposeButtonAccessibilityLabel = @"Compose Button";
  is returned, no image will be displayed.
  
  */
-- (UIImage *)conversationListViewController:(ATLConversationListViewController *)conversationListViewController imageForConversation:(LYRConversation *)conversation
+- (id<ATLAvatarItem>)conversationListViewController:(ATLConversationListViewController *)conversationListViewController avatarItemForConversation:(LYRConversation *)conversation
 {
-    return nil;
+    return self.applicationController.APIManager.authenticatedSession.user;
 }
 
 #pragma mark - Conversation Selection

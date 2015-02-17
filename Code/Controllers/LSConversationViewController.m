@@ -220,8 +220,8 @@ NSString *const LSDetailsButtonLabel = @"Details";
     
     NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
     [dateAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(0, dateAttributedString.length)];
-    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, dateAttributedString.length)];
-    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:12] range:NSMakeRange(0, dateString.length)];
+    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, dateAttributedString.length)];
+    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:11] range:NSMakeRange(0, dateString.length)];
     return dateAttributedString;
 }
 
@@ -262,7 +262,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
     } else {
         statusString = @"Not Sent";
     }
-    return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}];
+    return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:11]}];
 }
 
 /**
@@ -394,18 +394,9 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 #pragma mark - LSConversationDetailViewControllerDelegate
 
-- (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
+- (void)conversationDetailViewControllerDidSelectShareLocation:(LSConversationDetailViewController *)conversationDetailViewController
 {
-    ATLMediaAttachment *mediaAttachment = [ATLMediaAttachment mediaAttachmentWithLocation:location];
-    NSArray *parts = ATLMessagePartsWithMediaAttachment(mediaAttachment);
-    LYRMessage *message = [self.layerClient newMessageWithParts:parts options:nil error:nil];
-    NSError *error;
-    BOOL success = [self.conversation sendMessage:message error:&error];
-    if (success) {
-        NSLog(@"Message sent!");
-    } else {
-        NSLog(@"Message send failed with error: %@", error);
-    }
+    // TODO - Figure out how to tell Atlas that it needs to share a location.
     [self.navigationController popToViewController:self animated:YES];
 }
 
