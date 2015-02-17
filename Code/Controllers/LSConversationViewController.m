@@ -220,8 +220,8 @@ NSString *const LSDetailsButtonLabel = @"Details";
     
     NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
     [dateAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(0, dateAttributedString.length)];
-    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, dateAttributedString.length)];
-    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:12] range:NSMakeRange(0, dateString.length)];
+    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, dateAttributedString.length)];
+    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:11] range:NSMakeRange(0, dateString.length)];
     return dateAttributedString;
 }
 
@@ -262,7 +262,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
     } else {
         statusString = @"Not Sent";
     }
-    return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12]}];
+    return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:11]}];
 }
 
 /**

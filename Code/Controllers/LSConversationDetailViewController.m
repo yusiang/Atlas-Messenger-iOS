@@ -144,18 +144,17 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
                 return cell;
             } else {
                 UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
-                cell.textLabel.text = @"+ Add Participant";
+                cell.textLabel.attributedText = [self addParticipantAttributedString];
                 cell.accessibilityLabel = LSAddParticipantsAccessibilityLabel;
-                cell.textLabel.textColor = ATLBlueColor();
-                cell.textLabel.font = ATLMediumFont(14);
+                cell.imageView.image = [UIImage imageNamed:@"AtlasResource.bundle/plus"];
                 return cell;
             }
             
         case LSConversationDetailTableSectionLocation: {
             UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:LSDefaultCellIdentifier forIndexPath:indexPath];
-            cell.textLabel.text = @"Share My Location";
+            cell.textLabel.text = @"Send My Current Location";
             cell.textLabel.textColor = ATLBlueColor();
-            cell.textLabel.font = ATLMediumFont(14);
+            cell.textLabel.font = [UIFont systemFontOfSize:17];
             return cell;
         }
             
@@ -169,6 +168,14 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
         default:
             return nil;
     }
+}
+
+- (NSAttributedString *)addParticipantAttributedString
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"Add Participant"];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:ATLBlueColor() range:NSMakeRange(0, attributedString.length)];
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:17]  range:NSMakeRange(0, attributedString.length)];
+    return attributedString;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -209,14 +216,13 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     UITableViewRowAction *removeAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Remove" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
         [self removeParticipantAtIndexPath:indexPath];
     }];
-    removeAction.backgroundColor = [UIColor lightGrayColor];
+    removeAction.backgroundColor = ATLGrayColor();
     
     NSString *blockString = [self blockedParticipantAtIndexPath:indexPath] ? @"Unblock" : @"Block";
     UITableViewRowAction *blockAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:blockString handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
         [self blockParticipantAtIndexPath:indexPath];
     }];
-    
-    blockAction.backgroundColor = [UIColor redColor];
+    blockAction.backgroundColor = ATLRedColor();
     return @[removeAction, blockAction];
 }
 
@@ -301,41 +307,7 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (void)shareLocation
 {
-    if (![CLLocationManager locationServicesEnabled]) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Required"
-                                                            message:@"To share your location, enable location services in the Privacy section of the Settings app."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
-        return;
-    }
-    
-    switch ([CLLocationManager authorizationStatus]) {
-        case kCLAuthorizationStatusDenied:
-        case kCLAuthorizationStatusRestricted: {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location Access Required"
-                                                                message:@"To share your location, enable location services for this app in the Privacy section of the Settings app."
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-            [alertView show];
-        }
-            return;
-            
-        default:
-            break;
-    }
-    
-    if (self.locationManager) return;
-    
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        [self.locationManager requestWhenInUseAuthorization];
-    }
-    [self.locationManager startUpdatingLocation];
+    // Fix
 }
 
 - (void)chooseParticipantToAdd
@@ -360,17 +332,6 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
     } else {
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
-}
-
-#pragma mark - CLLocationManagerDelegate
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    if (manager != self.locationManager) return;
-    
-    self.locationManager = nil;
-    [manager stopUpdatingLocation];
-    [self.detailDelegate conversationDetailViewController:self didShareLocation:locations.lastObject];
 }
 
 #pragma mark - ATLParticipantTableViewControllerDelegate
@@ -517,14 +478,16 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 - (void)configureAppearance
 {
     [[ATLParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleColor:[UIColor blackColor]];
-    [[ATLParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleFont:ATLMediumFont(14)];
-    [[ATLParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setBoldTitleFont:[UIFont systemFontOfSize:14]];
+    [[ATLParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setTitleFont:[UIFont systemFontOfSize:17]];
+    [[ATLParticipantTableViewCell appearanceWhenContainedIn:[self class], nil] setBoldTitleFont:[UIFont systemFontOfSize:17]];
+    [[ATLAvatarImageView appearanceWhenContainedIn:[ATLParticipantTableViewCell class], nil] setAvatarImageViewDiameter:32];
 }
 
 - (void)configureConversationNameCell:(LSInputTableViewCell *)cell
 {
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textField.delegate = self;
+    cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     [cell setGuideText:@"Name:"];
     [cell setPlaceHolderText:@"Enter Conversation Name"];
     NSString *conversationName = [self.conversation.metadata valueForKey:LSConversationMetadataNameKey];

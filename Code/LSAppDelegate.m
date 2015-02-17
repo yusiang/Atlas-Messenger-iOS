@@ -45,7 +45,7 @@ LSEnvironment LSEnvironmentConfiguration(void)
     if (LSIsRunningTests()){
         return LSTestEnvironment;
     } else {
-        return LSProductionEnvironment;
+        return LSProductionDebugEnvironment;
     }
 }
 
@@ -486,9 +486,6 @@ LSEnvironment LSEnvironmentConfiguration(void)
 {
     [[UINavigationBar appearance] setTintColor:ATLBlueColor()];
     [[UINavigationBar appearance] setBarTintColor:ATLLightGrayColor()];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: ATLBoldFont(18)}];
-    
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:@{NSFontAttributeName : ATLMediumFont(16)} forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:ATLBlueColor()];
 }
 
