@@ -394,7 +394,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 #pragma mark - LSConversationDetailViewControllerDelegate
 
-- (void)conversationDetailViewControllerShouldShareLocation:(LSConversationDetailViewController *)conversationDetailViewController
+- (void)conversationDetailViewControllerDidSelectShareLocation:(LSConversationDetailViewController *)conversationDetailViewController
 {
     // TODO - Figure out how to tell Atlas that it needs to share a location.
     [self.navigationController popToViewController:self animated:YES];
