@@ -271,7 +271,7 @@ NSString *const LSDetailsButtonLabel = @"Details";
  message sending behavior. If an empty `NSOrderedSet` is returned, no messages will be sent.
  
  */
-- (NSOrderedSet *)conversationViewController:(ATLConversationViewController *)conversationViewController messagesForContentParts:(NSArray *)contentParts
+- (NSOrderedSet *)conversationViewController:(ATLConversationViewController *)conversationViewController messagesForMediaAttachments:(NSArray *)mediaAttachments
 {
     return nil;
 }
@@ -319,7 +319,12 @@ NSString *const LSDetailsButtonLabel = @"Details";
     } else {
         LYRMessagePart *part = message.parts.firstObject;
         if ([part.MIMEType isEqualToString:ATLMIMETypeImageJPEG] || [part.MIMEType isEqualToString:ATLMIMETypeImagePNG]) {
-            UIImage *image = [[UIImage alloc] initWithData:part.data];
+            UIImage *image;
+            if (part.fileURL) {
+                image = [UIImage imageWithContentsOfFile:part.fileURL.path];
+            } else {
+                image = [UIImage imageWithData:part.data];
+            }
             if (!image) return;
             LSImageViewController *imageViewController = [[LSImageViewController alloc] initWithImage:image];
             [self.navigationController pushViewController:imageViewController animated:YES];
@@ -391,7 +396,9 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
 {
-    LYRMessage *message = [self.layerClient newMessageWithParts:@[ATLMessagePartWithLocation(location)] options:nil error:nil];
+    ATLMediaAttachment *mediaAttachment = [ATLMediaAttachment mediaAttachmentWithLocation:location];
+    NSArray *parts = ATLMessagePartsWithMediaAttachment(mediaAttachment);
+    LYRMessage *message = [self.layerClient newMessageWithParts:parts options:nil error:nil];
     NSError *error;
     BOOL success = [self.conversation sendMessage:message error:&error];
     if (success) {

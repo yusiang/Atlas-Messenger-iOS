@@ -231,7 +231,7 @@ extern NSString *const LSConversationNamePlaceholderText;
     expect(location).toNot.beNil;
 }
 
-- (id<LYRUIParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
+- (id<ATLParticipant>)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     expect(conversationDetailViewController).toNot.beNil;
     expect(participantIdentifier).toNot.beNil;
