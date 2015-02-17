@@ -396,15 +396,8 @@ NSString *const LSDetailsButtonLabel = @"Details";
 
 - (void)conversationDetailViewControllerShouldShareLocation:(LSConversationDetailViewController *)conversationDetailViewController
 {
-//    LYRMessage *message = [self.layerClient newMessageWithParts:@[ATLMessagePartWithLocation(location)] options:nil error:nil];
-//    NSError *error;
-//    BOOL success = [self.conversation sendMessage:message error:&error];
-//    if (success) {
-//        NSLog(@"Message sent!");
-//    } else {
-//        NSLog(@"Message send failed with error: %@", error);
-//    }
-//    [self.navigationController popToViewController:self animated:YES];
+    // TODO - Figure out how to tell Atlas that it needs to share a location.
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 - (void)conversationDetailViewController:(LSConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
