@@ -83,7 +83,6 @@
 		D645F22E1A70493100131FE2 /* LSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D645F22D1A70493100131FE2 /* LSUtilities.m */; };
 		D648ECFC19FEC9D800ED17F0 /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D648ECFB19FEC9D800ED17F0 /* testImage.png */; };
 		D65DB8DF1A70663200A63842 /* LSConversationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10A21A6F2ED3009BFA9C /* LSConversationDetailViewController.m */; };
-		D663D6FA1A92E863007F39D4 /* layerbell.caf in Resources */ = {isa = PBXBuildFile; fileRef = D663D6F91A92E863007F39D4 /* layerbell.caf */; };
 		D66F086519FB524E0047F1C6 /* LSCenterTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */; };
 		D6D2789D1A795C6F00B2AC93 /* LSErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E671A6756AF00158901 /* LSErrors.m */; };
 		D6D2D8DA1A8C17F60094625E /* LSParticipantTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2D8D91A8C17F60094625E /* LSParticipantTableViewController.m */; };
@@ -211,7 +210,6 @@
 		D645F22C1A70493100131FE2 /* LSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSUtilities.h; path = Utilities/LSUtilities.h; sourceTree = "<group>"; };
 		D645F22D1A70493100131FE2 /* LSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSUtilities.m; path = Utilities/LSUtilities.m; sourceTree = "<group>"; };
 		D648ECFB19FEC9D800ED17F0 /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
-		D663D6F91A92E863007F39D4 /* layerbell.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = layerbell.caf; sourceTree = "<group>"; };
 		D66F086319FB524E0047F1C6 /* LSCenterTextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSCenterTextTableViewCell.h; sourceTree = "<group>"; };
 		D66F086419FB524E0047F1C6 /* LSCenterTextTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSCenterTextTableViewCell.m; sourceTree = "<group>"; };
 		D6D2D8D81A8C17F60094625E /* LSParticipantTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSParticipantTableViewController.h; sourceTree = "<group>"; };
@@ -431,7 +429,6 @@
 		259A576B1950EB83000E27B0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D663D6F91A92E863007F39D4 /* layerbell.caf */,
 				0AD6C4B419BD4CD6005142ED /* Icons */,
 				0A27A9441997FE110070BD4F /* back@2x.png */,
 				D648ECFB19FEC9D800ED17F0 /* testImage.png */,
@@ -607,7 +604,6 @@
 				0A27A9431997FD210070BD4F /* logout@2x.png in Resources */,
 				0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */,
 				0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */,
-				D663D6FA1A92E863007F39D4 /* layerbell.caf in Resources */,
 				0A27A9451997FE110070BD4F /* back@2x.png in Resources */,
 				0AD6C4C219BD4D3C005142ED /* background@2x.png in Resources */,
 				0A7023C219BE4C84004FF43E /* selection-indicator.png in Resources */,

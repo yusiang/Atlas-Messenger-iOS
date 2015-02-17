@@ -197,16 +197,13 @@ static NSString *const LSCenterContentCellIdentifier = @"centerContentCellIdenti
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch ((LSConversationDetailTableSection)indexPath.section) {
-        case LSConversationDetailTableSectionParticipants: {
-            BOOL canEdit = indexPath.row < self.participantIdentifiers.count;
-            return canEdit;
-        }
-        case LSConversationDetailTableSectionMetadata:
-        case LSConversationDetailTableSectionLocation:
-        case LSConversationDetailTableSectionLeave:
-        case LSConversationDetailTableSectionCount:
+    if (indexPath.section == LSConversationDetailTableSectionParticipants) {
+    // Prevent removal in 1 to 1 conversations.
+        if (self.conversation.participants.count < 3) {
             return NO;
+        }
+        BOOL canEdit = indexPath.row < self.participantIdentifiers.count;
+        return canEdit;
     }
     return NO;
 }
