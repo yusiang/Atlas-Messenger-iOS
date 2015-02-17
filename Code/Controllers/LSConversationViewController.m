@@ -319,7 +319,12 @@ NSString *const LSDetailsButtonLabel = @"Details";
     } else {
         LYRMessagePart *part = message.parts.firstObject;
         if ([part.MIMEType isEqualToString:ATLMIMETypeImageJPEG] || [part.MIMEType isEqualToString:ATLMIMETypeImagePNG]) {
-            UIImage *image = [[UIImage alloc] initWithData:part.data];
+            UIImage *image;
+            if (part.fileURL) {
+                image = [UIImage imageWithContentsOfFile:part.fileURL.path];
+            } else {
+                image = [UIImage imageWithData:part.data];
+            }
             if (!image) return;
             LSImageViewController *imageViewController = [[LSImageViewController alloc] initWithImage:image];
             [self.navigationController pushViewController:imageViewController animated:YES];
