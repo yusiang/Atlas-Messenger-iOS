@@ -314,7 +314,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 {
     // Queue UI updates onto the main thread, since LYRProgress performs
     // delegate callbacks from a background thread.
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         BOOL progressCompleted = progress.fractionCompleted == 1.0f;
         [self.progressView setProgress:progress.fractionCompleted animated:YES];
         // After transfer completes, remove self for delegation.
