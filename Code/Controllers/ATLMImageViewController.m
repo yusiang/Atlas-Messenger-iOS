@@ -91,6 +91,10 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 
     UIBarButtonItem *shareBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
     self.navigationItem.rightBarButtonItem = shareBarButtonItem;
+    UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
+    self.navigationItem.leftBarButtonItem = doneButtonItem;
+    
+    self.title = @"Image";
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -102,7 +106,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self downloadFullResImageIfNeeded];
+    //[self downloadFullResImageIfNeeded];
 }
 
 - (void)viewDidLayoutSubviews
@@ -152,6 +156,11 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
         UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[self.fullResImage] applicationActivities:nil];
         [self presentViewController:activityViewController animated:YES completion:nil];
     }
+}
+
+- (void)done:(id)sender
+{
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Helpers
@@ -295,7 +304,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
         // After transfer completes, remove self for delegation.
         if (progressCompleted) {
             progress.delegate = nil;
-            [self loadFullResImages];
+            //[self loadFullResImages];
         }
     });
 }

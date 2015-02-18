@@ -330,9 +330,13 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         LYRMessagePart *imageMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImageJPEG);
+        if (!imageMessagePart) {
+            imageMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImagePNG);
+        }
         if (imageMessagePart) {
             ATLMImageViewController *imageViewController = [[ATLMImageViewController alloc] initWithMessage:message];
-            [self.navigationController pushViewController:imageViewController animated:YES];
+            UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:imageViewController];
+            [self.navigationController presentViewController:controller animated:YES completion:nil];
         }
     }
 }

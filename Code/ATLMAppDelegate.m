@@ -499,6 +499,14 @@ ATLMEnvironment ATLMEnvironmentConfiguration(void)
     [[UINavigationBar appearance] setTintColor:ATLBlueColor()];
     [[UINavigationBar appearance] setBarTintColor:ATLLightGrayColor()];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:ATLBlueColor()];
+    
+    [[ATLIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
+    [[ATLOutgoingMessageCollectionViewCell appearance] setMessageLinkTextColor:ATLBlueColor()];
+    [[ATLIncomingMessageCollectionViewCell appearance] setBubbleViewColor:ATLLightGrayColor()];
+    
+    [[ATLOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
+    [[ATLOutgoingMessageCollectionViewCell appearance] setMessageLinkTextColor:[UIColor whiteColor]];
+    [[ATLOutgoingMessageCollectionViewCell appearance] setBubbleViewColor:ATLBlueColor()];
 }
 
 #pragma mark - Bug Reporting

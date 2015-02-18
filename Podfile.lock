@@ -100,14 +100,14 @@ CHECKOUT OPTIONS:
     :commit: 41edeeade3ea0618c2ddac6c90a648f322f1b5a2
     :git: https://github.com/blakewatters/KIFViewControllerActions.git
   LayerKit:
-    :commit: 88dcdc0a7ea1b81fb4cd6fa86c344951bf5b2b95
+    :commit: b369e3b1dc2a3a151a020a74605810b416234814
     :git: git@github.com:layerhq/LayerKit.git
   LYRCountDownLatch:
     :commit: 02119f855ad14e7fc0dae32bbbf17c735a281cfe
     :git: https://github.com/layerhq/LYRCountDownLatch.git
 
 SPEC CHECKSUMS:
-  Atlas: 4ddf9640b847d6227c8e49ba9149a38a5f36a25a
+  Atlas: 02b419cfca05c71d6403d4c727614ea58be2f0da
   CocoaLumberjack: 9d198d6e19909b3b113a38c5f06f7bb8eedd0427
   CocoaSPDY-Layer: 570f2d406759ae1237282d4f95a53853c9f09b06
   Expecta: ee641011fe10aa1855d487b40e4976dac50ec342
