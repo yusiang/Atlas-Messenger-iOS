@@ -329,16 +329,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
-        LYRMessagePart *part = message.parts.firstObject;
-        if ([part.MIMEType isEqualToString:ATLMIMETypeImageJPEG] || [part.MIMEType isEqualToString:ATLMIMETypeImagePNG]) {
-            UIImage *image;
-            if (part.fileURL) {
-                image = [UIImage imageWithContentsOfFile:part.fileURL.path];
-            } else {
-                image = [UIImage imageWithData:part.data];
-            }
-            if (!image) return;
-            ATLMImageViewController *imageViewController = [[ATLMImageViewController alloc] initWithImage:image];
+        LYRMessagePart *imageMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImageJPEG);
+        if (imageMessagePart) {
+            ATLMImageViewController *imageViewController = [[ATLMImageViewController alloc] initWithMessage:message];
             [self.navigationController pushViewController:imageViewController animated:YES];
         }
     }

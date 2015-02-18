@@ -172,7 +172,7 @@ ATLMEnvironment ATLMEnvironmentConfiguration(void)
     
     // Configure application controllers
     ATLMLayerClient *client = [ATLMLayerClient clientWithAppID:ATLMLayerAppID(self.environment)];
-    
+    client.autodownloadMIMETypes = [NSSet setWithObjects:ATLMIMETypeTextPlain, ATLMIMETypeImageJPEGPreview, nil];
     self.applicationController = [ATLMApplicationController controllerWithBaseURL:ATLMRailsBaseURL()
                                                                     layerClient:client
                                                              persistenceManager:ATLMPersitenceManager()];
