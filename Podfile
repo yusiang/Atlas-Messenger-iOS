@@ -4,7 +4,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 target 'Atlas Messenger' do
   pod 'SVProgressHUD', :head
   pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
-  pod 'HockeySDK', '~> 3.5.6'
+  pod 'HockeySDK', '~> 3.6'
   pod 'Atlas', path: 'Libraries/Atlas'
 end
 
