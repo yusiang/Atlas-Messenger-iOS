@@ -19,9 +19,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LayerKit.h>
 
 @interface ATLMImageViewController : UIViewController
 
-- (instancetype)initWithImage:(UIImage *)image;
+- (instancetype)initWithMessage:(LYRMessage *)message;
 
 @end
