@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
@@ -49,9 +49,23 @@
 		<key>LYRBuildBuilderName</key>
 		<string>Kevin Coleman</string>
 		<key>LYRBuildLayerKitVersion</key>
-		<string>LayerKit (0.9.8)</string>
+		<dict>
+			<key>LayerKit (0.10.0-pre6)</key>
+			<array>
+				<string>CocoaLumberjack (~&gt; 1.8.1)</string>
+				<string>CocoaSPDY-Layer (~&gt; 20150126164828156)</string>
+				<string>FMDB/standalone/FTS (= 2.4-20141216161347845)</string>
+				<string>FMDBMigrationManager (~&gt; 1.3.0)</string>
+				<string>GCNetworkReachability (~&gt; 1.3.2)</string>
+				<string>layer-client-messaging-schema (= 20150210133608257)</string>
+				<string>layer-thrift (= 0.69.0)</string>
+				<string>LayerKit/Public (= 0.10.0-pre6)</string>
+				<string>sqlite3 (= 3.8.7.4-1)</string>
+				<string>TransitionKit (~&gt; 2.1.0)</string>
+			</array>
+		</dict>
 		<key>LYRBuildShortSha</key>
-		<string>1cc0fa4</string>
+		<string>5091885</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location will only be shared in conversations that you choose.</string>
