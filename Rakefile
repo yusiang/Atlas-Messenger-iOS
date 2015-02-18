@@ -70,10 +70,10 @@ if defined?(XCTasks)
   end
 end
 
-desc "Creates a Testing Simulator configured for LayerUIKit Testing"
+desc "Creates a Testing Simulator configured for Atlas Messenger Testing"
 task :sim do
   # Check if LayerUIKit Test Device Exists
-  device = `xcrun simctl list | grep LayerUIKit-Test-Device`
+  device = `xcrun simctl list | grep Atlas-Messenger-Test-Device`
   if $?.exitstatus.zero?
     puts ("Found Layer Test Device #{device}")
     device.each_line do |line|
@@ -83,22 +83,21 @@ task :sim do
       end
     end
   end
-  puts green ("Creating iOS simulator for LayerUIKit Testing")
-  run("xcrun simctl create LayerUIKit-Test-Device com.apple.CoreSimulator.SimDeviceType.iPhone-6 com.apple.CoreSimulator.SimRuntime.iOS-8-1")
+  puts green ("Creating iOS simulator for Atlas-Messenger Testing")
+  run("xcrun simctl create Atlas-Messenger-Test-Device com.apple.CoreSimulator.SimDeviceType.iPhone-6 com.apple.CoreSimulator.SimRuntime.iOS-8-1")
 end
 
 desc "Builds and pushes a new release to Hockey App"
 task :release do
-
   require 'byebug'
   require 'plist'
   require "highline/import"
   
   # 1) Set the new version of the sample App.
   plist = info_plist
-  sample_version = ask "Set Sample Version... \nCurrent Sample Version: #{sample_app_version} \nCurrent LayerKit Version: #{layerkit_version}"
-  puts green ("New Layer Sample App Version: #{sample_version}")
-  plist['CFBundleShortVersionString'] = sample_version
+  sample_version = ask "Set Sample Version... \nAtlas Messenger Version: #{atlas_messenger_version} \nCurrent Atlas Version: #{atlas_version} \nLayerKit Version: #{layerkit_version}"
+  puts green ("New Atlas Messenger Version: #{atlas_messenger_version}")
+  plist['CFBundleShortVersionString'] = atlas_messenger_version
   
   # 2) Generate objects with: builder name/email (via git config), short-sha
   short_sha = `git rev-parse --short HEAD`.strip
@@ -114,22 +113,22 @@ task :release do
   }
   
   # Write the plist.
-  plist_path = 'Resources/LayerSample-Info.plist'
-  trap("SIGINT") { run("git checkout -- Resources/LayerSample-Info.plist", quiet: true) }
+  plist_path = 'Resources/Info.plist'
+  trap("SIGINT") { run("git checkout -- Resources/Info.plist", quiet: true) }
   File.open(plist_path, 'w') { |file| file.write(plist.to_plist) }
-  run ("git add Resources/LayerSample-Info.plist")
-  run ("git commit -m 'Changed LayerKit version string to #{sample_version}'")
+  run ("git add Resources/Info.plist")
+  run ("git commit -m 'Changed Atlas Messenger version string to #{atlas_messenger_version}'")
 
-  archive_path = 'LayerSample.xcarchive'
+  archive_path = 'Atlas Messenger.xcarchive'
 
   xcpretty_params = (ENV['LAYER_XCPRETTY_PARAMS'] || '')
 
   # 3.5) Move the shared scheme into the workspace directory.
-  FileUtils::Verbose.mkdir_p "LayerSample.xcworkspace/xcshareddata/xcschemes"
-  FileUtils::Verbose.cp Dir.glob("Resources/Schemes/*.xcscheme"), "LayerSample.xcworkspace/xcshareddata/xcschemes"
+  FileUtils::Verbose.mkdir_p "Atlas Messenger.xcworkspace/xcshareddata/xcschemes"
+  FileUtils::Verbose.cp Dir.glob("Resources/Schemes/*.xcscheme"), "Atlas Messenger.xcworkspace/xcshareddata/xcschemes"
 
   # 4) Archive project with shenzhen, but pipe to xcpretty.
-  run("ipa build --workspace LayerSample.xcworkspace --scheme LayerSample --configuration Release --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
+  run("ipa build --workspace 'Atlas Messenger.xcworkspace' --scheme 'Atlas Messenger' --configuration Release --verbose | xcpretty #{xcpretty_params} && exit ${PIPESTATUS[0]}")
   
   output = with_clean_env { `ipa info` }
   unless output =~ /LayerSample In House Distribution/
@@ -141,10 +140,10 @@ task :release do
   run("ipa distribute:hockeyapp --token 4293de2a6ba5492c9d77b6faaf8d5343 -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
   #run("ipa distribute:hockeyapp --token 4293de2a6ba5492c9d77b6faaf8d5343 --tags dev -m \"Build of #{short_sha} by #{builder_name} (#{builder_email}).\"")
   
-  run("ipa info LayerSample.ipa")
+  run("ipa info 'Atlas Messenger.ipa'")
 
   # 6) Reset Info.plist.
-  run("git checkout -- Resources/LayerSample-Info.plist", quiet: true)
+  run("git checkout -- Resources/Info.plist", quiet: true)
 
   # 8) Let everyone know that Layer Sample is Available
   require 'slack-notifier'
@@ -153,19 +152,19 @@ task :release do
   notifier.ping "Good news everyone! Layer iOS Sample App v#{sample_version} is now available on Hockey App", channel: '#applications', username: 'LayerBot', icon_emoji: ":marshawn:"
   
   # 9) Remove the build artifacts from repository
-  run ("rm -rf LayerSample.app.dSYM.zip")
-  run ("rm -rf LayerSample.ipa")
+  run ("rm -rf 'Atlas Messenger.app.dSYM.zip'")
+  run ("rm -rf 'Atlas Messenger.ipa'")
   
 end
 
 def info_plist
   require 'plist'
-  plist_path = 'Resources/LayerSample-Info.plist'
+  plist_path = 'Resources/Info.plist'
   info_plist = Plist::parse_xml(plist_path)
 end
 
-def sample_app_version
-  sample_version = info_plist['CFBundleShortVersionString']
+def atlas_messenger_version
+  info_plist['CFBundleShortVersionString']
 end
 
 def layerkit_version
@@ -177,6 +176,19 @@ def layerkit_version
       layer_kit_version = entry.match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
     elsif entry.kind_of?(Hash) && entry.keys[0] =~ /^LayerKit/
       layer_kit_version = entry.keys[0].match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+    end
+  end
+end
+
+def atlas_version
+  require 'yaml'
+  lockfile = YAML.load_file('Podfile.lock')
+  version = nil
+  lockfile['PODS'].detect do |entry|
+    if entry.kind_of?(String) && entry =~ /^Atlas/
+      version = entry.match(/Atlas \(([\d\.\-\w]+)\)/)[1]
+    elsif entry.kind_of?(Hash) && entry.keys[0] =~ /^Atlas/
+      version = entry.keys[0].match(/Atlas \(([\d\.\-\w]+)\)/)[1]
     end
   end
 end
