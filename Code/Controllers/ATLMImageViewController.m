@@ -106,7 +106,17 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //[self downloadFullResImageIfNeeded];
+    [self downloadFullResImageIfNeeded];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
 }
 
 - (void)viewDidLayoutSubviews
@@ -160,7 +170,14 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 
 - (void)done:(id)sender
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    // Removing the full-resolution image to save GPU resources when
+    // animating the view controller POP.
+    self.lowResImageView.hidden = NO;
+    self.lowResImageView.alpha = 1.0f;
+    [self.fullResImageView removeFromSuperview];
+    self.fullResImageView = nil;
+    self.fullResImage = nil;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Helpers
@@ -218,7 +235,6 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
         self.fullResImageView.alpha = 1.0f; // make the full res image appear.
         self.progressView.alpha = 0.0;
     } completion:^(BOOL finished) {
-        self.lowResImageView.hidden = YES; // and hide the low-res view, to save resources.
         self.progressView.hidden = YES;
     }];
     [self viewDidLayoutSubviews];
@@ -304,7 +320,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
         // After transfer completes, remove self for delegation.
         if (progressCompleted) {
             progress.delegate = nil;
-            //[self loadFullResImages];
+            [self loadFullResImages];
         }
     });
 }

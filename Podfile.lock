@@ -124,7 +124,6 @@ SPEC CHECKSUMS:
   KIFViewControllerActions: 73085acd975ebbfc954f7895ca1aaa9faa36b3c6
   layer-client-messaging-schema: 3de726352e3d6a9dce5b17067163fbf833514a53
   layer-thrift: 9a0a30007d430430b38cabfe739b590e72718dae
-  LayerIdentity: 7f5b8b0e3f4c2645016f657a79da571c7d2cabf6
   LayerKit: dd014caeedf87225a9e6c9e405de709c105c8492
   LYRCountDownLatch: 72a444f729ca5a8c6157c0b58f335a44e6702b48
   OCMock: ecdd510b73ef397f2f97274785c1e87fd147c49f
