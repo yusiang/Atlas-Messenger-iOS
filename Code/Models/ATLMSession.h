@@ -1,8 +1,8 @@
 //
-//  main.m
+//  ATLMSession.h
 //  Atlas Messenger
 //
-//  Created by Kevin Coleman on 6/10/14.
+//  Created by Blake Watters on 6/28/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,17 @@
 //  limitations under the License.
 //
 
-#import <UIKit/UIKit.h>
-#import "ATLMAppDelegate.h"
+#import <Foundation/Foundation.h>
+#import "ATLMUser.h"
 
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([ATLMAppDelegate class]));
-    }
-}
+/**
+ @abstract The `ATLMSession` class models a persistent user session.
+ */
+@interface ATLMSession : NSObject <NSCoding>
+
++ (instancetype)sessionWithAuthenticationToken:(NSString *)authenticationToken user:(ATLMUser *)user;
+
+@property (nonatomic, readonly) NSString *authenticationToken;
+@property (nonatomic, readonly) ATLMUser *user;
+
+@end

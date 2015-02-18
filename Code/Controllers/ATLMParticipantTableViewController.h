@@ -1,9 +1,9 @@
 //
-//  main.m
+//  ATLMParticipantTableViewController.h
 //  Atlas Messenger
 //
-//  Created by Kevin Coleman on 6/10/14.
-//  Copyright (c) 2014 Layer, Inc. All rights reserved.
+//  Created by Kevin Coleman on 2/11/15.
+//  Copyright (c) 2015 Layer, Inc. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,12 +18,8 @@
 //  limitations under the License.
 //
 
-#import <UIKit/UIKit.h>
-#import "ATLMAppDelegate.h"
+#import <Atlas/Atlas.h>
 
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([ATLMAppDelegate class]));
-    }
-}
+@interface ATLMParticipantTableViewController : ATLParticipantTableViewController
+
+@end

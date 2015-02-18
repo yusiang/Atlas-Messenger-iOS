@@ -1,0 +1,1001 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A0C242719477D8F00401B74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242619477D8F00401B74 /* Foundation.framework */; };
+		0A0C242919477D8F00401B74 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242819477D8F00401B74 /* CoreGraphics.framework */; };
+		0A0C242B19477D8F00401B74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242A19477D8F00401B74 /* UIKit.framework */; };
+		0A0C244619477D8F00401B74 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C244519477D8F00401B74 /* XCTest.framework */; };
+		0A0C244719477D8F00401B74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242619477D8F00401B74 /* Foundation.framework */; };
+		0A0C244819477D8F00401B74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242A19477D8F00401B74 /* UIKit.framework */; };
+		0A27A9431997FD210070BD4F /* logout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9421997FD210070BD4F /* logout@2x.png */; };
+		0A27A9451997FE110070BD4F /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9441997FE110070BD4F /* back@2x.png */; };
+		0A43B1D319D34CDD00AE8FA6 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */; };
+		0A605F3119BF735D00D773AF /* logo-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F2F19BF735D00D773AF /* logo-icon@2x.png */; };
+		0A605F3219BF735D00D773AF /* logo-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3019BF735D00D773AF /* logo-icon.png */; };
+		0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3319BF744600D773AF /* logo-icon-blue@2x.png */; };
+		0A605F3619BF744600D773AF /* logo-icon-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3419BF744600D773AF /* logo-icon-blue.png */; };
+		0A7023C219BE4C84004FF43E /* selection-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023BE19BE4C84004FF43E /* selection-indicator.png */; };
+		0A7023C319BE4C84004FF43E /* unselected-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023BF19BE4C84004FF43E /* unselected-indicator.png */; };
+		0A7023C419BE4C84004FF43E /* selection-indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023C019BE4C84004FF43E /* selection-indicator@2x.png */; };
+		0A7023C519BE4C84004FF43E /* unselected-indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023C119BE4C84004FF43E /* unselected-indicator@2x.png */; };
+		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
+		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
+		0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C71947C86B0083732B /* CoreLocation.framework */; };
+		0AADB5CA1947C8710083732B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C91947C8710083732B /* libz.dylib */; };
+		0AADB5CC1947C8770083732B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5CB1947C8770083732B /* MobileCoreServices.framework */; };
+		0AADB5CE1947C87C0083732B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5CD1947C87B0083732B /* QuartzCore.framework */; };
+		0AADB5D01947C8800083732B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5CF1947C8800083732B /* Security.framework */; };
+		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
+		0AB0501A196E24F00029BC1B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB05019196E24F00029BC1B /* Crashlytics.framework */; };
+		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
+		0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B519BD4CFA005142ED /* more@2x.png */; };
+		0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B719BD4CFA005142ED /* compose@2x.png */; };
+		0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B819BD4CFA005142ED /* compose.png */; };
+		0AD6C4C219BD4D3C005142ED /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4C119BD4D3C005142ED /* background@2x.png */; };
+		0AFE3FE419B0E19C00FCA264 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57311950EB76000E27B0 /* main.m */; };
+		25363AFA1A941B98000D3913 /* ATLMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363ABF1A941B98000D3913 /* ATLMAppDelegate.m */; };
+		25363AFB1A941B98000D3913 /* ATLMAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AC21A941B98000D3913 /* ATLMAPIManager.m */; };
+		25363AFC1A941B98000D3913 /* ATLMApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AC41A941B98000D3913 /* ATLMApplicationController.m */; };
+		25363AFD1A941B98000D3913 /* ATLMAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AC61A941B98000D3913 /* ATLMAuthenticationViewController.m */; };
+		25363AFE1A941B98000D3913 /* ATLMConversationDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AC81A941B98000D3913 /* ATLMConversationDetailViewController.m */; };
+		25363AFF1A941B98000D3913 /* ATLMConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363ACA1A941B98000D3913 /* ATLMConversationListViewController.m */; };
+		25363B001A941B98000D3913 /* ATLMConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363ACC1A941B98000D3913 /* ATLMConversationViewController.m */; };
+		25363B011A941B98000D3913 /* ATLMImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363ACE1A941B98000D3913 /* ATLMImageViewController.m */; };
+		25363B021A941B98000D3913 /* ATLMLocalNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AD01A941B98000D3913 /* ATLMLocalNotificationManager.m */; };
+		25363B031A941B98000D3913 /* ATLMMessageDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AD21A941B98000D3913 /* ATLMMessageDetailViewController.m */; };
+		25363B041A941B98000D3913 /* ATLMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AD41A941B98000D3913 /* ATLMNavigationController.m */; };
+		25363B051A941B98000D3913 /* ATLMParticipantTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AD61A941B98000D3913 /* ATLMParticipantTableViewController.m */; };
+		25363B061A941B98000D3913 /* ATLMPersistenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AD81A941B98000D3913 /* ATLMPersistenceManager.m */; };
+		25363B071A941B98000D3913 /* ATLMSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363ADA1A941B98000D3913 /* ATLMSettingsViewController.m */; };
+		25363B081A941B98000D3913 /* ATLMSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363ADD1A941B98000D3913 /* ATLMSession.m */; };
+		25363B091A941B98000D3913 /* ATLMUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363ADF1A941B98000D3913 /* ATLMUser.m */; };
+		25363B0A1A941B98000D3913 /* ATLMErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AE21A941B98000D3913 /* ATLMErrors.m */; };
+		25363B0B1A941B98000D3913 /* ATLMHTTPResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AE41A941B98000D3913 /* ATLMHTTPResponseSerializer.m */; };
+		25363B0C1A941B98000D3913 /* ATLMLayerClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AE61A941B98000D3913 /* ATLMLayerClient.m */; };
+		25363B0D1A941B98000D3913 /* ATLMParticipantDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AE81A941B98000D3913 /* ATLMParticipantDataSource.m */; };
+		25363B0E1A941B98000D3913 /* ATLMUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AEA1A941B98000D3913 /* ATLMUtilities.m */; };
+		25363B0F1A941B98000D3913 /* ATLMAuthenticationTableViewFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AED1A941B98000D3913 /* ATLMAuthenticationTableViewFooter.m */; };
+		25363B101A941B98000D3913 /* ATLMAuthenticationTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AEF1A941B98000D3913 /* ATLMAuthenticationTableViewHeader.m */; };
+		25363B111A941B98000D3913 /* ATLMCenterTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AF11A941B98000D3913 /* ATLMCenterTextTableViewCell.m */; };
+		25363B121A941B98000D3913 /* ATLMInputTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AF31A941B98000D3913 /* ATLMInputTableViewCell.m */; };
+		25363B131A941B98000D3913 /* ATLMSettingsHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AF51A941B98000D3913 /* ATLMSettingsHeaderView.m */; };
+		25363B141A941B98000D3913 /* ATLMSplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AF71A941B98000D3913 /* ATLMSplashView.m */; };
+		25363B151A941B98000D3913 /* ATLMStyleValue1TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25363AF91A941B98000D3913 /* ATLMStyleValue1TableViewCell.m */; };
+		259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 259A576E1950EB83000E27B0 /* InfoPlist.strings */; };
+		259A57751950EB83000E27B0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A57701950EB83000E27B0 /* Images.xcassets */; };
+		B53937841A24F6AF00DE60F9 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B53937831A24F6AF00DE60F9 /* Fabric.framework */; };
+		D6306DFB1A6F30B200E16E85 /* ATLMAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107B1A6F2D99009BFA9C /* ATLMAPIManagerTest.m */; };
+		D6306DFC1A6F30B200E16E85 /* ATLMApplicationControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107C1A6F2D99009BFA9C /* ATLMApplicationControllerTest.m */; };
+		D6306DFD1A6F30B200E16E85 /* ATLMAuthenticationViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107D1A6F2D99009BFA9C /* ATLMAuthenticationViewControllerTest.m */; };
+		D6306DFE1A6F30B200E16E85 /* ATLMConversationDetailViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107E1A6F2D99009BFA9C /* ATLMConversationDetailViewControllerTest.m */; };
+		D6306DFF1A6F30B200E16E85 /* ATLMConversationListViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107F1A6F2D99009BFA9C /* ATLMConversationListViewControllerTest.m */; };
+		D6306E001A6F30B200E16E85 /* ATLMConversationViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10801A6F2D99009BFA9C /* ATLMConversationViewControllerTest.m */; };
+		D6306E011A6F30B200E16E85 /* ATLMMesageDetailViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10831A6F2D99009BFA9C /* ATLMMesageDetailViewControllerTest.m */; };
+		D6306E021A6F30B200E16E85 /* ATLMPersistenceManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10841A6F2D99009BFA9C /* ATLMPersistenceManagerTest.m */; };
+		D6306E031A6F30B200E16E85 /* ATLMSettingsViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10861A6F2D99009BFA9C /* ATLMSettingsViewControllerTest.m */; };
+		D6306E041A6F30BE00E16E85 /* ATLMLayerContentFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10821A6F2D99009BFA9C /* ATLMLayerContentFactory.m */; };
+		D6306E051A6F30BE00E16E85 /* ATLMTestInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10881A6F2D99009BFA9C /* ATLMTestInterface.m */; };
+		D6306E061A6F30BE00E16E85 /* ATLMTestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B108A1A6F2D99009BFA9C /* ATLMTestUser.m */; };
+		D648ECFC19FEC9D800ED17F0 /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D648ECFB19FEC9D800ED17F0 /* testImage.png */; };
+		DE783CF95B3E136B03F3119D /* libPods-Atlas MessengerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */; };
+		E60CDAC28046CC178C349414 /* libPods-Atlas Messenger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0A0C244919477D8F00401B74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A0C241B19477D8F00401B74 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A0C242219477D8F00401B74;
+			remoteInfo = LayerSample;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0A0C242319477D8F00401B74 /* Atlas Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Atlas Messenger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A0C242619477D8F00401B74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0A0C242819477D8F00401B74 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		0A0C242A19477D8F00401B74 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		0A0C244419477D8F00401B74 /* Atlas MessengerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Atlas MessengerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A0C244519477D8F00401B74 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		0A27A9421997FD210070BD4F /* logout@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout@2x.png"; sourceTree = "<group>"; };
+		0A27A9441997FE110070BD4F /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
+		0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		0A605F2F19BF735D00D773AF /* logo-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon@2x.png"; sourceTree = "<group>"; };
+		0A605F3019BF735D00D773AF /* logo-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon.png"; sourceTree = "<group>"; };
+		0A605F3319BF744600D773AF /* logo-icon-blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon-blue@2x.png"; sourceTree = "<group>"; };
+		0A605F3419BF744600D773AF /* logo-icon-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon-blue.png"; sourceTree = "<group>"; };
+		0A7023BE19BE4C84004FF43E /* selection-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selection-indicator.png"; sourceTree = "<group>"; };
+		0A7023BF19BE4C84004FF43E /* unselected-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselected-indicator.png"; sourceTree = "<group>"; };
+		0A7023C019BE4C84004FF43E /* selection-indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selection-indicator@2x.png"; sourceTree = "<group>"; };
+		0A7023C119BE4C84004FF43E /* unselected-indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselected-indicator@2x.png"; sourceTree = "<group>"; };
+		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		0AADB5C51947C8600083732B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		0AADB5C71947C86B0083732B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		0AADB5C91947C8710083732B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		0AADB5CB1947C8770083732B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		0AADB5CD1947C87B0083732B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		0AADB5CF1947C8800083732B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0AB05019196E24F00029BC1B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
+		0AD6C4B519BD4CFA005142ED /* more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2x.png"; sourceTree = "<group>"; };
+		0AD6C4B719BD4CFA005142ED /* compose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compose@2x.png"; sourceTree = "<group>"; };
+		0AD6C4B819BD4CFA005142ED /* compose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compose.png; sourceTree = "<group>"; };
+		0AD6C4C119BD4D3C005142ED /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
+		25363ABE1A941B98000D3913 /* ATLMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAppDelegate.h; sourceTree = "<group>"; };
+		25363ABF1A941B98000D3913 /* ATLMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAppDelegate.m; sourceTree = "<group>"; };
+		25363AC11A941B98000D3913 /* ATLMAPIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAPIManager.h; sourceTree = "<group>"; };
+		25363AC21A941B98000D3913 /* ATLMAPIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAPIManager.m; sourceTree = "<group>"; };
+		25363AC31A941B98000D3913 /* ATLMApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMApplicationController.h; sourceTree = "<group>"; };
+		25363AC41A941B98000D3913 /* ATLMApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMApplicationController.m; sourceTree = "<group>"; };
+		25363AC51A941B98000D3913 /* ATLMAuthenticationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAuthenticationViewController.h; sourceTree = "<group>"; };
+		25363AC61A941B98000D3913 /* ATLMAuthenticationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAuthenticationViewController.m; sourceTree = "<group>"; };
+		25363AC71A941B98000D3913 /* ATLMConversationDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMConversationDetailViewController.h; sourceTree = "<group>"; };
+		25363AC81A941B98000D3913 /* ATLMConversationDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConversationDetailViewController.m; sourceTree = "<group>"; };
+		25363AC91A941B98000D3913 /* ATLMConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMConversationListViewController.h; sourceTree = "<group>"; };
+		25363ACA1A941B98000D3913 /* ATLMConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConversationListViewController.m; sourceTree = "<group>"; };
+		25363ACB1A941B98000D3913 /* ATLMConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMConversationViewController.h; sourceTree = "<group>"; };
+		25363ACC1A941B98000D3913 /* ATLMConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConversationViewController.m; sourceTree = "<group>"; };
+		25363ACD1A941B98000D3913 /* ATLMImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMImageViewController.h; sourceTree = "<group>"; };
+		25363ACE1A941B98000D3913 /* ATLMImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMImageViewController.m; sourceTree = "<group>"; };
+		25363ACF1A941B98000D3913 /* ATLMLocalNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLocalNotificationManager.h; sourceTree = "<group>"; };
+		25363AD01A941B98000D3913 /* ATLMLocalNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMLocalNotificationManager.m; sourceTree = "<group>"; };
+		25363AD11A941B98000D3913 /* ATLMMessageDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMMessageDetailViewController.h; sourceTree = "<group>"; };
+		25363AD21A941B98000D3913 /* ATLMMessageDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMMessageDetailViewController.m; sourceTree = "<group>"; };
+		25363AD31A941B98000D3913 /* ATLMNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMNavigationController.h; sourceTree = "<group>"; };
+		25363AD41A941B98000D3913 /* ATLMNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMNavigationController.m; sourceTree = "<group>"; };
+		25363AD51A941B98000D3913 /* ATLMParticipantTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMParticipantTableViewController.h; sourceTree = "<group>"; };
+		25363AD61A941B98000D3913 /* ATLMParticipantTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMParticipantTableViewController.m; sourceTree = "<group>"; };
+		25363AD71A941B98000D3913 /* ATLMPersistenceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMPersistenceManager.h; sourceTree = "<group>"; };
+		25363AD81A941B98000D3913 /* ATLMPersistenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMPersistenceManager.m; sourceTree = "<group>"; };
+		25363AD91A941B98000D3913 /* ATLMSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSettingsViewController.h; sourceTree = "<group>"; };
+		25363ADA1A941B98000D3913 /* ATLMSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSettingsViewController.m; sourceTree = "<group>"; };
+		25363ADC1A941B98000D3913 /* ATLMSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSession.h; sourceTree = "<group>"; };
+		25363ADD1A941B98000D3913 /* ATLMSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSession.m; sourceTree = "<group>"; };
+		25363ADE1A941B98000D3913 /* ATLMUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMUser.h; sourceTree = "<group>"; };
+		25363ADF1A941B98000D3913 /* ATLMUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMUser.m; sourceTree = "<group>"; };
+		25363AE11A941B98000D3913 /* ATLMErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMErrors.h; sourceTree = "<group>"; };
+		25363AE21A941B98000D3913 /* ATLMErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMErrors.m; sourceTree = "<group>"; };
+		25363AE31A941B98000D3913 /* ATLMHTTPResponseSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMHTTPResponseSerializer.h; sourceTree = "<group>"; };
+		25363AE41A941B98000D3913 /* ATLMHTTPResponseSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMHTTPResponseSerializer.m; sourceTree = "<group>"; };
+		25363AE51A941B98000D3913 /* ATLMLayerClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLayerClient.h; sourceTree = "<group>"; };
+		25363AE61A941B98000D3913 /* ATLMLayerClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMLayerClient.m; sourceTree = "<group>"; };
+		25363AE71A941B98000D3913 /* ATLMParticipantDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMParticipantDataSource.h; sourceTree = "<group>"; };
+		25363AE81A941B98000D3913 /* ATLMParticipantDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMParticipantDataSource.m; sourceTree = "<group>"; };
+		25363AE91A941B98000D3913 /* ATLMUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMUtilities.h; sourceTree = "<group>"; };
+		25363AEA1A941B98000D3913 /* ATLMUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMUtilities.m; sourceTree = "<group>"; };
+		25363AEC1A941B98000D3913 /* ATLMAuthenticationTableViewFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAuthenticationTableViewFooter.h; sourceTree = "<group>"; };
+		25363AED1A941B98000D3913 /* ATLMAuthenticationTableViewFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAuthenticationTableViewFooter.m; sourceTree = "<group>"; };
+		25363AEE1A941B98000D3913 /* ATLMAuthenticationTableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAuthenticationTableViewHeader.h; sourceTree = "<group>"; };
+		25363AEF1A941B98000D3913 /* ATLMAuthenticationTableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAuthenticationTableViewHeader.m; sourceTree = "<group>"; };
+		25363AF01A941B98000D3913 /* ATLMCenterTextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMCenterTextTableViewCell.h; sourceTree = "<group>"; };
+		25363AF11A941B98000D3913 /* ATLMCenterTextTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMCenterTextTableViewCell.m; sourceTree = "<group>"; };
+		25363AF21A941B98000D3913 /* ATLMInputTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMInputTableViewCell.h; sourceTree = "<group>"; };
+		25363AF31A941B98000D3913 /* ATLMInputTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMInputTableViewCell.m; sourceTree = "<group>"; };
+		25363AF41A941B98000D3913 /* ATLMSettingsHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSettingsHeaderView.h; sourceTree = "<group>"; };
+		25363AF51A941B98000D3913 /* ATLMSettingsHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSettingsHeaderView.m; sourceTree = "<group>"; };
+		25363AF61A941B98000D3913 /* ATLMSplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSplashView.h; sourceTree = "<group>"; };
+		25363AF71A941B98000D3913 /* ATLMSplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSplashView.m; sourceTree = "<group>"; };
+		25363AF81A941B98000D3913 /* ATLMStyleValue1TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMStyleValue1TableViewCell.h; sourceTree = "<group>"; };
+		25363AF91A941B98000D3913 /* ATLMStyleValue1TableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMStyleValue1TableViewCell.m; sourceTree = "<group>"; };
+		259A57311950EB76000E27B0 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		259A576F1950EB83000E27B0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		259A57701950EB83000E27B0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		259A57721950EB83000E27B0 /* LayerSample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LayerSample-Info.plist"; sourceTree = "<group>"; };
+		259A577B1950EB92000E27B0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Atlas MessengerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E3F5568A463FD6EA9B16318 /* Pods-Atlas MessengerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas MessengerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas MessengerTests/Pods-Atlas MessengerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7E757B6023455BCDEFB7E734 /* Pods-LayerSampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSampleTests/Pods-LayerSampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		87F9EE22AD5715654AAC60D4 /* Pods-LayerSampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSampleTests/Pods-LayerSampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		8D36EB537069F95E1312C1C5 /* Pods-Atlas Messenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas Messenger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas Messenger/Pods-Atlas Messenger.debug.xcconfig"; sourceTree = "<group>"; };
+		931E36A3415C497CA3681E7F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF9EB0255130554DFDAF0741 /* Pods-LayerSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.debug.xcconfig"; sourceTree = "<group>"; };
+		B2F4335E0FF4DEECF7A64846 /* Pods-Atlas MessengerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas MessengerTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas MessengerTests/Pods-Atlas MessengerTests.release.xcconfig"; sourceTree = "<group>"; };
+		B53937831A24F6AF00DE60F9 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		D61B107B1A6F2D99009BFA9C /* ATLMAPIManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAPIManagerTest.m; sourceTree = "<group>"; };
+		D61B107C1A6F2D99009BFA9C /* ATLMApplicationControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMApplicationControllerTest.m; sourceTree = "<group>"; };
+		D61B107D1A6F2D99009BFA9C /* ATLMAuthenticationViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAuthenticationViewControllerTest.m; sourceTree = "<group>"; };
+		D61B107E1A6F2D99009BFA9C /* ATLMConversationDetailViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConversationDetailViewControllerTest.m; sourceTree = "<group>"; };
+		D61B107F1A6F2D99009BFA9C /* ATLMConversationListViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConversationListViewControllerTest.m; sourceTree = "<group>"; };
+		D61B10801A6F2D99009BFA9C /* ATLMConversationViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConversationViewControllerTest.m; sourceTree = "<group>"; };
+		D61B10811A6F2D99009BFA9C /* ATLMLayerContentFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLayerContentFactory.h; sourceTree = "<group>"; };
+		D61B10821A6F2D99009BFA9C /* ATLMLayerContentFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMLayerContentFactory.m; sourceTree = "<group>"; };
+		D61B10831A6F2D99009BFA9C /* ATLMMesageDetailViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMMesageDetailViewControllerTest.m; sourceTree = "<group>"; };
+		D61B10841A6F2D99009BFA9C /* ATLMPersistenceManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMPersistenceManagerTest.m; sourceTree = "<group>"; };
+		D61B10851A6F2D99009BFA9C /* ATLMPushNotificationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMPushNotificationTest.m; sourceTree = "<group>"; };
+		D61B10861A6F2D99009BFA9C /* ATLMSettingsViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSettingsViewControllerTest.m; sourceTree = "<group>"; };
+		D61B10871A6F2D99009BFA9C /* ATLMTestInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMTestInterface.h; sourceTree = "<group>"; };
+		D61B10881A6F2D99009BFA9C /* ATLMTestInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTestInterface.m; sourceTree = "<group>"; };
+		D61B10891A6F2D99009BFA9C /* ATLMTestUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMTestUser.h; sourceTree = "<group>"; };
+		D61B108A1A6F2D99009BFA9C /* ATLMTestUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTestUser.m; sourceTree = "<group>"; };
+		D648ECFB19FEC9D800ED17F0 /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
+		E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Atlas Messenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA8D4F84D7ED9670A81B8293 /* Pods-Atlas Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas Messenger.release.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas Messenger/Pods-Atlas Messenger.release.xcconfig"; sourceTree = "<group>"; };
+		F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.release.xcconfig"; sourceTree = "<group>"; };
+		FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0A0C242019477D8F00401B74 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */,
+				0AADB5D01947C8800083732B /* Security.framework in Frameworks */,
+				0AADB5CE1947C87C0083732B /* QuartzCore.framework in Frameworks */,
+				0AADB5CC1947C8770083732B /* MobileCoreServices.framework in Frameworks */,
+				0A43B1D319D34CDD00AE8FA6 /* MapKit.framework in Frameworks */,
+				0AADB5CA1947C8710083732B /* libz.dylib in Frameworks */,
+				0AB0501A196E24F00029BC1B /* Crashlytics.framework in Frameworks */,
+				0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */,
+				0A0C242919477D8F00401B74 /* CoreGraphics.framework in Frameworks */,
+				0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */,
+				0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */,
+				B53937841A24F6AF00DE60F9 /* Fabric.framework in Frameworks */,
+				0A0C242B19477D8F00401B74 /* UIKit.framework in Frameworks */,
+				0A0C242719477D8F00401B74 /* Foundation.framework in Frameworks */,
+				E60CDAC28046CC178C349414 /* libPods-Atlas Messenger.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A0C244119477D8F00401B74 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A0C244619477D8F00401B74 /* XCTest.framework in Frameworks */,
+				0A0C244819477D8F00401B74 /* UIKit.framework in Frameworks */,
+				0A0C244719477D8F00401B74 /* Foundation.framework in Frameworks */,
+				DE783CF95B3E136B03F3119D /* libPods-Atlas MessengerTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0A0C241A19477D8F00401B74 = {
+			isa = PBXGroup;
+			children = (
+				259A57111950EB76000E27B0 /* Code */,
+				0A0C242419477D8F00401B74 /* Products */,
+				259A576B1950EB83000E27B0 /* Resources */,
+				259A57781950EB92000E27B0 /* Tests */,
+				1237757015DB99EEB628CAE9 /* Pods */,
+				A4627ED3910ACA161AC2D5A1 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		0A0C242419477D8F00401B74 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A0C242319477D8F00401B74 /* Atlas Messenger.app */,
+				0A0C244419477D8F00401B74 /* Atlas MessengerTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A0C242519477D8F00401B74 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */,
+				0AB05019196E24F00029BC1B /* Crashlytics.framework */,
+				B53937831A24F6AF00DE60F9 /* Fabric.framework */,
+				0AADB5D31947C88B0083732B /* SystemConfiguration.framework */,
+				0AADB5CF1947C8800083732B /* Security.framework */,
+				0AADB5CD1947C87B0083732B /* QuartzCore.framework */,
+				0AADB5CB1947C8770083732B /* MobileCoreServices.framework */,
+				0AADB5C91947C8710083732B /* libz.dylib */,
+				0AADB5C71947C86B0083732B /* CoreLocation.framework */,
+				0AADB5C51947C8600083732B /* CFNetwork.framework */,
+				0AADB5C31947C85A0083732B /* AudioToolbox.framework */,
+				0A0C242619477D8F00401B74 /* Foundation.framework */,
+				0A0C242819477D8F00401B74 /* CoreGraphics.framework */,
+				0A0C242A19477D8F00401B74 /* UIKit.framework */,
+				0A0C244519477D8F00401B74 /* XCTest.framework */,
+				931E36A3415C497CA3681E7F /* libPods.a */,
+				FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */,
+				A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */,
+			);
+			name = Frameworks;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0AD6C4B419BD4CD6005142ED /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				0A605F2F19BF735D00D773AF /* logo-icon@2x.png */,
+				0A605F3019BF735D00D773AF /* logo-icon.png */,
+				0A605F3319BF744600D773AF /* logo-icon-blue@2x.png */,
+				0A605F3419BF744600D773AF /* logo-icon-blue.png */,
+				0AD6C4B519BD4CFA005142ED /* more@2x.png */,
+				0AD6C4B719BD4CFA005142ED /* compose@2x.png */,
+				0AD6C4B819BD4CFA005142ED /* compose.png */,
+			);
+			name = Icons;
+			sourceTree = "<group>";
+		};
+		1237757015DB99EEB628CAE9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AF9EB0255130554DFDAF0741 /* Pods-LayerSample.debug.xcconfig */,
+				F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */,
+				87F9EE22AD5715654AAC60D4 /* Pods-LayerSampleTests.debug.xcconfig */,
+				7E757B6023455BCDEFB7E734 /* Pods-LayerSampleTests.release.xcconfig */,
+				8D36EB537069F95E1312C1C5 /* Pods-Atlas Messenger.debug.xcconfig */,
+				EA8D4F84D7ED9670A81B8293 /* Pods-Atlas Messenger.release.xcconfig */,
+				7E3F5568A463FD6EA9B16318 /* Pods-Atlas MessengerTests.debug.xcconfig */,
+				B2F4335E0FF4DEECF7A64846 /* Pods-Atlas MessengerTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		25363AC01A941B98000D3913 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				25363AC11A941B98000D3913 /* ATLMAPIManager.h */,
+				25363AC21A941B98000D3913 /* ATLMAPIManager.m */,
+				25363AC31A941B98000D3913 /* ATLMApplicationController.h */,
+				25363AC41A941B98000D3913 /* ATLMApplicationController.m */,
+				25363AC51A941B98000D3913 /* ATLMAuthenticationViewController.h */,
+				25363AC61A941B98000D3913 /* ATLMAuthenticationViewController.m */,
+				25363AC71A941B98000D3913 /* ATLMConversationDetailViewController.h */,
+				25363AC81A941B98000D3913 /* ATLMConversationDetailViewController.m */,
+				25363AC91A941B98000D3913 /* ATLMConversationListViewController.h */,
+				25363ACA1A941B98000D3913 /* ATLMConversationListViewController.m */,
+				25363ACB1A941B98000D3913 /* ATLMConversationViewController.h */,
+				25363ACC1A941B98000D3913 /* ATLMConversationViewController.m */,
+				25363ACD1A941B98000D3913 /* ATLMImageViewController.h */,
+				25363ACE1A941B98000D3913 /* ATLMImageViewController.m */,
+				25363ACF1A941B98000D3913 /* ATLMLocalNotificationManager.h */,
+				25363AD01A941B98000D3913 /* ATLMLocalNotificationManager.m */,
+				25363AD11A941B98000D3913 /* ATLMMessageDetailViewController.h */,
+				25363AD21A941B98000D3913 /* ATLMMessageDetailViewController.m */,
+				25363AD31A941B98000D3913 /* ATLMNavigationController.h */,
+				25363AD41A941B98000D3913 /* ATLMNavigationController.m */,
+				25363AD51A941B98000D3913 /* ATLMParticipantTableViewController.h */,
+				25363AD61A941B98000D3913 /* ATLMParticipantTableViewController.m */,
+				25363AD71A941B98000D3913 /* ATLMPersistenceManager.h */,
+				25363AD81A941B98000D3913 /* ATLMPersistenceManager.m */,
+				25363AD91A941B98000D3913 /* ATLMSettingsViewController.h */,
+				25363ADA1A941B98000D3913 /* ATLMSettingsViewController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		25363ADB1A941B98000D3913 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				25363ADC1A941B98000D3913 /* ATLMSession.h */,
+				25363ADD1A941B98000D3913 /* ATLMSession.m */,
+				25363ADE1A941B98000D3913 /* ATLMUser.h */,
+				25363ADF1A941B98000D3913 /* ATLMUser.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		25363AE01A941B98000D3913 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				25363AE11A941B98000D3913 /* ATLMErrors.h */,
+				25363AE21A941B98000D3913 /* ATLMErrors.m */,
+				25363AE31A941B98000D3913 /* ATLMHTTPResponseSerializer.h */,
+				25363AE41A941B98000D3913 /* ATLMHTTPResponseSerializer.m */,
+				25363AE51A941B98000D3913 /* ATLMLayerClient.h */,
+				25363AE61A941B98000D3913 /* ATLMLayerClient.m */,
+				25363AE71A941B98000D3913 /* ATLMParticipantDataSource.h */,
+				25363AE81A941B98000D3913 /* ATLMParticipantDataSource.m */,
+				25363AE91A941B98000D3913 /* ATLMUtilities.h */,
+				25363AEA1A941B98000D3913 /* ATLMUtilities.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		25363AEB1A941B98000D3913 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				25363AEC1A941B98000D3913 /* ATLMAuthenticationTableViewFooter.h */,
+				25363AED1A941B98000D3913 /* ATLMAuthenticationTableViewFooter.m */,
+				25363AEE1A941B98000D3913 /* ATLMAuthenticationTableViewHeader.h */,
+				25363AEF1A941B98000D3913 /* ATLMAuthenticationTableViewHeader.m */,
+				25363AF01A941B98000D3913 /* ATLMCenterTextTableViewCell.h */,
+				25363AF11A941B98000D3913 /* ATLMCenterTextTableViewCell.m */,
+				25363AF21A941B98000D3913 /* ATLMInputTableViewCell.h */,
+				25363AF31A941B98000D3913 /* ATLMInputTableViewCell.m */,
+				25363AF41A941B98000D3913 /* ATLMSettingsHeaderView.h */,
+				25363AF51A941B98000D3913 /* ATLMSettingsHeaderView.m */,
+				25363AF61A941B98000D3913 /* ATLMSplashView.h */,
+				25363AF71A941B98000D3913 /* ATLMSplashView.m */,
+				25363AF81A941B98000D3913 /* ATLMStyleValue1TableViewCell.h */,
+				25363AF91A941B98000D3913 /* ATLMStyleValue1TableViewCell.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		259A57111950EB76000E27B0 /* Code */ = {
+			isa = PBXGroup;
+			children = (
+				25363ABE1A941B98000D3913 /* ATLMAppDelegate.h */,
+				25363ABF1A941B98000D3913 /* ATLMAppDelegate.m */,
+				25363AC01A941B98000D3913 /* Controllers */,
+				25363ADB1A941B98000D3913 /* Models */,
+				25363AE01A941B98000D3913 /* Utilities */,
+				25363AEB1A941B98000D3913 /* Views */,
+				259A57311950EB76000E27B0 /* main.m */,
+				0A0C242519477D8F00401B74 /* Frameworks */,
+			);
+			path = Code;
+			sourceTree = "<group>";
+		};
+		259A576B1950EB83000E27B0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0AD6C4B419BD4CD6005142ED /* Icons */,
+				0A27A9441997FE110070BD4F /* back@2x.png */,
+				D648ECFB19FEC9D800ED17F0 /* testImage.png */,
+				0A7023BE19BE4C84004FF43E /* selection-indicator.png */,
+				0A7023BF19BE4C84004FF43E /* unselected-indicator.png */,
+				0A7023C019BE4C84004FF43E /* selection-indicator@2x.png */,
+				0A7023C119BE4C84004FF43E /* unselected-indicator@2x.png */,
+				0AD6C4C119BD4D3C005142ED /* background@2x.png */,
+				0A27A9421997FD210070BD4F /* logout@2x.png */,
+				0ABEFFAE196B7686006FFFF3 /* logo@2x.png */,
+				259A576E1950EB83000E27B0 /* InfoPlist.strings */,
+				259A57701950EB83000E27B0 /* Images.xcassets */,
+				259A57721950EB83000E27B0 /* LayerSample-Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		259A57781950EB92000E27B0 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D61B109A1A6F2DB6009BFA9C /* Utilities */,
+				D61B10991A6F2DA7009BFA9C /* Push Notification */,
+				D61B10981A6F2DA1009BFA9C /* Controllers */,
+				259A577B1950EB92000E27B0 /* Info.plist */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		A4627ED3910ACA161AC2D5A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */,
+				7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D61B10981A6F2DA1009BFA9C /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D61B107B1A6F2D99009BFA9C /* ATLMAPIManagerTest.m */,
+				D61B107C1A6F2D99009BFA9C /* ATLMApplicationControllerTest.m */,
+				D61B107D1A6F2D99009BFA9C /* ATLMAuthenticationViewControllerTest.m */,
+				D61B107E1A6F2D99009BFA9C /* ATLMConversationDetailViewControllerTest.m */,
+				D61B107F1A6F2D99009BFA9C /* ATLMConversationListViewControllerTest.m */,
+				D61B10801A6F2D99009BFA9C /* ATLMConversationViewControllerTest.m */,
+				D61B10831A6F2D99009BFA9C /* ATLMMesageDetailViewControllerTest.m */,
+				D61B10841A6F2D99009BFA9C /* ATLMPersistenceManagerTest.m */,
+				D61B10861A6F2D99009BFA9C /* ATLMSettingsViewControllerTest.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		D61B10991A6F2DA7009BFA9C /* Push Notification */ = {
+			isa = PBXGroup;
+			children = (
+				D61B10851A6F2D99009BFA9C /* ATLMPushNotificationTest.m */,
+			);
+			name = "Push Notification";
+			sourceTree = "<group>";
+		};
+		D61B109A1A6F2DB6009BFA9C /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				D61B10811A6F2D99009BFA9C /* ATLMLayerContentFactory.h */,
+				D61B10821A6F2D99009BFA9C /* ATLMLayerContentFactory.m */,
+				D61B10871A6F2D99009BFA9C /* ATLMTestInterface.h */,
+				D61B10881A6F2D99009BFA9C /* ATLMTestInterface.m */,
+				D61B10891A6F2D99009BFA9C /* ATLMTestUser.h */,
+				D61B108A1A6F2D99009BFA9C /* ATLMTestUser.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0A0C242219477D8F00401B74 /* Atlas Messenger */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A0C245519477D8F00401B74 /* Build configuration list for PBXNativeTarget "Atlas Messenger" */;
+			buildPhases = (
+				C1AF600B11EB477F8BE102D4 /* Check Pods Manifest.lock */,
+				0A0C241F19477D8F00401B74 /* Sources */,
+				0A0C242019477D8F00401B74 /* Frameworks */,
+				0A0C242119477D8F00401B74 /* Resources */,
+				A487A0EE4CB44DA78C108935 /* Copy Pods Resources */,
+				0A4D352619F0A48E00CC1984 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Atlas Messenger";
+			productName = LayerSample;
+			productReference = 0A0C242319477D8F00401B74 /* Atlas Messenger.app */;
+			productType = "com.apple.product-type.application";
+		};
+		0A0C244319477D8F00401B74 /* Atlas MessengerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A0C245819477D8F00401B74 /* Build configuration list for PBXNativeTarget "Atlas MessengerTests" */;
+			buildPhases = (
+				6D1B6C4F72A14767A34B248A /* Check Pods Manifest.lock */,
+				0A0C244019477D8F00401B74 /* Sources */,
+				0A0C244119477D8F00401B74 /* Frameworks */,
+				0A0C244219477D8F00401B74 /* Resources */,
+				72EE957AF4434922BA19B10E /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0A0C244A19477D8F00401B74 /* PBXTargetDependency */,
+			);
+			name = "Atlas MessengerTests";
+			productName = LayerSampleTests;
+			productReference = 0A0C244419477D8F00401B74 /* Atlas MessengerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0A0C241B19477D8F00401B74 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = LS;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Layer, Inc.";
+				TargetAttributes = {
+					0A0C242219477D8F00401B74 = {
+						DevelopmentTeam = U46UP347QQ;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					0A0C244319477D8F00401B74 = {
+						DevelopmentTeam = U46UP347QQ;
+						TestTargetID = 0A0C242219477D8F00401B74;
+					};
+				};
+			};
+			buildConfigurationList = 0A0C241E19477D8F00401B74 /* Build configuration list for PBXProject "Atlas Messenger" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0A0C241A19477D8F00401B74;
+			productRefGroup = 0A0C242419477D8F00401B74 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0A0C242219477D8F00401B74 /* Atlas Messenger */,
+				0A0C244319477D8F00401B74 /* Atlas MessengerTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0A0C242119477D8F00401B74 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A605F3619BF744600D773AF /* logo-icon-blue.png in Resources */,
+				0A7023C319BE4C84004FF43E /* unselected-indicator.png in Resources */,
+				0A7023C519BE4C84004FF43E /* unselected-indicator@2x.png in Resources */,
+				0A7023C419BE4C84004FF43E /* selection-indicator@2x.png in Resources */,
+				0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */,
+				0A605F3119BF735D00D773AF /* logo-icon@2x.png in Resources */,
+				259A57751950EB83000E27B0 /* Images.xcassets in Resources */,
+				0A605F3219BF735D00D773AF /* logo-icon.png in Resources */,
+				0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */,
+				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
+				0A27A9431997FD210070BD4F /* logout@2x.png in Resources */,
+				0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */,
+				0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */,
+				0A27A9451997FE110070BD4F /* back@2x.png in Resources */,
+				0AD6C4C219BD4D3C005142ED /* background@2x.png in Resources */,
+				0A7023C219BE4C84004FF43E /* selection-indicator.png in Resources */,
+				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
+				D648ECFC19FEC9D800ED17F0 /* testImage.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A0C244219477D8F00401B74 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0A4D352619F0A48E00CC1984 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# ./Libraries/Fabric.framework/run 0a0f48084316c34c98d99db32b6d9f9a93416892 9ae567b35b4bfc3f68296d25122038a6de4752faa8a5a2790506fbc165726882";
+		};
+		6D1B6C4F72A14767A34B248A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		72EE957AF4434922BA19B10E /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Atlas MessengerTests/Pods-Atlas MessengerTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A487A0EE4CB44DA78C108935 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Atlas Messenger/Pods-Atlas Messenger-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C1AF600B11EB477F8BE102D4 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0A0C241F19477D8F00401B74 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				25363AFD1A941B98000D3913 /* ATLMAuthenticationViewController.m in Sources */,
+				25363AFC1A941B98000D3913 /* ATLMApplicationController.m in Sources */,
+				25363B0C1A941B98000D3913 /* ATLMLayerClient.m in Sources */,
+				25363AFE1A941B98000D3913 /* ATLMConversationDetailViewController.m in Sources */,
+				25363B031A941B98000D3913 /* ATLMMessageDetailViewController.m in Sources */,
+				25363B151A941B98000D3913 /* ATLMStyleValue1TableViewCell.m in Sources */,
+				25363AFA1A941B98000D3913 /* ATLMAppDelegate.m in Sources */,
+				25363B061A941B98000D3913 /* ATLMPersistenceManager.m in Sources */,
+				0AFE3FE419B0E19C00FCA264 /* main.m in Sources */,
+				25363B101A941B98000D3913 /* ATLMAuthenticationTableViewHeader.m in Sources */,
+				25363AFB1A941B98000D3913 /* ATLMAPIManager.m in Sources */,
+				25363B041A941B98000D3913 /* ATLMNavigationController.m in Sources */,
+				25363B0F1A941B98000D3913 /* ATLMAuthenticationTableViewFooter.m in Sources */,
+				25363B0D1A941B98000D3913 /* ATLMParticipantDataSource.m in Sources */,
+				25363B001A941B98000D3913 /* ATLMConversationViewController.m in Sources */,
+				25363B081A941B98000D3913 /* ATLMSession.m in Sources */,
+				25363B071A941B98000D3913 /* ATLMSettingsViewController.m in Sources */,
+				25363B0E1A941B98000D3913 /* ATLMUtilities.m in Sources */,
+				25363B0A1A941B98000D3913 /* ATLMErrors.m in Sources */,
+				25363B111A941B98000D3913 /* ATLMCenterTextTableViewCell.m in Sources */,
+				25363B141A941B98000D3913 /* ATLMSplashView.m in Sources */,
+				25363B011A941B98000D3913 /* ATLMImageViewController.m in Sources */,
+				25363B051A941B98000D3913 /* ATLMParticipantTableViewController.m in Sources */,
+				25363B021A941B98000D3913 /* ATLMLocalNotificationManager.m in Sources */,
+				25363B0B1A941B98000D3913 /* ATLMHTTPResponseSerializer.m in Sources */,
+				25363AFF1A941B98000D3913 /* ATLMConversationListViewController.m in Sources */,
+				25363B121A941B98000D3913 /* ATLMInputTableViewCell.m in Sources */,
+				25363B131A941B98000D3913 /* ATLMSettingsHeaderView.m in Sources */,
+				25363B091A941B98000D3913 /* ATLMUser.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A0C244019477D8F00401B74 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D6306E041A6F30BE00E16E85 /* ATLMLayerContentFactory.m in Sources */,
+				D6306E051A6F30BE00E16E85 /* ATLMTestInterface.m in Sources */,
+				D6306E061A6F30BE00E16E85 /* ATLMTestUser.m in Sources */,
+				D6306DFB1A6F30B200E16E85 /* ATLMAPIManagerTest.m in Sources */,
+				D6306DFC1A6F30B200E16E85 /* ATLMApplicationControllerTest.m in Sources */,
+				D6306DFD1A6F30B200E16E85 /* ATLMAuthenticationViewControllerTest.m in Sources */,
+				D6306DFE1A6F30B200E16E85 /* ATLMConversationDetailViewControllerTest.m in Sources */,
+				D6306DFF1A6F30B200E16E85 /* ATLMConversationListViewControllerTest.m in Sources */,
+				D6306E001A6F30B200E16E85 /* ATLMConversationViewControllerTest.m in Sources */,
+				D6306E011A6F30B200E16E85 /* ATLMMesageDetailViewControllerTest.m in Sources */,
+				D6306E021A6F30B200E16E85 /* ATLMPersistenceManagerTest.m in Sources */,
+				D6306E031A6F30B200E16E85 /* ATLMSettingsViewControllerTest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0A0C244A19477D8F00401B74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A0C242219477D8F00401B74 /* Atlas Messenger */;
+			targetProxy = 0A0C244919477D8F00401B74 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		259A576E1950EB83000E27B0 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				259A576F1950EB83000E27B0 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0A0C245319477D8F00401B74 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		0A0C245419477D8F00401B74 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0A0C245619477D8F00401B74 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8D36EB537069F95E1312C1C5 /* Pods-Atlas Messenger.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Libraries",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/SVProgressHUD\"",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/**",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		0A0C245719477D8F00401B74 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA8D4F84D7ED9670A81B8293 /* Pods-Atlas Messenger.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Phone.ly, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Phone.ly, Inc.";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Libraries",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/SVProgressHUD\"",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/**",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "3e29b277-e35b-4f82-baad-fe98acad2a1b";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		0A0C245919477D8F00401B74 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E3F5568A463FD6EA9B16318 /* Pods-Atlas MessengerTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Atlas Messenger.app/Atlas Messenger";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Tests/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		0A0C245A19477D8F00401B74 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B2F4335E0FF4DEECF7A64846 /* Pods-Atlas MessengerTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Atlas Messenger.app/Atlas Messenger";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = Tests/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0A0C241E19477D8F00401B74 /* Build configuration list for PBXProject "Atlas Messenger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A0C245319477D8F00401B74 /* Debug */,
+				0A0C245419477D8F00401B74 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A0C245519477D8F00401B74 /* Build configuration list for PBXNativeTarget "Atlas Messenger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A0C245619477D8F00401B74 /* Debug */,
+				0A0C245719477D8F00401B74 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A0C245819477D8F00401B74 /* Build configuration list for PBXNativeTarget "Atlas MessengerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A0C245919477D8F00401B74 /* Debug */,
+				0A0C245A19477D8F00401B74 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0A0C241B19477D8F00401B74 /* Project object */;
+}

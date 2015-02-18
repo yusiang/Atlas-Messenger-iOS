@@ -1,9 +1,9 @@
 //
-//  main.m
+//  ATLMNavigationController.h
 //  Atlas Messenger
 //
-//  Created by Kevin Coleman on 6/10/14.
-//  Copyright (c) 2014 Layer, Inc. All rights reserved.
+//  Created by Ben Blakley on 1/14/15.
+//  Copyright (c) 2015 Layer, Inc. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,11 +19,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ATLMAppDelegate.h"
 
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([ATLMAppDelegate class]));
-    }
-}
+@interface ATLMNavigationController : UINavigationController
+
+@property (nonatomic, getter=isAnimating, readonly) BOOL animating;
+
+- (void)notifyWhenCompletionEndsUsingBlock:(void (^)())handler;
+
+@end
+
+@interface UIViewController (ATLMNavigationController)
+
+@property (nonatomic, readonly) ATLMNavigationController *ATLM_navigationController;
+
+@end

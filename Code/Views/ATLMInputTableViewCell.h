@@ -1,5 +1,5 @@
 //
-//  main.m
+//  ATLMInputTableViewCell.h
 //  Atlas Messenger
 //
 //  Created by Kevin Coleman on 6/10/14.
@@ -19,11 +19,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ATLMAppDelegate.h"
 
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([ATLMAppDelegate class]));
-    }
-}
+@interface ATLMInputTableViewCell : UITableViewCell
+
+@property (nonatomic) UITextField *textField;
+
+- (void)setGuideText:(NSString *)guideText;
+
+- (void)setPlaceHolderText:(NSString *)placeHolderText;
+
+@end

@@ -2,8 +2,7 @@ Pods
 .DS_Store
 *.bundle
 xcuserdata
-LayerSample.xcworkspace/xcuserdata/*.xcuserdatad/
-LayerSample.xcworkspace/xcshareddata/xcschemes/*.xcscheme
-LayerSample.xcworkspace/xcshareddata/LayerSample.xccheckout
+*.xcworkspace/xcuserdata/*.xcuserdatad
+*.xcworkspace/xcshareddata/xcschemes/*.xcscheme
+*.xcworkspace/xcshareddata/*.xccheckout
 xcodebuild.log
-

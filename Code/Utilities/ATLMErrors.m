@@ -1,8 +1,8 @@
 //
-//  main.m
+//  ATLMErrors.m
 //  Atlas Messenger
 //
-//  Created by Kevin Coleman on 6/10/14.
+//  Created by Kevin Coleman on 9/26/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,6 @@
 //  limitations under the License.
 //
 
-#import <UIKit/UIKit.h>
-#import "ATLMAppDelegate.h"
+#import "ATLMErrors.h"
 
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([ATLMAppDelegate class]));
-    }
-}
+NSString *const ATLMErrorDomain = @"com.layer.LayerSample.Error";

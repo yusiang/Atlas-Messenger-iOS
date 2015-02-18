@@ -1,5 +1,5 @@
 //
-//  main.m
+//  ATLMAppDelegate.h
 //  Atlas Messenger
 //
 //  Created by Kevin Coleman on 6/10/14.
@@ -19,11 +19,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ATLMAppDelegate.h"
+#import "ATLMApplicationController.h"
+#import "ATLMConversationListViewController.h"
 
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([ATLMAppDelegate class]));
-    }
-}
+@interface ATLMAppDelegate : UIResponder <UIApplicationDelegate>
+
+@property (nonatomic) UIWindow *window;
+
+@property (nonatomic) ATLMApplicationController *applicationController;
+
+@end

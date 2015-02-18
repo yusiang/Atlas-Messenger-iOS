@@ -1,8 +1,8 @@
 //
-//  main.m
+//  ATLMLocalNotificationManager.h
 //  Atlas Messenger
 //
-//  Created by Kevin Coleman on 6/10/14.
+//  Created by Kevin Coleman on 10/25/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,20 @@
 //  limitations under the License.
 //
 
-#import <UIKit/UIKit.h>
-#import "ATLMAppDelegate.h"
+#import <Foundation/Foundation.h>
+#import <LayerKit/LayerKit.h>
 
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([ATLMAppDelegate class]));
-    }
-}
+extern NSString *const ATLMNotificationClassTypeKey;
+extern NSString *const ATLMNotificationClassTypeConversation;
+extern NSString *const ATLMNotificationClassTypeMessage;
+extern NSString *const ATLMNotificationIdentifierKey;
+
+@interface ATLMLocalNotificationManager : NSObject
+
+- (void)notificationForReceiptOfPush;
+
+- (void)notificationForSyncCompletionWithChanges:(NSArray *)changes;
+
+- (void)processLayerChanges:(NSArray *)changes;
+
+@end

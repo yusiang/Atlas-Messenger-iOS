@@ -1,8 +1,8 @@
 //
-//  main.m
+//  ATLLayerContentFactory.h
 //  Atlas Messenger
 //
-//  Created by Kevin Coleman on 6/10/14.
+//  Created by Kevin Coleman on 9/3/14.
 //  Copyright (c) 2014 Layer, Inc. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,15 @@
 //  limitations under the License.
 //
 
-#import <UIKit/UIKit.h>
-#import "ATLMAppDelegate.h"
+#import <Foundation/Foundation.h>
+#import <LayerKit/LayerKit.h>
 
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([ATLMAppDelegate class]));
-    }
-}
+extern NSString *const ATLTestMessageText;
+
+@interface ATLMLayerContentFactory : NSObject
+
++ (instancetype)layerContentFactoryWithLayerClient:(LYRClient *)layerClient;
+
+- (LYRConversation *)newConversationsWithParticipants:(NSSet *)participants;
+
+@end
