@@ -51,7 +51,7 @@
 		<key>LYRBuildLayerKitVersion</key>
 		<string>0.10.0-pre6</string>
 		<key>LYRBuildShortSha</key>
-		<string>1d5e1a5</string>
+		<string>26a4fc9</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location will only be shared in conversations that you choose.</string>
