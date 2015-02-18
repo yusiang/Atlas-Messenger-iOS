@@ -95,7 +95,7 @@ task :release do
   
   # 1) Set the new version of the sample App.
   plist = info_plist
-  sample_version = ask "Set Sample Version... \nAtlas Messenger Version: #{atlas_messenger_version} \nCurrent Atlas Version: #{atlas_version} \nLayerKit Version: #{layerkit_version}"
+  sample_version = say "Building Atlas Messenger Version: #{atlas_messenger_version} \nCurrent Atlas Version: #{atlas_version} \nLayerKit Version: #{layerkit_version}"
   puts green ("New Atlas Messenger Version: #{atlas_messenger_version}")
   plist['CFBundleShortVersionString'] = atlas_messenger_version
   
@@ -170,14 +170,15 @@ end
 def layerkit_version
   require 'yaml'
   lockfile = YAML.load_file('Podfile.lock')
-  layer_kit_version = nil
+  version = nil
   lockfile['PODS'].detect do |entry|
     if entry.kind_of?(String) && entry =~ /^LayerKit/
-      layer_kit_version = entry.match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+      version = entry.match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
     elsif entry.kind_of?(Hash) && entry.keys[0] =~ /^LayerKit/
-      layer_kit_version = entry.keys[0].match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
+      version = entry.keys[0].match(/LayerKit \(([\d\.\-\w]+)\)/)[1]
     end
   end
+  version
 end
 
 def atlas_version
@@ -191,6 +192,7 @@ def atlas_version
       version = entry.keys[0].match(/Atlas \(([\d\.\-\w]+)\)/)[1]
     end
   end
+  version
 end
 
 # Safe to run when Bundler is not available
