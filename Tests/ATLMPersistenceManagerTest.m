@@ -1,0 +1,149 @@
+//
+//  ATLMPersistenceManagerTest.m
+//  Atlas Messenger
+//
+//  Created by Blake Watters on 6/29/14.
+//  Copyright (c) 2014 Layer, Inc. All rights reserved.
+//
+
+#import <XCTest/XCTest.h>
+#define EXP_SHORTHAND
+#import <Expecta/Expecta.h>
+#import "ATLMPersistenceManager.h"
+
+static NSString *ATLMApplicationDataDirectory(void)
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    return ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+}
+
+static NSString *ATLMRandomStorePath(void)
+{
+    return [ATLMApplicationDataDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+}
+
+@interface ATLMPersistenceManagerTest : XCTestCase
+
+@end
+
+@implementation ATLMPersistenceManagerTest
+
+- (void)testRaisesOnAttempToInit
+{
+    expect(^{ [ATLMPersistenceManager new]; }).to.raise(NSInternalInconsistencyException);
+}
+
+@end
+
+@interface ATLMInMemoryPersistenceManagerTest : XCTestCase
+
+@end
+
+@implementation ATLMInMemoryPersistenceManagerTest
+
+@end
+
+@interface ATLMOnDiskPersistenceManagerTest : XCTestCase
+
+@end
+
+@implementation ATLMOnDiskPersistenceManagerTest
+
+- (void)testInitializingWithEmptyDirectory
+{
+    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    expect([manager persistedSessionWithError:nil]).to.beNil();
+    expect([manager persistedUsersWithError:nil]).to.beNil();
+}
+
+- (void)testSessionPersistence
+{
+    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    ATLMUser *user = [ATLMUser new];
+    user.userID = [[NSUUID UUID] UUIDString];
+    ATLMSession *session = [ATLMSession sessionWithAuthenticationToken:@"12345" user:user];
+    
+    NSError *error = nil;
+    BOOL success = [manager persistSession:session error:&error];
+    expect(success).to.beTruthy();
+    expect(error).to.beNil();
+    
+    ATLMSession *loadedSession = [manager persistedSessionWithError:&error];
+    expect(loadedSession).notTo.beNil();
+    expect(error).to.beNil();
+    expect(loadedSession.user.userID).to.equal(user.userID);
+    expect(loadedSession.authenticationToken).to.equal(@"12345");
+}
+
+- (void)testLoadingNonExistantSessionFileFailsWithoutError
+{
+    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    NSError *error = nil;
+    ATLMSession *session = [manager persistedSessionWithError:&error];
+    expect(session).to.beNil();
+    expect(error).to.beNil();
+}
+
+- (void)testUsersPersistence
+{
+    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    ATLMUser *user1 = [ATLMUser new];
+    user1.userID = @"12345";
+    ATLMUser *user2 = [ATLMUser new];
+    user2.userID = @"5678";
+    NSError *error = nil;
+    NSSet *users = [NSSet setWithObjects:user1, user2, nil];
+    BOOL success = [manager persistUsers:users error:&error];
+    expect(success).to.beTruthy();
+    expect(error).to.beNil();
+    
+    NSSet *loadedUsers = [manager persistedUsersWithError:&error];
+    expect(loadedUsers).to.equal(users);
+    expect(error).to.beNil();
+}
+
+- (void)testLoadingNonExistantUsersFileFailsWithoutError
+{
+    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    NSError *error = nil;
+    NSSet *users = [manager persistedUsersWithError:&error];
+    expect(users).to.beNil();
+    expect(error).to.beNil();
+}
+
+- (void)testRemovingAllObjects
+{
+    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    ATLMUser *user = [ATLMUser new];
+    user.userID = [[NSUUID UUID] UUIDString];
+    ATLMSession *session = [ATLMSession sessionWithAuthenticationToken:@"12345" user:user];
+    
+    NSError *error = nil;
+    BOOL success = [manager persistSession:session error:&error];
+    expect(success).to.beTruthy();
+    expect(error).to.beNil();
+    
+    ATLMUser *user1 = [ATLMUser new];
+    user1.userID = @"12345";
+    ATLMUser *user2 = [ATLMUser new];
+    user2.userID = @"5678";
+    NSSet *users = [NSSet setWithObjects:user1, user2, nil];
+    success = [manager persistUsers:users error:&error];
+    expect(success).to.beTruthy();
+    expect(error).to.beNil();
+    
+    success = [manager deleteAllObjects:&error];
+    expect(success).to.beTruthy();
+    expect(error).to.beNil();
+    
+    // Verify the objects are gone
+    session = [manager persistedSessionWithError:&error];
+    expect(session).to.beNil();
+    expect(error).to.beNil();
+    
+    users = [manager persistedUsersWithError:&error];
+    expect(users).to.beNil();
+    expect(error).to.beNil();
+}
+
+@end
