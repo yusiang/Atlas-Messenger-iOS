@@ -45,7 +45,6 @@
 		0AFE400E19B0E1BD00FCA264 /* LSInputTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57471950EB76000E27B0 /* LSInputTableViewCell.m */; };
 		259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 259A576E1950EB83000E27B0 /* InfoPlist.strings */; };
 		259A57751950EB83000E27B0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A57701950EB83000E27B0 /* Images.xcassets */; };
-		9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */; };
 		B53937841A24F6AF00DE60F9 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B53937831A24F6AF00DE60F9 /* Fabric.framework */; };
 		B5A0DABA1A65D13900F3F349 /* LSStyleValue1TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A0DAB91A65D13900F3F349 /* LSStyleValue1TableViewCell.m */; };
 		B5A0DABD1A66FEFF00F3F349 /* LSNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A0DABC1A66FEFF00F3F349 /* LSNavigationController.m */; };
@@ -56,7 +55,6 @@
 		B5D66E741A67583E00158901 /* LSParticipantDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E731A67583E00158901 /* LSParticipantDataSource.m */; };
 		B5D66E7F1A68A30800158901 /* LSLayerClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E7E1A68A30800158901 /* LSLayerClient.m */; };
 		B5D66EB71A69BB6000158901 /* LSImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66EB61A69BB6000158901 /* LSImageViewController.m */; };
-		B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */; };
 		D61B10A71A6F2ED4009BFA9C /* LSAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B109C1A6F2ED3009BFA9C /* LSAPIManager.m */; };
 		D61B10A81A6F2ED4009BFA9C /* LSApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B109E1A6F2ED3009BFA9C /* LSApplicationController.m */; };
 		D61B10A91A6F2ED4009BFA9C /* LSAuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10A01A6F2ED3009BFA9C /* LSAuthenticationViewController.m */; };
@@ -87,6 +85,8 @@
 		D6D2789D1A795C6F00B2AC93 /* LSErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D66E671A6756AF00158901 /* LSErrors.m */; };
 		D6D2D8DA1A8C17F60094625E /* LSParticipantTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2D8D91A8C17F60094625E /* LSParticipantTableViewController.m */; };
 		D6FB95481A5DBD9D007BD16D /* LSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D6FB95471A5DBD9D007BD16D /* LSAppDelegate.m */; };
+		DE783CF95B3E136B03F3119D /* libPods-Atlas MessengerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */; };
+		E60CDAC28046CC178C349414 /* libPods-Atlas Messenger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,11 +100,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0A0C242319477D8F00401B74 /* LayerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LayerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A0C242319477D8F00401B74 /* Atlas Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Atlas Messenger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A0C242619477D8F00401B74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0A0C242819477D8F00401B74 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		0A0C242A19477D8F00401B74 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		0A0C244419477D8F00401B74 /* LayerSampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LayerSampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A0C244419477D8F00401B74 /* Atlas MessengerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Atlas MessengerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A0C244519477D8F00401B74 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0A27A9421997FD210070BD4F /* logout@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout@2x.png"; sourceTree = "<group>"; };
 		0A27A9441997FE110070BD4F /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
@@ -145,11 +145,15 @@
 		259A57701950EB83000E27B0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		259A57721950EB83000E27B0 /* LayerSample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LayerSample-Info.plist"; sourceTree = "<group>"; };
 		259A577B1950EB92000E27B0 /* LayerSampleTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LayerSampleTests-Info.plist"; sourceTree = "<group>"; };
+		7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Atlas MessengerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E3F5568A463FD6EA9B16318 /* Pods-Atlas MessengerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas MessengerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas MessengerTests/Pods-Atlas MessengerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7E757B6023455BCDEFB7E734 /* Pods-LayerSampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSampleTests/Pods-LayerSampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		87F9EE22AD5715654AAC60D4 /* Pods-LayerSampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSampleTests/Pods-LayerSampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		8D36EB537069F95E1312C1C5 /* Pods-Atlas Messenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas Messenger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas Messenger/Pods-Atlas Messenger.debug.xcconfig"; sourceTree = "<group>"; };
 		931E36A3415C497CA3681E7F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A9FA9226DE4FAB8C075E1F /* libPods-LayerSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF9EB0255130554DFDAF0741 /* Pods-LayerSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.debug.xcconfig"; sourceTree = "<group>"; };
+		B2F4335E0FF4DEECF7A64846 /* Pods-Atlas MessengerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas MessengerTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas MessengerTests/Pods-Atlas MessengerTests.release.xcconfig"; sourceTree = "<group>"; };
 		B53937831A24F6AF00DE60F9 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		B5A0DAB81A65D13900F3F349 /* LSStyleValue1TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSStyleValue1TableViewCell.h; sourceTree = "<group>"; };
 		B5A0DAB91A65D13900F3F349 /* LSStyleValue1TableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSStyleValue1TableViewCell.m; sourceTree = "<group>"; };
@@ -216,6 +220,8 @@
 		D6D2D8D91A8C17F60094625E /* LSParticipantTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSParticipantTableViewController.m; sourceTree = "<group>"; };
 		D6FB95461A5DBD9D007BD16D /* LSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAppDelegate.h; sourceTree = "<group>"; };
 		D6FB95471A5DBD9D007BD16D /* LSAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAppDelegate.m; sourceTree = "<group>"; };
+		E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Atlas Messenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA8D4F84D7ED9670A81B8293 /* Pods-Atlas Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas Messenger.release.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas Messenger/Pods-Atlas Messenger.release.xcconfig"; sourceTree = "<group>"; };
 		F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.release.xcconfig"; sourceTree = "<group>"; };
 		FBBE2D1F4815451CAAD12DF4 /* libPods-LayerSampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LayerSampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -239,7 +245,7 @@
 				B53937841A24F6AF00DE60F9 /* Fabric.framework in Frameworks */,
 				0A0C242B19477D8F00401B74 /* UIKit.framework in Frameworks */,
 				0A0C242719477D8F00401B74 /* Foundation.framework in Frameworks */,
-				B70EF0246E334A0BA15BFF1F /* libPods-LayerSample.a in Frameworks */,
+				E60CDAC28046CC178C349414 /* libPods-Atlas Messenger.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,7 +256,7 @@
 				0A0C244619477D8F00401B74 /* XCTest.framework in Frameworks */,
 				0A0C244819477D8F00401B74 /* UIKit.framework in Frameworks */,
 				0A0C244719477D8F00401B74 /* Foundation.framework in Frameworks */,
-				9842E4DC1E04484898FEF487 /* libPods-LayerSampleTests.a in Frameworks */,
+				DE783CF95B3E136B03F3119D /* libPods-Atlas MessengerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,14 +271,15 @@
 				259A576B1950EB83000E27B0 /* Resources */,
 				259A57781950EB92000E27B0 /* Tests */,
 				1237757015DB99EEB628CAE9 /* Pods */,
+				A4627ED3910ACA161AC2D5A1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		0A0C242419477D8F00401B74 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0A0C242319477D8F00401B74 /* LayerSample.app */,
-				0A0C244419477D8F00401B74 /* LayerSampleTests.xctest */,
+				0A0C242319477D8F00401B74 /* Atlas Messenger.app */,
+				0A0C244419477D8F00401B74 /* Atlas MessengerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -341,6 +348,10 @@
 				F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */,
 				87F9EE22AD5715654AAC60D4 /* Pods-LayerSampleTests.debug.xcconfig */,
 				7E757B6023455BCDEFB7E734 /* Pods-LayerSampleTests.release.xcconfig */,
+				8D36EB537069F95E1312C1C5 /* Pods-Atlas Messenger.debug.xcconfig */,
+				EA8D4F84D7ED9670A81B8293 /* Pods-Atlas Messenger.release.xcconfig */,
+				7E3F5568A463FD6EA9B16318 /* Pods-Atlas MessengerTests.debug.xcconfig */,
+				B2F4335E0FF4DEECF7A64846 /* Pods-Atlas MessengerTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -457,6 +468,15 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		A4627ED3910ACA161AC2D5A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */,
+				7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D61B10981A6F2DA1009BFA9C /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -497,9 +517,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0A0C242219477D8F00401B74 /* LayerSample */ = {
+		0A0C242219477D8F00401B74 /* Atlas Messenger */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A0C245519477D8F00401B74 /* Build configuration list for PBXNativeTarget "LayerSample" */;
+			buildConfigurationList = 0A0C245519477D8F00401B74 /* Build configuration list for PBXNativeTarget "Atlas Messenger" */;
 			buildPhases = (
 				C1AF600B11EB477F8BE102D4 /* Check Pods Manifest.lock */,
 				0A0C241F19477D8F00401B74 /* Sources */,
@@ -512,14 +532,14 @@
 			);
 			dependencies = (
 			);
-			name = LayerSample;
+			name = "Atlas Messenger";
 			productName = LayerSample;
-			productReference = 0A0C242319477D8F00401B74 /* LayerSample.app */;
+			productReference = 0A0C242319477D8F00401B74 /* Atlas Messenger.app */;
 			productType = "com.apple.product-type.application";
 		};
-		0A0C244319477D8F00401B74 /* LayerSampleTests */ = {
+		0A0C244319477D8F00401B74 /* Atlas MessengerTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A0C245819477D8F00401B74 /* Build configuration list for PBXNativeTarget "LayerSampleTests" */;
+			buildConfigurationList = 0A0C245819477D8F00401B74 /* Build configuration list for PBXNativeTarget "Atlas MessengerTests" */;
 			buildPhases = (
 				6D1B6C4F72A14767A34B248A /* Check Pods Manifest.lock */,
 				0A0C244019477D8F00401B74 /* Sources */,
@@ -532,9 +552,9 @@
 			dependencies = (
 				0A0C244A19477D8F00401B74 /* PBXTargetDependency */,
 			);
-			name = LayerSampleTests;
+			name = "Atlas MessengerTests";
 			productName = LayerSampleTests;
-			productReference = 0A0C244419477D8F00401B74 /* LayerSampleTests.xctest */;
+			productReference = 0A0C244419477D8F00401B74 /* Atlas MessengerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -567,7 +587,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0A0C241E19477D8F00401B74 /* Build configuration list for PBXProject "LayerSample" */;
+			buildConfigurationList = 0A0C241E19477D8F00401B74 /* Build configuration list for PBXProject "Atlas Messenger" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -580,8 +600,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0A0C242219477D8F00401B74 /* LayerSample */,
-				0A0C244319477D8F00401B74 /* LayerSampleTests */,
+				0A0C242219477D8F00401B74 /* Atlas Messenger */,
+				0A0C244319477D8F00401B74 /* Atlas MessengerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -662,7 +682,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LayerSampleTests/Pods-LayerSampleTests-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Atlas MessengerTests/Pods-Atlas MessengerTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A487A0EE4CB44DA78C108935 /* Copy Pods Resources */ = {
@@ -677,7 +697,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Atlas Messenger/Pods-Atlas Messenger-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C1AF600B11EB477F8BE102D4 /* Check Pods Manifest.lock */ = {
@@ -760,7 +780,7 @@
 /* Begin PBXTargetDependency section */
 		0A0C244A19477D8F00401B74 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0A0C242219477D8F00401B74 /* LayerSample */;
+			target = 0A0C242219477D8F00401B74 /* Atlas Messenger */;
 			targetProxy = 0A0C244919477D8F00401B74 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -849,7 +869,7 @@
 		};
 		0A0C245619477D8F00401B74 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AF9EB0255130554DFDAF0741 /* Pods-LayerSample.debug.xcconfig */;
+			baseConfigurationReference = 8D36EB537069F95E1312C1C5 /* Pods-Atlas Messenger.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -860,13 +880,12 @@
 					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Code/LayerSample-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
 					"\"${PODS_ROOT}/Headers/SVProgressHUD\"",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/**",
@@ -879,7 +898,7 @@
 		};
 		0A0C245719477D8F00401B74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */;
+			baseConfigurationReference = EA8D4F84D7ED9670A81B8293 /* Pods-Atlas Messenger.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -890,13 +909,12 @@
 					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Code/LayerSample-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
 					"\"${PODS_ROOT}/Headers/SVProgressHUD\"",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Resources/LayerSample-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/**",
@@ -909,9 +927,9 @@
 		};
 		0A0C245919477D8F00401B74 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 87F9EE22AD5715654AAC60D4 /* Pods-LayerSampleTests.debug.xcconfig */;
+			baseConfigurationReference = 7E3F5568A463FD6EA9B16318 /* Pods-Atlas MessengerTests.debug.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LayerSample.app/LayerSample";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Atlas Messenger.app/Atlas Messenger";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -920,12 +938,11 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Code/LayerSample-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Tests/LayerSampleTests-Info.plist";
+				INFOPLIST_FILE = Tests/Info.plist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -935,9 +952,9 @@
 		};
 		0A0C245A19477D8F00401B74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7E757B6023455BCDEFB7E734 /* Pods-LayerSampleTests.release.xcconfig */;
+			baseConfigurationReference = B2F4335E0FF4DEECF7A64846 /* Pods-Atlas MessengerTests.release.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LayerSample.app/LayerSample";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Atlas Messenger.app/Atlas Messenger";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -946,8 +963,7 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Code/LayerSample-Prefix.pch";
-				INFOPLIST_FILE = "Tests/LayerSampleTests-Info.plist";
+				INFOPLIST_FILE = Tests/Info.plist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -958,7 +974,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0A0C241E19477D8F00401B74 /* Build configuration list for PBXProject "LayerSample" */ = {
+		0A0C241E19477D8F00401B74 /* Build configuration list for PBXProject "Atlas Messenger" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A0C245319477D8F00401B74 /* Debug */,
@@ -967,7 +983,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0A0C245519477D8F00401B74 /* Build configuration list for PBXNativeTarget "LayerSample" */ = {
+		0A0C245519477D8F00401B74 /* Build configuration list for PBXNativeTarget "Atlas Messenger" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A0C245619477D8F00401B74 /* Debug */,
@@ -976,7 +992,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0A0C245819477D8F00401B74 /* Build configuration list for PBXNativeTarget "LayerSampleTests" */ = {
+		0A0C245819477D8F00401B74 /* Build configuration list for PBXNativeTarget "Atlas MessengerTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A0C245919477D8F00401B74 /* Debug */,
