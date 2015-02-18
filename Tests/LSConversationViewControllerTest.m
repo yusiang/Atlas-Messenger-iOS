@@ -21,10 +21,10 @@ extern NSString *const LSDetailsButtonAccessibilityLabel;
 extern NSString *const LSConversationDetailViewControllerTitle;
 extern NSString *const LSMessageDetailViewControllerAccessibilityLabel;
 
-extern NSString *const LYRUIConversationListViewControllerTitle;
-extern NSString *const LYRUIConversationCollectionViewAccessibilityIdentifier;
-extern NSString *const LYRUIAddressBarAccessibilityLabel;
-extern NSString *const LYRUIMessageInputToolbarAccessibilityLabel;
+extern NSString *const ATLConversationListViewControllerTitle;
+extern NSString *const ATLConversationCollectionViewAccessibilityIdentifier;
+extern NSString *const ATLAddressBarAccessibilityLabel;
+extern NSString *const ATLMessageInputToolbarAccessibilityLabel;
 
 @interface LSConversationViewControllerTest : KIFTestCase
 
@@ -58,30 +58,30 @@ extern NSString *const LYRUIMessageInputToolbarAccessibilityLabel;
 
 - (void)testToVerifyNewConversationViewControllerUI
 {
-    [tester waitForViewWithAccessibilityLabel:LYRUIConversationListViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
     [tester tapViewWithAccessibilityLabel:LSComposeButtonAccessibilityLabel];
     [tester waitForViewWithAccessibilityLabel:LSConversationViewControllerAccessibilityLabel];
-    [tester waitForViewWithAccessibilityLabel:LYRUIAddressBarAccessibilityLabel];
-    [tester waitForViewWithAccessibilityLabel:LYRUIMessageInputToolbarAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLMessageInputToolbarAccessibilityLabel];
     [tester waitForAbsenceOfViewWithAccessibilityLabel:LSDetailsButtonAccessibilityLabel];
-    [tester waitForViewWithAccessibilityLabel:LYRUIConversationListViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
 }
 
 - (void)testToVerifyExistingConversationViewControllerUI
 {
     [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:LYRUIAddressBarAccessibilityLabel];
-    [tester waitForViewWithAccessibilityLabel:LYRUIMessageInputToolbarAccessibilityLabel];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLMessageInputToolbarAccessibilityLabel];
     [tester waitForViewWithAccessibilityLabel:LSConversationViewControllerAccessibilityLabel];
     [tester waitForViewWithAccessibilityLabel:LSDetailsButtonAccessibilityLabel];
-    [tester waitForViewWithAccessibilityLabel:LYRUIConversationListViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
 }
 
 - (void)testToVerifyBackButtonFunctionality
 {
     [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-    [tester tapViewWithAccessibilityLabel:LYRUIConversationListViewControllerTitle];
-    [tester waitForViewWithAccessibilityLabel:LYRUIConversationListViewControllerTitle];
+    [tester tapViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
 }
 
 - (void)testToVerifyDetailsButtonFunctionality
@@ -95,7 +95,7 @@ extern NSString *const LYRUIMessageInputToolbarAccessibilityLabel;
 {
     self.testInterface.applicationController.debugModeEnabled = YES;
     [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-    [tester tapItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]  inCollectionViewWithAccessibilityIdentifier:LYRUIConversationCollectionViewAccessibilityIdentifier];
+    [tester tapItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]  inCollectionViewWithAccessibilityIdentifier:ATLConversationCollectionViewAccessibilityIdentifier];
     [tester waitForViewWithAccessibilityLabel:LSMessageDetailViewControllerAccessibilityLabel];
 }
 
@@ -103,7 +103,7 @@ extern NSString *const LYRUIMessageInputToolbarAccessibilityLabel;
 {
     self.testInterface.applicationController.debugModeEnabled = NO;
     [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-    [tester tapItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]  inCollectionViewWithAccessibilityIdentifier:LYRUIConversationCollectionViewAccessibilityIdentifier];
+    [tester tapItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]  inCollectionViewWithAccessibilityIdentifier:ATLConversationCollectionViewAccessibilityIdentifier];
     [tester waitForAbsenceOfViewWithAccessibilityLabel:LSMessageDetailViewControllerAccessibilityLabel];
 }
 

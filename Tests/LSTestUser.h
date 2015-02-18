@@ -1,5 +1,5 @@
 //
-//  LYRUITestUser.h
+//  ATLTestUser.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 9/2/14.

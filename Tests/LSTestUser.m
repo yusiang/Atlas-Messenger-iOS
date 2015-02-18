@@ -1,5 +1,5 @@
 //
-//  LYRUITestUser.m
+//  ATLTestUser.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 9/2/14.

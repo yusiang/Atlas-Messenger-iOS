@@ -23,8 +23,8 @@ extern NSString *const LSPasswordRowPlaceholderText;
 extern NSString *const LSConfirmationRowPlaceholderText;
 extern NSString *const LSLoginButtonText;
 extern NSString *const LSRegisterButtonText;
-extern NSString *const LYRUIConversationListViewControllerTitle;
-extern NSString *const LYRUIConversationTableViewTitle;
+extern NSString *const ATLConversationListViewControllerTitle;
+extern NSString *const ATLConversationTableViewTitle;
 
 @interface LSAuthenticationViewControllerTest : KIFTestCase
 
@@ -88,7 +88,7 @@ extern NSString *const LYRUIConversationTableViewTitle;
     [tester enterText:testUser.password intoViewWithAccessibilityLabel:LSPasswordRowPlaceholderText];
     [tester tapViewWithAccessibilityLabel:LSLoginButtonText];
     [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Unexpected Error"];
-    [tester waitForViewWithAccessibilityLabel:LYRUIConversationListViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
 }
 
 - (void)testToVerifyRegistrationUI
@@ -133,7 +133,7 @@ extern NSString *const LYRUIConversationTableViewTitle;
     [tester enterText:testUser.passwordConfirmation intoViewWithAccessibilityLabel:LSConfirmationRowPlaceholderText];
     [tester tapViewWithAccessibilityLabel:LSRegisterButtonText];
     [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Unexpected Error"];
-    [tester waitForViewWithAccessibilityLabel:LYRUIConversationListViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
 }
 
 - (void)testToVerifyValidRegistrationFunctionality
@@ -147,7 +147,7 @@ extern NSString *const LYRUIConversationTableViewTitle;
     [tester enterText:testUser.password intoViewWithAccessibilityLabel:LSPasswordRowPlaceholderText];
     [tester enterText:testUser.passwordConfirmation intoViewWithAccessibilityLabel:LSConfirmationRowPlaceholderText];
     [tester tapViewWithAccessibilityLabel:LSRegisterButtonText];
-    [tester waitForViewWithAccessibilityLabel:LYRUIConversationListViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
 }
 
 @end

@@ -1,5 +1,5 @@
 //
-//  LYRUILayerContentFactory.m
+//  ATLLayerContentFactory.m
 //  LayerSample
 //
 //  Created by Kevin Coleman on 9/3/14.
@@ -18,7 +18,7 @@
 
 @implementation LSLayerContentFactory
 
-NSString *const LYRUITestMessageText = @"Hi, this is a test!";
+NSString *const ATLTestMessageText = @"Hi, this is a test!";
 
 + (instancetype)layerContentFactoryWithLayerClient:(LYRClient *)layerClient;
 {
@@ -44,7 +44,7 @@ NSString *const LYRUITestMessageText = @"Hi, this is a test!";
 - (void)sendMessagesToConversation:(LYRConversation *)conversation number:(NSUInteger)number
 {
     for (int i = 0; i < number; i++) {
-        LYRMessagePart *part = [LYRMessagePart messagePartWithText:LYRUITestMessageText];
+        LYRMessagePart *part = [LYRMessagePart messagePartWithText:ATLTestMessageText];
         NSError *error;
         LYRMessage *message = [self.layerClient newMessageWithParts:@[part] options:@{LYRMessageOptionsPushNotificationAlertKey: @"Test Push"} error:nil];
         [conversation sendMessage:message error:&error];

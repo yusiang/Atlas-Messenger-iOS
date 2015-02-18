@@ -1,5 +1,5 @@
 //
-//  LYRUILayerContentFactory.h
+//  ATLLayerContentFactory.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 9/3/14.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 
-extern NSString *const LYRUITestMessageText;
+extern NSString *const ATLTestMessageText;
 
 @interface LSLayerContentFactory : NSObject
 

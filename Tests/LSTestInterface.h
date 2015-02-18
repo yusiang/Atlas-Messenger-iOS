@@ -1,5 +1,5 @@
 //
-//  LYRUITestInterface.h
+//  ATLTestInterface.h
 //  LayerSample
 //
 //  Created by Kevin Coleman on 9/3/14.

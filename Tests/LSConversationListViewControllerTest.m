@@ -17,7 +17,7 @@
 
 extern NSString *const LSConversationListTableViewAccessibilityLabel;
 extern NSString *const LSConversationViewControllerAccessibilityLabel;
-extern NSString *const LYRUIAddressBarAccessibilityLabel;
+extern NSString *const ATLAddressBarAccessibilityLabel;
 extern NSString *const LSSettingsButtonAccessibilityLabel;
 extern NSString *const LSComposeButtonAccessibilityLabel;
 extern NSString *const LSSettingsViewControllerTitle;
@@ -60,7 +60,7 @@ extern NSString *const LSSettingsViewControllerTitle;
 - (void)testToVerifyComposeButtonFunctionality
 {
     [tester tapViewWithAccessibilityLabel:LSComposeButtonAccessibilityLabel];
-    [tester waitForViewWithAccessibilityLabel:LYRUIAddressBarAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
 }
 
 - (void)testToVerifyConversationSelectionFunctionality
@@ -74,7 +74,7 @@ extern NSString *const LSSettingsViewControllerTitle;
     
     [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participants]];
     [tester waitForViewWithAccessibilityLabel:LSConversationViewControllerAccessibilityLabel];
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:LYRUIAddressBarAccessibilityLabel];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
 }
 
 @end
