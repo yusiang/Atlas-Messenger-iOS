@@ -26,44 +26,29 @@
 #import "ATLMStyleValue1TableViewCell.h"
 
 typedef NS_ENUM(NSInteger, ATLMSettingsTableSection) {
-    ATLMSettingsTableSectionNotifications,
-    ATLMSettingsTableSectionDebug,
-    ATLMSettingsTableSectionStatistics,
+    ATLMSettingsTableSectionInfo,
+    ATLMSettingsTableSectionLegal,
     ATLMSettingsTableSectionLogout,
     ATLMSettingsTableSectionCount,
 };
 
-typedef NS_ENUM(NSInteger, ATLMNotificationsTableRow) {
-    ATLMNotificationsTableRowSendPush,
-    ATLMNotificationsTableRowDisplayLocal,
-    ATLMNotificationsTableRowCount,
+typedef NS_ENUM(NSInteger, ATLMInfoTableRow) {
+    ATLMInfoTableRowAtlasVersion,
+    ATLMInfoTableRowLayerKitVersion,
+    ATLMInfoTableRowAppIDRow,
+    ATLMInfoTableRowCount,
 };
 
-typedef NS_ENUM(NSInteger, ATLMDebugTableRow) {
-    ATLMDebugTableRowMode,
-    ATLMDebugTableRowSyncInterval,
-    ATLMDebugTableRowVersion,
-    ATLMDebugTableRowBuild,
-    ATLMDebugTableRowHost,
-    ATLMDebugTableRowUserID,
-    ATLMDebugTableRowDeviceToken,
-    ATLMDebugTableRowCount,
+typedef NS_ENUM(NSInteger, ATLMLegalTableRow) {
+    ATLMLegalTableRowAttribution,
+    ATLMLegalTableRowTerms,
+    ATLMLegalTableRowCount,
 };
 
-typedef NS_ENUM(NSInteger, ATLMStatisticsTableRow) {
-    ATLMStatisticsTableRowConversations,
-    ATLMStatisticsTableRowMessages,
-    ATLMStatisticsTableRowUnread,
-    ATLMStatisticsTableRowCount,
-};
 
 @interface ATLMSettingsViewController () <UITextFieldDelegate>
 
-@property (nonatomic) NSUInteger conversationsCount;
-@property (nonatomic) NSUInteger messagesCount;
-@property (nonatomic) NSUInteger unreadMessagesCount;
 @property (nonatomic) ATLMSettingsHeaderView *headerView;
-@property (nonatomic) NSUInteger averageSend;
 
 @end
 
@@ -73,17 +58,13 @@ NSString *const ATLMSettingsViewControllerTitle = @"Settings";
 NSString *const ATLMSettingsTableViewAccessibilityIdentifier = @"Settings Table View";
 NSString *const ATLMSettingsHeaderAccessibilityLabel = @"Settings Header";
 
-NSString *const ATLMPushNotificationSettingSwitch = @"Push Notification Setting Switch";
-NSString *const ATLMLocalNotificationSettingSwitch = @"Local Notification Setting Switch";
-NSString *const ATLMDebugModeSettingSwitch = @"Debug Mode Setting Switch";
+NSString *const ATLMDefaultCellIdentifier = @"defaultTableViewCell";
+NSString *const ATLMCenterTextCellIdentifier = @"centerContentTableViewCell";
 
-static NSString *const ATLMDefaultCellIdentifier = @"defaultTableViewCell";
-static NSString *const ATLMCenterTextCellIdentifier = @"centerContentTableViewCell";
-
-static NSString *const ATLMConnected = @"Connected";
-static NSString *const ATLMDisconnected = @"Disconnected";
-static NSString *const ATLMLostConnection = @"Lost Connection";
-static NSString *const ATLMConnecting = @"Connecting";
+NSString *const ATLMConnected = @"Connected";
+NSString *const ATLMDisconnected = @"Disconnected";
+NSString *const ATLMLostConnection = @"Lost Connection";
+NSString *const ATLMConnecting = @"Connecting";
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -97,7 +78,6 @@ static NSString *const ATLMConnecting = @"Connecting";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self fetchConversationStatistics];
     
     [self.tableView registerClass:[ATLMStyleValue1TableViewCell class] forCellReuseIdentifier:ATLMDefaultCellIdentifier];
     [self.tableView registerClass:[ATLMCenterTextTableViewCell class] forCellReuseIdentifier:ATLMCenterTextCellIdentifier];
@@ -141,156 +121,90 @@ static NSString *const ATLMConnecting = @"Connecting";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch ((ATLMSettingsTableSection)section) {
-        case ATLMSettingsTableSectionNotifications:
-            return ATLMNotificationsTableRowCount;
+    switch (section) {
+        case ATLMSettingsTableSectionInfo:
+            return ATLMInfoTableRowCount;
             
-        case ATLMSettingsTableSectionDebug:
-            return ATLMDebugTableRowCount;
-            
-        case ATLMSettingsTableSectionStatistics:
-            return ATLMStatisticsTableRowCount;
+        case ATLMSettingsTableSectionLegal:
+            return ATLMLegalTableRowCount;
             
         case ATLMSettingsTableSectionLogout:
             return 1;
-            
-        case ATLMSettingsTableSectionCount:
-            return 0;
     }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch ((ATLMSettingsTableSection)indexPath.section) {
-        case ATLMSettingsTableSectionNotifications: {
+    switch (indexPath.section) {
+        case ATLMSettingsTableSectionInfo: {
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
-            UISwitch *switchControl = [self switchForCell];
-            switch ((ATLMNotificationsTableRow)indexPath.row) {
-                case ATLMNotificationsTableRowSendPush:
-                    cell.textLabel.text = @"Send Push Notifications";
-                    switchControl.accessibilityLabel = ATLMPushNotificationSettingSwitch;
-                    switchControl.on = self.applicationController.shouldSendPushText;
-                    cell.accessoryView = switchControl;
+            switch (indexPath.row) {
+                case ATLMInfoTableRowAtlasVersion:
+                    cell.textLabel.text = @"Atlas Version";
+                    cell.detailTextLabel.text = @"1.0.0";
+                    break;
+
+                case ATLMInfoTableRowLayerKitVersion:
+                    cell.textLabel.text = @"LayerKit Version";
+                    cell.detailTextLabel.text = @"1.0.0";
                     break;
                     
-                case ATLMNotificationsTableRowDisplayLocal:
-                    cell.textLabel.text = @"Display Local Notifications";
-                    switchControl.accessibilityLabel = ATLMLocalNotificationSettingSwitch;
-                    switchControl.on = self.applicationController.shouldDisplayLocalNotifications;
-                    cell.accessoryView = switchControl;
+                case ATLMInfoTableRowAppIDRow:
+                    cell.textLabel.text = @"App ID";
+                    cell.detailTextLabel.text = [self.applicationController.layerClient.appID UUIDString];
                     break;
                     
-                case ATLMNotificationsTableRowCount:
+                case ATLMInfoTableRowCount:
                     break;
             }
             return cell;
         }
             
-        case ATLMSettingsTableSectionDebug: {
+        case ATLMSettingsTableSectionLegal: {
             UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
-            switch ((ATLMDebugTableRow)indexPath.row) {
-                case ATLMDebugTableRowMode: {
-                    cell.textLabel.text = @"Debug Mode";
-                    UISwitch *switchControl = [self switchForCell];
-                    switchControl.accessibilityLabel = ATLMDebugModeSettingSwitch;
-                    switchControl.on = self.applicationController.debugModeEnabled;
-                    cell.accessoryView = switchControl;
-                }
+            switch (indexPath.row) {
+                case ATLMLegalTableRowAttribution:
+                    cell.textLabel.text = @"Attribution";
                     break;
-
-                case ATLMDebugTableRowSyncInterval: {
-                    cell.textLabel.text = @"Synchronization Interval";
-                    UITextField *syncIntervalLabel = [[UITextField alloc] init];
-                    syncIntervalLabel.delegate = self;
-                    syncIntervalLabel.text = [NSString stringWithFormat:@"%@", [self.applicationController.layerClient valueForKeyPath:@"synchronizationManager.syncInterval"]];
-                    [syncIntervalLabel sizeToFit];
-                    cell.accessoryView = syncIntervalLabel;
-                }
+            
+                case ATLMLegalTableRowTerms:
+                    cell.textLabel.text = @"Terms Of Service";
                     break;
-
-                case ATLMDebugTableRowVersion:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Version: %@", [ATLMApplicationController versionString]];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                    
-                case ATLMDebugTableRowBuild:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Build: %@", [ATLMApplicationController buildInformationString]];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                    
-                case ATLMDebugTableRowHost:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Host: %@", [ATLMApplicationController layerServerHostname]];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                    
-                case ATLMDebugTableRowUserID:
-                    cell.textLabel.text = [NSString stringWithFormat:@"User ID: %@", self.applicationController.layerClient.authenticatedUserID];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                    
-                case ATLMDebugTableRowDeviceToken:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Device Token: %@", [self.applicationController.deviceToken description]];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    break;
-                    
-                case ATLMDebugTableRowCount:
+            
+                case ATLMLegalTableRowCount:
                     break;
             }
             return cell;
         }
             
-        case ATLMSettingsTableSectionStatistics: {
-            UITableViewCell *cell = [self defaultCellForIndexPath:indexPath];
-            switch ((ATLMStatisticsTableRow)indexPath.row) {
-                case ATLMStatisticsTableRowConversations:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Conversations:"];
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.conversationsCount];
-                    break;
-                    
-                case ATLMStatisticsTableRowMessages:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Messages:"];
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.messagesCount];
-                    break;
-                    
-                case ATLMStatisticsTableRowUnread:
-                    cell.textLabel.text = [NSString stringWithFormat:@"Unread Messages:"];
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.unreadMessagesCount];
-                    break;
-                    
-                case ATLMStatisticsTableRowCount:
-                    break;
-            }
-            return cell;
-        }
-        
         case ATLMSettingsTableSectionLogout: {
-            ATLMCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:ATLMCenterTextCellIdentifier forIndexPath:indexPath];
-            cell.centerTextLabel.text = @"Log Out";
-            cell.centerTextLabel.textColor = ATLRedColor();
-            return cell;
+            ATLMCenterTextTableViewCell *centerCell = [self.tableView dequeueReusableCellWithIdentifier:ATLMCenterTextCellIdentifier forIndexPath:indexPath];
+            centerCell.centerTextLabel.text = @"Log Out";
+            centerCell.centerTextLabel.textColor = ATLRedColor();
+            return centerCell;
         }
-            
+
         case ATLMSettingsTableSectionCount:
-            return nil;
+            break;
     }
+    return nil;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    switch ((ATLMSettingsTableSection)section) {
-        case ATLMSettingsTableSectionNotifications:
-            return @"Notifications";
+    switch (section) {
+        case ATLMSettingsTableSectionInfo:
+            return @"Info";
 
-        case ATLMSettingsTableSectionDebug:
-            return @"Debug";
-
-        case ATLMSettingsTableSectionStatistics:
-            return @"Statistics";
+        case ATLMSettingsTableSectionLegal:
+            return @"Legal";
 
         case ATLMSettingsTableSectionLogout:
         case ATLMSettingsTableSectionCount:
             return nil;
     }
+    return nil;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -324,121 +238,13 @@ static NSString *const ATLMConnecting = @"Connecting";
     return cell;
 }
 
-- (UISwitch *)switchForCell
-{
-    UISwitch *switchControl = [[UISwitch alloc] init];
-    [switchControl addTarget:self action:@selector(switchSwitched:) forControlEvents:UIControlEventValueChanged];
-    return switchControl;
-}
-
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch ((ATLMSettingsTableSection)indexPath.section) {
-        case ATLMSettingsTableSectionDebug:
-            switch ((ATLMDebugTableRow)indexPath.row) {
-                case ATLMDebugTableRowVersion:
-                    [self showAlertViewForDebuggingWithTitle:@"Version" message:[ATLMApplicationController versionString]];
-                    break;
-                    
-                case ATLMDebugTableRowBuild:
-                    [self showAlertViewForDebuggingWithTitle:@"Build" message:[ATLMApplicationController buildInformationString]];
-                    break;
-                    
-                case ATLMDebugTableRowHost:
-                    [self showAlertViewForDebuggingWithTitle:@"Host" message:[ATLMApplicationController layerServerHostname]];
-                    break;
-                    
-                case ATLMDebugTableRowUserID:
-                    [self showAlertViewForDebuggingWithTitle:@"User ID" message:self.applicationController.layerClient.authenticatedUserID];
-                    break;
-                    
-                case ATLMDebugTableRowDeviceToken:
-                    if (self.applicationController.deviceToken) {
-                        [self showAlertViewForDebuggingWithTitle:@"Device Token" message:[self.applicationController.deviceToken description]];
-                    }
-                    break;
-                    
-                case ATLMDebugTableRowMode:
-                case ATLMDebugTableRowSyncInterval:
-                case ATLMDebugTableRowCount:
-                    break;
-            }
-            break;
-        
+    switch (indexPath.section) {
         case ATLMSettingsTableSectionLogout:
             [self logOut];
-            break;
-            
-        case ATLMSettingsTableSectionNotifications:
-        case ATLMSettingsTableSectionStatistics:
-        case ATLMSettingsTableSectionCount:
-            break;
-    }
-}
-
-#pragma mark - Actions
-
-- (void)switchSwitched:(UISwitch *)switchControl
-{
-    CGPoint switchControlCenter = [self.tableView convertPoint:switchControl.center fromView:switchControl.superview];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:switchControlCenter];
-    switch ((ATLMSettingsTableSection)indexPath.section) {
-        case ATLMSettingsTableSectionNotifications:
-            switch ((ATLMNotificationsTableRow)indexPath.row) {
-                case ATLMNotificationsTableRowSendPush:
-                    self.applicationController.shouldSendPushText = switchControl.on;
-                    break;
-                    
-                case ATLMNotificationsTableRowDisplayLocal:
-                    self.applicationController.shouldDisplayLocalNotifications = switchControl.on;
-                    break;
-                    
-                case ATLMNotificationsTableRowCount:
-                    break;
-            }
-            break;
-            
-        case ATLMSettingsTableSectionDebug:
-            switch ((ATLMDebugTableRow)indexPath.row) {
-                case ATLMDebugTableRowMode:
-                    self.applicationController.debugModeEnabled = switchControl.on;
-                    break;
-                    
-                case ATLMDebugTableRowSyncInterval:
-                case ATLMDebugTableRowVersion:
-                case ATLMDebugTableRowBuild:
-                case ATLMDebugTableRowHost:
-                case ATLMDebugTableRowUserID:
-                case ATLMDebugTableRowDeviceToken:
-                case ATLMDebugTableRowCount:
-                    break;
-            }
-            break;
-            
-        case ATLMSettingsTableSectionStatistics:
-        case ATLMSettingsTableSectionLogout:
-        case ATLMSettingsTableSectionCount:
-            break;
-    }
-}
-
-- (void)doneTapped:(UIControl *)sender
-{
-    [self.settingsDelegate settingsViewControllerDidFinish:self];
-}
-
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    switch (buttonIndex) {
-        case 0: {
-            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-            pasteboard.string = alertView.message;
-            [SVProgressHUD showSuccessWithStatus:@"Copied"];
-        }
             break;
             
         default:
@@ -446,25 +252,12 @@ static NSString *const ATLMConnecting = @"Connecting";
     }
 }
 
-#pragma mark - Helpers
+#pragma mark - Actions
 
-- (void)fetchConversationStatistics
+- (void)doneTapped:(UIControl *)sender
 {
-    self.conversationsCount = [self.applicationController.layerClient countOfConversations];
-    self.messagesCount = [self.applicationController.layerClient countOfMessages];
-    self.unreadMessagesCount = [self.applicationController.layerClient countOfUnreadMessages];
+    [self.settingsDelegate settingsViewControllerDidFinish:self];
 }
-
-- (void)showAlertViewForDebuggingWithTitle:(NSString *)title message:(NSString *)message
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                        message:message
-                                                       delegate:self
-                                              cancelButtonTitle:@"Copy"
-                                              otherButtonTitles:@"OK", nil];
-    [alertView show];
-}
-
 - (void)logOut
 {
     [self.settingsDelegate logoutTappedInSettingsViewController:self];
@@ -498,15 +291,6 @@ static NSString *const ATLMConnecting = @"Connecting";
 - (void)layerDidLoseConnection:(NSNotification *)notification
 {
     [self.headerView updateConnectedStateWithString:ATLMLostConnection];
-}
-
-#pragma mark - UITextFieldDelegate
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    [self.applicationController.layerClient setValue:@(textField.text.intValue) forKeyPath:@"synchronizationManager.syncInterval"];
-    return YES;
 }
 
 @end

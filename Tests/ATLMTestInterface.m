@@ -28,13 +28,13 @@
 
 @implementation ATLMTestInterface
 
-+ (instancetype)testInterfaceWithApplicationController:(ATLMApplicationController *)applicationController
++ (instancetype)testInterfaceWithApplicationController:(ATLMIApplicationController *)applicationController
 {
     NSParameterAssert(applicationController);
     return [[self alloc] initWithApplicationController:applicationController];
 }
 
-- (id)initWithApplicationController:(ATLMApplicationController *)applicationController
+- (id)initWithApplicationController:(ATLMIApplicationController *)applicationController
 {
     self = [super init];
     if (self) {

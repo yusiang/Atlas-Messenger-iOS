@@ -21,8 +21,8 @@
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
 #import <Atlas/Atlas.h>
-#import "ATLMApplicationController.h"
 #import <CoreLocation/CoreLocation.h>
+#import "ATLMApplicationController.h"
 
 extern NSString *const ATLMConversationMetadataNameKey;
 

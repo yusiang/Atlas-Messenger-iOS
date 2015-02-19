@@ -16,7 +16,7 @@
 @property (nonatomic) NSString *userID;
 @property (nonatomic) NSString *firstName;
 @property (nonatomic) NSString *lastName;
-@property (nonatomic, readonly) NSString *fullName;
+@property (nonatomic) NSString *fullName;
 @property (nonatomic) NSString *email;
 @property (nonatomic) NSString *password;
 @property (nonatomic) NSString *passwordConfirmation;

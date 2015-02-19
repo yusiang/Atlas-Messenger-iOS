@@ -23,9 +23,9 @@
 #import "KIFSystemTestActor+ViewControllerActions.h"
 #import <XCTest/XCTest.h>
 
-#import "ATLMApplicationController.h"
+#import "ATLMIApplicationController.h"
 #import "ATLMTestInterface.h"
-#import "ATLMAuthenticationViewController.h"
+#import "ATLAuthenticationViewController.h"
 #import "ATLMTestUser.h"
 
 @interface ATLMApplicationControllerTest : KIFTestCase
@@ -40,7 +40,7 @@
 - (void)setUp
 {
     [super setUp];
-    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    ATLMIApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
     self.testUser = [ATLMTestUser testUserWithNumber:0];
     [self.testInterface registerAndAuthenticateTestUser:self.testUser];

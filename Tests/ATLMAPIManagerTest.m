@@ -24,7 +24,7 @@
 #import "ATLMUtilities.h"
 #import "ATLMPersistenceManager.h"
 #import "LYRCountdownLatch.h"
-#import "ATLMApplicationController.h"
+#import "ATLMIApplicationController.h"
 #import "ATLMAppDelegate.h"
 #import "ATLMTestUser.h"
 #import "ATLMTestInterface.h"
@@ -40,7 +40,7 @@
 - (void)setUp
 {
     [super setUp];
-    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    ATLMIApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
 }
 
@@ -139,6 +139,11 @@
         }];
     }];
     [latch waitTilCount:0];
+}
+
+- (void)testToVerifyAtlasRegistrationEndpoint
+{
+    //56002530-b7cf-11e4-a62c-2d571000725e
 }
 
 - (void)testLoadingAllContactsForAuthenticatedUser

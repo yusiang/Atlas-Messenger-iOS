@@ -20,6 +20,7 @@
 
 #import <Atlas/Atlas.h>
 #import "ATLMApplicationController.h"
+
 /**
  @abstract Subclass of the `ATLMConversationViewController` LayerUIKit component.
  The class acts as the data source and delegate of the component. It presents a user

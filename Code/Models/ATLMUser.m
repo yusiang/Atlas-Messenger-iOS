@@ -25,13 +25,16 @@
 
 + (instancetype)userFromDictionaryRepresentation:(NSDictionary *)representation
 {
+    NSLog(@"Rep: %@", representation);
     ATLMUser *user = [ATLMUser new];
-    user.userID = representation[@"id"];
+    user.userID =  representation[@"id"];
     user.firstName = representation[@"first_name"];
+    if (!user.firstName) user.firstName = representation[@"name"];
     user.lastName = representation[@"last_name"];
+    if (!user.lastName) user.lastName = @"atlas";
     user.email = representation[@"email"];
     user.password = representation[@"password"];
-    
+    NSLog(@"User %@", user);
     return user;
 }
 

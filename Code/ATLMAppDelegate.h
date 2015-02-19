@@ -20,7 +20,6 @@
 
 #import <UIKit/UIKit.h>
 #import "ATLMApplicationController.h"
-#import "ATLMConversationListViewController.h"
 
 @interface ATLMAppDelegate : UIResponder <UIApplicationDelegate>
 

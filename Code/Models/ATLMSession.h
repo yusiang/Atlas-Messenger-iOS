@@ -29,6 +29,7 @@
 + (instancetype)sessionWithAuthenticationToken:(NSString *)authenticationToken user:(ATLMUser *)user;
 
 @property (nonatomic, readonly) NSString *authenticationToken;
+
 @property (nonatomic, readonly) ATLMUser *user;
 
 @end
