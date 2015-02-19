@@ -190,6 +190,11 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
     LYRMessagePart *lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEGPreview);
     LYRMessagePart *imageInfoPart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageSize);
 
+    if (!lowResImagePart) {
+        // Default back to image/jpeg MIMEType
+        lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
+    }
+    
     // Retrieve low-res image from message part
     if (!(lowResImagePart.transferStatus == LYRContentTransferReadyForDownload || lowResImagePart.transferStatus == LYRContentTransferDownloading)) {
         if (lowResImagePart.fileURL) {
@@ -204,8 +209,8 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
     if (imageInfoPart) {
         self.fullResImageSize = ATLImageSizeForJSONData(imageInfoPart.data);
     } else {
-        if (self.fullResImage) {
-            self.fullResImageSize = self.fullResImage.size;
+        if (self.lowResImage) {
+            self.fullResImageSize = self.lowResImage.size;
         } else {
             return;
         }
@@ -274,7 +279,15 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
     availableSize.height -= self.scrollView.contentInset.bottom;
 
     // We don't want to display the image larger than its native size.
-    CGFloat maximumScale = 1 / [[UIScreen mainScreen] scale];
+    CGFloat maximumScale;
+    if ((self.fullResImageSize.width / [[UIScreen mainScreen] scale] < self.view.frame.size.width) &&
+        (self.fullResImageSize.height / [[UIScreen mainScreen] scale] < self.view.frame.size.height)) {
+        // Fallback to default image scale;
+        maximumScale = 1;
+    } else {
+        // Force device scale of the image (1:1 pixel mapping).
+        maximumScale = 1 / [[UIScreen mainScreen] scale];
+    }
 
     // The smallest we want to display the image is the size that it completely fits onscreen.
     CGFloat xFittedScale = availableSize.width / self.fullResImageSize.width;
