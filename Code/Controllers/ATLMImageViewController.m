@@ -225,6 +225,9 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
 - (void)loadFullResImages
 {
     LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
+    if (!fullResImagePart) {
+        fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG);
+    }
     
     // Retrieve hi-res image from message part
     if (!(fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
@@ -250,9 +253,12 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
 - (void)downloadFullResImageIfNeeded
 {
     LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
+    if (!fullResImagePart) {
+        fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG);
+    }
     
     // Download hi-res image from the network
-    if ((fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
+    if (fullResImagePart && (fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
         NSError *error;
         LYRProgress *downloadProgress = [fullResImagePart downloadContent:&error];
         if (!downloadProgress) {
