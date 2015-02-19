@@ -33,6 +33,23 @@
 #import "LSQRCodeScannerController.h"
 #import "ATLMUtilities.h"
 
+// Private code for testing. Remove for release.
+NSString *const ATLMUserDefaultsLayerConfigurationURLKey = @"LAYER_CONFIGURATION_URL";
+
+extern dispatch_once_t LYRConfigurationURLOnceToken;
+
+void ATLMTestResetConfiguration(void)
+{
+    extern dispatch_once_t LYRDefaultConfigurationDispatchOnceToken;
+    
+    NSString *archivePath = [ATLMApplicationDataDirectory() stringByAppendingPathComponent:@"LayerConfiguration.plist"];
+    [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
+    
+    // Ensure the next call through `LYRDefaultConfiguration` will reload
+    LYRDefaultConfigurationDispatchOnceToken = 0;
+    LYRConfigurationURLOnceToken = 0;
+}
+
 @interface ATLMAppDelegate () <MFMailComposeViewControllerDelegate>
 
 @property (nonatomic) LSQRCodeScannerController *scannerController;
@@ -46,6 +63,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Private code for testing. Remove for release.
+    [self configureLayerForEnvironment];
+    
     self.applicationController = [ATLMApplicationController controllerWithPersistenceManager:ATLMPersitenceManager()];
     
     // Set up window
@@ -62,8 +82,6 @@
     return YES;
 }
 
-
-
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [self resumeSession];
@@ -73,6 +91,19 @@
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     [self setApplicationBadgeNumber];
+}
+
+- (void)configureLayerForEnvironment
+{
+    //NSString *configURLString =  @"https://conf.lyr8.net/conf"; // Production
+    NSString *configURLString = @"https://conf.stage1.lyr8.net/conf"; // Staging
+    NSString *configKey = ATLMUserDefaultsLayerConfigurationURLKey;
+    NSString *currentConfigURL = [[NSUserDefaults standardUserDefaults] objectForKey:configKey];
+    if (![currentConfigURL isEqualToString:configURLString]) {
+        [[NSUserDefaults standardUserDefaults] setObject:configURLString forKey:configKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    ATLMTestResetConfiguration();
 }
 
 #pragma mark - Setup

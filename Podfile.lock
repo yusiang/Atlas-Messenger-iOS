@@ -106,7 +106,7 @@ CHECKOUT OPTIONS:
     :commit: bbc691bab21f0b6b3d2e2cffc4967dbf93dfa07e
     :git: git@github.com:layerhq/layer-identity-ios
   LayerKit:
-    :commit: b369e3b1dc2a3a151a020a74605810b416234814
+    :commit: 2a6f74c56a8d18f71af0ad2acfe18447fd639fcb
     :git: git@github.com:layerhq/LayerKit.git
   LYRCountDownLatch:
     :commit: 02119f855ad14e7fc0dae32bbbf17c735a281cfe
