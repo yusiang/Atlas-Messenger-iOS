@@ -91,9 +91,10 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 
     UIBarButtonItem *shareBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
     self.navigationItem.rightBarButtonItem = shareBarButtonItem;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     self.navigationItem.leftBarButtonItem = doneButtonItem;
-    
+
     self.title = @"Image";
 }
 
@@ -234,6 +235,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
     [UIView animateWithDuration:ATLMImageViewControllerAnimationDuration animations:^{
         self.fullResImageView.alpha = 1.0f; // make the full res image appear.
         self.progressView.alpha = 0.0;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     } completion:^(BOOL finished) {
         self.progressView.hidden = YES;
     }];
