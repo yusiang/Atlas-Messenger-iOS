@@ -145,12 +145,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
                 ATLParticipantTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:ATLMParticipantCellIdentifier forIndexPath:indexPath];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 if ([self blockedParticipantAtIndexPath:indexPath]) {
-                    UILabel *blockLabel = [[UILabel alloc] init];
-                    blockLabel.text = @"Blocked";
-                    blockLabel.textColor = [UIColor redColor];
-                    blockLabel.font = [UIFont systemFontOfSize:12];
-                    [blockLabel sizeToFit];
-                    cell.accessoryView = blockLabel;
+                    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"AtlasResource.bundle/block"]];
                 }
                 [cell presentParticipant:participant withSortType:ATLParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES];
                 return cell;
