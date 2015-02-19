@@ -22,7 +22,6 @@
 #import <Atlas.h>
 
 static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
-static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 
 @interface ATLMImageViewController () <UIScrollViewDelegate, LYRProgressDelegate>
 
@@ -34,7 +33,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) UIImageView *lowResImageView;
 @property (nonatomic) UIImageView *fullResImageView;
-@property (nonatomic) ATLProgressView *progressView;
+@property (nonatomic) UIProgressView *progressView;
 
 @end
 
@@ -74,17 +73,19 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
     self.fullResImageView.alpha = 0.0f; // hide the full-res image view at the beginning.
     [self.scrollView addSubview:self.fullResImageView];
     
-    self.progressView = [[ATLProgressView alloc] initWithFrame:CGRectMake(0, 0, ATLMImageViewControllerProgressViewSize, ATLMImageViewControllerProgressViewSize)];
-    self.progressView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.progressView.alpha = 0.0f;
-    [self.progressView setProgress:0.0f animated:NO];
+    self.progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+    self.progressView.alpha = 0.0;
+    self.progressView.tintColor = ATLBlueColor();
+    self.progressView.trackTintColor = [UIColor clearColor];
     [self.view addSubview:self.progressView];
+    NSLayoutConstraint *constraint;
+    constraint = [NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
+    [self.view addConstraint:constraint];
     
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:(self.navigationController.navigationBar.frame.size.height+ATLMImageViewControllerProgressViewSize/4)/2]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:ATLMImageViewControllerProgressViewSize/2]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:ATLMImageViewControllerProgressViewSize/2]];
-
+    constraint = [NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    [self.view addConstraint:constraint];
+    [self.progressView setProgress:0];
+    
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapRecognized:)];
     recognizer.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:recognizer];
@@ -100,6 +101,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.progressView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height - 0.5f, self.view.frame.size.width, 2.0f);
     [super viewWillAppear:animated];
     [self loadLowResImages];
 }
@@ -236,8 +238,6 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
         self.fullResImageView.alpha = 1.0f; // make the full res image appear.
         self.progressView.alpha = 0.0;
         self.navigationItem.rightBarButtonItem.enabled = YES;
-    } completion:^(BOOL finished) {
-        self.progressView.hidden = YES;
     }];
     [self viewDidLayoutSubviews];
 }
@@ -249,13 +249,16 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
     // Download hi-res image from the network
     if ((fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
         NSError *error;
-        self.progressView.alpha = 1.0f;
         LYRProgress *downloadProgress = [fullResImagePart downloadContent:&error];
         if (!downloadProgress) {
             NSLog(@"problem downloading full resolution photo with %@", error);
             return;
         }
         downloadProgress.delegate = self;
+        self.title = @"Downloading Image...";
+        [UIView animateWithDuration:ATLMImageViewControllerAnimationDuration animations:^{
+            self.progressView.alpha = 1.0f;
+        }];
     } else {
         [self loadFullResImages];
     }
@@ -322,6 +325,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
         // After transfer completes, remove self for delegation.
         if (progressCompleted) {
             progress.delegate = nil;
+            self.title = @"Image Downloaded";
             [self loadFullResImages];
         }
     });
