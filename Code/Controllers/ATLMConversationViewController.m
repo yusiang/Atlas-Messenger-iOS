@@ -349,6 +349,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     self.participantDataSource.excludedIdentifiers = excludedIdentifiers;
     
     ATLMParticipantTableViewController  *controller = [ATLMParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:ATLParticipantPickerSortTypeFirstName];
+    controller.blockedParticipantIdentifiers = [self.layerClient.policies valueForKey:@"sentByUserID"];
     controller.delegate = self;
     controller.allowsMultipleSelection = NO;
     
