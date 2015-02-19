@@ -23,7 +23,7 @@
 #import "KIFSystemTestActor+ViewControllerActions.h"
 #import <XCTest/XCTest.h>
 
-#import "ATLMApplicationController.h"
+#import "ATLMIApplicationController.h"
 #import "ATLMTestInterface.h"
 #import "ATLMTestUser.h"
 
@@ -45,7 +45,7 @@ extern NSString *const ATLMSettingsViewControllerTitle;
 - (void)setUp
 {
     [super setUp];
-    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    ATLMIApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
     [self.testInterface registerAndAuthenticateTestUser:[ATLMTestUser testUserWithNumber:0]];
 }

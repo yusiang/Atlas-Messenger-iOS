@@ -20,7 +20,6 @@
 
 #import "ATLMConversationViewController.h"
 #import "ATLMParticipantDataSource.h"
-#import "ATLMMessageDetailViewController.h"
 #import "ATLMConversationDetailViewController.h"
 #import "ATLMImageViewController.h"
 #import "ATLMUtilities.h"
@@ -194,9 +193,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 - (id<ATLParticipant>)conversationViewController:(ATLConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
     if (participantIdentifier) {
-        ATLMUser *user = [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
-        if (user) return user;
-        [[NSNotificationCenter defaultCenter] postNotificationName:ATLMAppEncounteredUnknownUser object:nil];
+        return [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
     }
     return nil;
 }
@@ -324,20 +321,14 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
  */
 - (void)conversationViewController:(ATLConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
-    if (self.applicationController.debugModeEnabled) {
-        ATLMMessageDetailViewController *controller = [ATLMMessageDetailViewController messageDetailViewControllerWithMessage:message applicationController:self.applicationController];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-        [self.navigationController presentViewController:navController animated:YES completion:nil];
-    } else {
-        LYRMessagePart *imageMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImageJPEG);
-        if (!imageMessagePart) {
-            imageMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImagePNG);
-        }
-        if (imageMessagePart) {
-            ATLMImageViewController *imageViewController = [[ATLMImageViewController alloc] initWithMessage:message];
-            UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:imageViewController];
-            [self.navigationController presentViewController:controller animated:YES completion:nil];
-        }
+    LYRMessagePart *imageMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImageJPEG);
+    if (!imageMessagePart) {
+        imageMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImagePNG);
+    }
+    if (imageMessagePart) {
+        ATLMImageViewController *imageViewController = [[ATLMImageViewController alloc] initWithMessage:message];
+        UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:imageViewController];
+        [self.navigationController presentViewController:controller animated:YES completion:nil];
     }
 }
 
@@ -435,7 +426,6 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     detailViewController.detailDelegate = self;
     detailViewController.detailDataSource = self;
     detailViewController.applicationController = self.applicationController;
-    detailViewController.changingParticipantsMutatesConversation = self.applicationController.debugModeEnabled;
     [self.navigationController pushViewController:detailViewController animated:YES];
 }
 

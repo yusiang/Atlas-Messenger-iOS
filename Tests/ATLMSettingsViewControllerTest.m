@@ -47,7 +47,7 @@ extern NSString *const ATLMDebugModeSettingSwitch;
 - (void)setUp
 {
     [super setUp];
-    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    ATLMIApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
     [self.testInterface registerAndAuthenticateTestUser:[ATLMTestUser testUserWithNumber:0]];
     

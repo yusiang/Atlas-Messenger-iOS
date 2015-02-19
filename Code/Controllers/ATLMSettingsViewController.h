@@ -24,6 +24,18 @@
 
 @class ATLMSettingsViewController;
 
+NSString *const ATLMSettingsViewControllerTitle;
+NSString *const ATLMSettingsTableViewAccessibilityIdentifier;
+NSString *const ATLMSettingsHeaderAccessibilityLabel;
+
+NSString *const ATLMDefaultCellIdentifier;
+NSString *const ATLMCenterTextCellIdentifier;
+
+NSString *const ATLMConnected;
+NSString *const ATLMDisconnected;
+NSString *const ATLMLostConnection;
+NSString *const ATLMConnecting;
+
 /**
  @abstract The `ATLMSettingsViewControllerDelegate` protocol informs the receiver of events that have occurred
  within the controller.

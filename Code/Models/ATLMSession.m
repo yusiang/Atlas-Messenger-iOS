@@ -24,14 +24,13 @@
 
 + (instancetype)sessionWithAuthenticationToken:(NSString *)authenticationToken user:(ATLMUser *)user
 {
+    NSParameterAssert(authenticationToken);
+    NSParameterAssert(user);
     return [[self alloc] initWithAuthenticationToken:authenticationToken user:user];
 }
 
 - (id)initWithAuthenticationToken:(NSString *)authenticationToken user:(ATLMUser *)user
 {
-    NSParameterAssert(authenticationToken);
-    NSParameterAssert(user);
-    
     self = [super init];
     if (self) {
         _authenticationToken = authenticationToken;
@@ -64,7 +63,7 @@
 
 - (NSUInteger)hash
 {
-    return self.authenticationToken.hash ^ self.user.userID.hash;
+    return self.authenticationToken.hash ^ self.user.participantIdentifier.hash;
 }
 
 - (BOOL)isEqual:(id)object

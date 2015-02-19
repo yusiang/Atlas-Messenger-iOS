@@ -21,7 +21,7 @@
 #import <XCTest/XCTest.h>
 #define EXP_SHORTHAND
 #import <Expecta/Expecta.h>
-#import "ATLMPersistenceManager.h"
+#import "ATLMIPersistenceManager.h"
 
 static NSString *ATLMApplicationDataDirectory(void)
 {
@@ -63,14 +63,14 @@ static NSString *ATLMRandomStorePath(void)
 
 - (void)testInitializingWithEmptyDirectory
 {
-    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    ATLMIPersistenceManager *manager = [ATLMIPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
     expect([manager persistedSessionWithError:nil]).to.beNil();
     expect([manager persistedUsersWithError:nil]).to.beNil();
 }
 
 - (void)testSessionPersistence
 {
-    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    ATLMIPersistenceManager *manager = [ATLMIPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
     ATLMUser *user = [ATLMUser new];
     user.userID = [[NSUUID UUID] UUIDString];
     ATLMSession *session = [ATLMSession sessionWithAuthenticationToken:@"12345" user:user];
@@ -89,7 +89,7 @@ static NSString *ATLMRandomStorePath(void)
 
 - (void)testLoadingNonExistantSessionFileFailsWithoutError
 {
-    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    ATLMIPersistenceManager *manager = [ATLMIPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
     NSError *error = nil;
     ATLMSession *session = [manager persistedSessionWithError:&error];
     expect(session).to.beNil();
@@ -98,7 +98,7 @@ static NSString *ATLMRandomStorePath(void)
 
 - (void)testUsersPersistence
 {
-    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    ATLMIPersistenceManager *manager = [ATLMIPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
     ATLMUser *user1 = [ATLMUser new];
     user1.userID = @"12345";
     ATLMUser *user2 = [ATLMUser new];
@@ -116,7 +116,7 @@ static NSString *ATLMRandomStorePath(void)
 
 - (void)testLoadingNonExistantUsersFileFailsWithoutError
 {
-    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    ATLMIPersistenceManager *manager = [ATLMIPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
     NSError *error = nil;
     NSSet *users = [manager persistedUsersWithError:&error];
     expect(users).to.beNil();
@@ -125,7 +125,7 @@ static NSString *ATLMRandomStorePath(void)
 
 - (void)testRemovingAllObjects
 {
-    ATLMPersistenceManager *manager = [ATLMPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
+    ATLMIPersistenceManager *manager = [ATLMIPersistenceManager persistenceManagerWithStoreAtPath:ATLMRandomStorePath()];
     ATLMUser *user = [ATLMUser new];
     user.userID = [[NSUUID UUID] UUIDString];
     ATLMSession *session = [ATLMSession sessionWithAuthenticationToken:@"12345" user:user];

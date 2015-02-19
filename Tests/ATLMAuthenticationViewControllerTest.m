@@ -23,9 +23,9 @@
 #import "KIFSystemTestActor+ViewControllerActions.h"
 #import <XCTest/XCTest.h>
 
-#import "ATLMApplicationController.h"
+#import "ATLMIApplicationController.h"
 #import "ATLMTestInterface.h"
-#import "ATLMAuthenticationViewController.h"
+#import "ATLAuthenticationViewController.h"
 #import "ATLMTestUser.h"
 
 extern NSString *const ATLMFirstNameRowPlaceholderText;
@@ -40,7 +40,7 @@ extern NSString *const ATLConversationTableViewTitle;
 
 @interface ATLMAuthenticationViewControllerTest : KIFTestCase
 
-@property (nonatomic) ATLMAuthenticationViewController *authenticationViewController;
+@property (nonatomic) ATLAuthenticationViewController *authenticationViewController;
 @property (nonatomic) ATLMTestInterface *testInterface;
 
 @end
@@ -50,9 +50,9 @@ extern NSString *const ATLConversationTableViewTitle;
 - (void)setUp
 {
     [super setUp];
-    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    ATLMIApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
-    self.authenticationViewController = (ATLMAuthenticationViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    self.authenticationViewController = (ATLAuthenticationViewController *)[[[[UIApplication sharedApplication] delegate] window] rootViewController];
 }
 
 - (void)tearDown {

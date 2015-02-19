@@ -22,7 +22,7 @@
 #import <KIF/KIF.h>
 #import "KIFSystemTestActor+ViewControllerActions.h"
 
-#import "ATLMApplicationController.h"
+#import "ATLMIApplicationController.h"
 #import "ATLMTestInterface.h"
 #import "ATLMTestUser.h"
 
