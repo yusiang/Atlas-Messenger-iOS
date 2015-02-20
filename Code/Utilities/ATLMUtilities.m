@@ -21,8 +21,6 @@
 #import "ATLMPersistenceManager.h"
 #import "ATLMUtilities.h"
 
-NSString *const ATLMAppEncounteredUnknownUser = @"LSAppEncounteredUnknownUser";
-
 BOOL ATLMIsRunningTests(void)
 {
     return NSClassFromString(@"XCTestCase") != Nil;
