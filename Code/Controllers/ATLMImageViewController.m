@@ -22,6 +22,7 @@
 #import <Atlas.h>
 
 static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
+static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 
 @interface ATLMImageViewController () <UIScrollViewDelegate, LYRProgressDelegate>
 
@@ -77,13 +78,7 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
     self.progressView.alpha = 0.0;
     self.progressView.tintColor = ATLBlueColor();
     self.progressView.trackTintColor = [UIColor clearColor];
-    [self.view addSubview:self.progressView];
-    NSLayoutConstraint *constraint;
-    constraint = [NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
-    [self.view addConstraint:constraint];
-    
-    constraint = [NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0];
-    [self.view addConstraint:constraint];
+    [self.navigationController.navigationBar addSubview:self.progressView];
     [self.progressView setProgress:0];
     
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapRecognized:)];
@@ -101,7 +96,6 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.progressView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height - 0.5f, self.view.frame.size.width, 2.0f);
     [super viewWillAppear:animated];
     [self loadLowResImages];
 }
@@ -112,10 +106,22 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
     [self downloadFullResImageIfNeeded];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.progressView removeFromSuperview];
+}
+
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
     [self configureForAvailableSpace];
+}
+
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    self.progressView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height - ATLMImageViewControllerProgressBarHeight, self.view.frame.size.width, ATLMImageViewControllerProgressBarHeight);
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -170,7 +176,7 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
     [self.fullResImageView removeFromSuperview];
     self.fullResImageView = nil;
     self.fullResImage = nil;
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Helpers
