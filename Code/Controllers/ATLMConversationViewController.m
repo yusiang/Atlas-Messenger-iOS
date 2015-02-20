@@ -142,20 +142,16 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     self.view.accessibilityLabel = ATLMConversationViewControllerAccessibilityLabel;
     self.dataSource = self;
     self.delegate = self;
+   
     if (self.conversation) {
         [self addDetailsButton];
     }
     [self markAllMessagesAsRead];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(userDidTapLink:)
-                                                 name:ATLUserDidTapLinkNotification
-                                               object:nil];
+    [self registerForNotifications];
+    [self configureUserInterfaceAttributes];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(conversationMetadataDidChange:)
-                                                 name:ATLMConversationMetadataDidChangeNotification
-                                               object:nil];
+    self.participantDataSource = [ATLMParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    self.participantDataSource.excludedIdentifiers = [NSSet setWithObject:self.layerClient.authenticatedUserID];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -342,7 +338,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
  */
 - (void)addressBarViewController:(ATLAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
 {
-    NSMutableSet *excludedIdentifiers = [[NSMutableSet alloc] initWithObjects:self.layerClient.authenticatedUserID, nil];
+    NSMutableSet *excludedIdentifiers = [self.participantDataSource.excludedIdentifiers mutableCopy];
     [excludedIdentifiers addObjectsFromArray:[[addressBarViewController.selectedParticipants valueForKey:@"participantIdentifier"] allObjects]];
 
     self.participantDataSource = [ATLMParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
@@ -366,8 +362,8 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
  */
 - (void)addressBarViewController:(ATLAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
 {
-    [self.applicationController.persistenceManager performUserSearchWithString:searchText completion:^(NSArray *users, NSError *error) {
-        completion(users ?: @[]);
+    [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
+        completion([participants allObjects]);
     }];
 }
 
@@ -471,11 +467,28 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     return @"Group";
 }
 
+- (void)configureUserInterfaceAttributes
+{
+    [[ATLIncomingMessageCollectionViewCell appearance] setBubbleViewColor:ATLLightGrayColor()];
+    [[ATLIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
+    [[ATLIncomingMessageCollectionViewCell appearance] setMessageLinkTextColor:ATLBlueColor()];
+
+    [[ATLOutgoingMessageCollectionViewCell appearance] setBubbleViewColor:ATLBlueColor()];
+    [[ATLOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
+    [[ATLOutgoingMessageCollectionViewCell appearance] setMessageLinkTextColor:[UIColor whiteColor]];
+}
+
 #pragma mark - Link Tap Handler
 
 - (void)userDidTapLink:(NSNotification *)notification
 {
     [[UIApplication sharedApplication] openURL:notification.object];
+}
+
+- (void)registerForNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidTapLink:) name:ATLUserDidTapLinkNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationMetadataDidChange:) name:ATLMConversationMetadataDidChangeNotification object:nil];
 }
 
 @end
