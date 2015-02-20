@@ -22,7 +22,6 @@
 #import <Atlas.h>
 
 static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
-static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 
 @interface ATLMImageViewController () <UIScrollViewDelegate, LYRProgressDelegate>
 
@@ -34,7 +33,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) UIImageView *lowResImageView;
 @property (nonatomic) UIImageView *fullResImageView;
-@property (nonatomic) ATLProgressView *progressView;
+@property (nonatomic) UIProgressView *progressView;
 
 @end
 
@@ -74,31 +73,35 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
     self.fullResImageView.alpha = 0.0f; // hide the full-res image view at the beginning.
     [self.scrollView addSubview:self.fullResImageView];
     
-    self.progressView = [[ATLProgressView alloc] initWithFrame:CGRectMake(0, 0, ATLMImageViewControllerProgressViewSize, ATLMImageViewControllerProgressViewSize)];
-    self.progressView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.progressView.alpha = 0.0f;
-    [self.progressView setProgress:0.0f animated:NO];
+    self.progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+    self.progressView.alpha = 0.0;
+    self.progressView.tintColor = ATLBlueColor();
+    self.progressView.trackTintColor = [UIColor clearColor];
     [self.view addSubview:self.progressView];
+    NSLayoutConstraint *constraint;
+    constraint = [NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
+    [self.view addConstraint:constraint];
     
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:(self.navigationController.navigationBar.frame.size.height+ATLMImageViewControllerProgressViewSize/4)/2]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:ATLMImageViewControllerProgressViewSize/2]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:ATLMImageViewControllerProgressViewSize/2]];
-
+    constraint = [NSLayoutConstraint constraintWithItem:self.progressView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+    [self.view addConstraint:constraint];
+    [self.progressView setProgress:0];
+    
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapRecognized:)];
     recognizer.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:recognizer];
 
     UIBarButtonItem *shareBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
     self.navigationItem.rightBarButtonItem = shareBarButtonItem;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     self.navigationItem.leftBarButtonItem = doneButtonItem;
-    
+
     self.title = @"Image";
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.progressView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height - 0.5f, self.view.frame.size.width, 2.0f);
     [super viewWillAppear:animated];
     [self loadLowResImages];
 }
@@ -106,7 +109,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //[self downloadFullResImageIfNeeded];
+    [self downloadFullResImageIfNeeded];
 }
 
 - (void)viewDidLayoutSubviews
@@ -160,7 +163,14 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 
 - (void)done:(id)sender
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    // Removing the full-resolution image to save GPU resources when
+    // animating the view controller POP.
+    self.lowResImageView.hidden = NO;
+    self.lowResImageView.alpha = 1.0f;
+    [self.fullResImageView removeFromSuperview];
+    self.fullResImageView = nil;
+    self.fullResImage = nil;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Helpers
@@ -170,6 +180,11 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
     LYRMessagePart *lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEGPreview);
     LYRMessagePart *imageInfoPart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageSize);
 
+    if (!lowResImagePart) {
+        // Default back to image/jpeg MIMEType
+        lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
+    }
+    
     // Retrieve low-res image from message part
     if (!(lowResImagePart.transferStatus == LYRContentTransferReadyForDownload || lowResImagePart.transferStatus == LYRContentTransferDownloading)) {
         if (lowResImagePart.fileURL) {
@@ -184,8 +199,8 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
     if (imageInfoPart) {
         self.fullResImageSize = ATLImageSizeForJSONData(imageInfoPart.data);
     } else {
-        if (self.fullResImage) {
-            self.fullResImageSize = self.fullResImage.size;
+        if (self.lowResImage) {
+            self.fullResImageSize = self.lowResImage.size;
         } else {
             return;
         }
@@ -200,6 +215,9 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 - (void)loadFullResImages
 {
     LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
+    if (!fullResImagePart) {
+        fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG);
+    }
     
     // Retrieve hi-res image from message part
     if (!(fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
@@ -217,9 +235,7 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
     [UIView animateWithDuration:ATLMImageViewControllerAnimationDuration animations:^{
         self.fullResImageView.alpha = 1.0f; // make the full res image appear.
         self.progressView.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        self.lowResImageView.hidden = YES; // and hide the low-res view, to save resources.
-        self.progressView.hidden = YES;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
     }];
     [self viewDidLayoutSubviews];
 }
@@ -227,17 +243,23 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 - (void)downloadFullResImageIfNeeded
 {
     LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
+    if (!fullResImagePart) {
+        fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG);
+    }
     
     // Download hi-res image from the network
-    if ((fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
+    if (fullResImagePart && (fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
         NSError *error;
-        self.progressView.alpha = 1.0f;
         LYRProgress *downloadProgress = [fullResImagePart downloadContent:&error];
         if (!downloadProgress) {
             NSLog(@"problem downloading full resolution photo with %@", error);
             return;
         }
         downloadProgress.delegate = self;
+        self.title = @"Downloading Image...";
+        [UIView animateWithDuration:ATLMImageViewControllerAnimationDuration animations:^{
+            self.progressView.alpha = 1.0f;
+        }];
     } else {
         [self loadFullResImages];
     }
@@ -253,7 +275,15 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
     availableSize.height -= self.scrollView.contentInset.bottom;
 
     // We don't want to display the image larger than its native size.
-    CGFloat maximumScale = 1 / [[UIScreen mainScreen] scale];
+    CGFloat maximumScale;
+    if ((self.fullResImageSize.width / [[UIScreen mainScreen] scale] < self.view.frame.size.width) &&
+        (self.fullResImageSize.height / [[UIScreen mainScreen] scale] < self.view.frame.size.height)) {
+        // Fallback to default image scale;
+        maximumScale = 1;
+    } else {
+        // Force device scale of the image (1:1 pixel mapping).
+        maximumScale = 1 / [[UIScreen mainScreen] scale];
+    }
 
     // The smallest we want to display the image is the size that it completely fits onscreen.
     CGFloat xFittedScale = availableSize.width / self.fullResImageSize.width;
@@ -298,13 +328,14 @@ static CGFloat const ATLMImageViewControllerProgressViewSize = 128.0f;
 {
     // Queue UI updates onto the main thread, since LYRProgress performs
     // delegate callbacks from a background thread.
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         BOOL progressCompleted = progress.fractionCompleted == 1.0f;
         [self.progressView setProgress:progress.fractionCompleted animated:YES];
         // After transfer completes, remove self for delegation.
         if (progressCompleted) {
             progress.delegate = nil;
-            //[self loadFullResImages];
+            self.title = @"Image Downloaded";
+            [self loadFullResImages];
         }
     });
 }

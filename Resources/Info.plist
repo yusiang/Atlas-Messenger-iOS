@@ -45,13 +45,13 @@
 	<key>LYRBuildInformation</key>
 	<dict>
 		<key>LYRBuildBuilderEmail</key>
-		<string>blake@layer.com</string>
+		<string>klemen.verdnik@gmail.com</string>
 		<key>LYRBuildBuilderName</key>
-		<string>Blake Watters</string>
+		<string>Klemen Verdnik</string>
 		<key>LYRBuildLayerKitVersion</key>
 		<string>0.10.0-pre6</string>
 		<key>LYRBuildShortSha</key>
-		<string>26a4fc9</string>
+		<string>a019163</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location will only be shared in conversations that you choose.</string>
