@@ -266,8 +266,9 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 - (NSAttributedString *)addParticipantAttributedString
 {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"Add Participant"];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:ATLBlueColor() range:NSMakeRange(0, attributedString.length)];
-    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:17]  range:NSMakeRange(0, attributedString.length)];
+    NSRange range = NSMakeRange(0, attributedString.length);
+    [attributedString addAttribute:NSForegroundColorAttributeName value:ATLBlueColor() range:range];
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:17]  range:range];
     return attributedString;
 }
 
@@ -276,11 +277,12 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 - (void)presentParticipantPicker
 {
     self.participantDataSource.excludedIdentifiers = self.conversation.participants;
+    
     ATLMParticipantTableViewController  *controller = [ATLMParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:ATLParticipantPickerSortTypeFirstName];
     controller.delegate = self;
     controller.allowsMultipleSelection = NO;
     
-    UINavigationController *navigationController =[[UINavigationController alloc] initWithRootViewController:controller];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
@@ -306,7 +308,8 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
         NSError *error;
         [self.applicationController.layerClient removePolicy:policy error:&error];
         if (error) {
-            NSLog(@"Falied to remove policy with error: %@", error);
+            ATLMAlertWithError(error);
+            return;
         }
     } else {
         [self blockParticipantWithIdentifier:identifier];
@@ -322,7 +325,8 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     NSError *error;
     [self.applicationController.layerClient addPolicy:blockPolicy error:&error];
     if (error) {
-        NSLog(@"Failed adding policy with error %@", error);
+        ATLMAlertWithError(error);
+        return;
     }
     [SVProgressHUD showSuccessWithStatus:@"Participant Blocked"];
 }
@@ -338,7 +342,8 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     NSError *error;
     [self.conversation removeParticipants:participants error:&error];
     if (error) {
-        NSLog(@"Failed removing participant from conversation with error: %@", error);
+        ATLMAlertWithError(error);
+        return;
     } else {
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
@@ -349,7 +354,8 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     NSError *error;
     [self.conversation delete:LYRDeletionModeAllParticipants error:&error];
     if (error) {
-        NSLog(@"Failed deleting conversation with error: %@", error);
+        ATLMAlertWithError(error);
+        return;
     } else {
         [self.navigationController popToRootViewControllerAnimated:YES];
     }

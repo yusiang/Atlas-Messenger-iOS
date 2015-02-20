@@ -22,7 +22,7 @@
 #import "ATLMPersistenceManager.h"
 
 /**
- @abstract The `ATLMParticipantDataSource` provides and interface for fetching and searching for objects conforming to the `ATLMParticipant` protocol. The object also provides the ability to filter participants via the excluded identifiers property.
+ @abstract The `ATLMParticipantDataSource` provides an interface for fetching and searching for objects conforming to the `ATLMParticipant` protocol. The object also provides the ability to filter participants via the excluded identifiers property.
  */
 @interface ATLMParticipantDataSource : NSObject
 
