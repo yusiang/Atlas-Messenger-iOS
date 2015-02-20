@@ -22,15 +22,14 @@
 #import "ATLMPersistenceManager.h"
 
 /**
- @abstract Data source for the `ATLMParticipantTableViewController`. Supplies a list of objects conforming to the `ATLMParticipant`
- protocol to the picker.
+ @abstract The `ATLMParticipantDataSource` provides and interface for fetching and searching for objects conforming to the `ATLMParticipant` protocol. The object also provides the ability to filter participants via the excluded identifiers property.
  */
 @interface ATLMParticipantDataSource : NSObject
 
 /**
  @abstract Designated initializer for the receiver. Calling `init` will raise NSInternalInconsistencyException.
  */
-+ (instancetype)participantPickerDataSourceWithPersistenceManager:(ATLMPersistenceManager *)persistenceManager;
++ (instancetype)participantDataSourceWithPersistenceManager:(ATLMPersistenceManager *)persistenceManager;
 
 /**
  @abstract A set of participants conforming to the `ATLMParticipant` protocol.
@@ -42,6 +41,11 @@
  @discussion Typically this will be the set of identifiers for a given conversation.
  */
 @property (nonatomic) NSSet *excludedIdentifiers;
+
+/**
+ @abstract Queries the reciever for a user with a `participantIdentifier` matching the supplied identifier, if one exists.
+ */
+- (id<ATLParticipant>)participantForIdentifier:(NSString *)identifier;
 
 /**
  @abstract Searches for participants matching the provided search text.

@@ -52,20 +52,6 @@ extern NSString *const ATLMConversationMetadataNameKey;
 @end
 
 /**
- @abstract The `ATLMConversationDetailViewControllerDataSource` supplies information to be displayed within the controller.
- */
-@protocol ATLMConversationDetailViewControllerDataSource <NSObject>
-
-/**
- @abstract Requests an object conforming to `ATLMParticipant` for a given identifier.
- @param conversationDetailViewController The `ATLMConversationDetailViewController` requesting the object.
- @param participantIdentifier An `NSString` object representing a participant.
- */
-- (id<ATLParticipant>)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier;
-
-@end
-
-/**
  @abstract The `ATLMConversationDetailViewController` presents a user interface that displays information about a given
  conversation. It also provides for adding/removing participants to/from a conversation and sharing the user's location.
  */
@@ -83,18 +69,8 @@ extern NSString *const ATLMConversationMetadataNameKey;
 @property (nonatomic) id<ATLMConversationDetailViewControllerDelegate> detailDelegate;
 
 /**
- @abstract The `ATLMConversationDetailViewControllerDataSource` object for the controller.
- */
-@property (nonatomic) id<ATLMConversationDetailViewControllerDataSource> detailDataSource;
-
-/**
  @abstract The controller object for the application.
  */
 @property (nonatomic) ATLMApplicationController *applicationController;
-
-/**
- @abstract Boolean value that determines whether adding/removing participants affects the conversation itself (`YES`) or switches to a different conversation (`NO`).
- */
-@property (nonatomic) BOOL changingParticipantsMutatesConversation;
 
 @end

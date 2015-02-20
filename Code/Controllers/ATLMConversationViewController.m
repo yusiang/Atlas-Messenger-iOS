@@ -124,7 +124,7 @@ static ATLMDateProximity ATLMProximityToDate(NSDate *date)
     return ATLMDateProximityOther;
 }
 
-@interface ATLMConversationViewController () <ATLMConversationDetailViewControllerDelegate, ATLMConversationDetailViewControllerDataSource, ATLAddressBarControllerDataSource, ATLParticipantTableViewControllerDelegate>
+@interface ATLMConversationViewController () <ATLMConversationDetailViewControllerDelegate, ATLAddressBarControllerDataSource, ATLParticipantTableViewControllerDelegate>
 
 @property (nonatomic) ATLMParticipantDataSource *participantDataSource;
 
@@ -150,7 +150,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [self registerForNotifications];
     [self configureUserInterfaceAttributes];
     
-    self.participantDataSource = [ATLMParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.participantDataSource.excludedIdentifiers = [NSSet setWithObject:self.layerClient.authenticatedUserID];
 }
 
@@ -344,8 +344,6 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 {
     NSMutableSet *excludedIdentifiers = [self.participantDataSource.excludedIdentifiers mutableCopy];
     [excludedIdentifiers addObjectsFromArray:[[addressBarViewController.selectedParticipants valueForKey:@"participantIdentifier"] allObjects]];
-
-    self.participantDataSource = [ATLMParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.participantDataSource.excludedIdentifiers = excludedIdentifiers;
     
     ATLMParticipantTableViewController  *controller = [ATLMParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:ATLParticipantPickerSortTypeFirstName];
@@ -395,7 +393,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 - (id<ATLParticipant>)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
 {
-    return [self.dataSource conversationViewController:self participantForIdentifier:participantIdentifier];
+    return [self.participantDataSource participantForIdentifier:participantIdentifier];
 }
 
 #pragma mark - LSConversationDetailViewControllerDelegate
@@ -430,7 +428,6 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 {
     ATLMConversationDetailViewController *detailViewController = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
     detailViewController.detailDelegate = self;
-    detailViewController.detailDataSource = self;
     detailViewController.applicationController = self.applicationController;
     [self.navigationController pushViewController:detailViewController animated:YES];
 }
@@ -470,7 +467,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     if (otherParticipantIDs.count == 0) return @"Personal";
     if (otherParticipantIDs.count == 1) {
         NSString *otherParticipantID = [otherParticipantIDs anyObject];
-        id<ATLParticipant> participant = [self.dataSource conversationViewController:self participantForIdentifier:otherParticipantID];
+        id<ATLParticipant> participant = [self conversationViewController:self participantForIdentifier:otherParticipantID];
         return participant ? participant.firstName : @"Unknown";
     }
     return @"Group";
