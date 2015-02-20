@@ -372,6 +372,11 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     }];
 }
 
+- (void)addressBarViewControllerDidSelectWhileDisabled:(ATLAddressBarViewController *)addressBarViewController
+{
+    [self detailsButtonTapped];
+}
+
 #pragma mark - ATLParticipantTableViewControllerDelegate
 
 - (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<ATLParticipant>)participant

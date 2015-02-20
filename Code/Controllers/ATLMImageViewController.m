@@ -19,7 +19,7 @@
 //
 
 #import "ATLMImageViewController.h"
-#import <Atlas.h>
+#import <Atlas/Atlas.h>
 
 static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
 static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
