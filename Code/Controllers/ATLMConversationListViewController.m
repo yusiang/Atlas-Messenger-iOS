@@ -167,9 +167,10 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
     }
 
     ATLMConversationViewController *conversationViewController = [ATLMConversationViewController conversationViewControllerWithLayerClient:self.applicationController.layerClient];
-    conversationViewController.conversation = conversation;
     conversationViewController.applicationController = self.applicationController;
     conversationViewController.displaysAddressBar = YES;
+    conversationViewController.conversation = conversation;
+    
     if (self.navigationController.topViewController == self) {
         [self.navigationController pushViewController:conversationViewController animated:YES];
     } else {
