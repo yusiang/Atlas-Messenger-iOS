@@ -20,6 +20,7 @@
 
 #import <Atlas/Atlas.h>
 #import "ATLMApplicationController.h"
+#import "SVProgressHUD.h"
 
 /**
  @abstract Subclass of the `ATLMConversationListViewController`. Presents a list of conversations in time series order.

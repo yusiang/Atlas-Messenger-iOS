@@ -19,7 +19,6 @@
 //
 
 #import "ATLMConversationListViewController.h"
-#import "SVProgressHUD.h"
 #import "ATLMUser.h"
 #import "ATLMConversationViewController.h"
 #import "ATLMSettingsViewController.h"
