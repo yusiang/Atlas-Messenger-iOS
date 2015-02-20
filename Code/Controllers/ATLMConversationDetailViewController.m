@@ -263,11 +263,6 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
-- (void)configureCenterTextCell:(ATLMCenterTextTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
-
 - (NSAttributedString *)addParticipantAttributedString
 {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"Add Participant"];
@@ -334,7 +329,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 
 - (void)shareLocation
 {
-    
+    //TODO - Implement
 }
 
 - (void)leaveConversation
