@@ -238,6 +238,11 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
  */
 - (NSAttributedString *)conversationViewController:(ATLConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
+    // No Read Receipts if group conversation.
+    if (recipientStatus.count > 2) {
+        return [NSMutableAttributedString new];
+    }
+    
     __block BOOL allSent = YES;
     __block BOOL allDelivered = YES;
     __block BOOL allRead = YES;
