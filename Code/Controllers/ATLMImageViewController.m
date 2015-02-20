@@ -112,16 +112,6 @@ static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
     [self downloadFullResImageIfNeeded];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
-
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
