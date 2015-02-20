@@ -166,9 +166,10 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
         return;
     }
 
+    BOOL shouldShowAddressBar = (conversation.participants.count > 2 || !conversation.participants.count);
     ATLMConversationViewController *conversationViewController = [ATLMConversationViewController conversationViewControllerWithLayerClient:self.applicationController.layerClient];
     conversationViewController.applicationController = self.applicationController;
-    conversationViewController.displaysAddressBar = YES;
+    conversationViewController.displaysAddressBar = shouldShowAddressBar;
     conversationViewController.conversation = conversation;
     
     if (self.navigationController.topViewController == self) {
