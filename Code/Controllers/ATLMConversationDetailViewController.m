@@ -35,10 +35,11 @@ typedef NS_ENUM(NSInteger, ATLMConversationDetailTableSection) {
     ATLMConversationDetailTableSectionCount,
 };
 
-@interface ATLMConversationDetailViewController () <ATLParticipantTableViewControllerDelegate, UITextFieldDelegate>
+@interface ATLMConversationDetailViewController () <ATLParticipantTableViewControllerDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) NSMutableArray *participantIdentifiers;
+@property (nonatomic) NSIndexPath *indexPathToRemove;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) ATLMParticipantDataSource *participantDataSource;
 
@@ -196,7 +197,10 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // TODO - Handle on iOS 7
+    self.indexPathToRemove = indexPath;
+    NSString *blockString = [self blockedParticipantAtIndexPath:indexPath] ? @"Unblock" : @"Block";
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles:blockString, nil];
+    [actionSheet showInView:self.view];
 }
 
 
@@ -270,6 +274,20 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     [attributedString addAttribute:NSForegroundColorAttributeName value:ATLBlueColor() range:range];
     [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:17]  range:range];
     return attributedString;
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        [self removeParticipantAtIndexPath:self.indexPathToRemove];
+    } else if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+        [self blockParticipantAtIndexPath:self.indexPathToRemove];
+    } else if (buttonIndex == actionSheet.cancelButtonIndex) {
+        [self setEditing:NO animated:YES];
+    }
+    self.indexPathToRemove = nil;
 }
 
 #pragma mark - Actions
