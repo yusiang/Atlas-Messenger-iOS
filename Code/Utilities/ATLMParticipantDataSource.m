@@ -28,7 +28,7 @@
 
 @implementation ATLMParticipantDataSource
 
-+ (instancetype)participantPickerDataSourceWithPersistenceManager:(ATLMPersistenceManager *)persistenceManager
++ (instancetype)participantDataSourceWithPersistenceManager:(ATLMPersistenceManager *)persistenceManager
 {
     return [[self alloc] initWithPersistenceManager:persistenceManager];
 }
@@ -48,6 +48,14 @@
 }
 
 #pragma mark - LYRUIParticipantPickerDataSource
+
+- (id<ATLParticipant>)participantForIdentifier:(NSString *)identifier
+{
+    if ([self.excludedIdentifiers containsObject:identifier]) {
+        return nil;
+    }
+    return [self.persistenceManager userForIdentifier:identifier];
+}
 
 - (void)participantsMatchingSearchText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {

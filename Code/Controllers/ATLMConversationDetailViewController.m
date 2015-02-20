@@ -74,8 +74,6 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 {
     [super viewDidLoad];
     self.title = ATLMConversationDetailViewControllerTitle;
-    [self configureForConversation];
-    
     self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
     self.tableView.rowHeight = 48.0f;
@@ -84,17 +82,12 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     [self.tableView registerClass:[ATLMInputTableViewCell class] forCellReuseIdentifier:ATLMInputCellIdentifier];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:ATLMDefaultCellIdentifier];
     
+    self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
+    [self.participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
+    
+    [self registerNotificationObservers];
     [self configureAppearance];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(conversationMetadataDidChange:)
-                                                 name:ATLMConversationMetadataDidChangeNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(conversationParticipantsDidChange:)
-                                                 name:ATLMConversationParticipantsDidChangeNotification
-                                               object:nil];
 }
 
 - (void)dealloc
@@ -111,12 +104,12 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch ((ATLMConversationDetailTableSection)section) {
+    switch (section) {
         case ATLMConversationDetailTableSectionMetadata:
             return 1;
             
         case ATLMConversationDetailTableSectionParticipants:
-            return self.participantIdentifiers.count + 1;
+            return self.participantIdentifiers.count + 1; // Add a row for the `Add Participant` cell.
             
         case ATLMConversationDetailTableSectionLocation:
             return 1;
@@ -131,7 +124,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch ((ATLMConversationDetailTableSection)indexPath.section) {
+    switch (indexPath.section) {
         case ATLMConversationDetailTableSectionMetadata: {
             ATLMInputTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:ATLMInputCellIdentifier forIndexPath:indexPath];
             [self configureConversationNameCell:cell];
@@ -140,14 +133,8 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
             
         case ATLMConversationDetailTableSectionParticipants:
             if (indexPath.row < self.participantIdentifiers.count) {
-                NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
-                id<ATLParticipant>participant = [self.detailDataSource conversationDetailViewController:self participantForIdentifier:participantIdentifier];
                 ATLParticipantTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:ATLMParticipantCellIdentifier forIndexPath:indexPath];
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                if ([self blockedParticipantAtIndexPath:indexPath]) {
-                    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"AtlasResource.bundle/block"]];
-                }
-                [cell presentParticipant:participant withSortType:ATLParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES];
+                [self configureParticipantCell:cell atIndexPath:indexPath];
                 return cell;
             } else {
                 UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:ATLMDefaultCellIdentifier forIndexPath:indexPath];
@@ -168,21 +155,13 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
         case ATLMConversationDetailTableSectionLeave: {
             ATLMCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:ATLMCenterContentCellIdentifier];
             cell.centerTextLabel.textColor = ATLRedColor();
-            cell.centerTextLabel.text = @"Leave Conversation";
+            cell.centerTextLabel.text = self.conversation.participants.count > 2 ? @"Leave Conversation" : @"Delete Conversation";
             return cell;
         }
             
         default:
             return nil;
     }
-}
-
-- (NSAttributedString *)addParticipantAttributedString
-{
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"Add Participant"];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:ATLBlueColor() range:NSMakeRange(0, attributedString.length)];
-    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:17]  range:NSMakeRange(0, attributedString.length)];
-    return attributedString;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -205,7 +184,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == ATLMConversationDetailTableSectionParticipants) {
-    // Prevent removal in 1 to 1 conversations.
+        // Prevent removal in 1 to 1 conversations.
         if (self.conversation.participants.count < 3) {
             return NO;
         }
@@ -213,6 +192,36 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
         return canEdit;
     }
     return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // TODO - Handle on iOS 7
+}
+
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch ((ATLMConversationDetailTableSection)indexPath.section) {
+        case ATLMConversationDetailTableSectionParticipants:
+            if (indexPath.row == self.participantIdentifiers.count) {
+                [self presentParticipantPicker];
+            }
+            break;
+            
+        case ATLMConversationDetailTableSectionLocation:
+            [self shareLocation];
+            break;
+            
+        case ATLMConversationDetailTableSectionLeave:
+            self.conversation.participants.count > 2 ? [self leaveConversation] : [self deleteConversation];
+            break;
+            
+        default:
+            break;
+    }
 }
 
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -230,26 +239,63 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     return @[removeAction, blockAction];
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark - Cell Configuration
+
+- (void)configureConversationNameCell:(ATLMInputTableViewCell *)cell
 {
-    // TODO - Handle on iOS 7
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.textField.delegate = self;
+    cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    cell.guideText = @"Name:";
+    cell.placeHolderText = @"Enter Conversation Name";
+    NSString *conversationName = [self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey];
+    cell.textField.text = conversationName;
+}
+
+- (void)configureParticipantCell:(ATLParticipantTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
+    id<ATLParticipant> participant = [self.participantDataSource participantForIdentifier:participantIdentifier];
+    if ([self blockedParticipantAtIndexPath:indexPath]) {
+        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"AtlasResource.bundle/block"]];
+    }
+    [cell presentParticipant:participant withSortType:ATLParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+- (NSAttributedString *)addParticipantAttributedString
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"Add Participant"];
+    NSRange range = NSMakeRange(0, attributedString.length);
+    [attributedString addAttribute:NSForegroundColorAttributeName value:ATLBlueColor() range:range];
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:17]  range:range];
+    return attributedString;
+}
+
+#pragma mark - Actions
+
+- (void)presentParticipantPicker
+{
+    self.participantDataSource.excludedIdentifiers = self.conversation.participants;
+    
+    ATLMParticipantTableViewController  *controller = [ATLMParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:ATLParticipantPickerSortTypeFirstName];
+    controller.delegate = self;
+    controller.allowsMultipleSelection = NO;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)removeParticipantAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *participantIdentifier = self.participantIdentifiers[indexPath.row];
-    if (self.changingParticipantsMutatesConversation) {
-        NSError *error;
-        BOOL success = [self.conversation removeParticipants:[NSSet setWithObject:participantIdentifier] error:&error];
-        if (!success) {
-            ATLMAlertWithError(error);
-            return;
-        }
-        [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
-    } else {
-        [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
-        [self switchToConversationForParticipants];
+    NSError *error;
+    BOOL success = [self.conversation removeParticipants:[NSSet setWithObject:participantIdentifier] error:&error];
+    if (!success) {
+        ATLMAlertWithError(error);
+        return;
     }
+    [self.participantIdentifiers removeObjectAtIndex:indexPath.row];
     [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
 }
 
@@ -262,7 +308,8 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
         NSError *error;
         [self.applicationController.layerClient removePolicy:policy error:&error];
         if (error) {
-            NSLog(@"Falied to remove policy with error: %@", error);
+            ATLMAlertWithError(error);
+            return;
         }
     } else {
         [self blockParticipantWithIdentifier:identifier];
@@ -278,52 +325,15 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     NSError *error;
     [self.applicationController.layerClient addPolicy:blockPolicy error:&error];
     if (error) {
-        NSLog(@"Failed adding policy with error %@", error);
+        ATLMAlertWithError(error);
+        return;
     }
     [SVProgressHUD showSuccessWithStatus:@"Participant Blocked"];
 }
 
-#pragma mark - UITableViewDelegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    switch ((ATLMConversationDetailTableSection)indexPath.section) {
-        case ATLMConversationDetailTableSectionParticipants:
-            if (indexPath.row == self.participantIdentifiers.count) {
-                [self chooseParticipantToAdd];
-            }
-            break;
-            
-        case ATLMConversationDetailTableSectionLocation:
-            [self shareLocation];
-            break;
-            
-        case ATLMConversationDetailTableSectionLeave:
-            [self leaveConversation];
-            break;
-            
-        default:
-            break;
-    }
-}
-
-#pragma mark - Actions
-
 - (void)shareLocation
 {
-    
-}
-
-- (void)chooseParticipantToAdd
-{
-    self.participantDataSource = [ATLMParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
-    self.participantDataSource.excludedIdentifiers = self.conversation.participants;
-    ATLMParticipantTableViewController  *controller = [ATLMParticipantTableViewController participantTableViewControllerWithParticipants:self.participantDataSource.participants sortType:ATLParticipantPickerSortTypeFirstName];
-    controller.delegate = self;
-    controller.allowsMultipleSelection = NO;
-    
-    UINavigationController *navigationController =[[UINavigationController alloc] initWithRootViewController:controller];
-    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+    //TODO - Implement
 }
 
 - (void)leaveConversation
@@ -332,7 +342,20 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     NSError *error;
     [self.conversation removeParticipants:participants error:&error];
     if (error) {
-        NSLog(@"Failed removing participant from conversation with error: %@", error);
+        ATLMAlertWithError(error);
+        return;
+    } else {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+}
+
+- (void)deleteConversation
+{
+    NSError *error;
+    [self.conversation delete:LYRDeletionModeAllParticipants error:&error];
+    if (error) {
+        ATLMAlertWithError(error);
+        return;
     } else {
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
@@ -343,24 +366,18 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 - (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<ATLParticipant>)participant
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    self.participantDataSource = nil;
+    self.participantDataSource.excludedIdentifiers = nil;
     
-    if ([self.participantIdentifiers containsObject:participant.participantIdentifier]) return;
-    
-    NSString *authenticatedUserID = self.applicationController.layerClient.authenticatedUserID;
-    if ([participant.participantIdentifier isEqualToString:authenticatedUserID]) return;
-    
-    if (self.changingParticipantsMutatesConversation) {
+    [self.participantIdentifiers addObject:participant.participantIdentifier];
+    if (self.conversation.participants.count < 3) {
+        [self switchToConversationForParticipants];
+    } else {
         NSError *error;
         BOOL success = [self.conversation addParticipants:[NSSet setWithObject:participant.participantIdentifier] error:&error];
         if (!success) {
             ATLMAlertWithError(error);
             return;
         }
-        [self.participantIdentifiers addObject:participant.participantIdentifier];
-    } else {
-        [self.participantIdentifiers addObject:participant.participantIdentifier];
-        [self switchToConversationForParticipants];
     }
     [self.tableView reloadData];
 }
@@ -383,18 +400,6 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     }
     [self.detailDelegate conversationDetailViewController:self didChangeConversation:conversation];
     self.conversation = conversation;
-    
-    NSIndexPath *nameIndexPath = [NSIndexPath indexPathForRow:0 inSection:ATLMConversationDetailTableSectionMetadata];
-    ATLMInputTableViewCell *nameCell = (ATLMInputTableViewCell *)[self.tableView cellForRowAtIndexPath:nameIndexPath];
-    if (nameCell) {
-        [self configureConversationNameCell:nameCell];
-    }
-}
-
-- (void)configureForConversation
-{
-    self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
-    [self.participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
 }
 
 - (LYRPolicy *)blockedParticipantAtIndexPath:(NSIndexPath *)indexPath
@@ -473,11 +478,8 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
         [insertedIndexPaths addObject:indexPath];
     }
     [self.tableView insertRowsAtIndexPaths:insertedIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
-    
     [self.tableView endUpdates];
 }
-
-#pragma mark - Cell Configuration
 
 - (void)configureAppearance
 {
@@ -487,15 +489,10 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     [[ATLAvatarImageView appearanceWhenContainedIn:[ATLParticipantTableViewCell class], nil] setAvatarImageViewDiameter:32];
 }
 
-- (void)configureConversationNameCell:(ATLMInputTableViewCell *)cell
+- (void)registerNotificationObservers
 {
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textField.delegate = self;
-    cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    [cell setGuideText:@"Name:"];
-    [cell setPlaceHolderText:@"Enter Conversation Name"];
-    NSString *conversationName = [self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey];
-    cell.textField.text = conversationName;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationMetadataDidChange:) name:ATLMConversationMetadataDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationParticipantsDidChange:) name:ATLMConversationParticipantsDidChangeNotification object:nil];
 }
 
 @end

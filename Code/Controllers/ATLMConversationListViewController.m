@@ -60,7 +60,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
     composeButton.accessibilityLabel = ATLMComposeButtonAccessibilityLabel;
     [self.navigationItem setRightBarButtonItem:composeButton];
 
-    self.participantDataSource = [ATLMParticipantDataSource participantPickerDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
+    self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationDeleted:) name:ATLMConversationDeletedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationParticipantsDidChange:) name:ATLMConversationParticipantsDidChangeNotification object:nil];
