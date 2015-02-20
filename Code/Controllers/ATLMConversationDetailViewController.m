@@ -246,8 +246,8 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textField.delegate = self;
     cell.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    [cell setGuideText:@"Name:"];
-    [cell setPlaceHolderText:@"Enter Conversation Name"];
+    cell.guideText = @"Name:";
+    cell.placeHolderText = @"Enter Conversation Name";
     NSString *conversationName = [self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey];
     cell.textField.text = conversationName;
 }
@@ -255,7 +255,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 - (void)configureParticipantCell:(ATLParticipantTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
-    id<ATLParticipant>participant = [self.participantDataSource participantForIdentifier:participantIdentifier];
+    id<ATLParticipant> participant = [self.participantDataSource participantForIdentifier:participantIdentifier];
     if ([self blockedParticipantAtIndexPath:indexPath]) {
         cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"AtlasResource.bundle/block"]];
     }
