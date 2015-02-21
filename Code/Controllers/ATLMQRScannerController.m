@@ -34,11 +34,12 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     [self setupOverlay];
     [self startStopReading];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(taste)];
-    [self.view addGestureRecognizer:tap];
+    UITapGestureRecognizer *testTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(testTap)];
+    [self.view addGestureRecognizer:testTap];
 }
 
-- (void)taste
+// TODO - Remove Prior to launch
+- (void)testTap
 {
     [self setupLayerWithAppID:@"56002530-b7cf-11e4-a62c-2d571000725e"];
 }
