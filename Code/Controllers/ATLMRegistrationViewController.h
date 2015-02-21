@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ATLMApplicationController.h"
 
-@interface LSRegistrationViewController : UIViewController
+@interface ATLMRegistrationViewController : UIViewController
 
 @property (nonatomic) NSString *applicationID;
 

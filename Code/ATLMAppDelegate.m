@@ -30,7 +30,7 @@
 #import "ATLMAPIManager.h"
 #import "ATLMSplashView.h"
 #import "SVProgressHUD.h"
-#import "LSQRCodeScannerController.h"
+#import "ATLMQRScannerController.h"
 #import "ATLMUtilities.h"
 
 // Private code for testing. Remove for release.
@@ -52,7 +52,7 @@ void ATLMTestResetConfiguration(void)
 
 @interface ATLMAppDelegate () <MFMailComposeViewControllerDelegate>
 
-@property (nonatomic) LSQRCodeScannerController *scannerController;
+@property (nonatomic) ATLMQRScannerController *scannerController;
 @property (nonatomic) UINavigationController *navigationController;
 @property (nonatomic) ATLMConversationListViewController *conversationListViewController;
 @property (nonatomic) ATLMSplashView *splashView;
@@ -119,7 +119,7 @@ void ATLMTestResetConfiguration(void)
 
 - (void)configureWindow
 {
-    self.scannerController = [LSQRCodeScannerController new];
+    self.scannerController = [ATLMQRScannerController new];
     self.scannerController.applicationController = self.applicationController;
     
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.scannerController];
@@ -325,36 +325,38 @@ void ATLMTestResetConfiguration(void)
         ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:layerClient];
         self.applicationController.layerClient = layerClient;
         self.applicationController.APIManager = manager;
+        [self attemptToResumeSession];
     }
-    
-    if (self.applicationController.layerClient) {
-        // Connect to Layer and boot the UI
-        BOOL deauthenticateAfterConnection = NO;
-        BOOL resumingSession = NO;
-        if (self.applicationController.layerClient.authenticatedUserID) {
-            if ([self resumeSession]) {
-                resumingSession = YES;
-                [self presentConversationsListViewController:YES];
-            } else {
-                deauthenticateAfterConnection = YES;
-            }
+}
+
+- (void)attemptToResumeSession
+{
+    // Connect to Layer and boot the UI
+    BOOL deauthenticateAfterConnection = NO;
+    BOOL resumingSession = NO;
+    if (self.applicationController.layerClient.authenticatedUserID) {
+        if ([self resumeSession]) {
+            resumingSession = YES;
+            [self presentConversationsListViewController:YES];
+        } else {
+            deauthenticateAfterConnection = YES;
         }
-        
-        // Connect Layer SDK
-        [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-            if (success) {
-                NSLog(@"Layer Client is connected");
-                if (deauthenticateAfterConnection) {
-                    [self.applicationController.layerClient deauthenticateWithCompletion:nil];
-                }
-            } else {
-                NSLog(@"Error connecting Layer: %@", error);
-            }
-            if (!resumingSession) {
-                [self removeSplashView];
-            }
-        }];
     }
+
+    // Connect Layer SDK
+    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            NSLog(@"Layer Client is connected");
+            if (deauthenticateAfterConnection) {
+                [self.applicationController.layerClient deauthenticateWithCompletion:nil];
+            }
+        } else {
+            NSLog(@"Error connecting Layer: %@", error);
+        }
+        if (!resumingSession) {
+            [self removeSplashView];
+        }
+    }];
 }
 
 @end

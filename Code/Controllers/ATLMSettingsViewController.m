@@ -24,6 +24,7 @@
 #import "ATLMSettingsHeaderView.h"
 #import "ATLMCenterTextTableViewCell.h"
 #import "ATLMStyleValue1TableViewCell.h"
+#import "ATLLogoView.h"
 
 typedef NS_ENUM(NSInteger, ATLMSettingsTableSection) {
     ATLMSettingsTableSectionInfo,
@@ -101,6 +102,7 @@ NSString *const ATLMConnecting = @"Connecting";
     self.tableView.tableHeaderView = self.headerView;
     self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
+    self.tableView.tableFooterView = [ATLLogoView new];
     self.tableView.rowHeight = 44.0f;
     self.tableView.accessibilityIdentifier = ATLMSettingsTableViewAccessibilityIdentifier;
     
@@ -217,9 +219,6 @@ NSString *const ATLMConnecting = @"Connecting";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    if (section == ATLMSettingsTableSectionLogout) {
-        return 100;
-    }
     return 0;
 }
 

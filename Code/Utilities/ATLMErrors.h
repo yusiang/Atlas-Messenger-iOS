@@ -32,5 +32,7 @@ typedef NS_ENUM(NSUInteger, ATLMAuthenticationError) {
     ATLMInvalidPassword                               = 7004,
     ATLMInvalidAuthenticationNonce                    = 7005,
     ATLMNoAuthenticatedSession                        = 7006,
-    ATLMRequestInProgress                             = 7007
+    ATLMRequestInProgress                             = 7007,
+    ATLMInvalidAppIDString                            = 7008,
+    ATLMInvalidAppID                                  = 7009,
 };

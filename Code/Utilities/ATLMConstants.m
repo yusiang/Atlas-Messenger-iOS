@@ -6,9 +6,14 @@
 //  Copyright (c) 2015 Layer, Inc. All rights reserved.
 //
 
-#import "ASConstants.h"
+#import "ATLMConstants.h"
 
-UIFont *ATLUltraLightFont(CGFloat size)
+UIFont *ATLMUltraLightFont(CGFloat size)
 {
     return [UIFont fontWithName:@"AvenirNext-UltraLight" size:size];
+}
+
+UIFont *ATLMLightFont(CGFloat size)
+{
+    return [UIFont fontWithName:@"AvenirNext-Regular" size:size];
 }

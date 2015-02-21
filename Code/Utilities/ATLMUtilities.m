@@ -45,7 +45,7 @@ ATLMPersistenceManager *ATLMPersitenceManager(void)
     return [ATLMPersistenceManager persistenceManagerWithStoreAtPath:[ATLMApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
 }
 
-void ATLMAlertWithError(NSError *error)
+UIAlertView *ATLMAlertWithError(NSError *error)
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Unexpected Error"
                                                         message:error.localizedDescription
@@ -53,4 +53,5 @@ void ATLMAlertWithError(NSError *error)
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
     [alertView show];
+    return alertView;
 }

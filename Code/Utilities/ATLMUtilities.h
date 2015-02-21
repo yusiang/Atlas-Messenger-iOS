@@ -30,4 +30,4 @@ NSString *ATLMApplicationDataDirectory();
 
 ATLMPersistenceManager *ATLMPersitenceManager();
 
-void ATLMAlertWithError(NSError *error);
+UIAlertView *ATLMAlertWithError(NSError *error);

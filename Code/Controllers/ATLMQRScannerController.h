@@ -11,7 +11,7 @@
 
 extern NSString *const ATLMDidReceiveLayerAppID;
 
-@interface LSQRCodeScannerController : UIViewController
+@interface ATLMQRScannerController : UIViewController
 
 @property (nonatomic) ATLMApplicationController *applicationController;
 

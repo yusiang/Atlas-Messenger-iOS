@@ -8,7 +8,7 @@
 
 #import "ATLLogoView.h"
 #import <Atlas/Atlas.h> 
-#import "ASConstants.h"
+#import "ATLMConstants.h"
 
 @interface ATLLogoView ()
 
@@ -20,13 +20,16 @@
 
 @implementation ATLLogoView
 
+CGFloat const ATLMLogoSize = 18;
+CGFloat const ATLMLogoLeftPadding = 4;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         
         NSMutableAttributedString *atlasString = [[NSMutableAttributedString alloc] initWithString:@"ATLAS"];
-        [atlasString addAttribute:NSFontAttributeName value:ATLUltraLightFont(52) range:NSMakeRange(0, atlasString.length)];
+        [atlasString addAttribute:NSFontAttributeName value:ATLMUltraLightFont(48) range:NSMakeRange(0, atlasString.length)];
         [atlasString addAttribute:NSForegroundColorAttributeName value:ATLBlueColor() range:NSMakeRange(0, atlasString.length)];
         [atlasString addAttribute:NSKernAttributeName value:@(15.0) range:NSMakeRange(0, atlasString.length)];
         
@@ -38,7 +41,7 @@
         
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"Powered By "];
         [attributedString addAttribute:NSForegroundColorAttributeName value:ATLGrayColor() range:NSMakeRange(0, attributedString.length)];
-        [attributedString addAttribute:NSFontAttributeName value:ATLLightFont(16) range:NSMakeRange(0, attributedString.length)];
+        [attributedString addAttribute:NSFontAttributeName value:ATLLightFont(9) range:NSMakeRange(0, attributedString.length)];
         
         _poweredByLabel = [[UILabel alloc] init];
         _poweredByLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -48,7 +51,7 @@
         
         _logoImageView = [[UIImageView alloc] init];
         _logoImageView.translatesAutoresizingMaskIntoConstraints = NO;
-        _logoImageView.image = [UIImage imageNamed:@"logo-gray"];
+        _logoImageView.image = [UIImage imageNamed:@"layer-logo-gray"];
         [self addSubview:_logoImageView];
         
         [self configureLayoutConstraints];
@@ -63,16 +66,15 @@
 
 - (void)configureLayoutConstraints
 {
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.atlasLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.atlasLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:10]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:_atlasLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:_atlasLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:10]];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.poweredByLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:-16]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.poweredByLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.atlasLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10]];
+    CGFloat poweredByLabelOffset = (ATLMLogoSize + ATLMLogoLeftPadding) / ATLMLogoLeftPadding;
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:_poweredByLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:-poweredByLabelOffset]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:_poweredByLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_atlasLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10]];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:28]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:28]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImageView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.poweredByLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:4]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.poweredByLabel attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:_logoImageView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_poweredByLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:ATLMLogoLeftPadding]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:_logoImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:_poweredByLabel attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
 }
 
 @end
