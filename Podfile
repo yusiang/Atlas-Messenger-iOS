@@ -1,13 +1,9 @@
-source 'git@github.com:layerhq/cocoapods-specs.git'
+platform :ios, '7.0'
 source 'https://github.com/CocoaPods/Specs.git'
-
-dropbox_path = ENV['LAYER_DROPBOX_PATH'] || '~/Dropbox (Layer)'
 
 target 'Atlas Messenger' do
   pod 'SVProgressHUD', :head
-  pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
-  #pod 'LayerKit', path: "#{dropbox_path}/Layer/Builds/iOS/LayerKit-0.10.0-rc1"
-  pod 'LayerIdentity', git: 'git@github.com:layerhq/layer-identity-ios'
+  pod 'LayerKit', '~> 0.10.0'
   pod 'Atlas', path: 'Libraries/Atlas'
 end
 
