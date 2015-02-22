@@ -13,17 +13,11 @@
 		0A0C244619477D8F00401B74 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C244519477D8F00401B74 /* XCTest.framework */; };
 		0A0C244719477D8F00401B74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242619477D8F00401B74 /* Foundation.framework */; };
 		0A0C244819477D8F00401B74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242A19477D8F00401B74 /* UIKit.framework */; };
-		0A27A9431997FD210070BD4F /* logout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9421997FD210070BD4F /* logout@2x.png */; };
-		0A27A9451997FE110070BD4F /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A27A9441997FE110070BD4F /* back@2x.png */; };
 		0A43B1D319D34CDD00AE8FA6 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */; };
 		0A605F3119BF735D00D773AF /* logo-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F2F19BF735D00D773AF /* logo-icon@2x.png */; };
 		0A605F3219BF735D00D773AF /* logo-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3019BF735D00D773AF /* logo-icon.png */; };
 		0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3319BF744600D773AF /* logo-icon-blue@2x.png */; };
 		0A605F3619BF744600D773AF /* logo-icon-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3419BF744600D773AF /* logo-icon-blue.png */; };
-		0A7023C219BE4C84004FF43E /* selection-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023BE19BE4C84004FF43E /* selection-indicator.png */; };
-		0A7023C319BE4C84004FF43E /* unselected-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023BF19BE4C84004FF43E /* unselected-indicator.png */; };
-		0A7023C419BE4C84004FF43E /* selection-indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023C019BE4C84004FF43E /* selection-indicator@2x.png */; };
-		0A7023C519BE4C84004FF43E /* unselected-indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A7023C119BE4C84004FF43E /* unselected-indicator@2x.png */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
 		0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C71947C86B0083732B /* CoreLocation.framework */; };
@@ -36,7 +30,6 @@
 		0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B519BD4CFA005142ED /* more@2x.png */; };
 		0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B719BD4CFA005142ED /* compose@2x.png */; };
 		0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B819BD4CFA005142ED /* compose.png */; };
-		0AD6C4C219BD4D3C005142ED /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4C119BD4D3C005142ED /* background@2x.png */; };
 		0AFE3FE419B0E19C00FCA264 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57311950EB76000E27B0 /* main.m */; };
 		251D8DC01A9688C50000BFA2 /* ATLMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */; };
 		251D8DC11A9688C50000BFA2 /* ATLMAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D881A9688C40000BFA2 /* ATLMAPIManager.m */; };
@@ -49,11 +42,11 @@
 		251D8DC81A9688C50000BFA2 /* ATLMParticipantTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D961A9688C40000BFA2 /* ATLMParticipantTableViewController.m */; };
 		251D8DC91A9688C50000BFA2 /* ATLMPersistenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D981A9688C40000BFA2 /* ATLMPersistenceManager.m */; };
 		251D8DCA1A9688C50000BFA2 /* ATLMSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D9A1A9688C40000BFA2 /* ATLMSettingsViewController.m */; };
-		251D8DCB1A9688C50000BFA2 /* LSQRCodeScannerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D9C1A9688C40000BFA2 /* LSQRCodeScannerController.m */; };
-		251D8DCC1A9688C50000BFA2 /* LSRegistrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D9E1A9688C40000BFA2 /* LSRegistrationViewController.m */; };
+		251D8DCB1A9688C50000BFA2 /* ATLMQRScannerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D9C1A9688C40000BFA2 /* ATLMQRScannerController.m */; };
+		251D8DCC1A9688C50000BFA2 /* ATLMRegistrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D9E1A9688C40000BFA2 /* ATLMRegistrationViewController.m */; };
 		251D8DCD1A9688C50000BFA2 /* ATLMSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DA11A9688C40000BFA2 /* ATLMSession.m */; };
 		251D8DCE1A9688C50000BFA2 /* ATLMUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DA31A9688C40000BFA2 /* ATLMUser.m */; };
-		251D8DCF1A9688C50000BFA2 /* ASConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DA61A9688C40000BFA2 /* ASConstants.m */; };
+		251D8DCF1A9688C50000BFA2 /* ATLMConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DA61A9688C40000BFA2 /* ATLMConstants.m */; };
 		251D8DD01A9688C50000BFA2 /* ATLMErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DA81A9688C40000BFA2 /* ATLMErrors.m */; };
 		251D8DD11A9688C50000BFA2 /* ATLMHTTPResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DAA1A9688C40000BFA2 /* ATLMHTTPResponseSerializer.m */; };
 		251D8DD21A9688C50000BFA2 /* ATLMLayerClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DAC1A9688C40000BFA2 /* ATLMLayerClient.m */; };
@@ -65,9 +58,15 @@
 		251D8DD81A9688C50000BFA2 /* ATLMSettingsHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DB91A9688C40000BFA2 /* ATLMSettingsHeaderView.m */; };
 		251D8DD91A9688C50000BFA2 /* ATLMSplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DBB1A9688C40000BFA2 /* ATLMSplashView.m */; };
 		251D8DDA1A9688C50000BFA2 /* ATLMStyleValue1TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DBD1A9688C40000BFA2 /* ATLMStyleValue1TableViewCell.m */; };
-		251D8DDB1A9688C50000BFA2 /* LSOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DBF1A9688C40000BFA2 /* LSOverlayView.m */; };
+		251D8DDB1A9688C50000BFA2 /* ATLMOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DBF1A9688C40000BFA2 /* ATLMOverlayView.m */; };
 		259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 259A576E1950EB83000E27B0 /* InfoPlist.strings */; };
 		259A57751950EB83000E27B0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A57701950EB83000E27B0 /* Images.xcassets */; };
+		D62611691A98091800F6E707 /* layer-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D62611661A98091800F6E707 /* layer-logo@2x.png */; };
+		D626116A1A98091800F6E707 /* layer-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D62611671A98091800F6E707 /* layer-logo.png */; };
+		D626116B1A98091800F6E707 /* layer-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D62611681A98091800F6E707 /* layer-logo@3x.png */; };
+		D62611711A98153C00F6E707 /* layer-logo-gray.png in Resources */ = {isa = PBXBuildFile; fileRef = D626116E1A98153C00F6E707 /* layer-logo-gray.png */; };
+		D62611721A98153C00F6E707 /* layer-logo-gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D626116F1A98153C00F6E707 /* layer-logo-gray@3x.png */; };
+		D62611731A98153C00F6E707 /* layer-logo-gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D62611701A98153C00F6E707 /* layer-logo-gray@2x.png */; };
 		D6306DFB1A6F30B200E16E85 /* ATLMAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107B1A6F2D99009BFA9C /* ATLMAPIManagerTest.m */; };
 		D6306DFC1A6F30B200E16E85 /* ATLMApplicationControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107C1A6F2D99009BFA9C /* ATLMApplicationControllerTest.m */; };
 		D6306DFD1A6F30B200E16E85 /* ATLMAuthenticationViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107D1A6F2D99009BFA9C /* ATLMAuthenticationViewControllerTest.m */; };
@@ -80,7 +79,6 @@
 		D6306E041A6F30BE00E16E85 /* ATLMLayerContentFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10821A6F2D99009BFA9C /* ATLMLayerContentFactory.m */; };
 		D6306E051A6F30BE00E16E85 /* ATLMTestInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10881A6F2D99009BFA9C /* ATLMTestInterface.m */; };
 		D6306E061A6F30BE00E16E85 /* ATLMTestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B108A1A6F2D99009BFA9C /* ATLMTestUser.m */; };
-		D648ECFC19FEC9D800ED17F0 /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D648ECFB19FEC9D800ED17F0 /* testImage.png */; };
 		DE783CF95B3E136B03F3119D /* libPods-Atlas MessengerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */; };
 		E60CDAC28046CC178C349414 /* libPods-Atlas Messenger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */; };
 /* End PBXBuildFile section */
@@ -102,17 +100,11 @@
 		0A0C242A19477D8F00401B74 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0A0C244419477D8F00401B74 /* Atlas MessengerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Atlas MessengerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A0C244519477D8F00401B74 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		0A27A9421997FD210070BD4F /* logout@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logout@2x.png"; sourceTree = "<group>"; };
-		0A27A9441997FE110070BD4F /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
 		0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0A605F2F19BF735D00D773AF /* logo-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon@2x.png"; sourceTree = "<group>"; };
 		0A605F3019BF735D00D773AF /* logo-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon.png"; sourceTree = "<group>"; };
 		0A605F3319BF744600D773AF /* logo-icon-blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon-blue@2x.png"; sourceTree = "<group>"; };
 		0A605F3419BF744600D773AF /* logo-icon-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon-blue.png"; sourceTree = "<group>"; };
-		0A7023BE19BE4C84004FF43E /* selection-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selection-indicator.png"; sourceTree = "<group>"; };
-		0A7023BF19BE4C84004FF43E /* unselected-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselected-indicator.png"; sourceTree = "<group>"; };
-		0A7023C019BE4C84004FF43E /* selection-indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selection-indicator@2x.png"; sourceTree = "<group>"; };
-		0A7023C119BE4C84004FF43E /* unselected-indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselected-indicator@2x.png"; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0AADB5C51947C8600083732B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		0AADB5C71947C86B0083732B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -126,7 +118,6 @@
 		0AD6C4B519BD4CFA005142ED /* more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2x.png"; sourceTree = "<group>"; };
 		0AD6C4B719BD4CFA005142ED /* compose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compose@2x.png"; sourceTree = "<group>"; };
 		0AD6C4B819BD4CFA005142ED /* compose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compose.png; sourceTree = "<group>"; };
-		0AD6C4C119BD4D3C005142ED /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
 		251D8D841A9688C40000BFA2 /* ATLMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAppDelegate.h; sourceTree = "<group>"; };
 		251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAppDelegate.m; sourceTree = "<group>"; };
 		251D8D871A9688C40000BFA2 /* ATLMAPIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAPIManager.h; sourceTree = "<group>"; };
@@ -149,16 +140,16 @@
 		251D8D981A9688C40000BFA2 /* ATLMPersistenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMPersistenceManager.m; sourceTree = "<group>"; };
 		251D8D991A9688C40000BFA2 /* ATLMSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSettingsViewController.h; sourceTree = "<group>"; };
 		251D8D9A1A9688C40000BFA2 /* ATLMSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSettingsViewController.m; sourceTree = "<group>"; };
-		251D8D9B1A9688C40000BFA2 /* LSQRCodeScannerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSQRCodeScannerController.h; sourceTree = "<group>"; };
-		251D8D9C1A9688C40000BFA2 /* LSQRCodeScannerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSQRCodeScannerController.m; sourceTree = "<group>"; };
-		251D8D9D1A9688C40000BFA2 /* LSRegistrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRegistrationViewController.h; sourceTree = "<group>"; };
-		251D8D9E1A9688C40000BFA2 /* LSRegistrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSRegistrationViewController.m; sourceTree = "<group>"; };
+		251D8D9B1A9688C40000BFA2 /* ATLMQRScannerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMQRScannerController.h; sourceTree = "<group>"; };
+		251D8D9C1A9688C40000BFA2 /* ATLMQRScannerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMQRScannerController.m; sourceTree = "<group>"; };
+		251D8D9D1A9688C40000BFA2 /* ATLMRegistrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMRegistrationViewController.h; sourceTree = "<group>"; };
+		251D8D9E1A9688C40000BFA2 /* ATLMRegistrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMRegistrationViewController.m; sourceTree = "<group>"; };
 		251D8DA01A9688C40000BFA2 /* ATLMSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMSession.h; sourceTree = "<group>"; };
 		251D8DA11A9688C40000BFA2 /* ATLMSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSession.m; sourceTree = "<group>"; };
 		251D8DA21A9688C40000BFA2 /* ATLMUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMUser.h; sourceTree = "<group>"; };
 		251D8DA31A9688C40000BFA2 /* ATLMUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMUser.m; sourceTree = "<group>"; };
-		251D8DA51A9688C40000BFA2 /* ASConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASConstants.h; sourceTree = "<group>"; };
-		251D8DA61A9688C40000BFA2 /* ASConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASConstants.m; sourceTree = "<group>"; };
+		251D8DA51A9688C40000BFA2 /* ATLMConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMConstants.h; sourceTree = "<group>"; };
+		251D8DA61A9688C40000BFA2 /* ATLMConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConstants.m; sourceTree = "<group>"; };
 		251D8DA71A9688C40000BFA2 /* ATLMErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMErrors.h; sourceTree = "<group>"; };
 		251D8DA81A9688C40000BFA2 /* ATLMErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMErrors.m; sourceTree = "<group>"; };
 		251D8DA91A9688C40000BFA2 /* ATLMHTTPResponseSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMHTTPResponseSerializer.h; sourceTree = "<group>"; };
@@ -181,12 +172,11 @@
 		251D8DBB1A9688C40000BFA2 /* ATLMSplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSplashView.m; sourceTree = "<group>"; };
 		251D8DBC1A9688C40000BFA2 /* ATLMStyleValue1TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMStyleValue1TableViewCell.h; sourceTree = "<group>"; };
 		251D8DBD1A9688C40000BFA2 /* ATLMStyleValue1TableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMStyleValue1TableViewCell.m; sourceTree = "<group>"; };
-		251D8DBE1A9688C40000BFA2 /* LSOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSOverlayView.h; sourceTree = "<group>"; };
-		251D8DBF1A9688C40000BFA2 /* LSOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSOverlayView.m; sourceTree = "<group>"; };
+		251D8DBE1A9688C40000BFA2 /* ATLMOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMOverlayView.h; sourceTree = "<group>"; };
+		251D8DBF1A9688C40000BFA2 /* ATLMOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMOverlayView.m; sourceTree = "<group>"; };
 		259A57311950EB76000E27B0 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		259A576F1950EB83000E27B0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		259A57701950EB83000E27B0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		259A57721950EB83000E27B0 /* LayerSample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LayerSample-Info.plist"; sourceTree = "<group>"; };
 		259A577B1950EB92000E27B0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Atlas MessengerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E3F5568A463FD6EA9B16318 /* Pods-Atlas MessengerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas MessengerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas MessengerTests/Pods-Atlas MessengerTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -214,7 +204,12 @@
 		D61B10881A6F2D99009BFA9C /* ATLMTestInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTestInterface.m; sourceTree = "<group>"; };
 		D61B10891A6F2D99009BFA9C /* ATLMTestUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMTestUser.h; sourceTree = "<group>"; };
 		D61B108A1A6F2D99009BFA9C /* ATLMTestUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMTestUser.m; sourceTree = "<group>"; };
-		D648ECFB19FEC9D800ED17F0 /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
+		D62611661A98091800F6E707 /* layer-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo@2x.png"; sourceTree = "<group>"; };
+		D62611671A98091800F6E707 /* layer-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo.png"; sourceTree = "<group>"; };
+		D62611681A98091800F6E707 /* layer-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo@3x.png"; sourceTree = "<group>"; };
+		D626116E1A98153C00F6E707 /* layer-logo-gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo-gray.png"; sourceTree = "<group>"; };
+		D626116F1A98153C00F6E707 /* layer-logo-gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo-gray@3x.png"; sourceTree = "<group>"; };
+		D62611701A98153C00F6E707 /* layer-logo-gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo-gray@2x.png"; sourceTree = "<group>"; };
 		E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Atlas Messenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA8D4F84D7ED9670A81B8293 /* Pods-Atlas Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas Messenger.release.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas Messenger/Pods-Atlas Messenger.release.xcconfig"; sourceTree = "<group>"; };
 		F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.release.xcconfig"; sourceTree = "<group>"; };
@@ -355,10 +350,10 @@
 				251D8D981A9688C40000BFA2 /* ATLMPersistenceManager.m */,
 				251D8D991A9688C40000BFA2 /* ATLMSettingsViewController.h */,
 				251D8D9A1A9688C40000BFA2 /* ATLMSettingsViewController.m */,
-				251D8D9B1A9688C40000BFA2 /* LSQRCodeScannerController.h */,
-				251D8D9C1A9688C40000BFA2 /* LSQRCodeScannerController.m */,
-				251D8D9D1A9688C40000BFA2 /* LSRegistrationViewController.h */,
-				251D8D9E1A9688C40000BFA2 /* LSRegistrationViewController.m */,
+				251D8D9B1A9688C40000BFA2 /* ATLMQRScannerController.h */,
+				251D8D9C1A9688C40000BFA2 /* ATLMQRScannerController.m */,
+				251D8D9D1A9688C40000BFA2 /* ATLMRegistrationViewController.h */,
+				251D8D9E1A9688C40000BFA2 /* ATLMRegistrationViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -377,8 +372,8 @@
 		251D8DA41A9688C40000BFA2 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				251D8DA51A9688C40000BFA2 /* ASConstants.h */,
-				251D8DA61A9688C40000BFA2 /* ASConstants.m */,
+				251D8DA51A9688C40000BFA2 /* ATLMConstants.h */,
+				251D8DA61A9688C40000BFA2 /* ATLMConstants.m */,
 				251D8DA71A9688C40000BFA2 /* ATLMErrors.h */,
 				251D8DA81A9688C40000BFA2 /* ATLMErrors.m */,
 				251D8DA91A9688C40000BFA2 /* ATLMHTTPResponseSerializer.h */,
@@ -408,8 +403,8 @@
 				251D8DBB1A9688C40000BFA2 /* ATLMSplashView.m */,
 				251D8DBC1A9688C40000BFA2 /* ATLMStyleValue1TableViewCell.h */,
 				251D8DBD1A9688C40000BFA2 /* ATLMStyleValue1TableViewCell.m */,
-				251D8DBE1A9688C40000BFA2 /* LSOverlayView.h */,
-				251D8DBF1A9688C40000BFA2 /* LSOverlayView.m */,
+				251D8DBE1A9688C40000BFA2 /* ATLMOverlayView.h */,
+				251D8DBF1A9688C40000BFA2 /* ATLMOverlayView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -432,19 +427,16 @@
 		259A576B1950EB83000E27B0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D626116E1A98153C00F6E707 /* layer-logo-gray.png */,
+				D626116F1A98153C00F6E707 /* layer-logo-gray@3x.png */,
+				D62611701A98153C00F6E707 /* layer-logo-gray@2x.png */,
+				D62611661A98091800F6E707 /* layer-logo@2x.png */,
+				D62611671A98091800F6E707 /* layer-logo.png */,
+				D62611681A98091800F6E707 /* layer-logo@3x.png */,
 				0AD6C4B419BD4CD6005142ED /* Icons */,
-				0A27A9441997FE110070BD4F /* back@2x.png */,
-				D648ECFB19FEC9D800ED17F0 /* testImage.png */,
-				0A7023BE19BE4C84004FF43E /* selection-indicator.png */,
-				0A7023BF19BE4C84004FF43E /* unselected-indicator.png */,
-				0A7023C019BE4C84004FF43E /* selection-indicator@2x.png */,
-				0A7023C119BE4C84004FF43E /* unselected-indicator@2x.png */,
-				0AD6C4C119BD4D3C005142ED /* background@2x.png */,
-				0A27A9421997FD210070BD4F /* logout@2x.png */,
 				0ABEFFAE196B7686006FFFF3 /* logo@2x.png */,
 				259A576E1950EB83000E27B0 /* InfoPlist.strings */,
 				259A57701950EB83000E27B0 /* Images.xcassets */,
-				259A57721950EB83000E27B0 /* LayerSample-Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -603,23 +595,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A605F3619BF744600D773AF /* logo-icon-blue.png in Resources */,
-				0A7023C319BE4C84004FF43E /* unselected-indicator.png in Resources */,
-				0A7023C519BE4C84004FF43E /* unselected-indicator@2x.png in Resources */,
-				0A7023C419BE4C84004FF43E /* selection-indicator@2x.png in Resources */,
 				0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */,
+				D62611691A98091800F6E707 /* layer-logo@2x.png in Resources */,
 				0A605F3119BF735D00D773AF /* logo-icon@2x.png in Resources */,
 				259A57751950EB83000E27B0 /* Images.xcassets in Resources */,
 				0A605F3219BF735D00D773AF /* logo-icon.png in Resources */,
 				0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */,
+				D62611711A98153C00F6E707 /* layer-logo-gray.png in Resources */,
+				D62611721A98153C00F6E707 /* layer-logo-gray@3x.png in Resources */,
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
-				0A27A9431997FD210070BD4F /* logout@2x.png in Resources */,
 				0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */,
 				0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */,
-				0A27A9451997FE110070BD4F /* back@2x.png in Resources */,
-				0AD6C4C219BD4D3C005142ED /* background@2x.png in Resources */,
-				0A7023C219BE4C84004FF43E /* selection-indicator.png in Resources */,
+				D626116A1A98091800F6E707 /* layer-logo.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
-				D648ECFC19FEC9D800ED17F0 /* testImage.png in Resources */,
+				D62611731A98153C00F6E707 /* layer-logo-gray@2x.png in Resources */,
+				D626116B1A98091800F6E707 /* layer-logo@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -704,7 +694,7 @@
 				251D8DCA1A9688C50000BFA2 /* ATLMSettingsViewController.m in Sources */,
 				251D8DD21A9688C50000BFA2 /* ATLMLayerClient.m in Sources */,
 				251D8DCE1A9688C50000BFA2 /* ATLMUser.m in Sources */,
-				251D8DCC1A9688C50000BFA2 /* LSRegistrationViewController.m in Sources */,
+				251D8DCC1A9688C50000BFA2 /* ATLMRegistrationViewController.m in Sources */,
 				251D8DC31A9688C50000BFA2 /* ATLMConversationDetailViewController.m in Sources */,
 				251D8DCD1A9688C50000BFA2 /* ATLMSession.m in Sources */,
 				251D8DC51A9688C50000BFA2 /* ATLMConversationViewController.m in Sources */,
@@ -712,19 +702,19 @@
 				251D8DC01A9688C50000BFA2 /* ATLMAppDelegate.m in Sources */,
 				251D8DC61A9688C50000BFA2 /* ATLMImageViewController.m in Sources */,
 				251D8DD31A9688C50000BFA2 /* ATLMParticipantDataSource.m in Sources */,
-				251D8DCF1A9688C50000BFA2 /* ASConstants.m in Sources */,
+				251D8DCF1A9688C50000BFA2 /* ATLMConstants.m in Sources */,
 				251D8DDA1A9688C50000BFA2 /* ATLMStyleValue1TableViewCell.m in Sources */,
 				251D8DC81A9688C50000BFA2 /* ATLMParticipantTableViewController.m in Sources */,
 				251D8DC41A9688C50000BFA2 /* ATLMConversationListViewController.m in Sources */,
 				251D8DD81A9688C50000BFA2 /* ATLMSettingsHeaderView.m in Sources */,
 				251D8DD41A9688C50000BFA2 /* ATLMUtilities.m in Sources */,
 				251D8DD01A9688C50000BFA2 /* ATLMErrors.m in Sources */,
-				251D8DCB1A9688C50000BFA2 /* LSQRCodeScannerController.m in Sources */,
+				251D8DCB1A9688C50000BFA2 /* ATLMQRScannerController.m in Sources */,
 				251D8DC91A9688C50000BFA2 /* ATLMPersistenceManager.m in Sources */,
 				0AFE3FE419B0E19C00FCA264 /* main.m in Sources */,
 				251D8DD11A9688C50000BFA2 /* ATLMHTTPResponseSerializer.m in Sources */,
 				251D8DD71A9688C50000BFA2 /* ATLMInputTableViewCell.m in Sources */,
-				251D8DDB1A9688C50000BFA2 /* LSOverlayView.m in Sources */,
+				251D8DDB1A9688C50000BFA2 /* ATLMOverlayView.m in Sources */,
 				251D8DD51A9688C50000BFA2 /* ATLLogoView.m in Sources */,
 				251D8DC71A9688C50000BFA2 /* ATLMNavigationController.m in Sources */,
 				251D8DC11A9688C50000BFA2 /* ATLMAPIManager.m in Sources */,

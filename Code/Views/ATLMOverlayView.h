@@ -1,5 +1,5 @@
 //
-//  LSOverlayView.h
+//  ATLMOverlayView.h
 //  QRCodeTest
 //
 //  Created by Kevin Coleman on 2/15/15.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LSOverlayView : UIView
+@interface ATLMOverlayView : UIView
 
 @end

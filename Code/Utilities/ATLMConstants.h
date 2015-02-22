@@ -8,4 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-UIFont *ATLUltraLightFont(CGFloat size);
+UIFont *ATLMUltraLightFont(CGFloat size);
+
+UIFont *ATLMLightFont(CGFloat size);

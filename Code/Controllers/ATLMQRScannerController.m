@@ -6,14 +6,14 @@
 //  Copyright (c) 2015 Layer, Inc. All rights reserved.
 //
 
-#import "LSQRCodeScannerController.h"
+#import "ATLMQRScannerController.h"
 #import <AVFoundation/AVFoundation.h>
-#import "LSOverlayView.h"
-#import "LSRegistrationViewController.h"
+#import "ATLMOverlayView.h"
+#import "ATLMRegistrationViewController.h"
 #import "ATLMLayerClient.h"
 #import "ATLMUtilities.h"
 
-@interface LSQRCodeScannerController () <AVCaptureMetadataOutputObjectsDelegate>
+@interface ATLMQRScannerController () <AVCaptureMetadataOutputObjectsDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *videoPreviewLayer;
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation LSQRCodeScannerController
+@implementation ATLMQRScannerController
 
 NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
 
@@ -34,18 +34,19 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     [self setupOverlay];
     [self startStopReading];
     
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap)];
-    [self.view addGestureRecognizer:recognizer];
+    UITapGestureRecognizer *testTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(testTap)];
+    [self.view addGestureRecognizer:testTap];
 }
 
-- (void)handleTap
+// TODO - Remove Prior to launch
+- (void)testTap
 {
-    [self setupLayerWithAppID:nil];
+    [self setupLayerWithAppID:@"56002530-b7cf-11e4-a62c-2d571000725e"];
 }
 
 - (void)setupOverlay
 {
-    LSOverlayView *overlayView = [[LSOverlayView alloc] initWithFrame:self.view.frame];
+    ATLMOverlayView *overlayView = [[ATLMOverlayView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:overlayView];
 }
 
@@ -55,7 +56,7 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:captureDevice error:&error];
     if (!input) {
-        NSLog(@"%@", [error localizedDescription]);
+        ATLMAlertWithError(error);
         return;
     }
     
@@ -66,7 +67,7 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     [self.captureSession addOutput:captureMetadataOutput];
     
     dispatch_queue_t dispatchQueue;
-    dispatchQueue = dispatch_queue_create("capture-queue", NULL);
+    dispatchQueue = dispatch_queue_create("appID-capture-queue", NULL);
     [captureMetadataOutput setMetadataObjectsDelegate:self queue:dispatchQueue];
     [captureMetadataOutput setMetadataObjectTypes:[NSArray arrayWithObject:AVMetadataObjectTypeQRCode]];
     
@@ -101,9 +102,9 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     if (metadataObjects != nil && [metadataObjects count] > 0) {
         AVMetadataMachineReadableCodeObject *metadataObj = [metadataObjects objectAtIndex:0];
         if ([[metadataObj type] isEqualToString:AVMetadataObjectTypeQRCode]) {
-            NSLog(@"%@", metadataObj.stringValue);
+            NSLog(@"Received Layer App ID: %@", metadataObj.stringValue);
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self stopReading];
+                [self startStopReading];
                 [self setupLayerWithAppID:metadataObj.stringValue];
             });
             _isReading = NO;
@@ -113,19 +114,29 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
 
 - (void)setupLayerWithAppID:(NSString *)appID
 {
-    [[NSUserDefaults standardUserDefaults] setValue:appID forKey:ATLMLayerApplicationID];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:ATLMDidReceiveLayerAppID object:appID];
-    
-    [self presentRegistrationViewController];
+    NSUUID *applicationID = [[NSUUID alloc] initWithUUIDString:appID];
+    if (applicationID) {
+        [[NSUserDefaults standardUserDefaults] setValue:appID forKey:ATLMLayerApplicationID];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ATLMDidReceiveLayerAppID object:appID];
+        [self presentRegistrationViewController];
+    } else {
+        NSError *error = [[NSError alloc] initWithDomain:ATLMErrorDomain code:ATLMInvalidAppIDString userInfo:@{NSLocalizedDescriptionKey : @"There was an error scanning the QR code. Please try again"}];
+        UIAlertView *alertView = ATLMAlertWithError(error);
+        alertView.delegate = self;
+    }
 }
 
 - (void)presentRegistrationViewController
 {
-    LSRegistrationViewController *controller = [[LSRegistrationViewController alloc] init];
+    ATLMRegistrationViewController *controller = [[ATLMRegistrationViewController alloc] init];
     controller.applicationController = self.applicationController;
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [self startStopReading];
 }
 
 @end
