@@ -412,7 +412,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 - (void)switchToConversationForParticipants
 {
     NSSet *participants = [NSSet setWithArray:self.participantIdentifiers];
-    LYRConversation *conversation = [self.applicationController.layerClient conversationForParticipants:participants];
+    LYRConversation *conversation = [self.applicationController.layerClient existingConversationForParticipants:participants];
     if (!conversation) {
         conversation = [self.applicationController.layerClient newConversationWithParticipants:participants options:nil error:nil];
     }
@@ -434,6 +434,14 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 }
 
 #pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSString *title = [self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey];
+    if (![textField.text isEqualToString:title]) {
+        [self.conversation setValue:textField.text forMetadataAtKeyPath:ATLMConversationMetadataNameKey];
+    }
+}
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {

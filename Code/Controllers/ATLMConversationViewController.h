@@ -22,9 +22,7 @@
 #import "ATLMApplicationController.h"
 
 /**
- @abstract Subclass of the `ATLMConversationViewController` LayerUIKit component.
- The class acts as the data source and delegate of the component. It presents a user
- interface for displaying a conversation's messages.
+ @abstract Subclass of the `ATLMConversationViewController`. Presents a user interface for displaying and sending messages.
  */
 @interface ATLMConversationViewController : ATLConversationViewController <ATLConversationViewControllerDataSource, ATLConversationViewControllerDelegate>
 

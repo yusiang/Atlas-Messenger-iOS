@@ -70,7 +70,7 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 
 - (BOOL)resumeSession:(ATLMSession *)session error:(NSError *__autoreleasing *)error
 {
-    return YES;
+    return [self configureWithSession:session error:error];
 }
 
 - (void)deauthenticate
@@ -82,10 +82,10 @@ NSString *const ATLMAtlasUserNameKey = @"name";
     
     [self.URLSession invalidateAndCancel];
     self.URLSession = [self defaultURLSession];
-    [[NSNotificationCenter defaultCenter] postNotificationName:ATLMUserDidDeauthenticateNotification object:self.authenticatedSession.user];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ATLMUserDidDeauthenticateNotification object:nil];
 }
 
-#pragma mark - Registration 
+#pragma mark - Registration
 
 - (void)registerUserWithName:(NSString*)name nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion
 {
@@ -142,10 +142,17 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 {
     if (self.authenticatedSession) return YES;
     if (!session) {
-        if (error) *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"No authenticated session"}];
-        return NO;
+        if (error) {
+            *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"No authenticated session."}];
+            return NO;
+        }
     }
     self.authenticatedSession = session;
+    BOOL success = [self.persistenceManager persistSession:session error:nil];
+    if (!success) {
+        *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"There was an error persisting the session."}];
+        return NO;
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:ATLMUserDidAuthenticateNotification object:session.user];
     return YES;
 }

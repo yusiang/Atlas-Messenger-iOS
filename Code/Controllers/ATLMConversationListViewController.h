@@ -23,12 +23,12 @@
 #import "SVProgressHUD.h"
 
 /**
- @abstract Subclass of the `ATLMConversationListViewController`. Presents a list of conversations in time series order.
+ @abstract Subclass of the `ATLMConversationListViewController`. Presents a list of conversations.
  */
 @interface ATLMConversationListViewController : ATLConversationListViewController
 
 /**
- @abstract Programatically simulates the selection of a `LYRConversation` object in the conversations table view.
+ @abstract Programatically simulates the selection of an `LYRConversation` object in the conversations table view.
  @discussion This method is used when opening the application in response to a push notification. When invoked, it
  will display the approriate conversation on screen.
  */

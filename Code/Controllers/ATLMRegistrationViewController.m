@@ -8,11 +8,12 @@
 
 #import "ATLMRegistrationViewController.h"
 #import "ATLLogoView.h"
-#import <Atlas/Atlas.h> 
+#import <Atlas/Atlas.h>
 #import "ATLMLayerClient.h"
 #import "ATLMAPIManager.h"
 #import "ATLMConstants.h"
 #import "ATLMUtilities.h"
+#import "SVProgressHUD.h"
 
 @interface ATLMRegistrationViewController () <UITextFieldDelegate>
 
@@ -83,12 +84,13 @@ CGFloat const ATLMregistrationTextFieldBottomPadding = 20;
 - (void)registerAndAuthenticateUserWithName:(NSString *)name
 {
     [self.view endEditing:YES];
-
+    
     if (self.applicationController.layerClient.authenticatedUserID) {
         NSLog(@"Layer already authenticated as: %@", self.applicationController.layerClient.authenticatedUserID);
         return;
     }
     
+    [SVProgressHUD showWithStatus:@"Authenticating with Layer"];
     NSLog(@"Requesting Authentication Nonce");
     [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
         NSLog(@"Got a nonce %@", nonce);
@@ -104,12 +106,18 @@ CGFloat const ATLMregistrationTextFieldBottomPadding = 20;
                 return;
             }
             NSLog(@"Authenticating Layer");
+            if (!identityToken) {
+                NSError *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMInvalidIdentityToken userInfo:@{NSLocalizedDescriptionKey : @"Failed to obtain a valid identity token"}];
+                ATLMAlertWithError(error);
+                return;
+            }
             [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-                NSLog(@"Layer authenticated as: %@", authenticatedUserID);
                 if (error) {
                     ATLMAlertWithError(error);
                     return;
                 }
+                NSLog(@"Layer authenticated as: %@", authenticatedUserID);
+                [SVProgressHUD showSuccessWithStatus:@"Authenticated!"];
             }];
         }];
     }];

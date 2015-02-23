@@ -30,8 +30,8 @@ extern NSString *const ATLMUserDidAuthenticateNotification;
 extern NSString *const ATLMUserDidDeauthenticateNotification;
 
 /**
- @abstract The `ATLMAPIManager` class provides an interface for interacting with the Layer Identity Provider JSON API and managing 
- the Layer sample app authentication state.
+ @abstract The `ATLMAPIManager` class provides an interface for interacting with the Layer Identity Provider JSON API and managing
+ the Atlas authentication state.
  */
 @interface ATLMAPIManager : NSObject
 
@@ -46,12 +46,19 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
  */
 @property (nonatomic, readonly) LYRClient *layerClient;
 
+/**
+ @abstract The persistence manager responsible for persisting user information.
+ */
 @property (nonatomic) ATLMPersistenceManager *persistenceManager;
+
 /**
  @abstract The current authenticated session or `nil` if not yet authenticated.
  */
 @property (nonatomic) ATLMSession *authenticatedSession;
 
+/**
+ @abstract The baseURL used to initialize the receiver.
+ */
 @property (nonatomic) NSURL *baseURL;
 
 /**
@@ -59,15 +66,23 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
  */
 @property (nonatomic) NSURLSessionConfiguration *authenticatedURLSessionConfiguration;
 
-//TODO - document
+/**
+ @abstract The currently configured URL session.
+ */
 @property (nonatomic) NSURLSession *URLSession;
 
-//TODO - Implement and document
+/**
+ @abstract Attempts to resume an exsiting application session.
+ @param session an `ATLMSession` object containing information about an existing Atlast Messenger session. 
+ @param error A reference to an `NSError` object that will contain error information in case the action was not successful.
+ */
 - (BOOL)resumeSession:(ATLMSession *)session error:(NSError **)error;
 
 /**
  @abstract Registers and authenticates an Altas Messenger user.
- @param completion The completion block that is called upon successfully registering a user. Completion block cannot be `nil`.
+ @param name An `NSString` object representing the name of the user attempting to register.
+ @param nonce A nonce value obtained via a call to `requestAuthenticationNonceWithCompletion:` on `LYRClient`.
+ @param completion completion The block to execute upon completion of the asynchronous user registration operation. The block has no return value and accepts two arguments: An identity token that was obtained upon successful registration (or nil in the event of a failure) and an `NSError` object that describes why the operation failed (or nil if the operation was successful).
  */
 - (void)registerUserWithName:(NSString*)name nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion;
 
@@ -77,4 +92,3 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 - (void)deauthenticate;
 
 @end
-

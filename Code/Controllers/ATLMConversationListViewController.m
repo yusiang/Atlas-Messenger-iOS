@@ -41,13 +41,12 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    self.delegate = self;
-    self.dataSource = self;
     self.tableView.accessibilityLabel = ATLMConversationListTableViewAccessibilityLabel;
     
+    self.delegate = self;
+    self.dataSource = self;
     self.allowsEditing = YES;
-
+    
     // Left navigation item
     UIButton* infoButton= [UIButton buttonWithType:UIButtonTypeInfoLight];
     UIBarButtonItem *infoItem  = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
@@ -59,7 +58,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
     UIBarButtonItem *composeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonTapped)];
     composeButton.accessibilityLabel = ATLMComposeButtonAccessibilityLabel;
     [self.navigationItem setRightBarButtonItem:composeButton];
-
+    
     self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationDeleted:) name:ATLMConversationDeletedNotification object:nil];
@@ -74,10 +73,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 #pragma mark - ATLConversationListViewControllerDelegate
 
 /**
- 
- LAYER UI KIT - Allows your application to react to a conversation selection. This application pushses a subclass of 
- the `ATLConversationViewController` component.
- 
+ Atlas - Informs the delegate of a conversation selection. Atlas Messenger pushses a subclass of the `ATLConversationViewController`.
  */
 - (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didSelectConversation:(LYRConversation *)conversation
 {
@@ -85,10 +81,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 }
 
 /**
- 
- LAYER UI KIT - Allows your application react to a conversations deletion if necessary. This application does not 
- need to react because the superclass component will handle removing the conversation in response to a deletion.
- 
+ Atlas - Informs the delegate a conversation was deleted. Atlas Messenger does not need to react as the superclass will handle removing the conversation in response to a deletion.
  */
 - (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didDeleteConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode
 {
@@ -96,22 +89,27 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 }
 
 /**
- 
- LAYER UI KIT - Allows your application react to a failed conversation deletion if necessary.
- 
+ Atlas - Informs the delegate that a conversation deletion attempt failed. Atlas Messenger does not do anything in response.
  */
 - (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didFailDeletingConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode error:(NSError *)error
 {
     NSLog(@"Conversation Deletion Failed with Error: %@", error);
 }
 
+/**
+ Atlas - Informs the delegate that a search has been performed. Atlas messenger queries for, and returns objects conforming to the `ATLParticipant` protocol whose `fullName` property contains the search text.
+ */
+- (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didSearchForText:(NSString *)searchText completion:(void (^)(NSSet *))completion
+{
+    [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
+        completion(participants);
+    }];
+}
+
 #pragma mark - ATLConversationListViewControllerDataSource
 
 /**
- 
- LAYER UI KIT - Returns a label that is used to represent the conversation. This application puts the 
- name representing the `lastMessage.sentByUserID` property first in the string.
- 
+ Atlas - Returns a label that is used to represent the conversation. Atlas Messenger puts the name representing the `lastMessage.sentByUserID` property first in the string.
  */
 - (NSString *)conversationListViewController:(ATLConversationListViewController *)conversationListViewController titleForConversation:(LYRConversation *)conversation
 {
@@ -139,16 +137,13 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
             }
         }
     }];
-
+    
     NSString *firstNamesString = [firstNames componentsJoinedByString:@", "];
     return firstNamesString;
 }
 
 /**
- 
- LAYER UI KIT - If needed, your application can display an avatar image that represnts a conversation. If no image 
- is returned, no image will be displayed.
- 
+ Atlas - If needed, applications can display an avatar image that represents a conversation.
  */
 - (id<ATLAvatarItem>)conversationListViewController:(ATLConversationListViewController *)conversationListViewController avatarItemForConversation:(LYRConversation *)conversation
 {
@@ -165,7 +160,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
         [self.navigationController popToViewController:existingConversationViewController animated:YES];
         return;
     }
-
+    
     BOOL shouldShowAddressBar = (conversation.participants.count > 2 || !conversation.participants.count);
     ATLMConversationViewController *conversationViewController = [ATLMConversationViewController conversationViewControllerWithLayerClient:self.applicationController.layerClient];
     conversationViewController.applicationController = self.applicationController;
@@ -181,12 +176,6 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
         [viewControllers replaceObjectsInRange:replacementRange withObjectsFromArray:@[conversationViewController]];
         [self.navigationController setViewControllers:viewControllers animated:YES];
     }
-}
-- (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didSearchForText:(NSString *)searchText completion:(void (^)(NSSet *))completion
-{
-    [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
-        completion(participants);
-    }];
 }
 
 #pragma mark - Actions
@@ -245,15 +234,15 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
         }];
         return;
     }
-
+    
     ATLMConversationViewController *conversationViewController = [self existingConversationViewController];
     if (!conversationViewController) return;
-
+    
     LYRConversation *deletedConversation = notification.object;
     if (![conversationViewController.conversation isEqual:deletedConversation]) return;
-
+    
     [self.navigationController popToViewController:self animated:YES];
-
+    
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Conversation Deleted"
                                                         message:@"The conversation has been deleted."
                                                        delegate:nil
@@ -270,18 +259,18 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
         }];
         return;
     }
-
+    
     NSString *authenticatedUserID = self.applicationController.layerClient.authenticatedUserID;
     if (!authenticatedUserID) return;
     LYRConversation *conversation = notification.object;
     if ([conversation.participants containsObject:authenticatedUserID]) return;
-
+    
     ATLMConversationViewController *conversationViewController = [self existingConversationViewController];
     if (!conversationViewController) return;
     if (![conversationViewController.conversation isEqual:conversation]) return;
-
+    
     [self.navigationController popToViewController:self animated:YES];
-
+    
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Removed From Conversation"
                                                         message:@"You have been removed from the conversation."
                                                        delegate:nil
@@ -295,16 +284,16 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 - (ATLMConversationViewController *)existingConversationViewController
 {
     if (!self.navigationController) return nil;
-
+    
     NSUInteger listViewControllerIndex = [self.navigationController.viewControllers indexOfObject:self];
     if (listViewControllerIndex == NSNotFound) return nil;
-
+    
     NSUInteger nextViewControllerIndex = listViewControllerIndex + 1;
     if (nextViewControllerIndex >= self.navigationController.viewControllers.count) return nil;
-
+    
     id nextViewController = [self.navigationController.viewControllers objectAtIndex:nextViewControllerIndex];
     if (![nextViewController isKindOfClass:[ATLMConversationViewController class]]) return nil;
-
+    
     return nextViewController;
 }
 

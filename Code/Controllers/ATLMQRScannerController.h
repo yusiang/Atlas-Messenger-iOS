@@ -15,4 +15,9 @@ extern NSString *const ATLMDidReceiveLayerAppID;
 
 @property (nonatomic) ATLMApplicationController *applicationController;
 
+/**
+ @abstract Programmatically pushes an `ATLMRegistrationViewController` on to the current navigation stack.
+ */
+- (void)presentRegistrationViewController;
+
 @end

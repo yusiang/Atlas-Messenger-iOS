@@ -108,13 +108,18 @@ void ATLMTestResetConfiguration(void)
 
 #pragma mark - Setup
 
-- (BOOL)resumeSession
+- (void)setupLayer
 {
-    ATLMSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
-    if ([self.applicationController.APIManager resumeSession:session error:nil]) {
-        return YES;
+    NSString *appID = [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
+    if (appID) {
+        ATLMLayerClient *layerClient = [ATLMLayerClient clientWithAppID:[[NSUUID alloc] initWithUUIDString:appID]];
+        ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:layerClient];
+        self.applicationController.layerClient = layerClient;
+        self.applicationController.APIManager = manager;
+        if (![self resumeSession]) {
+            [self.scannerController presentRegistrationViewController];
+        }
     }
-    return NO;
 }
 
 - (void)configureWindow
@@ -135,7 +140,21 @@ void ATLMTestResetConfiguration(void)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerAppID:) name:ATLMDidReceiveLayerAppID object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticate:) name:ATLMUserDidAuthenticateNotification object:nil];
     [[NSNotificationCenter defaultCenter]  addObserver:self selector:@selector(userDidAuthenticateWithLayer:) name:LYRClientDidAuthenticateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticate:) name:ATLMUserDidDeauthenticateNotification object:nil];    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticate:) name:ATLMUserDidDeauthenticateNotification object:nil];
+}
+
+#pragma mark - Session Management
+
+- (BOOL)resumeSession
+{
+    if (self.applicationController.layerClient.authenticatedUserID) {
+        ATLMSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
+        if ([self.applicationController.APIManager resumeSession:session error:nil]) {
+            [self presentConversationsListViewController:YES];
+            return YES;
+        }
+    }
+    return NO;
 }
 
 #pragma mark - Push Notifications
@@ -207,7 +226,7 @@ void ATLMTestResetConfiguration(void)
 - (LYRConversation *)conversationFromRemoteNotification:(NSDictionary *)remoteNotification
 {
     NSURL *conversationIdentifier = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.conversation_identifier"]];
-    return [self.applicationController.layerClient conversationForIdentifier:conversationIdentifier];
+    return [self.applicationController.layerClient existingConversationForIdentifier:conversationIdentifier];
 }
 
 - (void)navigateToViewForConversation:(LYRConversation *)conversation
@@ -251,7 +270,6 @@ void ATLMTestResetConfiguration(void)
 
 - (void)userDidDeauthenticate:(NSNotification *)notification
 {
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:ATLMLayerApplicationID];
     NSError *error;
     BOOL success = [self.applicationController.persistenceManager persistSession:nil error:&error];
     if (success) {
@@ -315,48 +333,6 @@ void ATLMTestResetConfiguration(void)
 {
     NSUInteger countOfUnreadMessages = [self.applicationController.layerClient countOfUnreadMessages];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
-}
-
-- (void)setupLayer
-{
-    NSString *appID = [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
-    if (appID) {
-        ATLMLayerClient *layerClient = [ATLMLayerClient clientWithAppID:[[NSUUID alloc] initWithUUIDString:appID]];
-        ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:layerClient];
-        self.applicationController.layerClient = layerClient;
-        self.applicationController.APIManager = manager;
-        [self attemptToResumeSession];
-    }
-}
-
-- (void)attemptToResumeSession
-{
-    // Connect to Layer and boot the UI
-    BOOL deauthenticateAfterConnection = NO;
-    BOOL resumingSession = NO;
-    if (self.applicationController.layerClient.authenticatedUserID) {
-        if ([self resumeSession]) {
-            resumingSession = YES;
-            [self presentConversationsListViewController:YES];
-        } else {
-            deauthenticateAfterConnection = YES;
-        }
-    }
-
-    // Connect Layer SDK
-    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-        if (success) {
-            NSLog(@"Layer Client is connected");
-            if (deauthenticateAfterConnection) {
-                [self.applicationController.layerClient deauthenticateWithCompletion:nil];
-            }
-        } else {
-            NSLog(@"Error connecting Layer: %@", error);
-        }
-        if (!resumingSession) {
-            [self removeSplashView];
-        }
-    }];
 }
 
 @end
