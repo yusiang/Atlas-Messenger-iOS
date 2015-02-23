@@ -1,10 +1,12 @@
 platform :ios, '7.0'
 source 'https://github.com/CocoaPods/Specs.git'
+source 'git@github.com:layerhq/cocoapods-specs.git'
 
 target 'Atlas Messenger' do
   pod 'SVProgressHUD', :head
-  pod 'LayerKit', '~> 0.10.0'
+  #pod 'LayerKit', '~> 0.10.0'
   pod 'Atlas', path: 'Libraries/Atlas'
+  pod 'LayerKit', git: 'git@github.com:layerhq/LayerKit.git'
 end
 
 target 'Atlas MessengerTests' do

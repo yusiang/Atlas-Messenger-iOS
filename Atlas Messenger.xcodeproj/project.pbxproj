@@ -69,11 +69,9 @@
 		D62611731A98153C00F6E707 /* layer-logo-gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D62611701A98153C00F6E707 /* layer-logo-gray@2x.png */; };
 		D6306DFB1A6F30B200E16E85 /* ATLMAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107B1A6F2D99009BFA9C /* ATLMAPIManagerTest.m */; };
 		D6306DFC1A6F30B200E16E85 /* ATLMApplicationControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107C1A6F2D99009BFA9C /* ATLMApplicationControllerTest.m */; };
-		D6306DFD1A6F30B200E16E85 /* ATLMAuthenticationViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107D1A6F2D99009BFA9C /* ATLMAuthenticationViewControllerTest.m */; };
 		D6306DFE1A6F30B200E16E85 /* ATLMConversationDetailViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107E1A6F2D99009BFA9C /* ATLMConversationDetailViewControllerTest.m */; };
 		D6306DFF1A6F30B200E16E85 /* ATLMConversationListViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107F1A6F2D99009BFA9C /* ATLMConversationListViewControllerTest.m */; };
 		D6306E001A6F30B200E16E85 /* ATLMConversationViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10801A6F2D99009BFA9C /* ATLMConversationViewControllerTest.m */; };
-		D6306E011A6F30B200E16E85 /* ATLMMesageDetailViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10831A6F2D99009BFA9C /* ATLMMesageDetailViewControllerTest.m */; };
 		D6306E021A6F30B200E16E85 /* ATLMPersistenceManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10841A6F2D99009BFA9C /* ATLMPersistenceManagerTest.m */; };
 		D6306E031A6F30B200E16E85 /* ATLMSettingsViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10861A6F2D99009BFA9C /* ATLMSettingsViewControllerTest.m */; };
 		D6306E041A6F30BE00E16E85 /* ATLMLayerContentFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10821A6F2D99009BFA9C /* ATLMLayerContentFactory.m */; };
@@ -190,13 +188,11 @@
 		B53937831A24F6AF00DE60F9 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		D61B107B1A6F2D99009BFA9C /* ATLMAPIManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAPIManagerTest.m; sourceTree = "<group>"; };
 		D61B107C1A6F2D99009BFA9C /* ATLMApplicationControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMApplicationControllerTest.m; sourceTree = "<group>"; };
-		D61B107D1A6F2D99009BFA9C /* ATLMAuthenticationViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAuthenticationViewControllerTest.m; sourceTree = "<group>"; };
 		D61B107E1A6F2D99009BFA9C /* ATLMConversationDetailViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConversationDetailViewControllerTest.m; sourceTree = "<group>"; };
 		D61B107F1A6F2D99009BFA9C /* ATLMConversationListViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConversationListViewControllerTest.m; sourceTree = "<group>"; };
 		D61B10801A6F2D99009BFA9C /* ATLMConversationViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMConversationViewControllerTest.m; sourceTree = "<group>"; };
 		D61B10811A6F2D99009BFA9C /* ATLMLayerContentFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMLayerContentFactory.h; sourceTree = "<group>"; };
 		D61B10821A6F2D99009BFA9C /* ATLMLayerContentFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMLayerContentFactory.m; sourceTree = "<group>"; };
-		D61B10831A6F2D99009BFA9C /* ATLMMesageDetailViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMMesageDetailViewControllerTest.m; sourceTree = "<group>"; };
 		D61B10841A6F2D99009BFA9C /* ATLMPersistenceManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMPersistenceManagerTest.m; sourceTree = "<group>"; };
 		D61B10851A6F2D99009BFA9C /* ATLMPushNotificationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMPushNotificationTest.m; sourceTree = "<group>"; };
 		D61B10861A6F2D99009BFA9C /* ATLMSettingsViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMSettingsViewControllerTest.m; sourceTree = "<group>"; };
@@ -466,11 +462,9 @@
 			children = (
 				D61B107B1A6F2D99009BFA9C /* ATLMAPIManagerTest.m */,
 				D61B107C1A6F2D99009BFA9C /* ATLMApplicationControllerTest.m */,
-				D61B107D1A6F2D99009BFA9C /* ATLMAuthenticationViewControllerTest.m */,
 				D61B107E1A6F2D99009BFA9C /* ATLMConversationDetailViewControllerTest.m */,
 				D61B107F1A6F2D99009BFA9C /* ATLMConversationListViewControllerTest.m */,
 				D61B10801A6F2D99009BFA9C /* ATLMConversationViewControllerTest.m */,
-				D61B10831A6F2D99009BFA9C /* ATLMMesageDetailViewControllerTest.m */,
 				D61B10841A6F2D99009BFA9C /* ATLMPersistenceManagerTest.m */,
 				D61B10861A6F2D99009BFA9C /* ATLMSettingsViewControllerTest.m */,
 			);
@@ -731,11 +725,9 @@
 				D6306E061A6F30BE00E16E85 /* ATLMTestUser.m in Sources */,
 				D6306DFB1A6F30B200E16E85 /* ATLMAPIManagerTest.m in Sources */,
 				D6306DFC1A6F30B200E16E85 /* ATLMApplicationControllerTest.m in Sources */,
-				D6306DFD1A6F30B200E16E85 /* ATLMAuthenticationViewControllerTest.m in Sources */,
 				D6306DFE1A6F30B200E16E85 /* ATLMConversationDetailViewControllerTest.m in Sources */,
 				D6306DFF1A6F30B200E16E85 /* ATLMConversationListViewControllerTest.m in Sources */,
 				D6306E001A6F30B200E16E85 /* ATLMConversationViewControllerTest.m in Sources */,
-				D6306E011A6F30B200E16E85 /* ATLMMesageDetailViewControllerTest.m in Sources */,
 				D6306E021A6F30B200E16E85 /* ATLMPersistenceManagerTest.m in Sources */,
 				D6306E031A6F30B200E16E85 /* ATLMSettingsViewControllerTest.m in Sources */,
 			);

@@ -23,7 +23,7 @@
 #import "KIFSystemTestActor+ViewControllerActions.h"
 #import <XCTest/XCTest.h>
 
-#import "ATLMIApplicationController.h"
+#import "ATLMApplicationController.h"
 #import "ATLMTestInterface.h"
 #import "ATLMTestUser.h"
 
@@ -45,9 +45,11 @@ extern NSString *const ATLMSettingsViewControllerTitle;
 - (void)setUp
 {
     [super setUp];
-    ATLMIApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    
+    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
-    [self.testInterface registerAndAuthenticateTestUser:[ATLMTestUser testUserWithNumber:0]];
+    [self.testInterface connectLayerClient];
+    [self.testInterface registerTestUserWithIdentifier:@"test"];
 }
 
 - (void)tearDown
@@ -77,14 +79,21 @@ extern NSString *const ATLMSettingsViewControllerTitle;
 
 - (void)testToVerifyConversationSelectionFunctionality
 {
-    ATLMTestUser *testUser2 = [self.testInterface registerTestUser:[ATLMTestUser testUserWithNumber:2]];
-    [self.testInterface loadContacts];
+    NSString *testUserName = @"Test User2";
+    [self.testInterface registerTestUserWithIdentifier:testUserName];
     
-    NSSet *participants = [NSSet setWithObject:testUser2.userID];
-    [self.testInterface.contentFactory newConversationsWithParticipants:participants];
-    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participants]];
+    __block NSSet *participant;
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
+    [self.testInterface.applicationController.persistenceManager performUserSearchWithString:testUserName completion:^(NSArray *users, NSError *error) {
+        ATLMUser *user = users.firstObject;
+        participant = [NSSet setWithObject:user.participantIdentifier];
+        [latch decrementCount];
+    }];
+
+    [self.testInterface.contentFactory newConversationsWithParticipants:participant];
+    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participant]];
     
-    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participants]];
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participant]];
     [tester waitForViewWithAccessibilityLabel:ATLMConversationViewControllerAccessibilityLabel];
     [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
 }
