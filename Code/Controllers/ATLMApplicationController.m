@@ -47,12 +47,10 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
     _layerClient = layerClient;
     _layerClient.delegate = self;
     if (!_layerClient.isConnected && !_layerClient.isConnecting) {
-        [SVProgressHUD showWithStatus:@"Connecting To Layer"];
         [_layerClient connectWithCompletion:^(BOOL success, NSError *error) {
             if (error) {
                 NSLog(@"Layer failled to connect with error: %@", error);
             } else {
-                [SVProgressHUD showSuccessWithStatus:@"Connected!"];
                 NSLog(@"Layer Client connected.");
             }
         }];

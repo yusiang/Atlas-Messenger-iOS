@@ -73,7 +73,7 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 
 /**
  @abstract Attempts to resume an exsiting application session.
- @param session an `ATLMSession` object containin information about an existing Atlast Messenger session. 
+ @param session an `ATLMSession` object containing information about an existing Atlast Messenger session. 
  @param error A reference to an `NSError` object that will contain error information in case the action was not successful.
  */
 - (BOOL)resumeSession:(ATLMSession *)session error:(NSError **)error;
