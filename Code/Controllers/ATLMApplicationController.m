@@ -32,18 +32,7 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
 {
     self = [super init];
     if (self) {
-        _layerClient.delegate = self;
         _persistenceManager = persistenceManager;
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:)
-                                                     name:LYRClientWillBeginSynchronizationNotification
-                                                   object:_layerClient];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:)
-                                                     name:LYRClientDidFinishSynchronizationNotification
-                                                   object:_layerClient];
     }
     return self;
 }
@@ -56,6 +45,7 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
 - (void)setLayerClient:(ATLMLayerClient *)layerClient
 {
     _layerClient = layerClient;
+    _layerClient.delegate = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:) name:LYRClientWillBeginSynchronizationNotification object:layerClient];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:) name:LYRClientDidFinishSynchronizationNotification object:layerClient];
 }
