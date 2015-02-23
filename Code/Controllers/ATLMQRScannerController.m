@@ -33,7 +33,7 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     
     [self setupCaptureSession];
     [self setupOverlay];
-    [self startStopReading];
+    [self toggleQRCapture];
     
     UITapGestureRecognizer *testTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(testTap)];
     [self.view addGestureRecognizer:testTap];
@@ -78,7 +78,7 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     [self.view.layer addSublayer:self.videoPreviewLayer];
 }
 
-- (void)startStopReading
+- (void)toggleQRCapture
 {
     if (!_isReading) {
         [self startReading];
@@ -105,7 +105,7 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
         if ([[metadataObj type] isEqualToString:AVMetadataObjectTypeQRCode]) {
             NSLog(@"Received Layer App ID: %@", metadataObj.stringValue);
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self startStopReading];
+                [self toggleQRCapture];
                 if (!self.applicationID) {
                     self.applicationID = metadataObj.stringValue;
                     [self setupLayerWithAppID:self.applicationID];
@@ -140,7 +140,7 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    [self startStopReading];
+    [self toggleQRCapture];
 }
 
 @end

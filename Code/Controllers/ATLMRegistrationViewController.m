@@ -107,7 +107,8 @@ CGFloat const ATLMregistrationTextFieldBottomPadding = 20;
             }
             NSLog(@"Authenticating Layer");
             if (!identityToken) {
-                ATLMAlertWithError(nil);
+                NSError *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMInvalidIdentityToken userInfo:@{NSLocalizedDescriptionKey : @"Failed to obtain a valid identity token"}];
+                ATLMAlertWithError(error);
                 return;
             }
             [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {

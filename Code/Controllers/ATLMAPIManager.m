@@ -142,11 +142,17 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 {
     if (self.authenticatedSession) return YES;
     if (!session) {
-        if (error) *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"No authenticated session"}];
-        return NO;
+        if (error) {
+            *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"No authenticated session."}];
+            return NO;
+        }
     }
     self.authenticatedSession = session;
-    [self.persistenceManager persistSession:session error:nil];
+    BOOL success = [self.persistenceManager persistSession:session error:nil];
+    if (!success) {
+        *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"There was an error persisting the session."}];
+        return NO;
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:ATLMUserDidAuthenticateNotification object:session.user];
     return YES;
 }
