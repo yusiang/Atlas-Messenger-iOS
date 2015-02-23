@@ -435,6 +435,14 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 
 #pragma mark - UITextFieldDelegate
 
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSString *title = [self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey];
+    if (![textField.text isEqualToString:title]) {
+        [self.conversation setValue:textField.text forMetadataAtKeyPath:ATLMConversationMetadataNameKey];
+    }
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (textField.text.length > 0) {

@@ -30,7 +30,7 @@ extern NSString *const ATLMUserDidAuthenticateNotification;
 extern NSString *const ATLMUserDidDeauthenticateNotification;
 
 /**
- @abstract The `ATLMAPIManager` class provides an interface for interacting with the Layer Identity Provider JSON API and managing 
+ @abstract The `ATLMAPIManager` class provides an interface for interacting with the Layer Identity Provider JSON API and managing
  the Layer sample app authentication state.
  */
 @interface ATLMAPIManager : NSObject
@@ -46,12 +46,19 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
  */
 @property (nonatomic, readonly) LYRClient *layerClient;
 
+/**
+ @abstract The `ATLMPersistenceManage` object used to persiste user information
+ */
 @property (nonatomic) ATLMPersistenceManager *persistenceManager;
+
 /**
  @abstract The current authenticated session or `nil` if not yet authenticated.
  */
 @property (nonatomic) ATLMSession *authenticatedSession;
 
+/**
+ @abstract The baseURL used to initailze the receiver.
+ */
 @property (nonatomic) NSURL *baseURL;
 
 /**
@@ -59,10 +66,14 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
  */
 @property (nonatomic) NSURLSessionConfiguration *authenticatedURLSessionConfiguration;
 
-//TODO - document
+/**
+ @abstract The currently configured URL session`
+ */
 @property (nonatomic) NSURLSession *URLSession;
 
-//TODO - Implement and document
+/**
+ @abstract Attempts to resume an exsiting application session.
+ */
 - (BOOL)resumeSession:(ATLMSession *)session error:(NSError **)error;
 
 /**
@@ -77,4 +88,3 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 - (void)deauthenticate;
 
 @end
-

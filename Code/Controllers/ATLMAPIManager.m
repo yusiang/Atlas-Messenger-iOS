@@ -70,7 +70,7 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 
 - (BOOL)resumeSession:(ATLMSession *)session error:(NSError *__autoreleasing *)error
 {
-    return YES;
+    return [self configureWithSession:session error:error];
 }
 
 - (void)deauthenticate
@@ -82,10 +82,10 @@ NSString *const ATLMAtlasUserNameKey = @"name";
     
     [self.URLSession invalidateAndCancel];
     self.URLSession = [self defaultURLSession];
-    [[NSNotificationCenter defaultCenter] postNotificationName:ATLMUserDidDeauthenticateNotification object:self.authenticatedSession.user];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ATLMUserDidDeauthenticateNotification object:nil];
 }
 
-#pragma mark - Registration 
+#pragma mark - Registration
 
 - (void)registerUserWithName:(NSString*)name nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion
 {
@@ -146,6 +146,7 @@ NSString *const ATLMAtlasUserNameKey = @"name";
         return NO;
     }
     self.authenticatedSession = session;
+    [self.persistenceManager persistSession:session error:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:ATLMUserDidAuthenticateNotification object:session.user];
     return YES;
 }

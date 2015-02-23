@@ -124,7 +124,7 @@ static ATLMDateProximity ATLMProximityToDate(NSDate *date)
     return ATLMDateProximityOther;
 }
 
-@interface ATLMConversationViewController () <ATLMConversationDetailViewControllerDelegate, ATLAddressBarControllerDataSource, ATLParticipantTableViewControllerDelegate>
+@interface ATLMConversationViewController () <ATLMConversationDetailViewControllerDelegate, ATLParticipantTableViewControllerDelegate>
 
 @property (nonatomic) ATLMParticipantDataSource *participantDataSource;
 
@@ -163,7 +163,6 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     } else {
         self.title = [self defaultTitle];
     }
-    self.addressBarController.dataSource = self;
 }
 
 - (void)dealloc

@@ -18,6 +18,7 @@
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property (nonatomic) BOOL isReading;
+@property (nonatomic, strong) NSString *applicationID;
 
 @end
 
@@ -105,7 +106,10 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
             NSLog(@"Received Layer App ID: %@", metadataObj.stringValue);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self startStopReading];
-                [self setupLayerWithAppID:metadataObj.stringValue];
+                if (!self.applicationID) {
+                    self.applicationID = metadataObj.stringValue;
+                    [self setupLayerWithAppID:self.applicationID];
+                }
             });
             _isReading = NO;
         }

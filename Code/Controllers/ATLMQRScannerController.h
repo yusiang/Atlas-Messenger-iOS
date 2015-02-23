@@ -15,4 +15,6 @@ extern NSString *const ATLMDidReceiveLayerAppID;
 
 @property (nonatomic) ATLMApplicationController *applicationController;
 
+- (void)presentRegistrationViewController;
+
 @end
