@@ -31,7 +31,7 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 
 /**
  @abstract The `ATLMAPIManager` class provides an interface for interacting with the Layer Identity Provider JSON API and managing
- the Layer sample app authentication state.
+ the Atlast authentication state.
  */
 @interface ATLMAPIManager : NSObject
 
@@ -47,7 +47,7 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 @property (nonatomic, readonly) LYRClient *layerClient;
 
 /**
- @abstract The `ATLMPersistenceManage` object used to persiste user information
+ @abstract The `ATLMPersistenceManager` object used to persist user information
  */
 @property (nonatomic) ATLMPersistenceManager *persistenceManager;
 
@@ -67,7 +67,7 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 @property (nonatomic) NSURLSessionConfiguration *authenticatedURLSessionConfiguration;
 
 /**
- @abstract The currently configured URL session`
+ @abstract The currently configured URL session.
  */
 @property (nonatomic) NSURLSession *URLSession;
 
@@ -78,7 +78,7 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 
 /**
  @abstract Registers and authenticates an Altas Messenger user.
- @param completion The completion block that is called upon successfully registering a user. Completion block cannot be `nil`.
+ @param completion a completion block that is called upon successfully registering a user. Completion block cannot be `nil`.
  */
 - (void)registerUserWithName:(NSString*)name nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion;
 

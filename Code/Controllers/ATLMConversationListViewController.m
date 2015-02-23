@@ -97,7 +97,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 }
 
 /**
- Atlas - Informs the delegate that a search has been performed. Atlas messenger queries for and returns objects conforming to the `ATLParticipant` protocol whose `fullName` properties contain the search text.
+ Atlas - Informs the delegate that a search has been performed. Atlas messenger queries for, and returns objects conforming to the `ATLParticipant` protocol whose `fullName` property contains the search text.
  */
 - (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didSearchForText:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
@@ -109,7 +109,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 #pragma mark - ATLConversationListViewControllerDataSource
 
 /**
- Atlas - Returns a label that is used to represent the conversation. This application puts the name representing the `lastMessage.sentByUserID` property first in the string.
+ Atlas - Returns a label that is used to represent the conversation. Atlas Messenger puts the name representing the `lastMessage.sentByUserID` property first in the string.
  */
 - (NSString *)conversationListViewController:(ATLConversationListViewController *)conversationListViewController titleForConversation:(LYRConversation *)conversation
 {
