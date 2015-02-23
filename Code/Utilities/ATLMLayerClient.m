@@ -51,7 +51,7 @@
     return [self executeQuery:query error:nil].firstObject;
 }
 
-- (LYRConversation *)conversationForIdentifier:(NSURL *)identifier
+- (LYRConversation *)existingConversationForIdentifier:(NSURL *)identifier
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"identifier" operator:LYRPredicateOperatorIsEqualTo value:identifier];
@@ -59,7 +59,7 @@
     return [self executeQuery:query error:nil].firstObject;
 }
 
-- (LYRConversation *)conversationForParticipants:(NSSet *)participants
+- (LYRConversation *)existingConversationForParticipants:(NSSet *)participants
 {
     LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
     query.predicate = [LYRPredicate predicateWithProperty:@"participants" operator:LYRPredicateOperatorIsEqualTo value:participants];

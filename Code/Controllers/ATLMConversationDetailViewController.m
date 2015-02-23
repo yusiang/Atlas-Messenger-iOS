@@ -412,7 +412,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 - (void)switchToConversationForParticipants
 {
     NSSet *participants = [NSSet setWithArray:self.participantIdentifiers];
-    LYRConversation *conversation = [self.applicationController.layerClient conversationForParticipants:participants];
+    LYRConversation *conversation = [self.applicationController.layerClient existingConversationForParticipants:participants];
     if (!conversation) {
         conversation = [self.applicationController.layerClient newConversationWithParticipants:participants options:nil error:nil];
     }

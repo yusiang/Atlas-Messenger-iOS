@@ -31,9 +31,9 @@
 
 - (LYRMessage *)messageForIdentifier:(NSURL *)identifier;
 
-- (LYRConversation *)conversationForIdentifier:(NSURL *)identifier;
+- (LYRConversation *)existingConversationForIdentifier:(NSURL *)identifier;
 
-- (LYRConversation *)conversationForParticipants:(NSSet *)participants;
+- (LYRConversation *)existingConversationForParticipants:(NSSet *)participants;
 
 @end
 

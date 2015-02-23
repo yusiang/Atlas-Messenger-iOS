@@ -226,7 +226,7 @@ void ATLMTestResetConfiguration(void)
 - (LYRConversation *)conversationFromRemoteNotification:(NSDictionary *)remoteNotification
 {
     NSURL *conversationIdentifier = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.conversation_identifier"]];
-    return [self.applicationController.layerClient conversationForIdentifier:conversationIdentifier];
+    return [self.applicationController.layerClient existingConversationForIdentifier:conversationIdentifier];
 }
 
 - (void)navigateToViewForConversation:(LYRConversation *)conversation
