@@ -28,13 +28,17 @@
 
 #import "ATLMConversationDetailViewController.h"
 
+extern NSString *const ATLMConversationDetailTableViewAccessibilityLabel;
 extern NSString *const ATLMConversationDetailViewControllerTitle;
 extern NSString *const ATLMAddParticipantsAccessibilityLabel;
 extern NSString *const ATLMConversationListTableViewAccessibilityLabel;
 extern NSString *const ATLMDetailsButtonAccessibilityLabel;
 extern NSString *const ATLMConversationNamePlaceholderText;
+extern NSString *const ATLMShareLocationText;
+extern NSString *const ATLMDeleteConversationText;
+extern NSString *const ATLMLeaveConversationText;
 
-@interface ATLMConversationDetailViewControllerTest : KIFTestCase <ATLMConversationDetailViewControllerDelegate>
+@interface ATLMConversationDetailViewControllerTest : KIFTestCase
 
 @property (nonatomic) LYRConversation *conversation;
 @property (nonatomic) ATLMTestInterface *testInterface;
@@ -45,216 +49,262 @@ extern NSString *const ATLMConversationNamePlaceholderText;
 
 @implementation ATLMConversationDetailViewControllerTest
 
-//- (void)setUp
-//{
-//    [super setUp];
-//
-//    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
-//    self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
-//    [self.testInterface registerAndAuthenticateTestUser:[ATLMTestUser testUserWithNumber:0]];
-//    
-//    self.participant = [self.testInterface registerTestUser:[ATLMTestUser testUserWithNumber:2]];
-//    [self.testInterface loadContacts];
-//    
-//    self.participantIdentifiers = [NSSet setWithObject:self.participant.participantIdentifier];
-//    self.conversation = [self.testInterface.contentFactory newConversationsWithParticipants:self.participantIdentifiers];
-//    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participantIdentifiers]];
-//}
-//
-//- (void)tearDown
-//{
-//    [self.testInterface logoutIfNeeded];
-//    [super tearDown];
-//}
-//
-//- (void)testToVerifyConversationDetailViewControllerUI
-//{
-//    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
-//    controller.detailDataSource = self;
-//    controller.detailDelegate = self;
-//    
-//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-//    [system presentModalViewController:navigationController configurationBlock:nil];
-//    [tester waitForTimeInterval:10];
-//}
-//
-//- (void)testToVerifyConversationDetailViewControllerDelegateOnParticpantAdd
-//{
-//    ATLMTestUser *testUser3 = [self.testInterface registerTestUser:[ATLMTestUser testUserWithNumber:3]];
-//    [self.testInterface loadContacts];
-//    
-//    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
-//    controller.applicationController = self.testInterface.applicationController;
-//    id delegateMock = OCMProtocolMock(@protocol(ATLMConversationDetailViewControllerDelegate));
-//    controller.detailDelegate = delegateMock;
-//    controller.detailDataSource = self;
-//    
-//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-//    [system presentModalViewController:navigationController configurationBlock:nil];
-//    
-//    [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
-//        
-//    }] conversationDetailViewController:[OCMArg any] didChangeConversation:[OCMArg any]];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[[ATLMTestUser testUserWithNumber:2] fullName]];
-//    [tester tapViewWithAccessibilityLabel:ATLMAddParticipantsAccessibilityLabel];
-//    [tester tapViewWithAccessibilityLabel:testUser3.fullName];
-//
-//    [delegateMock verify];
-//}
-//
-//- (void)testToVerifyConversationDetailViewControllerDelegateOnParticpantDelete
-//{
-//    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
-//    controller.applicationController = self.testInterface.applicationController;
-//    id delegateMock = OCMProtocolMock(@protocol(ATLMConversationDetailViewControllerDelegate));
-//    controller.detailDelegate = delegateMock;
-//    controller.detailDataSource = self;
-//    
-//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-//    [system presentModalViewController:navigationController configurationBlock:nil];
-//    
-//    [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
-//        
-//    }] conversationDetailViewController:[OCMArg any] didChangeConversation:[OCMArg any]];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[[ATLMTestUser testUserWithNumber:2] fullName]];
-//    [tester swipeViewWithAccessibilityLabel:[[ATLMTestUser testUserWithNumber:2] fullName] inDirection:KIFSwipeDirectionLeft];
-//    [tester tapViewWithAccessibilityLabel:@"Remove"];
-//    [tester waitForAbsenceOfViewWithAccessibilityLabel:[[ATLMTestUser testUserWithNumber:2] fullName]];
-//    [delegateMock verify];
-//}
-//
-//- (void)testToVeriyConversationDetailViewDelegateOnLocationShare
-//{
-////    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
-////    controller.applicationController = self.testInterface.applicationController;
-////    id delegateMock = OCMProtocolMock(@protocol(ATLMConversationDetailViewControllerDelegate));
-////    controller.detailDelegate = delegateMock;
-////    controller.detailDataSource = self;
-////    
-////    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-////    [system presentModalViewController:navigationController configurationBlock:nil];
-////    
-////    [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
-////        
-////    }] conversationDetailViewController:[OCMArg any] didShareLocation:[OCMArg any]];
-////    
-////    [tester tapViewWithAccessibilityLabel:@"Share My Location"];
-////    [delegateMock verifyWithDelay:2];
-//}
-//
-//- (void)testToVerifyConversationDetailViewDataSource
-//{
-//    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
-//    controller.applicationController = self.testInterface.applicationController;
-//    id delegateMock = OCMProtocolMock(@protocol(ATLMConversationDetailViewControllerDataSource));
-//    controller.detailDataSource = delegateMock;
-//    
-//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-//    [system presentModalViewController:navigationController configurationBlock:nil];
-//
-//    [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
-//        
-//    }] conversationDetailViewController:[OCMArg any] participantForIdentifier:[OCMArg any]];
-//    
-//    [tester waitForViewWithAccessibilityLabel:[[ATLMTestUser testUserWithNumber:2] fullName]];
-//    [delegateMock verify];
-//}
-//
-//- (void)testToVerifyConversationDeletionFunctionality
-//{
-//    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participantIdentifiers]];
-//    [tester tapViewWithAccessibilityLabel:ATLMDetailsButtonAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailViewControllerTitle];
-//    
-//    [tester tapViewWithAccessibilityLabel:@"Global Delete Conversation"];
-//    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLMConversationDetailViewControllerTitle];
-//    [tester waitForViewWithAccessibilityLabel:ATLMConversationListTableViewAccessibilityLabel];
-//}
-//
-//- (void)testToVerifyMetadataFunctionality
-//{
-//    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
-//    controller.applicationController = self.testInterface.applicationController;
-//    id delegateMock = OCMProtocolMock(@protocol(ATLMConversationDetailViewControllerDataSource));
-//    controller.detailDataSource = delegateMock;
-//    controller.detailDataSource = self;
-//    
-//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-//    [system presentModalViewController:navigationController configurationBlock:nil];
-//    
-//    NSString *conversationName = @"New Name";
-//    [tester tapViewWithAccessibilityLabel:ATLMConversationNamePlaceholderText];
-//    [tester enterText:conversationName intoViewWithAccessibilityLabel:ATLMConversationNamePlaceholderText];
-//    [tester tapViewWithAccessibilityLabel:@"done"];
-//    
-//    [tester waitForViewWithAccessibilityLabel:conversationName];
-//    expect([self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey]).to.equal(conversationName);
-//
-//}
-//
-//- (void)testToVerifyParticipantBlockingFunctionality
-//{
-//    [self navigateToConversationDetailViewController];
-//    
-//    [tester swipeViewWithAccessibilityLabel:self.participant.fullName inDirection:KIFSwipeDirectionLeft];
-//    [tester waitForViewWithAccessibilityLabel:@"Block"];
-//    [tester tapViewWithAccessibilityLabel:@"Block"];
-//    [tester waitForViewWithAccessibilityLabel:@"Blocked"];
-//    
-//    LYRPolicy *policy = self.testInterface.applicationController.layerClient.policies.firstObject;
-//    expect(policy).toNot.beNil;
-//    expect(policy.sentByUserID).to.equal(self.participant.participantIdentifier);
-//}
-//
-//- (void)testToVerifyParticipantUnBlockingFunctionality
-//{
-//    LYRPolicy *policy = [LYRPolicy policyWithType:LYRPolicyTypeBlock];
-//    policy.sentByUserID = self.participant.participantIdentifier;
-//    NSError *error;
-//    [self.testInterface.applicationController.layerClient addPolicy:policy error:&error];
-//    expect(error).to.beNil;
-//    
-//    LYRPolicy *newPolicy = self.testInterface.applicationController.layerClient.policies.firstObject;
-//    expect(newPolicy).toNot.beNil;
-//    expect(newPolicy.sentByUserID).to.equal(self.participant.participantIdentifier);
-//    
-//    [self navigateToConversationDetailViewController];
-//    [tester waitForViewWithAccessibilityLabel:@"Blocked"];
-//    [tester swipeViewWithAccessibilityLabel:self.participant.fullName inDirection:KIFSwipeDirectionLeft];
-//    [tester waitForViewWithAccessibilityLabel:@"Unblock"];
-//    [tester tapViewWithAccessibilityLabel:@"Unblock"];
-//    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Blocked"];
-//    
-//    NSOrderedSet *policies = self.testInterface.applicationController.layerClient.policies;
-//    expect(policies).to.beNil;
-//}
-//
-//- (void)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
-//{
-//    expect(conversationDetailViewController).toNot.beNil;
-//    expect(conversation).toNot.beNil;
-//}
-//
-//- (void)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController didShareLocation:(CLLocation *)location
-//{
-//    expect(conversationDetailViewController).toNot.beNil;
-//    expect(location).toNot.beNil;
-//}
-//
-//- (id<ATLParticipant>)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
-//{
-//    expect(conversationDetailViewController).toNot.beNil;
-//    expect(participantIdentifier).toNot.beNil;
-//    return [self.testInterface userForIdentifier:participantIdentifier];
-//}
-//
-//- (void)navigateToConversationDetailViewController
-//{
-//    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participantIdentifiers]];
-//    [tester tapViewWithAccessibilityLabel:ATLMDetailsButtonAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailViewControllerTitle];
-//}
+- (void)setUp
+{
+    [super setUp];
+
+    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
+    [self.testInterface connectLayerClient];
+    [self.testInterface deauthenticateIfNeeded];
+    [self.testInterface registerTestUserWithIdentifier:@"test"];
+}
+
+- (void)tearDown
+{
+    [self.testInterface clearLayerContent];
+    [tester waitForTimeInterval:1];
+    [self.testInterface deauthenticateIfNeeded];
+    [super tearDown];
+}
+
+- (void)testToVerifyConversationDetailViewControllerUI
+{
+    [self setup1on1Conversation];
+
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [system presentModalViewController:navigationController configurationBlock:nil];
+    UITableView *tableView = (UITableView *)[tester waitForViewWithAccessibilityLabel:ATLMConversationDetailTableViewAccessibilityLabel ];
+    expect(tableView.numberOfSections).to.equal(4);
+}
+
+
+- (void)testToVerifyAddingParticipantToA1on1Conversation
+{
+    [self setup1on1Conversation];
+    
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    controller.applicationController = self.testInterface.applicationController;
+    
+    id delegateMock = OCMProtocolMock(@protocol(ATLMConversationDetailViewControllerDelegate));
+    controller.detailDelegate = delegateMock;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [system presentModalViewController:navigationController configurationBlock:nil];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailTableViewAccessibilityLabel];
+    
+    [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
+        LYRConversation *conversation;
+        [invocation getArgument:&conversation atIndex:3];
+        expect(conversation).toNot.equal(self.conversation);
+        expect(conversation.participants).toNot.contain(self.testInterface.applicationController.layerClient.authenticatedUserID);
+        expect(conversation.participants.count).to.equal(self.conversation.participants.count);
+    }] conversationDetailViewController:[OCMArg any] didChangeConversation:[OCMArg any]];
+
+    [tester tapViewWithAccessibilityLabel:ATLMAddParticipantsAccessibilityLabel];
+    [tester tapViewWithAccessibilityLabel:@"Blake atlas"];
+    [delegateMock verify];
+}
+
+- (void)testToVerifyAddingParticipantToAGroupConversation
+{
+    [self setupGroupConversation];
+    
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    controller.applicationController = self.testInterface.applicationController;
+    
+    id delegateMock = OCMProtocolMock(@protocol(ATLMConversationDetailViewControllerDelegate));
+    controller.detailDelegate = delegateMock;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [system presentModalViewController:navigationController configurationBlock:nil];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailTableViewAccessibilityLabel];
+    
+    [[delegateMock reject] conversationDetailViewController:[OCMArg any] didChangeConversation:[OCMArg any]];
+    
+    [tester tapViewWithAccessibilityLabel:ATLMAddParticipantsAccessibilityLabel];
+    [tester tapViewWithAccessibilityLabel:@"Blake atlas"];
+    [delegateMock verify];
+}
+
+- (void)testToVerifyRemovalOfParticipantInGroupConversation
+{
+    [self setupGroupConversation];
+    
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    controller.applicationController = self.testInterface.applicationController;
+    
+    id delegateMock = OCMProtocolMock(@protocol(ATLMConversationDetailViewControllerDelegate));
+    controller.detailDelegate = delegateMock;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [system presentModalViewController:navigationController configurationBlock:nil];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailTableViewAccessibilityLabel];
+    
+    [[delegateMock reject] conversationDetailViewController:[OCMArg any] didChangeConversation:[OCMArg any]];
+    
+    ATLMUser *user = [self.testInterface userForIdentifier:@"0"];
+    [tester waitForViewWithAccessibilityLabel:user.fullName];
+    [tester swipeViewWithAccessibilityLabel:user.fullName inDirection:KIFSwipeDirectionLeft];
+    [tester tapViewWithAccessibilityLabel:@"Remove"];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:user.fullName];
+    [delegateMock verify];
+}
+
+
+- (void)testToVerifyBlockingOfParticipantInGroupConversation
+{
+    [self removeExistingPolicies];
+    [self setupGroupConversation];
+    
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    controller.applicationController = self.testInterface.applicationController;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [system presentModalViewController:navigationController configurationBlock:nil];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailTableViewAccessibilityLabel];
+    
+    ATLMUser *user = [self.testInterface userForIdentifier:@"0"];
+    [tester swipeViewWithAccessibilityLabel:user.fullName inDirection:KIFSwipeDirectionLeft];
+    [tester waitForViewWithAccessibilityLabel:@"Block"];
+    [tester tapViewWithAccessibilityLabel:@"Block"];
+    [tester waitForViewWithAccessibilityLabel:@"Blocked"];
+    
+    LYRPolicy *policy = self.testInterface.applicationController.layerClient.policies.firstObject;
+    expect(policy).toNot.beNil;
+    expect(policy.sentByUserID).to.equal(user.participantIdentifier);
+}
+
+- (void)testToVerifyUnBlockingOfParticipantInGroupConversation
+{
+    [self removeExistingPolicies];
+    [self setupGroupConversation];
+    
+    ATLMUser *user = [self.testInterface userForIdentifier:@"0"];
+    LYRPolicy *policy = [LYRPolicy policyWithType:LYRPolicyTypeBlock];
+    policy.sentByUserID = user.participantIdentifier;
+   
+    NSError *error;
+    [self.testInterface.applicationController.layerClient addPolicy:policy error:&error];
+    expect(error).to.beNil;
+    
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    controller.applicationController = self.testInterface.applicationController;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [system presentModalViewController:navigationController configurationBlock:nil];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailTableViewAccessibilityLabel];
+    
+    
+    [tester swipeViewWithAccessibilityLabel:user.fullName inDirection:KIFSwipeDirectionLeft];
+    [tester waitForViewWithAccessibilityLabel:@"Unblock"];
+    [tester tapViewWithAccessibilityLabel:@"Unblock"];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Blocked"];
+    
+    NSOrderedSet *policies = self.testInterface.applicationController.layerClient.policies;
+    expect(policies.count).to.beNil;
+}
+
+- (void)testToVeriyConversationDetailViewDelegateOnLocationShare
+{
+    [self setup1on1Conversation];
+    
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    controller.applicationController = self.testInterface.applicationController;
+    id delegateMock = OCMProtocolMock(@protocol(ATLMConversationDetailViewControllerDelegate));
+    controller.detailDelegate = delegateMock;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [system presentModalViewController:navigationController configurationBlock:nil];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailTableViewAccessibilityLabel];
+    
+    [[[delegateMock expect] andDo:^(NSInvocation *invocation) {
+        
+    }] conversationDetailViewControllerDidSelectShareLocation:[OCMArg any]];
+    
+    [tester tapViewWithAccessibilityLabel:ATLMShareLocationText];
+    [delegateMock verifyWithDelay:2];
+}
+
+- (void)testToVerifyConversationDeletionFunctionality
+{
+    [self setup1on1Conversation];
+    
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    controller.applicationController = self.testInterface.applicationController;
+    
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.conversation.participants]];
+    [tester tapViewWithAccessibilityLabel:@"Details"];
+
+    [tester tapViewWithAccessibilityLabel:ATLMDeleteConversationText];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLMConversationDetailViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationListTableViewAccessibilityLabel];
+    
+    expect(self.conversation.isDeleted).to.beTruthy;
+}
+
+- (void)testToVerifyLeaveConversationFunctionality
+{
+    [self setupGroupConversation];
+    
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    controller.applicationController = self.testInterface.applicationController;
+    
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.conversation.participants]];
+    [tester tapViewWithAccessibilityLabel:@"Details"];
+    
+    [tester tapViewWithAccessibilityLabel:ATLMLeaveConversationText];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLMConversationDetailViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationListTableViewAccessibilityLabel];
+    
+    expect(self.conversation.participants).toNot.contain(self.testInterface.applicationController.layerClient.authenticatedUserID);
+}
+
+- (void)testToVerifyMetadataFunctionality
+{
+    [self setupGroupConversation];
+    
+    ATLMConversationDetailViewController *controller = [ATLMConversationDetailViewController conversationDetailViewControllerWithConversation:self.conversation];
+    controller.applicationController = self.testInterface.applicationController;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [system presentModalViewController:navigationController configurationBlock:nil];
+    
+    NSString *conversationName = @"New Name";
+    [tester tapViewWithAccessibilityLabel:ATLMConversationNamePlaceholderText];
+    [tester enterText:conversationName intoViewWithAccessibilityLabel:ATLMConversationNamePlaceholderText];
+    [tester tapViewWithAccessibilityLabel:@"done"];
+    
+    [tester waitForViewWithAccessibilityLabel:conversationName];
+    expect([self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey]).to.equal(conversationName);
+}
+
+- (void)setup1on1Conversation
+{
+    NSSet *participants = [NSSet setWithObject:@"0"];
+    self.conversation = [self.testInterface.contentFactory newConversationsWithParticipants:participants];
+    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participants]];
+}
+
+- (void)setupGroupConversation
+{
+    NSSet *participants = [NSSet setWithObjects:@"0", @"3", nil];
+    self.conversation = [self.testInterface.contentFactory newConversationsWithParticipants:participants];
+    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participants]];
+}
+
+- (void)removeExistingPolicies
+{
+    [tester waitForTimeInterval:1];
+    NSOrderedSet *policies = self.testInterface.applicationController.layerClient.policies;
+    for (LYRPolicy *policy in policies) {
+        NSError *error;
+        [self.testInterface.applicationController.layerClient removePolicy:policy error:&error];
+        expect(error).to.beNil;
+    }
+    expect(self.testInterface.applicationController.layerClient.policies).to.beNil;
+}
 
 @end

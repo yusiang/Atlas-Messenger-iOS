@@ -49,12 +49,15 @@ extern NSString *const ATLMSettingsViewControllerTitle;
     ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
     [self.testInterface connectLayerClient];
+    [self.testInterface deauthenticateIfNeeded];
     [self.testInterface registerTestUserWithIdentifier:@"test"];
 }
 
 - (void)tearDown
 {
-    [self.testInterface logoutIfNeeded];
+    [self.testInterface clearLayerContent];
+    [tester waitForTimeInterval:1];
+    [self.testInterface deauthenticateIfNeeded];
     [super tearDown];
 }
 
@@ -79,9 +82,7 @@ extern NSString *const ATLMSettingsViewControllerTitle;
 
 - (void)testToVerifyConversationSelectionFunctionality
 {
-    NSString *testUserName = @"Test User2";
-    [self.testInterface registerTestUserWithIdentifier:testUserName];
-    
+    NSString *testUserName = @"Blake";
     __block NSSet *participant;
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
     [self.testInterface.applicationController.persistenceManager performUserSearchWithString:testUserName completion:^(NSArray *users, NSError *error) {
@@ -96,6 +97,20 @@ extern NSString *const ATLMSettingsViewControllerTitle;
     [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:participant]];
     [tester waitForViewWithAccessibilityLabel:ATLMConversationViewControllerAccessibilityLabel];
     [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
+}
+
+- (void)testToVerifyAllConversationDisplayInConversationList
+{
+    NSSet *participants = [NSSet setWithObject:@"0"];
+    [self.testInterface.contentFactory newConversationsWithParticipants:participants];
+    [self.testInterface.contentFactory newConversationsWithParticipants:participants];
+    [self.testInterface.contentFactory newConversationsWithParticipants:participants];
+    [self.testInterface.contentFactory newConversationsWithParticipants:participants];
+    [self.testInterface.contentFactory newConversationsWithParticipants:participants];
+    
+    UITableView *conversationTableView =  (UITableView *)[tester waitForViewWithAccessibilityLabel:ATLMConversationListTableViewAccessibilityLabel];
+    expect([conversationTableView numberOfRowsInSection:0]).to.equal(5);
+    expect(conversationTableView.numberOfSections).to.equal(1);
 }
 
 @end

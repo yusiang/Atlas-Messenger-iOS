@@ -47,73 +47,62 @@ extern NSString *const ATLMessageInputToolbarAccessibilityLabel;
 
 @implementation ATLMConversationViewControllerTest
 
-//- (void)setUp
-//{
-//    [super setUp];
-//    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
-//    self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
-//
-//    
-//    self.participants = [NSSet setWithObject:testUser2.userID];
-//    [self.testInterface.contentFactory newConversationsWithParticipants:self.participants];
-//    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-//}
-//
-//- (void)tearDown
-//{
-//    [self.testInterface logoutIfNeeded];
-//    [super tearDown];
-//}
-//
-//- (void)testToVerifyNewConversationViewControllerUI
-//{
-//    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
-//    [tester tapViewWithAccessibilityLabel:ATLMComposeButtonAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLMConversationViewControllerAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLMessageInputToolbarAccessibilityLabel];
-//    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLMDetailsButtonAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
-//}
-//
-//- (void)testToVerifyExistingConversationViewControllerUI
-//{
-//    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-//    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLMessageInputToolbarAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLMConversationViewControllerAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLMDetailsButtonAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
-//}
-//
-//- (void)testToVerifyBackButtonFunctionality
-//{
-//    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-//    [tester tapViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
-//    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
-//}
-//
-//- (void)testToVerifyDetailsButtonFunctionality
-//{
-//    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-//    [tester tapViewWithAccessibilityLabel:ATLMDetailsButtonAccessibilityLabel];
-//    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailViewControllerTitle];
-//}
-//
-//- (void)testToVerifyDebugModeEnabledFunctionality
-//{
-//    self.testInterface.applicationController.debugModeEnabled = YES;
-//    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-//    [tester tapItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]  inCollectionViewWithAccessibilityIdentifier:ATLConversationCollectionViewAccessibilityIdentifier];
-//    [tester waitForViewWithAccessibilityLabel:ATLMMessageDetailViewControllerAccessibilityLabel];
-//}
-//
-//- (void)testToVerifyDebugModeDisabledFunctionality
-//{
-//    self.testInterface.applicationController.debugModeEnabled = NO;
-//    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-//    [tester tapItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]  inCollectionViewWithAccessibilityIdentifier:ATLConversationCollectionViewAccessibilityIdentifier];
-//    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLMMessageDetailViewControllerAccessibilityLabel];
-//}
+- (void)setUp
+{
+    [super setUp];
+    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
+    [self.testInterface connectLayerClient];
+    [self.testInterface deauthenticateIfNeeded];
+    [self.testInterface registerTestUserWithIdentifier:@"test"];
+    
+    self.participants = [NSSet setWithObject:@"0"];
+    [self.testInterface.contentFactory newConversationsWithParticipants:self.participants];
+    [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
+}
+
+- (void)tearDown
+{
+    [self.testInterface clearLayerContent];
+    [tester waitForTimeInterval:1];
+    [self.testInterface deauthenticateIfNeeded];
+    [super tearDown];
+}
+
+- (void)testToVerifyNewConversationViewControllerUI
+{
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
+    [tester tapViewWithAccessibilityLabel:ATLMComposeButtonAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationViewControllerAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLMessageInputToolbarAccessibilityLabel];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLMDetailsButtonAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
+}
+
+- (void)testToVerifyExistingConversationViewControllerUI
+{
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLAddressBarAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLMessageInputToolbarAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationViewControllerAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLMDetailsButtonAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
+}
+
+- (void)testToVerifyBackButtonFunctionality
+{
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
+    [tester tapViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
+    [tester waitForViewWithAccessibilityLabel:ATLConversationListViewControllerTitle];
+}
+
+- (void)testToVerifyDetailsButtonFunctionality
+{
+    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
+    [tester tapViewWithAccessibilityLabel:ATLMDetailsButtonAccessibilityLabel];
+    [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailViewControllerTitle];
+}
+
 
 @end

@@ -43,21 +43,17 @@
 
 @property ATLMLayerContentFactory *contentFactory;
 
-//-------------------------------------
-// Layer Client Authentication Methods
-//-------------------------------------
-
-- (LYRClient *)connectLayerClient;
-
 //-------------------------------
 // Authentication Methods
 //-------------------------------
 
+- (void)connectLayerClient;
+
 - (void)registerTestUserWithIdentifier:(NSString *)identifier;
 
-- (void)logoutIfNeeded;
+- (void)deauthenticateIfNeeded;
 
-- (void)deleteContacts;
+- (void)clearLayerContent;
 
 - (ATLMUser *)userForIdentifier:(NSString *)identifier;
 

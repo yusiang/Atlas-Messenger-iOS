@@ -49,6 +49,12 @@ extern NSString *const ATLMConversationMetadataNameKey;
  */
 - (void)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation;
 
+/**
+ @abstract Informs the delegate that a user has elected to share their current location. 
+ @param conversationDetailViewController The `ATLMConversationDetailViewController` in which the selection occurred.
+ */
+- (void)conversationDetaileViewControllerDidTapShareLocation:(ATLMConversationDetailViewController *)conversationDetailViewController;
+
 @end
 
 /**

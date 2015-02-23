@@ -21,6 +21,7 @@
 #import "ATLMTestInterface.h"
 #import "ATLMTestUser.h"
 #import "ATLMErrors.h"
+#import "ATLMUtilities.h"
 
 @interface ATLMTestInterface ();
 
@@ -39,49 +40,53 @@
     self = [super init];
     if (self) {
         _applicationController = applicationController;
+       
+        NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"0cbf780a-ba39-11e4-b645-4382000002fe"];
+        ATLMLayerClient *client = [ATLMLayerClient clientWithAppID:appID];
+        _applicationController.layerClient = client;
+        
+        ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:client];
+        _applicationController.APIManager = manager;
+        
         _contentFactory = [ATLMLayerContentFactory layerContentFactoryWithLayerClient:applicationController.layerClient];
     }
     return self;
 }
 
-- (LYRClient *)connectLayerClient
+- (void)connectLayerClient
 {
     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
-    NSUUID *appID = [[NSUUID alloc] initWithUUIDString:@"0cbf780a-ba39-11e4-b645-4382000002fe"];
-    ATLMLayerClient *client = [ATLMLayerClient clientWithAppID:appID];
-    [client connectWithCompletion:^(BOOL success, NSError *error) {
-        NSAssert(error, @"Error connecting Layer: %@", error);
+    [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         [latch decrementCount];
-        self.applicationController.layerClient = client;
     }];
-    return client;
+     [latch waitTilCount:0];
 }
 
 - (void)registerTestUserWithIdentifier:(NSString *)identifier
 {
-     LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:3 timeoutInterval:10];
+    // Hello
+    LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:3 timeoutInterval:10];
     [self.applicationController.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
-        NSAssert(error, @"Error requesting authentication nonce: %@", error);
+        NSAssert(!error, @"Error requesting authentication nonce: %@", error);
         [latch decrementCount];
         [self.applicationController.APIManager registerUserWithName:identifier nonce:nonce completion:^(NSString *identityToken, NSError *error) {
-            NSAssert(error, @"Error requesting identity token: %@", error);
+            NSAssert(!error, @"Error requesting identity token: %@", error);
             [latch decrementCount];
             [self.applicationController.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
-                NSAssert(error, @"Error authenticating with layer:%@", error);
+                NSAssert(!error, @"Error authenticating with layer:%@", error);
                 [latch decrementCount];
             }];
         }];
     }];
+    [latch waitTilCount:0];
 }
 
-- (void)logoutIfNeeded
+- (void)deauthenticateIfNeeded
 {
-    [self deleteContacts];
     if (self.applicationController.layerClient.authenticatedUserID) {
         LYRCountDownLatch *latch = [LYRCountDownLatch latchWithCount:1 timeoutInterval:10];
         [self.applicationController.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
-            expect(success).to.beTruthy;
-            expect(error).to.beNil;
+            NSAssert(!error, @"Error deauthenticating");
             [self.applicationController.APIManager deauthenticate];
             [latch decrementCount];
         }];
@@ -89,11 +94,23 @@
     }
 }
 
-- (void)deauthenticateLayerClientIfNeeded:(LYRClient *)layerClient
+- (void)clearLayerContent
 {
-    if (layerClient.authenticatedUserID) {
-        [self logoutIfNeeded];
+    NSOrderedSet *conversations = [self allLayerConversations];
+    for (LYRConversation *conversation in conversations) {
+        NSError *error;
+        [conversation delete:LYRDeletionModeAllParticipants error:&error];
+        NSAssert(!error, @"Failed to delete conversation with error: %@", error);
     }
+}
+
+- (NSOrderedSet *)allLayerConversations
+{
+    LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
+    NSError *error;
+    NSOrderedSet *conversations = [self.applicationController.layerClient executeQuery:query error:&error];
+    NSAssert(!error, @"Failed querying for conversations with error: %@", error);
+    return conversations;
 }
 
 - (ATLMUser *)randomUser
@@ -135,9 +152,13 @@
     
     ATLMUser *firstUser = [[participants allObjects] objectAtIndex:0];
     NSString *conversationLabel = firstUser.fullName;
+    if (participants.count == 1) {
+        return conversationLabel;
+    }
+    conversationLabel = firstUser.firstName;
     for (int i = 1; i < [[participants allObjects] count]; i++) {
         ATLMUser *user = [[participants allObjects] objectAtIndex:i];
-        conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.fullName];
+        conversationLabel = [NSString stringWithFormat:@"%@, %@", conversationLabel, user.firstName];
     }
     return conversationLabel;
 }
