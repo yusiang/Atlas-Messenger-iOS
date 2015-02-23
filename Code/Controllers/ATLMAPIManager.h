@@ -31,7 +31,7 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 
 /**
  @abstract The `ATLMAPIManager` class provides an interface for interacting with the Layer Identity Provider JSON API and managing
- the Atlast authentication state.
+ the Atlas authentication state.
  */
 @interface ATLMAPIManager : NSObject
 
