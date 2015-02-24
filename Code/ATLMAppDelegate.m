@@ -223,6 +223,11 @@ void ATLMTestResetConfiguration(void)
     }
 }
 
+-(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return YES;
+}
+
 - (LYRConversation *)conversationFromRemoteNotification:(NSDictionary *)remoteNotification
 {
     NSURL *conversationIdentifier = [NSURL URLWithString:[remoteNotification valueForKeyPath:@"layer.conversation_identifier"]];

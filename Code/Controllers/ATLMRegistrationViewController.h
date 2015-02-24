@@ -9,10 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "ATLMApplicationController.h"
 
+/**
+ @abstract The `ATLMRegistrationViewController` presents a simple interface for registering a user with a user name. 
+ */
 @interface ATLMRegistrationViewController : UIViewController
 
-@property (nonatomic) NSString *applicationID;
-
+/**
+ @abstract The controller object for the application.
+ */
 @property (nonatomic) ATLMApplicationController *applicationController;
 
 @end

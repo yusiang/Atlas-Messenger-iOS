@@ -28,13 +28,6 @@
 @interface ATLMConversationListViewController : ATLConversationListViewController
 
 /**
- @abstract Programatically simulates the selection of an `LYRConversation` object in the conversations table view.
- @discussion This method is used when opening the application in response to a push notification. When invoked, it
- will display the approriate conversation on screen.
- */
-- (void)selectConversation:(LYRConversation *)conversation;
-
-/**
  @abstract The controller object for the application.
  */
 @property (nonatomic) ATLMApplicationController *applicationController;
@@ -44,5 +37,12 @@
  the navigation controller.
  */
 @property (nonatomic) BOOL displaysInfoItem;
+
+/**
+ @abstract Programatically simulates the selection of an `LYRConversation` object in the conversations table view.
+ @discussion This method is used when opening the application in response to a push notification. When invoked, it
+ will display the approriate conversation on screen.
+ */
+- (void)selectConversation:(LYRConversation *)conversation;
 
 @end

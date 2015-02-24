@@ -32,6 +32,7 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 
 @interface ATLMAPIManager () <NSURLSessionDelegate>
 
+@property (nonatomic, readwrite) NSURL *baseURL;
 @property (nonatomic, readwrite) LYRClient *layerClient;
 
 @end
@@ -78,7 +79,6 @@ NSString *const ATLMAtlasUserNameKey = @"name";
     if (!self.authenticatedSession) return;
     
     self.authenticatedSession = nil;
-    self.authenticatedURLSessionConfiguration = nil;
     
     [self.URLSession invalidateAndCancel];
     self.URLSession = [self defaultURLSession];

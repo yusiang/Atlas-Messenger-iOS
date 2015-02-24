@@ -37,8 +37,7 @@ NSString *const ATLMLostConnection;
 NSString *const ATLMConnecting;
 
 /**
- @abstract The `ATLMSettingsViewControllerDelegate` protocol informs the receiver of events that have occurred
- within the controller.
+ @abstract The `ATLMSettingsViewControllerDelegate` protocol informs the receiver of events that have occurred within the controller.
  */
 @protocol ATLMSettingsViewControllerDelegate <NSObject>
 
@@ -57,8 +56,7 @@ NSString *const ATLMConnecting;
 @end
 
 /**
- @abstract The `ATLMSettingsViewController` presents a user interface for viewing and configuring application settings
- in addition to information related to the application.
+ @abstract The `ATLMSettingsViewController` presents a user interface for viewing and configuring application settings in addition to viewing information related to the application.
  */
 @interface ATLMSettingsViewController : UITableViewController
 

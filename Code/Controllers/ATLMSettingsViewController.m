@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger, ATLMLegalTableRow) {
 @interface ATLMSettingsViewController () <UITextFieldDelegate>
 
 @property (nonatomic) ATLMSettingsHeaderView *headerView;
+@property (nonatomic) ATLLogoView *logoView;
 
 @end
 
@@ -99,10 +100,10 @@ NSString *const ATLMConnecting = @"Connecting";
         [self.headerView updateConnectedStateWithString:ATLMDisconnected];
     }
     
+    self.logoView = [[ATLLogoView alloc] initWithFrame:CGRectMake(0, 0, 320, 160)];
+    self.tableView.tableFooterView = self.logoView;
     self.tableView.tableHeaderView = self.headerView;
     self.tableView.sectionHeaderHeight = 48.0f;
-    self.tableView.sectionFooterHeight = 0.0f;
-    self.tableView.tableFooterView = [ATLLogoView new];
     self.tableView.rowHeight = 44.0f;
     self.tableView.accessibilityIdentifier = ATLMSettingsTableViewAccessibilityIdentifier;
     
@@ -153,8 +154,9 @@ NSString *const ATLMConnecting = @"Connecting";
                     break;
                     
                 case ATLMInfoTableRowAppIDRow:
-                    cell.textLabel.text = @"App ID";
+                    cell.textLabel.text = @"Layer App ID";
                     cell.detailTextLabel.text = [self.applicationController.layerClient.appID UUIDString];
+                    cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
                     break;
                     
                 case ATLMInfoTableRowCount:

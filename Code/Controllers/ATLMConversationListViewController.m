@@ -61,8 +61,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
     
     self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationDeleted:) name:ATLMConversationDeletedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationParticipantsDidChange:) name:ATLMConversationParticipantsDidChangeNotification object:nil];
+    [self registerNotificationObservers];
 }
 
 - (void)dealloc
@@ -113,6 +112,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
  */
 - (NSString *)conversationListViewController:(ATLConversationListViewController *)conversationListViewController titleForConversation:(LYRConversation *)conversation
 {
+    // If we have a Conversation name in metadata, return it.
     NSString *conversationTitle = conversation.metadata[ATLMConversationMetadataNameKey];
     if (conversationTitle.length) {
         return conversationTitle;
@@ -139,21 +139,13 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
             }
         }
     }];
-    
     NSString *firstNamesString = [firstNames componentsJoinedByString:@", "];
     return firstNamesString;
 }
 
-/**
- Atlas - If needed, applications can display an avatar image that represents a conversation.
- */
-- (id<ATLAvatarItem>)conversationListViewController:(ATLConversationListViewController *)conversationListViewController avatarItemForConversation:(LYRConversation *)conversation
-{
-    return self.applicationController.APIManager.authenticatedSession.user;
-}
-
 #pragma mark - Conversation Selection
 
+// The following method handles presenting the correct `ATLMConversationViewController`, regardeless of the current state of the navigation stack.
 - (void)presentControllerWithConversation:(LYRConversation *)conversation
 {
     ATLMConversationViewController *existingConversationViewController = [self existingConversationViewController];
@@ -297,6 +289,12 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
     if (![nextViewController isKindOfClass:[ATLMConversationViewController class]]) return nil;
     
     return nextViewController;
+}
+
+- (void)registerNotificationObservers
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationDeleted:) name:ATLMConversationDeletedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationParticipantsDidChange:) name:ATLMConversationParticipantsDidChangeNotification object:nil];
 }
 
 @end
