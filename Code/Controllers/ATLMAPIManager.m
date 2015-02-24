@@ -71,6 +71,7 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 
 - (BOOL)resumeSession:(ATLMSession *)session error:(NSError *__autoreleasing *)error
 {
+    if (!session) return NO;
     return [self configureWithSession:session error:error];
 }
 

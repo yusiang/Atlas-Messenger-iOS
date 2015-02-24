@@ -25,7 +25,7 @@
 
 @implementation ATLMRegistrationViewController
 
-CGFloat const ATLMLogoViewBCenterYOffset = 160;
+CGFloat const ATLMLogoViewBCenterYOffset = 184;
 CGFloat const ATLMregistrationTextFieldWidthRatio = 0.8;
 CGFloat const ATLMregistrationTextFieldHeight = 60;
 CGFloat const ATLMregistrationTextFieldBottomPadding = 20;

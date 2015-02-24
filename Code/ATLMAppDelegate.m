@@ -118,6 +118,9 @@ void ATLMTestResetConfiguration(void)
         self.applicationController.APIManager = manager;
         if (![self resumeSession]) {
             [self.scannerController presentRegistrationViewController];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self removeSplashView];
+            });
         }
     }
 }
@@ -133,6 +136,8 @@ void ATLMTestResetConfiguration(void)
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
+    
+    [self addSplashView];
 }
 
 - (void)registerNotificationObservers
@@ -148,6 +153,7 @@ void ATLMTestResetConfiguration(void)
 - (BOOL)resumeSession
 {
     if (self.applicationController.layerClient.authenticatedUserID) {
+        [self connectLayerIfNeeded];
         ATLMSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
         if ([self.applicationController.APIManager resumeSession:session error:nil]) {
             [self presentConversationsListViewController:YES];
@@ -155,6 +161,15 @@ void ATLMTestResetConfiguration(void)
         }
     }
     return NO;
+}
+
+- (void)connectLayerIfNeeded
+{
+    if (!self.applicationController.layerClient.isConnected && !self.applicationController.layerClient.isConnecting) {
+        [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+            NSLog(@"Layer Client Connected");
+        }];
+    }
 }
 
 #pragma mark - Push Notifications
@@ -269,7 +284,6 @@ void ATLMTestResetConfiguration(void)
         NSLog(@"Persisted authenticated user session: %@", session);
     } else {
         NSLog(@"Failed persisting authenticated user: %@. Error: %@", session, error);
-        //TODO - Handle Error
     }
 }
 
@@ -285,6 +299,7 @@ void ATLMTestResetConfiguration(void)
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:^{
         self.conversationListViewController = nil;
+        [self setupLayer];
     }];
     [self unregisterForRemoteNotifications:[UIApplication sharedApplication]];
 }

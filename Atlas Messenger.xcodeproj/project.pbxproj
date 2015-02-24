@@ -60,7 +60,6 @@
 		251D8DDA1A9688C50000BFA2 /* ATLMStyleValue1TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DBD1A9688C40000BFA2 /* ATLMStyleValue1TableViewCell.m */; };
 		251D8DDB1A9688C50000BFA2 /* ATLMOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8DBF1A9688C40000BFA2 /* ATLMOverlayView.m */; };
 		259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 259A576E1950EB83000E27B0 /* InfoPlist.strings */; };
-		259A57751950EB83000E27B0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 259A57701950EB83000E27B0 /* Images.xcassets */; };
 		D62611691A98091800F6E707 /* layer-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D62611661A98091800F6E707 /* layer-logo@2x.png */; };
 		D626116A1A98091800F6E707 /* layer-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D62611671A98091800F6E707 /* layer-logo.png */; };
 		D626116B1A98091800F6E707 /* layer-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D62611681A98091800F6E707 /* layer-logo@3x.png */; };
@@ -68,6 +67,7 @@
 		D62611721A98153C00F6E707 /* layer-logo-gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D626116F1A98153C00F6E707 /* layer-logo-gray@3x.png */; };
 		D62611731A98153C00F6E707 /* layer-logo-gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D62611701A98153C00F6E707 /* layer-logo-gray@2x.png */; };
 		D62D17331A9C0D6700E0EFAF /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D62D17321A9C0D6700E0EFAF /* Info.plist */; };
+		D62D17351A9C22E100E0EFAF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D62D17341A9C22E100E0EFAF /* Images.xcassets */; };
 		D6306DFB1A6F30B200E16E85 /* ATLMAPIManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107B1A6F2D99009BFA9C /* ATLMAPIManagerTest.m */; };
 		D6306DFC1A6F30B200E16E85 /* ATLMApplicationControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107C1A6F2D99009BFA9C /* ATLMApplicationControllerTest.m */; };
 		D6306DFE1A6F30B200E16E85 /* ATLMConversationDetailViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B107E1A6F2D99009BFA9C /* ATLMConversationDetailViewControllerTest.m */; };
@@ -175,7 +175,6 @@
 		251D8DBF1A9688C40000BFA2 /* ATLMOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMOverlayView.m; sourceTree = "<group>"; };
 		259A57311950EB76000E27B0 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		259A576F1950EB83000E27B0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		259A57701950EB83000E27B0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		259A577B1950EB92000E27B0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Atlas MessengerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E3F5568A463FD6EA9B16318 /* Pods-Atlas MessengerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas MessengerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas MessengerTests/Pods-Atlas MessengerTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -208,6 +207,7 @@
 		D626116F1A98153C00F6E707 /* layer-logo-gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo-gray@3x.png"; sourceTree = "<group>"; };
 		D62611701A98153C00F6E707 /* layer-logo-gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo-gray@2x.png"; sourceTree = "<group>"; };
 		D62D17321A9C0D6700E0EFAF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D62D17341A9C22E100E0EFAF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../../../Resources/Images.xcassets; sourceTree = "<group>"; };
 		E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Atlas Messenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA8D4F84D7ED9670A81B8293 /* Pods-Atlas Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas Messenger.release.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas Messenger/Pods-Atlas Messenger.release.xcconfig"; sourceTree = "<group>"; };
 		F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.release.xcconfig"; sourceTree = "<group>"; };
@@ -425,6 +425,7 @@
 		259A576B1950EB83000E27B0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D62D17341A9C22E100E0EFAF /* Images.xcassets */,
 				D62D17321A9C0D6700E0EFAF /* Info.plist */,
 				D626116E1A98153C00F6E707 /* layer-logo-gray.png */,
 				D626116F1A98153C00F6E707 /* layer-logo-gray@3x.png */,
@@ -435,7 +436,6 @@
 				0AD6C4B419BD4CD6005142ED /* Icons */,
 				0ABEFFAE196B7686006FFFF3 /* logo@2x.png */,
 				259A576E1950EB83000E27B0 /* InfoPlist.strings */,
-				259A57701950EB83000E27B0 /* Images.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -595,7 +595,6 @@
 				0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */,
 				D62611691A98091800F6E707 /* layer-logo@2x.png in Resources */,
 				0A605F3119BF735D00D773AF /* logo-icon@2x.png in Resources */,
-				259A57751950EB83000E27B0 /* Images.xcassets in Resources */,
 				0A605F3219BF735D00D773AF /* logo-icon.png in Resources */,
 				0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */,
 				D62611711A98153C00F6E707 /* layer-logo-gray.png in Resources */,
@@ -603,6 +602,7 @@
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
 				D62D17331A9C0D6700E0EFAF /* Info.plist in Resources */,
 				0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */,
+				D62D17351A9C22E100E0EFAF /* Images.xcassets in Resources */,
 				0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */,
 				D626116A1A98091800F6E707 /* layer-logo.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
@@ -835,8 +835,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Phone.ly, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Phone.ly, Inc.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Libraries",
 					"$(inherited)",
@@ -853,7 +853,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "c604edb4-6e8d-4584-bde5-67228b3fbeaa";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -882,7 +882,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3e29b277-e35b-4f82-baad-fe98acad2a1b";
+				PROVISIONING_PROFILE = "c604edb4-6e8d-4584-bde5-67228b3fbeaa";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
