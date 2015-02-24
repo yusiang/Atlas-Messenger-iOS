@@ -28,6 +28,4 @@ NSURL *ATLMRailsBaseURL();
 
 NSString *ATLMApplicationDataDirectory();
 
-ATLMPersistenceManager *PersistenceManager();
-
 UIAlertView *ATLMAlertWithError(NSError *error);

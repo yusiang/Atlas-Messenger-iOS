@@ -33,15 +33,9 @@
 ///---------------------------------------
 
 /**
- @abstract Designated initializer when running tests.
+ @abstract Designated initializer.
  */
-+ (instancetype)persistenceManagerWithInMemoryStore;
-
-/**
- @abstract Designated initializer when running the application.
- @param The path where the data should be persisted.
- */
-+ (instancetype)persistenceManagerWithStoreAtPath:(NSString *)path;
++ (instancetype)defaultManager;
 
 ///---------------------------------------
 /// @name Persisting

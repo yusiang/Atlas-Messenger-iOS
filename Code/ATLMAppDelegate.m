@@ -68,7 +68,7 @@ static NSString *const ATLMLayerAppID = nil;
     // Private code for testing. Remove for release.
     [self configureLayerForEnvironment];
     
-    self.applicationController = [ATLMApplicationController controllerWithPersistenceManager:PersistenceManager()];
+    self.applicationController = [ATLMApplicationController controllerWithPersistenceManager:[ATLMPersistenceManager defaultManager]];
     
     // Set up window
     [self configureWindow];
@@ -111,6 +111,21 @@ static NSString *const ATLMLayerAppID = nil;
 
 #pragma mark - Setup
 
+- (void)configureWindow
+{
+    self.scannerController = [ATLMQRScannerController new];
+    self.scannerController.applicationController = self.applicationController;
+    
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.scannerController];
+    self.navigationController.navigationBarHidden = YES;
+    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.rootViewController = self.navigationController;
+    [self.window makeKeyAndVisible];
+    
+    [self addSplashView];
+}
+
 - (void)setupLayer
 {
     NSString *appID = ATLMLayerAppID ?: [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
@@ -128,21 +143,6 @@ static NSString *const ATLMLayerAppID = nil;
     } else {
         [self removeSplashView];
     }
-}
-
-- (void)configureWindow
-{
-    self.scannerController = [ATLMQRScannerController new];
-    self.scannerController.applicationController = self.applicationController;
-    
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.scannerController];
-    self.navigationController.navigationBarHidden = YES;
-    
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.rootViewController = self.navigationController;
-    [self.window makeKeyAndVisible];
-    
-    [self addSplashView];
 }
 
 - (void)registerNotificationObservers
