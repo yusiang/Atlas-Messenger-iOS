@@ -9,10 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "ATLMApplicationController.h"
 
+/**
+ @abstract Posted when the `ATLMQRScannerController succesfully scans a QR code and receives a valid Layer App ID>
+ */
 extern NSString *const ATLMDidReceiveLayerAppID;
 
+
+/** 
+ @abstract The `ATLMQRScannerController` presents a user interface for scanning QR codes. 
+ */
 @interface ATLMQRScannerController : UIViewController
 
+/**
+ @abstract The controller object for the application.
+ */
 @property (nonatomic) ATLMApplicationController *applicationController;
 
 /**

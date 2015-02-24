@@ -43,9 +43,7 @@ extern NSString *const ATLMConversationMetadataNameKey;
  @abstract Informs the delegate that a user has elected to switch the conversation.
  @param conversationDetailViewController The `ATLMConversationDetailViewController` in which the selection occurred.
  @param conversation The new `LYRConversation` object.
- @discussion The user changes the `LYRConversation` object in response to adding or deleting participants from a conversation. 
- If the user mutates the participant list, the application checks to see if a Layer conversation exists with the new participant
- list. If one exists, it is provided. If not, a new conversation object is created and provided.
+ @discussion The user changes the `LYRConversation` object in response to adding or deleting participants from a conversation.
  */
 - (void)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation;
 

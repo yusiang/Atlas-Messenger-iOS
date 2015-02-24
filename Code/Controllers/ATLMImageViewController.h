@@ -21,8 +21,15 @@
 #import <UIKit/UIKit.h>
 #import <LayerKit/LayerKit.h>
 
+/**
+ @abstract The `ATLMImageViewController` displays a high quality version of an image.
+ */
 @interface ATLMImageViewController : UIViewController
 
+/** 
+ @abstact Initializes the controller with a message object. 
+ @discussion The message object should contain a message parts with MIMETypes of `ATLMIMETypeImageJPEG`, `ATLMIMETypeImageJPEGPreview`, `ATLMIMETypeImageSize`.
+ */
 - (instancetype)initWithMessage:(LYRMessage *)message;
 
 @end

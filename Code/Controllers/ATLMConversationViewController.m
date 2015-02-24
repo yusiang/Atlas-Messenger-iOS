@@ -146,9 +146,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     if (self.conversation) {
         [self addDetailsButton];
     }
-    [self markAllMessagesAsRead];
-    [self registerForNotifications];
+    
     [self configureUserInterfaceAttributes];
+    [self registerNotificationObservers];
     
     self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.participantDataSource.excludedIdentifiers = [NSSet setWithObject:self.layerClient.authenticatedUserID];
@@ -157,12 +157,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    if ([self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey]) {
-        self.title = [self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey];
-    } else {
-        self.title = [self defaultTitle];
-    }
+    [self configureTitle];
 }
 
 - (void)dealloc
@@ -178,12 +173,57 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [self configureTitle];
 }
 
+#pragma mark - ATLConversationViewControllerDelegate
+
+/**
+ Atlas - Infroms the delegate of a successful message send. Atlas Messenger adds a `Details` button to the navigation bar if this is the first message sent within a new conversation.
+ */
+- (void)conversationViewController:(ATLConversationViewController *)viewController didSendMessage:(LYRMessage *)message
+{
+    [self addDetailsButton];
+}
+
+/**
+ Atlas - Informs the delegate that a message failed to send. Atlas messeneger display an alert view to inform the user of the failure.
+ */
+- (void)conversationViewController:(ATLConversationViewController *)viewController didFailSendingMessage:(LYRMessage *)message error:(NSError *)error;
+{
+    NSLog(@"Message Send Failed with Error: %@", error);
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
+                                                        message:error.localizedDescription
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
+}
+
+/**
+ Atlas - Infroms the delegate that a message was selected. Atlas messenger presents an `ATLImageViewController` if the message contains an image.
+ */
+- (void)conversationViewController:(ATLConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
+{
+    LYRMessagePart *JPEGMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImageJPEG);
+    if (JPEGMessagePart) {
+        [self presentImageViewControllerWithMessage:message];
+        return;
+    }
+    LYRMessagePart *PNGMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImagePNG);
+    if (PNGMessagePart) {
+        [self presentImageViewControllerWithMessage:message];
+    }
+}
+
+- (void)presentImageViewControllerWithMessage:(LYRMessage *)message
+{
+    ATLMImageViewController *imageViewController = [[ATLMImageViewController alloc] initWithMessage:message];
+    UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:imageViewController];
+    [self.navigationController presentViewController:controller animated:YES completion:nil];
+}
+
 #pragma mark - ATLConversationViewControllerDataSource
 
 /**
- 
- LAYER UI KIT - Returns an object conforming to the `ATLParticipant` protocol.
- 
+ Atlas - Returns an object conforming to the `ATLParticipant` protocol whose participantIdentifier property matches the supplied identifier.
  */
 - (id<ATLParticipant>)conversationViewController:(ATLConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
@@ -194,10 +234,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 }
 
 /**
- 
- LAYER UI KIT - Returns an `NSAttributedString` object for given date. The format of this string can be configured to
- whatever format your application wishes to display.
- 
+ Atlas - Returns an `NSAttributedString` object for given date. The format of this string can be configured to whatever format an application wishes to display.
  */
 - (NSAttributedString *)conversationViewController:(ATLConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
@@ -230,10 +267,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 }
 
 /**
- 
- LAYER UI KIT - Returns an `NSAttributedString` object for given recipient state. The state string will only be displayed
- below the latest message that was sent by the currently authenticated user.
- 
+ Atlas - Returns an `NSAttributedString` object for given recipient state. The state string will only be displayed below the latest message that was sent by the currently authenticated user.
  */
 - (NSAttributedString *)conversationViewController:(ATLConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
@@ -241,103 +275,30 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     if (recipientStatus.count > 2) {
         return [NSMutableAttributedString new];
     }
-    __block BOOL allSent = YES;
-    __block BOOL allDelivered = YES;
-    __block BOOL allRead = YES;
+    __block NSString *statusString = [NSString new];
     [recipientStatus enumerateKeysAndObjectsUsingBlock:^(NSString *userID, NSNumber *statusNumber, BOOL *stop) {
         if ([userID isEqualToString:self.applicationController.layerClient.authenticatedUserID]) return;
         LYRRecipientStatus status = statusNumber.integerValue;
         switch (status) {
             case LYRRecipientStatusInvalid:
-                allSent = NO;
+                statusString = @"Not Sent";
             case LYRRecipientStatusSent:
-                allDelivered = NO;
+                statusString = @"Sent";
             case LYRRecipientStatusDelivered:
-                allRead = NO;
+                statusString = @"Delivered";
                 break;
             case LYRRecipientStatusRead:
+                statusString = @"Read";
                 break;
         }
     }];
-
-    NSString *statusString;
-    if (allRead) {
-        statusString = @"Read";
-    } else if (allDelivered) {
-        statusString = @"Delivered";
-    } else if (allSent) {
-        statusString = @"Sent";
-    } else {
-        statusString = @"Not Sent";
-    }
     return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:11]}];
-}
-
-/**
- 
- LAYER UI KIT - Return an `NSOrderedSet` of `LYRMessage` objects. If nil is returned, controller will fall back to default
- message sending behavior. If an empty `NSOrderedSet` is returned, no messages will be sent.
- 
- */
-- (NSOrderedSet *)conversationViewController:(ATLConversationViewController *)conversationViewController messagesForMediaAttachments:(NSArray *)mediaAttachments
-{
-    return nil;
-}
-
-#pragma mark - ATLConversationViewControllerDelegate
-
-/**
- 
- LAYER UI KIT - Handle succesful message send if needed.
- 
- */
-- (void)conversationViewController:(ATLConversationViewController *)viewController didSendMessage:(LYRMessage *)message
-{
-    NSLog(@"Successful Message Send");
-    [self addDetailsButton];
-}
-
-/**
- 
- LAYER UI KIT - React to unsuccesful message send if needed.
- 
- */
-- (void)conversationViewController:(ATLConversationViewController *)viewController didFailSendingMessage:(LYRMessage *)message error:(NSError *)error;
-{
-    NSLog(@"Message Send Failed with Error: %@", error);
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
-                                                        message:error.localizedDescription
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-    [alertView show];
-}
-
-/**
- 
- LAYER UI KIT - React to a tap on a message object.
- 
- */
-- (void)conversationViewController:(ATLConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
-{
-    LYRMessagePart *imageMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImageJPEG);
-    if (!imageMessagePart) {
-        imageMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImagePNG);
-    }
-    if (imageMessagePart) {
-        ATLMImageViewController *imageViewController = [[ATLMImageViewController alloc] initWithMessage:message];
-        UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:imageViewController];
-        [self.navigationController presentViewController:controller animated:YES completion:nil];
-    }
 }
 
 #pragma mark - ATLAddressBarControllerDelegate
 
 /**
- 
- LAYER UI KIT - Allows your applicaiton to react to a tap on the `addContacts` button of the `ATLAddressBarViewController`. 
- In this case, we present an `ATLParticipantPickerController` component.
- 
+ Atlas - Informs the delegate that the user tapped the `addContacts` icon in the `ATLAddressBarViewController`. Atlas Messenger presents an `ATLParticipantPickerController`.
  */
 - (void)addressBarViewController:(ATLAddressBarViewController *)addressBarViewController didTapAddContactsButton:(UIButton *)addContactsButton
 {
@@ -354,12 +315,8 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
-#pragma mark - ATLAddressBarControllerDataSource
-
 /**
- 
- LAYER UI KIT - Searches for a participant given and search string.
- 
+ Atlas - Informs the delegate that the user is searching for participants. Atlas Messengers queries for participants whose `fullName` property contains the give search string.
  */
 - (void)addressBarViewController:(ATLAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
 {
@@ -368,6 +325,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     }];
 }
 
+/**
+ Atlas - Informs the delegate that the user tapped on the `ATLAddressBarViewController` while it was disabled. Atlas Messengers presents an `ATLConversationDetailViewController` in response.
+ */
 - (void)addressBarViewControllerDidSelectWhileDisabled:(ATLAddressBarViewController *)addressBarViewController
 {
     [self detailsButtonTapped];
@@ -375,12 +335,18 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 #pragma mark - ATLParticipantTableViewControllerDelegate
 
+/**
+ Atlas - Informs the delegate that the user selected an participant. Atlas Messengers in turn, informs the `ATLAddressBarViewController` of the selection.
+ */
 - (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<ATLParticipant>)participant
 {
     [self.addressBarController selectParticipant:participant];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
+/**
+ Atlas - Informs the delegate that the user is searching for participants. Atlas Messengers queries for participants whose `fullName` property contains the give search string.
+ */
 - (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSearchWithString:(NSString *)searchText completion:(void (^)(NSSet *))completion
 {
     [self.participantDataSource participantsMatchingSearchText:searchText completion:^(NSSet *participants) {
@@ -388,21 +354,20 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     }];
 }
 
-#pragma mark - LSConversationDetailViewControllerDataSource
-
-- (id<ATLParticipant>)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController participantForIdentifier:(NSString *)participantIdentifier
-{
-    return [self.participantDataSource participantForIdentifier:participantIdentifier];
-}
-
 #pragma mark - LSConversationDetailViewControllerDelegate
 
+/**
+ Atlas - Informs the delegate that the user has tapped the `Share My Current Location` button. Atlas Messengers sends a message into the current conversation with the current location.
+ */
 - (void)conversationDetailViewControllerDidSelectShareLocation:(ATLMConversationDetailViewController *)conversationDetailViewController
 {
-    // TODO - Figure out how to tell Atlas that it needs to share a location.
-    [self.navigationController popToViewController:self animated:YES];
+    //TODO - Implement Location Sharing
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
+/**
+ Atlas - Informs the delegate that the conversation has changed. Atlas messenger updates its conversation and the current view controller's title in response.
+ */
 - (void)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
 {
     self.conversation = conversation;
@@ -444,16 +409,15 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 #pragma mark - Helpers
 
-- (void)markAllMessagesAsRead
-{
-    [self.conversation markAllMessagesAsRead:nil];
-}
-
 - (void)configureTitle
 {
     if ([self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey]) {
-        self.title = [self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey];
-    } else {
+        NSString *conversationTitle = [self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey];
+        if (conversationTitle.length) {
+            self.title = conversationTitle;
+        } else {
+            self.title = [self defaultTitle];
+        }    } else {
         self.title = [self defaultTitle];
     }
 }
@@ -467,20 +431,24 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     if (otherParticipantIDs.count == 1) {
         NSString *otherParticipantID = [otherParticipantIDs anyObject];
         id<ATLParticipant> participant = [self conversationViewController:self participantForIdentifier:otherParticipantID];
-        return participant ? participant.firstName : @"Unknown";
+        return participant ? participant.firstName : @"Message";
+    } else {
+        NSUInteger participantCount = 0;
+        id<ATLParticipant> knownParticipant;
+        for (NSString *participantIdentifier in otherParticipantIDs) {
+            id<ATLParticipant> participant = [self conversationViewController:self participantForIdentifier:participantIdentifier];
+            if (participant) {
+                participantCount += 1;
+                knownParticipant = participant;
+            }
+        }
+        if (participantCount == 1) {
+            return knownParticipant.firstName;
+        } else if (participantCount > 1) {
+            return @"Group";
+        }
     }
-    return @"Group";
-}
-
-- (void)configureUserInterfaceAttributes
-{
-    [[ATLIncomingMessageCollectionViewCell appearance] setBubbleViewColor:ATLLightGrayColor()];
-    [[ATLIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
-    [[ATLIncomingMessageCollectionViewCell appearance] setMessageLinkTextColor:ATLBlueColor()];
-
-    [[ATLOutgoingMessageCollectionViewCell appearance] setBubbleViewColor:ATLBlueColor()];
-    [[ATLOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
-    [[ATLOutgoingMessageCollectionViewCell appearance] setMessageLinkTextColor:[UIColor whiteColor]];
+    return @"Message";
 }
 
 #pragma mark - Link Tap Handler
@@ -490,7 +458,18 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [[UIApplication sharedApplication] openURL:notification.object];
 }
 
-- (void)registerForNotifications
+- (void)configureUserInterfaceAttributes
+{
+    [[ATLIncomingMessageCollectionViewCell appearance] setBubbleViewColor:ATLLightGrayColor()];
+    [[ATLIncomingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor blackColor]];
+    [[ATLIncomingMessageCollectionViewCell appearance] setMessageLinkTextColor:ATLBlueColor()];
+    
+    [[ATLOutgoingMessageCollectionViewCell appearance] setBubbleViewColor:ATLBlueColor()];
+    [[ATLOutgoingMessageCollectionViewCell appearance] setMessageTextColor:[UIColor whiteColor]];
+    [[ATLOutgoingMessageCollectionViewCell appearance] setMessageLinkTextColor:[UIColor whiteColor]];
+}
+
+- (void)registerNotificationObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidTapLink:) name:ATLUserDidTapLinkNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(conversationMetadataDidChange:) name:ATLMConversationMetadataDidChangeNotification object:nil];

@@ -57,10 +57,13 @@ NSString *const ATLMShareLocationText = @"Send My Current Location";
 NSString *const ATLMDeleteConversationText = @"Delete Conversation";
 NSString *const ATLMLeaveConversationText = @"Leave Conversation";
 
-static NSString *const ATLMParticipantCellIdentifier = @"participantCell";
-static NSString *const ATLMDefaultCellIdentifier = @"defaultCellIdentifier";
-static NSString *const ATLMInputCellIdentifier = @"inputCell";
-static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIdentifier";
+static NSString *const ATLMParticipantCellIdentifier = @"ATLMParticipantCellIdentifier";
+static NSString *const ATLMDefaultCellIdentifier = @"ATLMDefaultCellIdentifier";
+static NSString *const ATLMInputCellIdentifier = @"ATLMInputCell";
+static NSString *const ATLMCenterContentCellIdentifier = @"ATLMCenterContentCellIdentifier";
+
+static NSString *const ATLMPlusIconName = @"AtlasResource.bundle/plus";
+static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
 
 + (instancetype)conversationDetailViewControllerWithConversation:(LYRConversation *)conversation
 {
@@ -90,11 +93,11 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:ATLMDefaultCellIdentifier];
     
     self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
-    self.participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
+    self.participantIdentifiers = [self filteredParticipantIdentifiers];
     [self.participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
     
-    [self registerNotificationObservers];
     [self configureAppearance];
+    [self registerNotificationObservers];
 }
 
 - (void)dealloc
@@ -147,7 +150,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
                 UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:ATLMDefaultCellIdentifier forIndexPath:indexPath];
                 cell.textLabel.attributedText = [self addParticipantAttributedString];
                 cell.accessibilityLabel = ATLMAddParticipantsAccessibilityLabel;
-                cell.imageView.image = [UIImage imageNamed:@"AtlasResource.bundle/plus"];
+                cell.imageView.image = [UIImage imageNamed:ATLMPlusIconName];
                 return cell;
             }
             
@@ -267,8 +270,8 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     NSString *participantIdentifier = [self.participantIdentifiers objectAtIndex:indexPath.row];
     id<ATLParticipant> participant = [self.participantDataSource participantForIdentifier:participantIdentifier];
     if ([self blockedParticipantAtIndexPath:indexPath]) {
-        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"AtlasResource.bundle/block"]];
         cell.accessoryView.accessibilityLabel = @"Blocked";
+        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:ATLMBlockIconName]];
     }
     [cell presentParticipant:participant withSortType:ATLParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -506,12 +509,23 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     if (authenticatedUserID) [insertedIdentifiers removeObject:authenticatedUserID];
     [insertedIdentifiers minusSet:existingIdentifiers];
     for (NSString *identifier in insertedIdentifiers) {
+        ATLMUser *user = [self.applicationController.persistenceManager userForIdentifier:identifier];
+        if (!user) continue;
         [self.participantIdentifiers addObject:identifier];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.participantIdentifiers.count - 1 inSection:ATLMConversationDetailTableSectionParticipants];
         [insertedIndexPaths addObject:indexPath];
     }
     [self.tableView insertRowsAtIndexPaths:insertedIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
+}
+
+#pragma mark - Helpers
+
+- (NSMutableArray *)filteredParticipantIdentifiers
+{
+    NSSet *participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
+    NSSet *knownParticipants = [self.applicationController.persistenceManager usersForIdentifiers:participantIdentifiers];
+    return [[[knownParticipants valueForKey:@"participantIdentifier"] allObjects] mutableCopy];
 }
 
 - (void)configureAppearance

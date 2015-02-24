@@ -26,6 +26,11 @@
  */
 @interface ATLMSession : NSObject <NSCoding>
 
+/**
+ @abstract Returns an `ATLMSession` object containing information about the current session. 
+ @param authenticationToken A token required for communication with the Layer Identity provider. 
+ @param user a `ATLMuser` object modeling the currently authenticated user.
+ */
 + (instancetype)sessionWithAuthenticationToken:(NSString *)authenticationToken user:(ATLMUser *)user;
 
 @property (nonatomic, readonly) NSString *authenticationToken;

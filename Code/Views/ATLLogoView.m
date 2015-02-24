@@ -59,11 +59,6 @@ CGFloat const ATLMLogoLeftPadding = 4;
     return self;
 }
 
-- (CGSize)intrinsicContentSize
-{
-    return CGSizeMake(320, 100);
-}
-
 - (void)configureLayoutConstraints
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:_atlasLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];

@@ -22,7 +22,7 @@
 #import "ATLMPersistenceManager.h"
 
 /**
- @abstract The `ATLMParticipantDataSource` provides an interface for fetching and searching for objects conforming to the `ATLMParticipant` protocol. The object also provides the ability to filter participants via the excluded identifiers property.
+ @abstract The `ATLMParticipantDataSource` provides an interface querying the Atlas Messenger persistence layer for objects conforming to the `ATLMParticipant` protocol. It also provides the ability to filter participants via the excluded identifiers property.
  */
 @interface ATLMParticipantDataSource : NSObject
 
@@ -37,20 +37,21 @@
 @property (nonatomic) NSSet *participants;
 
 /**
- @abstract The `NSSet` of user identifiers to be excluded from the pariticipant set.
+ @abstract The `NSSet` of user identifiers to be excluded from the pariticipant set and queries.
  @discussion Typically this will be the set of identifiers for a given conversation.
  */
 @property (nonatomic) NSSet *excludedIdentifiers;
 
 /**
- @abstract Queries the reciever for a user with a `participantIdentifier` matching the supplied identifier, if one exists.
+ @abstract Queries the reciever for a user with a `participantIdentifier` matching the supplied identifier.
+ @return An object confroming to the `ATLParticipant` protocol or `nil` if no match is found.
  */
 - (id<ATLParticipant>)participantForIdentifier:(NSString *)identifier;
 
 /**
  @abstract Searches for participants matching the provided search text.
  @param searchText The search text for which the search will be performed. 
- @param completion The completion block to be called upon completion of search. 
+ @param completion The completion block to be called upon completion of search. The block has no return value and accepts one argument: an `NSSet` of object confroming to the `ATLParticipant` protocol.
  */
 - (void)participantsMatchingSearchText:(NSString *)searchText completion:(void(^)(NSSet *participants))completion;
 
