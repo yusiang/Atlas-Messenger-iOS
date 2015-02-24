@@ -13,6 +13,8 @@ To build Atlas Messenger, you need a few a few standard iOS Development Tools:
 1. [Xcode](https://developer.apple.com/xcode/) - Apple's suite of iOS and OS X development tools. Available on the [App Store](http://itunes.apple.com/us/app/xcode/id497799835).
 2. [CocoaPods](http://cocoapods.org/) - The dependency manager for Cocoa projects. CocoaPods is used to automate the build and configuration of Atlas Messenger. Available by executing `$ sudo gem install cocoapods` in your terminal.
 
+**NOTE:** At this time there is a known incompatibility with CocoaPods v0.36.0.beta.2. Please stick to v0.35.0 or v0.36.0.beta.1 instead.
+
 #### Cloning & Preparing the Project
 
 Once you have installed the pre-requisites, you can proceed with cloning and configuring the project by executing the following commands in your terminal:
@@ -39,7 +41,7 @@ Before running Atlas Messenger from source code you must configure the Layer App
 static NSString *const ATLMLayerAppID = nil;
 ```
 
-Replace the `= nil` with the appID you previously obtained from the Info section of the [Layer Developer Dashboard](https://developer.layer.com/dashboard). Be sure to enclose it in standard Objective-C string quotes (`@""`). Once configured your code should now look something like:
+Replace the `nil` with the appID you previously obtained from the Info section of the [Layer Developer Dashboard](https://developer.layer.com/dashboard). Be sure to enclose it in standard Objective-C string quotes (`@""`). Once configured your code should now look something like:
 
 ```objc
 static NSString *const ATLMLayerAppID = @"035c3b96-ecb5-4642-b6b1-ff49ea2dd5db";
