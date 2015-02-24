@@ -113,7 +113,12 @@ static NSString *const ATLMLayerAppID = nil;
 
 - (void)setupLayer
 {
-    NSString *appID = ATLMLayerAppID ?: [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
+    NSString *appID;
+    if (ATLMLayerAppID) {
+        appID = ATLMLayerAppID;
+    } else {
+        appID = ATLMLayerAppID ?: [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
+    }
     if (appID) {
         ATLMLayerClient *layerClient = [ATLMLayerClient clientWithAppID:[[NSUUID alloc] initWithUUIDString:appID]];
         ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:layerClient];

@@ -94,7 +94,6 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     if (metadataObjects != nil && [metadataObjects count] > 0) {
         AVMetadataMachineReadableCodeObject *metadataObj = [metadataObjects objectAtIndex:0];
         if ([[metadataObj type] isEqualToString:AVMetadataObjectTypeQRCode]) {
-            NSLog(@"Received Layer App ID: %@", metadataObj.stringValue);
             if (!self.applicationID) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self toggleQRCapture];
@@ -125,7 +124,6 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
 - (void)presentRegistrationViewController
 {
     if ([self.navigationController.viewControllers.lastObject isKindOfClass:[ATLMRegistrationViewController class]]) {
-        NSLog(@"Tried to push a second controller");
         return;
     }
     ATLMRegistrationViewController *controller = [[ATLMRegistrationViewController alloc] init];
