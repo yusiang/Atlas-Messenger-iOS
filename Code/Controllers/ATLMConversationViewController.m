@@ -361,7 +361,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
  */
 - (void)conversationDetailViewControllerDidSelectShareLocation:(ATLMConversationDetailViewController *)conversationDetailViewController
 {
-    //TODO - Implement Location Sharing
+    [self sendLocationMessage];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
