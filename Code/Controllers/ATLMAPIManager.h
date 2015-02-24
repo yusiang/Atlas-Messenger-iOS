@@ -59,7 +59,6 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 /**
  @abstract The baseURL used to initialize the receiver.
  */
-@property (nonatomic, readonly) NSURL *baseURL;
 
 /**
  @abstract The currently configured URL session.
@@ -67,15 +66,13 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 @property (nonatomic) NSURLSession *URLSession;
 
 /**
- @abstract Resumes a Layer sample app session.
- @param session The model object for the current session.
  @param error A reference to an `NSError` object that will contain error information in case the action was not successful.
  @return A boolean value that indicates if the manager has a valid session.
  */
 - (BOOL)resumeSession:(ATLMSession *)session error:(NSError **)error;
 
 /**
- @abstract Registers and authenticates an Altas Messenger user.
+ @abstract Registers and authenticates an Atlas Messenger user.
  @param name An `NSString` object representing the name of the user attempting to register.
  @param nonce A nonce value obtained via a call to `requestAuthenticationNonceWithCompletion:` on `LYRClient`.
  @param completion completion The block to execute upon completion of the asynchronous user registration operation. The block has no return value and accepts two arguments: An identity token that was obtained upon successful registration (or nil in the event of a failure) and an `NSError` object that describes why the operation failed (or nil if the operation was successful).
@@ -83,7 +80,7 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
 - (void)registerUserWithName:(NSString*)name nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion;
 
 /**
- @abstract Deauthenticates the Layer sample app by discarding its `ATLMSession` object.
+ @abstract Deauthenticates the Atlas Messenger app by discarding its `ATLMSession` object.
  */
 - (void)deauthenticate;
 
