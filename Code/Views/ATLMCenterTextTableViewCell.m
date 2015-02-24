@@ -38,29 +38,9 @@
 
 - (void)setUpConstraints
 {
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel
-                                                     attribute:NSLayoutAttributeLeft
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.contentView
-                                                     attribute:NSLayoutAttributeLeft
-                                                    multiplier:1.0
-                                                      constant:10.0]];
-
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel
-                                                     attribute:NSLayoutAttributeRight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.contentView
-                                                     attribute:NSLayoutAttributeRight
-                                                    multiplier:1.0
-                                                      constant:-10.0]];
-
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel
-                                                     attribute:NSLayoutAttributeCenterY
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.contentView
-                                                     attribute:NSLayoutAttributeCenterY
-                                                    multiplier:1.0
-                                                      constant:0.0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:10.0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:-10.0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.centerTextLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
 }
 
 @end
