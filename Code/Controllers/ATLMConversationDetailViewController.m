@@ -48,9 +48,14 @@ typedef NS_ENUM(NSInteger, ATLMConversationDetailTableSection) {
 @implementation ATLMConversationDetailViewController
 
 NSString *const ATLMConversationDetailViewControllerTitle = @"Details";
+NSString *const ATLMConversationDetailTableViewAccessibilityLabel = @"Conversation Detail Table View";
 NSString *const ATLMAddParticipantsAccessibilityLabel = @"Add Participants";
 NSString *const ATLMConversationNamePlaceholderText = @"Enter Conversation Name";
 NSString *const ATLMConversationMetadataNameKey = @"conversationName";
+
+NSString *const ATLMShareLocationText = @"Send My Current Location";
+NSString *const ATLMDeleteConversationText = @"Delete Conversation";
+NSString *const ATLMLeaveConversationText = @"Leave Conversation";
 
 static NSString *const ATLMParticipantCellIdentifier = @"participantCell";
 static NSString *const ATLMDefaultCellIdentifier = @"defaultCellIdentifier";
@@ -78,6 +83,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     self.tableView.sectionHeaderHeight = 48.0f;
     self.tableView.sectionFooterHeight = 0.0f;
     self.tableView.rowHeight = 48.0f;
+    self.tableView.accessibilityLabel = ATLMConversationDetailTableViewAccessibilityLabel;
     [self.tableView registerClass:[ATLMCenterTextTableViewCell class] forCellReuseIdentifier:ATLMCenterContentCellIdentifier];
     [self.tableView registerClass:[ATLParticipantTableViewCell class] forCellReuseIdentifier:ATLMParticipantCellIdentifier];
     [self.tableView registerClass:[ATLMInputTableViewCell class] forCellReuseIdentifier:ATLMInputCellIdentifier];
@@ -147,7 +153,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
             
         case ATLMConversationDetailTableSectionLocation: {
             UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:ATLMDefaultCellIdentifier forIndexPath:indexPath];
-            cell.textLabel.text = @"Send My Current Location";
+            cell.textLabel.text = ATLMShareLocationText;
             cell.textLabel.textColor = ATLBlueColor();
             cell.textLabel.font = [UIFont systemFontOfSize:17];
             return cell;
@@ -156,7 +162,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
         case ATLMConversationDetailTableSectionLeave: {
             ATLMCenterTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:ATLMCenterContentCellIdentifier];
             cell.centerTextLabel.textColor = ATLRedColor();
-            cell.centerTextLabel.text = self.conversation.participants.count > 2 ? @"Leave Conversation" : @"Delete Conversation";
+            cell.centerTextLabel.text = self.conversation.participants.count > 2 ? ATLMLeaveConversationText : ATLMDeleteConversationText;
             return cell;
         }
             
@@ -262,6 +268,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
     id<ATLParticipant> participant = [self.participantDataSource participantForIdentifier:participantIdentifier];
     if ([self blockedParticipantAtIndexPath:indexPath]) {
         cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"AtlasResource.bundle/block"]];
+        cell.accessoryView.accessibilityLabel = @"Blocked";
     }
     [cell presentParticipant:participant withSortType:ATLParticipantPickerSortTypeFirstName shouldShowAvatarItem:YES];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -351,7 +358,7 @@ static NSString *const ATLMCenterContentCellIdentifier = @"centerContentCellIden
 
 - (void)shareLocation
 {
-    //TODO - Implement
+    [self.detailDelegate conversationDetailViewControllerDidSelectShareLocation:self];
 }
 
 - (void)leaveConversation

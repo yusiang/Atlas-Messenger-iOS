@@ -47,15 +47,13 @@ extern NSString *const ATLMDebugModeSettingSwitch;
 - (void)setUp
 {
     [super setUp];
-    ATLMIApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
-    [self.testInterface registerAndAuthenticateTestUser:[ATLMTestUser testUserWithNumber:0]];
-    
 }
 
 - (void)tearDown
 {
-    [self.testInterface logoutIfNeeded];
+    [self.testInterface deauthenticateIfNeeded];
     [super tearDown];
 }
 
@@ -111,72 +109,6 @@ extern NSString *const ATLMDebugModeSettingSwitch;
     [tester waitForViewWithAccessibilityLabel:@"Log Out"];
     [tester tapViewWithAccessibilityLabel:@"Log Out"];
     [delegateMock verify];
-}
-
-- (void)testToVerifySendPushNotificationSwitchFunctionality
-{
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    UISwitch *switchControl = (UISwitch *)[tester waitForTappableViewWithAccessibilityLabel:ATLMPushNotificationSettingSwitch];
-    expect(switchControl.on).to.beFalsy;
-    [tester setOn:YES forSwitchWithAccessibilityLabel:ATLMPushNotificationSettingSwitch];
-    [self.testInterface logoutIfNeeded];
-   
-    ATLMTestUser *user = [ATLMTestUser testUserWithNumber:0];
-    [self.testInterface authenticateTestUser:user];
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    switchControl = (UISwitch *)[tester waitForTappableViewWithAccessibilityLabel:ATLMPushNotificationSettingSwitch];
-    expect(switchControl.on).to.beTruthy;
-    [tester setOn:NO forSwitchWithAccessibilityLabel:ATLMPushNotificationSettingSwitch];
-    [self.testInterface logoutIfNeeded];
-    
-    [self.testInterface authenticateTestUser:user];
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    switchControl = (UISwitch *)[tester waitForTappableViewWithAccessibilityLabel:ATLMPushNotificationSettingSwitch];
-    expect(switchControl.on).to.beFalsy;
-}
-
-- (void)testToVerifyDisplayLocalNotificationSwitchFunctionality
-{
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    UISwitch *switchControl = (UISwitch *)[tester waitForTappableViewWithAccessibilityLabel:ATLMLocalNotificationSettingSwitch];
-    expect(switchControl.on).to.beFalsy;
-    [tester setOn:YES forSwitchWithAccessibilityLabel:ATLMLocalNotificationSettingSwitch];
-    [self.testInterface logoutIfNeeded];
-    
-    ATLMTestUser *user = [ATLMTestUser testUserWithNumber:0];
-    [self.testInterface authenticateTestUser:user];
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    switchControl = (UISwitch *)[tester waitForTappableViewWithAccessibilityLabel:ATLMLocalNotificationSettingSwitch];
-    expect(switchControl.on).to.beTruthy;
-    [tester setOn:NO forSwitchWithAccessibilityLabel:ATLMLocalNotificationSettingSwitch];
-    [self.testInterface logoutIfNeeded];
-    
-    [self.testInterface authenticateTestUser:user];
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    switchControl = (UISwitch *)[tester waitForTappableViewWithAccessibilityLabel:ATLMLocalNotificationSettingSwitch];
-    expect(switchControl.on).to.beFalsy;
-}
-
-- (void)testTiVerifyDebugModeSwitchFunctionality
-{
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    UISwitch *switchControl = (UISwitch *)[tester waitForTappableViewWithAccessibilityLabel:ATLMDebugModeSettingSwitch];
-    expect(switchControl.on).to.beFalsy;
-    [tester setOn:YES forSwitchWithAccessibilityLabel:ATLMDebugModeSettingSwitch];
-    [self.testInterface logoutIfNeeded];
-    
-    ATLMTestUser *user = [ATLMTestUser testUserWithNumber:0];
-    [self.testInterface authenticateTestUser:user];
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    switchControl = (UISwitch *)[tester waitForTappableViewWithAccessibilityLabel:ATLMDebugModeSettingSwitch];
-    expect(switchControl.on).to.beTruthy;
-    [tester setOn:NO forSwitchWithAccessibilityLabel:ATLMDebugModeSettingSwitch];
-    [self.testInterface logoutIfNeeded];
-    
-    [self.testInterface authenticateTestUser:user];
-    [tester tapViewWithAccessibilityLabel:@"Settings"];
-    switchControl = (UISwitch *)[tester waitForTappableViewWithAccessibilityLabel:ATLMDebugModeSettingSwitch];
-    expect(switchControl.on).to.beFalsy;
 }
 
 - (void)testToVerifyLayerStatistics

@@ -46,15 +46,6 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
 {
     _layerClient = layerClient;
     _layerClient.delegate = self;
-    if (!_layerClient.isConnected && !_layerClient.isConnecting) {
-        [_layerClient connectWithCompletion:^(BOOL success, NSError *error) {
-            if (error) {
-                NSLog(@"Layer failled to connect with error: %@", error);
-            } else {
-                NSLog(@"Layer Client connected.");
-            }
-        }];
-    }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientWillBeginSynchronizationNotification:) name:LYRClientWillBeginSynchronizationNotification object:layerClient];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerClientDidFinishSynchronizationNotification:) name:LYRClientDidFinishSynchronizationNotification object:layerClient];
 }

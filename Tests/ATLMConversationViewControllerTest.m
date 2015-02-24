@@ -23,7 +23,7 @@
 #import "KIFSystemTestActor+ViewControllerActions.h"
 #import <XCTest/XCTest.h>
 
-#import "ATLMIApplicationController.h"
+#import "ATLMApplicationController.h"
 #import "ATLMTestInterface.h"
 #import "ATLMTestUser.h"
 
@@ -50,21 +50,22 @@ extern NSString *const ATLMessageInputToolbarAccessibilityLabel;
 - (void)setUp
 {
     [super setUp];
-    ATLMIApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
+    ATLMApplicationController *applicationController =  [(ATLMAppDelegate *)[[UIApplication sharedApplication] delegate] applicationController];
     self.testInterface = [ATLMTestInterface testInterfaceWithApplicationController:applicationController];
-    [self.testInterface registerAndAuthenticateTestUser:[ATLMTestUser testUserWithNumber:0]];
+    [self.testInterface connectLayerClient];
+    [self.testInterface deauthenticateIfNeeded];
+    [self.testInterface registerTestUserWithIdentifier:@"test"];
     
-    ATLMTestUser *testUser2 = [self.testInterface registerTestUser:[ATLMTestUser testUserWithNumber:2]];
-    [self.testInterface loadContacts];
-    
-    self.participants = [NSSet setWithObject:testUser2.userID];
+    self.participants = [NSSet setWithObject:@"0"];
     [self.testInterface.contentFactory newConversationsWithParticipants:self.participants];
     [tester waitForViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
 }
 
 - (void)tearDown
 {
-    [self.testInterface logoutIfNeeded];
+    [self.testInterface clearLayerContent];
+    [tester waitForTimeInterval:1];
+    [self.testInterface deauthenticateIfNeeded];
     [super tearDown];
 }
 
@@ -103,20 +104,5 @@ extern NSString *const ATLMessageInputToolbarAccessibilityLabel;
     [tester waitForViewWithAccessibilityLabel:ATLMConversationDetailViewControllerTitle];
 }
 
-- (void)testToVerifyDebugModeEnabledFunctionality
-{
-    self.testInterface.applicationController.debugModeEnabled = YES;
-    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-    [tester tapItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]  inCollectionViewWithAccessibilityIdentifier:ATLConversationCollectionViewAccessibilityIdentifier];
-    [tester waitForViewWithAccessibilityLabel:ATLMMessageDetailViewControllerAccessibilityLabel];
-}
-
-- (void)testToVerifyDebugModeDisabledFunctionality
-{
-    self.testInterface.applicationController.debugModeEnabled = NO;
-    [tester tapViewWithAccessibilityLabel:[self.testInterface conversationLabelForParticipants:self.participants]];
-    [tester tapItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]  inCollectionViewWithAccessibilityIdentifier:ATLConversationCollectionViewAccessibilityIdentifier];
-    [tester waitForAbsenceOfViewWithAccessibilityLabel:ATLMMessageDetailViewControllerAccessibilityLabel];
-}
 
 @end

@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
-#import "ATLMIApplicationController.h"
+#import "ATLMApplicationController.h"
 #import "ATLMLayerContentFactory.h"
 #import "ATLMAppDelegate.h"
 #import "ATLMTestUser.h"
@@ -37,43 +37,23 @@
 
 @interface ATLMTestInterface : NSObject
 
-+ (instancetype)testInterfaceWithApplicationController:(ATLMIApplicationController *)applicationController;
++ (instancetype)testInterfaceWithApplicationController:(ATLMApplicationController *)applicationController;
 
-@property (nonatomic) ATLMIApplicationController *applicationController;
-
-@property (nonatomic) ATLMEnvironment testEnvironment;
+@property (nonatomic) ATLMApplicationController *applicationController;
 
 @property ATLMLayerContentFactory *contentFactory;
-
-//-------------------------------------
-// Layer Client Authentication Methods
-//-------------------------------------
-
-- (LYRClient *)authenticateLayerClient:(LYRClient *)layerClient withTestUser:(ATLMTestUser *)testUser;
 
 //-------------------------------
 // Authentication Methods
 //-------------------------------
 
-- (ATLMTestUser *)registerAndAuthenticateTestUser:(ATLMTestUser *)testUser;
+- (void)connectLayerClient;
 
-- (ATLMTestUser *)registerTestUser:(ATLMTestUser *)testUser;
+- (void)registerTestUserWithIdentifier:(NSString *)identifier;
 
-- (NSString *)authenticateTestUser:(ATLMTestUser *)testUser;
+- (void)deauthenticateIfNeeded;
 
-- (void)logoutIfNeeded;
-
-//-------------------------------
-// Participant Management Methods
-//-------------------------------
-
-- (void)loadContacts;
-
-- (NSSet *)fetchContacts;
-
-- (void)deleteContacts;
-
-- (ATLMUser *)randomUser;
+- (void)clearLayerContent;
 
 - (ATLMUser *)userForIdentifier:(NSString *)identifier;
 
