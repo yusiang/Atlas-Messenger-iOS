@@ -51,11 +51,11 @@ You can now proceed with building and running Atlas Messenger. Select **Run** fr
 
 Atlas Messenger was designed to strike a balance between being simple enough to quickly peruse the project, but full-featured enough to fully demonstrate the power of Atlas and Layer. As you begin working with the example code, keep the following things in mind:
 
-* [Layer](https://layer.com/) is a hosted communications platform. All communications services leveraged by Atlas Mesenger utilize the backend services hosted by Layer.
+* [Layer](https://layer.com/) is a hosted communications platform. All communications services leveraged by Atlas Messenger utilize the backend services hosted by Layer.
 * [LayerKit](https://github.com/layerhq/releases-ios) is the native iOS SDK for accessing the Layer communications platform. LayerKit handles the networking, persistence, security and synchronization necessary to implement robust native messaging. LayerKit also presents a programming model for accessing the Conversations and Messages that are transmitted through Layer.
 * [Atlas](https://atlas.layer.com/) is a library of user interface components developed by Layer that provide fully integrated user interface experiences on top of LayerKit. Atlas has a direct dependency on LayerKit and is not usable standalone.
 
-When working with the Atlas Messenger codebase your will encounter code coming from LayerKit (prefixed by `LYR`), Atlas (prefixed by `ATL`), and Atlas Messenger itself (prefixed by `ATLM`).
+When working with the Atlas Messenger codebase you will encounter code coming from LayerKit (prefixed by `LYR`), Atlas (prefixed by `ATL`), and Atlas Messenger itself (prefixed by `ATLM`).
 
 ### Navigating the Project
 
