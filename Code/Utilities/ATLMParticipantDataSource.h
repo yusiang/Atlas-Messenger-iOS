@@ -22,7 +22,7 @@
 #import "ATLMPersistenceManager.h"
 
 /**
- @abstract The `ATLMParticipantDataSource` provides an interface querying the Atlas Messenger persistence layer for objects conforming to the `ATLMParticipant` protocol. It also provides the ability to filter participants via the excluded identifiers property.
+ @abstract The `ATLMParticipantDataSource` provides an interface for querying the Atlas Messenger persistence layer for `ATLMUser` objects. It also provides the ability to filter participants via the `excludedIdentifiers` property.
  */
 @interface ATLMParticipantDataSource : NSObject
 
@@ -51,7 +51,7 @@
 /**
  @abstract Searches for participants matching the provided search text.
  @param searchText The search text for which the search will be performed. 
- @param completion The completion block to be called upon completion of search. The block has no return value and accepts one argument: an `NSSet` of object confroming to the `ATLParticipant` protocol.
+ @param completion The completion block to be called upon completion of search. The block has no return value and accepts one argument: an `NSSet` of objects conforming to the `ATLParticipant` protocol.
  */
 - (void)participantsMatchingSearchText:(NSString *)searchText completion:(void(^)(NSSet *participants))completion;
 

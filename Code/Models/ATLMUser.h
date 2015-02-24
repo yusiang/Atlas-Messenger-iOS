@@ -10,7 +10,7 @@
 #import <Atlas/Atlas.h>
 
 /**
- @abstract The `ATLMUser` object models a user within Atlas Messenger. The object also conforms the `ATLParticipant` protocol, enabling `ATLMUser` to be used with Atlas UI components.
+ @abstract The `ATLMUser` object models a user within Atlas Messenger. The object also conforms the `ATLParticipant` protocol, enabling `ATLMUser` objects to be used with Atlas UI components.
  */
 @interface ATLMUser : NSObject <NSCoding, ATLParticipant>
 

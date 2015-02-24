@@ -223,7 +223,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 #pragma mark - ATLConversationViewControllerDataSource
 
 /**
- Atlas - Returns an object conforming to the `ATLParticipant` protocol whose participantIdentifier property matches the supplied identifier.
+ Atlas - Returns an object conforming to the `ATLParticipant` protocol whose `participantIdentifier` property matches the supplied identifier.
  */
 - (id<ATLParticipant>)conversationViewController:(ATLConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
@@ -234,7 +234,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 }
 
 /**
- Atlas - Returns an `NSAttributedString` object for given date. The format of this string can be configured to whatever format an application wishes to display.
+ Atlas - Returns an `NSAttributedString` object for a given date. The format of this string can be configured to whatever format an application wishes to display.
  */
 - (NSAttributedString *)conversationViewController:(ATLConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
@@ -316,7 +316,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 }
 
 /**
- Atlas - Informs the delegate that the user is searching for participants. Atlas Messengers queries for participants whose `fullName` property contains the give search string.
+ Atlas - Informs the delegate that the user is searching for participants. Atlas Messengers queries for participants whose `fullName` property contains the given search string.
  */
 - (void)addressBarViewController:(ATLAddressBarViewController *)addressBarViewController searchForParticipantsMatchingText:(NSString *)searchText completion:(void (^)(NSArray *participants))completion
 {
@@ -326,7 +326,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 }
 
 /**
- Atlas - Informs the delegate that the user tapped on the `ATLAddressBarViewController` while it was disabled. Atlas Messengers presents an `ATLConversationDetailViewController` in response.
+ Atlas - Informs the delegate that the user tapped on the `ATLAddressBarViewController` while it was disabled. Atlas Messenger presents an `ATLConversationDetailViewController` in response.
  */
 - (void)addressBarViewControllerDidSelectWhileDisabled:(ATLAddressBarViewController *)addressBarViewController
 {
@@ -336,7 +336,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 #pragma mark - ATLParticipantTableViewControllerDelegate
 
 /**
- Atlas - Informs the delegate that the user selected an participant. Atlas Messengers in turn, informs the `ATLAddressBarViewController` of the selection.
+ Atlas - Informs the delegate that the user selected an participant. Atlas Messenger in turn, informs the `ATLAddressBarViewController` of the selection.
  */
 - (void)participantTableViewController:(ATLParticipantTableViewController *)participantTableViewController didSelectParticipant:(id<ATLParticipant>)participant
 {
@@ -357,7 +357,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 #pragma mark - LSConversationDetailViewControllerDelegate
 
 /**
- Atlas - Informs the delegate that the user has tapped the `Share My Current Location` button. Atlas Messengers sends a message into the current conversation with the current location.
+ Atlas - Informs the delegate that the user has tapped the `Share My Current Location` button. Atlas Messenger sends a message into the current conversation with the current location.
  */
 - (void)conversationDetailViewControllerDidSelectShareLocation:(ATLMConversationDetailViewController *)conversationDetailViewController
 {
@@ -366,7 +366,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 }
 
 /**
- Atlas - Informs the delegate that the conversation has changed. Atlas messenger updates its conversation and the current view controller's title in response.
+ Atlas - Informs the delegate that the conversation has changed. Atlas Messenger updates its conversation and the current view controller's title in response.
  */
 - (void)conversationDetailViewController:(ATLMConversationDetailViewController *)conversationDetailViewController didChangeConversation:(LYRConversation *)conversation
 {
@@ -424,15 +424,20 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 - (NSString *)defaultTitle
 {
-    if (!self.conversation) return @"New Message";
+    if (!self.conversation) {
+        return @"New Message";
+    }
+    
     NSMutableSet *otherParticipantIDs = [self.conversation.participants mutableCopy];
     if (self.layerClient.authenticatedUserID) [otherParticipantIDs removeObject:self.layerClient.authenticatedUserID];
-    if (otherParticipantIDs.count == 0) return @"Personal";
-    if (otherParticipantIDs.count == 1) {
+    
+    if (otherParticipantIDs.count == 0) {
+        return @"Personal";
+    } else if (otherParticipantIDs.count == 1) {
         NSString *otherParticipantID = [otherParticipantIDs anyObject];
         id<ATLParticipant> participant = [self conversationViewController:self participantForIdentifier:otherParticipantID];
         return participant ? participant.firstName : @"Message";
-    } else {
+    } else if (otherParticipantIDs.count > 1) {
         NSUInteger participantCount = 0;
         id<ATLParticipant> knownParticipant;
         for (NSString *participantIdentifier in otherParticipantIDs) {

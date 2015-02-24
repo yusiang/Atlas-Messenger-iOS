@@ -14,9 +14,8 @@
  */
 extern NSString *const ATLMDidReceiveLayerAppID;
 
-
 /** 
- @abstract The `ATLMQRScannerController` presents a user interface for scanning QR codes. 
+ @abstract The `ATLMQRScannerController` presents a user interface for scanning QR codes. When a QR code is succesfully scanned, it is persisted to the `NSUserDefaults` dictionary as the value for the `ATLMLayerApplicationID` key.
  */
 @interface ATLMQRScannerController : UIViewController
 
