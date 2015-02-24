@@ -49,6 +49,8 @@ void ATLMTestResetConfiguration(void)
     LYRDefaultConfigurationDispatchOnceToken = 0;
     LYRConfigurationURLOnceToken = 0;
 }
+// TODO: Configure a Layer appID from https://developer.layer.com/dashboard
+static NSString *const ATLMLayerAppID = nil;
 
 @interface ATLMAppDelegate () <MFMailComposeViewControllerDelegate>
 
@@ -110,7 +112,7 @@ void ATLMTestResetConfiguration(void)
 
 - (void)setupLayer
 {
-    NSString *appID = [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
+    NSString *appID = ATLMLayerAppID ?: [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
     if (appID) {
         ATLMLayerClient *layerClient = [ATLMLayerClient clientWithAppID:[[NSUUID alloc] initWithUUIDString:appID]];
         ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:layerClient];
