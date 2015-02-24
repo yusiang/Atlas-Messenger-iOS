@@ -49,7 +49,7 @@
         _guideLabel.textColor = [UIColor darkGrayColor];
         [self.contentView addSubview:_guideLabel];
         
-        [self setUpConstraints];
+        [self configureLayoutConstraints];
     }
     return self;
 }
@@ -60,7 +60,7 @@
     [super updateConstraints];
 }
 
-- (void)setUpConstraints
+- (void)configureLayoutConstraints
 {
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.guideLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     self.guideLabelLeftConstraint = [NSLayoutConstraint constraintWithItem:self.guideLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:self.separatorInset.left];
