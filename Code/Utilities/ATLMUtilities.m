@@ -37,7 +37,7 @@ NSString *ATLMApplicationDataDirectory(void)
     return paths.firstObject;
 }
 
-ATLMPersistenceManager *ATLMPersistenceManager(void)
+ATLMPersistenceManager *PersistenceManager(void)
 {
     if (ATLMIsRunningTests()) {
         return [ATLMPersistenceManager persistenceManagerWithInMemoryStore];

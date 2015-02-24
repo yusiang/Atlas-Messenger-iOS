@@ -68,7 +68,7 @@ static NSString *const ATLMLayerAppID = nil;
     // Private code for testing. Remove for release.
     [self configureLayerForEnvironment];
     
-    self.applicationController = [ATLMApplicationController controllerWithPersistenceManager:ATLMPersistenceManager()];
+    self.applicationController = [ATLMApplicationController controllerWithPersistenceManager:PersistenceManager()];
     
     // Set up window
     [self configureWindow];
