@@ -94,7 +94,6 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
     
     self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.participantIdentifiers = [self filteredParticipantIdentifiers];
-    [self.participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
     
     [self configureAppearance];
     [self registerNotificationObservers];
@@ -486,6 +485,8 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
     if (!notification.object) return;
     if (![notification.object isEqual:self.conversation]) return;
     
+    self.participantDataSource.excludedIdentifiers = nil;
+    
     [self.tableView beginUpdates];
     
     NSSet *existingIdentifiers = [NSSet setWithArray:self.participantIdentifiers];
@@ -523,9 +524,11 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
 
 - (NSMutableArray *)filteredParticipantIdentifiers
 {
-    NSSet *participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
-    NSSet *knownParticipants = [self.applicationController.persistenceManager usersForIdentifiers:participantIdentifiers];
-    return [[[knownParticipants valueForKey:@"participantIdentifier"] allObjects] mutableCopy];
+    NSMutableSet *participantIdentifiers = [self.conversation.participants.allObjects mutableCopy];
+    [participantIdentifiers removeObject:self.applicationController.layerClient.authenticatedUserID];
+    NSMutableSet *knownParticipants = [[self.applicationController.persistenceManager usersForIdentifiers:participantIdentifiers] mutableCopy];
+    NSSet *knownParticipantIdentifiers = [knownParticipants valueForKey:@"participantIdentifier"];
+    return [[knownParticipantIdentifiers allObjects] mutableCopy];
 }
 
 - (void)configureAppearance
