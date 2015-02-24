@@ -19,10 +19,11 @@
 //
 
 #import "ATLMSplashView.h"
+#import "ATLLogoView.h"
 
 @interface ATLMSplashView ()
 
-@property (nonatomic) UIImageView *logoImageView;
+@property (nonatomic) ATLLogoView *logoView;
 @property (nonatomic) UIActivityIndicatorView *spinner;
 @end
 
@@ -34,10 +35,9 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         
-        self.logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
-        self.logoImageView.center = CGPointMake(self.center.x, self.center.y - 40);
-        self.logoImageView.alpha = 0.10;
-        [self addSubview:self.logoImageView];
+        self.logoView = [ATLLogoView new];
+        self.logoView.center = CGPointMake(self.center.x, 100);
+        [self addSubview:self.logoView];
        
         self.spinner = [[UIActivityIndicatorView alloc] init];
         self.spinner.center = CGPointMake(self.center.x, self.center.y + 40);

@@ -208,8 +208,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
             [SVProgressHUD dismiss];
         }];
     } else {
-        [self.applicationController.APIManager deauthenticate];
-        [SVProgressHUD dismiss];
+        [SVProgressHUD showErrorWithStatus:@"Unable to logout. Layer is not connected"];
     }
 }
 

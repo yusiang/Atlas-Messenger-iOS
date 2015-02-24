@@ -107,7 +107,7 @@ NSString *const ATLMConnecting = @"Connecting";
     self.tableView.rowHeight = 44.0f;
     self.tableView.accessibilityIdentifier = ATLMSettingsTableViewAccessibilityIdentifier;
     
-    [self addConnectionObservers];
+    [self registerNotificationObservers];
 }
 
 - (void)dealloc
@@ -150,13 +150,13 @@ NSString *const ATLMConnecting = @"Connecting";
 
                 case ATLMInfoTableRowLayerKitVersion:
                     cell.textLabel.text = @"LayerKit Version";
-                    cell.detailTextLabel.text = @"1.0.0";
+                    cell.detailTextLabel.text = @"0.10.0";
                     break;
                     
                 case ATLMInfoTableRowAppIDRow:
-                    cell.textLabel.text = @"Layer App ID";
+                    cell.textLabel.text = @"App ID";
                     cell.detailTextLabel.text = [self.applicationController.layerClient.appID UUIDString];
-                    cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+                    cell.detailTextLabel.font = [UIFont systemFontOfSize:10];
                     break;
                     
                 case ATLMInfoTableRowCount:
@@ -261,12 +261,17 @@ NSString *const ATLMConnecting = @"Connecting";
 }
 - (void)logOut
 {
-    [self.settingsDelegate logoutTappedInSettingsViewController:self];
+    if (self.applicationController.layerClient.isConnected) {
+        [self.settingsDelegate logoutTappedInSettingsViewController:self];
+    } else {
+        [SVProgressHUD showErrorWithStatus:@"Cannot Logout. Layer is not connected"];
+    }
+    
 }
 
 # pragma mark - Layer Connection State Monitoring
 
-- (void)addConnectionObservers
+- (void)registerNotificationObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidConnect:) name:LYRClientDidConnectNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layerDidDisconnect:) name:LYRClientDidDisconnectNotification object:nil];

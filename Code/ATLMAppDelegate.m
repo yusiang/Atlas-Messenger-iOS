@@ -73,6 +73,7 @@ static NSString *const ATLMLayerAppID = nil;
     // Set up window
     [self configureWindow];
     
+    // Setup Layer
     [self setupLayer];
     
     // Configure sample app UI appearance
@@ -120,7 +121,12 @@ static NSString *const ATLMLayerAppID = nil;
         self.applicationController.APIManager = manager;
         if (![self resumeSession]) {
             [self.scannerController presentRegistrationViewController];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self removeSplashView];
+            });
         }
+    } else {
+        [self removeSplashView];
     }
 }
 
@@ -135,6 +141,8 @@ static NSString *const ATLMLayerAppID = nil;
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
+    
+    [self addSplashView];
 }
 
 - (void)registerNotificationObservers
@@ -150,6 +158,7 @@ static NSString *const ATLMLayerAppID = nil;
 - (BOOL)resumeSession
 {
     if (self.applicationController.layerClient.authenticatedUserID) {
+        [self connectLayerIfNeeded];
         ATLMSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
         if ([self.applicationController.APIManager resumeSession:session error:nil]) {
             [self presentConversationsListViewController:YES];
@@ -157,6 +166,15 @@ static NSString *const ATLMLayerAppID = nil;
         }
     }
     return NO;
+}
+
+- (void)connectLayerIfNeeded
+{
+    if (!self.applicationController.layerClient.isConnected && !self.applicationController.layerClient.isConnecting) {
+        [self.applicationController.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+            NSLog(@"Layer Client Connected");
+        }];
+    }
 }
 
 #pragma mark - Push Notifications
@@ -271,7 +289,6 @@ static NSString *const ATLMLayerAppID = nil;
         NSLog(@"Persisted authenticated user session: %@", session);
     } else {
         NSLog(@"Failed persisting authenticated user: %@. Error: %@", session, error);
-        //TODO - Handle Error
     }
 }
 
@@ -287,6 +304,7 @@ static NSString *const ATLMLayerAppID = nil;
     }
     [self.navigationController dismissViewControllerAnimated:YES completion:^{
         self.conversationListViewController = nil;
+        [self setupLayer];
     }];
     [self unregisterForRemoteNotifications:[UIApplication sharedApplication]];
 }
