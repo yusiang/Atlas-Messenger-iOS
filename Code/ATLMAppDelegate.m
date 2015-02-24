@@ -71,6 +71,7 @@ void ATLMTestResetConfiguration(void)
     // Set up window
     [self configureWindow];
     
+    // Setup Layer
     [self setupLayer];
     
     // Configure sample app UI appearance
@@ -122,6 +123,8 @@ void ATLMTestResetConfiguration(void)
                 [self removeSplashView];
             });
         }
+    } else {
+        [self removeSplashView];
     }
 }
 
