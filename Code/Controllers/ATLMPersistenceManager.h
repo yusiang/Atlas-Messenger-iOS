@@ -24,7 +24,7 @@
 
 /**
  @abstract The `ATLMPersistenceManager` provides an interface for persisting and querying, session and user
- data related to the Layer sample application.
+ data related to the Atlas Messenger application.
  */
 @interface ATLMPersistenceManager : NSObject
 

@@ -37,13 +37,13 @@
 @property (nonatomic) NSSet *participants;
 
 /**
- @abstract The `NSSet` of user identifiers to be excluded from the pariticipant set and queries.
+ @abstract The `NSSet` of user identifiers to be excluded from the participant set and queries.
  @discussion Typically this will be the set of identifiers for a given conversation.
  */
 @property (nonatomic) NSSet *excludedIdentifiers;
 
 /**
- @abstract Queries the reciever for a user with a `participantIdentifier` matching the supplied identifier.
+ @abstract Queries the receiver for a user with a `participantIdentifier` matching the supplied identifier.
  @return An object confroming to the `ATLParticipant` protocol or `nil` if no match is found.
  */
 - (id<ATLParticipant>)participantForIdentifier:(NSString *)identifier;

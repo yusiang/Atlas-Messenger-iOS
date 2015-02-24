@@ -68,7 +68,7 @@ static NSString *const ATLMLayerAppID = nil;
     // Private code for testing. Remove for release.
     [self configureLayerForEnvironment];
     
-    self.applicationController = [ATLMApplicationController controllerWithPersistenceManager:ATLMPersitenceManager()];
+    self.applicationController = [ATLMApplicationController controllerWithPersistenceManager:ATLMPersistenceManager()];
     
     // Set up window
     [self configureWindow];
@@ -76,7 +76,7 @@ static NSString *const ATLMLayerAppID = nil;
     // Setup Layer
     [self setupLayer];
     
-    // Configure sample app UI appearance
+    // Configure Atlas Messenger UI appearance
     [self configureGlobalUserInterfaceAttributes];
     
     // Setup notifications

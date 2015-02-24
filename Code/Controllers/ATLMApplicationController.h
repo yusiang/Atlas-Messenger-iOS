@@ -18,6 +18,7 @@
 //  limitations under the License.
 //
 
+
 #import <Foundation/Foundation.h>
 #import <LayerKit/LayerKit.h>
 #import "ATLMAPIManager.h"
@@ -30,7 +31,7 @@ extern NSString *const ATLMConversationParticipantsDidChangeNotification;
 extern NSString *const ATLMConversationDeletedNotification;
 
 /**
- @abstract The `LSApplicationController` manages global resources needed by multiple view controller classes in the Layer Sample App.
+ @abstract The `LSApplicationController` manages global resources needed by multiple view controller classes in the Atlas Messenger App.
  It also implement the `LYRClientDelegate` protocol. Only one instance should be instantiated and it should be passed to 
  controllers that require it.
  */
@@ -47,7 +48,7 @@ extern NSString *const ATLMConversationDeletedNotification;
 ///--------------------------------
 
 /**
- @abstract The `LYRCLient` object for the application.
+ @abstract The `LYRClient` object for the application.
  */
 @property (nonatomic) ATLMLayerClient *layerClient;
 
