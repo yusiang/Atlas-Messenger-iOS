@@ -33,7 +33,6 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 
 @interface ATLMAPIManager () <NSURLSessionDelegate>
 
-@property (nonatomic, readwrite) NSURL *baseURL;
 @property (nonatomic, readwrite) LYRClient *layerClient;
 
 @end

@@ -43,6 +43,11 @@ extern NSString *const ATLMApplicationDidSynchronizeParticipants;
 + (instancetype)managerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient;
 
 /**
+ @abstract
+ */
+@property (nonatomic) NSURL *baseURL;
+
+/**
  @abstract The `LYRClient` object used to initialize the receiver.
  */
 @property (nonatomic, readonly) LYRClient *layerClient;
