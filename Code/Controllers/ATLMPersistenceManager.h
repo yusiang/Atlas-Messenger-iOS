@@ -33,7 +33,8 @@
 ///---------------------------------------
 
 /**
- @abstract Designated initializer.
+ @abstract Returns the default persistence manager for the application.
+ @discussion When running within XCTest, returns a transient in-memory persistence manager. When running in a normal application environment, returns a persistence manager that persists objects to disk.
  */
 + (instancetype)defaultManager;
 
