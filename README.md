@@ -1,3 +1,5 @@
+![Atlas Header](Resources/atlas-github-header.png)
+
 # Atlas Messenger iOS
 
 This repository contains the source code of Atlas Messenger, an example application built by [Layer](https://layer.com/) to showcase the capabilities of [Atlas](https://github.com/layerhq/Atlas-iOS), a library of robust communications user interface components integrated with the Layer platform.
