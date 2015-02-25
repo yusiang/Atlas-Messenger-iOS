@@ -71,6 +71,10 @@
 		D6306E041A6F30BE00E16E85 /* ATLMLayerContentFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10821A6F2D99009BFA9C /* ATLMLayerContentFactory.m */; };
 		D6306E051A6F30BE00E16E85 /* ATLMTestInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B10881A6F2D99009BFA9C /* ATLMTestInterface.m */; };
 		D6306E061A6F30BE00E16E85 /* ATLMTestUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D61B108A1A6F2D99009BFA9C /* ATLMTestUser.m */; };
+		D633684E1A9D614900FBFCD3 /* atlas-splashscreen-960.png in Resources */ = {isa = PBXBuildFile; fileRef = D633684A1A9D614900FBFCD3 /* atlas-splashscreen-960.png */; };
+		D633684F1A9D614900FBFCD3 /* atlas-splashscreen-1334.png in Resources */ = {isa = PBXBuildFile; fileRef = D633684B1A9D614900FBFCD3 /* atlas-splashscreen-1334.png */; };
+		D63368501A9D614900FBFCD3 /* atlas-splashscreen-1336.png in Resources */ = {isa = PBXBuildFile; fileRef = D633684C1A9D614900FBFCD3 /* atlas-splashscreen-1336.png */; };
+		D63368511A9D614900FBFCD3 /* atlas-splashscreen-2208.png in Resources */ = {isa = PBXBuildFile; fileRef = D633684D1A9D614900FBFCD3 /* atlas-splashscreen-2208.png */; };
 		DE783CF95B3E136B03F3119D /* libPods-Atlas MessengerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B7FC39CB90F93655911C192 /* libPods-Atlas MessengerTests.a */; };
 		E60CDAC28046CC178C349414 /* libPods-Atlas Messenger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */; };
 /* End PBXBuildFile section */
@@ -195,6 +199,10 @@
 		D62D17321A9C0D6700E0EFAF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D62D17341A9C22E100E0EFAF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../../../Resources/Images.xcassets; sourceTree = "<group>"; };
 		D62D17361A9C267C00E0EFAF /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "Launch Screen.xib"; path = "../Launch Screen.xib"; sourceTree = "<group>"; };
+		D633684A1A9D614900FBFCD3 /* atlas-splashscreen-960.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "atlas-splashscreen-960.png"; sourceTree = "<group>"; };
+		D633684B1A9D614900FBFCD3 /* atlas-splashscreen-1334.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "atlas-splashscreen-1334.png"; sourceTree = "<group>"; };
+		D633684C1A9D614900FBFCD3 /* atlas-splashscreen-1336.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "atlas-splashscreen-1336.png"; sourceTree = "<group>"; };
+		D633684D1A9D614900FBFCD3 /* atlas-splashscreen-2208.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "atlas-splashscreen-2208.png"; sourceTree = "<group>"; };
 		E94B1E63D24BDBDE121BB97C /* libPods-Atlas Messenger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Atlas Messenger.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA8D4F84D7ED9670A81B8293 /* Pods-Atlas Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Atlas Messenger.release.xcconfig"; path = "Pods/Target Support Files/Pods-Atlas Messenger/Pods-Atlas Messenger.release.xcconfig"; sourceTree = "<group>"; };
 		F096675816A616DEE38AFF08 /* Pods-LayerSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LayerSample.release.xcconfig"; path = "Pods/Target Support Files/Pods-LayerSample/Pods-LayerSample.release.xcconfig"; sourceTree = "<group>"; };
@@ -405,6 +413,10 @@
 		259A576B1950EB83000E27B0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D633684A1A9D614900FBFCD3 /* atlas-splashscreen-960.png */,
+				D633684B1A9D614900FBFCD3 /* atlas-splashscreen-1334.png */,
+				D633684C1A9D614900FBFCD3 /* atlas-splashscreen-1336.png */,
+				D633684D1A9D614900FBFCD3 /* atlas-splashscreen-2208.png */,
 				D62D17361A9C267C00E0EFAF /* Launch Screen.xib */,
 				D62D17341A9C22E100E0EFAF /* Images.xcassets */,
 				D62D17321A9C0D6700E0EFAF /* Info.plist */,
@@ -572,11 +584,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D63368511A9D614900FBFCD3 /* atlas-splashscreen-2208.png in Resources */,
+				D633684E1A9D614900FBFCD3 /* atlas-splashscreen-960.png in Resources */,
 				D62611691A98091800F6E707 /* layer-logo@2x.png in Resources */,
 				D62611711A98153C00F6E707 /* layer-logo-gray.png in Resources */,
+				D633684F1A9D614900FBFCD3 /* atlas-splashscreen-1334.png in Resources */,
 				D62611721A98153C00F6E707 /* layer-logo-gray@3x.png in Resources */,
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
 				D62D17371A9C267C00E0EFAF /* Launch Screen.xib in Resources */,
+				D63368501A9D614900FBFCD3 /* atlas-splashscreen-1336.png in Resources */,
 				D62D17351A9C22E100E0EFAF /* Images.xcassets in Resources */,
 				D626116A1A98091800F6E707 /* layer-logo.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
@@ -827,7 +843,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "c604edb4-6e8d-4584-bde5-67228b3fbeaa";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -856,7 +872,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "c604edb4-6e8d-4584-bde5-67228b3fbeaa";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
