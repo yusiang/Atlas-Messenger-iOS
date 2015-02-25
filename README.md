@@ -4,7 +4,7 @@ This repository contains the source code of Atlas Messenger, an example applicat
 
 ## Getting Started
 
-Atlas Messenger requires a Layer App ID in order to run. You can obtain an App ID by registering for a Layer account on the [Experience Atlas](https://developer.layer.com/signup/atlas) page. Alternately, a pre-built is also available for testing [at the same location](https://developer.layer.com/signup/atlas).
+Building Atlas Messenger requires that you obtain a Layer App ID. You can obtain an App ID by registering for a Layer account on the [Experience Atlas](https://developer.layer.com/signup/atlas) page. Alternately, a pre-built version is available for immediate testing [at the same location](https://developer.layer.com/signup/atlas).
 
 ### Building Atlas Messenger
 
