@@ -20,6 +20,18 @@
 # Files will be installed in ~/Downloads/ folder.
 # 
 # This script requires that 'git' and 'cocoapods' are already installed.
+
+# Checking for pre-reqs before starting script
+hash git >/dev/null 2>&1 || {		
+  echo "You need to install git to continue: http://git-scm.com/download/mac"		
+  exit 1		
+}	
+
+hash pod >/dev/null  || {
+      echo "You need to install cocoapods to continue: http://cocoapods.org"
+      exit 1
+}
+
 echo "Welcome to the Layer Atlas Messenger install script for iOS"
 echo "This script will:"
 echo "1. Download the latest Atlas Messenger project from Github"
@@ -42,10 +54,8 @@ cd $INSTALL_DIR
 # Download the latest Atlas Messneger project from Github
 echo "##########################################"		
 echo "1. Downloading Latest Atlas Messenger code (This may take a few minutes)."		
-hash git >/dev/null 2>&1 && env git clone https://github.com/layerhq/Atlas-Messenger-iOS.git $INSTALL_DIR && env cd $INSTALL_DIR && env git submodule update --init|| {		
-  echo "You need to install git to continue: http://git-scm.com/download/mac"		
-  exit 1		
-}		
+git clone https://github.com/layerhq/Atlas-Messenger-iOS.git $INSTALL_DIR
+git submodule update --init
 echo "Atlas Messenger has been installed in your Downloads directory ($INSTALL_DIR)."
 
 # Update the generic XCode project with your App ID
@@ -58,10 +68,7 @@ fi
 
 # Install the latest LayerKit using Cocoapods
 echo "3: Running 'pod install' to download latest LayerKit via cocoapods (This may take a few minutes)."
-hash pod >/dev/null && env pod install || {
-      echo "You need to install cocoapods to continue: http://cocoapods.org"
-      exit 1
-}
+pod install
 
 # Launch XCode
 
@@ -70,3 +77,4 @@ open $INSTALL_DIR/Atlas\ Messenger.xcworkspace
 
 echo "Opening Atlas Messenger homepage on Github"
 open "https://github.com/layerhq/Atlas-Messenger-iOS"
+
