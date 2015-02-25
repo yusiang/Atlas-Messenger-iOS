@@ -77,3 +77,4 @@ open $INSTALL_DIR/Atlas\ Messenger.xcworkspace
 
 echo "Opening Atlas Messenger homepage on Github"
 open "https://github.com/layerhq/Atlas-Messenger-iOS"
+
