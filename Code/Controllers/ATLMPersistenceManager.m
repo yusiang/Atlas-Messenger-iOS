@@ -19,6 +19,7 @@
 //
 
 #import "ATLMPersistenceManager.h"
+#import "ATLMUtilities.h"
 
 #define ATLMMustBeImplementedBySubclass() @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Must be implemented by concrete subclass." userInfo:nil]
 
@@ -45,6 +46,14 @@ static NSString *const ATLMOnDiskPersistenceManagerSessionFileName = @"Session.p
 @end
 
 @implementation ATLMPersistenceManager
+
++ (instancetype)defaultManager
+{
+    if (ATLMIsRunningTests()) {
+        return [ATLMPersistenceManager persistenceManagerWithInMemoryStore];
+    }
+    return [ATLMPersistenceManager persistenceManagerWithStoreAtPath:[ATLMApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
+}
 
 + (instancetype)persistenceManagerWithInMemoryStore
 {

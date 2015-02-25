@@ -283,7 +283,6 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         __block BOOL sent;
         [mutableRecipientStatus enumerateKeysAndObjectsUsingBlock:^(NSString *userID, NSNumber *statusNumber, BOOL *stop) {
             LYRRecipientStatus status = statusNumber.integerValue;
-            NSLog(@"%ld", status);
             switch (status) {
                 case LYRRecipientStatusInvalid:
                     break;

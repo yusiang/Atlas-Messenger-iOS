@@ -37,14 +37,6 @@ NSString *ATLMApplicationDataDirectory(void)
     return paths.firstObject;
 }
 
-ATLMPersistenceManager *ATLMPersistenceManager(void)
-{
-    if (ATLMIsRunningTests()) {
-        return [ATLMPersistenceManager persistenceManagerWithInMemoryStore];
-    }
-    return [ATLMPersistenceManager persistenceManagerWithStoreAtPath:[ATLMApplicationDataDirectory() stringByAppendingPathComponent:@"PersistentObjects"]];
-}
-
 UIAlertView *ATLMAlertWithError(NSError *error)
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Unexpected Error"

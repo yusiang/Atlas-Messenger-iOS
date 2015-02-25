@@ -22,6 +22,7 @@
 
 NSString *const ATLMUserDidAuthenticateNotification = @"ATLMUserDidAuthenticateNotification";
 NSString *const ATLMUserDidDeauthenticateNotification = @"ATLMUserDidDeauthenticateNotification";
+NSString *const ATLMApplicationDidSynchronizeParticipants = @"ATLMApplicationDidSynchronizeParticipants";
 
 NSString *const ATLMAtlasIdentityKey = @"atlas_identity";
 NSString *const ATLMAtlasIdentitiesKey = @"atlas_identities";
@@ -115,7 +116,8 @@ NSString *const ATLMAtlasUserNameKey = @"name";
         BOOL success = [ATLMHTTPResponseSerializer responseObject:&userDetails withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
         if (success) {
             NSError *error;
-            BOOL success = [self persistUserWithResponseData:userDetails error:&error];
+            NSArray *userData = userDetails[ATLMAtlasIdentitiesKey];
+            BOOL success = [self persistUserData:userData error:&error];
             if (!success) {
                 completion(nil, error);
             }
@@ -134,6 +136,40 @@ NSString *const ATLMAtlasUserNameKey = @"name";
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(nil, serializationError);
+            });
+        }
+    }] resume];
+}
+
+- (void)loadContacts
+{
+    NSString *urlString = [NSString stringWithFormat:@"apps/%@/atlas_identities", [self.layerClient.appID UUIDString]];
+    NSURL *URL = [NSURL URLWithString:urlString relativeToURL:self.baseURL];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"GET";
+    
+    [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (!response && error) {
+            NSLog(@"Failed syncrhonizing participants with error: %@", error);
+            return;
+        }
+        
+        NSError *serializationError;
+        NSDictionary *userDetails;
+        BOOL success = [ATLMHTTPResponseSerializer responseObject:&userDetails withData:data response:(NSHTTPURLResponse *)response error:&serializationError];
+        if (success) {
+            NSError *error;
+            NSArray *userData = (NSArray *)userDetails;
+            BOOL success = [self persistUserData:userData error:&error];
+            if (!success) {
+                NSLog(@"Failed syncrhonizing participants with error: %@", error);
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:ATLMApplicationDidSynchronizeParticipants object:nil];
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"Failed syncrhonizing participants with error: %@", serializationError);
             });
         }
     }] resume];
@@ -158,10 +194,9 @@ NSString *const ATLMAtlasUserNameKey = @"name";
     return YES;
 }
 
-- (BOOL)persistUserWithResponseData:(NSDictionary *)responseData error:(NSError **)error
+- (BOOL)persistUserData:(NSArray *)userData error:(NSError **)error
 {
-    NSArray *users = responseData[ATLMAtlasIdentitiesKey];
-    BOOL success = [self.persistenceManager persistUsers:[self usersFromResponseData:users] error:error];
+    BOOL success = [self.persistenceManager persistUsers:[self usersFromResponseData:userData] error:error];
     if (success) {
         return YES;
     } else {

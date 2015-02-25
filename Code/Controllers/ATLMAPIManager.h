@@ -28,6 +28,7 @@
 
 extern NSString *const ATLMUserDidAuthenticateNotification;
 extern NSString *const ATLMUserDidDeauthenticateNotification;
+extern NSString *const ATLMApplicationDidSynchronizeParticipants;
 
 /**
  @abstract The `ATLMAPIManager` class provides an interface for interacting with the Layer Identity Provider JSON API and managing
@@ -78,6 +79,11 @@ extern NSString *const ATLMUserDidDeauthenticateNotification;
  @param completion completion The block to execute upon completion of the asynchronous user registration operation. The block has no return value and accepts two arguments: An identity token that was obtained upon successful registration (or nil in the event of a failure) and an `NSError` object that describes why the operation failed (or nil if the operation was successful).
  */
 - (void)registerUserWithName:(NSString*)name nonce:(NSString *)nonce completion:(void (^)(NSString *identityToken, NSError *error))completion;
+
+/**
+ @abstract Synchronizes the local participant store with the Layer identity provider.
+ */
+- (void)loadContacts;
 
 /**
  @abstract Deauthenticates the Atlas Messenger app by discarding its `ATLMSession` object.

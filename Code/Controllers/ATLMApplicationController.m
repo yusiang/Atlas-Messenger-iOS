@@ -146,6 +146,7 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
 
 - (void)didReceiveLayerClientWillBeginSynchronizationNotification:(NSNotification *)notification
 {
+    [self.APIManager loadContacts];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 }
 

@@ -33,15 +33,10 @@
 ///---------------------------------------
 
 /**
- @abstract Designated initializer when running tests.
+ @abstract Returns the default persistence manager for the application.
+ @discussion When running within XCTest, returns a transient in-memory persistence manager. When running in a normal application environment, returns a persistence manager that persists objects to disk.
  */
-+ (instancetype)persistenceManagerWithInMemoryStore;
-
-/**
- @abstract Designated initializer when running the application.
- @param The path where the data should be persisted.
- */
-+ (instancetype)persistenceManagerWithStoreAtPath:(NSString *)path;
++ (instancetype)defaultManager;
 
 ///---------------------------------------
 /// @name Persisting
