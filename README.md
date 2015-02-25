@@ -24,7 +24,6 @@ Once you have installed the prerequisites, you can proceed with cloning and conf
 ```sh
 $ git clone https://github.com/layerhq/Atlas-Messenger-iOS.git
 $ cd Atlas-Messenger-iOS
-$ git submodule update --init
 $ pod install
 ```
 
