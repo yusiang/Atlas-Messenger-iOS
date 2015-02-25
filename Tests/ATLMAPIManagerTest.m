@@ -60,12 +60,4 @@
     expect(manager).toNot.beNil();
 }
 
-- (void)testPublicPropertiesOnInitialization
-{
-    expect(self.testInterface.applicationController.APIManager.authenticatedURLSessionConfiguration).to.beNil();
-    expect(self.testInterface.applicationController.APIManager.authenticatedSession).to.beNil();
-}
-
-
-
 @end
