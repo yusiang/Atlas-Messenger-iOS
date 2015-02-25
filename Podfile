@@ -3,8 +3,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target 'Atlas Messenger' do
   pod 'SVProgressHUD', :head
-  pod 'LayerKit', '~> 0.10.0'
-  pod 'Atlas', path: 'Libraries/Atlas'
+  pod 'Atlas', '~> 1.0.0'
 end
 
 target 'Atlas MessengerTests' do
