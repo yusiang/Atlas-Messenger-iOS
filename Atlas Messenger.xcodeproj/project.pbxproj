@@ -197,7 +197,7 @@
 		D626116F1A98153C00F6E707 /* layer-logo-gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo-gray@3x.png"; sourceTree = "<group>"; };
 		D62611701A98153C00F6E707 /* layer-logo-gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "layer-logo-gray@2x.png"; sourceTree = "<group>"; };
 		D62D17321A9C0D6700E0EFAF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D62D17341A9C22E100E0EFAF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../../../Resources/Images.xcassets; sourceTree = "<group>"; };
+		D62D17341A9C22E100E0EFAF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Images.xcassets; sourceTree = "<group>"; };
 		D62D17361A9C267C00E0EFAF /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "Launch Screen.xib"; path = "../Launch Screen.xib"; sourceTree = "<group>"; };
 		D633684A1A9D614900FBFCD3 /* atlas-splashscreen-960.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "atlas-splashscreen-960.png"; sourceTree = "<group>"; };
 		D633684B1A9D614900FBFCD3 /* atlas-splashscreen-1334.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "atlas-splashscreen-1334.png"; sourceTree = "<group>"; };
