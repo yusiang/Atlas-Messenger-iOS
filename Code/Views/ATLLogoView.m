@@ -29,9 +29,9 @@ CGFloat const ATLMLogoLeftPadding = 4;
     if (self) {
         
         NSMutableAttributedString *atlasString = [[NSMutableAttributedString alloc] initWithString:@"ATLAS"];
-        [atlasString addAttribute:NSFontAttributeName value:ATLMUltraLightFont(48) range:NSMakeRange(0, atlasString.length)];
+        [atlasString addAttribute:NSFontAttributeName value:ATLMUltraLightFont(46) range:NSMakeRange(0, atlasString.length)];
         [atlasString addAttribute:NSForegroundColorAttributeName value:ATLBlueColor() range:NSMakeRange(0, atlasString.length)];
-        [atlasString addAttribute:NSKernAttributeName value:@(15.0) range:NSMakeRange(0, atlasString.length)];
+        [atlasString addAttribute:NSKernAttributeName value:@(12.0) range:NSMakeRange(0, atlasString.length)];
         
         _atlasLabel = [[UILabel alloc] init];
         _atlasLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -59,10 +59,15 @@ CGFloat const ATLMLogoLeftPadding = 4;
     return self;
 }
 
+- (CGSize)intrinsicContentSize
+{
+    return CGSizeMake(320, 80);
+}
+
 - (void)configureLayoutConstraints
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:_atlasLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:_atlasLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:10]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:_atlasLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
     
     CGFloat poweredByLabelOffset = (ATLMLogoSize + ATLMLogoLeftPadding) / ATLMLogoLeftPadding;
     [self addConstraint:[NSLayoutConstraint constraintWithItem:_poweredByLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:-poweredByLabelOffset]];

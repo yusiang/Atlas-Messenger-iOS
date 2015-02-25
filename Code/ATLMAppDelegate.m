@@ -131,6 +131,7 @@ static NSString *const ATLMLayerAppID = nil;
     NSString *appID = ATLMLayerAppID ?: [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
     if (appID) {
         ATLMLayerClient *layerClient = [ATLMLayerClient clientWithAppID:[[NSUUID alloc] initWithUUIDString:appID]];
+        layerClient.autodownloadMIMETypes = [NSSet setWithObjects:ATLMIMETypeImageJPEGPreview, ATLMIMETypeTextPlain, nil];
         ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:layerClient];
         self.applicationController.layerClient = layerClient;
         self.applicationController.APIManager = manager;

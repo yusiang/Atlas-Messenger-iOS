@@ -14,10 +14,6 @@
 		0A0C244719477D8F00401B74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242619477D8F00401B74 /* Foundation.framework */; };
 		0A0C244819477D8F00401B74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0C242A19477D8F00401B74 /* UIKit.framework */; };
 		0A43B1D319D34CDD00AE8FA6 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */; };
-		0A605F3119BF735D00D773AF /* logo-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F2F19BF735D00D773AF /* logo-icon@2x.png */; };
-		0A605F3219BF735D00D773AF /* logo-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3019BF735D00D773AF /* logo-icon.png */; };
-		0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3319BF744600D773AF /* logo-icon-blue@2x.png */; };
-		0A605F3619BF744600D773AF /* logo-icon-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A605F3419BF744600D773AF /* logo-icon-blue.png */; };
 		0AADB5C41947C85A0083732B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C31947C85A0083732B /* AudioToolbox.framework */; };
 		0AADB5C61947C8600083732B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C51947C8600083732B /* CFNetwork.framework */; };
 		0AADB5C81947C86B0083732B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5C71947C86B0083732B /* CoreLocation.framework */; };
@@ -27,9 +23,6 @@
 		0AADB5D01947C8800083732B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5CF1947C8800083732B /* Security.framework */; };
 		0AADB5D41947C88B0083732B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AADB5D31947C88B0083732B /* SystemConfiguration.framework */; };
 		0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABEFFAE196B7686006FFFF3 /* logo@2x.png */; };
-		0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B519BD4CFA005142ED /* more@2x.png */; };
-		0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B719BD4CFA005142ED /* compose@2x.png */; };
-		0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6C4B819BD4CFA005142ED /* compose.png */; };
 		0AFE3FE419B0E19C00FCA264 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 259A57311950EB76000E27B0 /* main.m */; };
 		251D8DC01A9688C50000BFA2 /* ATLMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */; };
 		251D8DC11A9688C50000BFA2 /* ATLMAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 251D8D881A9688C40000BFA2 /* ATLMAPIManager.m */; };
@@ -100,10 +93,6 @@
 		0A0C244419477D8F00401B74 /* Atlas MessengerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Atlas MessengerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A0C244519477D8F00401B74 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0A43B1D219D34CDD00AE8FA6 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		0A605F2F19BF735D00D773AF /* logo-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon@2x.png"; sourceTree = "<group>"; };
-		0A605F3019BF735D00D773AF /* logo-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon.png"; sourceTree = "<group>"; };
-		0A605F3319BF744600D773AF /* logo-icon-blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon-blue@2x.png"; sourceTree = "<group>"; };
-		0A605F3419BF744600D773AF /* logo-icon-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-icon-blue.png"; sourceTree = "<group>"; };
 		0AADB5C31947C85A0083732B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0AADB5C51947C8600083732B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		0AADB5C71947C86B0083732B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -114,9 +103,6 @@
 		0AADB5D31947C88B0083732B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0AB05019196E24F00029BC1B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		0ABEFFAE196B7686006FFFF3 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
-		0AD6C4B519BD4CFA005142ED /* more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2x.png"; sourceTree = "<group>"; };
-		0AD6C4B719BD4CFA005142ED /* compose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compose@2x.png"; sourceTree = "<group>"; };
-		0AD6C4B819BD4CFA005142ED /* compose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compose.png; sourceTree = "<group>"; };
 		251D8D841A9688C40000BFA2 /* ATLMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAppDelegate.h; sourceTree = "<group>"; };
 		251D8D851A9688C40000BFA2 /* ATLMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATLMAppDelegate.m; sourceTree = "<group>"; };
 		251D8D871A9688C40000BFA2 /* ATLMAPIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATLMAPIManager.h; sourceTree = "<group>"; };
@@ -300,13 +286,6 @@
 		0AD6C4B419BD4CD6005142ED /* Icons */ = {
 			isa = PBXGroup;
 			children = (
-				0A605F2F19BF735D00D773AF /* logo-icon@2x.png */,
-				0A605F3019BF735D00D773AF /* logo-icon.png */,
-				0A605F3319BF744600D773AF /* logo-icon-blue@2x.png */,
-				0A605F3419BF744600D773AF /* logo-icon-blue.png */,
-				0AD6C4B519BD4CFA005142ED /* more@2x.png */,
-				0AD6C4B719BD4CFA005142ED /* compose@2x.png */,
-				0AD6C4B819BD4CFA005142ED /* compose.png */,
 			);
 			name = Icons;
 			sourceTree = "<group>";
@@ -593,19 +572,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A605F3619BF744600D773AF /* logo-icon-blue.png in Resources */,
-				0AD6C4BD19BD4CFA005142ED /* compose.png in Resources */,
 				D62611691A98091800F6E707 /* layer-logo@2x.png in Resources */,
-				0A605F3119BF735D00D773AF /* logo-icon@2x.png in Resources */,
-				0A605F3219BF735D00D773AF /* logo-icon.png in Resources */,
-				0AD6C4BC19BD4CFA005142ED /* compose@2x.png in Resources */,
 				D62611711A98153C00F6E707 /* layer-logo-gray.png in Resources */,
 				D62611721A98153C00F6E707 /* layer-logo-gray@3x.png in Resources */,
 				0ABEFFAF196B7686006FFFF3 /* logo@2x.png in Resources */,
-				0AD6C4BA19BD4CFA005142ED /* more@2x.png in Resources */,
 				D62D17371A9C267C00E0EFAF /* Launch Screen.xib in Resources */,
 				D62D17351A9C22E100E0EFAF /* Images.xcassets in Resources */,
-				0A605F3519BF744600D773AF /* logo-icon-blue@2x.png in Resources */,
 				D626116A1A98091800F6E707 /* layer-logo.png in Resources */,
 				259A57741950EB83000E27B0 /* InfoPlist.strings in Resources */,
 				D62611731A98153C00F6E707 /* layer-logo-gray@2x.png in Resources */,
