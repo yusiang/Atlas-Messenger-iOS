@@ -15,7 +15,7 @@
 #  - Abir Majumdar (http://github.com/maju6406)
 
 #    Install the Atlas Messenger project by running this command:
-#    curl -L https://raw.githubusercontent.com/layerhq/Atlas-Messenger-iOS/master/install.sh | bash -s "<YOUR_APP_ID>"
+#    curl -L atlas.layer.com/install-script | bash -s "<YOUR_APP_ID>"
 #
 # Files will be installed in ~/Downloads/ folder.
 # 
@@ -55,7 +55,6 @@ cd $INSTALL_DIR
 echo "##########################################"		
 echo "1. Downloading Latest Atlas Messenger code (This may take a few minutes)."		
 git clone https://github.com/layerhq/Atlas-Messenger-iOS.git $INSTALL_DIR
-git submodule update --init
 echo "Atlas Messenger has been installed in your Downloads directory ($INSTALL_DIR)."
 
 # Update the generic XCode project with your App ID
