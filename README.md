@@ -42,11 +42,12 @@ Before running Atlas Messenger from source code you must configure the Layer App
 static NSString *const ATLMLayerAppID = nil;
 ```
 
-Replace the `nil` with the appID you previously obtained from the Info section of the [Layer Developer Dashboard](https://developer.layer.com/dashboard). Be sure to enclose it in standard Objective-C string quotes (`@""`). Once configured your code should now look something like:
+Replace the `nil` with the appID you previously obtained from the [Atlas build](https://developer.layer.com/dashboard/atlas/build) page. Be sure to enclose it in standard Objective-C string quotes (`@""`). Once configured your code should now look something like:
 
 ```objc
 static NSString *const ATLMLayerAppID = @"035c3b96-ecb5-4642-b6b1-ff49ea2dd5db";
 ```
+Note: The current Atlas Messenger project is designed to only work with a special `Atlas Messenger` project.  To create this special App ID you must go to the [Atlas build](https://developer.layer.com/dashboard/atlas/build)  page. If you use a different App ID you will see a "Request failed: forbidden" error when you launch the app.
 
 You can now proceed with building and running Atlas Messenger. Select **Run** from the **Product** menu (or type `⌘R`). After the build completes, Atlas Messenger will launch launch in your iOS Simulator.
 
