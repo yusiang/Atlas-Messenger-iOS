@@ -103,6 +103,7 @@ static NSString *const ATLMLayerAppID = nil;
         ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:layerClient];
         self.applicationController.layerClient = layerClient;
         self.applicationController.APIManager = manager;
+        [self connectLayerIfNeeded];
         if (![self resumeSession]) {
             [self.scannerController presentRegistrationViewController];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -127,7 +128,6 @@ static NSString *const ATLMLayerAppID = nil;
 - (BOOL)resumeSession
 {
     if (self.applicationController.layerClient.authenticatedUserID) {
-        [self connectLayerIfNeeded];
         ATLMSession *session = [self.applicationController.persistenceManager persistedSessionWithError:nil];
         if ([self.applicationController.APIManager resumeSession:session error:nil]) {
             [self presentConversationsListViewController:YES];
@@ -275,6 +275,7 @@ static NSString *const ATLMLayerAppID = nil;
         self.conversationListViewController = nil;
         [self setupLayer];
     }];
+    
     [self unregisterForRemoteNotifications:[UIApplication sharedApplication]];
 }
 
