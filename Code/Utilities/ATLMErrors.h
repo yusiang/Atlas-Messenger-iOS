@@ -36,4 +36,5 @@ typedef NS_ENUM(NSUInteger, ATLMAuthenticationError) {
     ATLMInvalidAppIDString                            = 7008,
     ATLMInvalidAppID                                  = 7009,
     ATLMInvalidIdentityToken                          = 7010,
+    ATLMDeviceTypeNotSupported                       = 7011,
 };

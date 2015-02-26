@@ -49,7 +49,7 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:captureDevice error:&error];
     if (!input) {
         if (!self.applicationController.layerClient.appID) {
-            NSError *error = [NSError errorWithDomain:ATLErrorDomain code:ATLErrorDeviceTypeNotSupported userInfo:@{NSLocalizedDescriptionKey : @"Cannot scan QR Codes from the simulator"}];
+            NSError *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMDeviceTypeNotSupported userInfo:@{NSLocalizedDescriptionKey : @"Cannot scan QR Codes from the simulator"}];
             ATLMAlertWithError(error);
         }
         return;
