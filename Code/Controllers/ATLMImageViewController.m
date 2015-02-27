@@ -233,6 +233,14 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
             self.fullResImage = [UIImage imageWithData:fullResImagePart.data];
         }
         self.fullResImageView.image = self.fullResImage;
+        
+        // Set the scrollview if we couldn't set it with the thumbnail sized image
+        if (CGSizeEqualToSize(self.fullResImageSize, CGSizeZero)) {
+            self.fullResImageSize = self.fullResImage.size;
+            self.scrollView.contentSize = self.fullResImageSize;
+            self.imageViewFrame = CGRectMake(0, 0, self.fullResImageSize.width, self.fullResImageSize.height);
+            self.lowResImageView.frame = self.imageViewFrame;
+        }
     }
     if (!self.fullResImage) {
         return;
