@@ -87,6 +87,7 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
     self.tableView.sectionFooterHeight = 0.0f;
     self.tableView.rowHeight = 48.0f;
     self.tableView.accessibilityLabel = ATLMConversationDetailTableViewAccessibilityLabel;
+    self.tableView.isAccessibilityElement = YES;
     [self.tableView registerClass:[ATLMCenterTextTableViewCell class] forCellReuseIdentifier:ATLMCenterContentCellIdentifier];
     [self.tableView registerClass:[ATLParticipantTableViewCell class] forCellReuseIdentifier:ATLMParticipantCellIdentifier];
     [self.tableView registerClass:[ATLMInputTableViewCell class] forCellReuseIdentifier:ATLMInputCellIdentifier];
