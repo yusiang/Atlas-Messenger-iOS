@@ -28,7 +28,11 @@ BOOL ATLMIsRunningTests(void)
 
 NSURL *ATLMRailsBaseURL(void)
 {
-    return [NSURL URLWithString:@"http://layer-test-identity-provider.herokuapp.com"];
+    if (ATLMIsRunningTests()){
+        return [NSURL URLWithString:@"http://layer-test-identity-provider.herokuapp.com"];
+    } else {
+        return [NSURL URLWithString:@"https://layer-identity-provider.herokuapp.com"];
+    }
 }
 
 NSString *ATLMApplicationDataDirectory(void)
