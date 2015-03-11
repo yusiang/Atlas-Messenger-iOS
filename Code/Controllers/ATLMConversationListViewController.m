@@ -42,7 +42,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 {
     [super viewDidLoad];
     self.tableView.accessibilityLabel = ATLMConversationListTableViewAccessibilityLabel;
-    
+    self.tableView.isAccessibilityElement = YES;
     self.delegate = self;
     self.dataSource = self;
     self.allowsEditing = YES;

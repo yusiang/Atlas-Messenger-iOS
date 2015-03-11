@@ -27,7 +27,6 @@
 #import "ATLMAppDelegate.h"
 #import "ATLMNavigationController.h"
 #import "ATLMConversationListViewController.h"
-#import "ATLMAPIManager.h"
 #import "ATLMSplashView.h"
 #import "SVProgressHUD.h"
 #import "ATLMQRScannerController.h"
