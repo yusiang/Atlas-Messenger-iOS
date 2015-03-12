@@ -53,14 +53,14 @@ static NSString *const ATLMLayerAppID = nil;
     // Set up window
     [self configureWindow];
     
+    // Setup notifications
+    [self registerNotificationObservers];
+    
     // Setup Layer
     [self setupLayer];
     
     // Configure Atlas Messenger UI appearance
     [self configureGlobalUserInterfaceAttributes];
-    
-    // Setup notifications
-    [self registerNotificationObservers];
     
     return YES;
 }
@@ -68,7 +68,6 @@ static NSString *const ATLMLayerAppID = nil;
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [self resumeSession];
-    [self setupLayer];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -182,6 +181,9 @@ static NSString *const ATLMLayerAppID = nil;
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
+    
+    NSLog(@"%@", userInfo);
+    
     BOOL userTappedRemoteNotification = application.applicationState == UIApplicationStateInactive;
     __block LYRConversation *conversation = [self conversationFromRemoteNotification:userInfo];
     if (userTappedRemoteNotification && conversation) {
@@ -258,6 +260,8 @@ static NSString *const ATLMLayerAppID = nil;
     } else {
         NSLog(@"Failed persisting authenticated user: %@. Error: %@", session, error);
     }
+    
+    [self registerForRemoteNotifications:[UIApplication sharedApplication]];
 }
 
 - (void)userDidDeauthenticate:(NSNotification *)notification
