@@ -542,7 +542,6 @@
 				ORGANIZATIONNAME = "Layer, Inc.";
 				TargetAttributes = {
 					0A0C242219477D8F00401B74 = {
-						DevelopmentTeam = U46UP347QQ;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -847,7 +846,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "b69da77d-5e12-4637-8f87-b9ef45d19df2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -876,7 +875,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "b69da77d-5e12-4637-8f87-b9ef45d19df2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
