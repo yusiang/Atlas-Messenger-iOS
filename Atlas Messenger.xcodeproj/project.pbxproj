@@ -846,7 +846,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b69da77d-5e12-4637-8f87-b9ef45d19df2";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -875,7 +875,7 @@
 					"$(SRCROOT)/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b69da77d-5e12-4637-8f87-b9ef45d19df2";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
