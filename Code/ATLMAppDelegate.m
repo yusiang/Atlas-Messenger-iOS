@@ -257,7 +257,6 @@ static NSString *const ATLMLayerAppID = nil;
     } else {
         NSLog(@"Failed persisting authenticated user: %@. Error: %@", session, error);
     }
-    
     [self registerForRemoteNotifications:[UIApplication sharedApplication]];
 }
 
