@@ -100,7 +100,7 @@ CGFloat const ATLMregistrationTextFieldBottomPadding = 20;
         }
         NSLog(@"Registering user");
         [self.applicationController.APIManager registerUserWithName:name nonce:nonce completion:^(NSString *identityToken, NSError *error) {
-            NSLog(@"User registerd and got identity token: %@", identityToken);
+            NSLog(@"User registered and got identity token: %@ (error=%@)", identityToken, error);
             if (error) {
                 ATLMAlertWithError(error);
                 return;

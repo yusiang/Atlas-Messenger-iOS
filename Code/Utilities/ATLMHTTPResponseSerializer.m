@@ -91,7 +91,10 @@ static NSString *ATLMHTTPErrorMessageFromErrorRepresentation(id representation)
     // No response body
     if (!data.length) {
         if (status != ATLMHTTPResponseStatusSuccess) {
-            if (error) *error = [NSError errorWithDomain:ATLMHTTPResponseErrorDomain code:(status == ATLMHTTPResponseStatusClientError ? ATLMHTTPResponseErrorClientError : ATLMHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: @"An error was encountered without a response body."}];
+            if (error) {
+                NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: @"An error was encountered without a response body."};
+                *error = [NSError errorWithDomain:ATLMHTTPResponseErrorDomain code:(status == ATLMHTTPResponseStatusClientError ? ATLMHTTPResponseErrorClientError : ATLMHTTPResponseErrorServerError) userInfo:userInfo];
+            }
             return NO;
         } else {
             // Successful response with no data (typical of a 204 (No Content) response)
@@ -110,7 +113,11 @@ static NSString *ATLMHTTPErrorMessageFromErrorRepresentation(id representation)
     
     if (status != ATLMHTTPResponseStatusSuccess) {
         NSString *errorMessage = ATLMHTTPErrorMessageFromErrorRepresentation(deserializedResponse);
-        if (error) *error = [NSError errorWithDomain:ATLMHTTPResponseErrorDomain code:(status == ATLMHTTPResponseStatusClientError ? ATLMHTTPResponseErrorClientError : ATLMHTTPResponseErrorServerError) userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+        if (error) {
+            NSString *responseBody = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: errorMessage, @"responseBody": responseBody };
+            *error = [NSError errorWithDomain:ATLMHTTPResponseErrorDomain code:(status == ATLMHTTPResponseStatusClientError ? ATLMHTTPResponseErrorClientError : ATLMHTTPResponseErrorServerError) userInfo:userInfo];
+        }
         return NO;
     }
     
