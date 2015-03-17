@@ -13,7 +13,7 @@ PODS:
   - SVProgressHUD (HEAD based on 1.1.2)
 
 DEPENDENCIES:
-  - Atlas (~> 1.0.1)
+  - Atlas (~> 1.0.2)
   - Expecta (~> 0.3.0)
   - KIF (~> 3.0.8)
   - KIFViewControllerActions (from `https://github.com/blakewatters/KIFViewControllerActions.git`)

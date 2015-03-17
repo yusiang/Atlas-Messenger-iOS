@@ -181,6 +181,7 @@ static NSString *const ATLMLayerAppID = nil;
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
+    NSLog(@"User Info: %@", userInfo);
     BOOL userTappedRemoteNotification = application.applicationState == UIApplicationStateInactive;
     __block LYRConversation *conversation = [self conversationFromRemoteNotification:userInfo];
     if (userTappedRemoteNotification && conversation) {
@@ -190,7 +191,6 @@ static NSString *const ATLMLayerAppID = nil;
     }
     
     BOOL success = [self.applicationController.layerClient synchronizeWithRemoteNotification:userInfo completion:^(NSArray *changes, NSError *error) {
-        [self setApplicationBadgeNumber];
         if (changes.count) {
             completionHandler(UIBackgroundFetchResultNewData);
         } else {
