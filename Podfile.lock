@@ -1,13 +1,13 @@
 PODS:
-  - Atlas (1.0.1):
-    - LayerKit (>= 0.10.3)
+  - Atlas (1.0.2):
+    - LayerKit (>= 0.11.0)
   - Expecta (0.3.2)
   - KIF (3.0.8):
     - KIF/XCTest (= 3.0.8)
   - KIF/XCTest (3.0.8)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - LayerKit (0.10.3)
+  - LayerKit (0.11.0)
   - LYRCountDownLatch (0.9.0)
   - OCMock (3.1.2)
   - SVProgressHUD (HEAD based on 1.1.2)
@@ -36,11 +36,11 @@ CHECKOUT OPTIONS:
     :git: https://github.com/layerhq/LYRCountDownLatch.git
 
 SPEC CHECKSUMS:
-  Atlas: 2059e544cdea455b463167d77069d3dadde23b15
+  Atlas: cc059148d05b8f58a5aa7e488ae3ac5c792eaba6
   Expecta: ee641011fe10aa1855d487b40e4976dac50ec342
   KIF: 2db5e8cf59136dd1267d49cca0d55883389b09d3
   KIFViewControllerActions: 73085acd975ebbfc954f7895ca1aaa9faa36b3c6
-  LayerKit: 67cefd07350644909c91250c9b70063630858d07
+  LayerKit: 0ba4dd34f30d1f52838fa8b22b0919a8006fc413
   LYRCountDownLatch: 72a444f729ca5a8c6157c0b58f335a44e6702b48
   OCMock: ecdd510b73ef397f2f97274785c1e87fd147c49f
   SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
