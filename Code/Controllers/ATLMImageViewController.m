@@ -200,9 +200,9 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
     if (!(lowResImagePart.transferStatus == LYRContentTransferReadyForDownload || lowResImagePart.transferStatus == LYRContentTransferDownloading)) {
         if ([lowResImagePart.MIMEType isEqualToString:ATLMIMETypeImageGIFPreview]) {
             if (lowResImagePart.fileURL) {
-                self.lowResImage = [ATLUIImageHelper animatedImageWithAnimatedGIFURL:lowResImagePart.fileURL];
+                self.lowResImage = ATLAnimatedImageWithAnimatedGIFURL(lowResImagePart.fileURL);
             } else {
-                self.lowResImage = [ATLUIImageHelper animatedImageWithAnimatedGIFData:lowResImagePart.data];
+                self.lowResImage = ATLAnimatedImageWithAnimatedGIFData(lowResImagePart.data);
             }
         } else {
             if (lowResImagePart.fileURL) {
@@ -246,9 +246,9 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
     if (!(fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
         if ([fullResImagePart.MIMEType isEqualToString:ATLMIMETypeImageGIF]) {
             if (fullResImagePart.fileURL) {
-                self.fullResImage = [ATLUIImageHelper animatedImageWithAnimatedGIFURL:fullResImagePart.fileURL];
+                self.fullResImage = ATLAnimatedImageWithAnimatedGIFURL(fullResImagePart.fileURL);
             } else {
-                self.fullResImage = [ATLUIImageHelper animatedImageWithAnimatedGIFData:fullResImagePart.data];
+                self.fullResImage = ATLAnimatedImageWithAnimatedGIFData(fullResImagePart.data);
             }
         } else {
             if (fullResImagePart.fileURL) {
