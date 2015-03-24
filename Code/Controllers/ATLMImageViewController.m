@@ -20,6 +20,7 @@
 
 #import "ATLMImageViewController.h"
 #import <Atlas/Atlas.h>
+#import "ATLUIImageHelper.h"
 
 static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
 static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
@@ -191,12 +192,24 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
         lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
     }
     
+    if (!lowResImagePart) {
+        lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIFPreview);
+    }
+    
     // Retrieve low-res image from message part
     if (!(lowResImagePart.transferStatus == LYRContentTransferReadyForDownload || lowResImagePart.transferStatus == LYRContentTransferDownloading)) {
-        if (lowResImagePart.fileURL) {
-            self.lowResImage = [UIImage imageWithContentsOfFile:lowResImagePart.fileURL.path];
+        if ([lowResImagePart.MIMEType isEqualToString:ATLMIMETypeImageGIFPreview]) {
+            if (lowResImagePart.fileURL) {
+                self.lowResImage = [ATLUIImageHelper animatedImageWithAnimatedGIFURL:lowResImagePart.fileURL];
+            } else {
+                self.lowResImage = [ATLUIImageHelper animatedImageWithAnimatedGIFData:lowResImagePart.data];
+            }
         } else {
-            self.lowResImage = [UIImage imageWithData:lowResImagePart.data];
+            if (lowResImagePart.fileURL) {
+                self.lowResImage = [UIImage imageWithContentsOfFile:lowResImagePart.fileURL.path];
+            } else {
+                self.lowResImage = [UIImage imageWithData:lowResImagePart.data];
+            }
         }
         self.lowResImageView.image = self.lowResImage;
     }
@@ -225,13 +238,26 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
         fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG);
     }
     
+    if (!fullResImagePart) {
+        fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF);
+    }
+    
     // Retrieve hi-res image from message part
     if (!(fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
-        if (fullResImagePart.fileURL) {
-            self.fullResImage = [UIImage imageWithContentsOfFile:fullResImagePart.fileURL.path];
+        if ([fullResImagePart.MIMEType isEqualToString:ATLMIMETypeImageGIF]) {
+            if (fullResImagePart.fileURL) {
+                self.fullResImage = [ATLUIImageHelper animatedImageWithAnimatedGIFURL:fullResImagePart.fileURL];
+            } else {
+                self.fullResImage = [ATLUIImageHelper animatedImageWithAnimatedGIFData:fullResImagePart.data];
+            }
         } else {
-            self.fullResImage = [UIImage imageWithData:fullResImagePart.data];
+            if (fullResImagePart.fileURL) {
+                self.fullResImage = [UIImage imageWithContentsOfFile:fullResImagePart.fileURL.path];
+            } else {
+                self.fullResImage = [UIImage imageWithData:fullResImagePart.data];
+            }
         }
+
         self.fullResImageView.image = self.fullResImage;
         
         // Set the scrollview if we couldn't set it with the thumbnail sized image
@@ -259,6 +285,10 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
     LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
     if (!fullResImagePart) {
         fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG);
+    }
+    
+    if (!fullResImagePart) {
+        fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF);
     }
     
     // Download hi-res image from the network
