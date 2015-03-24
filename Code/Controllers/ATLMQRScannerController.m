@@ -48,7 +48,6 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
                                                               denyButtonTitle:@"Not Now"
                                                              grantButtonTitle:@"OK"
                                                             completionHandler:^(BOOL hasPermission, ClusterDialogResult userDialogResult, ClusterDialogResult systemDialogResult) {
-        
                                                                 if (hasPermission) {
                                                                     [self setupCaptureSession];
                                                                     [self setupOverlay];
