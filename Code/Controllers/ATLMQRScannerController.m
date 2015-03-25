@@ -44,7 +44,7 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
 - (void)askForCameraPermissions
 {
     [[ClusterPrePermissions sharedPermissions] showCameraPermissionsWithTitle:@"Access Your Camera?"
-                                                                      message:@"Atlas Messenger needs to access your camera to scan the QR Code."
+                                                                      message:@"Atlas Messenger needs to access your camera to scan the QR Code.  You cannot proceed without giving permission."
                                                               denyButtonTitle:@"Not Now"
                                                              grantButtonTitle:@"OK"
                                                             completionHandler:^(BOOL hasPermission, ClusterDialogResult userDialogResult, ClusterDialogResult systemDialogResult) {
@@ -52,6 +52,8 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
                                                                     [self setupCaptureSession];
                                                                     [self setupOverlay];
                                                                     [self toggleQRCapture];
+                                                                } else if (userDialogResult == ClusterDialogResultDenied) {
+                                                                    [self askForCameraPermissions];
                                                                 }
     }];
 }
