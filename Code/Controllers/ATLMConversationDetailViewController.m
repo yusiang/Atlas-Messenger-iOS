@@ -35,6 +35,11 @@ typedef NS_ENUM(NSInteger, ATLMConversationDetailTableSection) {
     ATLMConversationDetailTableSectionCount,
 };
 
+typedef NS_ENUM(NSInteger, ATLMActionSheetTag) {
+    ATLMActionSheetBlockUser,
+    ATLMActionSheetLeaveConversation,
+};
+
 @interface ATLMConversationDetailViewController () <ATLParticipantTableViewControllerDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) LYRConversation *conversation;
@@ -209,6 +214,7 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
     self.indexPathToRemove = indexPath;
     NSString *blockString = [self blockedParticipantAtIndexPath:indexPath] ? @"Unblock" : @"Block";
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles:blockString, nil];
+    actionSheet.tag = ATLMActionSheetBlockUser;
     [actionSheet showInView:self.view];
 }
 
@@ -229,7 +235,7 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
             break;
             
         case ATLMConversationDetailTableSectionLeave:
-            self.conversation.participants.count > 2 ? [self leaveConversation] : [self deleteConversation];
+            [self confirmLeaveConversation];
             break;
             
         default:
@@ -290,14 +296,20 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        [self removeParticipantAtIndexPath:self.indexPathToRemove];
-    } else if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-        [self blockParticipantAtIndexPath:self.indexPathToRemove];
-    } else if (buttonIndex == actionSheet.cancelButtonIndex) {
-        [self setEditing:NO animated:YES];
+    if (actionSheet.tag == ATLMActionSheetBlockUser) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self removeParticipantAtIndexPath:self.indexPathToRemove];
+        } else if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+            [self blockParticipantAtIndexPath:self.indexPathToRemove];
+        } else if (buttonIndex == actionSheet.cancelButtonIndex) {
+            [self setEditing:NO animated:YES];
+        }
+        self.indexPathToRemove = nil;
+    } else if (actionSheet.tag == ATLMActionSheetLeaveConversation) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            self.conversation.participants.count > 2 ? [self leaveConversation] : [self deleteConversation];
+        }
     }
-    self.indexPathToRemove = nil;
 }
 
 #pragma mark - Actions
@@ -362,6 +374,14 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
 - (void)shareLocation
 {
     [self.detailDelegate conversationDetailViewControllerDidSelectShareLocation:self];
+}
+
+- (void)confirmLeaveConversation
+{
+    NSString *destructiveButtonTitle = self.conversation.participants.count > 2 ? ATLMLeaveConversationText : ATLMDeleteConversationText;
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:nil];
+    actionSheet.tag = ATLMActionSheetLeaveConversation;
+    [actionSheet showInView:self.view];
 }
 
 - (void)leaveConversation
