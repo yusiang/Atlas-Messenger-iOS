@@ -12,6 +12,7 @@
 #import "ATLMRegistrationViewController.h"
 #import "ATLMLayerClient.h"
 #import "ATLMUtilities.h"
+#import <ClusterPrePermissions/ClusterPrePermissions.h>
 
 @interface ATLMQRScannerController () <AVCaptureMetadataOutputObjectsDelegate, UIAlertViewDelegate>
 
@@ -31,15 +32,30 @@ NSString *const ATLMDidReceiveLayerAppID = @"ATLMDidRecieveLayerAppID";
     [super viewDidLoad];
     self.isReading = NO;
     
-    [self setupCaptureSession];
-    [self setupOverlay];
-    [self toggleQRCapture];
+    [self askForCameraPermissions];
 }
 
 - (void)setupOverlay
 {
     ATLMOverlayView *overlayView = [[ATLMOverlayView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:overlayView];
+}
+
+- (void)askForCameraPermissions
+{
+    [[ClusterPrePermissions sharedPermissions] showCameraPermissionsWithTitle:@"Access Your Camera?"
+                                                                      message:@"Atlas Messenger needs to access your camera to scan the QR Code.  You cannot proceed without giving permission."
+                                                              denyButtonTitle:@"Not Now"
+                                                             grantButtonTitle:@"OK"
+                                                            completionHandler:^(BOOL hasPermission, ClusterDialogResult userDialogResult, ClusterDialogResult systemDialogResult) {
+                                                                if (hasPermission) {
+                                                                    [self setupCaptureSession];
+                                                                    [self setupOverlay];
+                                                                    [self toggleQRCapture];
+                                                                } else if (userDialogResult == ClusterDialogResultDenied) {
+                                                                    [self askForCameraPermissions];
+                                                                }
+    }];
 }
 
 - (void)setupCaptureSession
