@@ -98,7 +98,7 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIFPreview)) {
+    if (ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIFPreview) || ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF)) {
         [self loadLowResGIFs];
     } else {
         [self loadLowResImages];
