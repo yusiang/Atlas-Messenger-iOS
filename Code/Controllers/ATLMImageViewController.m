@@ -58,7 +58,6 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.fullResImageSize = CGSizeZero;
     self.view.backgroundColor = [UIColor whiteColor];
     
@@ -150,7 +149,9 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 
 - (void)doubleTapRecognized:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (self.scrollView.minimumZoomScale == self.scrollView.maximumZoomScale) return;
+    if (self.scrollView.minimumZoomScale == self.scrollView.maximumZoomScale) {
+        return;
+    }
     
     if (self.scrollView.zoomScale == self.scrollView.minimumZoomScale) {
         CGPoint tappedPoint;
@@ -190,7 +191,6 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 {
     LYRMessagePart *lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEGPreview);
     LYRMessagePart *imageInfoPart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageSize);
-    
     if (!lowResImagePart) {
         // Default back to image/jpeg MIMEType
         lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
@@ -198,7 +198,6 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
     
     // Retrieve low-res image from message part
     if (!(lowResImagePart.transferStatus == LYRContentTransferReadyForDownload || lowResImagePart.transferStatus == LYRContentTransferDownloading)) {
-        
         if (lowResImagePart.fileURL) {
             self.lowResImage = [UIImage imageWithContentsOfFile:lowResImagePart.fileURL.path];
         } else {
@@ -269,7 +268,6 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
     
     // Retrieve hi-res image from message part
     if (!(fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
-        
         if (fullResImagePart.fileURL) {
             self.fullResImage = [UIImage imageWithContentsOfFile:fullResImagePart.fileURL.path];
         } else {
@@ -367,7 +365,9 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 
 - (void)configureForAvailableSpace
 {
-    if (!self.view.superview) return;
+    if (!self.view.superview) {
+        return;
+    }
     
     // We want to position and zoom the image based on the available size, i.e. so that it can be seen without being obstructed by the navigation bar or a toolbar.
     CGSize availableSize = self.scrollView.bounds.size;
