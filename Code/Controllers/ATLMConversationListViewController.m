@@ -84,7 +84,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
  */
 - (void)conversationListViewController:(ATLConversationListViewController *)conversationListViewController didDeleteConversation:(LYRConversation *)conversation deletionMode:(LYRDeletionMode)deletionMode
 {
-    NSLog(@"Conversation Successsfully Deleted");
+    NSLog(@"Conversation Successfully Deleted");
 }
 
 /**

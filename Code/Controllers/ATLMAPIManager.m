@@ -149,7 +149,7 @@ NSString *const ATLMAtlasUserNameKey = @"name";
     
     [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (!response && error) {
-            NSLog(@"Failed syncrhonizing participants with error: %@", error);
+            NSLog(@"Failed synchronizing participants with error: %@", error);
             return;
         }
         
@@ -161,14 +161,14 @@ NSString *const ATLMAtlasUserNameKey = @"name";
             NSArray *userData = (NSArray *)userDetails;
             BOOL success = [self persistUserData:userData error:&error];
             if (!success) {
-                NSLog(@"Failed syncrhonizing participants with error: %@", error);
+                NSLog(@"Failed synchronizing participants with error: %@", error);
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:ATLMApplicationDidSynchronizeParticipants object:nil];
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"Failed syncrhonizing participants with error: %@", serializationError);
+                NSLog(@"Failed synchronizing participants with error: %@", serializationError);
             });
         }
     }] resume];
