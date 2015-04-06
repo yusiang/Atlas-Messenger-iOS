@@ -107,7 +107,13 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self downloadFullResImageIfNeeded];
+    if (ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF)) {
+        [self downloadFullResImageForMIMEType:ATLMIMETypeImageGIF];
+    } else if (ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG)) {
+        [self downloadFullResImageForMIMEType:ATLMIMETypeImagePNG];
+    } else {
+        [self downloadFullResImageForMIMEType:ATLMIMETypeImageJPEG];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -330,18 +336,10 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
     [self viewDidLayoutSubviews];
 }
 
-- (void)downloadFullResImageIfNeeded
+- (void)downloadFullResImageForMIMEType:(NSString *)MIMEType
 {
-    LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
-    if (!fullResImagePart) {
-        fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG);
-    }
+    LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, MIMEType);
     
-    if (!fullResImagePart) {
-        fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF);
-    }
-    
-    // Download hi-res image from the network
     if (fullResImagePart && (fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
         NSError *error;
         LYRProgress *downloadProgress = [fullResImagePart downloadContent:&error];
@@ -355,7 +353,7 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
             self.progressView.alpha = 1.0f;
         }];
     } else {
-        if (ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF)) {
+        if ([MIMEType isEqualToString:ATLMIMETypeImageGIF]) {
             [self loadFullResGIFs];
         } else {
             [self loadFullResImages];
