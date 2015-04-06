@@ -20,6 +20,7 @@
 
 #import "ATLMImageViewController.h"
 #import <Atlas/Atlas.h>
+#import "ATLUIImageHelper.h"
 
 static NSTimeInterval const ATLMImageViewControllerAnimationDuration = 0.75f;
 static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
@@ -57,16 +58,15 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     self.fullResImageSize = CGSizeZero;
     self.view.backgroundColor = [UIColor whiteColor];
-
+    
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
     self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.scrollView.delegate = self;
     self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
     [self.view addSubview:self.scrollView];
-
+    
     self.lowResImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     [self.scrollView addSubview:self.lowResImageView];
     
@@ -84,26 +84,36 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapRecognized:)];
     recognizer.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:recognizer];
-
+    
     UIBarButtonItem *shareBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(share:)];
     self.navigationItem.rightBarButtonItem = shareBarButtonItem;
     self.navigationItem.rightBarButtonItem.enabled = NO;
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     self.navigationItem.leftBarButtonItem = doneButtonItem;
-
+    
     self.title = @"Image";
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self loadLowResImages];
+    if (ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIFPreview) || ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF)) {
+        [self loadLowResGIFs];
+    } else {
+        [self loadLowResImages];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self downloadFullResImageIfNeeded];
+    if (ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF)) {
+        [self downloadFullResImageForMIMEType:ATLMIMETypeImageGIF];
+    } else if (ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG)) {
+        [self downloadFullResImageForMIMEType:ATLMIMETypeImagePNG];
+    } else {
+        [self downloadFullResImageForMIMEType:ATLMIMETypeImageJPEG];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -145,8 +155,10 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 
 - (void)doubleTapRecognized:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (self.scrollView.minimumZoomScale == self.scrollView.maximumZoomScale) return;
-
+    if (self.scrollView.minimumZoomScale == self.scrollView.maximumZoomScale) {
+        return;
+    }
+    
     if (self.scrollView.zoomScale == self.scrollView.minimumZoomScale) {
         CGPoint tappedPoint;
         tappedPoint = [gestureRecognizer locationInView:self.lowResImageView];
@@ -185,7 +197,6 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
 {
     LYRMessagePart *lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEGPreview);
     LYRMessagePart *imageInfoPart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageSize);
-
     if (!lowResImagePart) {
         // Default back to image/jpeg MIMEType
         lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
@@ -197,6 +208,42 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
             self.lowResImage = [UIImage imageWithContentsOfFile:lowResImagePart.fileURL.path];
         } else {
             self.lowResImage = [UIImage imageWithData:lowResImagePart.data];
+        }
+        self.lowResImageView.image = self.lowResImage;
+    }
+    
+    // Set the size of the canvas.
+    if (imageInfoPart) {
+        self.fullResImageSize = ATLImageSizeForJSONData(imageInfoPart.data);
+    } else {
+        if (self.lowResImage) {
+            self.fullResImageSize = self.lowResImage.size;
+        } else {
+            return;
+        }
+    }
+    
+    self.scrollView.contentSize = self.fullResImageSize;
+    self.imageViewFrame = CGRectMake(0, 0, self.fullResImageSize.width, self.fullResImageSize.height);
+    self.lowResImageView.frame = self.imageViewFrame;
+    [self viewDidLayoutSubviews];
+}
+
+- (void)loadLowResGIFs
+{
+    LYRMessagePart *lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIFPreview);
+    LYRMessagePart *imageInfoPart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageSize);
+    
+    if (!lowResImagePart) {
+        lowResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF);
+    }
+    
+    // Retrieve low-res gif from message part
+    if (!(lowResImagePart.transferStatus == LYRContentTransferReadyForDownload || lowResImagePart.transferStatus == LYRContentTransferDownloading)) {
+        if (lowResImagePart.fileURL) {
+            self.lowResImage = ATLAnimatedImageWithAnimatedGIFURL(lowResImagePart.fileURL);
+        } else {
+            self.lowResImage = ATLAnimatedImageWithAnimatedGIFData(lowResImagePart.data);
         }
         self.lowResImageView.image = self.lowResImage;
     }
@@ -232,6 +279,7 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
         } else {
             self.fullResImage = [UIImage imageWithData:fullResImagePart.data];
         }
+        
         self.fullResImageView.image = self.fullResImage;
         
         // Set the scrollview if we couldn't set it with the thumbnail sized image
@@ -254,14 +302,44 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
     [self viewDidLayoutSubviews];
 }
 
-- (void)downloadFullResImageIfNeeded
+- (void)loadFullResGIFs
 {
-    LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageJPEG);
-    if (!fullResImagePart) {
-        fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImagePNG);
-    }
+    LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, ATLMIMETypeImageGIF);
     
-    // Download hi-res image from the network
+    // Retrieve hi-res gif from message part
+    if (!(fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
+        if (fullResImagePart.fileURL) {
+            self.fullResImage = ATLAnimatedImageWithAnimatedGIFURL(fullResImagePart.fileURL);
+        } else {
+            self.fullResImage = ATLAnimatedImageWithAnimatedGIFData(fullResImagePart.data);
+        }
+        
+        self.fullResImageView.image = self.fullResImage;
+        
+        // Set the scrollview if we couldn't set it with the thumbnail sized image
+        if (CGSizeEqualToSize(self.fullResImageSize, CGSizeZero)) {
+            self.fullResImageSize = self.fullResImage.size;
+            self.scrollView.contentSize = self.fullResImageSize;
+            self.imageViewFrame = CGRectMake(0, 0, self.fullResImageSize.width, self.fullResImageSize.height);
+            self.lowResImageView.frame = self.imageViewFrame;
+        }
+    }
+    if (!self.fullResImage) {
+        return;
+    }
+    self.fullResImageView.frame = self.imageViewFrame;
+    [UIView animateWithDuration:ATLMImageViewControllerAnimationDuration animations:^{
+        self.fullResImageView.alpha = 1.0f; // make the full res image appear.
+        self.progressView.alpha = 0.0;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    }];
+    [self viewDidLayoutSubviews];
+}
+
+- (void)downloadFullResImageForMIMEType:(NSString *)MIMEType
+{
+    LYRMessagePart *fullResImagePart = ATLMessagePartForMIMEType(self.message, MIMEType);
+    
     if (fullResImagePart && (fullResImagePart.transferStatus == LYRContentTransferReadyForDownload || fullResImagePart.transferStatus == LYRContentTransferDownloading)) {
         NSError *error;
         LYRProgress *downloadProgress = [fullResImagePart downloadContent:&error];
@@ -275,19 +353,25 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
             self.progressView.alpha = 1.0f;
         }];
     } else {
-        [self loadFullResImages];
+        if ([MIMEType isEqualToString:ATLMIMETypeImageGIF]) {
+            [self loadFullResGIFs];
+        } else {
+            [self loadFullResImages];
+        }
     }
 }
 
 - (void)configureForAvailableSpace
 {
-    if (!self.view.superview) return;
-
+    if (!self.view.superview) {
+        return;
+    }
+    
     // We want to position and zoom the image based on the available size, i.e. so that it can be seen without being obstructed by the navigation bar or a toolbar.
     CGSize availableSize = self.scrollView.bounds.size;
     availableSize.height -= self.scrollView.contentInset.top;
     availableSize.height -= self.scrollView.contentInset.bottom;
-
+    
     // We don't want to display the image larger than its native size.
     CGFloat maximumScale;
     if ((self.fullResImageSize.width / [[UIScreen mainScreen] scale] < self.view.frame.size.width) &&
@@ -298,15 +382,15 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
         // Force device scale of the image (1:1 pixel mapping).
         maximumScale = 1 / [[UIScreen mainScreen] scale];
     }
-
+    
     // The smallest we want to display the image is the size that it completely fits onscreen.
     CGFloat xFittedScale = availableSize.width / self.fullResImageSize.width;
     CGFloat yFittedScale = availableSize.height / self.fullResImageSize.height;
     CGFloat fittedScale = MIN(xFittedScale, yFittedScale);
-
+    
     // If we're dealing with a small image then we only display it at its native size.
     CGFloat minimumScale = MIN(fittedScale, maximumScale);
-
+    
     // If we're already at the minimum scale, we want to remain at that scale after our adjustments.
     BOOL atMinimumZoomScale = self.scrollView.zoomScale == self.scrollView.minimumZoomScale;
     self.scrollView.maximumZoomScale = maximumScale;
@@ -314,23 +398,23 @@ static NSTimeInterval const ATLMImageViewControllerProgressBarHeight = 2.00f;
     if (atMinimumZoomScale) {
         self.scrollView.zoomScale = minimumScale;
     }
-
+    
     CGRect imageViewFrame = self.lowResImageView.frame;
-
+    
     // If the entire image width is onscreen then we horizontally center the image in the available space.
     if (CGRectGetWidth(imageViewFrame) < availableSize.width) {
         imageViewFrame.origin.x = (availableSize.width - CGRectGetWidth(imageViewFrame)) / 2;
     } else {
         imageViewFrame.origin.x = 0;
     }
-
+    
     // If the entire image height is onscreen then we vertically center the image in the available space.
     if (CGRectGetHeight(imageViewFrame) < availableSize.height) {
         imageViewFrame.origin.y = (availableSize.height - CGRectGetHeight(imageViewFrame)) / 2;
     } else {
         imageViewFrame.origin.y = 0;
     }
-
+    
     self.imageViewFrame = imageViewFrame;
     self.lowResImageView.frame = imageViewFrame;
     self.fullResImageView.frame = imageViewFrame;

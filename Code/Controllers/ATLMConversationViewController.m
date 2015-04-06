@@ -210,6 +210,11 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     LYRMessagePart *PNGMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImagePNG);
     if (PNGMessagePart) {
         [self presentImageViewControllerWithMessage:message];
+        return;
+    }
+    LYRMessagePart *GIFMessagePart = ATLMessagePartForMIMEType(message, ATLMIMETypeImageGIF);
+    if (GIFMessagePart) {
+        [self presentImageViewControllerWithMessage:message];
     }
 }
 
