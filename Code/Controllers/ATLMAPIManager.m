@@ -65,7 +65,7 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 - (NSURLSession *)defaultURLSession
 {
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-    configuration.HTTPAdditionalHeaders = @{@"Accept": @"application/json", @"Content-Type": @"application/json", @"X_LAYER_APP_ID": self.layerClient.appID.UUIDString};
+    configuration.HTTPAdditionalHeaders = @{ @"Accept": @"application/json", @"X_LAYER_APP_ID": self.layerClient.appID.UUIDString };
     return [NSURLSession sessionWithConfiguration:configuration];
 }
 
@@ -100,6 +100,7 @@ NSString *const ATLMAtlasUserNameKey = @"name";
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"POST";
     request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     [[self.URLSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (!response && error) {
