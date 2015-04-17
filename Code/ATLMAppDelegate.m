@@ -41,6 +41,7 @@ static NSString *const ATLMLayerAppID = nil;
 @property (nonatomic) UINavigationController *navigationController;
 @property (nonatomic) ATLMConversationListViewController *conversationListViewController;
 @property (nonatomic) ATLMSplashView *splashView;
+@property (nonatomic) ATLMLayerClient *layerClient;
 
 @end
 
@@ -96,10 +97,13 @@ static NSString *const ATLMLayerAppID = nil;
 {
     NSString *appID = ATLMLayerAppID ?: [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
     if (appID) {
-        ATLMLayerClient *layerClient = [ATLMLayerClient clientWithAppID:[[NSUUID alloc] initWithUUIDString:appID]];
-        layerClient.autodownloadMIMETypes = [NSSet setWithObjects:ATLMIMETypeImageJPEGPreview, ATLMIMETypeTextPlain, nil];
-        ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:layerClient];
-        self.applicationController.layerClient = layerClient;
+        // Only instantiate one instance of `LYRClient`
+        if (!self.layerClient) {
+            self.layerClient = [ATLMLayerClient clientWithAppID:[[NSUUID alloc] initWithUUIDString:appID]];
+            self.layerClient.autodownloadMIMETypes = [NSSet setWithObjects:ATLMIMETypeImageJPEGPreview, ATLMIMETypeTextPlain, nil];
+        }
+        ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:self.layerClient];
+        self.applicationController.layerClient = self.layerClient;
         self.applicationController.APIManager = manager;
         [self connectLayerIfNeeded];
         if (![self resumeSession]) {
