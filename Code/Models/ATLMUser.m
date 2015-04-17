@@ -146,4 +146,9 @@
             [self class], self, self.userID, self.firstName, self.lastName, self.email, self.password];
 }
 
+- (NSURL *)avatarImageURL
+{
+    return nil;
+}
+
 @end

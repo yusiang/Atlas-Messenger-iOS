@@ -39,4 +39,7 @@
 
 - (BOOL)validate:(NSError **)error;
 
+- (NSURL *)avatarImageURL;
+
+
 @end
