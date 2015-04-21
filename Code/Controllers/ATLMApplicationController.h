@@ -24,7 +24,7 @@
 #import "ATLMAPIManager.h"
 #import "ATLMLayerClient.h"
 
-NSString *const ATLMLayerApplicationID;
+extern NSString *const ATLMLayerApplicationID;
 
 extern NSString *const ATLMConversationMetadataDidChangeNotification;
 extern NSString *const ATLMConversationParticipantsDidChangeNotification;

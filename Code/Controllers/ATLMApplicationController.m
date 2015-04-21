@@ -91,7 +91,6 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
 
 - (void)layerClient:(LYRClient *)client objectsDidChange:(NSArray *)changes
 {
-    NSLog(@"Layer Client objects did change");
     for (NSDictionary *change in changes) {
         id changedObject = change[LYRObjectChangeObjectKey];
         if (![changedObject isKindOfClass:[LYRConversation class]]) continue;

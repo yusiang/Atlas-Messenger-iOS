@@ -24,6 +24,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "ATLMApplicationController.h"
 
+extern NSString *const ATLMConversationDetailViewControllerTitle;
 extern NSString *const ATLMConversationMetadataNameKey;
 
 @class ATLMConversationDetailViewController;
