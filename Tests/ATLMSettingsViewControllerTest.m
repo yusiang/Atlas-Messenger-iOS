@@ -114,19 +114,19 @@ extern NSString *const ATLMDebugModeSettingSwitch;
 - (void)testToVerifyLayerStatistics
 {
     [tester tapViewWithAccessibilityLabel:@"Settings"];
-    LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
+    LYRQuery *query = [LYRQuery queryWithQueryableClass:[LYRConversation class]];
     NSError *error;
     NSUInteger conversationCount = [self.testInterface.applicationController.layerClient countForQuery:query error:&error];
     expect(error).to.beFalsy;
     [tester waitForViewWithAccessibilityLabel:[NSString stringWithFormat:@"Conversations:, %lu", (unsigned long)conversationCount]];
     
-    query = [LYRQuery queryWithClass:[LYRMessage class]];
+    query = [LYRQuery queryWithQueryableClass:[LYRMessage class]];
     NSUInteger messageCount = [self.testInterface.applicationController.layerClient countForQuery:query error:&error];
     expect(error).to.beFalsy;
     [tester waitForViewWithAccessibilityLabel:[NSString stringWithFormat:@"Messages:, %lu", (unsigned long)messageCount]];
     
-    query = [LYRQuery queryWithClass:[LYRMessage class]];
-    query.predicate = [LYRPredicate predicateWithProperty:@"isUnread" operator:LYRPredicateOperatorIsEqualTo value:@(YES)];
+    query = [LYRQuery queryWithQueryableClass:[LYRMessage class]];
+    query.predicate = [LYRPredicate predicateWithProperty:@"isUnread" predicateOperator:LYRPredicateOperatorIsEqualTo value:@(YES)];
     NSUInteger unreadMessageCount = [self.testInterface.applicationController.layerClient countForQuery:query error:&error];
     expect(error).to.beFalsy;
     [tester waitForViewWithAccessibilityLabel:[NSString stringWithFormat:@"Unread Messages:, %lu", (unsigned long)unreadMessageCount]];

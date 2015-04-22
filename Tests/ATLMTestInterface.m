@@ -106,7 +106,7 @@
 
 - (NSOrderedSet *)allLayerConversations
 {
-    LYRQuery *query = [LYRQuery queryWithClass:[LYRConversation class]];
+    LYRQuery *query = [LYRQuery queryWithQueryableClass:[LYRConversation class]];
     NSError *error;
     NSOrderedSet *conversations = [self.applicationController.layerClient executeQuery:query error:&error];
     NSAssert(!error, @"Failed querying for conversations with error: %@", error);
