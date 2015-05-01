@@ -176,7 +176,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 #pragma mark - ATLConversationViewControllerDelegate
 
 /**
- Atlas - Infroms the delegate of a successful message send. Atlas Messenger adds a `Details` button to the navigation bar if this is the first message sent within a new conversation.
+ Atlas - Informs the delegate of a successful message send. Atlas Messenger adds a `Details` button to the navigation bar if this is the first message sent within a new conversation.
  */
 - (void)conversationViewController:(ATLConversationViewController *)viewController didSendMessage:(LYRMessage *)message
 {
@@ -198,7 +198,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 }
 
 /**
- Atlas - Infroms the delegate that a message was selected. Atlas messenger presents an `ATLImageViewController` if the message contains an image.
+ Atlas - Informs the delegate that a message was selected. Atlas messenger presents an `ATLImageViewController` if the message contains an image.
  */
 - (void)conversationViewController:(ATLConversationViewController *)viewController didSelectMessage:(LYRMessage *)message
 {
