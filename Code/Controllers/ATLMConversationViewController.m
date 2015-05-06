@@ -319,8 +319,10 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
             switch (status) {
                 case LYRRecipientStatusInvalid:
                     blockStatusString = @"Not Sent";
+                    break;
                 case LYRRecipientStatusSent:
                     blockStatusString = @"Sent";
+                    break;
                 case LYRRecipientStatusDelivered:
                     blockStatusString = @"Delivered";
                     break;
