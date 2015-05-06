@@ -20,7 +20,7 @@
 
 #import "ATLMHTTPResponseSerializer.h"
 
-NSString *const ATLMHTTPResponseErrorDomain = @"com.layer.LSSample.HTTPResponseError";
+NSString *const ATLMHTTPResponseErrorDomain = @"com.layer.Atlas-Messenger";
 static NSRange const ATLMHTTPSuccessStatusCodeRange = {200, 100};
 static NSRange const ATLMHTTPClientErrorStatusCodeRange = {400, 100};
 static NSRange const ATLMHTTPServerErrorStatusCodeRange = {500, 100};
