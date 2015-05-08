@@ -108,7 +108,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
 #pragma mark - ATLConversationListViewControllerDataSource
 
 /**
- Atlas - Returns a label that is used to represent the conversation. Atlas Messenger puts the name representing the `lastMessage.sentByUserID` property first in the string.
+ Atlas - Returns a label that is used to represent the conversation. Atlas Messenger puts the name representing the `lastMessage.sender.userID` property first in the string.
  */
 - (NSString *)conversationListViewController:(ATLConversationListViewController *)conversationListViewController titleForConversation:(LYRConversation *)conversation
 {
@@ -132,7 +132,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
         id<ATLParticipant> participant = obj;
         if (participant.firstName) {
             // Put the last message sender's name first
-            if ([conversation.lastMessage.sentByUserID isEqualToString:participant.participantIdentifier]) {
+            if ([conversation.lastMessage.sender.userID isEqualToString:participant.participantIdentifier]) {
                 [firstNames insertObject:participant.firstName atIndex:0];
             } else {
                 [firstNames addObject:participant.firstName];
