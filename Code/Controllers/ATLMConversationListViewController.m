@@ -132,7 +132,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
         id<ATLParticipant> participant = obj;
         if (participant.firstName) {
             // Put the last message sender's name first
-            if ([conversation.lastMessage.sentByUserID isEqualToString:participant.participantIdentifier]) {
+            if ([conversation.lastMessage.sender.userID isEqualToString:participant.participantIdentifier]) {
                 [firstNames insertObject:participant.firstName atIndex:0];
             } else {
                 [firstNames addObject:participant.firstName];

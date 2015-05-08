@@ -286,10 +286,14 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         __block NSUInteger readCount = 0;
         __block BOOL delivered;
         __block BOOL sent;
+        __block BOOL pending;
         [mutableRecipientStatus enumerateKeysAndObjectsUsingBlock:^(NSString *userID, NSNumber *statusNumber, BOOL *stop) {
             LYRRecipientStatus status = statusNumber.integerValue;
             switch (status) {
                 case LYRRecipientStatusInvalid:
+                    break;
+                case LYRRecipientStatusPending:
+                    pending = YES;
                     break;
                 case LYRRecipientStatusSent:
                     sent = YES;
@@ -306,7 +310,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
         if (readCount) {
             NSString *participantString = readCount > 1 ? @"Participants" : @"Participant";
             statusString = [NSString stringWithFormat:@"Read by %lu %@", (unsigned long)readCount, participantString];
-        } else if (delivered) {
+        } else if (pending) {
+            statusString = @"Pending";
+        }else if (delivered) {
             statusString = @"Delivered";
         } else if (sent) {
             statusString = @"Sent";
@@ -319,6 +325,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
             switch (status) {
                 case LYRRecipientStatusInvalid:
                     blockStatusString = @"Not Sent";
+                    break;
+                case LYRRecipientStatusPending:
+                    blockStatusString = @"Pending";
                     break;
                 case LYRRecipientStatusSent:
                     blockStatusString = @"Sent";
