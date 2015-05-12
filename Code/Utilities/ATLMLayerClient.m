@@ -26,7 +26,7 @@
 {
     LYRQuery *query = [LYRQuery queryWithQueryableClass:[LYRMessage class]];
     LYRPredicate *unreadPred =[LYRPredicate predicateWithProperty:@"isUnread" predicateOperator:LYRPredicateOperatorIsEqualTo value:@(YES)];
-    LYRPredicate *userPred = [LYRPredicate predicateWithProperty:@"sentByUserID" predicateOperator:LYRPredicateOperatorIsNotEqualTo value:self.authenticatedUserID];
+    LYRPredicate *userPred = [LYRPredicate predicateWithProperty:@"sender.userID" predicateOperator:LYRPredicateOperatorIsNotEqualTo value:self.authenticatedUserID];
     query.predicate = [LYRCompoundPredicate compoundPredicateWithType:LYRCompoundPredicateTypeAnd subpredicates:@[unreadPred, userPred]];
     return [self countForQuery:query error:nil];
 }
