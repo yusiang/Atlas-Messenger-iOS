@@ -247,7 +247,9 @@ NSString *const ATLMConnecting = @"Connecting";
         case ATLMSettingsTableSectionLogout:
             [self logOut];
             break;
-            
+        case ATLMSettingsTableSectionLegal:
+            [self legalRowTapped:indexPath.row];
+            break;
         default:
             break;
     }
@@ -259,6 +261,7 @@ NSString *const ATLMConnecting = @"Connecting";
 {
     [self.settingsDelegate settingsViewControllerDidFinish:self];
 }
+
 - (void)logOut
 {
     if (self.applicationController.layerClient.isConnected) {
@@ -267,6 +270,20 @@ NSString *const ATLMConnecting = @"Connecting";
         [SVProgressHUD showErrorWithStatus:@"Cannot Logout. Layer is not connected"];
     }
     
+}
+
+- (void)legalRowTapped:(ATLMLegalTableRow)tableRow
+{
+    switch (tableRow) {
+        case ATLMLegalTableRowAttribution:
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/layerhq/Atlas-iOS#license"]];
+            break;
+        case ATLMLegalTableRowTerms:
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://layer.com/terms"]];
+            break;
+        default:
+            break;
+    }
 }
 
 # pragma mark - Layer Connection State Monitoring
