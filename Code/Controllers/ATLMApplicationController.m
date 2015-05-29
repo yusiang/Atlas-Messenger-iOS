@@ -91,12 +91,12 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
 
 - (void)layerClient:(LYRClient *)client objectsDidChange:(NSArray *)changes
 {
-    for (NSDictionary *change in changes) {
-        id changedObject = change[LYRObjectChangeObjectKey];
+    for (LYRObjectChange *change in changes) {
+        id changedObject = change.object;
         if (![changedObject isKindOfClass:[LYRConversation class]]) continue;
         
-        LYRObjectChangeType changeType = [change[LYRObjectChangeTypeKey] integerValue];
-        NSString *changedProperty = change[LYRObjectChangePropertyKey];
+        LYRObjectChangeType changeType = change.type;
+        NSString *changedProperty = change.property;
         
         if (changeType == LYRObjectChangeTypeUpdate && [changedProperty isEqualToString:@"metadata"]) {
             [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationMetadataDidChangeNotification object:changedObject];

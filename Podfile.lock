@@ -8,7 +8,7 @@ PODS:
   - KIF/XCTest (3.0.8)
   - KIFViewControllerActions (1.0.0):
     - KIF (>= 2.0.0)
-  - LayerKit (0.13.0)
+  - LayerKit (0.13.2)
   - LYRCountDownLatch (0.9.0)
   - OCMock (3.1.2)
   - SVProgressHUD (HEAD based on 1.1.3)
@@ -43,9 +43,9 @@ SPEC CHECKSUMS:
   Expecta: 8c507baf13211207b1e9d0a741480600e6b4ed15
   KIF: 3c2cb8e66fb216f9c3abcd714699411f0256f767
   KIFViewControllerActions: 73085acd975ebbfc954f7895ca1aaa9faa36b3c6
-  LayerKit: e8c4abff3198af5f3eab183aaf324e199a302a4e
+  LayerKit: 5a5cdfed55b3c56e7a6bb23323ecca1ad1e6183f
   LYRCountDownLatch: 72a444f729ca5a8c6157c0b58f335a44e6702b48
   OCMock: a10ea9f0a6e921651f96f78b6faee95ebc813b92
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
 
-COCOAPODS: 0.37.0
+COCOAPODS: 0.37.1
