@@ -284,9 +284,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     NSString *statusString = [NSString new];
     if (mutableRecipientStatus.count > 1) {
         __block NSUInteger readCount = 0;
-        __block BOOL delivered;
-        __block BOOL sent;
-        __block BOOL pending;
+        __block BOOL delivered = NO;
+        __block BOOL sent = NO;
+        __block BOOL pending = NO;
         [mutableRecipientStatus enumerateKeysAndObjectsUsingBlock:^(NSString *userID, NSNumber *statusNumber, BOOL *stop) {
             LYRRecipientStatus status = statusNumber.integerValue;
             switch (status) {
