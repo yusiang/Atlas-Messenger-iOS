@@ -261,7 +261,7 @@ static NSString *const ATLMLayerAppID = nil;
     } else {
         NSLog(@"Failed persisting authenticated user: %@. Error: %@", session, error);
     }
-    [self registerForRemoteNotifications:[UIApplication sharedApplication]];
+    //[self registerForRemoteNotifications:[UIApplication sharedApplication]];
 }
 
 - (void)userDidDeauthenticate:(NSNotification *)notification
@@ -279,7 +279,7 @@ static NSString *const ATLMLayerAppID = nil;
         [self setupLayer];
     }];
     
-    [self unregisterForRemoteNotifications:[UIApplication sharedApplication]];
+    //[self unregisterForRemoteNotifications:[UIApplication sharedApplication]];
 }
 
 #pragma mark - Conversations

@@ -92,22 +92,19 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
 - (void)layerClient:(LYRClient *)client objectsDidChange:(NSArray *)changes
 {
     for (LYRObjectChange *change in changes) {
-        id changedObject = change.object;
-        if (![changedObject isKindOfClass:[LYRConversation class]]) continue;
         
-        LYRObjectChangeType changeType = change.type;
-        NSString *changedProperty = change.property;
-        
-        if (changeType == LYRObjectChangeTypeUpdate && [changedProperty isEqualToString:@"metadata"]) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationMetadataDidChangeNotification object:changedObject];
+        if (![change.object isKindOfClass:[LYRConversation class]]) continue;
+    
+        if (change.type == LYRObjectChangeTypeUpdate && [change.property isEqualToString:@"metadata"]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationMetadataDidChangeNotification object:change.object];
         }
         
-        if (changeType == LYRObjectChangeTypeUpdate && [changedProperty isEqualToString:@"participants"]) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationParticipantsDidChangeNotification object:changedObject];
+        if (change.type == LYRObjectChangeTypeUpdate && [change.property isEqualToString:@"participants"]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationParticipantsDidChangeNotification object:change.object];
         }
         
-        if (changeType == LYRObjectChangeTypeDelete) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationDeletedNotification object:changedObject];
+        if (change.type == LYRObjectChangeTypeDelete) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationDeletedNotification object:change.object];
         }
     }
 }
