@@ -91,23 +91,21 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
 
 - (void)layerClient:(LYRClient *)client objectsDidChange:(NSArray *)changes
 {
-    for (NSDictionary *change in changes) {
-        id changedObject = change[LYRObjectChangeObjectKey];
-        if (![changedObject isKindOfClass:[LYRConversation class]]) continue;
-        
-        LYRObjectChangeType changeType = [change[LYRObjectChangeTypeKey] integerValue];
-        NSString *changedProperty = change[LYRObjectChangePropertyKey];
-        
-        if (changeType == LYRObjectChangeTypeUpdate && [changedProperty isEqualToString:@"metadata"]) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationMetadataDidChangeNotification object:changedObject];
+    for (LYRObjectChange *change in changes) {
+        if (![change.object isKindOfClass:[LYRConversation class]]) {
+            continue;
         }
         
-        if (changeType == LYRObjectChangeTypeUpdate && [changedProperty isEqualToString:@"participants"]) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationParticipantsDidChangeNotification object:changedObject];
+        if (change.type == LYRObjectChangeTypeUpdate && [change.property isEqualToString:@"metadata"]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationMetadataDidChangeNotification object:change.object];
         }
         
-        if (changeType == LYRObjectChangeTypeDelete) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationDeletedNotification object:changedObject];
+        if (change.type == LYRObjectChangeTypeUpdate && [change.property isEqualToString:@"participants"]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationParticipantsDidChangeNotification object:change.object];
+        }
+        
+        if (change.type == LYRObjectChangeTypeDelete) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:ATLMConversationDeletedNotification object:change.object];
         }
     }
 }

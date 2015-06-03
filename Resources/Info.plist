@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>0.8.8</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -44,13 +44,13 @@
 	<key>LYRBuildInformation</key>
 	<dict>
 		<key>LYRBuildBuilderEmail</key>
-		<string>kcoleman731@gmail.com</string>
+		<string>klemen.verdnik@gmail.com</string>
 		<key>LYRBuildBuilderName</key>
-		<string>Kevin Coleman</string>
+		<string>Klemen Verdnik</string>
 		<key>LYRBuildLayerKitVersion</key>
-		<string>0.10.0-rc3</string>
+		<string>0.13.3</string>
 		<key>LYRBuildShortSha</key>
-		<string>05f6caf</string>
+		<string>e0a3b34</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location will only be shared in conversations that you choose.</string>
