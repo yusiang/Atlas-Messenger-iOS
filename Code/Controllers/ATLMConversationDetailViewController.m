@@ -213,9 +213,20 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
 {
     self.indexPathToRemove = indexPath;
     NSString *blockString = [self blockedParticipantAtIndexPath:indexPath] ? @"Unblock" : @"Block";
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles:blockString, nil];
-    actionSheet.tag = ATLMActionSheetBlockUser;
-    [actionSheet showInView:self.view];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+    [controller addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        //
+    }]];
+    
+    [controller addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        //
+    }]];
+    
+    [controller addAction:[UIAlertAction actionWithTitle:blockString style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        //
+    }]];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 
@@ -378,10 +389,10 @@ static NSString *const ATLMBlockIconName = @"AtlasResource.bundle/block";
 
 - (void)confirmLeaveConversation
 {
-    NSString *destructiveButtonTitle = self.conversation.participants.count > 2 ? ATLMLeaveConversationText : ATLMDeleteConversationText;
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:nil];
-    actionSheet.tag = ATLMActionSheetLeaveConversation;
-    [actionSheet showInView:self.view];
+//    NSString *destructiveButtonTitle = self.conversation.participants.count > 2 ? ATLMLeaveConversationText : ATLMDeleteConversationText;
+//    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:nil];
+//    actionSheet.tag = ATLMActionSheetLeaveConversation;
+//    [actionSheet showInView:self.view];
 }
 
 - (void)leaveConversation

@@ -39,6 +39,11 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 
 @implementation ATLMAPIManager
 
+- (id)init
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
+}
+
 + (instancetype)managerWithBaseURL:(NSURL *)baseURL layerClient:(LYRClient *)layerClient
 {
     NSParameterAssert(baseURL);
@@ -57,11 +62,6 @@ NSString *const ATLMAtlasUserNameKey = @"name";
     return self;
 }
 
-- (id)init
-{
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
-}
-
 - (NSURLSession *)defaultURLSession
 {
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
@@ -69,18 +69,22 @@ NSString *const ATLMAtlasUserNameKey = @"name";
     return [NSURLSession sessionWithConfiguration:configuration];
 }
 
+#pragma mark - Session Management
+
 - (BOOL)resumeSession:(ATLMSession *)session error:(NSError *__autoreleasing *)error
 {
-    if (!session) return NO;
+    if (!session) {
+        return NO;
+    }
     return [self configureWithSession:session error:error];
 }
 
 - (void)deauthenticate
 {
-    if (!self.authenticatedSession) return;
-    
+    if (!self.authenticatedSession) {
+       return;
+    }
     self.authenticatedSession = nil;
-    
     [self.URLSession invalidateAndCancel];
     self.URLSession = [self defaultURLSession];
     [[NSNotificationCenter defaultCenter] postNotificationName:ATLMUserDidDeauthenticateNotification object:nil];
@@ -177,7 +181,9 @@ NSString *const ATLMAtlasUserNameKey = @"name";
 
 - (BOOL)configureWithSession:(ATLMSession *)session error:(NSError **)error
 {
-    if (self.authenticatedSession) return YES;
+    if (self.authenticatedSession) {
+        return YES;
+    }
     if (!session) {
         if (error) {
             *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"No authenticated session."}];
@@ -185,7 +191,7 @@ NSString *const ATLMAtlasUserNameKey = @"name";
         }
     }
     self.authenticatedSession = session;
-    BOOL success = [self.persistenceManager persistSession:session error:nil];
+    BOOL success = [self.persistenceManager persistSession:session error:error];
     if (!success) {
         *error = [NSError errorWithDomain:ATLMErrorDomain code:ATLMNoAuthenticatedSession userInfo:@{NSLocalizedDescriptionKey: @"There was an error persisting the session."}];
         return NO;

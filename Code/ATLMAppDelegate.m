@@ -32,7 +32,6 @@
 #import "ATLMQRScannerController.h"
 #import "ATLMUtilities.h"
 
-// TODO: Configure a Layer appID from https://developer.layer.com/dashboard/atlas/build
 static NSString *const ATLMLayerAppID = nil;
 
 @interface ATLMAppDelegate () <MFMailComposeViewControllerDelegate>
@@ -57,11 +56,14 @@ static NSString *const ATLMLayerAppID = nil;
     // Setup notifications
     [self registerNotificationObservers];
     
+    // Configure Atlas Messenger UI appearance
+    [self configureGlobalUserInterfaceAttributes];
+    
     // Setup Layer
     [self setupLayer];
     
-    // Configure Atlas Messenger UI appearance
-    [self configureGlobalUserInterfaceAttributes];
+    // Configure the application state
+    [self configureApplicationState];
     
     return YES;
 }
@@ -93,6 +95,21 @@ static NSString *const ATLMLayerAppID = nil;
     [self addSplashView];
 }
 
+- (void)registerNotificationObservers
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerAppID:) name:ATLMDidReceiveLayerAppID object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticate:) name:ATLMUserDidAuthenticateNotification object:nil];
+    [[NSNotificationCenter defaultCenter]  addObserver:self selector:@selector(userDidAuthenticateWithLayer:) name:LYRClientDidAuthenticateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticate:) name:ATLMUserDidDeauthenticateNotification object:nil];
+}
+
+- (void)configureGlobalUserInterfaceAttributes
+{
+    [[UINavigationBar appearance] setTintColor:ATLBlueColor()];
+    [[UINavigationBar appearance] setBarTintColor:ATLLightGrayColor()];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:ATLBlueColor()];
+}
+
 - (void)setupLayer
 {
     NSString *appID = ATLMLayerAppID ?: [[NSUserDefaults standardUserDefaults] valueForKey:ATLMLayerApplicationID];
@@ -102,29 +119,23 @@ static NSString *const ATLMLayerAppID = nil;
             self.layerClient = [ATLMLayerClient clientWithAppID:[[NSUUID alloc] initWithUUIDString:appID]];
             self.layerClient.autodownloadMIMETypes = [NSSet setWithObjects:ATLMIMETypeImageJPEGPreview, ATLMIMETypeTextPlain, nil];
         }
-        ATLMAPIManager *manager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:self.layerClient];
-        self.applicationController.layerClient = self.layerClient;
-        self.applicationController.APIManager = manager;
-        [self connectLayerIfNeeded];
-        if (![self resumeSession]) {
-            [self.scannerController presentRegistrationViewController];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self removeSplashView];
-            });
-        }
     } else {
         [self removeSplashView];
     }
 }
 
-- (void)registerNotificationObservers
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLayerAppID:) name:ATLMDidReceiveLayerAppID object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidAuthenticate:) name:ATLMUserDidAuthenticateNotification object:nil];
-    [[NSNotificationCenter defaultCenter]  addObserver:self selector:@selector(userDidAuthenticateWithLayer:) name:LYRClientDidAuthenticateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidDeauthenticate:) name:ATLMUserDidDeauthenticateNotification object:nil];
-}
-
+ - (void)configureApplicationState
+ {
+     self.applicationController.layerClient = self.layerClient;
+     self.applicationController.APIManager = [ATLMAPIManager managerWithBaseURL:ATLMRailsBaseURL() layerClient:self.layerClient];
+     [self connectLayerIfNeeded];
+     if (![self resumeSession]) {
+         [self.scannerController presentRegistrationViewController];
+         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+             [self removeSplashView];
+         });
+     }
+ }
 #pragma mark - Session Management
 
 - (BOOL)resumeSession
@@ -158,13 +169,20 @@ static NSString *const ATLMLayerAppID = nil;
         [application registerUserNotificationSettings:notificationSettings];
         [application registerForRemoteNotifications];
     } else {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge];
+#pragma GCC diagnostic pop
     }
 }
 
-- (void)unregisterForRemoteNotifications:(UIApplication *)application
+- (void)unregisterForRemoteNotifications
 {
-    [application unregisterForRemoteNotifications];
+    NSError *error;
+    BOOL success = [self.layerClient updateRemoteNotificationDeviceToken:nil error:&error];
+    if (!success) {
+        NSLog(@"Failed to unregister for remote notifications with error: %@", error);
+    }
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -187,6 +205,7 @@ static NSString *const ATLMLayerAppID = nil;
 {
     NSLog(@"User Info: %@", userInfo);
     BOOL userTappedRemoteNotification = application.applicationState == UIApplicationStateInactive;
+    
     __block LYRConversation *conversation = [self conversationFromRemoteNotification:userInfo];
     if (userTappedRemoteNotification && conversation) {
         [self navigateToViewForConversation:conversation];
@@ -238,6 +257,7 @@ static NSString *const ATLMLayerAppID = nil;
 - (void)didReceiveLayerAppID:(NSNotification *)notification
 {
     [self setupLayer];
+    [self configureApplicationState];
 }
 
 - (void)userDidAuthenticateWithLayer:(NSNotification *)notification
@@ -261,7 +281,9 @@ static NSString *const ATLMLayerAppID = nil;
     } else {
         NSLog(@"Failed persisting authenticated user: %@. Error: %@", session, error);
     }
-    //[self registerForRemoteNotifications:[UIApplication sharedApplication]];
+#ifndef WATCH_KIT_TARGET
+    [self registerForRemoteNotifications:[UIApplication sharedApplication]];
+#endif
 }
 
 - (void)userDidDeauthenticate:(NSNotification *)notification
@@ -278,15 +300,17 @@ static NSString *const ATLMLayerAppID = nil;
         self.conversationListViewController = nil;
         [self setupLayer];
     }];
-    
-    //[self unregisterForRemoteNotifications:[UIApplication sharedApplication]];
+    [self unregisterForRemoteNotifications];
 }
 
 #pragma mark - Conversations
 
 - (void)presentConversationsListViewController:(BOOL)animated
 {
-    if (self.conversationListViewController) return;
+    if (self.conversationListViewController) {
+       return;
+    }
+    
     self.conversationListViewController = [ATLMConversationListViewController conversationListViewControllerWithLayerClient:self.applicationController.layerClient];
     self.conversationListViewController.applicationController = self.applicationController;
     
@@ -316,21 +340,14 @@ static NSString *const ATLMLayerAppID = nil;
     }];
 }
 
-#pragma mark - UI Config
-
-- (void)configureGlobalUserInterfaceAttributes
-{
-    [[UINavigationBar appearance] setTintColor:ATLBlueColor()];
-    [[UINavigationBar appearance] setBarTintColor:ATLLightGrayColor()];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:ATLBlueColor()];
-}
-
 #pragma mark - Application Badge Setter
 
 - (void)setApplicationBadgeNumber
 {
+#ifndef WATCH_KIT_TARGET
     NSUInteger countOfUnreadMessages = [self.applicationController.layerClient countOfUnreadMessages];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:countOfUnreadMessages];
+#endif
 }
 
 @end

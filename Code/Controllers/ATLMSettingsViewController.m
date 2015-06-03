@@ -274,6 +274,7 @@ NSString *const ATLMConnecting = @"Connecting";
 
 - (void)legalRowTapped:(ATLMLegalTableRow)tableRow
 {
+#ifndef WATCH_KIT_TARGET
     switch (tableRow) {
         case ATLMLegalTableRowAttribution:
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/layerhq/Atlas-iOS#license"]];
@@ -284,6 +285,7 @@ NSString *const ATLMConnecting = @"Connecting";
         default:
             break;
     }
+#endif
 }
 
 # pragma mark - Layer Connection State Monitoring

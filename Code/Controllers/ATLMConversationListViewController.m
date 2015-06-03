@@ -236,12 +236,9 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
     
     [self.navigationController popToViewController:self animated:YES];
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Conversation Deleted"
-                                                        message:@"The conversation has been deleted."
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-    [alertView show];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Conversation Deleted" message:@"The conversation has been deleted." preferredStyle:UIAlertControllerStyleAlert];
+    [controller addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)conversationParticipantsDidChange:(NSNotification *)notification
@@ -264,12 +261,9 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
     
     [self.navigationController popToViewController:self animated:YES];
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Removed From Conversation"
-                                                        message:@"You have been removed from the conversation."
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-    [alertView show];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Removed From Conversation" message:@"You have been removed from the conversation." preferredStyle:UIAlertControllerStyleAlert];
+    [controller addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 #pragma mark - Helpers

@@ -21,6 +21,8 @@
 #import "ATLMPersistenceManager.h"
 #import "ATLMUtilities.h"
 
+static NSString *ATLAppGroupKey = @"LYRClientGroupIdentifierKey";
+
 BOOL ATLMIsRunningTests(void)
 {
     return NSClassFromString(@"XCTestCase") != Nil;
@@ -37,12 +39,20 @@ NSURL *ATLMRailsBaseURL(void)
 
 NSString *ATLMApplicationDataDirectory(void)
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    return paths.firstObject;
+    NSString *path;
+    NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:ATLAppGroupKey];
+    if (identifier) {
+        path = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:identifier].path;
+    } else {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        path = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    }
+    return path;
 }
 
 UIAlertView *ATLMAlertWithError(NSError *error)
 {
+#ifndef WATCH_KIT_TARGET
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Unexpected Error"
                                                         message:error.localizedDescription
                                                        delegate:nil
@@ -50,4 +60,6 @@ UIAlertView *ATLMAlertWithError(NSError *error)
                                               otherButtonTitles:nil];
     [alertView show];
     return alertView;
+#endif
+    return nil;
 }

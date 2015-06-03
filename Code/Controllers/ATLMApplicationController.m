@@ -143,12 +143,16 @@ NSString *const ATLMConversationDeletedNotification = @"LSConversationDeletedNot
 - (void)didReceiveLayerClientWillBeginSynchronizationNotification:(NSNotification *)notification
 {
     [self.APIManager loadContacts];
+#ifndef WATCH_KIT_TARGET
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
 }
 
 - (void)didReceiveLayerClientDidFinishSynchronizationNotification:(NSNotification *)notification
 {
+#ifndef WATCH_KIT_TARGET
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+#endif
 }
 
 @end

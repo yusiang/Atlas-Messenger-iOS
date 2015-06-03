@@ -88,7 +88,10 @@ static ATLMDateProximity ATLMProximityToDate(NSDate *date)
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDate *now = [NSDate date];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     NSCalendarUnit calendarUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSWeekOfMonthCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+#pragma GCC diagnostic pop
     NSDateComponents *dateComponents = [calendar components:calendarUnits fromDate:date];
     NSDateComponents *todayComponents = [calendar components:calendarUnits fromDate:now];
     if (dateComponents.day == todayComponents.day &&
@@ -189,12 +192,16 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 - (void)conversationViewController:(ATLConversationViewController *)viewController didFailSendingMessage:(LYRMessage *)message error:(NSError *)error;
 {
     NSLog(@"Message Send Failed with Error: %@", error);
+
+#ifndef WATCH_KIT_TARGET
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
                                                         message:error.localizedDescription
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
     [alertView show];
+#endif
+    
 }
 
 /**
@@ -510,7 +517,9 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 - (void)userDidTapLink:(NSNotification *)notification
 {
+#ifndef WATCH_KIT_TARGET
     [[UIApplication sharedApplication] openURL:notification.object];
+#endif
 }
 
 - (void)configureUserInterfaceAttributes
