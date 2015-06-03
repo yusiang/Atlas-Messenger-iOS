@@ -1,5 +1,15 @@
 # Atlas Messenger Changelog
 
+## 0.8.8
+
+### Enhancements
+
+1. Updated code to support the new change notifications in LayerKit v0.13.3.
+
+### Bug Fixes
+
+1. Fixed declared but undefined boolean values in ATLMConversationViewController.m which caused the messages' state to be stuck at 'pending' on random occasions.
+
 ## 0.8.7
 
 ### New Features 
