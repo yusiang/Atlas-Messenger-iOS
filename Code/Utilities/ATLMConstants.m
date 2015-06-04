@@ -17,3 +17,7 @@ UIFont *ATLMLightFont(CGFloat size)
 {
     return [UIFont fontWithName:@"AvenirNext-Regular" size:size];
 }
+
+NSString *ATLMApplicationControllerKey = @"ATLMApplicationControllerKey";
+
+NSString *ATLMPersistenceManagerKey = @"ATLMPersistenceManagerKey";

@@ -25,10 +25,12 @@
 #import "ATLMConversationDetailViewController.h"
 #import "ATLMNavigationController.h"
 #import "ATLMParticipantDataSource.h"
+#import "ATLMMessagingDataSource.h"
 
 @interface ATLMConversationListViewController () <ATLConversationListViewControllerDelegate, ATLConversationListViewControllerDataSource, ATLMSettingsViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) ATLMParticipantDataSource *participantDataSource;
+@property (nonatomic) ATLMMessagingDataSource *messagingDataSource;
 
 @end
 
@@ -59,6 +61,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
     composeButton.accessibilityLabel = ATLMComposeButtonAccessibilityLabel;
     [self.navigationItem setRightBarButtonItem:composeButton];
     
+    self.messagingDataSource = [ATLMMessagingDataSource dataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     
     [self registerNotificationObservers];
@@ -112,35 +115,7 @@ NSString *const ATLMComposeButtonAccessibilityLabel = @"Compose Button";
  */
 - (NSString *)conversationListViewController:(ATLConversationListViewController *)conversationListViewController titleForConversation:(LYRConversation *)conversation
 {
-    // If we have a Conversation name in metadata, return it.
-    NSString *conversationTitle = conversation.metadata[ATLMConversationMetadataNameKey];
-    if (conversationTitle.length) {
-        return conversationTitle;
-    }
-    
-    NSMutableSet *participantIdentifiers = [conversation.participants mutableCopy];
-    [participantIdentifiers minusSet:[NSSet setWithObject:self.layerClient.authenticatedUserID]];
-    
-    if (participantIdentifiers.count == 0) return @"Personal Conversation";
-    
-    NSMutableSet *participants = [[self.applicationController.persistenceManager usersForIdentifiers:participantIdentifiers] mutableCopy];
-    if (participants.count == 0) return @"No Matching Participants";
-    if (participants.count == 1) return [[participants allObjects][0] fullName];
-    
-    NSMutableArray *firstNames = [NSMutableArray new];
-    [participants enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-        id<ATLParticipant> participant = obj;
-        if (participant.firstName) {
-            // Put the last message sender's name first
-            if ([conversation.lastMessage.sender.userID isEqualToString:participant.participantIdentifier]) {
-                [firstNames insertObject:participant.firstName atIndex:0];
-            } else {
-                [firstNames addObject:participant.firstName];
-            }
-        }
-    }];
-    NSString *firstNamesString = [firstNames componentsJoinedByString:@", "];
-    return firstNamesString;
+    return [self.messagingDataSource cellTitleForConversation:conversation];
 }
 
 #pragma mark - Conversation Selection

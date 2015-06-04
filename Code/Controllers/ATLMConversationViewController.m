@@ -24,111 +24,12 @@
 #import "ATLMImageViewController.h"
 #import "ATLMUtilities.h"
 #import "ATLMParticipantTableViewController.h"
-
-static NSDateFormatter *ATLMShortTimeFormatter()
-{
-    static NSDateFormatter *dateFormatter;
-    if (!dateFormatter) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    }
-    return dateFormatter;
-}
-
-static NSDateFormatter *ATLMDayOfWeekDateFormatter()
-{
-    static NSDateFormatter *dateFormatter;
-    if (!dateFormatter) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"EEEE"; // Tuesday
-    }
-    return dateFormatter;
-}
-
-static NSDateFormatter *ATLMRelativeDateFormatter()
-{
-    static NSDateFormatter *dateFormatter;
-    if (!dateFormatter) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateStyle = NSDateFormatterMediumStyle;
-        dateFormatter.doesRelativeDateFormatting = YES;
-    }
-    return dateFormatter;
-}
-
-static NSDateFormatter *ATLMThisYearDateFormatter()
-{
-    static NSDateFormatter *dateFormatter;
-    if (!dateFormatter) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"E, MMM dd,"; // Sat, Nov 29,
-    }
-    return dateFormatter;
-}
-
-static NSDateFormatter *ATLMDefaultDateFormatter()
-{
-    static NSDateFormatter *dateFormatter;
-    if (!dateFormatter) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"MMM dd, yyyy,"; // Nov 29, 2013,
-    }
-    return dateFormatter;
-}
-
-typedef NS_ENUM(NSInteger, ATLMDateProximity) {
-    ATLMDateProximityToday,
-    ATLMDateProximityYesterday,
-    ATLMDateProximityWeek,
-    ATLMDateProximityYear,
-    ATLMDateProximityOther,
-};
-
-static ATLMDateProximity ATLMProximityToDate(NSDate *date)
-{
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDate *now = [NSDate date];
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    NSCalendarUnit calendarUnits = NSEraCalendarUnit | NSYearCalendarUnit | NSWeekOfMonthCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-#pragma GCC diagnostic pop
-    NSDateComponents *dateComponents = [calendar components:calendarUnits fromDate:date];
-    NSDateComponents *todayComponents = [calendar components:calendarUnits fromDate:now];
-    if (dateComponents.day == todayComponents.day &&
-        dateComponents.month == todayComponents.month &&
-        dateComponents.year == todayComponents.year &&
-        dateComponents.era == todayComponents.era) {
-        return ATLMDateProximityToday;
-    }
-
-    NSDateComponents *componentsToYesterday = [NSDateComponents new];
-    componentsToYesterday.day = -1;
-    NSDate *yesterday = [calendar dateByAddingComponents:componentsToYesterday toDate:now options:0];
-    NSDateComponents *yesterdayComponents = [calendar components:calendarUnits fromDate:yesterday];
-    if (dateComponents.day == yesterdayComponents.day &&
-        dateComponents.month == yesterdayComponents.month &&
-        dateComponents.year == yesterdayComponents.year &&
-        dateComponents.era == yesterdayComponents.era) {
-        return ATLMDateProximityYesterday;
-    }
-
-    if (dateComponents.weekOfMonth == todayComponents.weekOfMonth &&
-        dateComponents.month == todayComponents.month &&
-        dateComponents.year == todayComponents.year &&
-        dateComponents.era == todayComponents.era) {
-        return ATLMDateProximityWeek;
-    }
-
-    if (dateComponents.year == todayComponents.year &&
-        dateComponents.era == todayComponents.era) {
-        return ATLMDateProximityYear;
-    }
-
-    return ATLMDateProximityOther;
-}
+#import "ATLMMessagingDataSource.h"
+#import "ATLMUtilities.h"
 
 @interface ATLMConversationViewController () <ATLMConversationDetailViewControllerDelegate, ATLParticipantTableViewControllerDelegate>
 
+@property (nonatomic) ATLMMessagingDataSource *messagingDataSource;
 @property (nonatomic) ATLMParticipantDataSource *participantDataSource;
 
 @end
@@ -153,6 +54,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
     [self configureUserInterfaceAttributes];
     [self registerNotificationObservers];
     
+    self.messagingDataSource = [ATLMMessagingDataSource dataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.participantDataSource = [ATLMParticipantDataSource participantDataSourceWithPersistenceManager:self.applicationController.persistenceManager];
     self.participantDataSource.excludedIdentifiers = [NSSet setWithObject:self.layerClient.authenticatedUserID];
 }
@@ -192,16 +94,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 - (void)conversationViewController:(ATLConversationViewController *)viewController didFailSendingMessage:(LYRMessage *)message error:(NSError *)error;
 {
     NSLog(@"Message Send Failed with Error: %@", error);
-
-#ifndef WATCH_KIT_TARGET
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Messaging Error"
-                                                        message:error.localizedDescription
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-    [alertView show];
-#endif
-    
+    ATLMAlertWithError(error);
 }
 
 /**
@@ -239,10 +132,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
  */
 - (id<ATLParticipant>)conversationViewController:(ATLConversationViewController *)conversationViewController participantForIdentifier:(NSString *)participantIdentifier
 {
-    if (participantIdentifier) {
-        return [self.applicationController.persistenceManager userForIdentifier:participantIdentifier];
-    }
-    return nil;
+    return [self.messagingDataSource participantForIdentifier:participantIdentifier];
 }
 
 /**
@@ -250,32 +140,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
  */
 - (NSAttributedString *)conversationViewController:(ATLConversationViewController *)conversationViewController attributedStringForDisplayOfDate:(NSDate *)date
 {
-    NSDateFormatter *dateFormatter;
-    ATLMDateProximity dateProximity = ATLMProximityToDate(date);
-    switch (dateProximity) {
-        case ATLMDateProximityToday:
-        case ATLMDateProximityYesterday:
-            dateFormatter = ATLMRelativeDateFormatter();
-            break;
-        case ATLMDateProximityWeek:
-            dateFormatter = ATLMDayOfWeekDateFormatter();
-            break;
-        case ATLMDateProximityYear:
-            dateFormatter = ATLMThisYearDateFormatter();
-            break;
-        case ATLMDateProximityOther:
-            dateFormatter = ATLMDefaultDateFormatter();
-            break;
-    }
-
-    NSString *dateString = [dateFormatter stringFromDate:date];
-    NSString *timeString = [ATLMShortTimeFormatter() stringFromDate:date];
-    
-    NSMutableAttributedString *dateAttributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", dateString, timeString]];
-    [dateAttributedString addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:NSMakeRange(0, dateAttributedString.length)];
-    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:11] range:NSMakeRange(0, dateAttributedString.length)];
-    [dateAttributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:11] range:NSMakeRange(0, dateString.length)];
-    return dateAttributedString;
+    return [self.messagingDataSource attributedStringForDisplayOfDate:date];
 }
 
 /**
@@ -283,73 +148,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
  */
 - (NSAttributedString *)conversationViewController:(ATLConversationViewController *)conversationViewController attributedStringForDisplayOfRecipientStatus:(NSDictionary *)recipientStatus
 {
-    NSMutableDictionary *mutableRecipientStatus = [recipientStatus mutableCopy];
-    if ([mutableRecipientStatus valueForKey:self.applicationController.layerClient.authenticatedUserID]) {
-        [mutableRecipientStatus removeObjectForKey:self.applicationController.layerClient.authenticatedUserID];
-    }
-    
-    NSString *statusString = [NSString new];
-    if (mutableRecipientStatus.count > 1) {
-        __block NSUInteger readCount = 0;
-        __block BOOL delivered;
-        __block BOOL sent;
-        __block BOOL pending;
-        [mutableRecipientStatus enumerateKeysAndObjectsUsingBlock:^(NSString *userID, NSNumber *statusNumber, BOOL *stop) {
-            LYRRecipientStatus status = statusNumber.integerValue;
-            switch (status) {
-                case LYRRecipientStatusInvalid:
-                    break;
-                case LYRRecipientStatusPending:
-                    pending = YES;
-                    break;
-                case LYRRecipientStatusSent:
-                    sent = YES;
-                    break;
-                case LYRRecipientStatusDelivered:
-                    delivered = YES;
-                    break;
-                case LYRRecipientStatusRead:
-                    NSLog(@"Read");
-                    readCount += 1;
-                    break;
-            }
-        }];
-        if (readCount) {
-            NSString *participantString = readCount > 1 ? @"Participants" : @"Participant";
-            statusString = [NSString stringWithFormat:@"Read by %lu %@", (unsigned long)readCount, participantString];
-        } else if (pending) {
-            statusString = @"Pending";
-        }else if (delivered) {
-            statusString = @"Delivered";
-        } else if (sent) {
-            statusString = @"Sent";
-        }
-    } else {
-        __block NSString *blockStatusString = [NSString new];
-        [mutableRecipientStatus enumerateKeysAndObjectsUsingBlock:^(NSString *userID, NSNumber *statusNumber, BOOL *stop) {
-            if ([userID isEqualToString:self.applicationController.layerClient.authenticatedUserID]) return;
-            LYRRecipientStatus status = statusNumber.integerValue;
-            switch (status) {
-                case LYRRecipientStatusInvalid:
-                    blockStatusString = @"Not Sent";
-                    break;
-                case LYRRecipientStatusPending:
-                    blockStatusString = @"Pending";
-                    break;
-                case LYRRecipientStatusSent:
-                    blockStatusString = @"Sent";
-                    break;
-                case LYRRecipientStatusDelivered:
-                    blockStatusString = @"Delivered";
-                    break;
-                case LYRRecipientStatusRead:
-                    blockStatusString = @"Read";
-                    break;
-            }
-        }];
-        statusString = blockStatusString;
-    }
-    return [[NSAttributedString alloc] initWithString:statusString attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:11]}];
+    return [self.messagingDataSource attributedStringForDisplayOfRecipientStatus:recipientStatus];
 }
 
 #pragma mark - ATLAddressBarControllerDelegate
@@ -468,15 +267,7 @@ NSString *const ATLMDetailsButtonLabel = @"Details";
 
 - (void)configureTitle
 {
-    if ([self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey]) {
-        NSString *conversationTitle = [self.conversation.metadata valueForKey:ATLMConversationMetadataNameKey];
-        if (conversationTitle.length) {
-            self.title = conversationTitle;
-        } else {
-            self.title = [self defaultTitle];
-        }    } else {
-        self.title = [self defaultTitle];
-    }
+    self.title = [self.messagingDataSource titleForConversation:self.conversation];
 }
 
 - (NSString *)defaultTitle

@@ -23,3 +23,7 @@
 UIFont *ATLMUltraLightFont(CGFloat size);
 
 UIFont *ATLMLightFont(CGFloat size);
+
+extern NSString *ATLMApplicationControllerKey;
+
+extern NSString *ATLMPersistenceManagerKey;
